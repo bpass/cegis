@@ -1,0 +1,89 @@
+
+// CVS tracking device
+// $Id: printingInstructions.txt,v 1.1 2004/11/23 01:29:10 rstelzleni Exp $
+
+/** \page printingInstructions Printing Instructions
+ * 
+ * \section printingMaps Printing Maps
+ * Printing maps out successfully is a pain, but if you work with this
+ * code much you will probably need to do it fairly often, so hopefully
+ * this document helps to ease your suffering.  I always print to the
+ * HP5000_ps in the imaging room because it is the only big plotter with
+ * post script support for Arc print jobs.  Also, I print from ArcView
+ * because I find its interface to be easier to work with than Imagine.
+ * It can't do as much, but what it can do it makes easier.
+ *
+ * Ok, so the first step is to create your project in ArcView, if you
+ * don't have one already.  When you first open ArcView it will ask you
+ * if you want to create a new project with a new view, select ok in 
+ * this box.  It will then present you with a choice to add data to the
+ * view, again, select yes.  This will bring up a proprietary and poorly
+ * designed select file box.  Pick out the data you want to add.  
+ * Remember that Feature Data Source is a vector format file and Image
+ * Data Source is a raster image.  Multiple files can be selected by
+ * holding down shift and selecting.  To add another file after the first
+ * time you click ok, click on the "Add Theme" button, it kind of looks
+ * like a thick plus sign.
+ * 
+ * Next thing to do is set up the view.  There should be a window open
+ * called View1 or something similar.  On the left of this window, check
+ * the layers that you want visible, and drag and drop them into the z
+ * order you want.  Also, it is a good idea to zoom to where you can see
+ * whatever it is that you are planning to print.  One other step is
+ * important here.  Select View->Properties from the main menu.  In
+ * the dialog for this set the map units to meters, or whatever is
+ * appropriate for your data.
+ *
+ * Now go to the other open window that has the name of your project,
+ * probably "Untitled".  Here you will select Layouts on the left, and
+ * then click New at the top.  You will be presented with a new window.
+ * You'll want to go to Layout->Page Setup and set the paper size to
+ * whatever seems appropriate for your project.  I usually use "Custom"
+ * and 30" by 40", but you can go bigger.
+ *
+ * On the newly available tool bar there is an icon called "View Frame"
+ * that has a kind of planetish icon on it.  It should be on the far
+ * right of that toolbar.  If it isn't than click and hold down the 
+ * button on whatever icon is there, this will create a drop-down button
+ * selection where you can pick out the planet.
+ *
+ * With this tool you draw a rectangular area to be the plot area.  Once 
+ * you draw the area there is a dialog box that asks what you want to
+ * view in the view frame.  Select View1 at the top of the dialog.  The
+ * "Live Link" check box will make the view frame change when you change 
+ * the view that it is linked to, if you uncheck it the view frame won't
+ * change.  I usually leave this checked until I'm happy with the image,
+ * and then uncheck it to lock the view I have in place.  Under scale 
+ * select "User Specified Scale" and then enter a scale below it.  For
+ * roads I always use 1:3000, 1:6000 or 1:12000, usually 1:3000, it gives
+ * the most detailed view.  The rest of this dialog is ok, just click OK.
+ *
+ * Now you should see the image in your Layout.  You can zoom and pan 
+ * around in the main View (View1) to change what is shown in the Layout,
+ * when you are happy with it, I would go to Graphics->Properties and 
+ * turn off Live Link.  There are also some pretty self explanatory tools for adding text and
+ * drawing shapes and such.  Play with these until the image is ready to
+ * go.
+ *
+ * Ok, now to actually print something.  Go to File->Print Setup and
+ * select the \\\\mcprint\\hp5000_ps as the printer.  On paper size scroll
+ * up and select the smallest one that will contain your paper size
+ * that you selected above, and click OK.  Now go to File->Print and
+ * hit ok.
+ *
+ * If all goes according to plan you will have your project printed in
+ * about 30 minutes.  If it doesn't you might not.  
+ * 
+ * The printer has
+ * failed for me in about every way possible, but they got it fixed and
+ * since then I haven't seen too many problems.  Sometimes it is touchy
+ * about file size though.  If you are having problems where the print 
+ * job just dissappears, or where you get a tiny strip of paper instead
+ * of a 30x40 plot, try decreasing the dpi of the output file.  This
+ * can be done under File->Print, just type in the drop down box, you
+ * don't have to use the crappy provided values.  I'm pretty sure
+ * that around 150 dpi is still better than the printer can handle.
+ *
+ * If that doesn't help and you still can't print, the man to see is
+ * Dave Perdue.  He should be able to help.
+ */

@@ -124,6 +124,16 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
     FILE *paramfile = fopen( logFile, "wa");
 	
 
+    int PROJECT_MODE = 6;	//0  - Nearest Neighbor
+    				//1  - Sum
+    				//2  - Min
+    				//3  - Max
+    				//4  - Median
+    				//5  - Mode
+    				//6  - Avg
+    bool noDoubleCount = false;
+    type ignoreValue = -9999;
+	
     for(out_line = 0; out_line < outimg.nl; out_line++) 		// For each output image line
     {
 	// Set progress of Dialog box and cancel if process was cancelled
@@ -144,15 +154,13 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 		out[0] = outimg.ul_x + (out_samp * outimg.pixsize);	// Calc out-img proj_X coord
 
 
-		find2corners = 0;	// must get all 4 corners at beg. of line
-
 		double inbox[5][2];
 
 		for( int inbox_i = 0; inbox_i < 5; inbox_i++ )
 			for( int inbox_j = 0; inbox_j < 2; inbox_j++ )
 				inbox[inbox_i][inbox_j] = 0;
 
-		find2corners = 0;
+		find2corners = 0;  // must get all 4 corners at beg. of line
 
 		if( get_coords( outimg, inimg, out, inbox, out_line, out_samp, paramfile ) )
 		{
@@ -163,7 +171,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 			// ------------------------------
 			if (in_line<0||in_samp<0||in_line>=inimg.nl||in_samp>=inimg.ns)
 			{
-				*( (type*)mapimgoutbuf + out_samp) = fill; // Barely ever happans, if at all
+				*( (type*)mapimgoutbuf + out_samp) = fill; // Barely ever happens, if at all
 			}
 
 			// Assign the appropriate input image pixel to the output image using
@@ -172,111 +180,165 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 			// ---------------------------------------------
 			else
 			{
-				//----- compute minbox -----//
-				int maxx = 0,
-				maxy = 0,
-				minx = inimg.ns,
-				miny = inimg.ns;
-		
-				for(int inbox_index = 0; inbox_index < 4; ++inbox_index)
+				if( PROJECT_MODE == 0 )  //Nearest Neighbor
 				{
-					if(maxx < inbox[inbox_index][0])
-						maxx = inbox[inbox_index][0];
-				else
-				{
-					if(minx > inbox[inbox_index][0])
-						minx = inbox[inbox_index][0];
+					get_line(  mapimginbuf, inbox[4][1]*inimg.ns, inimg.ns+1, useType );
+					(*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
 				}
-		
-				if(maxy < inbox[inbox_index][1])
-					maxy = inbox[inbox_index][1];
-				// else
-				// {
-					if(miny > inbox[inbox_index][1])
-					miny = inbox[inbox_index][1];
-				//}
-				} //for inbox_index
-
-				//----- check each pixel in minbox & compile stats -----//
-				int boxError = 1;
-				int yCoverageArea = iround( maxy ) - iround( miny ) + 1;
-				int xCoverageArea = iround( maxx ) - iround( minx ) + 1;
-		
-				if( yCoverageArea < 1 ) yCoverageArea = 1;
-				if( yCoverageArea == 1 && maxy != miny ) yCoverageArea++;
-		
-				if( xCoverageArea < 1 ) xCoverageArea = 1;
-				if( xCoverageArea == 1 && maxx != minx ) xCoverageArea++;
-		
-				int coverageSize =  (int)( yCoverageArea * xCoverageArea );
-		
-				void* inputCoverage = (void*)malloc( sizeof(type) * coverageSize+1 );
-				int offset = 0;
-				double coord[2] = { 0 };
-		
-		
-				offset = 0;
-		
-				for(int currentY = iround(miny); currentY <= iround(maxy); currentY++)
+				else	//Analysis
 				{
-					coord[1] = currentY;
-		
-					//Loads into memory the current line of input needed
-					get_line(  mapimginbuf, coord[1]*inimg.ns, inimg.ns, useType );
-					if( mapimginbuf == NULL )
-					break;
-					
-					for(int currentX = iround(minx); currentX <= iround(maxx); currentX++)
+					//----- compute minbox -----//
+					int maxx = 0,
+					maxy = 0,
+					minx = inimg.ns,
+					miny = inimg.ns;
+			
+					for(int inbox_index = 0; inbox_index < 4; ++inbox_index)
 					{
-					coord[0] = currentX;
-					if( inBox( inbox, coord ) )
-					{
-						boxError = 0;
-							
-						type coordValue = (*(((type*)mapimginbuf + (int)coord[0])));
-						(*( (type*)inputCoverage + offset)) = coordValue;
-
-/*make sure things aren't counted twice*/	(*(((type*)mapimginbuf + (int)coord[0]))) = 0;
-						
-					}//if inBox
+						if(maxx < inbox[inbox_index][0])
+							maxx = inbox[inbox_index][0];
 					else
 					{
-						*( (type*)inputCoverage + offset) = 0;
+						if(minx > inbox[inbox_index][0])
+							minx = inbox[inbox_index][0];
 					}
-		
-					offset++;
-					}// for curx
-				}//for cury
-		
-				//----- finish statistical analysis -----//
-				if(boxError)	//no pixels from rectangle in the minbox, get NN.
-				{
-					//Loads into memory the current line of input needed
-					get_line(  mapimginbuf, inbox[4][1]*inimg.ns, inimg.ns+1, useType );
-		
-					(*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
-/*make sure things aren't counted twice*/
-					(*(((type*)mapimginbuf + (int)(inbox[4][0])))) = 0;
-				}
-				else	//!boxError
-				{
-					type sumValue = (type)0;
-		
-					for( int coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+			
+					if(maxy < inbox[inbox_index][1])
+						maxy = inbox[inbox_index][1];
+					// else
+					// {
+						if(miny > inbox[inbox_index][1])
+						miny = inbox[inbox_index][1];
+					//}
+					} //for inbox_index
+	
+					//----- check each pixel in minbox & compile stats -----//
+					//----- Calculate coverage size ----//
+					int boxError = 1;
+					int yCoverageArea = iround( maxy ) - iround( miny ) + 1;
+					int xCoverageArea = iround( maxx ) - iround( minx ) + 1;
+			
+					if( yCoverageArea < 1 ) yCoverageArea = 1;
+					if( yCoverageArea == 1 && maxy != miny ) yCoverageArea++;
+			
+					if( xCoverageArea < 1 ) xCoverageArea = 1;
+					if( xCoverageArea == 1 && maxx != minx ) xCoverageArea++;
+			
+					int coverageSize =  (int)( yCoverageArea * xCoverageArea );
+			
+					//---create memory for coverage ----//
+					void* inputCoverage = (void*)malloc( sizeof(type) * coverageSize+1 );
+					int offset = 0;
+					double coord[2] = { 0 };
+			
+			
+					offset = 0;
+			
+					//------  Load data into coverage memory  ----//
+					for(int currentY = iround(miny); currentY <= iround(maxy); currentY++)
 					{
-						if( *( (type*)inputCoverage + coverageIndex ) >= 0 )
-							sumValue += *( (type*)inputCoverage + coverageIndex );
+						coord[1] = currentY;
+			
+						//Loads into memory the current line of input needed
+						get_line(  mapimginbuf, coord[1]*inimg.ns, inimg.ns, useType );
+						if( mapimginbuf == NULL )
+						break;
 						
-						if( sumValue < 0 )
+						for(int currentX = iround(minx); currentX <= iround(maxx); currentX++)
 						{
-							fprintf( stderr, "Error negative sum value. Dang it!!!!\n" );
-							fflush( stderr );
+						coord[0] = currentX;
+						if( inBox( inbox, coord ) )
+						{
+							boxError = 0;
+								
+							type coordValue = (*(((type*)mapimginbuf + (int)coord[0])));
+							(*( (type*)inputCoverage + offset)) = coordValue;
+	
+							if( noDoubleCount )
+								(*(((type*)mapimginbuf + (int)coord[0]))) = 0;
+							
+						}//if inBox
+						else
+						{
+							*( (type*)inputCoverage + offset) = 0;
 						}
+			
+						offset++;
+						}// for curx
+					}//for cury
+			
+					//----- finish statistical analysis -----//
+					if(boxError)	//no pixels from rectangle in the minbox, get NN.
+					{
+						//Loads into memory the current line of input needed
+						get_line(  mapimginbuf, inbox[4][1]*inimg.ns, inimg.ns+1, useType );
+			
+						(*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
+						
+						if( noDoubleCount )
+							(*(((type*)mapimginbuf + (int)(inbox[4][0])))) = 0;
 					}
-					*( (type*)mapimgoutbuf + out_samp) = sumValue;
+					else	//!boxError
+					{
+						type dataValue = (type)0;
+						switch( PROJECT_MODE )
+						{
+							case 1:		//Sum
+								for( int coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+								{
+/* set ignore values for sum here*/					if( *( (type*)inputCoverage + coverageIndex ) != ignoreValue )
+									{
+										dataValue += *( (type*)inputCoverage + coverageIndex );
+									}
+								}
+								break;
+							case 2:		//Min
+								dataValue = *( (type*)inputCoverage + 0 );  //start equal to first element
+								dataValue = 0xFF * sizeof(type);  //or aribtary on dtat type
+								for( int coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+								{
+/* set ignore values for min here*/					if( ( *( (type*)inputCoverage + coverageIndex ) < dataValue ) &&
+										(*( (type*)inputCoverage + coverageIndex ) != ignoreValue ) )
+									{
+										dataValue = *( (type*)inputCoverage + coverageIndex );
+									}
+								}
+								break;
+							case 3:		//Max
+								dataValue = *( (type*)inputCoverage + 0 );  //start equal to first element
+								dataValue = 0;  //arbitrary
+								for( int coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+								{
+/* set ignore values for max here*/					if( ( *( (type*)inputCoverage + coverageIndex ) > dataValue ) &&
+										(*( (type*)inputCoverage + coverageIndex ) != ignoreValue ) )
+									{
+										dataValue = *( (type*)inputCoverage + coverageIndex );
+									}
+								}
+								break;
+							case 4:		//Median
+								break;
+							case 5:		//Mode
+								break;
+							case 6:		//Avg
+								for( int coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+								{
+/* set ignore values for avg here*/					if( *( (type*)inputCoverage + coverageIndex ) != ignoreValue )
+									{
+										dataValue += *( (type*)inputCoverage + coverageIndex );
+									}
+								}
+								dataValue /= coverageSize;
+								break;
+							default:
+								dataValue = 0;
+								break;
+						}
+						*( (type*)mapimgoutbuf + out_samp) = dataValue;
+					}
+	
+					free( inputCoverage );
 				}
-
-				free( inputCoverage );
 			}
 		}
 		else

@@ -117,9 +117,10 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 
     /* jtrent resample */
     static int call_count = 0;
-
-
     FILE* bobFile = fopen( "bob.img", "wr" );
+    void* bobBuffer = malloc( sizeof( type )* outimg.ns );
+
+
     for(out_line = 0; out_line < outimg.nl; out_line++) 		// For each output image line
     {
 	// Set progress of Dialog box and cancel if process was cancelled
@@ -174,7 +175,8 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
   			        // ------------------------------
              			if (in_line<0||in_samp<0||in_line>=inimg.nl||in_samp>=inimg.ns)
                 		{
-                         	   fwrite( fill_bob, sizeof( type ), 1, bobFile );
+                         	   //fwrite( fill_bob, sizeof( type ), 1, bobFile );
+			           *( (type*)bobBuffer + out_samp) = 33;
 			        }
 
 			        // Assign the appropriate input image pixel to the output image using
@@ -249,8 +251,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
                          }
 */
                                   //references specific element of input
-                                  fwrite( ((type*)mapimginbuf + (int)(inbox[4][0])), sizeof( type ), 1, bobFile );
-
+                                  *( (type*)bobBuffer + out_samp) = *(((type*)mapimginbuf + (int)(inbox[4][0])));
 			        }
 
                             	fflush( stdout );
@@ -259,7 +260,8 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
                             {
                             	printf( "get_coords call %i returned zero\n", call_count );
                             	fflush( stdout );
-                         	fwrite( fill_bob, sizeof( type ), 1, bobFile );
+                         	//fwrite( fill_bob, sizeof( type ), 1, bobFile );
+   		                *( (type*)bobBuffer + out_samp) = 33;
                             }
                        	    fflush( stdout );
 
@@ -363,6 +365,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 	// Spit out a processing message & write the output image line to disk
 	// -------------------------------------------------------------------
 	put_line(mapimgoutbuf, useType);
+	fwrite( bobBuffer, sizeof( type ), outsize, bobFile );
     }
 
     progress.setProgress( outimg.nl );

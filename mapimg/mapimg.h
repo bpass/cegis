@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.16 2005/03/25 04:16:57 rbuehler Exp $
+// $Id: mapimg.h,v 1.17 2005/03/25 14:28:45 jtrent Exp $
 
 
 #ifndef MAPIMG_H
@@ -59,7 +59,11 @@ progress bar is implemented to show the user why they are waiting.
 
 --Miscellaneous Helper Functions
 
-<>quickSortAndSearch() does a quick sort on values and returns ... I dunno
+<>quickSortAndSearch() does a recursive, in place, quick sort on values and returns
+the index of AN occurance of searchValue in the list, or -1 if it is not present.
+It is not guaranteed whether this index will point to teh first, last, or middle 
+occurance, just AN occurance. This allows the median resample method to quickly
+find the section of the list that should be ignored, if it exists.
 
 round() is used for cross-platform compatability because not all platforms
 round the same way.

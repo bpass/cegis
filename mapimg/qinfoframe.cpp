@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.12 2005/03/11 15:41:34 jtrent Exp $
+// $Id: qinfoframe.cpp,v 1.13 2005/03/14 17:52:51 jtrent Exp $
 
 
 #include "qinfoframe.h"
@@ -499,7 +499,7 @@ void QInfoFrame::setAsInput()
    mapTab->fileEdit->setDisabled( true );
    mapTab->copyButton->hide();
    mapTab->lockButton->show();
-   mapTab->fillButton->hide();
+//   mapTab->fillButton->hide();
 
    static_cast<QLabel*>(gctpTab->child( "gctpLabel" ))->setText( "Input Projection Info" );
    gctpTab->copyButton->hide();
@@ -692,7 +692,16 @@ void QInfoFrame::getFill()
        mapTab->fillEdit->validator()->fixup( fillString );
    }
 
-   mapTab->fillEdit->setText( fillString );
+   if( QMessageBox::question( 0,
+                          "Replace Fill Value?",
+                          QString("Are you sure you wish to replace the current fill "
+                                  "value (%1) with the new estimated value of %2?")
+                                  .arg( mapTab->fillEdit->text() ).arg( fillString ),
+                          QMessageBox::Yes,
+                          QMessageBox::No | QMessageBox::Default | QMessageBox::Escape ) == QMessageBox::Yes )
+   {
+       mapTab->fillEdit->setText( fillString );
+   }
 }
 
 /*!!!!!!!!!!!!!!!!!
@@ -750,7 +759,7 @@ void QInfoFrame::setInfo( RasterInfo &input )
    }
 
    mapTab->fillEdit->setText( fillString );
-   mapTab->fillButton->setShown( input.fillValue() == -1.0 );
+//   mapTab->fillButton->setShown( input.fillValue() == -1.0 );
 
 
    QString noDataString = QString::number( input.noDataValue(), 'f', 6 );

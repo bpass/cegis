@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.27 2005/03/08 17:40:07 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.28 2005/03/14 17:52:51 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -58,13 +58,12 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
    // mapimg STARTS HERE!!!!
    // mapimg to do the reprojection (no longer called as function in order to provide progress dialog)
    // mapimg written by D. Steinwand and updated by S. Posch
-
    int outputRows = output.rows();
    int outputCols = output.cols();
 
    type fill = (type)output.fillValue();			// Fill value for mapimg
 
-   IMGIO<type> imgIO;
+   IMGIO<type> imgIO( resample.cacheLineCount() );
 
    imgIO.parse_input(input.imgFileName().ascii(), output.imgFileName().ascii());
 

@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.5 2005/02/25 18:37:49 jtrent Exp $
+// $Id: resampleform.h,v 1.6 2005/03/14 17:52:51 jtrent Exp $
 
 
 /****************************************************************************
@@ -15,6 +15,7 @@
 #include <qdialog.h>
 #include <qvaluelist.h>
 #include "resampleinfo.h"
+#include "rasterinfo.h"
 
 class QVBoxLayout;
 class QHBoxLayout;
@@ -27,13 +28,15 @@ class QPushButton;
 class QListBox;
 class QListBoxItem;
 class QEvent;
+class QSlider;
+class QLabel;
 
 class ResampleForm : public QDialog
 {
    Q_OBJECT
 
 public:
-   ResampleForm( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
+   ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
    ~ResampleForm();
 
    ResampleInfo info();
@@ -60,7 +63,12 @@ protected:
    QSpacerItem* ingoreSpacer;
    QHBoxLayout* okLayout;
    QSpacerItem* okSpacer;
-   
+
+   QGroupBox* memoryBox;
+   QSlider* memoryAllocation;
+   QVBoxLayout* memoryBoxLayout;
+   QLabel* memoryLabel;
+
    bool eventFilter( QObject* object, QEvent* event );
 
 protected slots:
@@ -70,11 +78,14 @@ protected slots:
    void cancel();
    void reject();
    void ignoreListKeyPress( QKeyEvent* e );
+   void updateMemoryAllocation();
 
 private:
    ResampleInfo::ResampleCode rcode;
    IgnoreList ilist;
    bool canceled;
+   
+   float bytesPerRow;
 };
 
 #endif // RESAMPLEFORM_H

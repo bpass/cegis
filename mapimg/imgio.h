@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.15 2005/03/04 14:58:35 jtrent Exp $
+// $Id: imgio.h,v 1.16 2005/03/14 17:52:51 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -32,7 +32,7 @@
 
 
 
-#define DEFAULT_Max_Data_Element_Count 100;
+#define DEFAULT_Max_Data_Element_Count 100
 
 
 

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.22 2005/03/08 17:40:07 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.23 2005/03/14 17:52:51 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -747,7 +747,7 @@ void mapimgForm::outSaveClicked()
    }
 
    // Prompt for resample parameters
-   ResampleForm *resForm = new ResampleForm( this, "resForm", false,
+   ResampleForm *resForm = new ResampleForm( input, output, this, "resForm", false,
       WINDOW_FLAGS );
 
    if( resForm->exec() == QDialog::Rejected )

@@ -1,8 +1,10 @@
-// $Id: resampleinfo.cpp,v 1.9 2005/03/04 14:58:35 jtrent Exp $
+// $Id: resampleinfo.cpp,v 1.10 2005/03/14 17:52:51 jtrent Exp $
 
 
 #include "resampleinfo.h"
 #include <qstringlist.h>
+
+#include "imgio.h"
 
 
 ResampleInfo::ResampleInfo()
@@ -10,6 +12,10 @@ ResampleInfo::ResampleInfo()
    rc = ResampleInfo::NullResample;
    fillval = 0.0;
    noval = 0.0;
+
+   //DEFAULT_Max_Data_Element_Count defined in imgio.h
+   lineCacheSize = DEFAULT_Max_Data_Element_Count;
+
    ilist.clear();
    strncpy( rn, "NullResample", RN_MAXLENGTH );
 }
@@ -126,6 +132,7 @@ void ResampleInfo::copy( const ResampleInfo &src )
    noval = src.noval;
    ilist = src.ilist;
    rc = src.rc;
+   lineCacheSize = src.lineCacheSize;
    strncpy( rn, src.rn, RN_MAXLENGTH );
 }
 

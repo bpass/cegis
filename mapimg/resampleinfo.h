@@ -1,4 +1,4 @@
-// $Id: resampleinfo.h,v 1.7 2005/02/28 17:55:10 jtrent Exp $
+// $Id: resampleinfo.h,v 1.8 2005/03/14 17:52:51 jtrent Exp $
 
 
 #ifndef RESAMPLEINFO_H
@@ -38,13 +38,17 @@ public:
    void copy( const ResampleInfo &src );
 
    bool noDoubleCounting() const;
-   
+
+   void setCacheLineCount( const int lineCount ) { lineCacheSize = lineCount; }
+   int cacheLineCount() const { return lineCacheSize; }
+
 private:
    ResampleCode rc;
    double fillval;
    double noval;
    IgnoreList ilist;
-   
+   int lineCacheSize;
+
    #define RN_MAXLENGTH 16
    char rn[RN_MAXLENGTH];
 };

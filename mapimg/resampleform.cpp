@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.11 2005/02/25 18:37:49 jtrent Exp $
+// $Id: resampleform.cpp,v 1.12 2005/03/14 17:52:51 jtrent Exp $
 
 
 /****************************************************************************
@@ -22,10 +22,14 @@
 #include <qevent.h>
 #include <qvalidator.h>
 #include <qmessagebox.h>
+#include <qslider.h>
+#include <qlabel.h>
 
 #include "mapimgform.h"
-#include "mapimgvalidator.h"         
+#include "mapimgvalidator.h"
 #include "mapimgpalette.h"
+#include "rasterinfo.h"
+#include "imgio.h"
 
 /*
 *  Constructs a ResampleForm as a child of 'parent', with the
@@ -34,13 +38,15 @@
 *  The dialog will by default be modeless, unless you set 'modal' to
 *  TRUE to construct a modal dialog.
 */
-ResampleForm::ResampleForm( QWidget* parent, const char* name, bool modal, WFlags fl )
+ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent, const char* name, bool modal, WFlags fl )
 : QDialog( parent, name, modal, fl )
 {
    if ( !name )
       setName( "ResampleForm" );
 
    setPalette( RESAMPLEFORM_COLOR );
+   
+   bytesPerRow = (input.cols() * (input.bitCount() / 8));
 
    ResampleFormLayout = new QVBoxLayout( this, 11, 6, "ResampleFormLayout");
 
@@ -91,6 +97,32 @@ ResampleForm::ResampleForm( QWidget* parent, const char* name, bool modal, WFlag
    inputLayout->addWidget( ignoreBox );
    ResampleFormLayout->addLayout( inputLayout );
 
+
+
+   memoryBox = new QGroupBox( this, "memoryBox" );
+   memoryBox->setColumnLayout(0, Qt::Vertical );
+   memoryBox->layout()->setSpacing( 6 );
+   memoryBox->layout()->setMargin( 11 );
+   memoryBoxLayout = new QVBoxLayout( memoryBox->layout() );
+   memoryBoxLayout->setAlignment( Qt::AlignHCenter | Qt::AlignTop );
+
+   memoryLabel = new QLabel( memoryBox, "memoryLabel" );
+   memoryLabel->setAlignment( Qt::AlignCenter );
+
+   //DEFAULT_Max_Data_Element_Count is defined in imgio.h
+   //minimum computed as the ratio of output to input plus 2% of the input
+   memoryAllocation = new QSlider( (int)((output.pixelSize()/input.pixelSize()) + 0.02*(float)input.rows()), //min
+                                   input.rows(),                           //max
+                                   10,                                     //step size
+                                   DEFAULT_Max_Data_Element_Count,         //default
+                                   Qt::Horizontal,                         //orientation
+                                   memoryBox,                              //parent
+                                   "memoryAllocationSlider" );             //name
+
+   memoryBoxLayout->addWidget( memoryLabel );
+   memoryBoxLayout->addWidget( memoryAllocation );
+   inputLayout->addWidget( memoryBox );
+
    okLayout = new QHBoxLayout( 0, 0, 6, "okLayout");
    okSpacer = new QSpacerItem( 141, 21, QSizePolicy::Expanding, QSizePolicy::Minimum );
    okLayout->addItem( okSpacer );
@@ -115,6 +147,7 @@ ResampleForm::ResampleForm( QWidget* parent, const char* name, bool modal, WFlag
    connect( newButton, SIGNAL( clicked() ), this, SLOT( newVal() ) );
    connect( delButton, SIGNAL( clicked() ), this, SLOT( delVal() ) );
    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( reject() ) );
+   connect( memoryAllocation, SIGNAL( valueChanged( int ) ), this, SLOT( updateMemoryAllocation() ) );
 
 
    canceled = false;
@@ -151,8 +184,11 @@ void ResampleForm::languageChange()
    newButton->setText( tr( "New Value -->" ) );
    delButton->setText( tr( "Delete Value <--" ) );
    ignoreListBox->clear();
+   memoryBox->setTitle( tr( "Memory Allocation" ) );
    okButton->setText( tr( "Ok" ) );
    cancelButton->setText( tr( "Cancel" ) );
+   
+    updateMemoryAllocation();
 }
 
 bool ResampleForm::eventFilter( QObject* object, QEvent* event )
@@ -185,6 +221,28 @@ bool ResampleForm::eventFilter( QObject* object, QEvent* event )
    }
 
    return QDialog::eventFilter( object, event );
+}
+
+
+void ResampleForm::updateMemoryAllocation()
+{
+   QString labelText = QString("%1 lines / ").arg( memoryAllocation->value() );
+   
+   float bytes = memoryAllocation->value()*bytesPerRow;
+
+
+   if( bytes >= 1000 && bytes < 1000000 )
+       labelText += QString( "%2 KB" ).arg( bytes/1000 );
+   else if( bytes >= 1000000 && bytes < 1000000000 )
+       labelText += QString( "%2 MB" ).arg( bytes/1000000 );
+   else if( bytes >= 1000000000 )
+       labelText += QString( "%2 GB" ).arg( bytes/1000000000 );
+   else
+       labelText += QString( "%2 B" ).arg( bytes );
+
+
+    memoryLabel->setText( tr( labelText ) );
+    return;
 }
 
 
@@ -262,7 +320,8 @@ ResampleInfo ResampleForm::info()
 
    ResampleInfo r;
    r.setResampleCode( resampleCombo->currentText() );
-   r.setIgnoreList( sz, ivals );      
+   r.setIgnoreList( sz, ivals );   
+   r.setCacheLineCount( memoryAllocation->value() );
 
    return r;
 }

@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.15 2005/03/17 16:31:01 jtrent Exp $
+// $Id: qinfoframe.cpp,v 1.16 2005/03/17 18:57:25 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -806,7 +806,6 @@ void QInfoFrame::setInfo( RasterInfo &input )
       cap = cap.right(cap.length() - index);
 
       mapTab->fileEdit->setText( cap );
-//      mapTab->fillButton->show();
    }
 
    ////////Inputs

@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.12 2005/03/16 16:17:07 jtrent Exp $
+// $Id: rasterinfo.cpp,v 1.13 2005/03/17 18:57:25 rbuehler Exp $
 
 
 #include "rasterinfo.h"
@@ -233,8 +233,15 @@ bool RasterInfo::save()
 
 bool RasterInfo::load( QString &imgFileName )
 {
-   if( !imgFileName.isNull() )
+   if( imgFileName.isNull() )
    {
+      imgFileName = fileName;
+      defaults();
+      fileName = imgFileName;
+   }
+   else
+   {
+      defaults();
       fileName = imgFileName;
       parseFileName();
    }
@@ -385,11 +392,11 @@ bool RasterInfo::loadXml()
      bits = xml.getBits();
      datatype = xml.getDataType();
      pixsize = xml.getPixelSize();
-     fillval = xml.getFillValue();
-     noval = xml.getNoDataValue();
 
      hasFillVal = xml.hasFillValue();
+     fillval = xml.getFillValue();
      hasNoDataVal = xml.hasNoDataValue();
+     noval = xml.getNoDataValue();
 
      projcode = xml.getProjNumber();
      zonecode = xml.getZone();
@@ -403,7 +410,7 @@ bool RasterInfo::loadXml()
    }
    catch( XMLException exception )
    {
-     QMessageBox::critical( NULL, "Error", exception.getMessage() );
+     QMessageBox::critical( NULL, "XML File Error", exception.getMessage() );
      returnValue = false;
    }
 
@@ -453,32 +460,35 @@ void RasterInfo::defaults()
 {
    fileName = QString::null;
 
-   aName = QString::null;
+   aName = QString::null;  // "" author
    aCompany = QString::null;
    aEmail = QString::null;
 
-   ulx = -1.0;
-   uly = -1.0;
-   row = 0;
+   row = 0;                // 0x0
    col = 0;
 
-   signd = false;
-   bits = 0;
-   datatype = QString::null;
-   pixsize = -1.0;
-   fillval = -1.0;
-   noval = -1.0;
+   ulx = -1.0;             // (-1,-1)
+   uly = -1.0;
 
-   hasFillVal = false;
-   hasNoDataVal = false;
+   signd = false;          // Unsigned 8 Bit Integer
+   bits = 8;
+   datatype = "Integer";
 
-   projcode = -1;
+   pixsize = 55597.454840; //30 Minutes
+
+   hasFillVal = false;     // Undefined
+   fillval = 0;
+
+   hasNoDataVal = false;   // Undefined
+   noval = 0;
+
+   projcode = -1;          // ""
    zonecode = 62;
-   datumcode = 19;
-   unitcode = 2;
+   datumcode = 19;         // Sphere of Radius...
+   unitcode = 2;           // Meters
 
    for( int i = 0; i < 15; ++i )
-      gctpParams[i] = 0.0;
+      gctpParams[i] = 0.0; // All 0's
 }
 
 void RasterInfo::copy( const RasterInfo &src )

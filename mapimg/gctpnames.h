@@ -1,4 +1,4 @@
-// $Id: gctpnames.h,v 1.5 2005/03/11 15:41:34 jtrent Exp $
+// $Id: gctpnames.h,v 1.6 2005/03/17 18:57:25 rbuehler Exp $
 
 
 #ifndef GCTPNAMES_H
@@ -6,13 +6,27 @@
 
 #include <qstringlist.h>
 
-/*
-      gctpNames() returns a QStringList containing the names 
-   of each of the gctp parameters for the projection defined
-   by projNum and variation.
-*/
+class SmartQStringList : public QStringList
+{
+public:
+   SmartQStringList(const QStringList & I):QStringList(I){}
+
+   const QString &operator[](QStringList::size_type i) const
+   {
+      if( i < 0 || i > (size()-1) ) 
+         return QString::null;
+      else
+         return (*at(i));
+   }
+};
+
 namespace
 {
+   /*
+         gctpNames() returns a QStringList containing the names 
+      of each of the gctp parameters for the projection defined
+      by projNum and variation.
+   */
    QStringList gctpNames( uint projNum, char variation )
    {
       QStringList retList;
@@ -242,7 +256,7 @@ namespace
       return i - 4;
    }
 
-   const QStringList projNames = QStringList::split( ',', 
+   const SmartQStringList projNames(QStringList::split( ',', 
       "Geographic,Universal Transverse Mercator,State Plane Coordinates,"
       "Albers Conical Equal Area,Lambert Conformal Conic,Mercator,"
       "Polar Stereographic,Polyconic,Equidistant Conic,Transverse Mercator,"
@@ -252,7 +266,7 @@ namespace
       "Hotine Oblique Mercator,Robinson,Space Oblique Mercator,"
       "Modified Stereohraphic Conformal--Alaska,Interrupted Goode Homolsine,"
       "Mollweide,Interrupted Mollweide,Hammer,Wagner IV,Wagner VII,"
-      "Oblated Equal Area" );//,Unknown" );
+      "Oblated Equal Area" ));
 
    const QStringList unitNames = QStringList::split( ',',
       "Radians,U.S. Feet,Meters,Seconds of Arc,Degrees of Arc,"

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.23 2005/03/14 17:52:51 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.24 2005/03/17 18:57:25 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -483,7 +483,7 @@ bool mapimgForm::openFile( QString inFile )
       outInfoAction->setOn( false );
 
       imgFrame->setPixmap( mapimgImage( "USGS Logo" ) );
-      viewShowAction->setOn( false );
+      viewShowButton->setOn( false );
       inInfoFrame->setInfo( info );
 
       QMessageBox::information( this, "Open", 

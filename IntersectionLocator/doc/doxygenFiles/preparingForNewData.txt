@@ -1,6 +1,6 @@
 
 // Mystical symbols to please the CVS Gods
-// $Id: preparingForNewData.txt,v 1.4 2004/11/16 00:06:02 rstelzleni Exp $
+// $Id: preparingForNewData.txt,v 1.5 2004/11/16 20:14:58 rstelzleni Exp $
 
 
 /** \page preparingForNewData Preparing For New Data
@@ -30,8 +30,8 @@
  * Next go to the main Imagine toolbar and select
  * Vector.  In the dialog menu thingy that pops up select Build Vector
  * Layer Topology.  That will pop up another dialog where you will 
- * select your coverage file you created.  Then change the dropdown
- * at the bottom of the screen from "Polygon" to "Line" and click ok.
+ * select your coverage file you created.  Leave the dropdown box
+ * at the bottom of the dialog on "Polygon" and click ok.
  * After that completes go back to the Vector dialog-menu and select
  * Subset Vector Layer.  In this poorly designed dialog you will first
  * select the vector coverage for the original road map file (the big

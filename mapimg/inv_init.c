@@ -1,4 +1,4 @@
-// $Id: inv_init.c,v 1.1 2005/01/14 16:18:49 rbuehler Exp $
+// $Id: inv_init.c,v 1.2 2005/01/27 18:56:12 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -458,8 +458,8 @@ long obleqinv();
      {
      /* this is the call to initialize SOM 
      -----------------------------------*/
-     path = inparm[3];
-     satnum = inparm[2];
+     path = (long)inparm[3];
+     satnum = (long)inparm[2];
     if (inparm[12] == 0)
        {
        mode = 1;
@@ -470,7 +470,7 @@ long obleqinv();
        if (*iflg != 0)
           return;
        time = inparm[8];
-       start = inparm[10];
+       start = (long)inparm[10];
        }
     else
        mode = 0;

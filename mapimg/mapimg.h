@@ -1,14 +1,16 @@
-// $Id: mapimg.h,v 1.2 2005/01/27 18:15:13 jtrent Exp $
+// $Id: mapimg.h,v 1.3 2005/01/27 18:56:17 jtrent Exp $
 
 
 #ifndef MAPIMG_H
 #define MAPIMG_H
 
+#include <qglobal.h>
+
 class RasterInfo;
 class QWidget;
 class QString;
 
- #ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN32
 double round(double value, unsigned int decimals = 0);
 #endif
 

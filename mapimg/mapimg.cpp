@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.3 2005/01/27 18:15:13 jtrent Exp $
+// $Id: mapimg.cpp,v 1.4 2005/01/27 18:56:17 jtrent Exp $
 
 
 #include "mapimg.h"
@@ -6,7 +6,6 @@
 #include <qwidget.h>
 #include <qdir.h>
 #include <qstring.h>
-#include <math.h>
 
 #include "rasterinfo.h"
 #include "getprojinfo.h"
@@ -15,13 +14,10 @@ extern "C"
 #include "proj.h"
 }
 
-/* I hope this doesn't break anything!!
- * VC++ math.h does not have the c/c++standard round function!!!
- * One day the evil shall FALL
- */
- 
- #ifdef Q_OS_WIN32
-double round(double value, unsigned int decimals)
+#include <qglobal.h>
+#include <math.h>
+#ifdef Q_OS_WIN32
+double round(double value, unsigned int decimals )
 {
   double factor = pow(10,decimals);
   return floor((value * factor) + 0.5) / factor;

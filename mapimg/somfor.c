@@ -1,4 +1,4 @@
-// $Id: somfor.c,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: somfor.c,v 1.2 2005/01/27 18:56:21 jtrent Exp $
 
 
 //Copyright 1992 United States Geological Survey
@@ -30,27 +30,28 @@ ALGORITHM REFERENCES
 *******************************************************************************/
 #include <stdio.h>
 #include "cproj.h"
+#include "proj.h"
 #define LANDSAT_RATIO 0.5201613
 
 static double lon_center,a,b,a2,a4,c1,c3,q,t,u,w,xj,p21,sa,ca,es,s,start;
-static void som_series(fb,fa2,fa4,fc1,fc3,dlam);
+
 static double false_easting;
 static double false_northing;
 
-long somforint(r_major,r_minor,satnum,path,alf_in,lon,false_east,false_north,
-	time, start1,flag)
+long somforint( double r_major, double r_minor, long satnum, long path, double alf_in, double lon, double false_east, 
+		double false_north, double time, long start1, long flag)
 
-double r_major;			/* major axis				*/
-double r_minor;			/* minor axis				*/
-long satnum;			/* Landsat satellite number (1,2,3,4,5) */
-long path;			/* Landsat path number */
+/*double r_major;		major axis
+double r_minor;			minor axis
+long satnum;			Landsat satellite number (1,2,3,4,5) 
+long path;			Landsat path number 
 double alf_in;
 double lon;
-double false_east;		/* x offset in meters			*/
-double false_north;		/* y offset in meters			*/
+double false_east;		x offset in meters
+double false_north;		y offset in meters
 double time;
 long   start1;
-long   flag;
+long   flag;			*/
 {
 long i;
 double alf,e2c,e2s,one_es;

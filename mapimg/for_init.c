@@ -1,4 +1,4 @@
-// $Id: for_init.c,v 1.1 2005/01/14 16:18:48 rbuehler Exp $
+// $Id: for_init.c,v 1.2 2005/01/27 18:56:12 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -457,8 +457,8 @@ long obleqfor();
     {
     /* this is the call to initialize SOM 
     -----------------------------------*/
-    path = outparm[3];
-    satnum = outparm[2];
+    path = (long)outparm[3];
+    satnum = (long)outparm[2];
     if (outparm[12] == 0)
        {
        mode = 1;
@@ -469,7 +469,7 @@ long obleqfor();
        if (*iflg != 0)
           return;
        time = outparm[8];
-       start = outparm[10];
+       start = (long)outparm[10];
        }
     else
        mode = 0;

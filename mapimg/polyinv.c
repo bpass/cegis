@@ -1,4 +1,4 @@
-// $Id: polyinv.c,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: polyinv.c,v 1.2 2005/01/27 18:56:21 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -96,7 +96,7 @@ double *lat;			/* (I) Latitude 		*/
 double al;		/* temporary values				*/
 double b;		/* temporary values				*/
 double c;		/* temporary values				*/
-long iflg;		/* error flag					*/
+double iflg;		/* error flag					*/
 
 /* Inverse equations
   -----------------*/

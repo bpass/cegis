@@ -86,30 +86,16 @@ S. Nelson, EROS		Jan, 1998	Changed misspelled error message
    than calling each function separately.  It is provided here for those
    computer systems which don`t implement this function
   ----------------------------------------------------*/
-void sincos(double val,double *sin_val,double *cos_val )
-{
-*sin_val = sin(val);
-*cos_val = cos(val);
-return;
-}
+void sincos(double val,double *sin_val,double *cos_val );
 
 /* Function to eliminate roundoff errors in asin
 ----------------------------------------------*/
-double asinz ( double con )
-{
- if (fabs(con) > 1.0)
-   {
-   if (con > 1.0)
-     con = 1.0;
-   else
-     con = -1.0;
-   }
- return(asin(con));
-}
+double asinz ( double con );
 
 /* Function to compute the constant small m which is the radius of
    a parallel of latitude, phi, divided by the semimajor axis.
 ---------------------------------------------------------------*/
+/*
 double msfnz ( double eccent, double sinphi,   double cosphi )
 {
 double con;
@@ -117,10 +103,11 @@ double con;
       con = eccent * sinphi;
       return((cosphi / (sqrt (1.0 - con * con))));
 }
-
+*/
 /* Function to compute constant small q which is the radius of a 
    parallel of latitude, phi, divided by the semimajor axis. 
 ------------------------------------------------------------*/
+/*
 double qsfnz (double eccent, double sinphi,   double cosphi )
 {
 double con;
@@ -134,15 +121,17 @@ double con;
    else
      return(2.0 * sinphi);
 }
-
+*/
 /* Function to compute phi1, the latitude for the inverse of the
    Albers Conical Equal-Area projection.
 -------------------------------------------*/
-double phi1z ( double eccent,	/* Eccentricity angle in radians		*/
-     double qs,		/* Angle in radians				*/
-     long  *flag )	/* Error flag number				*/
-{
-double eccnts;
+
+//double phi1z ( double eccent,	/* Eccentricity angle in radians		*/
+//     double qs,		/* Angle in radians				*/
+//     long  *flag )	/* Error flag number				*/
+//{
+/*
+	double eccnts;
 double dphi;
 double con;
 double com;
@@ -174,11 +163,12 @@ long i;
 /* Function to compute the latitude angle, phi2, for the inverse of the
    Lambert Conformal Conic and Polar Stereographic projections.
 ----------------------------------------------------------------*/
-double phi2z( double eccent,		/* Spheroid eccentricity		*/
-				double ts,		/* Constant value t			*/
-				long *flag )		/* Error flag number			*/
- 
-{
+//double phi2z( double eccent,		/* Spheroid eccentricity		*/
+//				double ts,		/* Constant value t			*/
+//				long *flag )		/* Error flag number			*/
+// 
+//{
+/*
 double eccnth;
 double phi;
 double con;
@@ -203,19 +193,19 @@ long i;
   *flag = 002;
   return(002);
 }
- 
+ */
 /* Function to compute latitude, phi3, for the inverse of the Equidistant
    Conic projection.
 -----------------------------------------------------------------*/
-double phi3z(double ml,		/* Constant 			*/
-			double e0,		/* Constant			*/
-			double e1,		/* Constant			*/
-			double e2,		/* Constant			*/
-			double e3,		/* Constant			*/
-			long *flag )		/* Error flag number		*/
-
-{
-double phi;
+//double phi3z(double ml,		/* Constant 			*/
+//			double e0,		/* Constant			*/
+//			double e1,		/* Constant			*/
+//			double e2,		/* Constant			*/
+//			double e3,		/* Constant			*/
+//			long *flag )		/* Error flag number		*/
+//
+//{
+/*double phi;
 double dphi;
 long i;
 
@@ -235,20 +225,21 @@ for (i = 0; i < 15; i++)
 *flag = 3;
 return(3);
 }
-
+*/
 /* Function to compute, phi4, the latitude for the inverse of the
    Polyconic projection.
 ------------------------------------------------------------*/
-double phi4z (double eccent,		/* Spheroid eccentricity squared	*/
-double e0,
-double e1,
-double e2,
-double e3,
-double a,
-double b,
-double *c,
-double *phi )
-{
+//double phi4z (double eccent,		/* Spheroid eccentricity squared	*/
+//double e0,
+//double e1,
+//double e2,
+//double e3,
+//double a,
+//double b,
+//double *c,
+//double *phi )
+//{
+/*
 double sinphi;
 double sin2ph;
 double tanphi;
@@ -272,7 +263,7 @@ long i;
         mlp = e0 - 2.0 * e1 * cos (2.0 *  *phi) + 4.0 * e2 *
               cos (4.0 *  *phi);
 */
-        ml = e0 * *phi - e1 * sin2ph + e2 * sin (4.0 *  *phi) - e3 * 
+/*        ml = e0 * *phi - e1 * sin2ph + e2 * sin (4.0 *  *phi) - e3 * 
  	     sin (6.0 *  *phi);
         mlp = e0 - 2.0 * e1 * cos (2.0 *  *phi) + 4.0 * e2 *
               cos (4.0 *  *phi) - 6.0 * e3 * cos (6.0 *  *phi);
@@ -287,12 +278,12 @@ long i;
 //p_error("Latitude failed to converge","phi4z-conv");
 return(004);
 }
-
+*/
 /* Function to convert 2 digit alternate packed DMS format (+/-)DDDMMSS.SSS
    to 3 digit standard packed DMS format (+/-)DDDMMMSSS.SSS.
 -----------------------------------------------------------------*/
-double pakcz(double pak)	/* Angle in alternate packed DMS format	*/
-      {
+//double pakcz(double pak)	/* Angle in alternate packed DMS format	*/
+/*      {
       double con;
       double secs;
       long degs,mins;
@@ -311,11 +302,11 @@ double pakcz(double pak)	/* Angle in alternate packed DMS format	*/
 	  con = - con;
       return(con); 
       }
-
+*/
 /* Function to convert radians to 3 digit packed DMS format (+/-)DDDMMMSSS.SSS
 ----------------------------------------------------------------------------*/
-double pakr2dm( double pak )	/* Angle in radians			*/
-      {
+//double pakr2dm( double pak )	/* Angle in radians			*/
+/*      {
       double con;
       double secs;
       long degs,mins;
@@ -335,16 +326,16 @@ double pakr2dm( double pak )	/* Angle in radians			*/
 	  con = - con;
       return(con); 
       }
-
+*/
 /* Function to compute the constant small t for use in the forward
    computations in the Lambert Conformal Conic and the Polar
    Stereographic projections.
 --------------------------------------------------------------*/
-double tsfnz(
-  double eccent,	/* Eccentricity of the spheroid		*/
-  double phi,		/* Latitude phi				*/
-  double sinphi )	/* Sine of the latitude			*/
-  {
+//double tsfnz(
+//  double eccent,	/* Eccentricity of the spheroid		*/
+//  double phi,		/* Latitude phi				*/
+//  double sinphi )	/* Sine of the latitude			*/
+/*  {
   double con;
   double com;
   
@@ -353,61 +344,24 @@ double tsfnz(
   con = pow(((1.0 - con) / (1.0 + con)),com);
   return (tan(.5 * (HALF_PI - phi))/con);
   }
-
+*/
 
 /* Function to return the sign of an argument
   ------------------------------------------*/
-int sign(double x )
-{
-if (x < 0.0)
-    return(-1);
-else
-    return(1);
-}
+
+int sign(double x );
 
 /* Function to adjust a longitude angle to range from -180 to 180 radians
    added if statments 
   -----------------------------------------------------------------------*/
-double adjust_lon( double x )		/* Angle in radians			*/
-{
-long temp;
-long count = 0;
-for(;;)
-  {
-  if (fabs(x)<=PI)
-     break;
-  else
-  if (((long) fabs(x / PI)) < 2)
-     x = x-(sign(x) *TWO_PI);
-  else
-  if (((long) fabs(x / TWO_PI)) < MAXLONG)
-     {
-     x = x-(((long)(x / TWO_PI))*TWO_PI);
-     }
-  else
-  if (((long) fabs(x / (MAXLONG * TWO_PI))) < MAXLONG)
-     {
-     x = x-(((long)(x / (MAXLONG * TWO_PI))) * (TWO_PI * MAXLONG));
-     }
-  else
-  if (((long) fabs(x / (DBLLONG * TWO_PI))) < MAXLONG)
-     {
-     x = x-(((long)(x / (DBLLONG * TWO_PI))) * (TWO_PI * DBLLONG));
-     }
-  else
-     x = x-(sign(x) *TWO_PI);
-  count++;
-  if (count > MAX_VAL)
-     break;
-  }
+double adjust_lon( double x );		/* Angle in radians			*/
 
-return(x);
-}
 
 /* Functions to compute the constants e0, e1, e2, and e3 which are used
    in a series for calculating the distance along a meridian.  The
    input x represents the eccentricity squared.
 ----------------------------------------------------------------*/
+/*
 double e0fn(double x)
 {
 return(1.0-0.25*x*(1.0+x/16.0*(3.0+1.25*x)));
@@ -424,11 +378,12 @@ double e3fn(double x)
 {
 return(x*x*x*(35.0/3072.0));
 }
-
+*/
 /* Function to compute the constant e4 from the input of the eccentricity
    of the spheroid, x.  This constant is used in the Polar Stereographic
    projection.
 --------------------------------------------------------------------*/
+/*
 double e4fn( double x )
 {
  double con;
@@ -437,22 +392,24 @@ double e4fn( double x )
  com = 1.0 - x;
  return (sqrt((pow(con,con))*(pow(com,com))));
  }
-
+*/
 /* Function computes the value of M which is the distance along a meridian
    from the Equator to latitude phi.
 ------------------------------------------------*/
+/*
 double mlfn( double e0,double e1,double e2,double e3,double phi )
 {
 return(e0*phi-e1*sin(2.0*phi)+e2*sin(4.0*phi)-e3*sin(6.0*phi));
 }
-
+*/
 /* Function to calculate UTM zone number--NOTE Longitude entered in DEGREES!!!
   ---------------------------------------------------------------------------*/
+/*
 long calc_utm_zone(double lon)
 {
 return((long)(((lon + 180.0) / 6.0) + 1.0));
 }
 
-
+*/
 #endif //#ifndef CPROJ_C
 #endif //def CPROJ_H

@@ -22,7 +22,7 @@ class Equirectangular : public Projection
    long forward( double lon, double lat, double* x = NULL, double* y = NULL );
    long inverse( double x, double y, double* lon = NULL, double* lat = NULL );
 
-  protected:
+  public:
    long forward_init (  );
    long inverse_init (  );
 };

@@ -9,7 +9,7 @@ class Projection
 {
   // Associations
   // Attributes
-  protected:
+  public:
     char* name;
     int number;
     int unitCode;

@@ -77,9 +77,9 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 
     double in[2];				// Input projection coordinates of a point
     double out[2];				// Output projection coordinates of a point
-    double t1[2];				// Temp coords for comparing
-    double t2[2];				// Temp coords for comparing
-    double temp1, temp2;			// Temp vars
+//    double t1[2];				// Temp coords for comparing
+//    double t2[2];				// Temp coords for comparing
+//    double temp1, temp2;			// Temp vars
     double pparm[15] = {0};			// 15 GCTP projection parameters
 
     long zero = 0;
@@ -87,7 +87,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 
     unsigned long fill = fillval;			// Fill value for mapimg
 
-    long status;				// Return status flag for gctp() call
+//    long status;				// Return status flag for gctp() call
     long in_line, in_samp;			// Input image coordinates of a point
 
 
@@ -122,7 +122,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 
     /******* Change bounds here for doing per line or per line section *******/
     FILE *paramfile = fopen( logFile, "wa");
-	
+
 
     int PROJECT_MODE = 0;	//0  - Nearest Neighbor
     				//1  - Sum
@@ -132,8 +132,8 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
     				//5  - Mode
     				//6  - Avg
     bool noDoubleCount = false;
-    type ignoreValue = -9999;
-	
+    type ignoreValue = (type)fill;
+
     for(out_line = 0; out_line < outimg.nl; out_line++) 		// For each output image line
     {
 	// Set progress of Dialog box and cancel if process was cancelled
@@ -166,7 +166,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 		{
 			in_line = ((inimg.ul_y - in[1]) / inimg.pixsize) + 0.5;
 			in_samp = ((in[0] - inimg.ul_x) / inimg.pixsize) + 0.5;
-	
+
 			// Still inside the input image??
 			// ------------------------------
 			if (in_line<0||in_samp<0||in_line>=inimg.nl||in_samp>=inimg.ns)
@@ -182,7 +182,8 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 			{
 				if( PROJECT_MODE == 0 )  //Nearest Neighbor
 				{
-					get_line(  mapimginbuf, inbox[4][1]*inimg.ns, inimg.ns+1, useType );
+//					get_line(  mapimginbuf, inbox[4][1]*inimg.ns, inimg.ns+1, useType );
+					get_line(  mapimginbuf, inbox[4][1], inimg.ns+1, useType );
 					(*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
 				}
 				else	//Analysis
@@ -233,58 +234,61 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 			
 			
 					offset = 0;
-			
+
 					//------  Load data into coverage memory  ----//
 					for(int currentY = iround(miny); currentY <= iround(maxy); currentY++)
 					{
 						coord[1] = currentY;
-			
+
 						//Loads into memory the current line of input needed
-						get_line(  mapimginbuf, coord[1]*inimg.ns, inimg.ns, useType );
+						get_line(  mapimginbuf, coord[1], inimg.ns, useType );
+//						get_line(  mapimginbuf, coord[1]*inimg.ns, inimg.ns, useType );
 						if( mapimginbuf == NULL )
 						break;
-						
+
 						for(int currentX = iround(minx); currentX <= iround(maxx); currentX++)
 						{
 						coord[0] = currentX;
 						if( inBox( inbox, coord ) )
 						{
 							boxError = 0;
-								
+
 							type coordValue = (*(((type*)mapimginbuf + (int)coord[0])));
 							(*( (type*)inputCoverage + offset)) = coordValue;
-	
+
 							if( noDoubleCount )
 								(*(((type*)mapimginbuf + (int)coord[0]))) = 0;
-							
+
 						}//if inBox
 						else
 						{
 							*( (type*)inputCoverage + offset) = 0;
 						}
-			
+
 						offset++;
 						}// for curx
 					}//for cury
-			
+
 					//----- finish statistical analysis -----//
 					if(boxError)	//no pixels from rectangle in the minbox, get NN.
 					{
 						//Loads into memory the current line of input needed
-						get_line(  mapimginbuf, inbox[4][1]*inimg.ns, inimg.ns+1, useType );
-			
+						get_line(  mapimginbuf, inbox[4][1], inimg.ns+1, useType );
+//						get_line(  mapimginbuf, inbox[4][1]*inimg.ns, inimg.ns+1, useType );
+
 						(*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
-						
+
 						if( noDoubleCount )
 							(*(((type*)mapimginbuf + (int)(inbox[4][0])))) = 0;
 					}
 					else	//!boxError
 					{
+						int coverageIndex = 0;
 						type dataValue = (type)0;
 						switch( PROJECT_MODE )
 						{
 							case 1:		//Sum
-								for( int coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+								for( coverageIndex = 0;  coverageIndex < coverageSize; coverageIndex++ )
 								{
 /* set ignore values for sum here*/					if( *( (type*)inputCoverage + coverageIndex ) != ignoreValue )
 									{
@@ -295,7 +299,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 							case 2:		//Min
 								dataValue = *( (type*)inputCoverage + 0 );  //start equal to first element
 								dataValue = 0xFF * sizeof(type);  //or aribtary on dtat type
-								for( int coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+								for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
 								{
 /* set ignore values for min here*/					if( ( *( (type*)inputCoverage + coverageIndex ) < dataValue ) &&
 										(*( (type*)inputCoverage + coverageIndex ) != ignoreValue ) )
@@ -307,7 +311,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 							case 3:		//Max
 								dataValue = *( (type*)inputCoverage + 0 );  //start equal to first element
 								dataValue = 0;  //arbitrary
-								for( int coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+								for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
 								{
 /* set ignore values for max here*/					if( ( *( (type*)inputCoverage + coverageIndex ) > dataValue ) &&
 										(*( (type*)inputCoverage + coverageIndex ) != ignoreValue ) )
@@ -321,7 +325,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 							case 5:		//Mode
 								break;
 							case 6:		//Avg
-								for( int coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+								for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
 								{
 /* set ignore values for avg here*/					if( *( (type*)inputCoverage + coverageIndex ) != ignoreValue )
 									{

@@ -19,11 +19,15 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
+//#include <unistd.h>
 #include <stdlib.h>
 
 #include <qfile.h>
 #include <qmessagebox.h>
+
+
+#include <iostream.h>
+
 
 struct IMGINFO
 {
@@ -60,7 +64,7 @@ extern FILE * ininfoptr;		// Input .info file pointer
 extern FILE * outinfoptr;		// Output .info file pointer
 
 extern QFile inptr;
-extern FILE * outptr;			// Output file pointer  from imgio.cpp
+extern QFile outptr;			// Output file pointer  from imgio.cpp
 
 template <class type>
 int init_io(IMGINFO * inimg, IMGINFO * outimg, type)
@@ -130,7 +134,7 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type)
 			printf ("Attempted  to  clear  the  O_APPEND  flag on a file that has the  append-only attribute set.\n" );
 			fflush( stdout );
 		}
-		else 
+		else
 		{
 			printf ("Undefined = %i opening %s\n", errno, infile_name );
 			fflush( stdout );
@@ -145,8 +149,11 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type)
 	}
 
 	// Open output file and check for any errors
-	outptr = fopen64(outfile_name, "wb");
-	if(!outptr)
+//	outptr = fopen(outfile_name, "wb");
+	outptr.setName( outfile_name );
+        outptr.open( IO_WriteOnly | IO_Raw );
+
+	if(!outptr.isOpen() || !outptr.isWritable() )
 	{
 	    early_error_cleanup();
 	    QMessageBox::critical( 0, "MapIMG",
@@ -236,6 +243,20 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type)
 	mapimginbuf = bufptr;
  	mapimgoutbuf = (void *) malloc(outsize*sizeof(type));
 
+        if(!mapimgoutbuf)
+	{
+	    early_error_cleanup();
+	    QMessageBox::critical(0, "MapIMG",
+	    QString("An internal error occurred while trying to allocate the input image buffer!  Image is too large!\n\nMapIMG will not execute."));
+	    return 0;
+	}
+
+	for( int index = 0; index < outsize; index++ )
+        {
+        	*((type*)mapimgoutbuf + index) = (type)0;
+        }
+
+
         return 1;
 }
 
@@ -266,13 +287,13 @@ type get_max_value(const char* inputFilename, int inputSize, type)
 
      for( int index = 0; index < (inputSize-1)/2; index++ )
      {
-           if( *((type*)bufptrMax + index*sizeof(type)) > max_value )
-              max_value = *((type*)bufptrMax + index*sizeof(type));
+           if( *((type*)bufptrMax + index) > max_value )
+              max_value = *((type*)bufptrMax + index);
      }
 
      free(bufptrMax);
      free(inputPtr);
-     
+
      return max_value;
 }
 
@@ -297,37 +318,43 @@ void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
      // check and see if line requested is already in memory
      QString offsetString = "";
      offsetString.setNum( offset );
-     
+
+
      if( inputDataMap.find( offsetString ) ==  0 )
      {
-
-        if( !inptr.at( (Q_ULLONG)(offset * sizeof(type)) ) )
+        if( !inptr.at( (Q_ULLONG)(offset) * insize * sizeof(type)) )
         {
             // end of file or corrupt file found
-            printf( "error seeking!!!\n" );
-	    fflush(stdout );
+//            printf( "error seeking!!!\n" );
+//	    fflush(stdout );
+            cout << "Error seeking" << endl;
         }
 
         //then load the line into memory
         type *newBuffer = new type[insize];
 //  	long amountRead = fread(newBuffer, sizeof(type), insize, inptr);
+
+//this line?
 	long amountRead = inptr.readBlock( (char*&)newBuffer, sizeof(type) * insize);
-	
+
 	if( amountRead != sizeof(type) * insize )
 	{
-		printf( "Read %i requested %i\n", amountRead, insize );
-		fflush( stdout );
-	
+		cout << "Read " << amountRead << " requested " << insize << endl;
+//		printf( "Read %i requested %i\n", amountRead, insize );
+//		fflush( stdout );
+
 		if( inptr.atEnd() )
 		{
-			printf( "End-of-File reached\n" );
-			fflush( stdout );
+			cout << "End-of-File reached" << endl;
+//			printf( "End-of-File reached\n" );
+//			fflush( stdout );
 		}
 		else if( amountRead = -1 )
 		{
-			printf( "Error on read.!!!\n" );
-			fflush(stdout);
-		
+			cout << "Error on read.!!!" << endl;
+//			printf( "Error on read.!!!\n" );
+//			fflush(stdout);
+
 			/*  Add more descriptive messages here*/
 		}
 	}
@@ -335,9 +362,12 @@ void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
 	{
         	if( inputDataMap.insert( offsetString, (type*)newBuffer ) != true )
         	{
-	           printf( "Error deleting least recently used item.\n" );
-        	   fflush( stdout );
+	           cout << "Error deleting least recently used item." << endl;
+//	           printf( "Error deleting least recently used item.\n" );
+//        	   fflush( stdout );
 	        }
+	        else
+	            cout << "Successfully inserted" << endl;
 	}
      }
 
@@ -349,8 +379,9 @@ void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
      }
      else
      {
-       printf( "Error inserting into and retreiving from least recently used cache.\n" );
-       fflush( stdout );
+       cout << "Error inserting into and retreiving from least recently used cache." << endl;
+//       printf( "Error inserting into and retreiving from least recently used cache.\n" );
+//       fflush( stdout );
        buf = NULL;
      }
 /*
@@ -381,14 +412,29 @@ void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
 // Definition must be in header for
 // Solaris compiler compatability
 // ---------------------------------
-extern FILE * outptr;				// Output file pointer  from imgio.cpp
+
+
+extern QFile outptr;				// Output file pointer  from imgio.cpp
 extern long outsize;				// Number of bytes in output image
 
 template <class type>
 void put_line(void * buf, type)
 {
-     fwrite(buf, sizeof(type), outsize, outptr);
-     fflush( outptr );
+     if( outptr.isOpen() && outptr.isWritable() )
+     {
+         Q_LONG amountWritten = outptr.writeBlock( (char*&)buf, outsize*sizeof(type) );
+         outptr.flush();
+
+         if( amountWritten != outsize )
+             cout << "Amount written was incorrect "
+                   << QString::number( amountWritten )
+                   << " instead of "
+                   << QString::number( outsize )
+                   << endl;
+     }
+     else
+         cout << "Outptr not open or writable" << endl;
+
      return;
 }
 

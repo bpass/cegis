@@ -25,7 +25,7 @@ char infile_info[500];		// Name of input info file
 char outfile_info[500];		// Name of output info file
 
 QFile inptr;				// Input file pointer
-FILE * outptr;				// Output file pointer
+QFile outptr;				// Output file pointer
 FILE * ininfoptr;				// Input .info file pointer
 FILE * outinfoptr;				// Output .info file pointer
 
@@ -62,7 +62,7 @@ void cleanup_input()
 
 void cleanup_output()
 {
-	fclose(outptr);
+	outptr.close();
 	return;
 }
 
@@ -84,9 +84,9 @@ void early_error_cleanup()
 	inptr.close();
     }
 
-    if(outptr)
+    if(outptr.isOpen())
     {
-	fclose(outptr);
+	outptr.close();
     }
 
     if(ininfoptr)

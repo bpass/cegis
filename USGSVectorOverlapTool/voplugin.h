@@ -1,6 +1,6 @@
 /**
  * @file voplugin.h
- * $Id: voplugin.h,v 1.3 2004/12/08 18:41:17 ahartman Exp $
+ * $Id: voplugin.h,v 1.4 2004/12/08 18:55:54 ahartman Exp $
  */
 
 #ifndef VOPLUGIN
@@ -13,7 +13,7 @@
 #include <qgisplugin.h>
 
 // Boost headers
-#include <boost/smart_ptr.hpp>
+//#include <boost/smart_ptr.hpp>
 
 // Forward declarations
 class QgisApp;
@@ -34,11 +34,9 @@ public:
      * @param qi Pointer to the QgisIface object
      */
     VOPlugin(QgisApp * qgis , QgisIface * qi);
-private:
-    struct Imp;
-public:
+
     /** The destructor */
-    virtual ~VOPlugin() { delete imp; }
+    virtual ~VOPlugin();
 
 public slots:
     /** Initialize the GUI */
@@ -51,6 +49,7 @@ public slots:
     void run();
 
 private:
+    struct Imp;
 
     /**
      * A smart pointer to the object that will contain most of

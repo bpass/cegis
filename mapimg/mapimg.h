@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.18 2005/03/25 18:06:41 rbuehler Exp $
+// $Id: mapimg.h,v 1.19 2005/03/25 21:25:31 jtrent Exp $
 
 
 #ifndef MAPIMG_H
@@ -83,80 +83,78 @@ namespace mapimg
    bool downSizeProjection( RasterInfo &input, int maxDimension );
    double calcFillValue( const RasterInfo &input );
    bool reproject( const RasterInfo &input, const RasterInfo &output, const ResampleInfo &resample, QWidget *parent = 0 );
-   template <typename type>   // Inlined below;
-      int quickSortAndSearch( void* values, type searchValue, int size, int left = 0, int right = -1 );
-
    int round(double value, unsigned int decimals = 0);
 
 
+   template <typename type>  //defined below
+      int quickSortAndSearch( void* values, type searchValue, int size, int left = 0, int right = -1 )
+      {
+         int returnValue = -1;
+      
+         if( size <= 0 )
+            return returnValue;
+      
+         if( right == -1 )
+            right = size -1;
+      
+         type *castValues = (type*)values;
+         int left_hold_point = left;
+         int right_hold_point = right;
+         type pivot_value = castValues[left];
+      
+         while( left < right )
+         {
+            while( (castValues[right] >= pivot_value) && (left < right) )
+            {
+      
+               right--;
+            }
+            if( left != right )
+            {
+               castValues[left] = castValues[right];
+               left++;
+            }
+      
+            while( (castValues[left] <= pivot_value) && (left < right) )
+            {
+               left++;
+            }
+            if( left != right )
+            {
+               castValues[right] = castValues[left];
+               right--;
+            }
+         }
+      
+         castValues[left] = pivot_value;
+      
+         if( castValues[left] == searchValue )
+            returnValue = left;
+      
+         int pivot_point = left;
+         left = left_hold_point;
+         right = right_hold_point;
+      
+         if( left < pivot_point )
+         {
+            int leftReturn = mapimg::quickSortAndSearch<type>( values, searchValue, size, left, pivot_point-1 );
+      
+            if( leftReturn != -1 )
+               returnValue = leftReturn;
+         }
+      
+         if( right > pivot_point )
+         {
+            int rightReturn = mapimg::quickSortAndSearch<type>( values, searchValue, size, pivot_point+1, right );
+      
+            if( rightReturn != -1 )
+               returnValue = rightReturn;
+         }
+
+         return returnValue;
+      }
 };
 
-template <typename type>
-inline int mapimg::quickSortAndSearch( void* values, type searchValue, int size, int left, int right )
-{
-   int returnValue = -1;
 
-   if( size <= 0 )
-      return returnValue;
-
-   if( right == -1 )
-      right = size -1;
-
-   type *castValues = (type*)values;
-   int left_hold_point = left;
-   int right_hold_point = right;
-   type pivot_value = castValues[left];
-
-   while( left < right )
-   {
-      while( (castValues[right] >= pivot_value) && (left < right) )
-      {
-
-         right--;
-      }
-      if( left != right )
-      {
-         castValues[left] = castValues[right];
-         left++;
-      }
-
-      while( (castValues[left] <= pivot_value) && (left < right) )
-      {
-         left++;
-      }
-      if( left != right )
-      {
-         castValues[right] = castValues[left];
-         right--;
-      }
-   }
-
-   castValues[left] = pivot_value;
-
-   if( castValues[left] == searchValue )
-      returnValue = left;
-
-   int pivot_point = left;
-   left = left_hold_point;
-   right = right_hold_point;
-
-   if( left < pivot_point )
-   {
-      int leftReturn = mapimg::quickSortAndSearch<type>( values, searchValue, size, left, pivot_point-1 );
-
-      if( leftReturn != -1 )
-         returnValue = leftReturn;
-   }
-
-   if( right > pivot_point )
-   {
-      int rightReturn = mapimg::quickSortAndSearch<type>( values, searchValue, size, pivot_point+1, right );
-
-      if( rightReturn != -1 )
-         returnValue = rightReturn;
-   }
-
-   return returnValue;
-}
 
 #endif//MAPIMG_H

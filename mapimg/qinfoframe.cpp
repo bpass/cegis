@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.17 2005/03/18 17:39:32 jtrent Exp $
+// $Id: qinfoframe.cpp,v 1.18 2005/03/25 21:25:31 jtrent Exp $
 
 
 #include "qinfoframe.h"
@@ -90,6 +90,7 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    dataCombo = new QComboBox( dataBox, "dataCombo" );
    (void) new QLabel( "Fill Value", dataBox );
    QHBox *fillBox = new QHBox( dataBox );
+   fillBox->setSpacing( 5 );
    hasFillCheck = new QCheckBox( fillBox, "hasFillCheck" );
    hasFillCheck->hide();
    fillEdit = new QLineEdit( fillBox, "fillEdit" );
@@ -98,6 +99,7 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
 
    (void) new QLabel( "No Data Value", dataBox );
    QHBox *noDataBox = new QHBox( dataBox );
+   noDataBox->setSpacing( 5 );
    hasNoDataCheck = new QCheckBox( noDataBox, "hasNoDataCheck" );
    hasNoDataCheck->hide();
    noDataEdit = new QLineEdit( noDataBox, "noDataEdit" );
@@ -680,8 +682,12 @@ void QInfoFrame::copy( QInfoFrame *src )
    mapTab->ulLonEdit->setText( source->mapTab->ulLonEdit->text() );
    mapTab->dataCombo->setCurrentItem( 
       source->mapTab->dataCombo->currentItem() );
-   mapTab->fillEdit->setText( source->mapTab->fillEdit->text() );
-   mapTab->noDataEdit->setText( source->mapTab->noDataEdit->text() );
+      
+   if( source->mapTab->hasFillCheck->isChecked() )
+       mapTab->fillEdit->setText( source->mapTab->fillEdit->text() );
+
+   if( source->mapTab->hasNoDataCheck->isChecked() )
+       mapTab->noDataEdit->setText( source->mapTab->noDataEdit->text() );
 
    gctpTab->projCombo->setCurrentText( 
       source->gctpTab->projCombo->currentText() );
@@ -778,8 +784,8 @@ void QInfoFrame::lock( bool on, bool saveFile )
 }
 
 /*
-   The frame() function calls the mapimg::frameIt() function for calculating 
-the ulLatitude, ulLongitude, rows, and columns of the raster based on all 
+   The frame() function calls the mapimg::frameIt() function for calculating
+the ulLatitude, ulLongitude, rows, and columns of the raster based on all
 other parameters.
 */
 bool QInfoFrame::frame()
@@ -859,9 +865,9 @@ void QInfoFrame::setInfo( RasterInfo &input )
    mapTab->rowSpin->setValue( input.rows() );
    mapTab->colSpin->setValue( input.cols() );
 
-   mapTab->unitCombo->setCurrentText( 
+   mapTab->unitCombo->setCurrentText(
       unitNames[input.unitNumber()] );
-   mapTab->spheroidCombo->setCurrentText( 
+   mapTab->spheroidCombo->setCurrentText(
       spheroidNames[input.datumNumber()] );
 
    mapTab->pixelEdit->setText( QString::number(input.pixelSize(), 'f', 6) );
@@ -888,6 +894,7 @@ void QInfoFrame::setInfo( RasterInfo &input )
        ((MapimgValidator*)mapTab->fillEdit->validator())->setDataType( dtype );
        ((MapimgValidator*)mapTab->fillEdit->validator())->setAllowUndefined( fillString.upper() == "UNDEFINED" );
        mapTab->hasFillCheck->setChecked( !(fillString.upper() == "UNDEFINED") );
+       mapTab->fillEdit->setDisabled( true );
 
        mapTab->fillEdit->validator()->fixup( fillString );
    }
@@ -905,7 +912,7 @@ void QInfoFrame::setInfo( RasterInfo &input )
        ((MapimgValidator*)mapTab->noDataEdit->validator())->setDataType( dtype );
        ((MapimgValidator*)mapTab->noDataEdit->validator())->setAllowUndefined( noDataString.upper() == "UNDEFINED" );
        mapTab->hasNoDataCheck->setChecked( !(noDataString.upper() == "UNDEFINED") );
-
+       mapTab->noDataEdit->setDisabled( true );
        mapTab->noDataEdit->validator()->fixup( noDataString );
    }
 

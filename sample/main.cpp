@@ -1,4 +1,4 @@
-// $Id: main.cpp,v 1.14 2004/10/07 16:00:25 ahartman Exp $
+// $Id: main.cpp,v 1.15 2004/10/08 16:16:46 jtrent Exp $
 
 
 #include <iostream>
@@ -18,6 +18,7 @@ using namespace std;
 
 		4) When prompted for an external diff program, you can select WinDiff.
 			This is usually found in C:\Program Files\Microsoft Visual Studio\Common\Tools\
+			or WinMerge if you have installed it
 
 		5) Review the diff and make sure that what it displays makes "sense"
 
@@ -60,7 +61,7 @@ int main()
         << "\tJames Muo\n"
         << "\tBob Buehler\n"
         << "\tJimmy Hoffa\n"
-		<< "\tMike Williams\n";
+	<< "\tMike Williams\n";
 
    return 0;
 }

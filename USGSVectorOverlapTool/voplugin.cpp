@@ -1,6 +1,6 @@
 /**
  * @file voplugin.cpp
- * $Id
+ * $Id: voplugin.cpp,v 1.2 2004/12/08 16:18:02 ahartman Exp $
  */
 
 // QGIS headers

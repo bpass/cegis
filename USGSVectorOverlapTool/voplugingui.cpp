@@ -1,6 +1,6 @@
 /**
  * @file voplugingui.cpp
- * $Id
+ * $Id: voplugingui.cpp,v 1.2 2004/12/08 16:18:02 ahartman Exp $
  */
 
 // Qt headers

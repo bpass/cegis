@@ -1,6 +1,6 @@
 /**
  * @file voplugingui.h
- * $Id
+ * $Id: voplugingui.h,v 1.2 2004/12/08 16:18:02 ahartman Exp $
  */
 
 #include <qdialog.h>

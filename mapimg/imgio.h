@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.7 2005/02/10 20:30:30 jtrent Exp $
+// $Id: imgio.h,v 1.8 2005/02/14 17:29:05 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -24,9 +24,15 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
+#include <qstring.h>
 #include <qfile.h>
 #include <qmessagebox.h>
 #include "rasterinfo.h"
+#include <qcache.h>
+
+
+
+#define DEFAULT_Max_Data_Element_Count 100;
 
 struct IMGINFO
 {
@@ -44,34 +50,144 @@ struct IMGINFO
 	long datum;						// Datum code (spheroid code for now)
 };
 
-void raster2IMG( RasterInfo &ras, IMGINFO *img );
-void cleanup_input();				// Function to close input file and deallocate buffers
-void cleanup_output();				// Function to close output file and deallocate buffers
-void parse_input(const char * infile, const char * outfile);
-void send_imgio_par(long inout, const char * name);
-void early_error_cleanup();
-
-
-// Function to initialize input image, buffers & projection
-// Definition must be in header for
-// Solaris compiler compatability
-// ---------------------------------
-extern char infile_name[500];		// Name of input file   from imgio.cpp
-extern char outfile_name[500];		// Name of output file
-
-extern QFile inptr;
-extern QFile outptr;			// Output file pointer  from imgio.cpp
-
-extern long insize;				// Number of bytes in input image
-extern long outsize;				// Number of bytes in output image
-
-extern void * mapimginbuf;			// Ptr to the input image (all in memory)
-extern void * mapimgoutbuf;			// Ptr to one line of output image data
 
 template <class type>
-int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * outimg, type )
+class IMGIO
 {
-	void * bufptr;		// Pointer to input buffer
+ private:
+      int Max_Data_Element_Count;
+      QCache<type>* inputDataMap;
+
+      QString infile_name;		        // Name of input file
+      QString outfile_name;		        // Name of output file
+
+      QFile inptr;				// Input file pointer
+      QFile outptr;				// Output file pointer
+      QFile ininfoptr;				// Input .info file pointer
+      QFile outinfoptr;				// Output .info file pointer
+
+
+ public:
+      long insize;				// Number of bytes in input image
+      long outsize;				// Number of bytes in output image
+
+      void* mapimginbuf;			// Ptr to the input image (all in memory)
+      void* mapimgoutbuf;			// Ptr to one line of output image data
+
+
+      IMGIO()
+      {
+      	Max_Data_Element_Count = DEFAULT_Max_Data_Element_Count;
+        inputDataMap = NULL;
+      }
+      
+      ~IMGIO()
+      {
+      	if( inputDataMap )
+      	{
+      	    inputDataMap->clear();
+      	    delete inputDataMap;
+      	}
+      }
+
+      void clearCache()
+      {
+      	  if( inputDataMap )
+      	      inputDataMap->clear();
+      	  return;
+      }
+
+      // Assigns all values in the IMGINFO to equal the RasterInfo
+      void raster2IMG( RasterInfo &ras, IMGINFO *img )
+      {
+         int i;
+         img->nl = ras.rows(); img->ns = ras.cols();
+         img->sys = ras.projectionNumber();
+         img->zone = ras.zoneNumber();
+         img->unit = ras.unitNumber();
+         img->datum = ras.datumNumber();
+         img->pixsize = ras.pixelSize();
+         img->ul_x = ras.ul_X(), img->ul_y = ras.ul_Y();
+	 for(i = 0; i < 15; i++)
+	 {
+             img->pparm[i] = ras.gctpParam(i);
+         }
+
+         return;
+      }
+
+      // Image I/O functions
+      void send_imgio_par(long inout, QString name)
+      {
+	 if(inout == INFILE_NAME)
+	 {
+		infile_name = name;		// Init infile name
+	 }
+
+	 if(inout == OUTFILE_NAME)
+	 {
+		outfile_name = name;		// Init outfile name
+         }
+
+  	 return;
+      }
+
+      // Cleanup
+      void cleanup_input()
+      {
+	inptr.close();
+	return;
+      }
+
+      void cleanup_output()
+      {
+	outptr.close();
+	return;
+      }
+
+      // Parse the input arguments and initialize processing
+      void parse_input( QString infile, QString outfile)
+      {
+	send_imgio_par(INFILE_NAME, infile);
+	send_imgio_par(OUTFILE_NAME, outfile);
+	return;
+      }
+
+
+      // Early Error cleanup
+      void early_error_cleanup()
+      {
+          if(inptr.isOpen())
+          {
+              inptr.close();
+          }
+
+          if(outptr.isOpen())
+          {
+	      outptr.close();
+          }
+
+          if(ininfoptr.isOpen())
+          {
+	      ininfoptr.close();
+          }
+
+          if(outinfoptr.isOpen())
+          {
+	      outinfoptr.close();
+          }
+
+          remove(outfile_name);
+          return;
+      }
+
+      // Function to initialize input image, buffers & projection
+      // Definition must be in header for
+      // Solaris compiler compatability
+      template <class type>
+      int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * outimg, type )
+      {
+      	void * bufptr;		// Pointer to input buffer
 
 	// Open input file and check for any errors
 	if( inptr.isOpen() )
@@ -103,15 +219,13 @@ int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * ou
 	    return 0;
 	}
 
-   raster2IMG( input, inimg );
-   raster2IMG( output, outimg );
+        raster2IMG( input, inimg );
+        raster2IMG( output, outimg );
 
 	// Set input file size and try to allocate that amount of memory
 
 
 	insize = inimg->nl * inimg->ns;
-
-
         insize = inimg->ns;
 
         bufptr = (type *) malloc(insize*sizeof(type));
@@ -147,90 +261,85 @@ int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * ou
 
 
         return 1;
-}
-
-// Read partial input image and find max value
-// Definition must be in header for
-// Solaris compiler compatability
-// ---------------------------
-template <class type>
-type get_max_value( RasterInfo &input, type )
-{
-   char* inputFilename = new char[500];
-   strncpy( inputFilename, input.imgFileName().ascii(), 499 );
-   inputFilename[499] = '\0';
-
-   int inputSize = input.rows() * input.cols();
-
-     FILE * inputPtr = fopen(inputFilename, "rb");
-   if( inputPtr == NULL )
-      return (type)0.0;
-
-     if( inputSize > 10000 )
-     	 inputSize = 10000;
-
-     void* bufptrMax = (type *) malloc(inputSize*sizeof(type));
-
-     if( bufptrMax == NULL )
-      return (type)0.0;
-
-     fread( bufptrMax, sizeof(type), inputSize, inputPtr );
-     
-     fclose( inputPtr );
-
-     inputSize = inputSize / sizeof( type );
-
-     type max_value = (type)0.0;
-
-     for( int index = 0; index < (inputSize-1)/2; index++ )
-     {
-           if( *((type*)bufptrMax + index) > max_value )
-              max_value = *((type*)bufptrMax + index);
      }
 
-     free(bufptrMax);
-   //delete inputPtr;
-
-     return max_value;
-}
-
-// Read input image line by line number
-// Definition must be in header for
-// Solaris compiler compatability
-// ---------------------------
-extern QFile inptr;				// Input file pointer  from imgio.cpp
-extern long insize;				// Number of bytes in input image
-//static off64_t get_line_loadedData;
-
-#include <qcache.h>
-static int MAX_DATA_ELEMENT_COUNT = 2;		//20, 23
-static int FRIST_PRIME_AFTER_MAX = 3;
-
-template <class type>
-void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
-{
-  static QCache<type> inputDataMap( MAX_DATA_ELEMENT_COUNT, FRIST_PRIME_AFTER_MAX );
-  inputDataMap.setAutoDelete( true );
-
-     // check and see if line requested is already in memory
-     QString offsetString = "";
-     offsetString.setNum( offset );
-
-     if( inputDataMap.find( offsetString ) ==  0 )
+     // Read partial input image and find max value
+     // Definition must be in header for
+     // Solaris compiler compatability
+     // ---------------------------
+     template <class type>
+     static type get_max_value( RasterInfo &input, type )
      {
-        if( !inptr.at( (Q_ULLONG)(offset) * lineLength * sizeof(type)) )
-        {
-            // end of file or corrupt file found
-            printf( "error seeking!!!\n" );
-	    fflush( stdout );
-        }
-	
-        //then load the line into memory
-        type *newBuffer = new type[lineLength];
-	long amountRead = inptr.readBlock( (char*&)newBuffer, sizeof(type) * lineLength);
+        QString inputFilename = input.imgFileName().ascii();
 
-	if( amountRead != (long)(sizeof(type) * lineLength) )
-	{
+        int inputSize = input.rows() * input.cols();
+
+        FILE * inputPtr = fopen(inputFilename.ascii(), "rb");
+        if( inputPtr == NULL )
+            return (type)0.0;
+
+        if( inputSize > 10000 )
+     	    inputSize = 10000;
+
+        void* bufptrMax = (type *) malloc(inputSize*sizeof(type));
+
+        if( bufptrMax == NULL )
+            return (type)0.0;
+
+        fread( bufptrMax, sizeof(type), inputSize, inputPtr );
+
+        fclose( inputPtr );
+
+        inputSize = inputSize / sizeof( type );
+
+        type max_value = (type)0.0;
+
+        for( int index = 0; index < (inputSize-1)/2; index++ )
+        {
+           if( *((type*)bufptrMax + index) > max_value )
+              max_value = *((type*)bufptrMax + index);
+        }
+
+        free(bufptrMax);
+        //delete inputPtr;
+
+        return max_value;
+     }
+
+
+
+     // Read input image line by line number
+     // Definition must be in header for
+     // Solaris compiler compatability
+     // ---------------------------
+     template <class type>
+     void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
+     {
+         // check and see if line requested is already in memory
+         QString offsetString = "";
+         offsetString.setNum( offset );
+
+         if( inputDataMap == NULL )
+         {
+      	     inputDataMap = new QCache<type>( Max_Data_Element_Count, 1.6*Max_Data_Element_Count );
+             inputDataMap->setAutoDelete( true );
+         }
+
+         if( inputDataMap->find( offsetString ) ==  0 )
+         {
+             if( !inptr.at( (Q_ULLONG)(offset) * lineLength * sizeof(type)) )
+             {
+                 // end of file or corrupt file found
+                 printf( "error seeking!!!\n" );
+	         fflush( stdout );
+             }
+
+             //then load the line into memory
+             type *newBuffer = new type[lineLength];
+	     long amountRead = inptr.readBlock( (char*&)newBuffer, sizeof(type) * lineLength);
+
+	     if( amountRead != (long)(sizeof(type) * lineLength) )
+	     {
 		printf( "Read %li requested %i\n", amountRead, lineLength );
 		fflush( stdout );
 
@@ -246,58 +355,53 @@ void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
 
 			/*  Add more descriptive messages here*/
 		}
-	}
-	else
-	{
-        	if( inputDataMap.insert( offsetString, (type*)newBuffer ) != true )
+	    }
+	    else
+	    {
+        	if( inputDataMap->insert( offsetString, (type*)newBuffer ) != true )
         	{
 	           printf( "Error deleting least recently used item.\n" );
         	   fflush( stdout );
 	        }
-	}
+	    }
+        }
+
+
+        if( inputDataMap->find( offsetString ) !=  0 )
+        {
+           buf = inputDataMap->find( offsetString );
+        }
+        else
+        {
+            printf( "Error inserting into and retreiving from least recently used cache.\n" );
+            fflush( stdout );
+            buf = NULL;
+        }
+
+        return;
      }
 
 
-     if( inputDataMap.find( offsetString ) !=  0 )
+     // Write a line of output image data
+     // Definition must be in header for
+     // Solaris compiler compatability
+     template <class type>
+     void put_line(void * buf, type )
      {
-       buf = inputDataMap.find( offsetString );
+         if( outptr.isOpen() && outptr.isWritable() )
+         {
+             outptr.writeBlock( (char*&)buf, outsize*sizeof(type) );
+             outptr.flush();
+         }
+         else
+         {
+             printf( "Outptr not open or writable\n" );
+    	 fflush( stdout );
+         }
 
+         return;
      }
-     else
-     {
-       printf( "Error inserting into and retreiving from least recently used cache.\n" );
-       fflush( stdout );
-       buf = NULL;
-     }
-     
-     return;
-}
-
-
-// Write a line of output image data
-// Definition must be in header for
-// Solaris compiler compatability
-// ---------------------------------
-extern QFile outptr;				// Output file pointer  from imgio.cpp
-extern long outsize;				// Number of bytes in output image
-
-template <class type>
-void put_line(void * buf, type )
-{
-     if( outptr.isOpen() && outptr.isWritable() )
-     {
-         outptr.writeBlock( (char*&)buf, outsize*sizeof(type) );
-         outptr.flush();
-     }
-     else
-     {
-         printf( "Outptr not open or writable\n" );
-	 fflush( stdout );
-     }
-
-     return;
-}
-
+};
 
 #ifndef RESAMPLE
 #define RESAMPLE
@@ -328,41 +432,7 @@ void* get_raster_value(void * buf, long offset, long sample, int lineLength, typ
 // use output pixel coordinate to find the coordinates of
 // the corners of the corresponding input pixel
 //--------------------------------------------------------
-
-
-
-//static double in[2];			/* Input projection coordinates of a point */
-//static double out[2];			/* Output projection coordinates of a point */
-//static double corner[2];		// for computing values at pixel corners
-//static double coord[2];		// random coordinates
-//static double in_line, in_samp;	/* Input image coordinates of a point */
-//static long status;			/* Return status flag for gctp() call */
-//static long zero=0;			/* Constant of 0 */
-//static long num_classes=255;		// number of classes used...
-//static int preferred;		// most preferred class
-//static int unpreferred;	// least preferred class
-
-
-//---------- flags ----------//
-//static int dodump=0;		// whether or not to dump minbox to screen
-//static int domax=0;		// image of most common value per pixel
-//static int domin=0;		// image of least common value per pixel
-//static int donn=0;		// create traditional mapimg image
-//static int dobands=0;		// images of how many hits per pixel per band
-//static int dochoice=0;		// image of how many classes to choose from per pixel
-//static int doout=0;		// write "the" output file
-//static int dopreferred=0;	// most preferred class
-//static int dounpreferred=0;	// least preferred class
-//static int boxerr=0;		// true if no minbox pixels are in polygon
 static int find2corners=0;	// true if previous pixel's corners can be reused
-//static int classcount[256][2]={0};// flags which classes are used per output pixel
-	// classcount[x][0] is true if class x is used
-	// classcount[][1] is a list of the classes used in current pixel
-//static int class2data[256][2]={0};// flags which classes are used in input image
-	// class2data[x][0] converts data value x to its internal class number
-	// class2data[x][1] converts internal class number x to its data value
-
-
 
 #define DELTA_LS 0.00005
 #define DELTA_METERS outimg.pixsize/2
@@ -377,24 +447,6 @@ extern "C"
 int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2], long out_line, long out_samp, FILE* paramfile );
 int onLine(double p1[2], double p2[2], double test[2]);
 int inBox(double box[4][2], double test[2]);
-
-
-/*
-// Write a line of output image data
-// Definition must be in header for
-// Solaris compiler compatability
-// ---------------------------------
-extern FILE * outptr;				// Output file pointer  from imgio.cpp
-
-template <class type>
-void put_line(void * buf, FILE* file, type)
-{
-     fwrite(buf, sizeof(type), outsize, file);
-     return;
-}
-
-*/
-
 
 
 

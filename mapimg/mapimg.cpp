@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.13 2005/02/13 23:12:48 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.14 2005/02/14 17:29:05 jtrent Exp $
 
 
 #include "mapimg.h"
@@ -331,28 +331,28 @@ double mapimg::calcFillValue( RasterInfo &input )
 
    if( dtype == "Signed 64 Bit IEEE Float" )
    {	double data = 0;
-      return get_max_value( input, data );   }
+      return IMGIO<double>::get_max_value( input, data );   }
    else if( dtype == "Signed 32 Bit IEEE Float" )
    {	float data = 0;
-      return get_max_value( input, data );   }
+      return IMGIO<float>::get_max_value( input, data );   }
    else if( dtype == "Signed 32 Bit Integer" )
    {	Q_INT32 data = 0;
-      return get_max_value( input, data );   }
+      return IMGIO<Q_INT32>::get_max_value( input, data );   }
    else if( dtype == "Unsigned 32 Bit Integer" )
    {	Q_UINT32 data = 0;
-      return get_max_value( input, data );   }
+      return IMGIO<Q_UINT32>::get_max_value( input, data );   }
    else if( dtype == "Signed 16 Bit Integer" )
    {	Q_INT16 data = 0;
-      return get_max_value( input, data );   }
+      return IMGIO<Q_INT16>::get_max_value( input, data );   }
    else if( dtype == "Unsigned 16 Bit Integer" )
    {	Q_UINT16 data = 0;
-      return get_max_value( input, data );   }
+      return IMGIO<Q_UINT16>::get_max_value( input, data );   }
    else if( dtype == "Signed 8 Bit Integer" )
    { 	Q_INT8 data = 0;
-      return get_max_value( input, data );   }
+      return IMGIO<Q_INT8>::get_max_value( input, data );   }
    else //( dtype == "Unsigned 8 Bit Integer" )
    {  Q_UINT8 data = 0;
-      return get_max_value( input, data );   }
+      return IMGIO<Q_UINT8>::get_max_value( input, data );   }
 }
 
 bool mapimg::reproject( RasterInfo &input, RasterInfo &output, ResampleInfo &resample, QWidget *parent )

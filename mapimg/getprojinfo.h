@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.10 2005/02/13 23:12:48 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.11 2005/02/14 17:29:05 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -46,7 +46,7 @@ static long   paramMode = 0;    //FILE* to logFile
 extern  void * mapimginbuf;         // Ptr to the input image (all in memory)
 extern  void * mapimgoutbuf;         // Ptr to one line of output image data
 
-template <class type>
+template <typename type>
 bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample, type useType, QWidget * mapimgdial)
 {
     // mapimg STARTS HERE!!!!
@@ -76,7 +76,9 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
     type fill = (type)output.fillValue();			// Fill value for mapimg
 
-    parse_input(input.imgFileName().ascii(), output.imgFileName().ascii());
+    IMGIO<type> imgIO;
+
+    imgIO.parse_input(input.imgFileName().ascii(), output.imgFileName().ascii());
 
     IMGINFO inimg;				// Image information--input
     IMGINFO outimg;			// Image information--output
@@ -105,7 +107,10 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
 
     // Initialize input & output space image & projections
-    ioreturnval = init_io(input, output, &inimg, &outimg, useType );
+    ioreturnval = imgIO.init_io(input, output, &inimg, &outimg, useType );
+
+    void * mapimginbuf = imgIO.mapimginbuf;
+    void * mapimgoutbuf = imgIO.mapimgoutbuf;
 
     // Progress Dialog added in QT
     QProgressDialog progress( "Performing Transformation", "Abort", outimg.nl,
@@ -173,7 +178,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 			{
 				if( resample.resampleCode() == ResampleInfo::NearestNeighbor )
 				{
-					get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
+					imgIO.get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
 					(*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
 				}
 				else	//Analysis
@@ -231,7 +236,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 						coord[1] = currentY;
 
 						//Loads into memory the current line of input needed
-						get_line(  mapimginbuf, (Q_ULLONG)coord[1], inimg.ns, useType );
+						imgIO.get_line(  mapimginbuf, (Q_ULLONG)coord[1], inimg.ns, useType );
 						if( mapimginbuf == NULL )
 						break;
 
@@ -262,7 +267,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 					if(boxError)	//no pixels from rectangle in the minbox, get NN.
 					{
 						//Loads into memory the current line of input needed
-						get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
+						imgIO.get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
 
 						(*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
 
@@ -343,15 +348,15 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
 	// Spit out a processing message & write the output image line to disk
 	// -------------------------------------------------------------------
-	put_line(mapimgoutbuf, useType);
+	imgIO.put_line(mapimgoutbuf, useType);
     }
 
     progress.setProgress( outimg.nl );
 
     // Close down processing & Exit... Processing is complete.
     // -------------------------------------------------------
-    cleanup_input();
-    cleanup_output();
+    imgIO.cleanup_input();
+    imgIO.cleanup_output();
     // END of mapimg!!
 
     bool cancelled = false;

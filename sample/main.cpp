@@ -54,7 +54,8 @@ int main()
         << "\tJason Trent\n"
         << "\tAustin Hartman\n"
         << "\tRyan Stelzleni\n"
-        << "\tJames Muo\n";
+        << "\tJames Muo\n"
+        << "\tBob Buehler\n";
 
    return 0;
 }

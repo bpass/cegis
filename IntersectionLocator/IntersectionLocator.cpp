@@ -10,7 +10,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionLocator.cpp,v 1.10 2004/11/26 17:03:00 ahartman Exp $
+// $Id: IntersectionLocator.cpp,v 1.11 2004/12/23 17:50:23 ahartman Exp $
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1300
@@ -116,22 +116,182 @@ void filterTests()
 
    std::string szRaster, szVector, szOutput, szLines, szAbbrev;
 
-   std::string szRasterDir = "/snap/ahartman/Data/GeorgiaLines/orthos/16SGC";
-   std::string szVectorDir = "/work/Data/IntersectionLocator/GeorgiaLines/OriginalRoads/";
-   std::string szOutputDir = "/work/Data/IntersectionLocator/GeorgiaLines/CorrectedRoads/";
+   std::string szRasterDir = "L:\\cartoresearch\\data-integration\\gjaromack\\STL\\orthoimages\\15SYC";
+   std::string szVectorDir = "L:\\sdir_snap\\rstelzleni\\Mo2Quads\\OriginalRoads\\";
+   std::string szOutputDir = "L:\\sdir_snap\\rstelzleni\\Mo2Quads\\CorrectedRoads_10-90\\";
 
    double templateSize = 50, areaSize = 65;
 
 
    char *aszNames[] = {
-        "500560",
-        "500575",
-        "500590",
-        "500605",
-        "500620"
+        "065630",
+        "065645",
+        "065660",
+        "065675",
+        "065690",
+        "065705",
+        "065720",
+        "065735",
+        "065750",
+        "065765",
+        "065780",
+        "080630",
+        "080645",
+        "080660",
+        "080675",
+        "080690",
+        "080705",
+        "080720",
+        "080735",
+        "080750",
+        "080765",
+        "080780",
+        "095630",
+        "095645",
+        "095660",
+        "095675",
+        "095690",
+        "095705",
+        "095720",
+        "095735",
+        "095750",
+        "095765",
+        "095780",
+        "110630",
+        "110645",
+        "110660",
+        "110675",
+        "110690",
+        "110705",
+        "110720",
+        "110735",
+        "110750",
+        "110765",
+        "110780",
+        "125630",
+        "125645",
+        "125660",
+        "125675",
+        "125690",
+        "125705",
+        "125720",
+        "125735",
+        "125750",
+        "125765",
+        "125780",
+        "140630",
+        "140645",
+        "140660",
+        "140675",
+        "140690",
+        "140705",
+        "140720",
+        "140735",
+        "140750",
+        "140765",
+        "140780",
+        "155630",
+        "155645",
+        "155660",
+        "155675",
+        "155690",
+        "155705",
+        "155720",
+        "155735",
+        "155750",
+        "155765",
+        "155780",
+        "170630",
+        "170645",
+        "170660",
+        "170675",
+        "170690",
+        "170705",
+        "170720",
+        "170735",
+        "170750",
+        "170765",
+        "170780",
+        "185630",
+        "185645",
+        "185660",
+        "185675",
+        "185690",
+        "185705",
+        "185720",
+        "185735",
+        "185750",
+        "185765",
+        "185780",
+        "200630",
+        "200645",
+        "200660",
+        "200675",
+        "200690",
+        "200705",
+        "200720",
+        "200735",
+        "200750",
+        "200765",
+        "200780",
+        "215630",
+        "215645",
+        "215660",
+        "215675",
+        "215690",
+        "215705",
+        "215720",
+        "215735",
+        "215750",
+        "215765",
+        "215780",
+        "230630",
+        "230645",
+        "230660",
+        "230675",
+        "230690",
+        "230705",
+        "230720",
+        "230735",
+        "230750",
+        "230765",
+        "230780",
+        "245630",
+        "245645",
+        "245660",
+        "245675",
+        "245690",
+        "245705",
+        "245720",
+        "245735",
+        "245750",
+        "245765",
+        "245780",
+        "260630",
+        "260645",
+        "260660",
+        "260675",
+        "260690",
+        "260705",
+        "260720",
+        "260735",
+        "260750",
+        "260765",
+        "260780",
+        "275630",
+        "275645",
+        "275660",
+        "275675",
+        "275690",
+        "275705",
+        "275720",
+        "275735",
+        "275750",
+        "275765",
+        "275780"
     };
 
-   int n = 5; // number of names
+   int n = 165; // number of names
 
 
 
@@ -140,7 +300,7 @@ void filterTests()
 
    Classifier C;
    printf( "Loading classifier training\n\n" );
-   C.inputText("/work/Data/IntersectionLocator/GeorgiaLines/classifiertraining/training.dat");
+   C.inputText("L:\\sdir_snap\\rstelzleni\\Mo2Quads\\classifiertraining\\training.dat");
 
    DelauneyTriangulator *Triangulator = new QuarticTriangulator;
    RubberSheetTransform *Transformer = new SaalfeldRubberSheet;
@@ -187,7 +347,7 @@ void filterTests()
       printf( "Finding control points\n\n" );
 
 
-      printf( "\n50-90\n" );
+      printf( "\n10-90\n" );
       Intersections.findControlPoints( Rasta, templateSize, areaSize );
       printf( "Saving control points\n" );
       std::vector<ControlPoint> originalPoints = 
@@ -225,7 +385,7 @@ void filterTests()
       delete pLinesDS;
 
       // Now filter the points using all filters and combinations
-      for( double r = 0.1; r <= 0.5; r = r + 0.1 )
+      for( double r = 0.1; r <= 0.9; r = r + 0.1 )
       {
          char temp[10];
          sprintf( temp, "_%02dVMF", static_cast<int>(100*r) );
@@ -264,7 +424,7 @@ void filterTests()
          delete pOutputDS;
          delete pLinesDS;
 
-
+/*
          sprintf( temp, "_%02dDF", static_cast<int>(100*r) );
          szAbbrev = temp;
 
@@ -300,6 +460,7 @@ void filterTests()
          delete filter;
          delete pOutputDS;
          delete pLinesDS;
+*/
       } // end for r (ratio)
       
       delete pRaster;

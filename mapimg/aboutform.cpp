@@ -1,4 +1,4 @@
-// $Id: aboutform.cpp,v 1.2 2005/01/31 03:09:04 rbuehler Exp $
+// $Id: aboutform.cpp,v 1.3 2005/02/02 00:21:22 rbuehler Exp $
 
 
 /****************************************************************************
@@ -36,8 +36,8 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    if ( !name )
 	   setName( "aboutForm" );
 
-   setMinimumSize( QSize( 407, 314 ) );
-   setMaximumSize( QSize( 407, 314 ) );
+   //setMinimumSize( QSize( 407, 314 ) );
+   //setMaximumSize( QSize( 407, 314 ) );
    setPalette( QColor( 180, 173, 165 ) );
 
    aboutFormLayout = new QVBoxLayout( this, 4, 3, "aboutFormLayout"); 
@@ -60,35 +60,50 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    titleLabel->setAlignment( int( QLabel::WordBreak | QLabel::AlignCenter ) );
    aboutFormLayout->addWidget( titleLabel );
 
-   discFrame = new QFrame( this, "discFrame" );
-   discFrame->setFrameShape( QFrame::WinPanel );
-   discFrame->setFrameShadow( QFrame::Sunken );
-   discFrameLayout = new QVBoxLayout( discFrame, 4, 0, "discFrameLayout"); 
+   descFrame = new QFrame( this, "descFrame" );
+   descFrame->setFrameShape( QFrame::WinPanel );
+   descFrame->setFrameShadow( QFrame::Sunken );
+   descFrameLayout = new QVBoxLayout( descFrame, 4, 0, "discFrameLayout"); 
 
-   discLabel1 = new QLabel( discFrame, "discLabel1" );
-   discLabel1->setPaletteForegroundColor( QColor( 0, 102, 51 ) );
-   QFont discLabel1_font(  discLabel1->font() );
-   discLabel1_font.setFamily( "Arial" );
-   discLabel1_font.setPointSize( 10 );
-   discLabel1->setFont( discLabel1_font ); 
-   discLabel1->setTextFormat( QLabel::RichText );
-   discLabel1->setAlignment( int( QLabel::WordBreak | QLabel::AlignJustify | QLabel::AlignTop ) );
-   discFrameLayout->addWidget( discLabel1 );
+   descLabel1 = new QLabel( descFrame, "descLabel1" );
+   descLabel1->setPaletteForegroundColor( QColor( 0, 102, 51 ) );
+   QFont descLabel1_font(  descLabel1->font() );
+   descLabel1_font.setFamily( "Arial" );
+   descLabel1_font.setPointSize( 10 );
+   descLabel1->setFont( descLabel1_font ); 
+   descLabel1->setTextFormat( QLabel::RichText );
+   descLabel1->setAlignment( int( QLabel::WordBreak | QLabel::AlignJustify | QLabel::AlignTop ) );
+   descFrameLayout->addWidget( descLabel1 );
 
-   discLabel2 = new QLabel( discFrame, "discLabel2" );
-   discLabel2->setPaletteForegroundColor( QColor( 0, 102, 51 ) );
-   QFont discLabel2_font(  discLabel2->font() );
-   discLabel2_font.setFamily( "Arial" );
-   discLabel2_font.setPointSize( 12 );
-   discLabel2->setFont( discLabel2_font ); 
-   discLabel2->setTextFormat( QLabel::RichText );
-   discLabel2->setAlignment( int( QLabel::WordBreak | QLabel::AlignJustify | QLabel::AlignTop ) );
-   discFrameLayout->addWidget( discLabel2 );
-   aboutFormLayout->addWidget( discFrame );
+   descLabel2 = new QLabel( descFrame, "descLabel2" );
+   descLabel2->setPaletteForegroundColor( QColor( 0, 102, 51 ) );
+   QFont descLabel2_font(  descLabel2->font() );
+   descLabel2_font.setFamily( "Arial" );
+   descLabel2_font.setPointSize( 12 );
+   descLabel2->setFont( descLabel2_font ); 
+   descLabel2->setTextFormat( QLabel::RichText );
+   descLabel2->setAlignment( int( QLabel::WordBreak | QLabel::AlignJustify | QLabel::AlignTop ) );
+   descFrameLayout->addWidget( descLabel2 );
+   aboutFormLayout->addWidget( descFrame );
+
+   descLabel3 = new QLabel( descFrame, "descLabel3" );
+   descLabel3->setPaletteForegroundColor( QColor( 0, 102, 51 ) );
+   descLabel3->setFont( descLabel1_font ); 
+   descLabel3->setTextFormat( QLabel::RichText );
+   descLabel3->setAlignment( int( QLabel::WordBreak | QLabel::AlignJustify | QLabel::AlignTop ) );
+   descFrameLayout->addWidget( descLabel3 );
+
+   okLayout = new QHBoxLayout( this, 4, 3, "okLayout" );
+   okLayout->addItem( new QSpacerItem( 30, 10 ) );
+   okButton = new QPushButton( this, "okButton" );
+   okButton->setMaximumWidth( 80 );
+   okLayout->addWidget( okButton );
+
+   aboutFormLayout->addItem( okLayout );
+
+   connect( okButton, SIGNAL( clicked() ), this, SLOT( close() ) );
 
    languageChange();
-   //resize( QSize(407, 314).expandedTo(minimumSizeHint()) );
-   //clearWState( WState_Polished );
 }
 
 /*
@@ -107,13 +122,13 @@ void aboutForm::languageChange()
 {
     setCaption( tr( "About mapimg2" ) );
     titleLabel->setText( QString("mapimg v%1.%2.%3").arg(MAJOR_VERSION).arg(MINOR_VERSION).arg(REVISION_NUM) );
-    discLabel1->setText( tr( "MapImage is a research-oriented project. Its source and binaries are provided with no warranty or support. <b>Use at your own risk.</b> We will, however, provide minimal technical support as time allows. We are also very interested in feedback as well as bug reports. All questions and comments may be sent to:" ) );
-    discLabel2->setText( tr( "<p align=\"center\">mapimg@usgs.gov</p>" ) );
-}
-
-void aboutForm::mousePressEvent(QMouseEvent *e)
-{
-   QWidget::mousePressEvent(e);
-
-   accept();
+    descLabel1->setText( tr( "MapImage is a research-oriented project. Its source and binaries"
+       " are provided with no warranty or support. <b>Use at your own risk.</b>"
+       " We will, however, provide minimal technical support as time allows."
+       " We are also very interested in feedback as well as bug reports. All"
+       " questions and comments may be sent to:" ) );
+    descLabel2->setText( tr( "<p align=\"center\">mapimg@usgs.gov</p>" ) );
+    descLabel3->setText( tr( "The TinyXML library is used in this projects."
+       " Props to them." ) );
+    okButton->setText( tr( "Ok" ) );
 }

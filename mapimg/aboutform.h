@@ -1,4 +1,4 @@
-// $Id: aboutform.h,v 1.2 2005/01/31 03:09:04 rbuehler Exp $
+// $Id: aboutform.h,v 1.3 2005/02/02 00:21:22 rbuehler Exp $
 
 
 /****************************************************************************
@@ -21,6 +21,7 @@ class QGridLayout;
 class QSpacerItem;
 class QLabel;
 class QFrame;
+class QPushButton;
 
 class aboutForm : public QDialog
 {
@@ -32,16 +33,18 @@ public:
 
     QLabel* logoLabel;
     QLabel* titleLabel;
-    QFrame* discFrame;
-    QLabel* discLabel1;
-    QLabel* discLabel2;
-
-public slots:
-    void mousePressEvent( QMouseEvent * e );
+    QFrame* descFrame;
+    QLabel* descLabel1;
+    QLabel* descLabel2;
+    QLabel* descLabel3;
+    QPushButton* okButton;
 
 protected:
     QVBoxLayout* aboutFormLayout;
-    QVBoxLayout* discFrameLayout;
+    QVBoxLayout* descFrameLayout;
+    QHBoxLayout* okLayout;
+    QSpacerItem* okLeft;
+    QSpacerItem* okRight;
 
 protected slots:
     virtual void languageChange();

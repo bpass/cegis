@@ -1,6 +1,6 @@
 
 // Mystical symbols to please the CVS Gods
-// $Id: preparingForNewData.txt,v 1.5 2004/11/16 20:14:58 rstelzleni Exp $
+// $Id: preparingForNewData.txt,v 1.6 2004/11/18 19:09:26 rstelzleni Exp $
 
 
 /** \page preparingForNewData Preparing For New Data
@@ -76,7 +76,10 @@
  * small window will open in the upper left of the screen, you can close
  * it, you only need the larger dialog that also opened.
  * This dialog box will prompt you for a name to save the new file under, 
- * so give it one.  At the bottom of the dialog there is a button labeled
+ * when selecting this, click on the open file folder and change the file
+ * type to tiff, this is a work around for a problem with the InMemRaster
+ * that I haven't found a work around for yet.
+ *  At the bottom of the dialog there is a button labeled
  * Aoi, click this button and select the radio button labeled "Viewer".
  * Then click ok in the Aoi dialog.  I usually click the "ignore zeros in
  * output" checkbox in the subset dialog too, but it doesn't seem to 

@@ -1,4 +1,4 @@
-// $Id: imgio.cpp,v 1.6 2005/02/18 00:08:04 rbuehler Exp $
+// $Id: imgio.cpp,v 1.7 2005/02/28 17:55:10 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -20,6 +20,8 @@
 #include <string.h>
 #include <qfile.h>
 #include "imgio.h"
+
+#include "mapimg.h"
 
 
 
@@ -44,9 +46,9 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
    double coordt2[2];
    double temp1;
    double temp2;
-   //    int dumpflag=0;
 
    double in_line, in_samp;	/* Input image coordinates of a point */
+   long in_line_temp, in_samp_temp;
    long status;		/* Return status flag for gctp() call */
    long zero=0;		/* Constant of 0 */
    double in[2];		/* Input projection coordinates of a point */
@@ -100,8 +102,8 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
          return 0;
    } //else not goode's
 
-   in_line = (inimg.ul_y - in[1]) / inimg.pixsize+0.5;
-   in_samp = (in[0] - inimg.ul_x) / inimg.pixsize+0.5;
+   in_line = (inimg.ul_y - in[1]) / inimg.pixsize;
+   in_samp = (in[0] - inimg.ul_x) / inimg.pixsize;
 
    if(in_line < 0 && in_line < -DELTA_LS)
       in_line = 0;
@@ -109,12 +111,15 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
       in_samp = 0;
 
    //----- Are we in bounds? -----//
-   if( (long)in_line <0 || (long)in_samp <0 ||
-      (long)in_line >= inimg.nl || (long)in_samp >= inimg.ns )
+   in_line_temp = (long)mapimg::round(in_line);
+   in_samp_temp = (long)mapimg::round(in_samp);
+
+   if( in_line_temp <0 || in_samp_temp <0 ||
+      in_line_temp >= inimg.nl || in_samp_temp >= inimg.ns )
       return 0;
 
-   inbox[4][1] = (long)(in_line);
-   inbox[4][0] = (long)(in_samp);
+   inbox[4][1] = in_line_temp;
+   inbox[4][0] = in_samp_temp;
 
    //----- Are we only looking for the center? -----//
    if( centerOnly )
@@ -187,13 +192,16 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
          in_samp = 0;
 
       //----- bounds checking -----//
-      if((long)in_line+DELTA_LS < 0 || (long)in_samp+DELTA_LS < 0 ||
-         (long)in_line > inimg.nl   || (long)in_samp > inimg.ns)
+      in_line_temp = (long)mapimg::round(in_line);
+      in_samp_temp = (long)mapimg::round(in_samp);
+
+      if(in_line_temp+DELTA_LS < 0 || in_samp_temp+DELTA_LS < 0 ||
+         in_line_temp >= inimg.nl   || in_samp_temp >= inimg.ns)
          return 0;
 
       //----- save coordinates -----//
-      inbox[0][1] = in_line;
-      inbox[0][0] = in_samp;
+      inbox[0][1] = in_line_temp;
+      inbox[0][0] = in_samp_temp;
 
       /// jtrent
       //          printf( "get_coords  Upper Left ( %f, %f )\n", inbox[0][0], inbox[0][1] );
@@ -242,7 +250,7 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
             return 0;
       }
 
-      in_line = (inimg.ul_y - in[1]) / inimg.pixsize;
+      in_line = (inimg.ul_y - in[1]) / inimg.pixsize;   //to match working center
       in_samp = (in[0] - inimg.ul_x) / inimg.pixsize;
 
       //----- adjust for tolerance around zero -----//
@@ -253,14 +261,16 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
          in_samp = 0;
 
       //----- bounds checking -----//
-      if((long)in_line+DELTA_LS < 0 || (long)in_samp+DELTA_LS < 0 ||
-         (long)in_line > inimg.nl   || (long)in_samp > inimg.ns)
+      in_line_temp = (long)mapimg::round(in_line);
+      in_samp_temp = (long)mapimg::round(in_samp);
+
+      if(in_line_temp+DELTA_LS < 0 || in_samp_temp+DELTA_LS < 0 ||
+         in_line_temp >= inimg.nl   || in_samp_temp >=inimg.ns)
          return 0;
 
       //----- save coordinates -----//
-      inbox[3][1] = in_line;
-      inbox[3][0] = in_samp;
-
+      inbox[3][1] = in_line_temp;
+      inbox[3][0] = in_samp_temp;
 
       /// jtrent
       //          printf( "get_coords  Lower Left ( %f, %f )\n", inbox[3][0], inbox[3][1] );
@@ -283,7 +293,7 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
    if(status != OK)
       return 0;
 
-   in_line = (inimg.ul_y - in[1]) / inimg.pixsize;
+   in_line = (inimg.ul_y - in[1]) / inimg.pixsize;      //to match working center
    in_samp = (in[0] - inimg.ul_x) / inimg.pixsize;
 
    //----- adjust for tolerance around zero -----//
@@ -294,13 +304,16 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
       in_samp = 0;
 
    //----- bounds checking -----//
-   if((long)in_line < 0 || (long)in_samp < 0 ||
-      (long)in_line > inimg.nl || (long)in_samp > inimg.ns)
+   in_line_temp = (long)mapimg::round(in_line);
+   in_samp_temp = (long)mapimg::round(in_samp);
+
+   if(in_line_temp < 0 || in_samp_temp < 0 ||
+      in_line_temp >= inimg.nl || in_samp_temp >= inimg.ns)
       return 0;
 
    //----- save coordinates -----//
-   inbox[1][1] = in_line;
-   inbox[1][0] = in_samp;
+   inbox[1][1] = in_line_temp;
+   inbox[1][0] = in_samp_temp;
 
 
    /// jtrent
@@ -325,7 +338,7 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
    if(status != OK)
       return 0;
 
-   in_line = (inimg.ul_y - in[1]) / inimg.pixsize;
+   in_line = (inimg.ul_y - in[1]) / inimg.pixsize;        //to match working cneter
    in_samp = (in[0] - inimg.ul_x) / inimg.pixsize;
 
    if(in_line < 0 && in_line < -DELTA_LS)
@@ -335,13 +348,16 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
       in_samp = 0;
 
    //----- bounds checking -----//
-   if((long)in_line < 0 || (long)in_samp < 0 ||
-      (long)in_line > inimg.nl || (long)in_samp > inimg.ns)
+   in_line_temp = (long)mapimg::round(in_line);
+   in_samp_temp = (long)mapimg::round(in_samp);
+
+   if(in_line_temp < 0 || in_samp_temp < 0 ||
+      in_line_temp >= inimg.nl || in_samp_temp >= inimg.ns)
       return 0;
 
    //----- save coordinates -----//
-   inbox[2][1] = in_line;
-   inbox[2][0] = in_samp;
+   inbox[2][1] = in_line_temp;
+   inbox[2][0] = in_samp_temp;
 
 
    /// jtrent
@@ -351,9 +367,6 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
    //----- Success! Got all four corners, OK to reuse these next time
    find2corners = 1;
 
-   //       if(dodump && dumpflag)
-   //         return 0;
-   //       else
    return 1;
 }// get_coords
 
@@ -362,7 +375,9 @@ int onLine(double p1[2], double p2[2], double test[2])
 {
    float dx, dy, dxt, dyt;
 
-   if(test == p1 || test == p2) return 1;
+   if( (test[0] == p1[0] && test[1] == p1[1]) ||
+       (test[0] == p2[0] && test[1] == p2[1]) )
+       return 1;
 
    if( !((p1[0] <= test[0] && test[0] < p2[0]) || (p2[0] <= test[0] && test[0] < p1[0])) )
       return 0;
@@ -379,7 +394,7 @@ int onLine(double p1[2], double p2[2], double test[2])
       return 1;
 }      //onLine
 
-int inBox(double box[4][2], double test[2])
+int inBox(double box[5][2], double test[2])
 {
    int intersections = 0;	// # of times test line crosses a polgon line
    int i;			// loop counter
@@ -389,10 +404,10 @@ int inBox(double box[4][2], double test[2])
    {
       if(onLine(box[j], box[i], test))
          return 1;
-      if( (test[1] < box[j][1] || test[1] < box[i][1]) &&
+       if( (test[1] < box[j][1] || test[1] < box[i][1]) &&
          ( (box[j][0] <= test[0] && test[0] < box[i][0]) ||
          (box[i][0] <= test[0] && test[0] < box[j][0]) ) )
-         intersections++;
+          intersections++;
       j = i;
    }
 

@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.21 2005/02/27 05:30:01 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.22 2005/02/28 17:55:10 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -127,10 +127,6 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
    /******* Change bounds here for doing per line or per line section *******/
    FILE *paramfile = fopen( logFile, "wa");
 
-   bool noDoubleCount = false;
-   //type ignoreValue = (type)fill; /*commented out to clear some warnings*/
-
-
    for(out_line = 0; out_line < outimg.nl; out_line++) 		// For each output image line
    {
       // Set progress of Dialog box and cancel if process was cancelled
@@ -182,9 +178,16 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                {
                   imgIO.get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
 
-                  if( !resample.shouldIgnore( (*(((type*)mapimginbuf + (int)(inbox[4][0]))))) )
+                  if( mapimginbuf != NULL )
                   {
-                      (*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
+                    if( !resample.shouldIgnore( (*(((type*)mapimginbuf + (int)(inbox[4][0]))))) )
+                    {
+                        (*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
+                    }
+                    else
+                    {
+                        (*( (type*)mapimgoutbuf + out_samp)) = (type)resample.noDataValue();
+                    }
                   }
                   else
                   {
@@ -261,7 +264,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
                            (*( (type*)inputCoverage + offset)) = coordValue;
 
-                           if( noDoubleCount )
+                           if( resample.noDoubleCounting() )
                               (*(((type*)mapimginbuf + (int)coord[0]))) = 0;
 
                         }//if inBox
@@ -280,16 +283,23 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                      //Loads into memory the current line of input needed
                      imgIO.get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
 
-                     if( !resample.shouldIgnore( (*(((type*)mapimginbuf + (int)(inbox[4][0]))))) )
+                     if( mapimginbuf != NULL )
                      {
-                         (*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
+                         if( !resample.shouldIgnore( (*(((type*)mapimginbuf + (int)(inbox[4][0]))))) )
+                         {
+                             (*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
+                         }
+                         else
+                         {
+                             (*( (type*)mapimgoutbuf + out_samp)) = (type)resample.noDataValue();
+                         }
                      }
                      else
                      {
                          (*( (type*)mapimgoutbuf + out_samp)) = (type)resample.noDataValue();
                      }
 
-                     if( noDoubleCount )
+                     if( resample.noDoubleCounting() )
                         (*(((type*)mapimginbuf + (int)(inbox[4][0])))) = 0;
                   }
                   else	//!boxError
@@ -327,25 +337,35 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                         break;
                      case ResampleInfo::Median:  //Median
                         dataValue = (type)resample.noDataValue();
+/*
+                        qDebug( QString("Quicksorting %1 elements (%2)...").arg( coverageSize ).ascii() );
 
-                        //DBG qDebug( QString("Quicksorting %1 elements (%2)...").arg( coverageSize ).ascii() );
-
-                        //coverageString = "";
-                        //for( bob = 0; bob < coverageSize; ++bob )
-                        //   coverageString += QString::number( *((type*)inputCoverage + bob) ) + ",";
-                        //qDebug( "Elements Pre-sort: " + coverageString );
-
+                        coverageString = "";
+                        for( bob = 0; bob < coverageSize; ++bob )
+                           coverageString += QString::number( *((type*)inputCoverage + bob) ) + ",";
+                        qDebug( "Elements Pre-sort: " + coverageString );
+*/
                         mapimg::quicksort<type>( inputCoverage, coverageSize );
-                        dataValue = *((type*)inputCoverage + coverageSize/2);
-                        
-                        //coverageString = "";
-                        //for( bob = 0; bob < coverageSize; ++bob )
-                        //   coverageString += QString::number( *((type*)inputCoverage + bob) ) + ",";
-                        //qDebug( "Elements Post-sort: " + coverageString );
-                        //qDebug( "~Median: " + QString::number( dataValue ) + "\n" );
-                        
-                        //DBG qDebug( "Done sorting." );
 
+                        if( coverageSize%2 == 0 )   //even number of elements
+                        {
+                            dataValue = *((type*)inputCoverage + (coverageSize-2)/2);
+                            dataValue += *((type*)inputCoverage + coverageSize/2);
+                            dataValue /= 2;
+                        }
+                        else                        //odd number of elements
+                        {
+                            dataValue = *((type*)inputCoverage + (coverageSize-1)/2);
+                        }
+/*
+                        coverageString = "";
+                        for( bob = 0; bob < coverageSize; ++bob )
+                           coverageString += QString::number( *((type*)inputCoverage + bob) ) + ",";
+                        qDebug( "Elements Post-sort: " + coverageString );
+                        qDebug( "~Median: " + QString::number( dataValue ) + "\n" );
+
+                        qDebug( "Done sorting." );
+*/
                         break;
                      case ResampleInfo::Mode:   //Mode
                         coverageMap.clear();
@@ -537,6 +557,9 @@ bool mapimg_downsample( RasterInfo &input, RasterInfo &output, type useType, QWi
          break;
 
       imgIO.get_line( mapimginbuf, (Q_ULLONG)(outY*pixRatio), inimg.ns, useType );
+
+      if( mapimginbuf == NULL )
+          break;
 
       for(outX = 0; outX < outimg.ns; outX++)	// For each output image sample
       {

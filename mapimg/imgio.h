@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.12 2005/02/18 16:59:07 jtrent Exp $
+// $Id: imgio.h,v 1.13 2005/02/28 17:55:10 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -337,7 +337,7 @@ public:
 
          if( amountRead != (long)(sizeof(type) * lineLength) )
          {
-            printf( "Read %li requested %i\n", amountRead, lineLength );
+            printf( "Read %li requested %i at line %s\n", amountRead, lineLength, offsetString.ascii() );
             fflush( stdout );
 
             if( inptr.atEnd() )

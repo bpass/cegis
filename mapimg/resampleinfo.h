@@ -1,4 +1,4 @@
-// $Id: resampleinfo.h,v 1.6 2005/02/25 18:37:49 jtrent Exp $
+// $Id: resampleinfo.h,v 1.7 2005/02/28 17:55:10 jtrent Exp $
 
 
 #ifndef RESAMPLEINFO_H
@@ -37,6 +37,8 @@ public:
 
    void copy( const ResampleInfo &src );
 
+   bool noDoubleCounting() const;
+   
 private:
    ResampleCode rc;
    double fillval;

@@ -1,6 +1,6 @@
 
 // CVS magic symbols for voodoo practitioners
-// $Id: doxygenMain.h,v 1.4 2004/11/15 22:33:49 rstelzleni Exp $
+// $Id: doxygenMain.h,v 1.5 2004/11/15 23:30:46 rstelzleni Exp $
 
 /** \mainpage IntersectionLocator
  *
@@ -29,8 +29,8 @@
  * </P>
  *
  * \section usage Usage
- * \ref preparingForNewData Instructions for preparing for a new dataset
- *
+ * \ref preparingForNewData Instructions for preparing for a new dataset <BR>
+ * \ref overallProcess Explanation of the overall process <BR><BR>
  * It is probably worth pointing out here that the 
  * IntersectionMap::findControlPoints function will print out a bunch of
  * messages that say "processing intersection 1 of 543" or some other 

@@ -27,12 +27,13 @@ extern "C"
  * VC++ math.h does not have the c/c++standard round function!!!
  * One day the evil shall FALL
  */
-
-double round(double value, unsigned int decimals = 0)
-{
-  double factor = pow(10,decimals);
-  return floor((value * factor) + 0.5) / factor;
-}
+ #ifdef Q_OS_WIN32_
+ 	double round(double value, unsigned int decimals = 0)
+	{
+		double factor = pow(10,decimals);
+		return floor((value * factor) + 0.5) / factor;
+	}
+#endif //Q_WIN
 
 
 int mapframeit(char * filename, double pixsiz, double ul_lat, double ul_lon,

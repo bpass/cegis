@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.13 2005/02/15 23:40:39 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.14 2005/02/17 18:52:59 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -626,12 +626,13 @@ void mapimgForm::outSaveClicked()
    // Prompt for resample parameters
    ResampleForm *resForm = new ResampleForm( this, "resForm", false,
       WINDOW_FLAGS );
-   resForm->exec();
-   if( resForm->wasCanceled() )
+
+   if( resForm->exec() == QDialog::Rejected )
    {
       delete resForm;
       return;
    }
+
    ResampleInfo resample( resForm->info() );
    resample.setFillValue( input.fillValue() );
    resample.setNoDataValue( input.noDataValue() );
@@ -679,3 +680,21 @@ void mapimgForm::aboutClicked()
    about->exec();
    delete about;
 }
+
+QString mapimgForm::dataType() const
+{
+   QString currentDataType = "";
+
+   if( inInfoFrame )
+   {
+   	if( inInfoFrame->mapTab )
+   	{
+   	    if( inInfoFrame->mapTab->dataCombo )
+   	        currentDataType = inInfoFrame->mapTab->dataCombo->currentText();
+   	}
+   }
+
+   return currentDataType;
+}
+
+

@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.5 2005/02/13 00:27:17 rbuehler Exp $
+// $Id: resampleform.cpp,v 1.6 2005/02/17 18:52:59 jtrent Exp $
 
 
 /****************************************************************************
@@ -19,6 +19,12 @@
 #include <qlayout.h>
 #include <qtooltip.h>
 #include <qwhatsthis.h>
+#include <qevent.h>
+#include <qvalidator.h>
+#include <qmessagebox.h>
+
+#include "mapimgform.h"
+#include "mapimgvalidator.h"
 
 /*
  *  Constructs a ResampleForm as a child of 'parent', with the
@@ -48,6 +54,7 @@ ResampleForm::ResampleForm( QWidget* parent, const char* name, bool modal, WFlag
 
    resampleCombo = new QComboBox( FALSE, resampleBox, "resampleCombo" );
    resampleCombo->setMinimumSize( QSize( 125, 0 ) );
+   resampleCombo->installEventFilter( this );
    resampleBoxLayout->addWidget( resampleCombo );
    inputLayout->addWidget( resampleBox );
 
@@ -58,15 +65,19 @@ ResampleForm::ResampleForm( QWidget* parent, const char* name, bool modal, WFlag
    ignoreBoxLayout = new QHBoxLayout( ignoreBox->layout() );
    ignoreBoxLayout->setAlignment( Qt::AlignTop );
 
-   ignoreLayout = new QVBoxLayout( 0, 0, 6, "ignoreLayout"); 
+   ignoreLayout = new QVBoxLayout( 0, 0, 6, "ignoreLayout");
 
    ignoreEdit = new QLineEdit( ignoreBox, "ignoreEdit" );
    ignoreEdit->setMinimumSize( QSize( 125, 0 ) );
+   ignoreEdit->setValidator( new MapimgValidator( ((mapimgForm*)parent)->dataType(), ignoreEdit ) );
    ignoreLayout->addWidget( ignoreEdit );
 
    newButton = new QPushButton( ignoreBox, "newButton" );
+   newButton->setAutoDefault( false );
    ignoreLayout->addWidget( newButton );
    delButton = new QPushButton( ignoreBox, "delButton" );
+   delButton->setEnabled( false );
+   delButton->setAutoDefault( false );
    ignoreLayout->addWidget( delButton );
    ingoreSpacer = new QSpacerItem( 31, 91, QSizePolicy::Minimum, QSizePolicy::Expanding );
    ignoreLayout->addItem( ingoreSpacer );
@@ -74,28 +85,35 @@ ResampleForm::ResampleForm( QWidget* parent, const char* name, bool modal, WFlag
 
    ignoreListBox = new QListBox( ignoreBox, "ignoreListBox" );
    ignoreListBox->setMinimumSize( QSize( 125, 0 ) );
+   ignoreListBox->installEventFilter( this );
    ignoreBoxLayout->addWidget( ignoreListBox );
    inputLayout->addWidget( ignoreBox );
    ResampleFormLayout->addLayout( inputLayout );
 
-   okLayout = new QHBoxLayout( 0, 0, 6, "okLayout"); 
+   okLayout = new QHBoxLayout( 0, 0, 6, "okLayout");
    okSpacer = new QSpacerItem( 141, 21, QSizePolicy::Expanding, QSizePolicy::Minimum );
    okLayout->addItem( okSpacer );
 
    okButton = new QPushButton( this, "okButton" );
+   okButton->setAutoDefault( false );
    okLayout->addWidget( okButton );
 
    cancelButton = new QPushButton( this, "cancelButton" );
+   cancelButton->setAutoDefault( false );
+   cancelButton->setAccel( Key_Escape );
    okLayout->addWidget( cancelButton );
    ResampleFormLayout->addLayout( okLayout );
    languageChange();
    resize( QSize(300, 218).expandedTo(minimumSizeHint()) );
    clearWState( WState_Polished );
 
+
+   connect( okButton, SIGNAL( clicked() ), this, SLOT( accept() ) );
+   connect( ignoreEdit, SIGNAL( returnPressed() ), this, SLOT( newVal() ) );
+   connect( ignoreEdit, SIGNAL( returnPressed() ), newButton, SLOT( animateClick() ) );
    connect( newButton, SIGNAL( clicked() ), this, SLOT( newVal() ) );
    connect( delButton, SIGNAL( clicked() ), this, SLOT( delVal() ) );
-   connect( okButton, SIGNAL( clicked() ), this, SLOT( close() ) );
-   connect( cancelButton, SIGNAL( clicked() ), this, SLOT( cancel() ) );
+   connect( cancelButton, SIGNAL( clicked() ), this, SLOT( reject() ) );
 
 
    canceled = false;
@@ -135,19 +153,64 @@ void ResampleForm::languageChange()
     cancelButton->setText( tr( "Cancel" ) );
 }
 
+bool ResampleForm::eventFilter( QObject* object, QEvent* event )
+{
+     if( (object == ignoreListBox) && (event->type() == QEvent::KeyPress) )
+     {
+         QKeyEvent* keyEvent = (QKeyEvent*)event;
+         if( keyEvent->key() == Qt::Key_Delete )
+         {
+            delButton->animateClick();
+            return true;
+         }
+         else
+         {
+             return QDialog::eventFilter( object, event );
+         }
+     }
+     else if( (object == resampleCombo) && (event->type() == QEvent::KeyPress) )
+     {
+         QKeyEvent* keyEvent = (QKeyEvent*)event;
+         if( keyEvent->key() == Qt::Key_Return )
+         {
+            okButton->animateClick();
+            return true;
+         }
+         else
+         {
+             return QDialog::eventFilter( object, event );
+         }
+     }
+
+     return QDialog::eventFilter( object, event );
+}
+
+
+void ResampleForm::ignoreListKeyPress( QKeyEvent* e )
+{
+
+   delButton->animateClick();
+
+   return;
+}
 
 void ResampleForm::newVal()
 {
-   IgnoreValue i = ignoreEdit->text().toDouble();
-
-   if( ilist.contains( i ) < 1 )
+   if( ignoreEdit->hasAcceptableInput() )
    {
-      ilist.append( i );
-      ignoreListBox->insertItem( QString::number( i, 'f', 6 ) );
+     IgnoreValue i = ignoreEdit->text().toDouble();
+
+     if( ilist.contains( i ) < 1 )
+     {
+        ilist.append( i );
+        ignoreListBox->insertItem( QString::number( i, 'f', 6 ) );
+     }
+
+     if( ignoreListBox->count() > 0 )
+        delButton->setDisabled(false);
    }
-   
-   if( ignoreListBox->count() > 0 )
-      delButton->setDisabled(false);
+
+   ignoreEdit->selectAll();
 }
 
 
@@ -172,6 +235,11 @@ void ResampleForm::cancel()
    close();
 }
 
+void ResampleForm::reject()
+{
+   canceled = true;
+   QDialog::reject();
+}
 
 ResampleInfo ResampleForm::info()
 {

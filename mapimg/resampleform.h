@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.3 2005/02/13 00:27:17 rbuehler Exp $
+// $Id: resampleform.h,v 1.4 2005/02/17 18:52:59 jtrent Exp $
 
 
 /****************************************************************************
@@ -26,6 +26,7 @@ class QLineEdit;
 class QPushButton;
 class QListBox;
 class QListBoxItem;
+class QEvent;
 
 class ResampleForm : public QDialog
 {
@@ -61,12 +62,16 @@ protected:
    QSpacerItem* ingoreSpacer;
    QHBoxLayout* okLayout;
    QSpacerItem* okSpacer;
+   
+   bool eventFilter( QObject* object, QEvent* event );
 
 protected slots:
    virtual void languageChange();
    void newVal();
    void delVal();
    void cancel();
+   void reject();
+   void ignoreListKeyPress( QKeyEvent* e );
 
 private:
    ResampleInfo::ResampleCode rcode;

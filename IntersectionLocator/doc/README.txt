@@ -6,4 +6,5 @@ If you don't have doxygen you can get it at:
 
 www.doxygen.org
 
-I highly recommend doing so.
+I highly recommend doing so, the documentation is pretty big and 
+hopefully useful.

@@ -26,12 +26,13 @@
 		7) Right-click on the FOLDER containing main.cpp and choose "CVS Commit..."
 		   This will commit your file changes to the repository
 
-        8) When the checkin dialog appears enter a comment and click ok
+		8) When the checkin dialog appears enter a comment and click ok
+
+	Linux Users:
+		3a) 
 
 
-
-
-
+*/
 
 
 

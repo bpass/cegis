@@ -70,7 +70,9 @@ WARN_LOGFILE           =
 INPUT                  = ../ \
                          ./doxygenFiles
 FILE_PATTERNS          = *.cpp \
-                         *.h
+                         *.h \
+                         *.dox \
+                         *.txt
 RECURSIVE              = NO
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO

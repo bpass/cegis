@@ -1,4 +1,4 @@
-// $Id: orthfor.c,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: orthfor.c,v 1.2 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -57,7 +57,7 @@ lat_origin = center_lat;
 false_northing = false_north;
 false_easting = false_east;
 
-sincos(center_lat,&sin_p14,&cos_p14);
+gctp_sincos(center_lat,&sin_p14,&cos_p14);
 
 /* Report parameters to the user
   -----------------------------*/
@@ -87,7 +87,7 @@ double g;
 /* Forward equations
   -----------------*/
 dlon = adjust_lon(lon - lon_center);
-sincos(lat,&sinphi,&cosphi);
+gctp_sincos(lat,&sinphi,&cosphi);
 coslon = cos(dlon);
 g = sin_p14 * sinphi + cos_p14 * cosphi * coslon;
 ksp = 1.0;

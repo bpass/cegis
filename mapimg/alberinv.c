@@ -1,4 +1,4 @@
-// $Id: alberinv.c,v 1.3 2005/02/10 15:48:19 jtrent Exp $
+// $Id: alberinv.c,v 1.4 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1992 United States Geological Survey
@@ -81,18 +81,18 @@ temp = r_minor / r_major;
 es = 1.0 - SQUARE(temp);
 e3 = sqrt(es);
 
-sincos(lat1, &sin_po, &cos_po);
+gctp_sincos(lat1, &sin_po, &cos_po);
 con = sin_po;
 
 ms1 = msfnz(e3,sin_po,cos_po);
 qs1 = qsfnz(e3,sin_po ); 
 
-sincos(lat2,&sin_po,&cos_po);
+gctp_sincos(lat2,&sin_po,&cos_po);
 
 ms2 = msfnz(e3,sin_po,cos_po);
 qs2 = qsfnz(e3,sin_po ); 
 
-sincos(lat0,&sin_po,&cos_po);
+gctp_sincos(lat0,&sin_po,&cos_po);
 
 qs0 = qsfnz(e3,sin_po ); 
 

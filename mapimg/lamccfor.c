@@ -1,4 +1,4 @@
-// $Id: lamccfor.c,v 1.1 2005/01/14 16:18:49 rbuehler Exp $
+// $Id: lamccfor.c,v 1.2 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -85,11 +85,11 @@ e = sqrt(es);
 
 center_lon = c_lon;
 center_lat = c_lat;
-sincos(lat1,&sin_po,&cos_po);
+gctp_sincos(lat1,&sin_po,&cos_po);
 con = sin_po;
 ms1 = msfnz(e,sin_po,cos_po);
 ts1 = tsfnz(e,lat1,sin_po);
-sincos(lat2,&sin_po,&cos_po);
+gctp_sincos(lat2,&sin_po,&cos_po);
 ms2 = msfnz(e,sin_po,cos_po);
 ts2 = tsfnz(e,lat2,sin_po);
 sin_po = sin(center_lat);

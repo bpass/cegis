@@ -1,4 +1,4 @@
-// $Id: aziminv.c,v 1.1 2005/01/14 16:18:48 rbuehler Exp $
+// $Id: aziminv.c,v 1.2 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -57,7 +57,7 @@ lat_origin = center_lat;
 false_northing = false_north;
 false_easting = false_east;
 
-sincos(center_lat,&sin_p12,&cos_p12);
+gctp_sincos(center_lat,&sin_p12,&cos_p12);
 
 /* Report parameters to the user
   -----------------------------*/
@@ -95,7 +95,7 @@ if (rh > (2.0 * HALF_PI * r_major))
    return(125);
    }
 z = rh / r_major;
-sincos(z,&sinz,&cosz);
+gctp_sincos(z,&sinz,&cosz);
 *lon = lon_center;
 if (fabs(rh) <= EPSLN)
    {

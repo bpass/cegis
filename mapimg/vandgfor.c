@@ -1,4 +1,4 @@
-// $Id: vandgfor.c,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: vandgfor.c,v 1.2 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -105,7 +105,7 @@ if ((fabs(dlon) <= EPSLN) || (fabs(fabs(lat) - HALF_PI) <= EPSLN))
    }
 al = .5 * fabs((PI / dlon) - (dlon / PI));
 asq = al * al;
-sincos(theta,&sinth,&costh);
+gctp_sincos(theta,&sinth,&costh);
 g = costh / (sinth + costh - 1.0);
 gsq = g * g;
 m = g * (2.0 / sinth - 1.0);

@@ -1,4 +1,4 @@
-// $Id: proj.h,v 1.3 2005/02/10 15:48:20 jtrent Exp $
+// $Id: proj.h,v 1.4 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -133,7 +133,7 @@ long aziminvint( double r_maj, double center_lon, double center_lat,
 long aziminv( double x, double y, double *lon, double *lat);
 
 /* Functions residing in cproj.c */
-void sincos( double val, double *sin_val, double *cos_val);
+void gctp_sincos( double val, double *sin_val, double *cos_val);
 double asinz (double con);
 double msfnz (double eccent, double sinphi, double cosphi);
 double qsfnz (double eccent, double sinphi ); 

@@ -1,4 +1,4 @@
-// $Id: wviifor.c,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: wviifor.c,v 1.2 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1991 United States Geological Survey
@@ -74,7 +74,7 @@ double s, c0, c1;
 /* Forward equations
   -----------------*/
 delta_lon = adjust_lon(lon - lon_center);
-sincos((delta_lon/3.0), &sin_lon, &cos_lon);
+gctp_sincos((delta_lon/3.0), &sin_lon, &cos_lon);
 s = 0.90631 * sin(lat);
 c0 = sqrt(1-s*s);
 c1 = sqrt(2.0 / (1.0 + c0 * cos_lon));

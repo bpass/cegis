@@ -1,4 +1,4 @@
-// $Id: alconfor.c,v 1.1 2005/01/14 16:18:48 rbuehler Exp $
+// $Id: alconfor.c,v 1.2 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -91,7 +91,7 @@ e = sqrt(es);
 esphi = e * sin(lat_center);
 chi = 2.0 * atan(tan((HALF_PI + lat_center)/2.0) * 
             pow(((1.0 - esphi)/(1.0 + esphi)),(e/2.0))) - HALF_PI;
-sincos(chi,&sin_p26,&cos_p26);
+gctp_sincos(chi,&sin_p26,&cos_p26);
 
 
 /* Report parameters to the user
@@ -138,11 +138,11 @@ dlon = adjust_lon( lon - lon_center);
 
 /* caluclate x' and y' for Oblique Stereographic Proj for LAT/LONG
 ----------------------------------------------------------------*/
-sincos(dlon,&sinlon,&coslon);
+gctp_sincos(dlon,&sinlon,&coslon);
 esphi = e * sin(lat);
 chi = 2.0 * atan(tan((HALF_PI + lat) / 2.0) * 
             pow(((1.0 - esphi) / (1.0 + esphi)),(e/2.0))) - HALF_PI;
-sincos(chi,&sinphi,&cosphi);
+gctp_sincos(chi,&sinphi,&cosphi);
 g = sin_p26 * sinphi + cos_p26 * cosphi * coslon;
 s = 2.0 / (1.0 + g);
 xp = s * cosphi * sinlon;

@@ -1,4 +1,4 @@
-// $Id: lamazfor.c,v 1.1 2005/01/14 16:18:49 rbuehler Exp $
+// $Id: lamazfor.c,v 1.2 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1991 United States Geological Survey
@@ -61,7 +61,7 @@ lon_center = center_long;
 lat_center = center_lat;
 false_easting = false_east;
 false_northing = false_north;
-sincos(center_lat, &sin_lat_o, &cos_lat_o);
+gctp_sincos(center_lat, &sin_lat_o, &cos_lat_o);
 
 /* Report parameters to the user
   -----------------------------*/
@@ -93,8 +93,8 @@ char mess[60];
 /* Forward equations
   -----------------*/
 delta_lon = adjust_lon(lon - lon_center);
-sincos(lat, &sin_lat, &cos_lat);
-sincos(delta_lon, &sin_delta_lon, &cos_delta_lon);
+gctp_sincos(lat, &sin_lat, &cos_lat);
+gctp_sincos(delta_lon, &sin_delta_lon, &cos_delta_lon);
 g = sin_lat_o * sin_lat + cos_lat_o * cos_lat * cos_delta_lon;
 if (g == -1.0) 
    {

@@ -1,4 +1,4 @@
-// $Id: polyfor.c,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: polyfor.c,v 1.2 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -104,7 +104,7 @@ if (fabs(lat) <= .0000001)
    }
 else
    {
-   sincos(lat,&sinphi,&cosphi);
+   gctp_sincos(lat,&sinphi,&cosphi);
    ml = mlfn(e0, e1, e2, e3, lat);
    ms = msfnz(e,sinphi,cosphi);
    con *= sinphi;

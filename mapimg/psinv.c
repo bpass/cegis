@@ -1,4 +1,4 @@
-// $Id: psinv.c,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: psinv.c,v 1.2 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -81,7 +81,7 @@ if (fabs(fabs(c_lat) - HALF_PI) > EPSLN)
    {
    ind = 1;
    con1 = fac * center_lat; 
-   sincos(con1,&sinphi,&cosphi);
+   gctp_sincos(con1,&sinphi,&cosphi);
    mcs = msfnz(e,sinphi,cosphi);
    tcs = tsfnz(e,con1,sinphi);
    }

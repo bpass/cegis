@@ -1,4 +1,4 @@
-// $Id: tmfor.c,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: tmfor.c,v 1.2 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1991 United States Geological Survey
@@ -121,7 +121,7 @@ double con, n, ml;	/* cone constant, small m			*/
 /* Forward equations
   -----------------*/
 delta_lon = adjust_lon(lon - lon_center);
-sincos(lat, &sin_phi, &cos_phi);
+gctp_sincos(lat, &sin_phi, &cos_phi);
 
 /* This part was in the fortran code and is for the spherical form 
 ----------------------------------------------------------------*/

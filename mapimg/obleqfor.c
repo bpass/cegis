@@ -1,4 +1,4 @@
-// $Id: obleqfor.c,v 1.1 2005/01/14 16:18:49 rbuehler Exp $
+// $Id: obleqfor.c,v 1.2 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1991 United States Geological Survey
@@ -78,7 +78,7 @@ offsetp(false_easting,false_northing);
 /* Calculate the sine and cosine of the latitude of the center of the map
    and store in static storage for common use.
   -------------------------------------------*/
-sincos(lat_o, &sin_lat_o, &cos_lat_o);
+gctp_sincos(lat_o, &sin_lat_o, &cos_lat_o);
 return(OK);
 }
 
@@ -107,12 +107,12 @@ double N;
 /* Forward equations
   -----------------*/
 delta_lon = lon - lon_center;
-sincos(lat, &sin_lat, &cos_lat);
-sincos(delta_lon, &sin_delta_lon, &cos_delta_lon);
+gctp_sincos(lat, &sin_lat, &cos_lat);
+gctp_sincos(delta_lon, &sin_delta_lon, &cos_delta_lon);
 z = acos(sin_lat_o * sin_lat + cos_lat_o * cos_lat * cos_delta_lon);
 Az = atan2(cos_lat * sin_delta_lon , cos_lat_o * sin_lat - sin_lat_o * 
 	cos_lat * cos_delta_lon) + theta;
-sincos(Az, &sin_Az, &cos_Az);
+gctp_sincos(Az, &sin_Az, &cos_Az);
 temp = 2.0 * sin(z / 2.0);
 x_prime = temp * sin_Az;
 y_prime = temp * cos_Az;

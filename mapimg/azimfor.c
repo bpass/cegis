@@ -1,4 +1,4 @@
-// $Id: azimfor.c,v 1.2 2005/01/28 17:59:06 jtrent Exp $
+// $Id: azimfor.c,v 1.3 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -60,7 +60,7 @@ lat_origin = center_lat;
 false_northing = false_north;
 false_easting = false_east;
 
-sincos(center_lat,&sin_p12,&cos_p12);
+gctp_sincos(center_lat,&sin_p12,&cos_p12);
 
 /* Report parameters to the user
   -----------------------------*/
@@ -93,7 +93,7 @@ char mess[80];		/* error message buffer				*/
 /* Forward equations
   -----------------*/
 dlon = adjust_lon(lon - lon_center);
-sincos(lat,&sinphi,&cosphi);
+gctp_sincos(lat,&sinphi,&cosphi);
 coslon = cos(dlon);
 g = sin_p12 * sinphi + cos_p12 * cosphi * coslon;
 if (fabs(fabs(g) - 1.0) < EPSLN)

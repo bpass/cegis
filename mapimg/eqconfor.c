@@ -1,4 +1,4 @@
-// $Id: eqconfor.c,v 1.2 2005/01/28 17:59:06 jtrent Exp $
+// $Id: eqconfor.c,v 1.3 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -81,7 +81,7 @@ e1 = e1fn(es);
 e2 = e2fn(es);
 e3 = e3fn(es);
 
-sincos(lat1,&sinphi,&cosphi);
+gctp_sincos(lat1,&sinphi,&cosphi);
 ms1 = msfnz(e,sinphi,cosphi);
 ml1 = mlfn(e0, e1, e2, e3, lat1);
 
@@ -94,7 +94,7 @@ if (mode != 0)
       p_error("Standard Parallels on opposite sides of equator","eqcon_for");
       return(81);
       }
-   sincos(lat2,&sinphi,&cosphi);
+   gctp_sincos(lat2,&sinphi,&cosphi);
    ms2 = msfnz(e,sinphi,cosphi);
    ml2 = mlfn(e0, e1, e2, e3, lat2);
    if (fabs(lat1 - lat2) >= EPSLN)

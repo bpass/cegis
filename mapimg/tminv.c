@@ -1,4 +1,4 @@
-// $Id: tminv.c,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: tminv.c,v 1.2 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1991 United States Geological Survey
@@ -167,7 +167,7 @@ for (i=0;;i++)
    }
 if (fabs(phi) < HALF_PI)
    {
-   sincos(phi, &sin_phi, &cos_phi);
+   gctp_sincos(phi, &sin_phi, &cos_phi);
    tan_phi = tan(phi);
    c    = esp * SQUARE(cos_phi);
    cs   = SQUARE(c);

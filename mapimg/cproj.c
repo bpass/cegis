@@ -1,4 +1,4 @@
-// $Id: cproj.c,v 1.2 2005/01/28 17:59:06 jtrent Exp $
+// $Id: cproj.c,v 1.3 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1991 United States Geological Survey
@@ -9,7 +9,7 @@ NAME                Projection support routines listed below.
 
 PURPOSE:	The following functions are included in CPROJ.C.
 
-		SINCOS:	  Calculates the sine and cosine.
+		gctp_sincos:	  Calculates the sine and cosine.
 		ASINZ:	  Eliminates roundoff errors.
 		MSFNZ:	  Computes the constant small m for Oblique Equal Area.
 		QSFNZ:	  Computes the constant small q for Oblique Equal Area.
@@ -52,7 +52,7 @@ S. Nelson, EROS		Jan, 1998	Changed misspelled error message
    than calling each function separately.  It is provided here for those
    computer systems which don`t implement this function
   ----------------------------------------------------*/
-void sincos(val, sin_val, cos_val)
+void gctp_sincos(val, sin_val, cos_val)
 double val;
 double *sin_val;
 double *cos_val;
@@ -132,7 +132,7 @@ long i;
       eccnts = eccent * eccent;
       for (i = 1; i <= 25; i++)
         {
-        sincos(phi,&sinpi,&cospi);
+        gctp_sincos(phi,&sinpi,&cospi);
         con = eccent * sinpi; 
         com = 1.0 - con * con;
         dphi = .5 * com * com / cospi * (qs / (1.0 - eccnts) - sinpi / com + 

@@ -1,4 +1,4 @@
-// $Id: gvnspinv.c,v 1.1 2005/01/14 16:18:48 rbuehler Exp $
+// $Id: gvnspinv.c,v 1.2 2005/03/03 15:26:30 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -64,7 +64,7 @@ lon_center = center_long;
 lat_center = center_lat;
 false_easting = false_east;
 false_northing = false_north;
-sincos(center_lat, &sin_p15, &cos_p15);
+gctp_sincos(center_lat, &sin_p15, &cos_p15);
 
 /* Report parameters to the user
   -----------------------------*/
@@ -110,7 +110,7 @@ if (r > sqrt(con/com))
    }
 sinz = (p - sqrt(1.0 - (r * r * com) / con)) / (con / r + r/con);
 z = asinz(sinz);
-sincos(z,&sinz,&cosz);
+gctp_sincos(z,&sinz,&cosz);
 *lon = lon_center;
 if (fabs(rh) <= EPSLN)
    {

@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.14 2005/03/02 16:26:25 jtrent Exp $
+// $Id: mapimg.h,v 1.15 2005/03/03 15:26:30 jtrent Exp $
 
 
 #ifndef MAPIMG_H
@@ -40,8 +40,6 @@ namespace mapimg
       int right_hold_point = right;
       type pivot_value = castValues[left]; //(rand()%right)+left));
 
-      //qDebug( QString("Here pivot = %1").arg( pivot_value ).ascii() );
-
       while( left < right )
       {
          while( (castValues[right] >= pivot_value) && (left < right) )
@@ -65,7 +63,6 @@ namespace mapimg
             right--;
          }
       }
-      //        qDebug( "Here 2" );
 
       castValues[left] = pivot_value;
 
@@ -83,21 +80,14 @@ namespace mapimg
          if( leftReturn != -1 )
              returnValue = leftReturn;
       }
-      //qDebug( QString("Here 3, %1 %2 %3").arg( size ).arg( pivot_point+1 ).arg( right ).ascii() );
 
       if( right > pivot_point )
       {
-         //qDebug( "Here 3a" );
          int rightReturn = mapimg::quickSortAndSearch<type>( values, searchValue, size, pivot_point+1, right );
 
          if( rightReturn != -1 )
              returnValue = rightReturn;
-
-         //qDebug( "Here 3b" );
       }
-
-      //qDebug( "Here 4" );
-
 
       return returnValue;
    }

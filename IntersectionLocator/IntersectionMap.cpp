@@ -18,10 +18,11 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionMap.cpp,v 1.3 2004/11/02 01:20:46 rstelzleni Exp $
+// $Id: IntersectionMap.cpp,v 1.4 2004/11/10 17:04:09 ahartman Exp $
 
 
 #include "IntersectionMap.h"
+#include <sstream> // for ostringstream
 
 
 // Locates the intersections and stores intersection information about what
@@ -182,8 +183,8 @@ void IntersectionMap::iterativelyFindControlPoints( InMemRaster &rasta,
          // Get the starting point and iterate over the area, comparing
          // the template at each location and keeping track of the greatest
          // correlation factor.
-         startX = i->first.getX();
-         startY = i->first.getY();
+         startX = const_cast<OGRPoint&>(i->first).getX();
+         startY = const_cast<OGRPoint&>(i->first).getY();
          rasta.vector2Raster( startX, startY );
 
          // Reset these variables for this iteration.
@@ -261,7 +262,7 @@ void IntersectionMap::pickHighestCorrelation(
                                      std::vector<ControlPoint> &vNewVals )
 {
    double dTotalCControl = 0, dTotalCNew = 0;
-   int i;
+   unsigned int i;
 
    for( i = 0; i<vControl.size(); ++i )
    {
@@ -333,8 +334,8 @@ void IntersectionMap::findControlPoints( InMemRaster &rasta,
       // Get the starting point and iterate over the area, comparing
       // the template at each location and keeping track of the greatest
       // correlation factor.
-      startX = i->first.getX();
-      startY = i->first.getY();
+      startX = const_cast<OGRPoint&>(i->first).getX();
+      startY = const_cast<OGRPoint&>(i->first).getY();
       rasta.vector2Raster( startX, startY );
 
       // Reset these variables for this iteration.
@@ -735,7 +736,7 @@ void IntersectionMap::fillTemplate( Template &T,
 
    iter = mIntersectMap.find( intersection );
 
-   for( int x=0; x<iter->second.size(); ++x )
+   for( unsigned int x=0; x<iter->second.size(); ++x )
    {
       // iter->second[x].first is the number of the line
       // This funcion will put a string into type to identify the road type
@@ -763,7 +764,7 @@ void IntersectionMap::templateTest( int i, const char *szFilename )
    std::string file;
    std::string type;
 
-   char temp[50];
+   std::string temp;
    int count = 0;
  
    OGRLineString *pLine;
@@ -774,11 +775,12 @@ void IntersectionMap::templateTest( int i, const char *szFilename )
       if( iter->second.size() > INTERSECT_ROAD_LIMIT )
       {
          printf( "%f, %f are the point's coordinates\n", 
-                 iter->first.getX(), iter->first.getY() );
+                 const_cast<OGRPoint&>(iter->first).getX(), 
+                 const_cast<OGRPoint&>(iter->first).getY() );
          printf( "%i lines in this intersection\n", iter->second.size() );
          Template T( 20, 20, iter->first );
 
-         for( int x=0; x<iter->second.size(); ++x )
+         for( unsigned int x=0; x<iter->second.size(); ++x )
          {
             // iter->second[x].first is the number of the line
             pLine = getLine( iter->second[x].first, type );
@@ -799,7 +801,12 @@ void IntersectionMap::templateTest( int i, const char *szFilename )
             delete pLine;
          }
          file = szFilename;
-         itoa( count, temp, 10 );
+         {
+             std::ostringstream output_string;
+             output_string << count;
+             temp = output_string.str();
+         }
+         
          file += temp;
          file += ".txt";
          T.dumpToFile( file.c_str() );

@@ -1,4 +1,4 @@
-// $Id: rasterinfo.h,v 1.5 2005/02/05 00:16:55 rbuehler Exp $
+// $Id: rasterinfo.h,v 1.7 2005/03/15 17:34:42 jtrent Exp $
 
 
 #ifndef RASTERINFO_H
@@ -53,6 +53,7 @@ public:
    bool setProjection( int projNumber, int zoneNumber = 62, int datumNumber = 19, int unitNumber = 2 );
    bool setProjectionNumber( int projNumber );
    bool setZoneNumber( int zoneNumber );
+   bool setUnitNumber( int unitNumber );
    int projectionNumber() const {return projcode;}
    int zoneNumber() const {return zonecode;}
    int datumNumber() const {return datumcode;}

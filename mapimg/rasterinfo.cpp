@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.8 2005/02/18 00:08:04 rbuehler Exp $
+// $Id: rasterinfo.cpp,v 1.10 2005/03/15 17:34:42 jtrent Exp $
 
 
 #include "rasterinfo.h"
@@ -168,9 +168,10 @@ bool RasterInfo::setProjection( int projNumber, int zoneNumber, int datumNumber,
 
 bool RasterInfo::setProjectionNumber( int projNumber )
 {
-   projcode = projNumber;
+   if( projcode >= 0 && projcode < 31 )
+       projcode = projNumber;
 
-   return projcode >= 0 && projcode < 31;
+   return projcode == projNumber;
 }
 
 bool RasterInfo::setZoneNumber( int zoneNumber )
@@ -178,11 +179,20 @@ bool RasterInfo::setZoneNumber( int zoneNumber )
    zonecode = zoneNumber;
 
    if( projcode != 1 ||
-      (zonecode > 60 && zonecode != 62) || 
+      (zonecode > 60 && zonecode != 62) ||
       ( zonecode < -60 ) || ( zonecode == 0 ) )
       zonecode = 62;
 
    return zonecode == zoneNumber;
+}
+
+bool RasterInfo::setUnitNumber( int unitNumber )
+{
+   unitcode = unitNumber;
+   
+
+
+   return unitcode == unitNumber;
 }
 
 bool RasterInfo::setGctpParam(int i, double value)
@@ -192,7 +202,7 @@ bool RasterInfo::setGctpParam(int i, double value)
       gctpParams[i] = value;
       return true;
    }
-   
+
    return false;
 }
 

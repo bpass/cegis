@@ -250,8 +250,10 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
                                     coord[1] = currentY;
 
                                     //Loads into memory the current line of input needed
-                                    get_line(  mapimginbuf, coord[1]*inimg.ns, inimg.ns+1, useType );
-
+                                    get_line(  mapimginbuf, coord[1]*inimg.ns, inimg.ns, useType );
+				    if( mapimginbuf == NULL )
+				    	break;
+				    
 	                            for(int currentX = iround(minx); currentX <= iround(maxx); currentX++)
 	                            {
 	                                coord[0] = currentX;

@@ -12,6 +12,16 @@
 #define OUTFILE_NAME	2
 
 
+#define _LARGEFILE_SOURCE
+#define _LARGEFILE64_SOURCE
+#define _FILE_OFFSET_BITS 64
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
+
 #include <qmessagebox.h>
 
 struct IMGINFO
@@ -64,9 +74,64 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type typeToUse)
 	strncat(outfile_info, ".info", 500);
 
 	// Open input file and check for any errors
-	inptr = fopen(infile_name, "rb");
+	inptr = fopen64(infile_name, "rb");
 	if(!inptr)
 	{
+		int dangErrCode = errno;//ferror( inptr );
+		
+		if( dangErrCode == EINVAL )
+		{
+			printf ("Input mode invalid\n" );
+			fflush( stdout );
+		}
+		else if( dangErrCode == EACCES || dangErrCode == EAGAIN )
+		{
+			printf ("Operation is prohibited by locks held by other  processes. Or, by another process.\n" );
+			fflush( stdout );
+		}
+		else if( dangErrCode == EBADF )
+		{
+			printf ("fd is not an open file descriptor, or the command was F_SETLK or F_SETLKW  and  the  file descriptor open mode doesn't match with the type of lock requested.\n" );
+			fflush( stdout );
+		}
+		
+		else if( dangErrCode == EDEADLK )
+		{
+			printf ("It was detected that the specified F_SETLKW command would  cause  a deadlock.\n" );
+			fflush( stdout );
+		}
+		else if( dangErrCode == EFAULT )
+		{
+			printf ("lock is outside your accessible address space.\n" );
+			fflush( stdout );
+		}
+		else if( dangErrCode == EINTR )
+		{
+			printf ("For  F_SETLKW,  the  command  was  interrupted by a signal. For F_GETLK and F_SETLK, the command was  interrupted  by  a signal before the lock was checked or acquired.  Most likely when lock-ing a remote file (e.g. locking over  NFS),  but  can  sometimes happen locally.\n" );
+			fflush( stdout );
+		}
+		else if( dangErrCode == EMFILE )
+		{
+			printf ("For  F_DUPFD, the process already has the maximum number of file descriptors open.\n" );
+			fflush( stdout );
+		}
+		else if( dangErrCode == ENOLCK )
+		{
+			printf ("Too many segment locks open, lock table is  full,  or  a  remote locking protocol failed (e.g. locking over NFS).\n" );
+			fflush( stdout );
+		}
+		else if( dangErrCode == EPERM )
+		{
+			printf ("Attempted  to  clear  the  O_APPEND  flag on a file that has the  append-only attribute set.\n" );
+			fflush( stdout );
+		}
+		else 
+		{
+			printf ("Undefined = %i opening %s\n", errno, infile_name );
+			fflush( stdout );
+		}
+
+		
 	    early_error_cleanup();
 	    QMessageBox::critical( 0, "MapIMG",
 	    QString("An internal error occurred while trying to open the designated input file\n\nMapIMG will not execute."));
@@ -74,7 +139,7 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type typeToUse)
 	}
 
 	// Open output file and check for any errors
-	outptr = fopen(outfile_name, "wb");
+	outptr = fopen64(outfile_name, "wb");
 	if(!outptr)
 	{
 	    early_error_cleanup();
@@ -226,23 +291,26 @@ void get_image(void * buf, type typeToUse)
 // ---------------------------
 extern FILE * inptr;				// Input file pointer  from imgio.cpp
 extern long insize;				// Number of bytes in input image
-static long get_line_loadedData;
+static off64_t get_line_loadedData;
 
-#include <qintcache.h>
+#include <qcache.h>
 static int MAX_DATA_ELEMENT_COUNT = 10;
 static int FRIST_PRIME_AFTER_MAX = 11;
 
 template <class type>
-void get_line(void* &buf, long offset, int lineLength, type typeToUse)
+void get_line(void* &buf, off64_t offset, int lineLength, type typeToUse)
 {
-  static QIntCache<type> inputDataMap( MAX_DATA_ELEMENT_COUNT, FRIST_PRIME_AFTER_MAX );
+  static QCache<type> inputDataMap( MAX_DATA_ELEMENT_COUNT, FRIST_PRIME_AFTER_MAX );
   inputDataMap.setAutoDelete( true );
 
      // check and see if line requested is already in memory
-     if( inputDataMap.find( offset ) ==  0 )
+     QString offsetString = "";
+     offsetString.setNum( offset );
+     
+     if( inputDataMap.find( offsetString ) ==  0 )
      {
 
-        if( fseek( inptr, offset * sizeof(type), 0 ) != 0 )
+        if( fseeko64( inptr, offset * sizeof(type), 0 ) != 0 )
         {
             // end of file or corrupt file found
             p_error( "seek_image: error!", "[image read]");
@@ -250,25 +318,103 @@ void get_line(void* &buf, long offset, int lineLength, type typeToUse)
 
         //then load the line into memory
         type *newBuffer = new type[insize];
-        fread( newBuffer, sizeof(type), insize, inptr );
-
-        if( inputDataMap.insert( offset, (type*)newBuffer ) != true )
-        {
-           printf( "Error deleting least recently used item.\n" );
-           fflush( stdout );
-        }
+  	long amountRead = fread(newBuffer, sizeof(type), insize, inptr);
+	
+	if( amountRead != insize )
+	{
+		printf( "Read %i requested %i\n", amountRead, insize );
+		fflush( stdout );
+	
+		if( feof( inptr ) )
+		{
+			printf( "End-of-File reached\n" );
+			fflush( stdout );
+		}
+		else if( ferror(inptr) )
+		{
+			printf( "Error on read. Damn you LFS!!!\n" );
+			fflush(stdout);
+		
+		
+			if( ferror(inptr) == EACCES  )
+			{
+				printf( "Another process has the file locked.\n" );
+				fflush(stdout); 
+			}
+			else if( ferror(inptr) == EAGAIN  )
+			{
+				printf( "The underlying file descriptor is in non-blocking mode, and the process would be delayed waiting for data to become available.\n" );
+				fflush(stdout);
+			}
+			else if( ferror(inptr) == EBADF  )
+			{
+				printf( "stream is not a valid stream opened for reading.\n" );
+				fflush(stdout);
+			}
+			else if( ferror(inptr) == EINTR  )
+			{
+				printf( "A signal interrupted the call.\n" );
+				fflush(stdout);
+			}
+			else if( ferror(inptr) == EIO  )
+			{
+				printf( "An input error occurred.\n" );
+				fflush(stdout);
+			}
+			else if( ferror(inptr) == EISDIR  )
+			{
+				printf( "The open object is a directory, not a file.\n" );
+				fflush(stdout);
+			}
+			else if( ferror(inptr) == ENOMEM  )
+			{
+				printf( "Memory could not be allocated for internal buffers.\n" );
+				fflush(stdout);
+			}
+			else if( ferror(inptr) == ENXIO  )
+			{
+				printf( "A device error occurred.\n" );
+				fflush(stdout);
+			}
+			else if( ferror(inptr) == EOVERFLOW  )
+			{
+				printf( "The file is a regular file and an attempt was made to read at or beyond the offset maximum associated with the corresponding stream.\n" );
+				fflush(stdout);
+			}
+			else if( ferror(inptr) == EWOULDBLOCK  )
+			{
+				printf( "The underlying file descriptor is a non-blocking socket and no data is ready to be read.\n" );
+				fflush(stdout);
+			}
+			else
+			{
+				printf( "none of the above %i\n", ferror(inptr) );
+				fflush( stdout );
+			}
+			clearerr( inptr );
+		}
+	}
+	else
+	{
+        	if( inputDataMap.insert( offsetString, (type*)newBuffer ) != true )
+        	{
+	           printf( "Error deleting least recently used item.\n" );
+        	   fflush( stdout );
+	        }
+	}
      }
 
 
-     if( inputDataMap.find( offset ) !=  0 )
+     if( inputDataMap.find( offsetString ) !=  0 )
      {
-       buf = inputDataMap.find( offset );
+       buf = inputDataMap.find( offsetString );
 
      }
      else
      {
        printf( "Error inserting into and retreiving from least recently used cache.\n" );
        fflush( stdout );
+       buf = NULL;
      }
 /*
      if( get_line_loadedData != offset )

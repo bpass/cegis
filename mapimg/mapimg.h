@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.6 2005/01/31 17:24:04 jtrent Exp $
+// $Id: mapimg.h,v 1.7 2005/02/05 00:16:55 rbuehler Exp $
 
 
 #ifndef MAPIMG_H
@@ -17,7 +17,7 @@ namespace mapimg
    QString projectionErrors( RasterInfo &input );
 
    void frameIt( RasterInfo &input);
-   bool downSampleImg( RasterInfo &input, int maxDimension );
+   bool downSampleImg( RasterInfo &input, RasterInfo &output, int maxDimension );
    bool downSizeProjection( RasterInfo &input, int maxDimension );
    double calcFillValue( RasterInfo &input );
    bool reproject( RasterInfo &input, RasterInfo &output, ResampleInfo resample, QWidget *parent = 0 );

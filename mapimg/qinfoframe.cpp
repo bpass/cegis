@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.4 2005/01/31 17:24:07 jtrent Exp $
+// $Id: qinfoframe.cpp,v 1.5 2005/02/05 00:16:55 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -705,7 +705,7 @@ void QInfoFrame::setInfo( RasterInfo &input )
       gctpTab->gctpBoxes[i]->setValue( input.gctpParam(i) );
 }
 
-/*!!!!!!!!!!!!!!!!
+/*DBG
    writeInfo(QString) saves all of the entered values to a mapimg formatted
 ".info" file if they all check-out OK. It cleanUp()'s any lineEdits into which
 the user could potentially put "messy" data. If it is writing over a file it

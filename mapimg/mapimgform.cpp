@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.8 2005/02/03 18:12:18 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.9 2005/02/05 00:16:55 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -476,9 +476,9 @@ void mapimgForm::inSaveClicked()
    {
       int arg = QMessageBox::question( this, "Overwrite File?",
          QString("%1\n\nInput XML file already exists. Do you want to overwrite it?").arg(i.xmlFileName()),
-         "Yes", "No");
+         QMessageBox::Yes, QMessageBox::No);
 
-      if( arg == 1 )
+      if( arg == QMessageBox::Yes )
       {
          i.load();
          inInfoFrame->setInfo( i );
@@ -519,8 +519,9 @@ void mapimgForm::previewProjClicked()
       return;
    mapimg::frameIt( output );
 
-   mapimg::downSampleImg( input, 720 );
-   input.save();
+   RasterInfo smallInput;
+   mapimg::downSampleImg( input, smallInput, 720 );
+   smallInput.save();
 
    if( !mapimg::downSizeProjection( output, 720 ) )
    {
@@ -537,7 +538,7 @@ void mapimgForm::previewProjClicked()
    resample.setFillValue( input.fillValue() );
    resample.setNoDataValue( input.noDataValue() );
 
-   mapimg::reproject( input, output, resample );
+   mapimg::reproject( smallInput, output, resample );
 
    inInfoAction->setOn(false);
    viewShowAction->setOn(true);
@@ -572,7 +573,6 @@ void mapimgForm::outSaveClicked()
       return;
 
    mapimg::frameIt( output );
-   outInfoFrame->setInfo( output );
 
    QString temp = QFileDialog::getSaveFileName(
          outPath, "mapimg Raster Files (*.img)", this, "", "Choose a destination for the reprojection");

@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.8 2005/02/03 18:12:18 jtrent Exp $
+// $Id: mapimg.cpp,v 1.9 2005/02/05 00:16:55 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -271,19 +271,21 @@ void mapimg::frameIt( RasterInfo &input )
       (int)(mapimg::round( ((pxmax - pxmin) / pixsize) )) );
 }
 
-bool mapimg::downSampleImg( RasterInfo &input, int maxDimension )
+bool mapimg::downSampleImg( RasterInfo &input, RasterInfo &output, int maxDimension )
 {
-   RasterInfo old(input);
-   mapimg::downSizeProjection(input, maxDimension);
+   output.copy(input);
 
-   input.setFileName( QDir::currentDirPath().append("/temp.img") );
+   output.setFileName( QDir::currentDirPath().append("/temp.img") );
+   mapimg::downSizeProjection(output, maxDimension);
 
    ResampleInfo resample;
    resample.setResampleCode( ResampleInfo::NearestNeighbor );
-   resample.setFillValue( old.fillValue() );
-   resample.setNoDataValue( old.noDataValue() );
+   resample.setFillValue( input.fillValue() );
+   resample.setNoDataValue( input.noDataValue() );
 
-   mapimg::reproject(old, input, resample);
+   mapimg::reproject(input, output, resample);
+   output.save();
+
 
    return true;
 }

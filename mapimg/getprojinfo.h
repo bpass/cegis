@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.4 2005/02/03 18:12:18 jtrent Exp $
+// $Id: getprojinfo.h,v 1.5 2005/02/05 00:16:55 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -141,13 +141,13 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
     // Initialize input & output space image & projections
     ioreturnval = init_io(input, output, &inimg, &outimg, useType );
 
-    if(!ioreturnval)	/* jtrent    is this needed anymore?? */
-    {
+    /*if(!ioreturnval)	// jtrent    is this needed anymore?? 
+    {                   // rbuehler  my guess would be no. 
 	remove("abctempxyz31199.proj");
 	remove("abctempxyz311992.proj");
 	mapimgdial->setEnabled(true);
 	return true;
-    }
+    }*/
 
     // Progress Dialog added in QT
     QProgressDialog progress( "Performing Transformation", "Abort", outimg.nl,
@@ -176,8 +176,6 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 	}
 
 	out[1] = outimg.ul_y - (out_line * outimg.pixsize);		// Calc out-img proj_Y coord
-
-
 
 	for (out_samp = 0; out_samp < outimg.ns; out_samp++)	// For each output image sample
 	{

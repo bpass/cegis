@@ -1,4 +1,4 @@
-// $Id: rasterinfo.h,v 1.4 2005/02/01 17:20:59 rbuehler Exp $
+// $Id: rasterinfo.h,v 1.5 2005/02/05 00:16:55 rbuehler Exp $
 
 
 #ifndef RASTERINFO_H
@@ -22,16 +22,16 @@ public:
 
    //Author
    bool setAuthor( QString &name, QString &company, QString &email );
-   QString author(){return aName;}
-   QString company(){return aCompany;}
-   QString email(){return aEmail;}
+   QString author() const {return aName;}
+   QString company() const {return aCompany;}
+   QString email() const {return aEmail;}
 
    //Area
    bool setArea( double ul_X, double ul_Y, int rows, int cols );
-   double ul_X(){return ulx;}
-   double ul_Y(){return uly;}
-   int rows(){return row;}
-   int cols(){return col;}
+   double ul_X() const {return ulx;}
+   double ul_Y() const {return uly;}
+   int rows() const {return row;}
+   int cols() const {return col;}
 
    //Pixel Description
    bool setPixelDescription( const QString &dataType, double pixelSize, double fillValue, double noDataValue );
@@ -41,27 +41,27 @@ public:
    bool setPixelSize( double pixelSize );
    bool setFillValue( double fillValue );
    bool setNoDataValue( double noDataValue );
-   QString dataType(){return datatype;}
-   bool isSigned(){return signd;}
-   int bitCount(){return bits;}
-   QString type(){return datatype;}
-   double pixelSize(){return pixsize;}
-   double fillValue(){return fillval;}
-   double noDataValue(){return noval;}
+   QString dataType() const {return datatype;}
+   bool isSigned() const {return signd;}
+   int bitCount() const {return bits;}
+   QString type() const {return datatype;}
+   double pixelSize() const {return pixsize;}
+   double fillValue() const {return fillval;}
+   double noDataValue() const {return noval;}
 
    //Projection
    bool setProjection( int projNumber, int zoneNumber = 62, int datumNumber = 19, int unitNumber = 2 );
    bool setProjectionNumber( int projNumber );
    bool setZoneNumber( int zoneNumber );
-   int projectionNumber(){return projcode;}
-   int zoneNumber(){return zonecode;}
-   int datumNumber(){return datumcode;}
-   int unitNumber(){return unitcode;}
+   int projectionNumber() const {return projcode;}
+   int zoneNumber() const {return zonecode;}
+   int datumNumber() const {return datumcode;}
+   int unitNumber() const {return unitcode;}
 
    //GCTP Parameters
    bool setGctpParam(int i, double value);
-   double gctpParam(int i){return ((i>=0)&&(i<15))?gctpParams[i]:0.0;}
-   double *allGctpParams(){return gctpParams;}
+   double gctpParam(int i) const {return ((i>=0)&&(i<15))?gctpParams[i]:0.0;}
+   double *allGctpParams() const {return gctpParams;}
 
    //I/O
    bool load();
@@ -75,9 +75,10 @@ public:
    bool ready();
    bool notReady();
    
+   void copy( const RasterInfo &src );
+
 private:
    void defaults();
-   void copy( const RasterInfo &src );
    bool parseFileName();
    void loadInfo();
    bool loadXml();

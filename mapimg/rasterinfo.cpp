@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.5 2005/02/01 17:20:59 rbuehler Exp $
+// $Id: rasterinfo.cpp,v 1.6 2005/02/01 18:11:55 rbuehler Exp $
 
 
 #include "rasterinfo.h"
@@ -428,6 +428,7 @@ void RasterInfo::defaults()
    datatype = QString::null;
    pixsize = -1.0;
    fillval = -1.0;
+   noval = -1.0;
 
    projcode = -1;
    zonecode = 62;
@@ -456,6 +457,7 @@ void RasterInfo::copy( const RasterInfo &src )
    datatype = src.datatype;
    pixsize = src.pixsize;
    fillval = src.fillval;
+   noval = src.noval;
 
    projcode = src.projcode;
    zonecode = src.zonecode;

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.6 2005/02/01 17:20:59 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.7 2005/02/01 18:11:55 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -529,9 +529,6 @@ void mapimgForm::previewProjClicked()
       return;
    }
 
-   inInfoAction->setOn(false);
-   viewShowAction->setOn(true);
-
    output.setFileName( QDir::currentDirPath().append("/mapimg.img") );
    output.save();
 
@@ -542,6 +539,8 @@ void mapimgForm::previewProjClicked()
 
    mapimg::reproject( input, output, resample );
 
+   inInfoAction->setOn(false);
+   viewShowAction->setOn(true);
    imgFrame->loadImg( output.imgFileName(), true );
 }
 

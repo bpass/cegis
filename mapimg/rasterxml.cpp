@@ -1,4 +1,4 @@
-// $Id: rasterxml.cpp,v 1.5 2005/02/01 16:08:13 jtrent Exp $
+// $Id: rasterxml.cpp,v 1.6 2005/02/01 18:11:55 rbuehler Exp $
 
 
 /*  To Do:
@@ -793,7 +793,7 @@ void RasterXML::setFillValue(double val) {
 		TiXmlText* fillValueT = handle.FirstChild("rasterInformation").FirstChild("pixelDescription").FirstChild("fillValue").FirstChild().Text();
 		if(fillValueT) {
 			char temp[20] = {'\0'};
-			sprintf(temp, "%f", val);
+			sprintf(temp, "%19f", val);
 			fillValueT->SetValue(temp);
 		}
 
@@ -814,7 +814,7 @@ void RasterXML::setNoDataValue(double val) {
 		TiXmlText* noDataValueT = handle.FirstChild("rasterInformation").FirstChild("pixelDescription").FirstChild("noDataValue").FirstChild().Text();
 		if(noDataValueT) {
 			char temp[20] = {'\0'};
-			sprintf(temp, "%f", val);
+			sprintf(temp, "%19f", val);
 			noDataValueT->SetValue(temp);
 		}
 

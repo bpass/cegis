@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.cpp,v 1.8 2005/03/16 16:17:06 jtrent Exp $
+// $Id: mapimgvalidator.cpp,v 1.9 2005/03/18 17:39:32 jtrent Exp $
 
 #include <qvalidator.h>
 #include <qstring.h>
@@ -41,7 +41,7 @@ MapimgValidator::MapimgValidator( QString mapimgDataType, bool allowUndefined, Q
    setDataType( mapimgDataType );
 }
 
-void MapimgValidator::setDataType( QString mapimgDataType )
+void MapimgValidator::setDataType( QString mapimgDataType, bool quiet )
 {
    if( mapimgDataType.contains( "Unsigned" ) )
    {
@@ -56,7 +56,7 @@ void MapimgValidator::setDataType( QString mapimgDataType )
          m_top = Q_UINT32_MAX;
       else
       {
-         QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
+         if( !quiet ) QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
          m_top = Q_UINT32_MAX;
       }
    }
@@ -89,7 +89,7 @@ void MapimgValidator::setDataType( QString mapimgDataType )
          }
          else
          {
-            QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
+            if( !quiet ) QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
             m_bottom = Q_INT32_MIN;
             m_top = Q_INT32_MAX;
          }
@@ -103,14 +103,14 @@ void MapimgValidator::setDataType( QString mapimgDataType )
       }
       else //Signed with out proper bit or int/float string
       {
-         QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
+         if( !quiet ) QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
          m_bottom = Q_INT32_MIN;
          m_top = Q_INT32_MAX;
       }
    }
    else //Completely invalid string
    {
-      QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
+      if( !quiet ) QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
       m_bottom = Q_INT32_MIN;
       m_top = Q_INT32_MAX;
       m_decimals = 0;

@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.h,v 1.9 2005/03/16 16:17:06 jtrent Exp $
+// $Id: mapimgvalidator.h,v 1.10 2005/03/18 17:39:32 jtrent Exp $
 
 #ifndef MAPIMGVALIDATOR_H
 #define MAPIMGVALIDATOR_H
@@ -32,7 +32,7 @@ public:
    void fixup( QString& input ) const;
 
    virtual void setRange( double bottom, double top, int decimals = 0 );
-   void setDataType( QString mapimgDataType );
+   void setDataType( QString mapimgDataType, bool quiet = false );
    void setBottom( double bottom );
    void setTop( double top );
    void setDecimals( int decimals );

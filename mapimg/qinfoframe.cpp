@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.16 2005/03/17 18:57:25 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.17 2005/03/18 17:39:32 jtrent Exp $
 
 
 #include "qinfoframe.h"
@@ -424,7 +424,7 @@ void QGctpTab::projChange()
 {
    int projNum = combo2proj( projCombo->currentItem() );
    char variation = projCombo->currentText().right(1)[0].latin1();
- 
+
    QStringList projNames = gctpNames( projNum, variation );
    for( int i = 0; i < 15; ++i )
       gctpBoxes[i]->setGctpName( projNames[i] );
@@ -519,7 +519,7 @@ void QInfoFrame::fixWidth( uint w )
 }
 
 /*
-   This function is mainly used by the lock(bool) function to restrict or 
+   This function is mainly used by the lock(bool) function to restrict or
 allow all access to the parameters found in a QInfoFrame.
 */
 void QInfoFrame::setReadOnly( bool ro )
@@ -654,7 +654,7 @@ void QInfoFrame::setPartner( QInfoFrame *i )
 }
 
 /*
-   The copy(QInfoFrame*) function is used to copy data from one frame into 
+   The copy(QInfoFrame*) function is used to copy data from one frame into
 another. Its most obvious usage is to pass it a the QInfoFrame that you want
 to copy. However, for my own purposes, I have added an extra feature where the
 function can be called with no parameters and it will rely on a setPartner().
@@ -700,16 +700,55 @@ void QInfoFrame::partnerChanged()
 {
    mapTab->dataCombo->setCurrentItem(
       partner->mapTab->dataCombo->currentItem() );
-   mapTab->fillEdit->setText(
-      partner->mapTab->fillEdit->text() );
-   mapTab->noDataEdit->setText(
-      partner->mapTab->noDataEdit->text() );
+   
+    if( mapTab->fillEdit->validator() != 0 )
+    {
+    	QString fillString = mapTab->fillEdit->text();
+        ((MapimgValidator*)mapTab->fillEdit->validator())->setDataType( mapTab->dataCombo->currentText(), true );
+        ((MapimgValidator*)mapTab->fillEdit->validator())->fixup( fillString );
+        mapTab->fillEdit->setText( fillString );
+    }
+
+    if( mapTab->noDataEdit->validator() != 0 )
+    {
+    	QString noDataString = mapTab->noDataEdit->text();
+        ((MapimgValidator*)mapTab->noDataEdit->validator())->setDataType( mapTab->dataCombo->currentText(), true );
+        ((MapimgValidator*)mapTab->noDataEdit->validator())->fixup( noDataString );
+        mapTab->noDataEdit->setText( noDataString );
+    }
+
+
+   QString fillString = partner->mapTab->fillEdit->text();
+
+   if( fillString.upper() == "UNDEFINED" && static_cast<QLabel*>(mapTab->child( "mapLabel" ))->text().contains( "Output", false ) )
+   {
+       mapTab->fillEdit->setEnabled( true );
+       mapTab->fillButton->setShown( true );
+   }
+   else
+   {
+       mapTab->fillEdit->setEnabled( false );
+       mapTab->fillButton->setShown( false );
+       mapTab->fillEdit->setText( fillString );
+   }
+
+   QString noDataString = partner->mapTab->noDataEdit->text();
+
+   if( noDataString.upper() == "UNDEFINED" && static_cast<QLabel*>(mapTab->child( "mapLabel" ))->text().contains( "Output", false ) )
+   {
+       mapTab->noDataEdit->setEnabled( true );
+   }
+   else
+   {
+       mapTab->noDataEdit->setEnabled( false );
+       mapTab->noDataEdit->setText( noDataString );
+   }
 }
 
 /*
    The lock(bool) function is used for locking and unlocking QInfoFrames. The
 event that triggers this function is usually a click of the lockButton found
-in this QInfoFrame's mapTab and gctpTab. They are toggle buttons that emit 
+in this QInfoFrame's mapTab and gctpTab. They are toggle buttons that emit
 whether they are locking or unlocking with the current click.
 */
 void QInfoFrame::lock( bool on, bool saveFile )
@@ -760,7 +799,15 @@ bool QInfoFrame::frame()
 
 void QInfoFrame::getFill()
 {
-   RasterInfo inf( info() );
+   RasterInfo inf;
+   if( static_cast<QLabel*>(mapTab->child( "mapLabel" ))->text().contains( "Output", false ) )
+   {
+       inf.copy( partner->info() );
+   }
+   else
+   {
+   	inf.copy( info() );
+   }
 
    double maxValue = mapimg::calcFillValue(inf);
    QString fillString = "0.000000";

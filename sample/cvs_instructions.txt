@@ -1,0 +1,23 @@
+CVS Setup and Checkout Instructions
+
+Windows Users:
+	1) From Labrat goto /cartoresearch/CVS_Tools/ and copy Tot....
+
+
+Linux Users:
+	1a) Run Cervisia (under More Applications -> Development -> Tools in Mandrake 10)
+
+	2a) In Cervisia choose Repository -> Repositories...
+
+	3a) On the Configure Access... dialog choose Add... and enter the following information:
+		Repository:	:ext:username@centaur:/cvs
+		Remote Shell:	ssh
+		Leave everything else alone
+
+	4a) From Cervisia's main windows choose Repository -> Checkout... and enter the following information:
+		Repository:	select the entry you just made from the drop-down box
+		Module:		sample    (this is case sensative)
+		Branch tag:	Leave Blank
+		Working Folder:	Select where to create the checkout locaclly
+
+	5a) You should now have a checked out version of "sample"

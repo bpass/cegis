@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.25 2005/03/17 20:17:36 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.26 2005/03/18 18:52:37 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -853,11 +853,36 @@ void mapimgForm::launchWebTool( const QString& url )
     QProcess web( this, "webTool" );
     bool supportedPlatform = true;
 
-#ifdef Q_OS_WIN32
+#if defined(Q_OS_WIN32)
     web.addArgument( "cmd" );
     web.addArgument( "/c" );
     web.addArgument( "start" );
     web.addArgument( url );
+#elif defined(Q_OS_LINUX)
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    //get : delimited list of all perferred browsers 
+    QCString allBrowsers = getenv( "BROWSER" );
+    
+    if( allBrowsers.isEmpty() ) //if it is empty we're hosed
+    {
+       qDebug( "No $BROWSER environment varialbe set." );
+       supportedPlatform = false;
+    }
+    else
+    {
+       //split the list
+       QStringList browsers = QStringList::split( ":" , allBrowsers );
+       
+       //grab the first (default)
+       QString browser = *browsers.begin();
+       web.addArgument( browser );
+       web.addArgument( url );
+       web.addArgument( "&" );
+       
+       qDebug( "command: %s", web.arguments().join( " " ).ascii() );
+    }
 #else
     supportedPlatform = false;
 #endif

@@ -1,4 +1,4 @@
-// $Id: polyinv.c,v 1.2 2005/01/27 18:56:21 jtrent Exp $
+// $Id: polyinv.c,v 1.3 2005/01/31 15:39:09 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -114,7 +114,7 @@ else
    b = al * al + (x/r_major) * (x/r_major);
    iflg = phi4z(es,e0,e1,e2,e3,al,b,&c,lat);
    if (iflg != OK)
-      return(iflg);
+      return (long)iflg;
    *lon = adjust_lon((asinz(x * c / r_major) / sin(*lat)) + lon_center);
    }
 

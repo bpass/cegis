@@ -1,0 +1,1 @@
+gcc -o ../bin/resample resample.c inbox.c output.c init.c getgeoinfo.c getprojinfo.c pixdump.c ../support/gctpc.a -lm

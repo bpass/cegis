@@ -1,0 +1,135 @@
+Resample
+-----------------------------------------------------------------
+Does statistical analysis on the area in the input image that 
+goes into making each pixel in the output image. 
+-----------------------------------------------------------------
+
+Usage:	resample inimg outimg histogram fillval options {Pcl#} {pcl#}
+
+-----------------------------------------------------------------
+Parameters:
+
+inputimg	input image with .geoinfo and .proj files
+
+outputimg	name of output image, must have .geoinfo
+		and .proj files already created.
+		Statistical images will have filenames like
+		outputimg.max.img and outputimg.016.img
+
+histogram	The name of a histogram file in the format 
+		written by the histo program.  If a pixel value
+		has zero "hits" associated with it, the b option
+		will not create a band for that class.
+
+fillval		The value associated with breaks in the map, or
+		unneded data.
+
+Pcl#		Most preferred class number.
+
+pcl#		Least preferred class number.
+
+
+Filenames should not have their extensions specified.
+
+-----------------------------------------------------------------
+Options:
+	M	find the most used class value in the input pixel
+	m	find the least used value in input pixel (minimum)
+	N	write the nearest neighbor resampled image
+	C	find how many choices were available per pixel
+	b	Create an image for each band showing how many hits
+		of that band were in the input pixel
+	o	Create the output image.
+	P	there is a most preferred class
+	p	there is a least preferred class
+
+The options can be listed in any order and in any combination.
+
+If both P and p are used, the most preferred value must be given
+first, then the least preferred value.
+
+-----------------------------------------------------------------
+Naming Conventions:
+
+	If outputimg is named earth, the images created will be:
+
+	             "the" output:	earth.img
+	nearest neighbor resample:	earth.nn.img
+	             the minimums:	earth.min.img
+	             the maximums:	earth.max.img
+	              the choices:	earth.choice.img
+	          the band images:	earth.XXX.img
+	                                   where XXX is 000 - 255 
+
+-----------------------------------------------------------------
+Examples:
+
+	To do just a nearest neighbor resample:
+	resample ex1in ex1out exhisto fill N
+
+	To find the min and max images:
+	resample ex2in ex2out exhisto fill Mm
+
+	To create the output image, preferring class 2 most:
+	resample ex3in ex3out exhisto fill Po 2 
+
+	To create the output image preferring class 5 least:
+	resample ex4in ex4out exhisto fill po 5
+
+	To create the output image preferring class 2 most and class 5 least:
+	resample ex5in ex5out exhisto fill Ppo 2 5
+
+-----------------------------------------------------------------
+Hints:
+
+  .	The output image must have .proj and .geoinfo files before execution.
+	This is how gctp calculates the input coordinates.
+
+  .	Options cannot be separated by spaces or commas, but they may
+	be listed in any order.
+
+  .	The Min & Max routines are very simple.  If the input area for a
+	pixel has several classes with only one appearance, min will choose
+	the one with the lowest class number; the same is true for max.
+
+  .	If a pixel in a band image has value 255, it may have had more hits than that.
+
+  .	When the program is forced to use the nearest neighbor for an output pixel,
+	a 255 is placed in that pixel in the choices image, if the C option was listed.
+
+  .	To make a band image for a class that doesn't have "hits"
+	in the histogram file, open the file and change the number of
+	hits to a positive integer.  Resample ignores the percentages.
+	Conversely, to avoid creating unneeded band images, change the hits
+	for that class to zero.  If Resample encounters a pixel from a class
+	with a zero in the histo file, it is mapped to the fill band.
+	
+-----------------------------------------------------------------
+Notes on .geoinfo files and GCTP
+
+GCTP is very particular about the parameters in .geoinfo files.  The more the
+values have been rounded, the more likely GCTP is to spout errors.
+
+If GCTP prints screens full of errors at the beginning of the run, adjust the
+upper left Y coordinate so it is at least half a pixel lower.  It may still be
+too high; keep adjusting until the errors are gone.
+
+If GCTP prints screens full of errors at the end of the run, it is trying to
+output too many lines.  Reduce the number of lines until Resample runs all the
+way through.  Divide the output file's size (in bytes) by the number of
+samples in the image.  The answer is what the number of lines should be.
+
+If GCTP prints errors at the beginning of each line, adjust the upper left X
+coordinate until the errors are gone.  Generally, the number of errors it prints
+at a time is the number of samples UL-X is off.
+
+If GCTP prints errors at the end of each line, reduce the number of samples.
+Generally the number of errors printed at the end of each line is the number
+of samples to reduce by.
+
+Some projections are more particular than others, and a few (Robinson, for one)
+may terminate with a segmentations fault if a coordinate is out of bounds.  As
+before, if the segmentation fault is at the beginning of the run, adjust ul-y
+as necessary.  If the segmentation fault is at the end of the run, reduce the
+number of lines.  Segmentation faults due to a too-low UL-X coordinate or too
+many samples could occurr at any time during processing.

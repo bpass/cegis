@@ -26,8 +26,8 @@ char outfile_info[500];		// Name of output info file
 
 QFile inptr;				// Input file pointer
 QFile outptr;				// Output file pointer
-FILE * ininfoptr;				// Input .info file pointer
-FILE * outinfoptr;				// Output .info file pointer
+QFile ininfoptr;				// Input .info file pointer
+QFile outinfoptr;				// Output .info file pointer
 
 long insize;				// Number of bytes in input image
 long outsize;				// Number of bytes in output image
@@ -89,14 +89,14 @@ void early_error_cleanup()
 	outptr.close();
     }
 
-    if(ininfoptr)
+    if(ininfoptr.isOpen())
     {
-	fclose(ininfoptr);
+	ininfoptr.close();
     }
 
-    if(outinfoptr)
+    if(outinfoptr.isOpen())
     {
-	fclose(outinfoptr);
+	outinfoptr.close();
     }
 
     remove(outfile_name);

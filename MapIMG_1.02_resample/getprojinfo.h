@@ -35,8 +35,8 @@ extern "C"
 }
 
 static char*  logFile = strdup( QDir::currentDirPath().append("/mapimg.log").ascii() );
-static long   errorMode = 3;    //print both errors and parameters to a precreated
-static long   paramMode = 3;    //FILE* to logFile
+static long   errorMode = 0;    //print both errors and parameters to a precreated
+static long   paramMode = 0;    //FILE* to logFile
 
 
 int get_projInfo(char *name, long *sys, long *unit, long *zone, long *datum, double pparm[]);
@@ -70,25 +70,21 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
     // mapimg written by D. Steinwand and updated by S. Posch
 
     IMGINFO inimg;				// Image information--input
-    IMGINFO outimg;			// Image information--output
+    IMGINFO outimg;				// Image information--output
 
     int ioreturnval;
-    long out_line, out_samp;	// Output image coordinates of a point
+    long out_line, out_samp;		// Output image coordinates of a point
 
     double in[2];				// Input projection coordinates of a point
-    double out[2];				// Output projection coordinates of a point
-//    double t1[2];				// Temp coords for comparing
-//    double t2[2];				// Temp coords for comparing
-//    double temp1, temp2;			// Temp vars
-    double pparm[15] = {0};			// 15 GCTP projection parameters
+    double out[2];			// Output projection coordinates of a point
+    double pparm[15];			// 15 GCTP projection parameters
 
     long zero = 0;
     long four = 4;
 
-    unsigned long fill = fillval;			// Fill value for mapimg
+    unsigned long fill = fillval;		// Fill value for mapimg
 
-//    long status;				// Return status flag for gctp() call
-    long in_line, in_samp;			// Input image coordinates of a point
+    long in_line, in_samp;		// Input image coordinates of a point
 
 
     jt_time debugTimer;
@@ -183,7 +179,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 				if( PROJECT_MODE == 0 )  //Nearest Neighbor
 				{
 //					get_line(  mapimginbuf, inbox[4][1]*inimg.ns, inimg.ns+1, useType );
-					get_line(  mapimginbuf, inbox[4][1], inimg.ns+1, useType );
+					get_line(  mapimginbuf, inbox[4][1], inimg.ns, useType );
 					(*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
 				}
 				else	//Analysis
@@ -273,7 +269,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 					if(boxError)	//no pixels from rectangle in the minbox, get NN.
 					{
 						//Loads into memory the current line of input needed
-						get_line(  mapimginbuf, inbox[4][1], inimg.ns+1, useType );
+						get_line(  mapimginbuf, inbox[4][1], inimg.ns, useType );
 //						get_line(  mapimginbuf, inbox[4][1]*inimg.ns, inimg.ns+1, useType );
 
 						(*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));

@@ -52,7 +52,7 @@ false_northing = false_north;
 
 /* Report parameters to the user
   -----------------------------*/
-ptitle("SINUSOIDAL"); 
+ptitle("SINUSOIDAL INVERSE"); 
 radius(r);
 cenlon(center_long);
 offsetp(false_easting,false_northing);

@@ -19,14 +19,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-//#include <unistd.h>
 #include <stdlib.h>
 
 #include <qfile.h>
 #include <qmessagebox.h>
 
 
-#include <iostream.h>
 
 
 struct IMGINFO
@@ -60,8 +58,8 @@ extern char infile_name[500];		// Name of input file   from imgio.cpp
 extern char outfile_name[500];		// Name of output file
 extern char infile_info[500];		// Name of input info file
 extern char outfile_info[500];		// Name of output info file
-extern FILE * ininfoptr;		// Input .info file pointer
-extern FILE * outinfoptr;		// Output .info file pointer
+extern QFile ininfoptr;		// Input .info file pointer
+extern QFile outinfoptr;		// Output .info file pointer
 
 extern QFile inptr;
 extern QFile outptr;			// Output file pointer  from imgio.cpp
@@ -83,63 +81,8 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type)
 	// Open input file and check for any errors
 	inptr.setName( infile_name );
 	inptr.open( IO_ReadOnly | IO_Raw );
-/*	inptr = fopen64(infile_name, "rb");
-	if(!inptr)
-	{
-		int dangErrCode = errno;//ferror( inptr );
-		
-		if( dangErrCode == EINVAL )
-		{
-			printf ("Input mode invalid\n" );
-			fflush( stdout );
-		}
-		else if( dangErrCode == EACCES || dangErrCode == EAGAIN )
-		{
-			printf ("Operation is prohibited by locks held by other  processes. Or, by another process.\n" );
-			fflush( stdout );
-		}
-		else if( dangErrCode == EBADF )
-		{
-			printf ("fd is not an open file descriptor, or the command was F_SETLK or F_SETLKW  and  the  file descriptor open mode doesn't match with the type of lock requested.\n" );
-			fflush( stdout );
-		}
-		
-		else if( dangErrCode == EDEADLK )
-		{
-			printf ("It was detected that the specified F_SETLKW command would  cause  a deadlock.\n" );
-			fflush( stdout );
-		}
-		else if( dangErrCode == EFAULT )
-		{
-			printf ("lock is outside your accessible address space.\n" );
-			fflush( stdout );
-		}
-		else if( dangErrCode == EINTR )
-		{
-			printf ("For  F_SETLKW,  the  command  was  interrupted by a signal. For F_GETLK and F_SETLK, the command was  interrupted  by  a signal before the lock was checked or acquired.  Most likely when lock-ing a remote file (e.g. locking over  NFS),  but  can  sometimes happen locally.\n" );
-			fflush( stdout );
-		}
-		else if( dangErrCode == EMFILE )
-		{
-			printf ("For  F_DUPFD, the process already has the maximum number of file descriptors open.\n" );
-			fflush( stdout );
-		}
-		else if( dangErrCode == ENOLCK )
-		{
-			printf ("Too many segment locks open, lock table is  full,  or  a  remote locking protocol failed (e.g. locking over NFS).\n" );
-			fflush( stdout );
-		}
-		else if( dangErrCode == EPERM )
-		{
-			printf ("Attempted  to  clear  the  O_APPEND  flag on a file that has the  append-only attribute set.\n" );
-			fflush( stdout );
-		}
-		else
-		{
-			printf ("Undefined = %i opening %s\n", errno, infile_name );
-			fflush( stdout );
-		}
-*/
+//	inptr = fopen64(infile_name, "rb");
+
 	if( !inptr.isOpen() || !inptr.isReadable() )
 	{
 	    early_error_cleanup();
@@ -164,8 +107,10 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type)
 
 	// Open input .info file and get image geometry information
 	// -------------------------------------------------
-	ininfoptr = fopen(infile_info, "rb");		// Open info file
-	if(!ininfoptr)
+	ininfoptr.setName( infile_info );
+	ininfoptr.open( IO_ReadOnly );
+//	ininfoptr = fopen(infile_info, "rb");		// Open info file
+	if(!ininfoptr.isOpen() || !ininfoptr.isReadable() )
 	{
 	    early_error_cleanup();
 	    QMessageBox::critical( 0, "MapIMG",
@@ -175,8 +120,10 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type)
 
 	// Open output .info file and get image geometry information
 	// -------------------------------------------------
-	outinfoptr = fopen(outfile_info, "rb");	// Open info file
-	if(!outinfoptr)
+	outinfoptr.setName( outfile_info );
+	outinfoptr.open( IO_ReadOnly );
+//	outinfoptr = fopen(outfile_info, "rb");	// Open info file
+	if(!outinfoptr.isOpen() || !outinfoptr.isReadable() )
 	{
 	    early_error_cleanup();
 	    QMessageBox::critical( 0, "MapIMG",
@@ -184,36 +131,99 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type)
 	    return 0;
 	}
 
-	// Scan in variables from input .info file
-	fscanf(ininfoptr, "%d %d", &inimg->nl, &inimg->ns);				// Get number of lines, samples
-	fscanf(ininfoptr, "%d", &inimg->sys);					// Projection system code
-	fscanf(ininfoptr, "%d", &inimg->zone);					// Projection zone code
-	fscanf(ininfoptr, "%d", &inimg->unit);					// Projection unit code
-	fscanf(ininfoptr, "%d", &inimg->datum);					// Projection datum code
-	fscanf(ininfoptr, "%f", &inimg->pixsize);					// Image pixel size in meters
-	fscanf(ininfoptr, "%lf %lf", &inimg->ul_x, &inimg->ul_y);			// Upper left projection coords
+   	////////READ IN ROWS AND COLUMNS OF IMAGE
+	QString inFile;
+	
+	ininfoptr.readLine( inFile, 1000 );
+   	int breakPoint = inFile.find( ' ', 0, false );
+   	inimg->nl = inFile.left( breakPoint ).toLong();
+   	inimg->ns = inFile.right( inFile.length() - breakPoint - 1 ).toLong();
+   
+   	////////READ IN PROJECTION
+   	ininfoptr.readLine( inFile, 1000 );
+   	inimg->sys = inFile.toLong();
+   
+   	////////READ IN ZONE
+   	ininfoptr.readLine( inFile, 1000 );
+   	inimg->zone = inFile.toLong();
+   	
+   	////////READ IN UNIT
+   	ininfoptr.readLine( inFile, 1000 );
+   	inimg->unit = inFile.toLong();
+
+   	////////READ IN DATUM
+   	ininfoptr.readLine( inFile, 1000 );
+   	inimg->datum = inFile.toLong();
+	
+   	////////READ IN PIXEL SIZE
+   	ininfoptr.readLine( inFile, 1000 );
+   	inimg->pixsize = inFile.toFloat();
+	
+   	////////READ IN UPPER LEFT
+	ininfoptr.readLine( inFile, 1000 );
+   	breakPoint = inFile.find( ' ', 0, false );
+   	inimg->ul_x = inFile.left( breakPoint ).toDouble();
+   	inimg->ul_y = inFile.right( inFile.length() - breakPoint - 1 ).toDouble();
+	
+
+   	////////READ IN GCTP 15
+	ininfoptr.readLine( inFile, 1000 );
 	for(i = 0; i < 15; i++)
 	{
-		fscanf(ininfoptr, "%lf", &inimg->pparm[i]);				// 15 gctp projection parameters
+ 		breakPoint = inFile.find( ' ', 0, false );
+   		inimg->pparm[i] = inFile.left( breakPoint ).toDouble();
+		inFile = inFile.right( inFile.length() - breakPoint - 1 );
 	}
+	
 
-	// Scan in variables from output .info file
-	fscanf(outinfoptr, "%d %d", &outimg->nl, &outimg->ns);				// Get number of lines, samples
-	fscanf(outinfoptr, "%d", &outimg->sys);						// Projection system code
-	fscanf(outinfoptr, "%d", &outimg->zone);						// Projection zone code
-	fscanf(outinfoptr, "%d", &outimg->unit);						// Projection unit code
-	fscanf(outinfoptr, "%d", &outimg->datum);						// Projection datum code
-	fscanf(outinfoptr, "%f", &outimg->pixsize);						// Image pixel size in meters
-	fscanf(outinfoptr, "%lf %lf", &outimg->ul_x, &outimg->ul_y);				// Upper left projection coords
+	
+	////////READ IN ROWS AND COLUMNS OF IMAGE
+	QString outFile;
+	
+	outinfoptr.readLine( outFile, 1000 );
+   	breakPoint = outFile.find( ' ', 0, false );
+   	outimg->nl = outFile.left( breakPoint ).toLong();
+   	outimg->ns = outFile.right( outFile.length() - breakPoint - 1 ).toLong();
+   
+   	////////READ IN PROJECTION
+   	outinfoptr.readLine( outFile, 1000 );
+   	outimg->sys = outFile.toLong();
+   
+   	////////READ IN ZONE
+   	outinfoptr.readLine( outFile, 1000 );
+   	outimg->zone = outFile.toLong();
+   	
+   	////////READ IN UNIT
+   	outinfoptr.readLine( outFile, 1000 );
+   	outimg->unit = outFile.toLong();
 
+   	////////READ IN DATUM
+   	outinfoptr.readLine( outFile, 1000 );
+   	outimg->datum = outFile.toLong();
+	
+   	////////READ IN PIXEL SIZE
+   	outinfoptr.readLine( outFile, 1000 );
+   	outimg->pixsize = outFile.toFloat();
+	
+   	////////READ IN UPPER LEFT
+	outinfoptr.readLine( outFile, 1000 );
+   	breakPoint = outFile.find( ' ', 0, false );
+   	outimg->ul_x = outFile.left( breakPoint ).toDouble();
+   	outimg->ul_y = outFile.right( outFile.length() - breakPoint - 1 ).toDouble();
+	
 
+   	////////READ IN GCTP 15
+	outinfoptr.readLine( outFile, 1000 );
 	for(i = 0; i < 15; i++)
 	{
-		fscanf(outinfoptr, "%lf", &outimg->pparm[i]);				// 15 gctp projection parameters
+ 		breakPoint = outFile.find( ' ', 0, false );
+   		outimg->pparm[i] = outFile.left( breakPoint ).toDouble();
+		outFile = outFile.right( outFile.length() - breakPoint - 1 );
 	}
+	
 
-	// Set input file size and try to allocate that amount of memory
-
+	
+	
    /******* Change here for allocating lines in input *******/
 
 	insize = inimg->nl * inimg->ns;
@@ -237,8 +247,8 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type)
 	outsize = outimg->ns;
 
 	// close all files
-	fclose(ininfoptr);
-	fclose(outinfoptr);
+	ininfoptr.close();
+	outinfoptr.close();
 
 	mapimginbuf = bufptr;
  	mapimgoutbuf = (void *) malloc(outsize*sizeof(type));
@@ -322,38 +332,31 @@ void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
 
      if( inputDataMap.find( offsetString ) ==  0 )
      {
-        if( !inptr.at( (Q_ULLONG)(offset) * insize * sizeof(type)) )
+        if( !inptr.at( (Q_ULLONG)(offset) * lineLength * sizeof(type)) )
         {
             // end of file or corrupt file found
-//            printf( "error seeking!!!\n" );
-//	    fflush(stdout );
-            cout << "Error seeking" << endl;
+            printf( "error seeking!!!\n" );
+	    fflush(stdout );
         }
-
+	
         //then load the line into memory
-        type *newBuffer = new type[insize];
-//  	long amountRead = fread(newBuffer, sizeof(type), insize, inptr);
+        type *newBuffer = new type[lineLength];
+	long amountRead = inptr.readBlock( (char*&)newBuffer, sizeof(type) * lineLength);
 
-//this line?
-	long amountRead = inptr.readBlock( (char*&)newBuffer, sizeof(type) * insize);
-
-	if( amountRead != sizeof(type) * insize )
+	if( amountRead != sizeof(type) * lineLength )
 	{
-		cout << "Read " << amountRead << " requested " << insize << endl;
-//		printf( "Read %i requested %i\n", amountRead, insize );
-//		fflush( stdout );
+		printf( "Read %i requested %i\n", amountRead, lineLength );
+		fflush( stdout );
 
 		if( inptr.atEnd() )
 		{
-			cout << "End-of-File reached" << endl;
-//			printf( "End-of-File reached\n" );
-//			fflush( stdout );
+			printf( "End-of-File reached\n" );
+			fflush( stdout );
 		}
 		else if( amountRead = -1 )
 		{
-			cout << "Error on read.!!!" << endl;
-//			printf( "Error on read.!!!\n" );
-//			fflush(stdout);
+			printf( "Error on read.!!!\n" );
+			fflush(stdout);
 
 			/*  Add more descriptive messages here*/
 		}
@@ -362,12 +365,9 @@ void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
 	{
         	if( inputDataMap.insert( offsetString, (type*)newBuffer ) != true )
         	{
-	           cout << "Error deleting least recently used item." << endl;
-//	           printf( "Error deleting least recently used item.\n" );
-//        	   fflush( stdout );
+	           printf( "Error deleting least recently used item.\n" );
+        	   fflush( stdout );
 	        }
-	        else
-	            cout << "Successfully inserted" << endl;
 	}
      }
 
@@ -379,30 +379,11 @@ void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
      }
      else
      {
-       cout << "Error inserting into and retreiving from least recently used cache." << endl;
-//       printf( "Error inserting into and retreiving from least recently used cache.\n" );
-//       fflush( stdout );
+       printf( "Error inserting into and retreiving from least recently used cache.\n" );
+       fflush( stdout );
        buf = NULL;
      }
-/*
-     if( get_line_loadedData != offset )
-     {
-        //if not, first, seek to that point in the file
-     	get_line_loadedData = offset;
-
-        if( fseek( inptr, offset * sizeof(type), 0 ) != 0 )
-        {
-            // end of file or corrupt file found
-            p_error( "seek_image: error!", "[image read]");
-            get_line_loadedData = -1;
-        }
-
-        //then load the line into memory
-        fread(buf, sizeof(type), insize, inptr);
-
-     }
-  }
- */
+     
      return;
 }
 
@@ -422,18 +403,14 @@ void put_line(void * buf, type)
 {
      if( outptr.isOpen() && outptr.isWritable() )
      {
-         Q_LONG amountWritten = outptr.writeBlock( (char*&)buf, outsize*sizeof(type) );
+         outptr.writeBlock( (char*&)buf, outsize*sizeof(type) );
          outptr.flush();
-
-         if( amountWritten != outsize )
-             cout << "Amount written was incorrect "
-                   << QString::number( amountWritten )
-                   << " instead of "
-                   << QString::number( outsize )
-                   << endl;
      }
      else
-         cout << "Outptr not open or writable" << endl;
+     {
+         printf( "Outptr not open or writable\n" );
+	 fflush( stdout );
+     }
 
      return;
 }
@@ -451,8 +428,6 @@ void put_line(void * buf, type)
 // Definition must be in header for
 // Solaris compiler compatability
 // ---------------------------
-extern long insize;				// Number of bytes in input image
-
 template <class type>
 void* get_raster_value(void * buf, long offset, long sample, int lineLength, type typeToUse)
 {

@@ -13,8 +13,13 @@
 
 proj15::proj15( double* params )
 {
+     m_paramValues = new double[15];
+     
      if( params == NULL )
-         m_paramValues = new double[15];
+     {
+         for( int index = 0; index < 15; index++ )
+              m_paramValues[index] = -1;
+     }
      else
      {
          for( int index = 0; index < 15; index++ )
@@ -26,8 +31,13 @@ proj15::proj15( double* params )
 
 proj15::proj15( const int projNumber, double* params )
 {
+     m_paramValues = new double[15];     
+     
      if( params == NULL )
-         m_paramValues = new double[15];
+     {
+         for( int index = 0; index < 15; index++ )
+              m_paramValues[index] = -1;
+     }
      else
      {
          for( int index = 0; index < 15; index++ )
@@ -39,8 +49,13 @@ proj15::proj15( const int projNumber, double* params )
 
 proj15::proj15( const QString projectionName, double* params )
 {
+     m_paramValues = new double[15];
+     
      if( params == NULL )
-         m_paramValues = new double[15];
+     {
+         for( int index = 0; index < 15; index++ )
+              m_paramValues[index] = -1;
+     }
      else
      {
          for( int index = 0; index < 15; index++ )
@@ -645,7 +660,7 @@ QString proj15::angle()
 
 float proj15::getParamValue( const int param )
 {
-     if( param >= 0 && param < 15 )
+     if( param >= 0 && param < 15 && m_paramValues != NULL )
          return m_paramValues[param];
      else
          return -1;
@@ -653,7 +668,7 @@ float proj15::getParamValue( const int param )
 
 void proj15::setParamName( const int param, const QString Name )
 {
-     if( param >= 0 && param < 15 )
+     if( param >= 0 && param < 15 && m_paramNames != NULL )
          m_paramNames[param] = Name;
      return;
 }

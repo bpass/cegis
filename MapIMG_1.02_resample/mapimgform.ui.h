@@ -337,7 +337,7 @@ void mapimgForm::executemapimg()
 			projform = new projfileForm(0,0,true, WINDOW_FLAGS);
 			connect(projform, SIGNAL(changesMade(double)), this, SLOT(setInPixel(double)));
 			projform->exec();
-			delete projform;
+//			delete projform;
 
 			mapframereturnval2 = mapframeit(mitemp2, inPixelSize,
 						ul_lat, ul_lon, lr_lat, lr_lon, infilename, &outputRows, &outputCols);
@@ -345,9 +345,9 @@ void mapimgForm::executemapimg()
 			// if mapframit returns abnormally, remove .proj files and .info file and exit process
 			if(!mapframereturnval2)
 			{
-//jtrent			        remove(mitempproj);
-//				remove(mitemp2proj);
-//				remove(infilename);
+				remove(mitempproj);
+				remove(mitemp2proj);
+				remove(infilename);
 				this->setEnabled(true);
 				return;
 			}
@@ -373,8 +373,8 @@ void mapimgForm::executemapimg()
 		   QMessageBox::critical (this, "Aborted!","Input and Output Files Must be Different!",
 					QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton);
 
-//jtrent		   remove(mitempproj);
-//		   remove(mitemp2proj);
+		   remove(mitempproj);
+		   remove(mitemp2proj);
 		   this->setEnabled(true);
 		   return;
 		}
@@ -392,9 +392,9 @@ void mapimgForm::executemapimg()
 
 		if(!mapframereturnval)
 		{
-//jtrent			remove(mitempproj);
-//			remove(mitemp2proj);
-//			remove(infilename);
+			remove(mitempproj);
+			remove(mitemp2proj);
+			remove(infilename);
 			this->setEnabled(true);
 			return;
 		}
@@ -594,7 +594,7 @@ void mapimgForm::comboCheck()
 			utmform = new utmForm(0,0,true,WINDOW_FLAGS);
 			connect(utmform, SIGNAL(changesMade(double *, int)), this, SLOT(setUTMout(double *, int)));
 			utmform->exec();
-			delete utmform;
+//			delete utmform;
 			break;
 
 		 // Albers Equal Area, (Lambert Conformal Conic), Equidistant Conic B
@@ -607,7 +607,7 @@ void mapimgForm::comboCheck()
                         lambform->getGCTP();
 			connect(lambform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArrayOut(double *)));
 			lambform->exec();
-			delete lambform;
+//			delete lambform;
 			if( index == 10)
 			{
 			    output_gctparray[8] = 1;
@@ -622,7 +622,7 @@ void mapimgForm::comboCheck()
                         mercform->getGCTP();
                         connect(mercform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArrayOut(double *)));
 			mercform->exec();
-			delete mercform;
+//			delete mercform;
 			break;
 
 		// Polar Steroegraphic
@@ -647,7 +647,7 @@ void mapimgForm::comboCheck()
                         pcform->getGCTP();
 			connect(pcform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArrayOut(double *)));
 			pcform->exec();
-			delete pcform;
+//			delete pcform;
 			break;
 
 		 // Equidistant Conic A
@@ -658,7 +658,7 @@ void mapimgForm::comboCheck()
                         ecaform->getGCTP();
 			connect(ecaform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArrayOut(double *)));
 			ecaform->exec();
-			delete ecaform;
+//			delete ecaform;
 			break;
 
 		 // Transverse Mercator
@@ -669,7 +669,7 @@ void mapimgForm::comboCheck()
                         tmercform->getGCTP();
 			connect(tmercform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArrayOut(double *)));
 			tmercform->exec();
-			delete tmercform;
+//			delete tmercform;
 			break;
 
 		 // (Stereographic), Lambert Azimuthal, Azimuthal, (Gnomonic), Orthographic
@@ -684,7 +684,7 @@ void mapimgForm::comboCheck()
                         sterform->getGCTP();
 			connect(sterform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArrayOut(double *)));
 			sterform->exec();
-			delete sterform;
+//			delete sterform;
 			break;
 
 		 // Gen. Vert. Near Per
@@ -695,7 +695,7 @@ void mapimgForm::comboCheck()
                         genform->getGCTP();
 			connect(genform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArrayOut(double *)));
 			genform->exec();
-			delete genform;
+//			delete genform;
 			break;
 
 		 // Sinusoidal, Miller Cylindrical, Robinson, Mollweide, Hammer, Wagner IV, Wagner VII
@@ -712,7 +712,7 @@ void mapimgForm::comboCheck()
                         sineform->getGCTP();
                         connect(sineform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArrayOut(double*)));
 			sineform->exec();
-			delete sineform;
+//			delete sineform;
 			break;
 
 		 // Equirectangular
@@ -723,7 +723,7 @@ void mapimgForm::comboCheck()
                         equiform->getGCTP();
 			connect(equiform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArrayOut(double*)));
 			equiform->exec();
-			delete equiform;
+//			delete equiform;
 			break;
 
 		 // Van der Grinten
@@ -734,7 +734,7 @@ void mapimgForm::comboCheck()
                         vandform->getGCTP();
 			connect(vandform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArrayOut(double*)));
 			vandform->exec();
-			delete vandform;
+//			delete vandform;
 			break;
 
 		 // Hotin Oblique Mercator A
@@ -745,7 +745,7 @@ void mapimgForm::comboCheck()
                         homaform->getGCTP();
 			connect(homaform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArrayOut(double*)));
 			homaform->exec();
-			delete homaform;
+//			delete homaform;
 			break;
 
 		 // Hotin Oblique Mercator B
@@ -756,7 +756,7 @@ void mapimgForm::comboCheck()
                         hombform->getGCTP();
                         connect(hombform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArrayOut(double*)));
 			hombform->exec();
-			delete hombform;
+//			delete hombform;
 			break;
 
 		 // Space Oblique Mercator A
@@ -767,7 +767,7 @@ void mapimgForm::comboCheck()
                         somaform->getGCTP();
 			connect(somaform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArrayOut(double*)));
 			somaform->exec();
-			delete somaform;
+//			delete somaform;
 			break;
 
 		 // Space Oblique Mercator B
@@ -778,7 +778,7 @@ void mapimgForm::comboCheck()
                         sombform->getGCTP();
 			connect(sombform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArrayOut(double*)));
 			sombform->exec();
-			delete sombform;
+//			delete sombform;
 			break;
 
 		 // Alaska Conformal
@@ -804,7 +804,7 @@ void mapimgForm::comboCheck()
                         interform->getGCTP();
 			connect(interform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArrayOut(double*)));
 			interform->exec();
-			delete interform;
+//			delete interform;
 			break;
 
 		 // Oblated Equal Area
@@ -815,7 +815,7 @@ void mapimgForm::comboCheck()
                         oblform->getGCTP();
 			connect(oblform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArrayOut(double*)));
 			oblform->exec();
-			delete oblform;
+//			delete oblform;
 			break;
 
 		 // Integerized Sinusoid
@@ -1411,7 +1411,7 @@ void mapimgForm::comboCheckIn()
                         lambform->getGCTP();
 			connect(lambform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArray(double *)));
 			lambform->exec();
-			delete lambform;
+//			delete lambform;
 			if( index == 11)
 			{
 			    input_gctparray[8] = 1;
@@ -1426,7 +1426,7 @@ void mapimgForm::comboCheckIn()
                         mercform->getGCTP();
 			connect(mercform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArray(double *)));
 			mercform->exec();
-			delete mercform;
+//			delete mercform;
 			break;
 
 		 // Polar Stereographic
@@ -1450,7 +1450,7 @@ void mapimgForm::comboCheckIn()
                         pcform->getGCTP();
 			connect(pcform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArray(double *)));
 			pcform->exec();
-			delete pcform;
+//			delete pcform;
 			break;
 
 		 // Equidistant Conic A
@@ -1461,7 +1461,7 @@ void mapimgForm::comboCheckIn()
                         ecaform->getGCTP();
 			connect(ecaform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArray(double *)));
 			ecaform->exec();
-			delete ecaform;
+//			delete ecaform;
 			break;
 
 		 // Transverse Mercator
@@ -1472,7 +1472,7 @@ void mapimgForm::comboCheckIn()
                         tmercform->getGCTP();
 			connect(tmercform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArray(double *)));
 			tmercform->exec();
-			delete tmercform;
+//			delete tmercform;
 			break;
 
 		 // (Stereographic), Lambert Azimuthal, Azimuthal, (Gnomonic), Orthographic
@@ -1487,7 +1487,7 @@ void mapimgForm::comboCheckIn()
                         sterform->getGCTP();
 			connect(sterform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArray(double *)));
 			sterform->exec();
-			delete sterform;
+//			delete sterform;
 			break;
 
 		 // Gen. Vert. Near Per
@@ -1498,7 +1498,7 @@ void mapimgForm::comboCheckIn()
                         genform->getGCTP();
 			connect(genform, SIGNAL(changesMade(double *)), this, SLOT(setgctpArray(double *)));
 			genform->exec();
-			delete genform;
+//			delete genform;
 			break;
 
 		 // Sinusoidal, Miller Cylindrical, Robinson, Mollweide, Hammer, Wagner IV, Wagner VII
@@ -1515,7 +1515,7 @@ void mapimgForm::comboCheckIn()
                         sineform->getGCTP();
 			connect(sineform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArray(double*)));
 			sineform->exec();
-			delete sineform;
+//			delete sineform;
 			break;
 
 		 // Equirectangular
@@ -1526,7 +1526,7 @@ void mapimgForm::comboCheckIn()
                         equiform->getGCTP();
 			connect(equiform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArray(double*)));
 			equiform->exec();
-			delete equiform;
+//			delete equiform;
 			break;
 
 		 // Van der Grinten
@@ -1537,7 +1537,7 @@ void mapimgForm::comboCheckIn()
                         vandform->getGCTP();
 			connect(vandform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArray(double*)));
 			vandform->exec();
-			delete vandform;
+//			delete vandform;
 			break;
 
 		 // Hotin Oblique Mercator A
@@ -1548,7 +1548,7 @@ void mapimgForm::comboCheckIn()
                         homaform->getGCTP();
 			connect(homaform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArray(double*)));
 			homaform->exec();
-			delete homaform;
+//			delete homaform;
 			break;
 
 		 // Hotin Oblique Mercator B
@@ -1559,7 +1559,7 @@ void mapimgForm::comboCheckIn()
                         hombform->getGCTP();
 			connect(hombform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArray(double*)));
 			hombform->exec();
-			delete hombform;
+//			delete hombform;
 			break;
 
 		 // Space Oblique Mercator A
@@ -1570,7 +1570,7 @@ void mapimgForm::comboCheckIn()
                         somaform->getGCTP();
 			connect(somaform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArray(double*)));
 			somaform->exec();
-			delete somaform;
+//			delete somaform;
 			break;
 
 		 // Space Oblique Mercator B
@@ -1581,7 +1581,7 @@ void mapimgForm::comboCheckIn()
                         sombform->getGCTP();
 			connect(sombform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArray(double*)));
 			sombform->exec();
-			delete sombform;
+//			delete sombform;
 			break;
 
 		 // Alaska Conformal
@@ -1606,7 +1606,7 @@ void mapimgForm::comboCheckIn()
                         interform->getGCTP();
 			connect(interform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArray(double*)));
 			interform->exec();
-			delete interform;
+//			delete interform;
 			break;
 
 		 // Oblated Equal Area
@@ -1617,7 +1617,7 @@ void mapimgForm::comboCheckIn()
                         oblform->getGCTP();
 			connect(oblform, SIGNAL(changesMade(double*)), this, SLOT(setgctpArray(double*)));
 			oblform->exec();
-			delete oblform;
+//			delete oblform;
 			break;
 
 		 // Integerized Sinusoid
@@ -1927,7 +1927,7 @@ void mapimgForm::mousePressEvent( QMouseEvent * e )
 
        aboutPopup->exec( QCursor::pos() );
 
-       delete aboutPopup;
+//       delete aboutPopup;
    }
 }
 
@@ -1937,7 +1937,7 @@ void mapimgForm::showAboutMapIMG()
      aboutForm *aboutform = new aboutForm( NULL, "aboutform", false,
                                            Qt::WStyle_Customize | Qt::WStyle_NormalBorder );
      aboutform->exec();
-	 delete aboutform;
+//	 delete aboutform;
 }
 
 

@@ -18,6 +18,11 @@
 #include <math.h>
 #include "getprojinfo.h"
 
+#include <iostream.h>
+
+#include <qfile.h>
+#include <qtextstream.h>
+
 extern "C"
 {
 #include "proj.h"
@@ -39,19 +44,18 @@ int mapframeit(char * filename, double pixsiz, double ul_lat, double ul_lon,
 			   double lr_lat, double lr_lon, const char * outfilename,
 			   long * outputRows, long * outputCols)
 {
-	FILE * file2;
 	int projreturnval;
 
 	long numLines;
 	long numSamps;
 	double pixX, pixY;
-	double pxmin;			// Projection minimum in X
-	double pxmax;			// Projection maximum in X
-	double pymin;			// Projection minimum in Y
-	double pymax;			// Projection maximum in Y
+	double pxmin;		// Projection minimum in X
+	double pxmax;		// Projection maximum in X
+	double pymin;		// Projection minimum in Y
+	double pymax;		// Projection maximum in Y
 
 	long status;
-	long i,j;
+	long i = 0, j = 0;
 	long stepSize = 1000;
 	double delta_north, delta_east;
 
@@ -66,11 +70,12 @@ int mapframeit(char * filename, double pixsiz, double ul_lat, double ul_lon,
 	long inZone = 62;
 	long inDatum = 0;
 	long zero = 0;
-	double inParms[15];
+	double inParms[15] = {0};
 
 	double inCoords[2];
 	double outCoords[2];
 
+	
 	for (i = 0; i < 15; inParms[i++] = 0.0);
 
 	pxmin = 1000000000.0;
@@ -87,7 +92,7 @@ int mapframeit(char * filename, double pixsiz, double ul_lat, double ul_lon,
 		return 0;
 	}
 
-        FILE *paramfile = fopen( logFile, "wa");
+        FILE *paramfile = NULL; //fopen( logFile, "wa");
 
 	// Calc projection coordinates (initially) for the four corners
 	// ------------------------------------------------------------
@@ -166,33 +171,54 @@ int mapframeit(char * filename, double pixsiz, double ul_lat, double ul_lon,
 	numLines = (long) round( ((pymax - pymin) / pixsiz), 0 );
 	numSamps = (long) round( ((pxmax - pxmin) / pixsiz), 0 );
 
-
+	if( numLines == 0 || numSamps == 0 )
+	{
+		cout << numLines << " = (" << pymax << " - " << pymin << ") / " << pixsiz << endl;
+		cout << numSamps << " = (" << pxmax << " - " << pxmin << ") / " << pixsiz << endl;
+	}
+	
 	pixX = pxmin + (pixsiz/2);
 	pixY = pymax - (pixsiz/2);
 
 	// Report Results
 	// --------------
-	file2 = fopen(outfilename, "w");
-	if(!file2)
+	QFile outfileinfo( outfilename );
+	outfileinfo.open( IO_WriteOnly );
+	
+	if( !outfileinfo.isOpen() || !outfileinfo.isWritable() )
 	{
-		fclose(file2);
-		remove(outfilename);
+		outfileinfo.close();
+		QFile::remove( outfilename );
 		QMessageBox::critical(0, "MapIMG", QString("An internal error occurred while trying to open the designated output file\n\nMapIMG will not execute."));
 		return 0;
 	}
-	fprintf(file2, "%d %d\n", numLines, numSamps);
-	fprintf(file2, "%d\n", outProj);
-	fprintf(file2, "%d\n", outZone);
-	fprintf(file2, "%d\n", outUnit);
-	fprintf(file2, "%d\n", outDatum);
-	fprintf(file2, "%lf\n", pixsiz);
-	fprintf(file2, "%lf %lf\n", pixX, pixY);
-	for(i = 0; i < 15; i++) fprintf(file2, "%lf ", outParms[i]);
-	fclose(file2);
+	
+	QTextStream stream( &outfileinfo );
+	stream << numLines << " " << numSamps << endl;
+	stream << outProj << endl;
+	stream << outZone << endl;
+	stream << outUnit << endl;
+	stream << outDatum << endl;
+	stream << pixsiz << endl;
+	stream << pixX << " " << pixY << endl;
+	for(i = 0; i < 15; i++) 
+	{
+		stream << outParms[i];
+		
+		if( i < 14 )
+			stream << " ";
+		else
+			stream << endl;
+	}
+	
+	outfileinfo.flush();
+	outfileinfo.close();
+	
+	
 	*outputRows = numLines;
 	*outputCols = numSamps;
 
-        fclose( paramfile );
+        //fclose( paramfile );
 	return 1;
 }
 

@@ -1,4 +1,4 @@
-// $Id: gctpnames.h,v 1.4 2005/01/31 17:24:02 jtrent Exp $
+// $Id: gctpnames.h,v 1.5 2005/03/11 15:41:34 jtrent Exp $
 
 
 #ifndef GCTPNAMES_H
@@ -271,9 +271,10 @@ namespace
       "555974.548395,111194.909679,55597.454840,9266.242473,926.624247" );
 
    const QStringList dataTypes = QStringList::split( ',',
-      "Signed 64 Bit IEEE Float,Signed 32 Bit IEEE Float,Signed 32 Bit Integer,"
-      "Unsigned 32 Bit Integer,Signed 16 Bit Integer,Unsigned 16 Bit Integer,"
-      "Signed 8 Bit Integer,Unsigned 8 Bit Integer" );
+      "Signed 64 Bit IEEE Float,"
+      "Signed 32 Bit IEEE Float,Unsigned 32 Bit Integer,Signed 32 Bit Integer,"
+      "Unsigned 16 Bit Integer,Signed 16 Bit Integer,"
+      "Unsigned 8 Bit Integer,Signed 8 Bit Integer" );
 }
 
 #endif

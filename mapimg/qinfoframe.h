@@ -1,4 +1,4 @@
-// $Id: qinfoframe.h,v 1.6 2005/02/22 17:22:09 jtrent Exp $
+// $Id: qinfoframe.h,v 1.7 2005/03/11 15:41:34 jtrent Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -71,6 +71,8 @@ public:
    QLineEdit   *fillEdit;
    QPushButton *fillButton;
    QLineEdit   *noDataEdit;
+
+   bool eventFilter( QObject* object, QEvent* event );
 
 public slots:
    void pixelChange(int);

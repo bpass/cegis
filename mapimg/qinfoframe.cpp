@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.11 2005/02/22 17:22:09 jtrent Exp $
+// $Id: qinfoframe.cpp,v 1.12 2005/03/11 15:41:34 jtrent Exp $
 
 
 #include "qinfoframe.h"
@@ -90,6 +90,7 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    (void) new QLabel( "Fill Value", dataBox );
    QHBox *fillBox = new QHBox( dataBox );
    fillEdit = new QLineEdit( fillBox, "fillEdit" );
+   fillEdit->installEventFilter( this );
    fillButton = new QPushButton( "?", fillBox );
    (void) new QLabel( "No Data Value", dataBox );
    noDataEdit = new QLineEdit( dataBox, "noDataEdit" );
@@ -173,6 +174,38 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
 */
 QMapTab::~QMapTab()
 {}
+
+
+
+
+/* eventFilter is an event filter for misc GUI events. Right now it is used
+to dsiplay a popup menu when a user right-clicks on teh fill value edit box
+*/
+bool QMapTab::eventFilter( QObject* object, QEvent* event )
+{
+   if( (object == fillEdit) && (event->type() == QEvent::MouseButtonPress ) )
+   {
+      QMouseEvent* mouseEvent = (QMouseEvent*)event;
+      if( mouseEvent->button() == Qt::RightButton )
+      {
+         mouseEvent->accept();
+
+         QPopupMenu* estimatePopup = new QPopupMenu( this, "estimatePopup" );
+         estimatePopup->insertItem( "Estimate Value", fillButton, SLOT( animateClick() ) );
+
+         estimatePopup->exec( mouseEvent->globalPos() );
+         delete estimatePopup;
+         return true;
+      }
+      else
+      {
+         return QScrollView::eventFilter( object, event );
+      }
+   }
+
+   return QScrollView::eventFilter( object, event );
+}
+
 
 /*
    The pixelChange(int) function is connected to the pixelCombo so that

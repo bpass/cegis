@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.6 2005/01/31 03:09:09 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.7 2005/01/31 17:24:02 jtrent Exp $
 
 
 #include "mapimg.h"
@@ -268,7 +268,7 @@ void mapimg::frameIt( RasterInfo &input )
       pxmin + (pixsize/2),
       pymax - (pixsize/2), 
       (int)(mapimg::round( ((pymax - pymin) / pixsize) )),
-      (int)(round( ((pxmax - pxmin) / pixsize) )) );
+      (int)(mapimg::round( ((pxmax - pxmin) / pixsize) )) );
 }
 
 bool mapimg::downSampleImg( RasterInfo &input, int maxDimension )
@@ -345,7 +345,7 @@ double mapimg::calcFillValue( RasterInfo &input )
 
 bool mapimg::reproject( RasterInfo &input, RasterInfo &output, ResampleInfo resample, QWidget *parent )
 {
-   resample;
+//   resample;
    QString dtype(output.isSigned()?"Signed ":"Unsigned ");
    dtype += QString::number(output.bitCount());
    dtype += " Bit ";
@@ -376,3 +376,4 @@ bool mapimg::reproject( RasterInfo &input, RasterInfo &output, ResampleInfo resa
    {  Q_UINT8 data = 0;
       return nearestNeighbor( input, output, data, parent);   }
 }
+

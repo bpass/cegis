@@ -1,4 +1,4 @@
-// $Id: resampleinfo.h,v 1.1 2005/01/31 03:09:09 rbuehler Exp $
+// $Id: resampleinfo.h,v 1.2 2005/01/31 17:24:07 jtrent Exp $
 
 
 #ifndef RESAMPLEINFO_H
@@ -14,7 +14,7 @@ class ResampleInfo
 {
 public:
    ResampleInfo();
-   ResampleInfo( ResampleInfo &src ){copy(src);}
+   ResampleInfo( const ResampleInfo &src ){copy(src);}
    ~ResampleInfo();
    enum ResampleCode{ NullResample, NearestNeighbor, Add, Mean, Mode, Min, Max };
 
@@ -35,7 +35,7 @@ public:
    template<class T>
       bool shouldIgnore( T val );
 
-   void copy( ResampleInfo &src );
+   void copy( const ResampleInfo &src );
 
 private:
    ResampleCode rc;

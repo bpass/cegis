@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.5 2005/01/31 03:09:09 rbuehler Exp $
+// $Id: mapimg.h,v 1.6 2005/01/31 17:24:04 jtrent Exp $
 
 
 #ifndef MAPIMG_H

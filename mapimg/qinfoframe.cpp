@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.3 2005/01/31 03:09:09 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.4 2005/01/31 17:24:07 jtrent Exp $
 
 
 #include "qinfoframe.h"
@@ -772,3 +772,5 @@ void QInfoFrame::cleanUp( QLineEdit *lEdit )
    lEdit->setText( cleanUp );
    return;
 }
+
+

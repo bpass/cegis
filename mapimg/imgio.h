@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.2 2005/01/28 17:59:07 jtrent Exp $
+// $Id: imgio.h,v 1.3 2005/01/31 17:24:02 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -70,7 +70,6 @@ int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * ou
 	// Open input file and check for any errors
 	inptr.setName( infile_name );
 	inptr.open( IO_ReadOnly | IO_Raw );
-//	inptr = fopen64(infile_name, "rb");
 
 	if( !inptr.isOpen() || !inptr.isReadable() )
 	{
@@ -81,7 +80,6 @@ int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * ou
 	}
 
 	// Open output file and check for any errors
-//	outptr = fopen(outfile_name, "wb");
 	outptr.setName( outfile_name );
         outptr.open( IO_WriteOnly | IO_Raw );
 

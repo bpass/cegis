@@ -1,4 +1,4 @@
-// $Id: qinfoframe.h,v 1.2 2005/01/31 03:09:09 rbuehler Exp $
+// $Id: qinfoframe.h,v 1.3 2005/01/31 17:24:07 jtrent Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -178,3 +178,5 @@ private:
 
 
 #endif
+
+

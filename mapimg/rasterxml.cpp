@@ -1,4 +1,4 @@
-// $Id: rasterxml.cpp,v 1.3 2005/01/31 03:09:09 rbuehler Exp $
+// $Id: rasterxml.cpp,v 1.4 2005/01/31 17:24:07 jtrent Exp $
 
 
 /*  To Do:
@@ -7,7 +7,7 @@
 		4.) rework loadFile() to account for new design
 		6.) test test test
 		7.)finish reworking set functions
-
+*/
 
 
 
@@ -33,6 +33,9 @@ m_projNumber(0),
 m_unitsNumber(0),
 m_zone(0),
 m_datumNumber(0),
+m_rows(0),
+m_cols(0),
+m_pixelSize(0.0),
 m_ulx(0.0),
 m_uly(0.0),
 m_fillValue(0.0),
@@ -40,14 +43,12 @@ m_projName(NULL),
 m_datumName(NULL),
 m_unitsName(NULL),
 m_dataType(NULL),
-m_filename(NULL),
 m_authorName(NULL),
 m_authorCompany(NULL),
 m_authorEmail(NULL),
+m_filename(NULL),
+m_tempFilename(NULL),
 m_signed(false),
-m_rows(0),
-m_cols(0),
-m_pixelSize(0.0),
 m_doc(NULL)
 {
 	m_GCTPParams = new double[15];
@@ -69,6 +70,9 @@ m_projNumber(0),
 m_unitsNumber(0),
 m_zone(0),
 m_datumNumber(0),
+m_rows(0),
+m_cols(0),
+m_pixelSize(0.0),
 m_ulx(0.0),
 m_uly(0.0),
 m_fillValue(0.0),
@@ -79,12 +83,10 @@ m_dataType(NULL),
 m_authorName(NULL),
 m_authorCompany(NULL),
 m_authorEmail(NULL),
-m_doc(NULL),
 m_filename(NULL),
+m_tempFilename(NULL),
 m_signed(false),
-m_rows(0),
-m_cols(0),
-m_pixelSize(0.0)
+m_doc(NULL)
 {
 	if(!filename) {
 		throw(XMLException("NULL filename"));
@@ -107,6 +109,9 @@ m_projNumber(0),
 m_unitsNumber(0),
 m_zone(0),
 m_datumNumber(0),
+m_rows(0),
+m_cols(0),
+m_pixelSize(0.0),
 m_ulx(0.0),
 m_uly(0.0),
 m_fillValue(0.0),
@@ -114,14 +119,12 @@ m_projName(NULL),
 m_datumName(NULL),
 m_unitsName(NULL),
 m_dataType(NULL),
-m_filename(NULL),
 m_authorName(NULL),
 m_authorCompany(NULL),
 m_authorEmail(NULL),
+m_filename(NULL),
+m_tempFilename(NULL),
 m_signed(false),
-m_rows(0),
-m_cols(0),
-m_pixelSize(0.0),
 m_doc(NULL)
 {
 	//initialize internal document tree

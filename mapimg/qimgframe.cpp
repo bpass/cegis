@@ -1,4 +1,4 @@
-// $Id: qimgframe.cpp,v 1.2 2005/01/27 18:15:16 jtrent Exp $
+// $Id: qimgframe.cpp,v 1.3 2005/01/31 17:24:05 jtrent Exp $
 
 
 #include "qimgframe.h"
@@ -88,3 +88,4 @@ void QImgFrame::showEvent( QShowEvent * )
       newFile = false;
    }
 }
+

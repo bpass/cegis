@@ -1,4 +1,4 @@
-// $Id: mapimgversion.h,v 1.3 2005/01/31 03:09:09 rbuehler Exp $
+// $Id: mapimgversion.h,v 1.4 2005/01/31 17:24:04 jtrent Exp $
 
 
 //This verison numbering system will be updated soon enough via a script.

@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: qgctpbox.cpp,v 1.2 2005/01/31 17:24:04 jtrent Exp $
 
 
 #include <qtooltip.h>

@@ -1,6 +1,6 @@
 /**
  * @file voplugin.h
- * $Id: voplugin.h,v 1.2 2004/12/08 16:18:02 ahartman Exp $
+ * $Id: voplugin.h,v 1.3 2004/12/08 18:41:17 ahartman Exp $
  */
 
 #ifndef VOPLUGIN
@@ -34,28 +34,30 @@ public:
      * @param qi Pointer to the QgisIface object
      */
     VOPlugin(QgisApp * qgis , QgisIface * qi);
-
+private:
+    struct Imp;
+public:
     /** The destructor */
-    virtual ~VOPlugin();
+    virtual ~VOPlugin() { delete imp; }
 
+public slots:
     /** Initialize the GUI */
     virtual void initGui();
 
     /** Unload the plug-in and clean up the GUI */
-    virtual void unload();
+    virtual void unload() {}
 
-public slots:
     /** Show the dialog box */
     void run();
 
 private:
-    struct Imp;
 
     /**
      * A smart pointer to the object that will contain most of
      * the private data
      */
-    boost::scoped_ptr<Imp> imp;
+    //boost::scoped_ptr<Imp> imp;
+    Imp* imp;
 }; // class VOPlugin
 
 #endif

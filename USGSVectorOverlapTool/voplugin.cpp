@@ -1,6 +1,6 @@
 /**
  * @file voplugin.cpp
- * $Id: voplugin.cpp,v 1.2 2004/12/08 16:18:02 ahartman Exp $
+ * $Id: voplugin.cpp,v 1.3 2004/12/08 18:41:17 ahartman Exp $
  */
 
 // QGIS headers
@@ -17,8 +17,8 @@
 // Variables for the information needed by QGIS for every plugin
 namespace
 {
-    const char * ident_ = "$Id";
-    const char * name_ = "USGS Vector Overlap Tool Plug-in";
+    const char * ident_ = "$Id: voplugin.cpp,v 1.3 2004/12/08 18:41:17 ahartman Exp $";
+    const char * name_ = "!USGS Vector Overlap Tool Plug-in";
     const char * description_ = "Analyze two vector layers to find "
                                 "their points of intersection";
     const char * version_ = "0.01";

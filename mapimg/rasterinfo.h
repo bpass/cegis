@@ -1,4 +1,4 @@
-// $Id: rasterinfo.h,v 1.3 2005/01/31 03:09:09 rbuehler Exp $
+// $Id: rasterinfo.h,v 1.4 2005/02/01 17:20:59 rbuehler Exp $
 
 
 #ifndef RASTERINFO_H
@@ -80,7 +80,7 @@ private:
    void copy( const RasterInfo &src );
    bool parseFileName();
    void loadInfo();
-   void loadXml();
+   bool loadXml();
 
    QString  fileName;
 

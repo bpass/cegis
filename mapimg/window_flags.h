@@ -1,4 +1,4 @@
-// $Id: window_flags.h,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: window_flags.h,v 1.2 2005/02/01 17:20:59 rbuehler Exp $
 
 
 //Copyright 2003 United States Geological Survey
@@ -19,6 +19,6 @@
 #ifndef WINDOW_FLAGS_H
 #define WINDOW_FLAGS_H
 
-#define WINDOW_FLAGS Qt::WStyle_Customize | Qt::WStyle_Title | Qt::WStyle_SysMenu |Qt::WStyle_Minimize
+#define WINDOW_FLAGS Qt::WStyle_Customize | Qt::WStyle_Title | Qt::WStyle_SysMenu
 
 #endif

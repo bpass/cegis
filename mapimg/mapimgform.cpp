@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.5 2005/01/31 03:09:09 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.6 2005/02/01 17:20:59 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -23,8 +23,9 @@
 #include "qimgframe.h"
 #include "qinfoframe.h"
 #include "rasterinfo.h"
-#include "resampleform.h"
 #include "resampleinfo.h"
+#include "window_flags.h"
+#include "resampleform.h"
 #include "aboutform.h"
 #include "authorform.h"
 #include "tiff2img.h"
@@ -528,6 +529,9 @@ void mapimgForm::previewProjClicked()
       return;
    }
 
+   inInfoAction->setOn(false);
+   viewShowAction->setOn(true);
+
    output.setFileName( QDir::currentDirPath().append("/mapimg.img") );
    output.save();
 
@@ -539,8 +543,6 @@ void mapimgForm::previewProjClicked()
    mapimg::reproject( input, output, resample );
 
    imgFrame->loadImg( output.imgFileName(), true );
-   inInfoAction->setOn(false);
-   viewShowAction->setOn(true);
 }
 
 /*
@@ -611,7 +613,7 @@ void mapimgForm::outSaveClicked()
    }
 
    ResampleForm *resForm = new ResampleForm( this, "resForm", false, 
-      Qt::WStyle_Customize | Qt::WStyle_NormalBorder );
+      WINDOW_FLAGS );
    resForm->exec();
 
    if( resForm->wasCanceled() )
@@ -640,7 +642,7 @@ void mapimgForm::editAuthor()
    settings->setPath( "USGS.gov", "mapimg2" );
 
    authorForm *form = new authorForm(settings, this, "about", false,
-      Qt::WStyle_Customize | Qt::WStyle_NormalBorder );
+      WINDOW_FLAGS );
    form->exec();
    delete form;
 
@@ -654,7 +656,7 @@ void mapimgForm::editAuthor()
 void mapimgForm::aboutClicked()
 {
    aboutForm *about = new aboutForm(this, "about", false,
-      Qt::WStyle_Customize | Qt::WStyle_NormalBorder );
+      WINDOW_FLAGS );
    about->exec();
    delete about;
 }

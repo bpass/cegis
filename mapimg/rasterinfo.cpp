@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.4 2005/02/01 16:08:13 jtrent Exp $
+// $Id: rasterinfo.cpp,v 1.5 2005/02/01 17:20:59 rbuehler Exp $
 
 
 #include "rasterinfo.h"
@@ -212,7 +212,7 @@ bool RasterInfo::load( QString &imgFileName )
    }
 
    if( QFile::exists( fileName + ".xml" ) )
-      loadXml();
+      return loadXml();
    else if( QFile::exists( fileName + ".img.info" ) )
    {
       loadInfo();
@@ -328,8 +328,10 @@ void RasterInfo::loadInfo()
    setDataType( inFile[8] ); //Data Type
 }
 
-void RasterInfo::loadXml()
+bool RasterInfo::loadXml()
 {
+   bool returnValue = false;
+
    try
    {
      RasterXML xml( QString( fileName + ".xml" ).ascii() );
@@ -357,13 +359,16 @@ void RasterInfo::loadXml()
     
      for( int i = 0; i < 15; ++i )
         gctpParams[i] = xml.getGCTPParam( i );
+
+     returnValue = true;
    }
    catch( XMLException exception )
    {
      QMessageBox::critical( NULL, "Error", exception.getMessage() );
+     returnValue = false;
    }
 
-   return;
+   return returnValue;
 }
 
 bool RasterInfo::remove()

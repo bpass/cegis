@@ -266,6 +266,12 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 					{
 						if( *( (type*)inputCoverage + coverageIndex ) >= 0 )
 							sumValue += *( (type*)inputCoverage + coverageIndex );
+						
+						if( sumValue < 0 )
+						{
+							fprintf( stderr, "Error negative sum value. Dang it!!!!\n" );
+							fflush( stderr );
+						}
 					}
 					*( (type*)mapimgoutbuf + out_samp) = sumValue;
 				}

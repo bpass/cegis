@@ -206,7 +206,7 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type typeToUse)
 	insize = inimg->nl * inimg->ns;
 
 
-        insize = inimg->ns + 2;
+        insize = inimg->ns;
 
         bufptr = (type *) malloc(insize*sizeof(type));
         Q_CHECK_PTR( bufptr );
@@ -294,8 +294,8 @@ extern long insize;				// Number of bytes in input image
 static off64_t get_line_loadedData;
 
 #include <qcache.h>
-static int MAX_DATA_ELEMENT_COUNT = 20;
-static int FRIST_PRIME_AFTER_MAX = 23;
+static int MAX_DATA_ELEMENT_COUNT = 800;		//20, 23
+static int FRIST_PRIME_AFTER_MAX = 801;
 
 template <class type>
 void get_line(void* &buf, off64_t offset, int lineLength, type typeToUse)

@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.8 2005/02/19 00:43:53 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.9 2005/02/20 05:23:27 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -699,11 +699,10 @@ void QInfoFrame::setInfo( RasterInfo &input )
       gctpTab->gctpBoxes[i]->setValue( input.gctpParam(i) );
 }
 
-/*DBG
-   writeInfo(QString) saves all of the entered values to a mapimg formatted
-".info" file if they all check-out OK. It cleanUp()'s any lineEdits into which
-the user could potentially put "messy" data. If it is writing over a file it
-can prompt the user for how they feel about this.
+/*
+   info() saves all of the entered values to a returned RasterInfo. It 
+cleanUp()'s any lineEdits into which the user could potentially put 
+"messy" data.
 */
 RasterInfo QInfoFrame::info()
 {

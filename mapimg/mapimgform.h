@@ -1,4 +1,4 @@
-// $Id: mapimgform.h,v 1.6 2005/02/19 00:43:53 rbuehler Exp $
+// $Id: mapimgform.h,v 1.7 2005/02/20 05:23:27 rbuehler Exp $
 
 
 /****************************************************************************
@@ -22,6 +22,7 @@ class QAction;
 class QActionGroup;
 class QPopupMenu;
 class QToolBar;
+class QToolButton;
 class QWidgetStack;
 class QImgFrame;
 class QInfoFrame;
@@ -45,15 +46,14 @@ protected:
 protected slots:
    void inOpenClicked();
    void inSaveClicked();
-   void previewProjClicked();
+   void previewInput( bool on = true );
+   void previewOutput( bool on = true );
    void outSaveClicked();
    void editAuthor();
    void aboutClicked();
    void showAboutQt(){QMessageBox::aboutQt( this );}
 
 private:
-   void callmapimg( RasterInfo input, RasterInfo output );
-
    QMenuBar       *menuBar;
    QToolBar       *toolBar;
 
@@ -78,6 +78,12 @@ private:
    QAction        *outInfoAction;
    QAction        *outSaveAction;
    QInfoFrame     *outInfoFrame;
+
+   QToolButton    *viewShowButton;
+   QPopupMenu     *viewShowPopup;
+   QActionGroup   *prevGroup;
+   QAction        *prevInput;
+   QAction        *prevOutput;
 
    QPopupMenu     *Help;
    QAction        *aboutAction;

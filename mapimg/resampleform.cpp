@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.8 2005/02/18 16:59:07 jtrent Exp $
+// $Id: resampleform.cpp,v 1.9 2005/02/20 05:23:27 rbuehler Exp $
 
 
 /****************************************************************************
@@ -27,14 +27,14 @@
 #include "mapimgvalidator.h"
 
 /*
- *  Constructs a ResampleForm as a child of 'parent', with the
- *  name 'name' and widget flags set to 'f'.
- *
- *  The dialog will by default be modeless, unless you set 'modal' to
- *  TRUE to construct a modal dialog.
- */
+*  Constructs a ResampleForm as a child of 'parent', with the
+*  name 'name' and widget flags set to 'f'.
+*
+*  The dialog will by default be modeless, unless you set 'modal' to
+*  TRUE to construct a modal dialog.
+*/
 ResampleForm::ResampleForm( QWidget* parent, const char* name, bool modal, WFlags fl )
-    : QDialog( parent, name, modal, fl )
+: QDialog( parent, name, modal, fl )
 {
    if ( !name )
       setName( "ResampleForm" );
@@ -122,67 +122,67 @@ ResampleForm::ResampleForm( QWidget* parent, const char* name, bool modal, WFlag
 }
 
 /*
- *  Destroys the object and frees any allocated resources
- */
+*  Destroys the object and frees any allocated resources
+*/
 ResampleForm::~ResampleForm()
 {
-    // no need to delete child widgets, Qt does it all for us
+   // no need to delete child widgets, Qt does it all for us
 }
 
 /*
- *  Sets the strings of the subwidgets using the current
- *  language.
- */
+*  Sets the strings of the subwidgets using the current
+*  language.
+*/
 void ResampleForm::languageChange()
 {
-    setCaption( tr( "Resample Options" ) );
-    resampleBox->setTitle( tr( "Resample Method" ) );
-    resampleCombo->clear();
-    resampleCombo->insertItem( tr( "Nearest Neighbor" ) );
-    resampleCombo->insertItem( tr( "Add" ) );
-    resampleCombo->insertItem( tr( "Mean" ) );
-    resampleCombo->insertItem( tr( "Mode" ) );
-    resampleCombo->insertItem( tr( "Min" ) );
-    resampleCombo->insertItem( tr( "Max" ) );
-    ignoreBox->setTitle( tr( "Ignore Values" ) );
-    ignoreEdit->setText( tr( "0" ) );
-    newButton->setText( tr( "New Value -->" ) );
-    delButton->setText( tr( "Delete Value <--" ) );
-    ignoreListBox->clear();
-    okButton->setText( tr( "Ok" ) );
-    cancelButton->setText( tr( "Cancel" ) );
+   setCaption( tr( "Resample Options" ) );
+   resampleBox->setTitle( tr( "Resample Method" ) );
+   resampleCombo->clear();
+   resampleCombo->insertItem( tr( "Nearest Neighbor" ) );
+   resampleCombo->insertItem( tr( "Add" ) );
+   resampleCombo->insertItem( tr( "Mean" ) );
+   resampleCombo->insertItem( tr( "Mode" ) );
+   resampleCombo->insertItem( tr( "Min" ) );
+   resampleCombo->insertItem( tr( "Max" ) );
+   ignoreBox->setTitle( tr( "Ignore Values" ) );
+   ignoreEdit->setText( tr( "0" ) );
+   newButton->setText( tr( "New Value -->" ) );
+   delButton->setText( tr( "Delete Value <--" ) );
+   ignoreListBox->clear();
+   okButton->setText( tr( "Ok" ) );
+   cancelButton->setText( tr( "Cancel" ) );
 }
 
 bool ResampleForm::eventFilter( QObject* object, QEvent* event )
 {
-     if( (object == ignoreListBox) && (event->type() == QEvent::KeyPress) )
-     {
-         QKeyEvent* keyEvent = (QKeyEvent*)event;
-         if( keyEvent->key() == Qt::Key_Delete )
-         {
-            delButton->animateClick();
-            return true;
-         }
-         else
-         {
-             return QDialog::eventFilter( object, event );
-         }
-     }
-     else if( (object == resampleCombo) && (event->type() == QEvent::KeyPress) )
-     {
-         QKeyEvent* keyEvent = (QKeyEvent*)event;
-         if( keyEvent->key() == Qt::Key_Return )
-         {
-            okButton->animateClick();
-            return true;
-         }
-         else
-         {
-             return QDialog::eventFilter( object, event );
-         }
-     }
+   if( (object == ignoreListBox) && (event->type() == QEvent::KeyPress) )
+   {
+      QKeyEvent* keyEvent = (QKeyEvent*)event;
+      if( keyEvent->key() == Qt::Key_Delete )
+      {
+         delButton->animateClick();
+         return true;
+      }
+      else
+      {
+         return QDialog::eventFilter( object, event );
+      }
+   }
+   else if( (object == resampleCombo) && (event->type() == QEvent::KeyPress) )
+   {
+      QKeyEvent* keyEvent = (QKeyEvent*)event;
+      if( keyEvent->key() == Qt::Key_Return )
+      {
+         okButton->animateClick();
+         return true;
+      }
+      else
+      {
+         return QDialog::eventFilter( object, event );
+      }
+   }
 
-     return QDialog::eventFilter( object, event );
+   return QDialog::eventFilter( object, event );
 }
 
 
@@ -198,26 +198,26 @@ void ResampleForm::newVal()
 {
    if( ignoreEdit->hasAcceptableInput() )
    {
-     IgnoreValue i = (IgnoreValue)ignoreEdit->text().toDouble();
+      IgnoreValue i = (IgnoreValue)ignoreEdit->text().toDouble();
 
       int decimals = 6;
 
       if( ignoreEdit->validator() != NULL )
-          decimals = ((MapimgValidator*)ignoreEdit->validator())->decimals();
+         decimals = ((MapimgValidator*)ignoreEdit->validator())->decimals();
 
-     if(  ilist.contains( i ) < 1 )
-     {
-        ilist.append( i );
-        ignoreListBox->insertItem( QString::number( i, 'f', decimals ) );
-     }
-     else
-     {
-        QListBoxItem* ignoreListItem = ignoreListBox->findItem( QString::number( i, 'f', decimals ), Qt::ExactMatch );
-     	ignoreListBox->setSelected( ignoreListItem, TRUE );
-     }
+      if(  ilist.contains( i ) < 1 )
+      {
+         ilist.append( i );
+         ignoreListBox->insertItem( QString::number( i, 'f', decimals ) );
+      }
+      else
+      {
+         QListBoxItem* ignoreListItem = ignoreListBox->findItem( QString::number( i, 'f', decimals ), Qt::ExactMatch );
+         ignoreListBox->setSelected( ignoreListItem, TRUE );
+      }
 
-     if( ignoreListBox->count() > 0 )
-        delButton->setDisabled(false);
+      if( ignoreListBox->count() > 0 )
+         delButton->setDisabled(false);
    }
 
    ignoreEdit->selectAll();

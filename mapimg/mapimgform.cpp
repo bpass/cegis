@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.17 2005/02/19 00:43:53 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.18 2005/02/20 05:23:27 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -9,6 +9,7 @@
 #include <qwhatsthis.h>
 #include <qaction.h>
 #include <qmenubar.h>
+#include <qtoolbutton.h>
 #include <qpopupmenu.h>
 #include <qtoolbar.h>
 #include <qdragobject.h>
@@ -151,7 +152,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    //signals and slots
    connect( viewShowAction, SIGNAL( toggled(bool) ), imgFrame, SLOT( setShown(bool) ) );
    connect( viewResampleAction, SIGNAL( activated() ), imgFrame, SLOT( resample() ) );
-   connect( previewProjAction, SIGNAL( activated() ), this, SLOT( previewProjClicked() ) );
+   connect( previewProjAction, SIGNAL( activated() ), this, SLOT( previewOutput() ) );
 
    ////////
    //OUTPUT
@@ -201,12 +202,34 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    outSaveAction->addTo( toolBar );
    toolBar->addSeparator();
    inInfoAction->addTo( toolBar );
-   viewShowAction->addTo( toolBar );
+   viewShowButton = new QToolButton( QIconSet( mapimgImage( "preview" ) ), 
+      "Show Preview", "", NULL, 0, toolBar, "previewButton" );
    outInfoAction->addTo( toolBar );
    toolBar->addSeparator();
    viewResampleAction->addTo( toolBar );
    previewProjAction->addTo( toolBar );
 
+   //preview button extra features
+   viewShowPopup = new QPopupMenu( viewShowButton, "viewShowPopup" );
+
+   prevInput = new QAction( "Preview Input", QKeySequence(""), this, "prevInput" );
+   prevInput->setToggleAction( true );
+   prevInput->addTo( viewShowPopup );
+   prevOutput = new QAction( "Preview Output", QKeySequence(""), this, "prevOutput" );
+   prevOutput->setToggleAction( true );
+   prevOutput->addTo( viewShowPopup );
+
+   viewShowButton->setPopup( viewShowPopup );
+   viewShowButton->setPopupDelay( 400 );
+   viewShowButton->setToggleButton(true);
+
+   connect( viewShowButton, SIGNAL( toggled(bool) ), imgFrame, SLOT( setShown(bool) ) );
+   connect( prevInput, SIGNAL( toggled(bool) ), this, SLOT( previewInput(bool) ) );
+   connect( prevOutput, SIGNAL( toggled(bool) ), this, SLOT( previewOutput(bool) ) );
+
+   ///DBG --- UNDER CONSTRUCTION. CHECK BACK SOON :)
+   prevInput->setDisabled(true);
+   prevOutput->setDisabled(true);
 
    ////////
    //MENUBAR
@@ -504,15 +527,38 @@ void mapimgForm::inSaveClicked()
 }
 
 /*
-   previewProjClicked() is used to preview a projection. This is useful
+   prevGroupSelect() "Preview Group Selected"
+*/
+void mapimgForm::previewInput( bool on )
+{
+   if( on )
+   {
+      imgFrame->loadImg( inInfoFrame->info().imgFileName() );
+      //QMessageBox::information( this, "DBG", "On" );
+
+      viewShowButton->setOn(true);
+      prevOutput->setOn(false);
+   }
+   else if( !prevOutput->isOn() )
+      viewShowButton->setOn(false);
+}
+
+/*
+   previewOutput() is used to preview a projection. This is useful
 because many reprojections can take hours but using this function the output
 can be preivewed before investing the time. The reprojection function is
 linear with size increases having a proportional effect on run-time. This
 preview down samples the input with a constant time algorithm and then
 reprojects to a much smaller output.
 */
-void mapimgForm::previewProjClicked()
+void mapimgForm::previewOutput( bool on )
 {
+   if( !on && !prevInput->isOn() )
+   {
+      viewShowButton->setOn(false);
+      return;
+   }
+
    if( !imgSet )
    {
       QMessageBox::critical( this, "Input not set",
@@ -527,7 +573,7 @@ void mapimgForm::previewProjClicked()
    RasterInfo output( outInfoFrame->info() );
    output.setDataType( input.isSigned(), input.bitCount(), input.type() );
    output.setFillValue( input.fillValue() );
-   if( !mapimg::readytoReproject(input, this) )
+   if( !mapimg::readytoReproject(output, this) )
       return;
    mapimg::frameIt( output );
 
@@ -554,8 +600,10 @@ void mapimgForm::previewProjClicked()
    mapimg::reproject( smallInput, output, resample );
 
    inInfoAction->setOn(false);
-   viewShowAction->setOn(true);
+   viewShowButton->setOn(true);
    imgFrame->loadImg( output.imgFileName(), true );
+   prevInput->setOn(false);
+   imgFrame->show();
 }
 
 /*

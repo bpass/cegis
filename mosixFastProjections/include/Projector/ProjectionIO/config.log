@@ -1,0 +1,24 @@
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+configure:566: checking host system type
+configure:627: checking for gcc
+configure:704: checking whether the C compiler (gcc  ) works
+configure:718: gcc -o conftest    conftest.c  1>&5
+configure:744: checking whether the C compiler (gcc  ) is a cross-compiler
+configure:749: checking whether we are using GNU C
+configure:773: checking whether gcc accepts -g
+configure:805: checking for c++
+configure:836: checking whether the C++ compiler (c++  ) works
+configure:850: c++ -o conftest    conftest.C  1>&5
+configure:870: checking whether the C++ compiler (c++  ) is a cross-compiler
+configure:875: checking whether we are using GNU C++
+configure:899: checking whether c++ accepts -g
+configure:929: checking how to run the C++ preprocessor
+configure:966: checking for ANSI C header files
+configure:1076: checking for vector
+configure:1076: checking for string
+configure:1076: checking for fstream
+configure:1076: checking for new
+configure:1076: checking for exception
+configure:1115: checking for working const

@@ -1,0 +1,215 @@
+
+---------- ALBERFOR.C
+[123]theta = ns0 * adjust_lon(lon - lon_center); 
+
+---------- ALBERINV.C
+[169]*lon = adjust_lon(theta/ns0 + lon_center);
+
+---------- ALCONFOR.C
+[133]dlon = adjust_lon( lon - lon_center);
+
+---------- ALCONINV.C
+[243]*lon = adjust_lon (lon_center + atan2((xp * sinz), (rh * cos_p26 * cosz - yp *
+
+---------- AZIMFOR.C
+[90]dlon = adjust_lon(lon - lon_center);
+
+---------- AZIMINV.C
+[105]      *lon = adjust_lon(lon_center + atan2(x , -y));
+[110]      *lon = adjust_lon(lon_center - atan2(-x , y));
+[118]*lon = adjust_lon(lon_center + atan2((x * sinz * cos_p12), (con * rh)));
+
+---------- BR_GCTP.C
+
+---------- CPROJ.C
+[21]		ADJUST_LON:  Adjusts a longitude angle to range -180 to 180.
+[34]S. Nelson, EROS		Nov, 1993	Added loop counter in ADJUST_LON
+[354]double adjust_lon(x) 
+
+---------- EQCONFOR.C
+[147]theta = ns * adjust_lon(lon - lon_center);
+
+---------- EQCONINV.C
+[166]*lon = adjust_lon(lon_center + theta / ns);
+
+---------- EQUIFOR.C
+[79]dlon = adjust_lon(lon - lon_center);
+
+---------- EQUIINV.C
+[88]*lon = adjust_lon(lon_center + x / (r_major * cos(lat_origin)));
+
+---------- FOR_INIT.C
+
+---------- GCTP.C
+
+---------- GNOMFOR.C
+[88]dlon = adjust_lon(lon - lon_center);
+
+---------- GNOMINV.C
+[104]      *lon = adjust_lon(lon_center + atan2(x, -y));
+[109]      *lon = adjust_lon(lon_center - atan2(-x, y));
+[116]*lon = adjust_lon(lon_center + atan2((x * sinz * cos_p13), (con * rh)));
+
+---------- GOODFOR.C
+[127]   delta_lon = adjust_lon(lon - lon_center[region]);
+[133]   delta_lon = adjust_lon(lon - lon_center[region]);
+
+---------- GOODINV.C
+[135]      *lon = adjust_lon(temp);
+
+---------- GVNSPFOR.C
+[94]dlon = adjust_lon(lon - lon_center);
+
+---------- GVNSPINV.C
+[120]      *lon = adjust_lon(lon_center + atan2(x, -y));
+[125]      *lon = adjust_lon(lon_center - atan2(-x, y));
+[132]*lon  = adjust_lon(lon_center + atan2((x * sinz * cos_p15), (con * rh)));
+
+---------- HAMFOR.C
+[79]dlon = adjust_lon(lon - lon_center);
+
+---------- HAMINV.C
+[82]*lon = adjust_lon(lon_center + 2.0 * 
+
+---------- IMOLWFOR.C
+[110]delta_lon = adjust_lon(lon - lon_center[region]);
+
+---------- IMOLWINV.C
+[96]*lon = adjust_lon(lon_center[region] + (x / (0.900316316158*R * cos(theta))));
+
+---------- INV_INIT.C
+
+---------- LAMAZFOR.C
+[89]delta_lon = adjust_lon(lon - lon_center);
+
+---------- LAMAZINV.C
+[107]      if(temp!=0.0)*lon=adjust_lon(lon_center+atan2(x*sin_z*cos_lat_o,temp*Rh));
+[109]   else if (lat_center < 0.0) *lon = adjust_lon(lon_center - atan2(-x, y));
+[110]   else *lon = adjust_lon(lon_center + atan2(x, -y));
+
+---------- LAMCCFOR.C
+[143]theta = ns * adjust_lon(lon - center_lon);
+
+---------- LAMCCINV.C
+[154] *lon = adjust_lon(theta/ns + center_lon);
+
+---------- MERFOR.C
+[98]   *x = false_easting + r_major * m1 * adjust_lon(lon - lon_center);
+
+---------- MERINV.C
+[98]*lon = adjust_lon(lon_center + x/(r_major * m1));
+
+---------- MILLFOR.C
+[76]dlon = adjust_lon(lon - lon_center);
+
+---------- MILLINV.C
+[80]*lon = adjust_lon(lon_center + x / R);
+
+---------- MOLWFOR.C
+[74]delta_lon = adjust_lon(lon - lon_center);
+
+---------- MOLWINV.C
+[79]*lon = adjust_lon(lon_center + (x / (0.900316316158 * R * cos(theta))));
+
+---------- OBLEQFOR.C
+
+---------- OBLEQINV.C
+[13]S. Nelson		Nov, 1993	Added "double adjust_lon()" function
+[118]*lon = adjust_lon(lon_center + atan2((sin_z * sin_diff_angle), (cos_lat_o *
+
+---------- OMERFOR.C
+[168]   dlon  = adjust_lon(lon1 - lon_origin);
+[231]dlon = adjust_lon(lon - lon_origin);
+
+---------- OMERINV.C
+[167]   dlon  = adjust_lon(lon1 - lon_origin);
+[258]   *lon = adjust_lon(theta);
+
+---------- ORTHFOR.C
+[84]dlon = adjust_lon(lon - lon_center);
+
+---------- ORTHINV.C
+[105]      *lon = adjust_lon(lon_center + atan2(x, -y));
+[110]      *lon = adjust_lon(lon_center - atan2(-x, y));
+[116]   *lon = adjust_lon(lon_center + atan2((x * sinz * cos_p14), (con * rh)));
+
+---------- PAKSZ.C
+
+---------- POLYFOR.C
+[95]con = adjust_lon(lon - lon_center);
+
+---------- POLYINV.C
+[114]   *lon = adjust_lon((asinz(x * c / r_major) / sin(*lat)) + lon_center);
+
+---------- PSFOR.C
+[107]con1 = fac * adjust_lon(lon - center_lon);
+
+---------- PSINV.C
+[122]   *lon = adjust_lon(fac *temp + center_lon);
+
+---------- REPORT.C
+
+---------- ROBFOR.C
+[126]dlon = adjust_lon(lon - lon_center);
+
+---------- ROBINV.C
+[208]*lon = adjust_lon(*lon);
+
+---------- SINFOR.C
+[71]delta_lon = adjust_lon(lon - lon_center);
+
+---------- SININV.C
+[83]   *lon = adjust_lon(temp);
+
+---------- SOMFOR.C
+
+---------- SOMINV.C
+[215]*lon = adjust_lon(dlon+lon_center);
+
+---------- SPHDZ.C
+
+---------- STERFOR.C
+[84]dlon = adjust_lon(lon - lon_center);
+
+---------- STERINV.C
+[102]       *lon = adjust_lon(lon_center + atan2(x, -y));
+[107]       *lon = adjust_lon(lon_center - atan2(-x, y));
+[117]       *lon = adjust_lon(lon_center + atan2((x * sinz * cos_p10), (con * rh)));
+
+---------- STPLNFOR.C
+
+---------- STPLNINV.C
+
+---------- TMFOR.C
+[119]delta_lon = adjust_lon(lon - lon_center);
+
+---------- TMINV.C
+[135]     *lon = adjust_lon(atan2(g,h) + lon_center);
+[178]   *lon = adjust_lon(lon_center + (d * (1.0 - ds / 6.0 * (1.0 + 2.0 * t +
+
+---------- UNTFZ.C
+
+---------- UTMFOR.C
+[116]delta_lon = adjust_lon(lon - lon_center);
+
+---------- UTMINV.C
+[135]     *lon = adjust_lon(atan2(g,h) + lon_center);
+[178]   *lon = adjust_lon(lon_center + (d * (1.0 - ds / 6.0 * (1.0 + 2.0 * t +
+
+---------- VANDGFOR.C
+[83]dlon = adjust_lon(lon  - lon_center);
+
+---------- VANDGINV.C
+[115]*lon = adjust_lon(lon_center + PI * (xys - 1.0 + sqrt(1.0 + 2.0 * 
+
+---------- WIVFOR.C
+[73]delta_lon = adjust_lon(lon - lon_center);
+
+---------- WIVINV.C
+[71]*lon = adjust_lon(lon_center + (x / (0.86310 * R * cos(theta))));
+
+---------- WVIIFOR.C
+[70]delta_lon = adjust_lon(lon - lon_center);
+
+---------- WVIIINV.C
+[82]*lon = adjust_lon(lon_center + 3.0 * atan2(x * tan(c), 2.66723 * p));

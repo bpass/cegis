@@ -1,0 +1,2 @@
+.obj/BaseProgress.o: BaseProgress.cpp BaseProgress.h
+.obj/ProjectorException.o: ProjectorException.cpp ProjectorException.h

@@ -1,0 +1,62 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: ProjectionLib - Win32 MThreadDebug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\TEMP\RSP565.tmp" with contents
+[
+/nologo /MD /W3 /GR /GX /O2 /I "E:\Project\Project" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "_DLL" /Fp"ProjectionLib___Win32_MThreadDebug/ProjectionLib.pch" /YX /Fo"ProjectionLib___Win32_MThreadDebug/" /Fd"ProjectionLib___Win32_MThreadDebug/" /FD /c 
+"E:\Project\Project\ProjectionLib\GoodeHomolosineProjection.cpp"
+]
+Creating command line "cl.exe @C:\TEMP\RSP565.tmp" 
+Creating temporary file "C:\TEMP\RSP566.tmp" with contents
+[
+/nologo /out:"E:\Project\Project\Mthread\ProjectionLib.lib" 
+.\ProjectionLib___Win32_MThreadDebug\AlaskaConformalProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\AlbersConicProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\AzimuthalEquidistantProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\AzimuthalProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\ConicProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\DatumConvertor.obj
+.\ProjectionLib___Win32_MThreadDebug\EquidistantConicProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\EquirectangularProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\GeographicProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\GnomonicProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\GoodeHomolosineProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\HotineObliqueMercatorProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\LambertAzimuthalProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\LambertConformalConicProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\MercatorProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\MillerCylindricalProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\OrthographicProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\PolarStereographicProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\PolyconicProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\Projection.obj
+.\ProjectionLib___Win32_MThreadDebug\ProjectionException.obj
+.\ProjectionLib___Win32_MThreadDebug\PseudocylindricalProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\RobinsonProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\SinusoidalProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\StatePlaneProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\StereographicProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\TransverseMercatorProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\UnknownProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\UTMProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\VanDerGrintenProjection.obj
+.\ProjectionLib___Win32_MThreadDebug\ZonedProjection.obj
+]
+Creating command line "link.exe -lib @C:\TEMP\RSP566.tmp"
+<h3>Output Window</h3>
+Compiling...
+GoodeHomolosineProjection.cpp
+Creating library...
+
+
+
+<h3>Results</h3>
+ProjectionLib.lib - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

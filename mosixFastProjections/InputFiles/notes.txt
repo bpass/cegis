@@ -1,0 +1,93 @@
+Dear Whoever Worxon Thisnext,
+
+
+OVERVIEW
+--------
+My strategy in converting this program was to create a new framework to take
+the place of the old MPI stuff and basically copy and paste large blocks of the
+old reprojector program into that framework. I did not make any major changes
+to the actual reprojection code, I simply built the new program around it. So,
+this program works almost identically to the old, standard, non-MPI projector,
+except it's all clustery and stuff.
+It goes kinda like this.
+You make a BigJob object that encapsulates all the gory details about what's
+going to be done. Then, you create a WorkManager object associated with that
+BigJob. The WorkManager is in charge of breaking up the work and sewing the
+results back together. To do the clustery stuff, you create a SlaveManager
+object associated with the WorkManager and call Work(). Then you arbitrarily
+launch slave processes externally with the IP and port of the master, and they
+do their thing until the work is all done. Alternately, you could get WorkUnits
+from the WorkManager and just execute them one by one in the same process. The
+work gets done just the same, only without the l33t clust0r business. WorkUnits
+are self-contained "units" of "work". WorkManager creates them. They contain
+their own data or open their own input files. They know how to copy themselves
+over an open socket. (Basically, open a stream connection, and on one end tell
+a WorkUnit to "import" from the socket, and on the other tell another WorkUnit
+to "export" to the socket, and when they're finished dorking around the former
+will be a copy of the latter) WorkUnits know how to process their input data
+into output scanlines, just call Execute() and they do their job. The owning
+object doesn't know how and it doesn't have to care.
+Once all WorkUnits have been Execute()ed and returned to the WorkManager, you
+can ask for a BigResult. If you get one, then all went well and theoretically
+your results are there. In this case, BigResult is an empty object because all
+the results go directly into a tiff file, but you never know. Someday somebody
+might want to change the way results are returned, so that mechanism is there
+for that flexibility, just in case.
+
+
+MISC DETAILS
+------------
+"backup" is a crummy script that archives the project folder into ./backups
+In ./backups you will find a course history of the work I've done. Many of
+those backups are probably pointless, but quite a few are stable milestones.
+The stuff in ./unused is code from the old projector that isn't currently used
+for MSXProject, but may come in handy later. Inside ./unused/projector is
+actual old code, and in ./unused/nuprojector is stuff I've messed with, some-
+times functionally but mostly just cosmetically. Maybe. I don't know. I haven't
+touched that stuff in a while.
+./foo is the original code pile Brian sent me. Libraries in there.
+./junk is stuff I've messed with in the past, but I've forgotten what I did and
+why. It can probably be discarded. Except ./junk/projector, that's the regular
+old reprojector utility in working order.
+
+
+IMMEDIATE ISSUES
+----------------
+The last thing I was doing was trying to integrate the optional multithreaded
+"stitcher", which runs the task of writing to the output image file in a thread
+separate from the actual work server duties. I grabbed the stitcher code from
+the old project and dropped it in where it belongs, but I've found that said
+code isn't actually functional, at least, it doesn't seem to be. There are some
+undeclared variables and invalid/nonsensical constructor calls and the like.
+Incidentally, the stitcher code present here has been converted from the ACE
+library to Boost. Obviously it's untested since the code is otherwise broken,
+but it ought to work. The actual multithreading function calls, at least.
+Anyway. The _immediate_ issue is fixing (completing? rewriting?) the threaded
+stitcher functionality I lifted from the old program. As of now the thing won't
+compile because of this. Just comment out the Stitcher* includes and whatnot if
+need be. They aren't in too deep.
+
+Once the threaded stitcher is functioning, the makefile needs to be set up
+to compile (only) servermain, Stitcher, and StitcherNode with -pthread and
+-lpthread. The master needs those options, but the slaves absolutely cannot
+have them since it causes minor snafus (segfaulting) when mosix attempts to
+migrate them.
+
+
+OTHER PROBLEMS AND MISSING FEATURES
+-----------------------------------
+While it's easy to report a WorkUnit as "lost" to the WorkManager, thereby
+causing it to be redispatched, there is nothing in place to detect slaves that
+have died horribly without reporting failure. Therefore, it's possible that a
+slave could die suddenly and the master will just wait forever for the WorkUnit
+it had to come down the line. A simple timeout would be better than nothing,
+but choosing an appropriate timeout value would be very tricky. The best thing
+would probably be for the master to determine a timeout value on the fly, based
+on the average time taken for results to come back. The cluster environment
+could get very chaotic, so a predetermined timeout is unacceptable. Slaves are
+pretty good about crawling off and dying if the master screws up, though. Tons
+of orphan slave processes wandering the cluster isn't a problem. (any more)
+
+
+ummm. I think that's all I've got. Good luck Mr. or Mrs. Thisnext.
+

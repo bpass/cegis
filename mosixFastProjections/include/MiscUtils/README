@@ -1,0 +1,3 @@
+This is the MiscUtils library.  It contains utilities which different projects
+can use, such as the compare_nocase function.  These functions really don't
+fit under a class so they're here as standalone functions.

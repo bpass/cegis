@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.14 2005/02/14 17:29:05 jtrent Exp $
+// $Id: mapimg.cpp,v 1.15 2005/02/15 23:40:39 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -11,6 +11,7 @@
 #include "resampleinfo.h"
 
 #include "getprojinfo.h"
+#include "imgio.h"
 extern "C"
 {
 #include "proj.h"
@@ -19,8 +20,8 @@ extern "C"
 #include <math.h>
 int mapimg::round(double value, unsigned int decimals)
 {
-  double factor = pow(10,decimals);
-  return (int)(floor((value * factor) + 0.5) / factor);
+   double factor = pow(10,decimals);
+   return (int)(floor((value * factor) + 0.5) / factor);
 }
 
 bool mapimg::readytoFrameIt( RasterInfo &input, QWidget * parent )
@@ -281,21 +282,44 @@ void mapimg::frameIt( RasterInfo &input )
       (int)(mapimg::round( ((pxmax - pxmin) / pixsize) )) );
 }
 
-bool mapimg::downSampleImg( RasterInfo &input, RasterInfo &output, int maxDimension )
+bool mapimg::downSampleImg( RasterInfo &input, RasterInfo &output, int maxDimension, QWidget *parent )
 {
    output.copy(input);
 
    output.setFileName( QDir::currentDirPath().append("/temp.img") );
    mapimg::downSizeProjection(output, maxDimension);
 
-   ResampleInfo resample;
-   resample.setResampleCode( ResampleInfo::NearestNeighbor );
-   resample.setFillValue( input.fillValue() );
-   resample.setNoDataValue( input.noDataValue() );
+   QString dtype(input.isSigned()?"Signed ":"Unsigned ");
+   dtype += QString::number(input.bitCount());
+   dtype += " Bit ";
+   dtype += input.dataType();
 
-   mapimg::reproject(input, output, resample);
+   if( dtype == "Signed 64 Bit IEEE Float" )
+   {	double data = 0;
+      return mapimg_downsample( input, output, data, parent ); }
+   else if( dtype == "Signed 32 Bit IEEE Float" )
+   {	float data = 0;
+      return mapimg_downsample( input, output, data, parent ); }
+   else if( dtype == "Signed 32 Bit Integer" )
+   {	Q_INT32 data = 0;
+      return mapimg_downsample( input, output, data, parent ); }
+   else if( dtype == "Unsigned 32 Bit Integer" )
+   {	Q_UINT32 data = 0;
+      return mapimg_downsample( input, output, data, parent ); }
+   else if( dtype == "Signed 16 Bit Integer" )
+   {	Q_INT16 data = 0;
+      return mapimg_downsample( input, output, data, parent ); }
+   else if( dtype == "Unsigned 16 Bit Integer" )
+   {	Q_UINT16 data = 0;
+      return mapimg_downsample( input, output, data, parent ); }
+   else if( dtype == "Signed 8 Bit Integer" )
+   { 	Q_INT8 data = 0;
+      return mapimg_downsample( input, output, data, parent ); }
+   else //( dtype == "Unsigned 8 Bit Integer" )
+   {  Q_UINT8 data = 0;
+      return mapimg_downsample( input, output, data, parent ); }
+
    output.save();
-
 
    return true;
 }

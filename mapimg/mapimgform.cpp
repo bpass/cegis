@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.12 2005/02/13 23:12:48 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.13 2005/02/15 23:40:39 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -147,6 +147,9 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
       "Resample Preview", QKeySequence("F5"), this, "resampleAction" );
    previewProjAction = new QAction( QIconSet( mapimgImage( "previewproject" ) ), 
       "&Preview Reprojection", QKeySequence("Ctrl+P"), this, "resampleAction" );
+   //DBG
+   previewProjAction->setEnabled( false );
+   previewProjAction->setToolTip( "Under reconstruction. Check back soon :)" );
 
 
    //signals and slots
@@ -533,7 +536,7 @@ void mapimgForm::previewProjClicked()
    mapimg::frameIt( output );
 
    RasterInfo smallInput;
-   mapimg::downSampleImg( input, smallInput, 720 );
+   mapimg::downSampleImg( input, smallInput, 720, this );
    smallInput.save();
 
    if( !mapimg::downSizeProjection( output, 720 ) )

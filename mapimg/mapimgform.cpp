@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.29 2005/03/25 18:06:41 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.30 2005/03/29 21:44:46 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -283,6 +283,10 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    menuBar->insertItem( "Help", Help);
 
 
+   ////////
+   // SETTINGS
+   ////////
+
    QSettings *settings = new QSettings( QSettings::Ini );
    settings->setPath( "USGS.gov", "mapimg2" );
 
@@ -310,6 +314,10 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    resize( QSize(600, 524).expandedTo(minimumSizeHint()) );
    clearWState( WState_Polished );
    setAcceptDrops( true );
+
+   ////////
+   // DEFAULT VALUES
+   ////////
 
    imgName = "";
    imgSet = false;

@@ -1,4 +1,4 @@
-// $Id: resampleinfo.h,v 1.10 2005/03/25 18:06:41 rbuehler Exp $
+// $Id: resampleinfo.h,v 1.11 2005/03/25 21:32:10 rbuehler Exp $
 
 
 #ifndef RESAMPLEINFO_H
@@ -17,7 +17,7 @@ public:
    ResampleInfo();
    ResampleInfo( const ResampleInfo &src ){copy(src);}
    ~ResampleInfo(){}
-   enum ResampleCode{ NullResample, NearestNeighbor, Add, Mean, Median, Mode, Min, Max };
+   enum ResampleCode{ NullResample, NearestNeighbor, Sum, Mean, Median, Mode, Min, Max };
 
    void setResampleCode( ResampleCode code );
    bool setResampleCode( const QString &codeName );
@@ -40,7 +40,7 @@ public:
 
    void copy( const ResampleInfo &src );
 
-   bool noDoubleCounting() const {return rc==Add;}
+   bool noDoubleCounting() const {return rc==Sum;}
 
    void setCacheLineCount( const int lineCount ) { lineCacheSize = lineCount; }
    int cacheLineCount() const { return lineCacheSize; }

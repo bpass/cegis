@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.31 2005/03/25 18:06:41 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.32 2005/03/25 21:32:10 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -305,10 +305,10 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
 
                      switch( resample.resampleCode() )
                      {
-                     case ResampleInfo::Add:   //Sum
+                     case ResampleInfo::Sum:   //Sum
                         if( resample.isCategorical() )
                         {
-                           QMessageBox::critical( &progress, "Error", "Add resampling is not supported for categorical data." );
+                           QMessageBox::critical( &progress, "Error", "Sum resampling is not supported for categorical data." );
                            progress.cancel();
                         }
                         else

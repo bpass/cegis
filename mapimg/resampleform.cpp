@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.12 2005/03/14 17:52:51 jtrent Exp $
+// $Id: resampleform.cpp,v 1.13 2005/03/25 21:32:10 rbuehler Exp $
 
 
 /****************************************************************************
@@ -173,7 +173,7 @@ void ResampleForm::languageChange()
    resampleBox->setTitle( tr( "Resample Method" ) );
    resampleCombo->clear();
    resampleCombo->insertItem( tr( "Nearest Neighbor" ) );
-   resampleCombo->insertItem( tr( "Add" ) );
+   resampleCombo->insertItem( tr( "Sum" ) );
    resampleCombo->insertItem( tr( "Mean" ) );
    resampleCombo->insertItem( tr( "Median" ) );
    resampleCombo->insertItem( tr( "Mode" ) );

@@ -1,4 +1,4 @@
-// $Id: resampleinfo.cpp,v 1.12 2005/03/25 18:06:41 rbuehler Exp $
+// $Id: resampleinfo.cpp,v 1.13 2005/03/25 21:32:10 rbuehler Exp $
 
 
 #include "resampleinfo.h"
@@ -30,8 +30,8 @@ void ResampleInfo::setResampleCode( ResampleCode code )
    case NearestNeighbor:
       strncpy( rn, "NearestNeighbor", RN_MAXLENGTH );
       break;
-   case Add:
-      strncpy( rn, "Add", RN_MAXLENGTH );
+   case Sum:
+      strncpy( rn, "Sum", RN_MAXLENGTH );
       break;
    case Mean:
       strncpy( rn, "Mean", RN_MAXLENGTH );
@@ -64,8 +64,8 @@ bool ResampleInfo::setResampleCode( const QString &codeName )
 
    if( str == "nearestneighbor" )
       rc = ResampleInfo::NearestNeighbor;
-   else if( str == "add" )
-      rc = ResampleInfo::Add;
+   else if( str == "sum" )
+      rc = ResampleInfo::Sum;
    else if( str == "mean" )
       rc = ResampleInfo::Mean;
    else if( str == "median" )

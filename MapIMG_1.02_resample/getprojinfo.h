@@ -122,8 +122,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 
     /******* Change bounds here for doing per line or per line section *******/
     FILE *paramfile = fopen( logFile, "wa");
-
-
+	
 
     for(out_line = 0; out_line < outimg.nl; out_line++) 		// For each output image line
     {
@@ -233,8 +232,12 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 					if( inBox( inbox, coord ) )
 					{
 						boxError = 0;
-		
-						*( (type*)inputCoverage + offset) = *(((type*)mapimginbuf + (int)coord[0]));
+							
+						type coordValue = (*(((type*)mapimginbuf + (int)coord[0])));
+						(*( (type*)inputCoverage + offset)) = coordValue;
+
+/*make sure things aren't counted twice*/	(*(((type*)mapimginbuf + (int)coord[0]))) = 0;
+						
 					}//if inBox
 					else
 					{
@@ -251,7 +254,9 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 					//Loads into memory the current line of input needed
 					get_line(  mapimginbuf, inbox[4][1]*inimg.ns, inimg.ns+1, useType );
 		
-					*( (type*)mapimgoutbuf + out_samp) = *(((type*)mapimginbuf + (int)(inbox[4][0])));
+					(*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
+/*make sure things aren't counted twice*/
+					(*(((type*)mapimginbuf + (int)(inbox[4][0])))) = 0;
 				}
 				else	//!boxError
 				{
@@ -259,7 +264,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 		
 					for( int coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
 					{
-						if( *( (type*)inputCoverage + coverageIndex ) != -9999 )
+						if( *( (type*)inputCoverage + coverageIndex ) >= 0 )
 							sumValue += *( (type*)inputCoverage + coverageIndex );
 					}
 					*( (type*)mapimgoutbuf + out_samp) = sumValue;

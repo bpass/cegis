@@ -1,4 +1,4 @@
-// $Id: rasterxml.cpp,v 1.6 2005/02/01 18:11:55 rbuehler Exp $
+// $Id: rasterxml.cpp,v 1.7 2005/03/15 18:09:53 jtrent Exp $
 
 
 /*  To Do:
@@ -40,6 +40,8 @@ m_ulx(0.0),
 m_uly(0.0),
 m_fillValue(0.0),
 m_noDataValue(0.0),
+m_hasFillVal(false),
+m_hasNoDataVal(false),
 m_projName(NULL),
 m_datumName(NULL),
 m_unitsName(NULL),
@@ -78,6 +80,8 @@ m_ulx(0.0),
 m_uly(0.0),
 m_fillValue(0.0),
 m_noDataValue(0.0),
+m_hasFillVal(false),
+m_hasNoDataVal(false),
 m_projName(NULL),
 m_datumName(NULL),
 m_unitsName(NULL),
@@ -104,7 +108,7 @@ m_doc(NULL)
 
 //Copy Constructor
 RasterXML::RasterXML(const RasterXML& c):
-m_bits(0), 
+m_bits(0),
 m_projNumber(0),
 m_unitsNumber(0),
 m_zone(0),
@@ -116,6 +120,8 @@ m_ulx(0.0),
 m_uly(0.0),
 m_fillValue(0.0),
 m_noDataValue(0.0),
+m_hasFillVal(false),
+m_hasNoDataVal(false),
 m_projName(NULL),
 m_datumName(NULL),
 m_unitsName(NULL),
@@ -157,6 +163,8 @@ m_doc(NULL)
 	setPixelSize(c.m_pixelSize);
 	setFillValue(c.m_fillValue);
 	setNoDataValue(c.m_noDataValue);
+	setHasFillValue(c.m_hasFillVal);
+	setHasNoDataValue(c.m_hasNoDataVal);
 	setBits(c.m_bits);
 
 	if(c.m_signed)
@@ -249,7 +257,7 @@ void RasterXML::initInternalDocument(const char* filename) {
 
 
 
-	
+
 	//********************init header comment******************
 	headerComment.SetValue(headerCommentString);
 
@@ -257,7 +265,7 @@ void RasterXML::initInternalDocument(const char* filename) {
 	projE.SetAttribute("number", "-1");
 	projUnitsE.SetAttribute("number", "-1");
 	projDatumE.SetAttribute("number", "-1");
-	
+
 	//<author>
 	authorNameE.InsertEndChild(unknownV);
 	authorCompanyE.InsertEndChild(unknownV);
@@ -274,13 +282,13 @@ void RasterXML::initInternalDocument(const char* filename) {
 	areaE.InsertEndChild(ulCornerE);
 	areaE.InsertEndChild(dimensionsE);
 
-	//<pixelDescription> 
+	//<pixelDescription>
 	pixelBitsE.InsertEndChild(TiXmlText("0"));
 	pixelSignE.InsertEndChild(unknownV);
 	pixelTypeE.InsertEndChild(unknownV);
 	pixelSizeE.InsertEndChild(unknownV);
-	pixelFillValueE.InsertEndChild(TiXmlText("0.0"));
-	pixelNoDataValueE.InsertEndChild(TiXmlText("0.0"));
+	pixelFillValueE.InsertEndChild(TiXmlText("Undefined"));
+	pixelNoDataValueE.InsertEndChild(TiXmlText("Undefined"));
 	pixelDescE.InsertEndChild(pixelSignE);
 	pixelDescE.InsertEndChild(pixelBitsE);
 	pixelDescE.InsertEndChild(pixelTypeE);
@@ -331,6 +339,8 @@ void RasterXML::loadFile(const char* filename) {
 	double pixelSize = 0;
 	double fillValue = 0;
 	double noDataValue = 0;
+	bool hasFillVal = false;
+	bool hasNoDataVal = false;
 	int rows = 0;
 	int cols = 0;
 	int sign = -2;
@@ -516,14 +526,32 @@ void RasterXML::loadFile(const char* filename) {
       		throw(XMLException("Error: bits value not present, please put \"0\" if you do not have a value"));
       	
       	if(fillValueE->FirstChild())
-      		fillValue = atof(fillValueE->FirstChild()->Value());
-      	
+      	{
+      		if( !strncmp(fillValueE->FirstChild()->Value(), "Undefined", 9) )
+      		{
+      		    hasFillVal = false;
+      		}
+                else
+                {
+      		    fillValue = atof(fillValueE->FirstChild()->Value());
+      		    hasFillVal = true;
+      		}
+        }
       	else
       		throw(XMLException("Error, missing value for <fillValue> under <pixelDescription>, please use -2 if it is unknown"));
-      
+
       	if(noDataValueE->FirstChild())
-      		noDataValue = atof(noDataValueE->FirstChild()->Value());
-      
+      	{
+      		if( !strncmp(noDataValueE->FirstChild()->Value(), "Undefined", 9) )
+      		{
+      		    hasNoDataVal = false;
+      		}
+                else
+                {
+      		    noDataValue = atof(noDataValueE->FirstChild()->Value());
+      		    hasNoDataVal = true;
+      		}
+        }
       	else
       		throw(XMLException("Error, missing value for <noDataValue> under <pixelDescription>, please use -2 if it is unknown"));
       
@@ -627,6 +655,8 @@ void RasterXML::loadFile(const char* filename) {
       	setBits(bits);
       	setFillValue(fillValue);
       	setNoDataValue(noDataValue);
+      	setHasFillValue(hasFillVal);
+      	setHasNoDataValue(hasNoDataVal);
       	setPixelSize(pixelSize);
       	if(sign == 1)
       		setSigned(true);
@@ -786,6 +816,15 @@ double RasterXML::getNoDataValue() const {
 	return m_noDataValue;
 }
 
+bool RasterXML::hasFillValue() const {
+	return m_hasFillVal;
+}
+
+bool RasterXML::hasNoDataValue() const {
+	return m_hasNoDataVal;
+}
+
+
 void RasterXML::setFillValue(double val) {
 
 	if(m_doc) {
@@ -827,6 +866,59 @@ void RasterXML::setNoDataValue(double val) {
 	else
 		throw(XMLException("Error: internal document tree not initialized"));
 }
+
+void RasterXML::setHasFillValue(bool val) {
+
+	if(m_doc) {
+		TiXmlHandle handle(m_doc);
+		TiXmlText* fillValueT = handle.FirstChild("rasterInformation").FirstChild("pixelDescription").FirstChild("fillValue").FirstChild().Text();
+		if(fillValueT) {
+   			char temp[20] = {'\0'};
+  			
+                        if( val )
+			    sprintf(temp, "%19f", getFillValue() );
+			else
+                            strncpy( temp, "Undefined", 20 );
+
+			fillValueT->SetValue(temp);
+		}
+
+		else
+			throw(XMLException("Error: <fillValue> value not present"));
+
+		m_hasFillVal = val;
+	}
+
+	else 
+		throw(XMLException("Error: internal document tree not initialized"));
+}
+
+void RasterXML::setHasNoDataValue(bool val) {
+
+	if(m_doc) {
+		TiXmlHandle handle(m_doc);
+		TiXmlText* noDataValueT = handle.FirstChild("rasterInformation").FirstChild("pixelDescription").FirstChild("noDataValue").FirstChild().Text();
+		if(noDataValueT) {
+			char temp[20] = {'\0'};
+			
+			if( val )
+			    sprintf(temp, "%19f", getNoDataValue());
+			else
+			    strncpy( temp, "Undefined", 20 );
+
+			noDataValueT->SetValue(temp);
+		}
+
+		else
+			throw(XMLException("Error: <noDataValue> value not present"));
+
+		m_hasNoDataVal = val;
+	}
+
+	else
+		throw(XMLException("Error: internal document tree not initialized"));
+}
+
 
 void RasterXML::setAuthorName(const char* name) {
 	if(m_authorName)
@@ -1382,8 +1474,21 @@ std::ostream& operator<<(std::ostream& os, const RasterXML& i) {
 	os << i.getBits() << " bit " << i.getDataType() << endl;
 
 	os << "Units: " << i.getUnitsName() << endl;
-	os << "Fill Value: " << i.getFillValue() << endl;
-	os << "No Data Value: " << i.getNoDataValue() << endl;
+	
+	os << "Fill Value: ";
+        if( i.hasFillValue() )
+            os  << i.getFillValue();
+        else
+            os << "Undefined";
+        os << endl;
+
+	os << "No Data Value: ";
+	if( i.hasNoDataValue() )
+            os  << i.getNoDataValue();
+        else
+            os << "Undefined";
+        os << endl;
+
 	os << "Pixel Size: " << i.m_pixelSize << endl;
 	os << "Boundaries:   ulx=" << i.getUlx() << "   uly=" << i.getUly() << endl;
 	os << "Projection: " << i.getProjName() << "     Zone(if UTM):" << i.getZone() << endl;

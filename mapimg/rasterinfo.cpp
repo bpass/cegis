@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.10 2005/03/15 17:34:42 jtrent Exp $
+// $Id: rasterinfo.cpp,v 1.11 2005/03/15 18:09:53 jtrent Exp $
 
 
 #include "rasterinfo.h"
@@ -20,7 +20,7 @@ RasterInfo::RasterInfo()
 }
 
 //Load constructor
-// Loads the values found in the file whose name and path are 
+// Loads the values found in the file whose name and path are
 // given in imgFileName.
 RasterInfo::RasterInfo( QString &imgFileName )
 {
@@ -158,6 +158,21 @@ bool RasterInfo::setNoDataValue( double noDataValue )
 
    noval = noDataValue;
    return true;
+}
+
+
+bool RasterInfo::setHasFillValue( const bool& hasFill )
+{
+    hasFillVal = hasFill;
+
+    return hasFillVal == hasFill;
+}
+
+bool RasterInfo::setHasNoDataValue( const bool& hasNoData )
+{
+    hasNoDataVal = hasNoData;
+    
+    return hasNoDataVal == hasNoData;
 }
 
 bool RasterInfo::setProjection( int projNumber, int zoneNumber, int datumNumber, int unitNumber )
@@ -448,6 +463,9 @@ void RasterInfo::defaults()
    fillval = -1.0;
    noval = -1.0;
 
+   hasFillVal = false;
+   hasNoDataVal = false;
+
    projcode = -1;
    zonecode = 62;
    datumcode = 19;
@@ -476,6 +494,9 @@ void RasterInfo::copy( const RasterInfo &src )
    pixsize = src.pixsize;
    fillval = src.fillval;
    noval = src.noval;
+
+   hasFillVal = src.hasFillVal;
+   hasNoDataVal = src.hasNoDataVal;
 
    projcode = src.projcode;
    zonecode = src.zonecode;

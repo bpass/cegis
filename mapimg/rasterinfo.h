@@ -1,4 +1,4 @@
-// $Id: rasterinfo.h,v 1.7 2005/03/15 17:34:42 jtrent Exp $
+// $Id: rasterinfo.h,v 1.8 2005/03/15 18:09:53 jtrent Exp $
 
 
 #ifndef RASTERINFO_H
@@ -48,6 +48,11 @@ public:
    double pixelSize() const {return pixsize;}
    double fillValue() const {return fillval;}
    double noDataValue() const {return noval;}
+
+   bool hasFillValue() const {return hasFillVal;}
+   bool hasNoDataValue() const {return hasNoDataVal;}
+   bool setHasFillValue( const bool& hasFill );
+   bool setHasNoDataValue( const bool& hasNoData );
 
    //Projection
    bool setProjection( int projNumber, int zoneNumber = 62, int datumNumber = 19, int unitNumber = 2 );
@@ -101,6 +106,9 @@ private:
    double   pixsize;
    double   fillval;
    double   noval;
+   
+   bool     hasFillVal;
+   bool     hasNoDataVal;
 
    long     projcode;
    long     zonecode;

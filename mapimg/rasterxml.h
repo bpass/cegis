@@ -1,4 +1,4 @@
-// $Id: rasterxml.h,v 1.4 2005/02/01 16:08:13 jtrent Exp $
+// $Id: rasterxml.h,v 1.5 2005/03/15 18:09:53 jtrent Exp $
 
 
 /*! \mainpage RasterXML class for mapimg
@@ -87,36 +87,42 @@ public:
 	//!Get the pixel no data value for the image.
 	double getNoDataValue() const;
 
+	//!Gets if there is pixel fill value for the image.
+	bool hasFillValue() const;
+
+	//!Gets if there is a pixel no data value for the image.
+	bool hasNoDataValue() const;
+
 	//!Get Name of current projection.
-	/*! 
+	/*!
 		If projection name is not set this returns NULL.
 	*/
 	char* getProjName() const;
-	
+
 	//!Get name of current datum.
 	/*!
 		If datum name is not set, this returns NULL.
 	*/
 	char* getDatumName() const;
-	
+
 	//!Get the name of the current units.
 	/*!
 		If units name is not set, this returns NULL.
 	*/
 	char* getUnitsName() const;
-	
+
 	//!Get the data type of the image.
 	/*!
 		If the data type has not been set, this returns NULL.
 	*/
 	char* getDataType() const;
-	
+
 	//!Get the filename of the xml file associated with this image.
 	/*!
 		If filename has not been set, this returns NULL.
 	*/
 	char* getFilename() const;
-	
+
 	//!Get the name of the image author.
 	char* getAuthorName() const;
 
@@ -149,10 +155,10 @@ public:
 
 	//!Set the GCTP units number for this image.
 	void setUnitsNumber(int num);
-	
+
 	//!Set the name of the units for this image.
 	void setUnitsName(const char* name);
-	
+
 	//!Set the UTM zone for this image.
 	void setZone(int zone);
 
@@ -209,13 +215,19 @@ public:
 	//!Set the pixel no data value for the image.
 	void setNoDataValue(double val);
 
+	//!Sets if there is a pixel fill value for the image.
+	void setHasFillValue(bool val);
+
+	//!Sets if there is a pixel no data value for the image.
+	void setHasNoDataValue(bool val);
+
 	//!Set the name of the image author.
 	/*!
 		If NULL is passed, the value "Unknown"
 		will be used.
 	*/
 	void setAuthorName(const char* name);
-	
+
 	//!Set the company of the image author.
 	/*!
 		If NULL is passed, the value "Unknown"
@@ -229,7 +241,7 @@ public:
 		will be used.
 	*/
 	void setAuthorEmail(const char* email);
-	 
+
 
 private:
 		int m_bits;
@@ -244,6 +256,10 @@ private:
 		double m_uly;
 		double m_fillValue;
                 double m_noDataValue;
+                
+                bool m_hasFillVal;
+                bool m_hasNoDataVal;
+
 		double* m_GCTPParams;
 		char* m_projName;
 		char* m_datumName;

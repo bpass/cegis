@@ -1,6 +1,6 @@
 
 // CVS magic symbols for voodoo practitioners
-// $Id: doxygenMain.h,v 1.6 2004/11/16 00:06:02 rstelzleni Exp $
+// $Id: doxygenMain.h,v 1.7 2004/11/16 00:33:24 rstelzleni Exp $
 
 /** \mainpage IntersectionLocator
  *
@@ -37,7 +37,7 @@
  * numbers.  The total number of intersections isn't correct in this
  * output, what it actually uses as the total number of intersections
  * is the total number of points in all the lines.  This could be fixed
- * by looping through the vControl vector once and counting the number of
+ * by looping through the mIntersectMap once and counting the number of
  * points that are intersections, but I didn't go to the trouble, so ... 
  * sorry.
  *

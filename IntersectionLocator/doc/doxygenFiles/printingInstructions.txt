@@ -1,6 +1,6 @@
 
 // CVS tracking device
-// $Id: printingInstructions.txt,v 1.1 2004/11/23 01:29:10 rstelzleni Exp $
+// $Id: printingInstructions.txt,v 1.2 2004/11/23 20:41:50 rstelzleni Exp $
 
 /** \page printingInstructions Printing Instructions
  * 
@@ -61,9 +61,15 @@
  * Now you should see the image in your Layout.  You can zoom and pan 
  * around in the main View (View1) to change what is shown in the Layout,
  * when you are happy with it, I would go to Graphics->Properties and 
- * turn off Live Link.  There are also some pretty self explanatory tools for adding text and
+ * turn off Live Link.  There are also some pretty self explanatory tools 
+ * for adding text and
  * drawing shapes and such.  Play with these until the image is ready to
- * go.
+ * go.  If you need to plot an image where the points that were filtered
+ * out are in red, what I usually do is open the shapefile for all of the
+ * unfiltered points and make it red.  Then I open the shapefile for the
+ * filtered points at whatever filter level I need and make it some other
+ * color.  If the filtered points are over the unfiltered then only the
+ * points that were filtered out will be visible, and red.
  *
  * Ok, now to actually print something.  Go to File->Print Setup and
  * select the \\\\mcprint\\hp5000_ps as the printer.  On paper size scroll

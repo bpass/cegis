@@ -18,21 +18,16 @@ void outputClassifiedImage( std::string ortho, std::string outputFile,
 
 int main()
 {
-   string rd( "D:\\rstelzleni\\VisualStudioProjects\\"
-              "IntersectionLocator\\Mo2Quads\\"
-              "classifiertraining\\roads260735.tif" );
-   string nonrd( "d:\\rstelzleni\\VisualStudioProjects\\"
-              "IntersectionLocator\\Mo2Quads\\"
-              "classifiertraining\\nonroads260735.tif" );
-   string outfile( "d:\\rstelzleni\\VisualStudioProjects\\"
-              "IntersectionLocator\\Mo2Quads\\"
-              "classifiertraining\\testdblrds.dat" );
-   string testOrtho( "d:\\rstelzleni\\VisualStudioProjects\\"
-              "IntersectionLocator\\Mo2Quads\\"
-              "orthos\\15SYC245735.tif" );
-   string testOutput( "d:\\rstelzleni\\VisualStudioProjects\\"
-              "IntersectionLocator\\Mo2Quads\\"
-              "classifiertraining\\testImages\\class245735testfiverds.dat" );
+   string rd( "F:\\rstelzleni\\GA2Quads\\classifierTraining\\"
+              "fewroads515605.tif" );
+   string nonrd( "F:\\rstelzleni\\GA2Quads\\classifierTraining\\"
+                 "nonroads515605.tif" );
+   string outfile( "F:\\rstelzleni\\GA2Quads\\"
+                   "classifierTraining\\newTrainingTest.dat" );
+   string testOrtho( "F:\\rstelzleni\\GA2Quads\\"
+               "classifierTraining\\TestImage\\16SGC515605.tif" );
+   string testOutput( "F:\\rstelzleni\\GA2Quads\\"
+               "classifierTraining\\TestImage\\newTrySeven.dat" );
 
    cout << "Running\n";
 
@@ -55,11 +50,12 @@ int main()
    // Comment or uncomment lines as you see fit
    Classifier C;
    C.inputText( outfile.c_str() );
-   C.addRdTraining( pRd );
-   //C.addNonRdTraining( pNonRd );
-   //C.outputText( outfile.c_str() );
+   //for( int i=0; i<5; ++i )
+   //   C.addRdTraining( pRd );
+   C.addNonRdTraining( pNonRd );
+   C.outputText( outfile.c_str() );
 
-   //outputClassifiedImage( testOrtho, testOutput, C );
+   outputClassifiedImage( testOrtho, testOutput, C );
 
    return 0;
 }

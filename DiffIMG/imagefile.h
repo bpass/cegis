@@ -9,6 +9,7 @@ using namespace std;
 #include <qstring.h>
 #include <qmap.h>
 #include <qcolor.h>
+#include <qmessagebox.h>
 
 struct ImageFile
 {
@@ -149,7 +150,8 @@ bool compareImages( ImageFile originalImage, ImageFile reprojectedImage, QString
          originalList = loadImageLine( originalImage, index, typeToUse );
          reprojectedList = loadImageLine( reprojectedImage, index, typeToUse );
 
-         diffCount = compareDataAbs( originalList, reprojectedList, diffList );
+//         diffCount = compareDataAbs( originalList, reprojectedList, diffList );
+         diffCount = compareData( originalList, reprojectedList, diffList );
 
 #ifdef _JT_DEBUG
 
@@ -180,7 +182,7 @@ bool compareImages( ImageFile originalImage, ImageFile reprojectedImage, QString
 
     int size = diffList.size();
    	diffList.clear();
-    for( index = 0; index < size; index++ )
+    for( int index2 = 0; index2 < size; index2++ )
     {
     	diffList.push_back( 1 );
     }

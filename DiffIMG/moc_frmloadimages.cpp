@@ -1,8 +1,8 @@
 /****************************************************************************
 ** FrmLoadImages meta object code from reading C++ file 'frmloadimages.h'
 **
-** Created: Thu Sep 16 10:49:44 2004
-**      by: The Qt MOC ($Id: moc_frmloadimages.cpp,v 1.1 2004/10/22 13:30:14 jtrent Exp $)
+** Created: Fri Oct 22 08:57:51 2004
+**      by: The Qt MOC ($Id: moc_frmloadimages.cpp,v 1.2 2004/10/22 15:37:22 jtrent Exp $)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -14,7 +14,7 @@
 
 #include <private/qucomextra_p.h>
 #if !defined(Q_MOC_OUTPUT_REVISION) || (Q_MOC_OUTPUT_REVISION != 26)
-#error "This file was generated using the moc from 3.2.0. It"
+#error "This file was generated using the moc from 3.2.3. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif

@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Form interface generated from reading ui file 'frmloadimages.ui'
 **
-** Created: Thu Sep 16 10:49:44 2004
-**      by: The User Interface Compiler ($Id: frmloadimages.h,v 1.1 2004/10/22 13:30:14 jtrent Exp $)
+** Created: Fri Oct 22 08:56:27 2004
+**      by: The User Interface Compiler ($Id: frmloadimages.h,v 1.2 2004/10/22 15:37:22 jtrent Exp $)
 **
 ** WARNING! All changes made in this file will be lost!
 ****************************************************************************/

@@ -21,7 +21,7 @@ int compareDataAbs( const list<T> &list1, const list<T> &list2, list<T> &diffLis
 
     for( ; (list1Iter!=list1.end()) && (list2Iter!=list2.end());  )
     {
-    	difference = abs( (*list1Iter) - (*list2Iter) );  //compute absolute val. diff.
+    	difference = 1; //abs( (*list1Iter) - (*list2Iter) );  //compute absolute val. diff.
 
     	if( difference ) errorCount++;                    //if different increment
                                                           //error counter
@@ -35,7 +35,7 @@ int compareDataAbs( const list<T> &list1, const list<T> &list2, list<T> &diffLis
         for( ; list1Iter!=list1.end(); list1Iter++ )      //insert all remaining
         {                                                 //elements and increment
         	errorCount++;                                 //error counter
-            diffList.push_back( abs(*list1Iter)+1 );
+//            diffList.push_back( std::abs(((T)(*list1Iter)))+1 );
         }
     }
     else if( list1.size() < list2.size() )                //save as above
@@ -43,7 +43,7 @@ int compareDataAbs( const list<T> &list1, const list<T> &list2, list<T> &diffLis
         for( ; list2Iter!=list2.end(); list2Iter++ )
         {
         	errorCount++;
-            diffList.push_back( abs(*list2Iter)+1 );
+ //           diffList.push_back( std::abs(((T)(*list2Iter)))+1 );
         }
     }
 
@@ -81,7 +81,7 @@ int compareData( const list<T> &list1, const list<T> &list2, list<U> &diffList )
         for( ; list1Iter!=list1.end(); list1Iter++ )      //insert all remaining
         {                                                 //elements and increment
         	errorCount++;                                 //error counter
-            diffList.push_back( abs(*list1Iter)+1 );
+            diffList.push_back( (*list1Iter)+1 );
         }
     }
     else if( list1.size() < list2.size() )                //save as above
@@ -89,7 +89,7 @@ int compareData( const list<T> &list1, const list<T> &list2, list<U> &diffList )
         for( ; list2Iter!=list2.end(); list2Iter++ )
         {
         	errorCount++;
-            diffList.push_back( abs(*list2Iter)+1 );
+            diffList.push_back( (*list2Iter)+1 );
         }
     }
 

@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.cpp,v 1.6 2005/02/24 17:59:14 jtrent Exp $
+// $Id: mapimgvalidator.cpp,v 1.7 2005/03/04 14:58:35 jtrent Exp $
 
 #include <qvalidator.h>
 #include <qstring.h>
@@ -71,8 +71,8 @@ void MapimgValidator::setDataType( QString mapimgDataType )
          else if( mapimgDataType.contains( "Float" ) )
          {
             d = 6;
-            b = FLOAT32_MIN;
-            t = FLOAT32_MAX;
+            b = FLOAT_MIN;
+            t = FLOAT_MAX;
          }
          else
          {
@@ -85,8 +85,8 @@ void MapimgValidator::setDataType( QString mapimgDataType )
       else if( mapimgDataType.contains( "64" ) && mapimgDataType.contains( "Float" ) )
       {
          d = 6;
-         b = (double)FLOAT64_MIN;
-         t = (double)FLOAT64_MAX;
+         b = (double)DOUBLE_MIN;
+         t = (double)DOUBLE_MAX;
       }
       else //Signed with out proper bit or int/float string
       {
@@ -145,7 +145,7 @@ QValidator::State MapimgValidator::validate( QString & input, int & ) const
    QRegExp empty( QString::fromLatin1(" *-?\\.? *") );
    if ( b >= 0 &&
       input.stripWhiteSpace().startsWith(QString::fromLatin1("-")) )
-      return Invalid;
+        return Invalid;
    if ( empty.exactMatch(input) )
       return Intermediate;
    bool ok = TRUE;

@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.14 2005/03/01 17:55:24 jtrent Exp $
+// $Id: imgio.h,v 1.15 2005/03/04 14:58:35 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -108,18 +108,18 @@ public:
       }
    }
 
-   int getMaxLineCount() const 
-   { 
-     return Max_Data_Element_Count; 
+   int getMaxLineCount() const
+   {
+     return Max_Data_Element_Count;
    }
 
-   void setMaxLineCount( int count ) 
-   { 
+   void setMaxLineCount( int count )
+   {
      Max_Data_Element_Count = count;
-     
+
      if( inputDataMap )
          inputDataMap->setMaxCost( Max_Data_Element_Count );
-         
+
      return;
    }
 
@@ -295,23 +295,28 @@ public:
 
       int inputSize = input.rows() * input.cols();
 
-      FILE * inputPtr = fopen(inputFilename.ascii(), "rb");
-      if( inputPtr == NULL )
+      QFile inputPtr( inputFilename );
+      inputPtr.open( IO_ReadOnly | IO_Raw );
+
+      if( !inputPtr.isOpen() || !inputPtr.isReadable() )
+      {
+         if( inputPtr.isOpen() )
+             inputPtr.close();
          return (type)0.0;
+      }
 
       if( inputSize > 10000 )
          inputSize = 10000;
 
-      void* bufptrMax = (type *) malloc(inputSize*sizeof(type));
+      type *bufptrMax = new type[inputSize];
 
       if( bufptrMax == NULL )
          return (type)0.0;
 
-      fread( bufptrMax, sizeof(type), inputSize, inputPtr );
+      long amountRead = inputPtr.readBlock( (char*&)bufptrMax, sizeof(type) * inputSize);
+      inputPtr.close();
 
-      fclose( inputPtr );
-
-      inputSize = inputSize / sizeof( type );
+      inputSize = amountRead / sizeof( type );
 
       type max_value = (type)0.0;
 
@@ -321,8 +326,7 @@ public:
             max_value = *((type*)bufptrMax + index);
       }
 
-      free(bufptrMax);
-      //delete inputPtr;
+      delete[] bufptrMax;
 
       return max_value;
    }

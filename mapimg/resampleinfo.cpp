@@ -1,4 +1,4 @@
-// $Id: resampleinfo.cpp,v 1.8 2005/02/28 17:55:10 jtrent Exp $
+// $Id: resampleinfo.cpp,v 1.9 2005/03/04 14:58:35 jtrent Exp $
 
 
 #include "resampleinfo.h"
@@ -11,7 +11,7 @@ ResampleInfo::ResampleInfo()
    fillval = 0.0;
    noval = 0.0;
    ilist.clear();
-   strcpy( rn, "NullResample" );
+   strncpy( rn, "NullResample", RN_MAXLENGTH );
 }
 
 
@@ -58,7 +58,7 @@ bool ResampleInfo::setResampleCode( const QString &codeName )
    QString str( codeName.lower() );
    str.stripWhiteSpace();
    str.remove(' ');
-   strcpy( rn, str.ascii() );
+   strncpy( rn, str.ascii(), RN_MAXLENGTH );
 
    if( str == "nearestneighbor" )
       rc = ResampleInfo::NearestNeighbor;
@@ -126,6 +126,6 @@ void ResampleInfo::copy( const ResampleInfo &src )
    noval = src.noval;
    ilist = src.ilist;
    rc = src.rc;
-   strcpy( rn, src.rn );
+   strncpy( rn, src.rn, RN_MAXLENGTH );
 }
 

@@ -33,11 +33,12 @@
        #define Q_INT64_MIN       (-Q_INT64_MAX - 1LL)
 #endif
 
-#define FLOAT32_MAX         3.402823466e+38F
-#define FLOAT32_MIN         1.175494351e-38F
+#define FLOAT_MAX         3.402823466e+38F
+#define FLOAT_MIN       (-FLOAT_MAX - 1)
 
-#define FLOAT64_MAX         1.7976931348623158e+308
-#define FLOAT64_MIN         2.2250738585072014e-308
+
+#define DOUBLE_MAX         1.7976931348623158e+308
+#define DOUBLE_MIN        (-DOUBLE_MAX - 1)
 
 
 #endif //MAPIMGDATATYPES_H

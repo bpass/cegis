@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.25 2005/03/03 16:48:05 jtrent Exp $
+// $Id: getprojinfo.h,v 1.26 2005/03/04 14:58:35 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -44,10 +44,9 @@ extern "C"
    #include "proj.h"
 }
 
-/*jtrent   I have turned off all logginf for right now, then should be enabled after teh merge */
 static char*  logFile = strdup( QDir::currentDirPath().append("/mapimg.log").ascii() );
-static long   errorMode = 0;    //print both errors and parameters to a precreated
-static long   paramMode = 0;    //FILE* to logFile
+static long   errorMode = 3;    //print both errors and parameters to a precreated
+static long   paramMode = 3;    //FILE* to logFile
 
 // Bring in the buffers
 extern  void * mapimginbuf;         // Ptr to the input image (all in memory)
@@ -59,24 +58,6 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
    // mapimg STARTS HERE!!!!
    // mapimg to do the reprojection (no longer called as function in order to provide progress dialog)
    // mapimg written by D. Steinwand and updated by S. Posch
-
-   printf( resample.resampleName() );
-
-   printf( "\tFill value = %f\tNo data value = %f\n",
-      resample.fillValue(),
-      resample.noDataValue() );
-   fflush( stdout );
-
-   printf( "Ignore List(%i):\n", resample.ignoreList().size() );
-
-   IgnoreList::ConstIterator ignoreVal;
-
-   for( ignoreVal = resample.ignoreList().begin(); ignoreVal != resample.ignoreList().end(); ignoreVal++ )
-   {
-      printf( "\t%f\n", *ignoreVal );
-   }
-
-   fflush( stdout );
 
    int outputRows = output.rows();
    int outputCols = output.cols();

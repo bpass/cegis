@@ -1,0 +1,334 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>FrmLoadImages</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>FrmLoadImages</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>525</width>
+            <height>399</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Difference Image Generator</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLayoutWidget" row="0" column="1">
+            <property name="name">
+                <cstring>layout7</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnShowDifference</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Difference Image</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnClose</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Close</string>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer3</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer4</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Fixed</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>93</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+            </vbox>
+        </widget>
+        <widget class="QGroupBox" row="0" column="0">
+            <property name="name">
+                <cstring>originalGroup</cstring>
+            </property>
+            <property name="title">
+                <string>Load Images:</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget" row="0" column="0">
+                    <property name="name">
+                        <cstring>layout11</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <spacer row="0" column="1">
+                            <property name="name">
+                                <cstring>spacer13</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Vertical</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>20</width>
+                                    <height>21</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="QLabel" row="0" column="0" rowspan="2" colspan="1">
+                            <property name="name">
+                                <cstring>lblOriginal</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>100</width>
+                                    <height>21</height>
+                                </size>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>32767</width>
+                                    <height>50</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string>Original Image: None</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignTop</set>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton" row="1" column="1">
+                            <property name="name">
+                                <cstring>btnLoadOriginal</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>80</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>80</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Load...</string>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QLayoutWidget" row="1" column="0">
+                    <property name="name">
+                        <cstring>layout10</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <spacer row="0" column="1">
+                            <property name="name">
+                                <cstring>spacer11</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Vertical</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>20</width>
+                                    <height>21</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="QPushButton" row="1" column="1">
+                            <property name="name">
+                                <cstring>btnLoadReprojected</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>80</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>80</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string>L&amp;oad...</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="0" column="0" rowspan="2" colspan="1">
+                            <property name="name">
+                                <cstring>lblReprojected</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>7</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>100</width>
+                                    <height>21</height>
+                                </size>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>32767</width>
+                                    <height>50</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string>Reprojected Image: None</string>
+                            </property>
+                            <property name="alignment">
+                                <set>WordBreak|AlignTop</set>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QLabel" row="2" column="0">
+                    <property name="name">
+                        <cstring>lblPositions</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>3</hsizetype>
+                            <vsizetype>3</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>380</width>
+                            <height>200</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string></string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>btnClose</sender>
+        <signal>clicked()</signal>
+        <receiver>FrmLoadImages</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>btnLoadOriginal</sender>
+        <signal>clicked()</signal>
+        <receiver>FrmLoadImages</receiver>
+        <slot>loadOriginal()</slot>
+    </connection>
+    <connection>
+        <sender>btnLoadReprojected</sender>
+        <signal>clicked()</signal>
+        <receiver>FrmLoadImages</receiver>
+        <slot>loadReprojected()</slot>
+    </connection>
+    <connection>
+        <sender>btnShowDifference</sender>
+        <signal>clicked()</signal>
+        <receiver>FrmLoadImages</receiver>
+        <slot>showDifference()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in declaration">imagefile.h</include>
+    <include location="local" impldecl="in implementation">frmloadimages.ui.h</include>
+</includes>
+<variables>
+    <variable>ImageFile originalImage;</variable>
+    <variable>ImageFile reprojectedImage;</variable>
+</variables>
+<slots>
+    <slot>loadOriginal()</slot>
+    <slot>loadReprojected()</slot>
+    <slot>showDifference()</slot>
+</slots>
+<functions>
+    <function returnType="bool">loadImage( ImageFile * image )</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -1,0 +1,290 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>FrmDimensions</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>FrmDimensions</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>342</width>
+            <height>144</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Set Dimensions</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLabel" row="0" column="0">
+            <property name="name">
+                <cstring>lblImage</cstring>
+            </property>
+            <property name="text">
+                <string>Please enter dimensions for image:
+None</string>
+            </property>
+        </widget>
+        <spacer row="1" column="0">
+            <property name="name">
+                <cstring>spacer12</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget" row="2" column="0">
+            <property name="name">
+                <cstring>layout12</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout14</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>lblRows</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Rows:</string>
+                            </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>spacer6</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>71</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="QSpinBox">
+                            <property name="name">
+                                <cstring>spinRows</cstring>
+                            </property>
+                            <property name="maxValue">
+                                <number>65535</number>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout11</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>lblColumns</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Columns:</string>
+                            </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>spacer6_2</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>68</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="QSpinBox">
+                            <property name="name">
+                                <cstring>spinColumns</cstring>
+                            </property>
+                            <property name="maxValue">
+                                <number>65535</number>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout10</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>lblDataType</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Select Data Type:</string>
+                            </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>spacer10</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>16</width>
+                                    <height>21</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="QComboBox">
+                            <item>
+                                <property name="text">
+                                    <string>Unsigned 8 Bit</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Signed 8 Bit</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Unsigned 16 Bit</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Signed 16 Bit</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Unsigned 32 Bit</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Signed 32 Bit</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>IEEE 32 Bit Float</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>IEEE 64 Bit Float</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>cmbDataType</cstring>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QLayoutWidget" row="0" column="1" rowspan="3" colspan="1">
+            <property name="name">
+                <cstring>layout19</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnOk</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Ok</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnCancel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Cancel</string>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer3</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>40</height>
+                        </size>
+                    </property>
+                </spacer>
+            </vbox>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>btnCancel</sender>
+        <signal>clicked()</signal>
+        <receiver>FrmDimensions</receiver>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>btnOk</sender>
+        <signal>clicked()</signal>
+        <receiver>FrmDimensions</receiver>
+        <slot>Ok()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in implementation">frmdimensions.ui.h</include>
+</includes>
+<slots>
+    <slot access="protected">Ok()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -1,6 +1,6 @@
 
 // Mystical symbols to please the CVS Gods
-// $Id: preparingForNewData.txt,v 1.1 2004/11/15 16:35:05 rstelzleni Exp $
+// $Id: preparingForNewData.txt,v 1.2 2004/11/15 18:04:34 rstelzleni Exp $
 
 
 /** \page preparingForNewData Preparing For New Data
@@ -45,4 +45,115 @@
  * When this finishes open up your new coverage in a viewer
  * and make sure that it overlaps the raster, if it does then it worked.
  * 
+ * \section gettingAGoodTrainingSet	Getting a Good Training Set
+ * If you like mindless tedium you are gonna love this part.  To generate a
+ * training set for the classifier you need to create some raster images
+ * that contain only road pixels and some that contain only non road pixels.
+ * Imagine works pretty well at this so that is what I use.  The first 
+ * thing that I usually do is look at a large sample of the imagery that
+ * we need to classify, paying attention to the color of the roads and to
+ * the overall colors in the picture.  Next I try to pick two or so images
+ * that are representative of the overall mixture of colors in the set.
+ *
+ * Now comes the exciting part.  Open one of the images in a viewer in
+ * Imagine and select Aoi->Tools from the main menu.  Zoom in on the image
+ * to true size or closer so that you can see road areas clearly.
+ * On the toolbox that
+ * shows up select the "create polygon aoi" tool and draw a polygon around
+ * a section of road.  Try not to get any shadows, parking lots or cars in
+ * the area that you outline.  If you mess up click the scissors on the 
+ * aoi tools box to erase the polygon.  If you want the polygon tool to 
+ * stay selected after selecting an area then click on the little pad lock
+ * icon in the tool box.  Ok, now repeat this for all of the roads in the
+ * image.
+ *
+ * Next zoom the image out and use the rectangular "select aois" tool to 
+ * select all of the polygons that you just created.  Now select the group
+ * aois icon from the tool box.  This should group and select all of your
+ * aois.  With the large aoi group selected select the "subset image" icon
+ * from the main window toolbar (if you used a Geospatial Light Table) or
+ * from the main menu under raster (I think) if you used a normal viewer.
+ * This dialog box will prompt you for a name to save the new file under, 
+ * so give it one.  At the bottom of the dialog there is a button labeled
+ * Aoi, click this button and select the radio button labeled "In Viewer".
+ * Then click ok in the Aoi dialog.  I usually click the "ignore zeros in
+ * output" checkbox in the subset dialog too, but it doesn't seem to 
+ * actually do anything.  Now click ok in the subset dialog box and wait
+ * for the process to finish.  When it is done open the new image in a 
+ * viewer and make sure it looks like you expect.
+ *
+ * Ok, now do the same thing for this image but outline areas that aren't
+ * roads, parking lots or shadows on roads.  Subset that image and save it
+ * somewhere.  Also get the roads from another image or two, and you might
+ * want the non roads from another tile too.  
+ *
+ * Once you have some training
+ * that you think will work, train a Classifier using its 
+ * Classifier::addRdTraining and Classifier::addNonRdTraining
+ * functions and output the training to a text file.  Open
+ * up the text file and copy all of its information into a spreadsheet.
+ * The text in the file is basically a histogram generated for the h, s and
+ * v values of the road and non road pixels that the classifier has been
+ * trained with.  Once you have it in a spreadsheet it is a fairly easy
+ * operation to normalize the number of road and non road pixels, and plot
+ * out the histograms for the hsv values.  This will give you some ability
+ * to see if the training set will be usefull.  At least one or two of the
+ * hsv plots should show some areas where there are many more road pixels
+ * than non road, and vice verse.  If not then you will probably need
+ * to get more training sets, or open up the text file you saved with a 
+ * classifier and reuse the same roads or non roads data to double the
+ * training with a particular data set.  
+ *
+ * The final test I usually do for a training set is to classify an image 
+ * and look at the output.  To do this create a Classifier and train it
+ * with a saved text file for your data.  Then open one of the images
+ * you need to look at and use the InMemRaster::convertToHSV and
+ * InMemRaster::classify functions to prepare the image.  
+ * Then call the InMemRaster::dumpToBinary
+ * function to output the classified file.  The file can be imported by
+ * Imagine using the Import dialog box.  Select Generic Binary as the type
+ * of file to import.  The file is a single band, it contains only ones
+ * and zeros.  You should only have to set the dimensions of the raster
+ * (the same as the dimensions of the raster that you classified, usually
+ * 5000 x 5000).  Once this is done you can select the preview button to
+ * see if the settings are correct, and then convert the image to an img
+ * file.  Open the file in a viewer and compare it to the original image.
+ * This is a good way to see if there is a particular type of road color
+ * that you are under trained for, or if there is a particular off road
+ * item that is being misclassified as a road.
+ *
+ * \section oddsAndEnds Odds And Ends
+ * Other things that should probably be mentioned.
+ *
+ * When looking at a new data set it is a good idea to use a GIS measuring
+ * tool to see about how far off the average intersection is from the real
+ * intersection.  Also pay attention to how far off the worst intersection
+ * you can find is.  This is helpful when you want to use the 
+ * IntersectionMap::findControlPoints function.  The function will want
+ * a template size and a size of an area to move the template over.  I have
+ * found that templates of sizes 50 and 60 seem to work well, but the size
+ * of the area to move it over depends on the data.  A good rule of thumb
+ * is to pick a template size that seems sufficient and add the average
+ * of your intersections to it to get the size of the area to check.  If you 
+ * subtract the size of the template from the size of the area to check
+ * then the result is the maximum distance from the vector data's 
+ * intersection that will be searched for the correct intersection.  So 
+ * sometimes it is also a good choice to add the maximum distance from
+ * an intersection to its real location, or even a little more than that.
+ *
+ * Another thing that is important to keep in mind is that the code
+ * right now depends on the Cfcc code being defined for a data set.  This
+ * is a code that is defined by the TIGER data set (information 
+ * <a href="http://www.esri.com/data/download/census2000_tigerline/">here 
+ * </a>) to represent the type
+ * of a road segment.  It consists of a letter followed by two numbers,
+ * like A00.  The function IntersectionMap::roadWidth uses these codes to
+ * determine the width for drawing roads.  If a new dataset doesn't have
+ * a Cfcc code field in the attribution then you will need to rewrite this
+ * function, and possibly a few others, to look for the proper attribute.
+ * If your data has no attribute that specifies road type then you are on
+ * your own.  I know this isn't very good design, feel free to make 
+ * improvements.
  */
+
+

@@ -18,6 +18,8 @@ public:
 
 public slots:
        void setProgress( int progress );
+       void setTotalSteps( int totalSteps );
+       void setProgress( int progress, int totalSteps );
 
 private:
         void defaults();

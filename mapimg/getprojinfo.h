@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.17 2005/02/23 17:25:35 jtrent Exp $
+// $Id: getprojinfo.h,v 1.18 2005/02/24 17:59:14 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -29,6 +29,7 @@
 #include "mapimg.h"
 #include "mapimgform.h"
 
+#include "mapimgdatatypes.h"
 #include "mapimgpalette.h"
 #include "mapimgprogressdialog.h"
 
@@ -177,7 +178,15 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                if( resample.resampleCode() == ResampleInfo::NearestNeighbor )
                {
                   imgIO.get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
-                  (*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
+
+                  if( !resample.shouldIgnore( (*(((type*)mapimginbuf + (int)(inbox[4][0]))))) )
+                  {
+                      (*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
+                  }
+                  else
+                  {
+                      (*( (type*)mapimgoutbuf + out_samp)) = (type)resample.noDataValue();
+                  }
                }
                else	//Analysis
                {
@@ -246,6 +255,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                            boxError = 0;
 
                            type coordValue = (*(((type*)mapimginbuf + (int)coord[0])));
+
                            (*( (type*)inputCoverage + offset)) = coordValue;
 
                            if( noDoubleCount )
@@ -254,7 +264,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                         }//if inBox
                         else
                         {
-                           *( (type*)inputCoverage + offset) = 0;
+                           *( (type*)inputCoverage + offset) = resample.noDataValue();
                         }
 
                         offset++;
@@ -267,7 +277,14 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                      //Loads into memory the current line of input needed
                      imgIO.get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
 
-                     (*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
+                     if( !resample.shouldIgnore( (*(((type*)mapimginbuf + (int)(inbox[4][0]))))) )
+                     {
+                         (*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
+                     }
+                     else
+                     {
+                         (*( (type*)mapimgoutbuf + out_samp)) = (type)resample.noDataValue();
+                     }
 
                      if( noDoubleCount )
                         (*(((type*)mapimginbuf + (int)(inbox[4][0])))) = 0;
@@ -276,41 +293,42 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                   {
                      int coverageIndex = 0;
                      type dataValue = (type)0;
+                     bool allIgnored = true;
+
                      switch( resample.resampleCode() )
                      {
                      case ResampleInfo::Add:	//Sum
                         for( coverageIndex = 0;  coverageIndex < coverageSize; coverageIndex++ )
                         {
-                           /* set ignore values for sum here*/
-                           if( *( (type*)inputCoverage + coverageIndex ) != ignoreValue )
+                           if( !resample.shouldIgnore( *( (type*)inputCoverage + coverageIndex )) )
                            {
                               dataValue += *( (type*)inputCoverage + coverageIndex );
+                              allIgnored = false;
                            }
                         }
                         break;
                      case ResampleInfo::Min:		//Min
-                        dataValue = *( (type*)inputCoverage + 0 );  //start equal to first element
-                        dataValue = 0xFF * sizeof(type);  //or aribtary on dtat type
+                        dataValue = (type)Q_UINT64_MAX;
+
                         for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
                         {
-                           /* set ignore values for min here*/
                            if( ( *( (type*)inputCoverage + coverageIndex ) < dataValue ) &&
-                              (*( (type*)inputCoverage + coverageIndex ) != ignoreValue ) )
+                              ( !resample.shouldIgnore(*( (type*)inputCoverage + coverageIndex ))) )
                            {
                               dataValue = *( (type*)inputCoverage + coverageIndex );
+                              allIgnored = false;
                            }
                         }
                         break;
                      case ResampleInfo::Max:		//Max
-                        dataValue = *( (type*)inputCoverage + 0 );  //start equal to first element
-                        dataValue = 0;  //arbitrary
+                        dataValue = (type)Q_INT64_MIN;
                         for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
                         {
-                           /* set ignore values for max here*/
                            if( ( *( (type*)inputCoverage + coverageIndex ) > dataValue ) &&
-                              (*( (type*)inputCoverage + coverageIndex ) != ignoreValue ) )
+                              ( resample.shouldIgnore(*( (type*)inputCoverage + coverageIndex ))) )
                            {
                               dataValue = *( (type*)inputCoverage + coverageIndex );
+                              allIgnored = false;
                            }
                         }
                         break;
@@ -321,10 +339,10 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                      case ResampleInfo::Mean:   //Avg
                         for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
                         {
-                           /* set ignore values for avg here*/
-                           if( *( (type*)inputCoverage + coverageIndex ) != ignoreValue )
+                           if( !resample.shouldIgnore(*( (type*)inputCoverage + coverageIndex )) )
                            {
                               dataValue += *( (type*)inputCoverage + coverageIndex );
+                              allIgnored = false;
                            }
                         }
                         dataValue /= coverageSize;
@@ -333,7 +351,15 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                         dataValue = 0;
                         break;
                      }
-                     *( (type*)mapimgoutbuf + out_samp) = dataValue;
+
+                     if( !allIgnored )
+                     {
+                         *( (type*)mapimgoutbuf + out_samp) = dataValue;
+                     }
+                     else
+                     {
+                     	*( (type*)mapimgoutbuf + out_samp) = (type)resample.noDataValue();
+                     }
                   }
 
                   free( inputCoverage );
@@ -402,14 +428,21 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
       }
 
 
-      //retVal will be an integer, 0 if OK is clicked, 1 if Log is clicked, or -1 if the X is clicked
-      int retVal = QMessageBox::information (mapimgdial, "Completed",out, "OK",
-         "View Log", NULL, 0);
+      //exec() will be an integer, 0 if OK is clicked, 1 if Log is clicked, or -1 if the X is clicked
+      QMessageBox informationDisplay( "Completed", out,
+                                      QMessageBox::Information,
+                                      QMessageBox::Ok | QMessageBox::Default | QMessageBox::Escape,
+                                      QMessageBox::Yes,
+                                      QMessageBox::NoButton,
+                                      mapimgdial, false );
+      informationDisplay.setButtonText( QMessageBox::Yes, "View Log" );
+      informationDisplay.setPalette( ABOUTFORM_COLOR );
 
-      if( retVal == 1 )
+      if( informationDisplay.exec() == QMessageBox::Yes )      //corresponding to the "View Log" Button
       {
          logForm *logform;
          logform = new logForm(0,0,true,WINDOW_FLAGS);
+         logform->setPalette( AUTHORFORM_COLOR );
          logform->exec();
          delete logform;
       }

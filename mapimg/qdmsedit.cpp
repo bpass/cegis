@@ -1,4 +1,4 @@
-// $Id: qdmsedit.cpp,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: qdmsedit.cpp,v 1.2 2005/02/24 17:59:14 jtrent Exp $
 
 
 #include "qdmsedit.h"
@@ -130,3 +130,6 @@ void QDmsEdit::setValue( const int deg, const int min, const double sec )
    mEdit->setText( QString::number( min ) );
    sEdit->setText( QString::number( sec, 'f', 6 ) );
 }
+
+
+

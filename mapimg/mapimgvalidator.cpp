@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.cpp,v 1.5 2005/02/23 17:25:35 jtrent Exp $
+// $Id: mapimgvalidator.cpp,v 1.6 2005/02/24 17:59:14 jtrent Exp $
 
 #include <qvalidator.h>
 #include <qstring.h>
@@ -8,6 +8,7 @@
 #include <math.h>
 
 #include "mapimgvalidator.h"
+#include "mapimgdatatypes.h"
 
 MapimgValidator::MapimgValidator( QObject* parent, const char* name )
 : QValidator( parent, name )

@@ -108,5 +108,35 @@ void MapimgProgressDialog::setProgress( int progress )
         p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
         setPalette( p );
     }
+    return;
 }
 
+void MapimgProgressDialog::setTotalSteps( int totalSteps )
+{
+    QProgressDialog::setTotalSteps( totalSteps );
+    
+   int tempSteps = totalSteps;
+   if( tempSteps <= 0 )
+       tempSteps = 1;
+
+   if( colorEnd && colorStart )
+   {
+       deltaRed = (colorEnd->red() - currentRed) / tempSteps;
+       deltaGreen = (colorEnd->green() - currentGreen) / tempSteps;
+       deltaBlue = (colorEnd->blue() - currentBlue) / tempSteps;
+
+       currentRed = colorStart->red() + deltaRed * tempSteps;
+       currentGreen = colorStart->green() + deltaGreen * tempSteps;
+       currentBlue = colorStart->blue() + deltaBlue * tempSteps;
+   }
+
+    return;
+}
+
+void MapimgProgressDialog::setProgress( int progress, int totalSteps )
+{
+    setTotalSteps( totalSteps );
+    setProgress( progress );
+
+    return;
+}

@@ -12,7 +12,7 @@
 
 
 // Majic numbers for CVS
-// $Id: Point.h,v 1.3 2004/11/02 01:20:46 rstelzleni Exp $
+// $Id: Point.h,v 1.4 2004/11/10 17:10:29 ahartman Exp $
 
 
 
@@ -85,3 +85,4 @@ private:
 };
 
 #endif // POINT_H
+

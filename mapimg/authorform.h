@@ -1,4 +1,4 @@
-// $Id: authorform.h,v 1.3 2005/01/31 03:09:04 rbuehler Exp $
+// $Id: authorform.h,v 1.4 2005/02/13 00:27:17 rbuehler Exp $
 
 
 /****************************************************************************
@@ -20,6 +20,7 @@ class QHBoxLayout;
 class QGridLayout;
 class QSpacerItem;
 class QLabel;
+class QGroupBox;
 class QLineEdit;
 class QPushButton;
 
@@ -32,10 +33,11 @@ public:
     ~authorForm();
 
     QLabel* descrLabel;
+    QGroupBox* inputBox;
     QLabel* emailLabel;
     QLabel* nameLabel;
     QLabel* companyLabel;
-    QLabel* textLabel5;
+    QLabel* infoLabel;
     QLineEdit* nameEdit;
     QLineEdit* companyEdit;
     QLineEdit* emailEdit;
@@ -44,7 +46,6 @@ public:
 
 protected:
     QVBoxLayout* authorFormLayout;
-    QSpacerItem* spacer5;
     QSpacerItem* spacer1;
     QSpacerItem* spacer3;
     QGridLayout* layout1;

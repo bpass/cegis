@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.4 2005/02/10 15:48:20 jtrent Exp $
+// $Id: resampleform.cpp,v 1.5 2005/02/13 00:27:17 rbuehler Exp $
 
 
 /****************************************************************************
@@ -33,9 +33,11 @@ ResampleForm::ResampleForm( QWidget* parent, const char* name, bool modal, WFlag
    if ( !name )
       setName( "ResampleForm" );
 
+   setPalette( QColor( 159, 159, 149 ) );
+
    ResampleFormLayout = new QVBoxLayout( this, 11, 6, "ResampleFormLayout"); 
 
-   inputLayout = new QHBoxLayout( 0, 0, 6, "inputLayout"); 
+   inputLayout = new QVBoxLayout( 0, 0, 6, "inputLayout"); 
 
    resampleBox = new QGroupBox( this, "resampleBox" );
    resampleBox->setColumnLayout(0, Qt::Vertical );
@@ -87,7 +89,7 @@ ResampleForm::ResampleForm( QWidget* parent, const char* name, bool modal, WFlag
    okLayout->addWidget( cancelButton );
    ResampleFormLayout->addLayout( okLayout );
    languageChange();
-   resize( QSize(457, 218).expandedTo(minimumSizeHint()) );
+   resize( QSize(300, 218).expandedTo(minimumSizeHint()) );
    clearWState( WState_Polished );
 
    connect( newButton, SIGNAL( clicked() ), this, SLOT( newVal() ) );

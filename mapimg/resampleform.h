@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.2 2005/02/03 18:12:18 jtrent Exp $
+// $Id: resampleform.h,v 1.3 2005/02/13 00:27:17 rbuehler Exp $
 
 
 /****************************************************************************
@@ -54,7 +54,7 @@ protected:
    QPushButton* cancelButton;
 
    QVBoxLayout* ResampleFormLayout;
-   QHBoxLayout* inputLayout;
+   QVBoxLayout* inputLayout;
    QVBoxLayout* resampleBoxLayout;
    QHBoxLayout* ignoreBoxLayout;
    QVBoxLayout* ignoreLayout;

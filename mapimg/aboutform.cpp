@@ -1,4 +1,4 @@
-// $Id: aboutform.cpp,v 1.3 2005/02/02 00:21:22 rbuehler Exp $
+// $Id: aboutform.cpp,v 1.4 2005/02/13 00:27:17 rbuehler Exp $
 
 
 /****************************************************************************
@@ -36,9 +36,8 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    if ( !name )
 	   setName( "aboutForm" );
 
-   //setMinimumSize( QSize( 407, 314 ) );
-   //setMaximumSize( QSize( 407, 314 ) );
    setPalette( QColor( 180, 173, 165 ) );
+   setPaletteForegroundColor( QColor( 0, 102, 51 ) );
 
    aboutFormLayout = new QVBoxLayout( this, 4, 3, "aboutFormLayout"); 
 
@@ -51,7 +50,6 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    aboutFormLayout->addWidget( logoLabel );
 
    titleLabel = new QLabel( this, "titleLabel" );
-   titleLabel->setPaletteForegroundColor( QColor( 0, 102, 51 ) );
    QFont titleLabel_font(  titleLabel->font() );
    titleLabel_font.setFamily( "Arial" );
    titleLabel_font.setPointSize( 22 );
@@ -66,7 +64,6 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    descFrameLayout = new QVBoxLayout( descFrame, 4, 0, "discFrameLayout"); 
 
    descLabel1 = new QLabel( descFrame, "descLabel1" );
-   descLabel1->setPaletteForegroundColor( QColor( 0, 102, 51 ) );
    QFont descLabel1_font(  descLabel1->font() );
    descLabel1_font.setFamily( "Arial" );
    descLabel1_font.setPointSize( 10 );
@@ -76,7 +73,6 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    descFrameLayout->addWidget( descLabel1 );
 
    descLabel2 = new QLabel( descFrame, "descLabel2" );
-   descLabel2->setPaletteForegroundColor( QColor( 0, 102, 51 ) );
    QFont descLabel2_font(  descLabel2->font() );
    descLabel2_font.setFamily( "Arial" );
    descLabel2_font.setPointSize( 12 );
@@ -87,7 +83,6 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    aboutFormLayout->addWidget( descFrame );
 
    descLabel3 = new QLabel( descFrame, "descLabel3" );
-   descLabel3->setPaletteForegroundColor( QColor( 0, 102, 51 ) );
    descLabel3->setFont( descLabel1_font ); 
    descLabel3->setTextFormat( QLabel::RichText );
    descLabel3->setAlignment( int( QLabel::WordBreak | QLabel::AlignJustify | QLabel::AlignTop ) );
@@ -128,7 +123,6 @@ void aboutForm::languageChange()
        " We are also very interested in feedback as well as bug reports. All"
        " questions and comments may be sent to:" ) );
     descLabel2->setText( tr( "<p align=\"center\">mapimg@usgs.gov</p>" ) );
-    descLabel3->setText( tr( "The TinyXML library is used in this projects."
-       " Props to them." ) );
+    descLabel3->setText( tr( "Libraries used: Qt, Libtiff, and TinyXML." ) );
     okButton->setText( tr( "Ok" ) );
 }

@@ -1,4 +1,4 @@
-// $Id: authorform.cpp,v 1.4 2005/01/31 17:24:02 jtrent Exp $
+// $Id: authorform.cpp,v 1.5 2005/02/13 00:27:17 rbuehler Exp $
 
 
 /****************************************************************************
@@ -12,6 +12,7 @@
 #include "mapimgversion.h"
 
 #include <qvariant.h>
+#include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
@@ -26,72 +27,67 @@
 authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, bool modal, WFlags fl )
     : QDialog( parent, name, modal, fl )
 {
-    set = settings;
-    if ( !name )
-	    setName( "authorForm" );
-    authorFormLayout = new QVBoxLayout( this, 3, 3, "authorFormLayout"); 
-    spacer5 = new QSpacerItem( 20, 41, QSizePolicy::Minimum, QSizePolicy::Expanding );
-    authorFormLayout->addItem( spacer5 );
+   set = settings;
+   if ( !name )
+	   setName( "authorForm" );
 
-    descrLabel = new QLabel( this, "descrLabel" );
-    descrLabel->setFrameShape( QLabel::WinPanel );
-    descrLabel->setFrameShadow( QLabel::Sunken );
-    descrLabel->setLineWidth( 2 );
-    descrLabel->setAlignment( int( QLabel::WordBreak | QLabel::AlignVCenter ) );
-    authorFormLayout->addWidget( descrLabel );
-    spacer1 = new QSpacerItem( 20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding );
-    authorFormLayout->addItem( spacer1 );
+   setPalette( QColor( 159, 149, 154) );
 
-    layout1 = new QGridLayout( 0, 1, 1, 0, 3, "layout1"); 
+   authorFormLayout = new QVBoxLayout( this, 5, 3, "authorFormLayout"); 
 
-    emailLabel = new QLabel( this, "emailLabel" );
+   descrLabel = new QLabel( this, "descrLabel" );
+   //descrLabel->setFrameShape( QLabel::WinPanel );
+   //descrLabel->setFrameShadow( QLabel::Sunken );
+   //descrLabel->setLineWidth( 2 );
+   descrLabel->setAlignment( int( QLabel::WordBreak | QLabel::AlignVCenter ) );
+   authorFormLayout->addWidget( descrLabel );
+   //spacer1 = new QSpacerItem( 20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding );
+   //authorFormLayout->addItem( spacer1 );
 
-    layout1->addWidget( emailLabel, 2, 0 );
+   inputBox = new QGroupBox( this, "inputBox" );
+   layout1 = new QGridLayout( inputBox, 1, 1, 10, 3, "layout1"); 
 
-    nameLabel = new QLabel( this, "nameLabel" );
+   emailLabel = new QLabel( inputBox, "emailLabel" );
+   layout1->addWidget( emailLabel, 2, 0 );
+   emailEdit = new QLineEdit( inputBox, "emailEdit" );
+   layout1->addWidget( emailEdit, 2, 1 );
 
-    layout1->addWidget( nameLabel, 0, 0 );
+   nameLabel = new QLabel( inputBox, "nameLabel" );
+   layout1->addWidget( nameLabel, 0, 0 );
+   nameEdit = new QLineEdit( inputBox, "nameEdit" );
+   layout1->addWidget( nameEdit, 0, 1 );
 
-    nameEdit = new QLineEdit( this, "nameEdit" );
+   companyLabel = new QLabel( inputBox, "companyLabel" );
+   layout1->addWidget( companyLabel, 1, 0 );
+   companyEdit = new QLineEdit( inputBox, "companyEdit" );
+   layout1->addWidget( companyEdit, 1, 1 );
 
-    layout1->addWidget( nameEdit, 0, 1 );
+   authorFormLayout->addWidget( inputBox );
 
-    companyLabel = new QLabel( this, "companyLabel" );
+   spacer3 = new QSpacerItem( 20, 21, QSizePolicy::Minimum, QSizePolicy::Expanding );
+   authorFormLayout->addItem( spacer3 );
 
-    layout1->addWidget( companyLabel, 1, 0 );
+   infoLabel = new QLabel( this, "infoLabel" );
+   infoLabel->setAlignment( int( QLabel::WordBreak | QLabel::AlignVCenter ) );
+   authorFormLayout->addWidget( infoLabel );
 
-    companyEdit = new QLineEdit( this, "companyEdit" );
+   layout2 = new QHBoxLayout( 0, 0, 6, "layout2"); 
+   spacer4 = new QSpacerItem( 31, 21, QSizePolicy::Expanding, QSizePolicy::Minimum );
+   layout2->addItem( spacer4 );
 
-    layout1->addWidget( companyEdit, 1, 1 );
+   okButton = new QPushButton( this, "okButton" );
+   okButton->setMaximumSize( QSize( 80, 32767 ) );
+   cancelButton = new QPushButton( this, "cancelButton" );
+   cancelButton->setMaximumSize( QSize( 80, 32767 ) );
+   layout2->addWidget( okButton );
+   layout2->addWidget( cancelButton );
+   authorFormLayout->addLayout( layout2 );
+   languageChange();
+   resize( QSize(265, 200).expandedTo(minimumSizeHint()) );
+   clearWState( WState_Polished );
 
-    emailEdit = new QLineEdit( this, "emailEdit" );
-
-    layout1->addWidget( emailEdit, 2, 1 );
-    authorFormLayout->addLayout( layout1 );
-    spacer3 = new QSpacerItem( 20, 21, QSizePolicy::Minimum, QSizePolicy::Expanding );
-    authorFormLayout->addItem( spacer3 );
-
-    textLabel5 = new QLabel( this, "textLabel5" );
-    textLabel5->setAlignment( int( QLabel::WordBreak | QLabel::AlignVCenter ) );
-    authorFormLayout->addWidget( textLabel5 );
-
-    layout2 = new QHBoxLayout( 0, 0, 6, "layout2"); 
-    spacer4 = new QSpacerItem( 31, 21, QSizePolicy::Expanding, QSizePolicy::Minimum );
-    layout2->addItem( spacer4 );
-
-    okButton = new QPushButton( this, "okButton" );
-    okButton->setMaximumSize( QSize( 80, 32767 ) );
-    cancelButton = new QPushButton( this, "cancelButton" );
-    cancelButton->setMaximumSize( QSize( 80, 32767 ) );
-    layout2->addWidget( okButton );
-    layout2->addWidget( cancelButton );
-    authorFormLayout->addLayout( layout2 );
-    languageChange();
-    resize( QSize(265, 174).expandedTo(minimumSizeHint()) );
-    clearWState( WState_Polished );
-
-    connect( okButton, SIGNAL( clicked() ), this, SLOT(okClicked()) );
-    connect( cancelButton, SIGNAL( clicked() ), this, SLOT(close()) );
+   connect( okButton, SIGNAL( clicked() ), this, SLOT(okClicked()) );
+   connect( cancelButton, SIGNAL( clicked() ), this, SLOT(close()) );
 }
 
 /*
@@ -106,17 +102,17 @@ authorForm::~authorForm()
  */
 void authorForm::languageChange()
 {
-    setCaption( tr( "Author Properties" ) );
-    descrLabel->setText( tr( "For your covenience mapimg%1 can attach your information to the re-projections that you create." ).arg(MAJOR_VERSION) );
-    emailLabel->setText( tr( "Email address" ) );
-    nameLabel->setText( tr( "Name:" ) );
-    companyLabel->setText( tr( "Company" ) );
-    textLabel5->setText( tr( "These fields can be changed at any time by clicking \"Edit Author\" under the options menu." ) );
-    okButton->setText( tr( "Ok" ) );
-    cancelButton->setText( tr( "Cancel" ) );
-    nameEdit->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorName" ) ) );
-    companyEdit->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorCompany" ) ) );
-    emailEdit->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorEmail" ) ) );
+   setCaption( tr( "Author Properties" ) );
+   descrLabel->setText( tr( "For your covenience mapimg%1 can attach your information to the re-projections that you create." ).arg(MAJOR_VERSION) );
+   nameLabel->setText( tr( "Name:" ) );
+   companyLabel->setText( tr( "Company:" ) );
+   emailLabel->setText( tr( "Email address:" ) );
+   infoLabel->setText( tr( "These fields can be changed at any time by clicking \"Edit Author\" under the Options menu." ) );
+   okButton->setText( tr( "Ok" ) );
+   cancelButton->setText( tr( "Cancel" ) );
+   nameEdit->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorName" ) ) );
+   companyEdit->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorCompany" ) ) );
+   emailEdit->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorEmail" ) ) );
 }
 
 void authorForm::okClicked()

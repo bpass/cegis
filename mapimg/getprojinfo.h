@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.7 2005/02/10 16:59:12 jtrent Exp $
+// $Id: getprojinfo.h,v 1.8 2005/02/13 00:27:17 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -41,15 +41,6 @@ extern "C"
 static char*  logFile = strdup( QDir::currentDirPath().append("/mapimg.log").ascii() );
 static long   errorMode = 0;    //print both errors and parameters to a precreated
 static long   paramMode = 0;    //FILE* to logFile
-
-
-int get_projInfo(char *name, long *sys, long *unit, long *zone, long *datum, double pparm[]);
-
-int mapframeit(char * filename,double pixsiz,double ul_lat,double ul_lon,
-		double lr_lat,double lr_lon, const char *outfilename, long * outputRows, long * outputCols);
-
-int geo2eqr(long numLines, long numSamps, const char * infilename, int projnum);
-
 
 // Bring in the buffers
 extern  void * mapimginbuf;			// Ptr to the input image (all in memory)

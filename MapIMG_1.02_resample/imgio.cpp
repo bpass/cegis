@@ -15,14 +15,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <qfile.h>
 #include "imgio.h"
+
 
 char infile_name[500];		// Name of input file
 char outfile_name[500];		// Name of output file
 char infile_info[500];		// Name of input info file
 char outfile_info[500];		// Name of output info file
 
-FILE * inptr;				// Input file pointer
+QFile inptr;				// Input file pointer
 FILE * outptr;				// Output file pointer
 FILE * ininfoptr;				// Input .info file pointer
 FILE * outinfoptr;				// Output .info file pointer
@@ -54,7 +56,7 @@ void send_imgio_par(long inout, const char * name)
 // -------
 void cleanup_input()
 {
-	fclose(inptr);
+	inptr.close();
 	return;
 }
 
@@ -77,9 +79,9 @@ void parse_input(const char * infile, const char * outfile)
 // Early Error cleanup
 void early_error_cleanup()
 {
-    if(inptr)
+    if(inptr.isOpen())
     {
-	fclose(inptr);
+	inptr.close();
     }
 
     if(outptr)

@@ -12,8 +12,8 @@
 #define OUTFILE_NAME	2
 
 
-#define _LARGEFILE_SOURCE
-#define _LARGEFILE64_SOURCE
+//#define _LARGEFILE_SOURCE
+//#define _LARGEFILE64_SOURCE
 #define _FILE_OFFSET_BITS 64
 
 #include <sys/types.h>
@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#include <qfile.h>
 #include <qmessagebox.h>
 
 struct IMGINFO
@@ -58,6 +59,7 @@ extern char outfile_info[500];		// Name of output info file
 extern FILE * ininfoptr;				// Input .info file pointer
 extern FILE * outinfoptr;				// Output .info file pointer
 
+extern QFile inptr;
 
 template <class type>
 int init_io(IMGINFO * inimg, IMGINFO * outimg, type typeToUse)
@@ -74,7 +76,9 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type typeToUse)
 	strncat(outfile_info, ".info", 500);
 
 	// Open input file and check for any errors
-	inptr = fopen64(infile_name, "rb");
+	inptr.setName( infile_name );
+	inptr.open( IO_ReadOnly | IO_Raw );
+/*	inptr = fopen64(infile_name, "rb");
 	if(!inptr)
 	{
 		int dangErrCode = errno;//ferror( inptr );
@@ -130,8 +134,9 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type typeToUse)
 			printf ("Undefined = %i opening %s\n", errno, infile_name );
 			fflush( stdout );
 		}
-
-		
+*/
+	if( !inptr.isOpen() || !inptr.isReadable() )
+	{
 	    early_error_cleanup();
 	    QMessageBox::critical( 0, "MapIMG",
 	    QString("An internal error occurred while trying to open the designated input file\n\nMapIMG will not execute."));
@@ -270,12 +275,12 @@ type get_max_value(const char* inputFilename, int inputSize, type typeToUse)
      return max_value;
 }
 
-
+/*
 // Read the entire input image (no longer used)
 // Definition must be in header for
 // Solaris compiler compatability
 // ---------------------------
-extern FILE * inptr;				// Input file pointer  from imgio.cpp
+extern QFile inptr;				// Input file pointer  from imgio.cpp
 extern long insize;				// Number of bytes in input image
 
 template <class type>
@@ -284,12 +289,13 @@ void get_image(void * buf, type typeToUse)
      fread(buf, sizeof(type), insize, inptr);
      return;
 }
+*/
 
 // Read input image line by line number
 // Definition must be in header for
 // Solaris compiler compatability
 // ---------------------------
-extern FILE * inptr;				// Input file pointer  from imgio.cpp
+extern QFile inptr;				// Input file pointer  from imgio.cpp
 extern long insize;				// Number of bytes in input image
 static off64_t get_line_loadedData;
 
@@ -298,7 +304,7 @@ static int MAX_DATA_ELEMENT_COUNT = 800;		//20, 23
 static int FRIST_PRIME_AFTER_MAX = 801;
 
 template <class type>
-void get_line(void* &buf, off64_t offset, int lineLength, type typeToUse)
+void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type typeToUse)
 {
   static QCache<type> inputDataMap( MAX_DATA_ELEMENT_COUNT, FRIST_PRIME_AFTER_MAX );
   inputDataMap.setAutoDelete( true );
@@ -310,88 +316,34 @@ void get_line(void* &buf, off64_t offset, int lineLength, type typeToUse)
      if( inputDataMap.find( offsetString ) ==  0 )
      {
 
-        if( fseeko64( inptr, offset * sizeof(type), 0 ) != 0 )
+        if( !inptr.at( (Q_ULLONG)(offset * sizeof(type)) ) )
         {
             // end of file or corrupt file found
-            p_error( "seek_image: error!", "[image read]");
+            printf( "error seeking!!!\n" );
+	    fflush(stdout );
         }
 
         //then load the line into memory
         type *newBuffer = new type[insize];
-  	long amountRead = fread(newBuffer, sizeof(type), insize, inptr);
+//  	long amountRead = fread(newBuffer, sizeof(type), insize, inptr);
+	long amountRead = inptr.readBlock( (char*&)newBuffer, sizeof(type) * insize);
 	
 	if( amountRead != insize )
 	{
 		printf( "Read %i requested %i\n", amountRead, insize );
 		fflush( stdout );
 	
-		if( feof( inptr ) )
+		if( inptr.atEnd() )
 		{
 			printf( "End-of-File reached\n" );
 			fflush( stdout );
 		}
-		else if( ferror(inptr) )
+		else if( amountRead = -1 )
 		{
-			printf( "Error on read. Damn you LFS!!!\n" );
+			printf( "Error on read.!!!\n" );
 			fflush(stdout);
 		
-		
-			if( ferror(inptr) == EACCES  )
-			{
-				printf( "Another process has the file locked.\n" );
-				fflush(stdout); 
-			}
-			else if( ferror(inptr) == EAGAIN  )
-			{
-				printf( "The underlying file descriptor is in non-blocking mode, and the process would be delayed waiting for data to become available.\n" );
-				fflush(stdout);
-			}
-			else if( ferror(inptr) == EBADF  )
-			{
-				printf( "stream is not a valid stream opened for reading.\n" );
-				fflush(stdout);
-			}
-			else if( ferror(inptr) == EINTR  )
-			{
-				printf( "A signal interrupted the call.\n" );
-				fflush(stdout);
-			}
-			else if( ferror(inptr) == EIO  )
-			{
-				printf( "An input error occurred.\n" );
-				fflush(stdout);
-			}
-			else if( ferror(inptr) == EISDIR  )
-			{
-				printf( "The open object is a directory, not a file.\n" );
-				fflush(stdout);
-			}
-			else if( ferror(inptr) == ENOMEM  )
-			{
-				printf( "Memory could not be allocated for internal buffers.\n" );
-				fflush(stdout);
-			}
-			else if( ferror(inptr) == ENXIO  )
-			{
-				printf( "A device error occurred.\n" );
-				fflush(stdout);
-			}
-			else if( ferror(inptr) == EOVERFLOW  )
-			{
-				printf( "The file is a regular file and an attempt was made to read at or beyond the offset maximum associated with the corresponding stream.\n" );
-				fflush(stdout);
-			}
-			else if( ferror(inptr) == EWOULDBLOCK  )
-			{
-				printf( "The underlying file descriptor is a non-blocking socket and no data is ready to be read.\n" );
-				fflush(stdout);
-			}
-			else
-			{
-				printf( "none of the above %i\n", ferror(inptr) );
-				fflush( stdout );
-			}
-			clearerr( inptr );
+			/*  Add more descriptive messages here*/
 		}
 	}
 	else
@@ -438,7 +390,7 @@ void get_line(void* &buf, off64_t offset, int lineLength, type typeToUse)
      return;
 }
 
-
+/*
 // Read input image line
 // Definition must be in header for
 // Solaris compiler compatability
@@ -452,7 +404,7 @@ void get_line(void * buf, int lineLength, type typeToUse)
      fread(buf, sizeof(type), insize, inptr);
      return;
 }
-
+*/
 
 
 
@@ -484,7 +436,6 @@ void put_line(void * buf, type typeToUse)
 // Definition must be in header for
 // Solaris compiler compatability
 // ---------------------------
-extern FILE * inptr;				// Input file pointer  from imgio.cpp
 extern long insize;				// Number of bytes in input image
 
 template <class type>

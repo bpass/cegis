@@ -1,0 +1,73 @@
+
+
+// $Id: overallProcess.txt,v 1.1 2004/11/15 23:30:13 rstelzleni Exp $
+
+/** \page overallProcess The Big Picture
+ *
+ * \section basicSteps Basic Steps
+ * These steps don't have to be followed in any particular order, but
+ * this is basically the way I did it.  There are some things that do
+ * need to be done before others, but those are obvious enough that you
+ * can probably figure them out for yourself.  For the record, here are 
+ * the steps in the order I do them.
+ *
+ * \subsection stepOne Step One
+ * Call the OGRRegisterAll() and GDALAllRegister() functions to make 
+ * sure that all the file type drivers are loaded for the gdal/ogr
+ * stuff.  Also at this time I usually load some training into the
+ * classifier.  It will save some time if you do this from an already
+ * saved training dataset, some instruction for doing this can be 
+ * found at \ref gettingAGoodTrainingSet.  
+ *
+ * \subsection stepTwo Step Two
+ * Next I usually open all of the files I'll need with gdal/ogr.  Make
+ * sure to check and see if the pointers that are returned are null
+ * when you do this, gdal has a tendency to fail for really 
+ * touchy reasons.  If you don't know how to do this, generate the
+ * the doxygen docs for gdal and read up!  Or just look at a driver
+ * in cvs that does it.
+ *
+ * \subsection stepThree Step Three
+ * At this point I usually load the raster I'll be using into memory,
+ * using the InMemRaster class.  The constructor will take a 
+ * GDALDataset * and load the image from that file.  Then you will
+ * need to call the InMemRaster::convertToHSV function and then the
+ * InMemRaster::classify functions to prepare the image for use.
+ * This generally takes a minute or less.
+ *
+ * \subsection stepFour Step Four
+ * Now that the image is ready to go we need to locate the 
+ * intersections that we will be trying to use for control point
+ * location.  To do this create an IntersectionMap and giving it
+ * pointers to both the vector format file and the raster that 
+ * goes under that vector line file.
+ *
+ * \subsection stepFive Step Forever
+ * This is what takes a long time.  Next we call one of the 
+ * IntersectionMap findControlPoints type functions.  These will
+ * take a pointer to an InMemRaster and to a size for a template
+ * and an area to move the template within.  See \ref oddsAndEnds
+ * for a description of how to choose those values.
+ *
+ * \subsection stepSize Step Six
+ * Now we have a set of control points picked out, we need to 
+ * filter out the bad ones and correct the roads using the good
+ * ones.  Do this using the IntersectionMap::triangulateAndAdjust, 
+ * IntersectionMap::filter and/or
+ * IntersectionMap::adjustToControl functions as you see fit.  If
+ * you need to do several corrections using this same data, you
+ * can save time by saving the ControlPoint vector before you do this,
+ * instead of recreating the set of points every time you want to test this
+ * area.  To save the vector use the IntersectionMap::getControlPoints
+ * function, and to resture it use IntersectionMap::setControlPoints.
+ *
+ * \subsection finallyFinished Finished
+ * Now, wasn't that easy?  All that is left is to clean up your memory
+ * and you are done.  The program will take a long time to run any
+ * large number of areas, but if you are just going to run one or two
+ * it will take under an hour, I think it takes less than 30 minutes to
+ * do this process on one 5000x5000 tile.
+ */
+
+
+

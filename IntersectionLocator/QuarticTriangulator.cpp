@@ -9,7 +9,7 @@
 
 
 // Majic numbers for CVS
-// $Id: QuarticTriangulator.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+// $Id: QuarticTriangulator.cpp,v 1.3 2004/11/10 17:33:12 ahartman Exp $
 
 
 #include "QuarticTriangulator.h"
@@ -25,17 +25,20 @@ void QuarticTriangulator::triangulate( const std::vector<ControlPoint> &points,
    // Just iterate through all possible triangles and keep the good ones.
    for( int i = 0; i < n; ++i )
    {
-      Point A( points[i].point.getX(), points[i].point.getY() );
+      Point A( const_cast<OGRPoint&>(points[i].point).getX(), 
+               const_cast<OGRPoint&>(points[i].point).getY() );
       for( int j = 0; j < n; ++j )
       {
          if( j != i )
          {
-            Point B( points[j].point.getX(), points[j].point.getY() );
+            Point B( const_cast<OGRPoint&>(points[j].point).getX(), 
+                     const_cast<OGRPoint&>(points[j].point).getY() );
             for( int k = 0; k < n; ++k )
             {
                if( k != i && k != j )
                {
-                  Point C( points[k].point.getX(), points[k].point.getY() );
+                  Point C( const_cast<OGRPoint&>(points[k].point).getX(), 
+                           const_cast<OGRPoint&>(points[k].point).getY() );
 
                   Triangle triangle( A, B, C );
                   Circle circumCircle( triangle );
@@ -45,7 +48,8 @@ void QuarticTriangulator::triangulate( const std::vector<ControlPoint> &points,
                   {
                      if( c != i && c != j && c != k )
                      {
-                        Point D( points[c].point.getX(), points[c].point.getY() );
+                        Point D( const_cast<OGRPoint&>(points[c].point).getX(), 
+                                 const_cast<OGRPoint&>(points[c].point).getY() );
                         if( circumCircle.encloses( D ) )
                         {
                            bGoodTriangle = false;

@@ -20,7 +20,7 @@
 
 
 // Majic numbers for CVS
-// $Id: Template.cpp,v 1.2 2004/10/18 22:42:52 rstelzleni Exp $
+// $Id: Template.cpp,v 1.3 2004/11/10 17:35:17 ahartman Exp $
 
 
 #include "Template.h"
@@ -49,8 +49,8 @@ Template::Template( int xSize, int ySize, const OGRPoint &center )
    // as an offset for transforming projection coordinates onto the
    // raster.  I don't think my template images will ever be very big.
    // Currently I'm thinking 60 meters tops.
-   mdXTrans = center.getX() - mnXSize/2;
-   mdYTrans = center.getY() - mnYSize/2;
+   mdXTrans = const_cast<OGRPoint&>(center).getX() - mnXSize/2;
+   mdYTrans = const_cast<OGRPoint&>(center).getY() - mnYSize/2;
 
 } // End Constructor
 
@@ -76,31 +76,31 @@ void Template::addSegment( const OGRPoint &from, const OGRPoint &dest,
    int iWidth = static_cast<int>( width * PIX_PER_METER );
 
    // Determine what direction the line is going.
-   if( dest.getY() > from.getY() )
+   if( const_cast<OGRPoint&>(dest).getY() > const_cast<OGRPoint&>(from).getY() )
       ySign = 1;
    else
       ySign = -1;
 
-   if( dest.getX() > from.getX() )
+   if( const_cast<OGRPoint&>(dest).getX() > const_cast<OGRPoint&>(from).getX() )
       xSign = 1;
    else
       xSign = -1;
 
 
    // Get starting and ending points in the raster coordinates.
-   fromX = static_cast<int>(from.getX() - mdXTrans);
-   fromY = static_cast<int>(from.getY() - mdYTrans);
-   destX = static_cast<int>(dest.getX() - mdXTrans);
-   destY = static_cast<int>(dest.getY() - mdYTrans);
+   fromX = static_cast<int>(const_cast<OGRPoint&>(from).getX() - mdXTrans);
+   fromY = static_cast<int>(const_cast<OGRPoint&>(from).getY() - mdYTrans);
+   destX = static_cast<int>(const_cast<OGRPoint&>(dest).getX() - mdXTrans);
+   destY = static_cast<int>(const_cast<OGRPoint&>(dest).getY() - mdYTrans);
 
 
    // Calculate the slope.  If the line is vertical then its 
    // slope is undefined so I need a different method.  For
    // that case I use the addVerticalLine function.
-   if( dest.getX() - from.getX() != 0 )
+   if( const_cast<OGRPoint&>(dest).getX() - const_cast<OGRPoint&>(from).getX() != 0 )
    {
-      slope = (dest.getY() - from.getY()) / 
-              (dest.getX() - from.getX());
+      slope = (const_cast<OGRPoint&>(dest).getY() - const_cast<OGRPoint&>(from).getY()) / 
+              (const_cast<OGRPoint&>(dest).getX() - const_cast<OGRPoint&>(from).getX());
       if( slope >= 0 )
          slopeSign = 1;
       else

@@ -163,8 +163,8 @@ int mapframeit(char * filename, double pixsiz, double ul_lat, double ul_lon,
 
 	// Calc output image size, etc.
 	// ---------------------------
-	numLines = (long) round( ((pymax - pymin) / pixsiz) );
-	numSamps = (long) round( ((pxmax - pxmin) / pixsiz) );
+	numLines = (long) round( ((pymax - pymin) / pixsiz), 0 );
+	numSamps = (long) round( ((pxmax - pxmin) / pixsiz), 0 );
 
 
 	pixX = pxmin + (pixsiz/2);

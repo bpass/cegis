@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file 'acForm.ui'
 **
-** Created: Thu Oct 7 08:49:11 2004
-**      by: The User Interface Compiler ($Id: acForm.cpp,v 1.1 2004/10/20 16:36:39 jtrent Exp $)
+** Created: Thu Oct 21 09:26:02 2004
+**      by: The User Interface Compiler ($Id: acForm.cpp,v 1.2 2004/10/21 15:15:59 jtrent Exp $)
 **
 ** WARNING! All changes made in this file will be lost!
 ****************************************************************************/

@@ -307,7 +307,7 @@ void* get_raster_value(void * buf, long offset, long sample, int lineLength, typ
      //if not load it
      get_line( buf, offset, linLength, typeToUse );
 
-     return ((typeToUse*)buf + sample);
+     return ((type*)buf + sample);
 }
 
 

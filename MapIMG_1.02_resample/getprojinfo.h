@@ -124,7 +124,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
     FILE *paramfile = fopen( logFile, "wa");
 	
 
-    int PROJECT_MODE = 6;	//0  - Nearest Neighbor
+    int PROJECT_MODE = 0;	//0  - Nearest Neighbor
     				//1  - Sum
     				//2  - Min
     				//3  - Max

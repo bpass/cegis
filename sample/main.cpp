@@ -1,4 +1,5 @@
-#include <iostream.h>
+#include <iostream>
+using namespace std;
 
 /*	This program is very simple. Now that you (should) have compiled and run it
 	please do the following (see me (Jason) if you have any troubles):
@@ -50,7 +51,8 @@ int main()
 {
    cout << "CVS Demo\n";
    cout << "Others who have checked out:\n"
-        << "\tJason Trent\n";
+        << "\tJason Trent\n"
+        << "\tAustin Hartman\n";
 
    return 0;
 }

@@ -1,0 +1,27 @@
+SQL> describe project_news
+ Name                            Null?    Type
+ ------------------------------- -------- ----
+ ID                              NOT NULL NUMBER(6)
+ POST_DATE                       NOT NULL DATE
+ ARTICLE                                  VARCHAR2(4000)
+ SUBJECT                                  VARCHAR2(500)
+ 
+
+SQL> describe image_info
+ Name                            Null?    Type
+ ------------------------------- -------- ----
+ ID                              NOT NULL NUMBER(6)
+ SATELLITE                                VARCHAR2(50)
+ SENSOR                                   VARCHAR2(50)
+ LAT                                      NUMBER(10,4)
+ LON                                      NUMBER(10,4)
+ CAPTURE_DATE                             DATE
+ SPAT_R                                   NUMBER(10,4)
+ PROJECTION                               VARCHAR2(100)
+ DATUM                                    VARCHAR2(100)
+ SPHEROID                                 VARCHAR2(100)
+ COMMENTS                                 VARCHAR2(2000)
+ 
+ create sequence news_seq start with 1 increment by 1;
+ create sequence id_seq start with 1 increment by 1;
+

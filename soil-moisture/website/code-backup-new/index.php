@@ -1,6 +1,4 @@
 <?php
-
-//get everything I need
 require('/opt/oracle/product/mid904/Apache/Apache/htdocs/sso_php/authenticate.php');
 $file_loc="/opt/oracle/product/mid904/Apache/Apache/htdocs/SMP/ACL.php";	
 require('common.php');

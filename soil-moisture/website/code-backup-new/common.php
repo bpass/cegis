@@ -49,6 +49,8 @@ function oracleEscape(&$query, $searching) {
 							    <b>Sensor</b><select name=\"sensor\" onChange=\"setSpatialResolution(this.options[this.selectedIndex].value)\">
 							    		  <option value=\"\">&nbsp;&nbsp;&nbsp;&nbsp;</select>
 					<p>
+					<b>Path</b>&nbsp;<input type=\"text\" name=\"path\" maxlength=\"3\" size=\"4\">&nbsp;
+					<b>Row</b>&nbsp;<input type=\"text\" name=\"row\" maxlength=\"3\" size=\"4\">&nbsp;&nbsp;&nbsp;
 					<b>Lat(N)</b>&nbsp;<input type=\"text\" name=\"lat\" maxlength=\"10\" size=\"4\">&nbsp;
 					<b>Lon(W)</b>&nbsp;<input type=\"text\" name=\"lon\" maxlength=\"10\" size=\"4\">&nbsp;&nbsp;
 					<b>Spatial Res (m)</b>&nbsp;<input type=\"text\" name=\"spat_r\" maxlength=\"10\" size=\"4\"><p>
@@ -75,6 +77,8 @@ function oracleEscape(&$query, $searching) {
 		$sensor = $_POST['sensor'];
 		$lat = $_POST['lat'];
 		$lon = $_POST['lon'];
+		$path = $_POST['path'];
+		$row = $_POST['row'];
 		$spat_r = $_POST['spat_r'];
 		$proj = $_POST['projection'];
 		$spheroid = $_POST['spheroid'];
@@ -91,15 +95,17 @@ function oracleEscape(&$query, $searching) {
 		$formValues[1] = $sensor;
 		$formValues[2] = $lat;
 		$formValues[3] = $lon;
-		$formValues[4] = $day;
-		$formValues[5] = $month;
-		$formValues[6] = $year;
+		$formValues[4] = $path;
+		$formValues[5] = $row;
+		$formValues[6] = $day;
+		$formValues[7] = $month;
+		$formValues[8] = $year;
 			
-		$formValues[7] = $spat_r;
-		$formValues[8] = $proj;
-		$formValues[9] = $datum;
-		$formValues[10] = $spheroid;
-		$formValues[11] = $comments;
+		$formValues[9] = $spat_r;
+		$formValues[10] = $proj;
+		$formValues[11] = $datum;
+		$formValues[12] = $spheroid;
+		$formValues[13] = $comments;
 		
 		//Store the length of each month
 		//and the names of each month in associative arrays
@@ -234,6 +240,26 @@ function oracleEscape(&$query, $searching) {
 			
 		}
 		
+		if(!(empty($path) && empty($row)) && (preg_match('/^\s+$/s', $path) || preg_match('/^\s+$/s', $row))) {
+			$errorList[$errorCount] = "<p>You must either provide both path and row, or leave them both blank</p>";
+			$error = true;
+			$errorCount++;
+			
+		}
+		
+		if((!is_numeric($path) || !is_numeric($row)) && !(empty($path) && empty($row))) {
+			$errorList[$errorCount] = "<p>Path and row must be numeric</p>";
+			$error = true;
+			$errorCount++;
+			
+		}
+		
+		if($path < 0 || $row < 0 || $path > 999 || $row > 999) {
+			$errorList[$errorCount] = "<p>Path and row must be positive 3-digit numbers</p>";
+			$error = true;
+			$errorCount++;
+		}
+		
 		if((abs($lat) > 90) || (abs($lon) > 180)) {
 			$errorList[$errorCount] = "<p>Coordinates out of range</p>";
 			$error = true;
@@ -295,6 +321,12 @@ function oracleEscape(&$query, $searching) {
 				$lon = 0;
 		}
 		
+		//if the user chose to leave out the lat and lon, force them to 0
+		if((empty($path) && empty($row)) || ((preg_match('/^\s+$/s', $path) && preg_match('/^\s+$/s', $row)))) {
+				$path = 0;
+				$row = 0;
+		}
+		
 		//If there were problems 
 		if($error) {
 			foreach($errorList as $err) {
@@ -327,7 +359,7 @@ function oracleEscape(&$query, $searching) {
 		
 		if($operation == "add") {
 					
-			$query = "INSERT INTO mwilliams.image_info VALUES (mwilliams.id_seq.nextval, '$sat', '$sensor', $lat, $lon, '$date', $spat_r, '$proj', '$datum', '$spheroid', '$comments')";
+			$query = "INSERT INTO mwilliams.image_info VALUES (mwilliams.id_seq.nextval, '$sat', '$sensor', $lat, $lon, $path, $row, '$date', $spat_r, '$proj', '$datum', '$spheroid', '$comments')";
 			$confirmation = "<p>Image information added to database.</p>";
 		}
 		
@@ -337,6 +369,8 @@ function oracleEscape(&$query, $searching) {
 			  SENSOR='$sensor',
 			  LAT=$lat,
 			  LON=$lon,
+			  LS_PATH=$path,
+			  LS_ROW=$row,
 			  CAPTURE_DATE='$date',
 			  SPAT_R=$spat_r,
 			  PROJECTION='$proj',
@@ -383,7 +417,7 @@ function oracleEscape(&$query, $searching) {
 		}
 		
 		$countQ = "SELECT COUNT(ID) from mwilliams.image_info";
-		$imageQ = "SELECT ID, capture_date, satellite, sensor, lat, lon from mwilliams.image_info ORDER BY ID DESC";
+		$imageQ = "SELECT ID, capture_date, satellite, sensor, lat, lon, LS_PATH, LS_ROW from mwilliams.image_info ORDER BY ID DESC";
 		
 		$QO1 = OCIParse($conn, $countQ);
 		$QO2 = OCIParse($conn, $imageQ);
@@ -412,10 +446,12 @@ function oracleEscape(&$query, $searching) {
 		$sens = $result['SENSOR'];
 		$lat = $result['LAT'];
 		$lon = $result['LON'];
+		$path = $result['LS_PATH'];
+		$row = $result['LS_ROW'];
 		
 		for($i = 0; $i < $nrows; $i++) {
-			print "<tr><td><b>ID</b></td><td><b>Capture Date</b></td><td><b>Satellite</b></td><td><b>Sensor</b></td><td><b>Latitude(N)</b></td><td><b>Longitude(W)</b></td></tr>\n";
-			print "<tr><td>$id[$i]</td><td>$date[$i]</td><td>$sat[$i]</td><td>$sens[$i]</td><td>$lat[$i]</td><td>$lon[$i]</td><td><a href=\"./index.php?mode=viewImage&id=$id[$i]\">Details</a></td>";
+			print "<tr><td><b>Capture Date</b></td><td><b>Satellite</b></td><td><b>Sensor</b></td><td><b>Path</b></td><td><b>Row</b></td><td><b>Latitude(N)</b></td><td><b>Longitude(W)</b></td></tr>\n";
+			print "<tr><td>$date[$i]</td><td>$sat[$i]</td><td>$sens[$i]</td><td>$path[$i]</td><td>$row[$i]</td><td>$lat[$i]</td><td>$lon[$i]</td><td><a href=\"./index.php?mode=viewImage&id=$id[$i]\">Details</a></td>";
 			if($GLOBALS['AUTH_ADMIN'] || $GLOBALS['AUTH_WRITE']) {
 				print "<td><a href=\"./index.php?mode=editImage&id=$id[$i]\">Edit</a></td>";
 			}
@@ -496,6 +532,8 @@ function oracleEscape(&$query, $searching) {
 		$spat_r = $result['SPAT_R'];
 		$lat = $result['LAT'];
 		$lon = $result['LON'];
+		$path = $result['LS_PATH'];
+		$row = $result['LS_ROW'];
 		$proj = $result['PROJECTION'];
 		$sph = $result['SPHEROID'];
 		$dat = $result['DATUM'];
@@ -511,9 +549,9 @@ function oracleEscape(&$query, $searching) {
 		print "<br>";
 		print "<div align=\"center\" width=\"100%\">\n";
 		print "<table width=\"100%\" cellspacing=\"20\">";
-		print "<tr><td><b>ID</b></td><td><b>Capture Date</b></td><td><b>Satellite</b></td><td><b>Sensor</b></td><td><b>Latitude(N)</b></td><td><b>Longitude(W)</b></td>";
+		print "<tr><td><b>ID</b></td><td><b>Capture Date</b></td><td><b>Satellite</b></td><td><b>Sensor</b></td><td><b>Path</b></td><td><b>Row</b></td><td><b>Latitude(N)</b></td><td><b>Longitude(W)</b></td>";
 		print "<td><b>Spatial Resolution</b></td></tr>\n";
-		print "<tr><td>$ID</td><td>$date[0]</td><td>$sat[0]</td><td>$sens[0]</td><td>$lat[0]</td><td>$lon[0]</td><td>$spat_r[0]</td></tr></table>\n";
+		print "<tr><td>$ID</td><td>$date[0]</td><td>$sat[0]</td><td>$sens[0]</td><td>$path[0]</td><td>$row[0]</td><td>$lat[0]</td><td>$lon[0]</td><td>$spat_r[0]</td></tr></table>\n";
 	
 		print "<br>";
 		print "<table>\n";
@@ -551,6 +589,8 @@ function oracleEscape(&$query, $searching) {
 		$sensor ="";
 		$lat = "";
 		$lon = "";
+		$path = "";
+		$row_val = "";
 		$date = array();
 		$spat_r = "";
 		$proj = "";
@@ -599,25 +639,27 @@ function oracleEscape(&$query, $searching) {
 			$sensor = strtolower($sensor);
 			$lat = $row[3];
 			$lon = $row[4];
-			$date = explode("-",$row[5]);
+			$path = $row[5];
+			$row_val = $row[6];
+			$date = explode("-",$row[7]);
 			$date[1] = strtolower($date[1]);
-			$spat_r = $row[6];
+			$spat_r = $row[8];
 			
 			//check optional values
-			if(isset($row[7]))
-			   $proj = $row[7];
+			if(isset($row[9]))
+			   $proj = $row[9];
 			else
 			   $proj = "";
-			if(isset($row[8]))
-			   $datum = $row[8];
+			if(isset($row[10]))
+			   $datum = $row[10];
 			else
 			   $datum="";
-			if(isset($row[9]))
-			   $spheroid = $row[9];
+			if(isset($row[11]))
+			   $spheroid = $row[11];
 			else
 			   $spheroid="";
-			if(isset($row[10])) {
-			   $comments = $row[10];
+			if(isset($row[12])) {
+			   $comments = $row[12];
 			   $comments = str_replace("<br>", "\n", $comments);
 			 }
 			else
@@ -629,28 +671,32 @@ function oracleEscape(&$query, $searching) {
 		else {
 		
 			$sat = $formValues[0];
-			oracleEscape($sat, false);
+			oracleEscape($sat);
 			$sensor = $formValues[1];
-			oracleEscape($sensor, false);
+			oracleEscape($sensor);
 			$lat = $formValues[2];
-			oracleEscape($sensor, false);
+			oracleEscape($lat);
 			$lon = $formValues[3];
-			oracleEscape($lon, false);
-			$date[0] = $formValues[4];
-			$date[1] = $formValues[5];
-			$date[2] = $formValues[6];
-			oracleEscape($date, false);
-			$spat_r = $formValues[7];
-			oracleEscape($spat_r, false);
-			$proj = $formValues[8];
-			oracleEscape($proj, false);
-			$datum = $formValues[9];
-			oracleEscape($datum, false);
-			$spheroid = $formValues[10];
-			oracleEscape($spheroid, false);
-			$comments = $formValues[11];
-			oracleEscape($comments, false);
-			$comments = str_replace("<br>", "\n", $comments);
+			oracleEscape($lon);
+			$path = $formValues[4];
+			oracleEscape($path);
+			$row_val = $formValues[5];
+			oracleEscape($row);
+			$date[0] = $formValues[6];
+			$date[1] = $formValues[7];
+			$date[2] = $formValues[8];
+			oracleEscape($date);
+			$spat_r = $formValues[9];
+			oracleEscape($spat_r);
+			$proj = $formValues[10];
+			oracleEscape($proj);
+			$datum = $formValues[11];
+			oracleEscape($datum);
+			$spheroid = $formValues[12];
+			oracleEscape($spheroid);
+			$comments = $formValues[13];
+			oracleEscape($comments);
+			
 			
 			if($operation == "add") {
 				$action = "./index.php?mode=doImgAdd";
@@ -741,7 +787,8 @@ function oracleEscape(&$query, $searching) {
 		$formCode .= $sensorListCode;
 		
 		//finish form template
-		$formCode .= "<p>
+		$formCode .= "<p><b>Path</b>&nbsp;<input type=\"text\" name=\"path\" maxlength=\"3\" size=\"4\" value=\"%path%\">&nbsp;
+					<b>Row</b>&nbsp;<input type=\"text\" name=\"row\" maxlength=\"3\" size=\"4\" value=\"%row%\">&nbsp;&nbsp;&nbsp;
 				<b>Lat(N)</b>&nbsp;<input type=\"text\" name=\"lat\" maxlength=\"10\" size=\"4\" value=\"%lat%\">&nbsp;
 				<b>Lon(W)</b>&nbsp;<input type=\"text\" name=\"lon\" maxlength=\"10\" size=\"4\" value=\"%lon%\">&nbsp;&nbsp;
 				<b>Spatial Res (m)</b>&nbsp;<input type=\"text\" name=\"spat_r\" maxlength=\"10\" size=\"4\" value=\"%spat_r%\"><p>
@@ -763,7 +810,9 @@ function oracleEscape(&$query, $searching) {
 		$formCode = str_replace("%$sat%", "SELECTED", $formCode);
 		$formCode = str_replace("%$sensor%", "SELECTED", $formCode);
 		
-		//fill in lat / lon
+		//fill in lat / lon and path / row
+		$formCode = str_replace("%path%", "$path", $formCode);
+		$formCode = str_replace("%row%", "$row_val", $formCode);
 		$formCode = str_replace("%lat%", "$lat", $formCode);
 		$formCode = str_replace("%lon%", "$lon", $formCode);
 		

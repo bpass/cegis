@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.19 2005/02/25 18:37:49 jtrent Exp $
+// $Id: getprojinfo.h,v 1.20 2005/02/27 04:24:05 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -128,7 +128,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
    FILE *paramfile = fopen( logFile, "wa");
 
    bool noDoubleCount = false;
-   type ignoreValue = (type)fill;
+   //type ignoreValue = (type)fill; /*commented out to clear some warnings*/
 
 
    for(out_line = 0; out_line < outimg.nl; out_line++) 		// For each output image line

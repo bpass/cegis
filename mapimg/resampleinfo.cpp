@@ -1,4 +1,4 @@
-// $Id: resampleinfo.cpp,v 1.10 2005/03/14 17:52:51 jtrent Exp $
+// $Id: resampleinfo.cpp,v 1.11 2005/03/20 19:24:11 rbuehler Exp $
 
 
 #include "resampleinfo.h"
@@ -10,6 +10,7 @@
 ResampleInfo::ResampleInfo()
 {
    rc = ResampleInfo::NullResample;
+   is_cat = false;
    fillval = 0.0;
    noval = 0.0;
 
@@ -18,11 +19,6 @@ ResampleInfo::ResampleInfo()
 
    ilist.clear();
    strncpy( rn, "NullResample", RN_MAXLENGTH );
-}
-
-
-ResampleInfo::~ResampleInfo()
-{
 }
 
 

@@ -1,4 +1,4 @@
-// $Id: gctpnames.h,v 1.6 2005/03/17 18:57:25 rbuehler Exp $
+// $Id: gctpnames.h,v 1.7 2005/03/20 19:24:11 rbuehler Exp $
 
 
 #ifndef GCTPNAMES_H
@@ -22,11 +22,9 @@ public:
 
 namespace
 {
-   /*
-         gctpNames() returns a QStringList containing the names 
-      of each of the gctp parameters for the projection defined
-      by projNum and variation.
-   */
+   //    gctpNames() returns a QStringList containing the names 
+   // of each of the gctp parameters for the projection defined
+   // by projNum and variation.
    QStringList gctpNames( uint projNum, char variation )
    {
       QStringList retList;
@@ -166,6 +164,7 @@ namespace
       return retList;
    }
 
+   // Extended names with more meaning then their gctpNames code
    QString nameMeanings( QString &gctpName )
    {
       if( gctpName == "" )
@@ -248,6 +247,8 @@ namespace
       return "Unused";
    }
 
+
+   // Convert the index of the projection combo box to actual projection code
    uint combo2proj( uint i )
    {
       if( i < 10 ) return i - 1;
@@ -256,6 +257,7 @@ namespace
       return i - 4;
    }
 
+   // A list of projections sorted by projection code
    const SmartQStringList projNames(QStringList::split( ',', 
       "Geographic,Universal Transverse Mercator,State Plane Coordinates,"
       "Albers Conical Equal Area,Lambert Conformal Conic,Mercator,"
@@ -268,25 +270,30 @@ namespace
       "Mollweide,Interrupted Mollweide,Hammer,Wagner IV,Wagner VII,"
       "Oblated Equal Area" ));
 
+   // A list of unit types sorted by unit-code
    const QStringList unitNames = QStringList::split( ',',
       "Radians,U.S. Feet,Meters,Seconds of Arc,Degrees of Arc,"
       "International Feet,State Zone Table,Unknown" );
 
+   // A list of Spheroid types sorted by spheroid-code
    const QStringList spheroidNames = QStringList::split( ',',
       "Clarke 1866,Clarke 1880,Bessel,International 1967,International 1909,"
       "WGS 72,Everest,WGS 66,GRS 1980,Airy,Modified Everest,Modified Airy,"
       "WGS 84,Southeast Asia,Australlian National,Krassovsky,Hough,Mercury 1960,"
       "Modified Mercury 1968,Sphere of Radius 6370997 meters,Unknown" );
 
+   // A list of common named pixel sizes sorted by decreasing values
    const QStringList pixelSizes = QStringList::split( ',',
       "5 Degrees,1 Degree,30 Minutes,5 Minutes,30 Arc Seconds,Meters..." );
 
+   // A list of the pixel values associated with the names
    const QStringList pixelValues = QStringList::split( ',',
       "555974.548395,111194.909679,55597.454840,9266.242473,926.624247" );
 
+   // A list of all supported data types for mapimg
    const QStringList dataTypes = QStringList::split( ',',
-      "Signed 64 Bit IEEE Float,"
-      "Signed 32 Bit IEEE Float,Unsigned 32 Bit Integer,Signed 32 Bit Integer,"
+      "Signed 64 Bit IEEE Float,Signed 32 Bit IEEE Float,"
+      "Unsigned 32 Bit Integer,Signed 32 Bit Integer,"
       "Unsigned 16 Bit Integer,Signed 16 Bit Integer,"
       "Unsigned 8 Bit Integer,Signed 8 Bit Integer" );
 }

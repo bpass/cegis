@@ -1,4 +1,4 @@
-// $Id: aboutform.cpp,v 1.5 2005/02/22 15:17:42 jtrent Exp $
+// $Id: aboutform.cpp,v 1.6 2005/03/20 19:24:11 rbuehler Exp $
 
 
 /****************************************************************************
@@ -25,7 +25,7 @@
 #include <qpixmap.h>
 
 /*
- *  Constructs a abourForm as a child of 'parent', with the
+ *  Constructs an aboutForm as a child of 'parent', with the
  *  name 'name' and widget flags set to 'f'.
  *
  *  The dialog will by default be modeless, unless you set 'modal' to
@@ -100,14 +100,6 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    connect( okButton, SIGNAL( clicked() ), this, SLOT( close() ) );
 
    languageChange();
-}
-
-/*
- *  Destroys the object and frees any allocated resources
- */
-aboutForm::~aboutForm()
-{
-    // no need to delete child widgets, Qt does it all for us
 }
 
 /*

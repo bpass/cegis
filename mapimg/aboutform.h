@@ -1,4 +1,4 @@
-// $Id: aboutform.h,v 1.3 2005/02/02 00:21:22 rbuehler Exp $
+// $Id: aboutform.h,v 1.4 2005/03/20 19:24:11 rbuehler Exp $
 
 
 /****************************************************************************
@@ -29,7 +29,7 @@ class aboutForm : public QDialog
 
 public:
     aboutForm( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
-    ~aboutForm();
+    ~aboutForm(){}
 
     QLabel* logoLabel;
     QLabel* titleLabel;
@@ -50,4 +50,4 @@ protected slots:
     virtual void languageChange();
 };
 
-#endif // ABOURFORM_H
+#endif // ABOUTFORM_H

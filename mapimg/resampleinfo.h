@@ -1,4 +1,4 @@
-// $Id: resampleinfo.h,v 1.8 2005/03/14 17:52:51 jtrent Exp $
+// $Id: resampleinfo.h,v 1.9 2005/03/20 19:24:11 rbuehler Exp $
 
 
 #ifndef RESAMPLEINFO_H
@@ -16,13 +16,16 @@ class ResampleInfo
 public:
    ResampleInfo();
    ResampleInfo( const ResampleInfo &src ){copy(src);}
-   ~ResampleInfo();
+   ~ResampleInfo(){}
    enum ResampleCode{ NullResample, NearestNeighbor, Add, Mean, Median, Mode, Min, Max };
 
    void setResampleCode( ResampleCode code );
    bool setResampleCode( const QString &codeName );
    ResampleCode resampleCode() const {return rc;}
    const char * resampleName() const {return rn;}
+
+   void setIsCategorical(bool enable){is_cat = enable;}
+   bool isCategorical(){return is_cat;}
 
    void setFillValue( double val ){fillval = val;}
    double fillValue() const {return fillval;}
@@ -44,6 +47,7 @@ public:
 
 private:
    ResampleCode rc;
+   bool is_cat;
    double fillval;
    double noval;
    IgnoreList ilist;

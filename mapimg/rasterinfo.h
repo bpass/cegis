@@ -1,4 +1,4 @@
-// $Id: rasterinfo.h,v 1.8 2005/03/15 18:09:53 jtrent Exp $
+// $Id: rasterinfo.h,v 1.9 2005/03/20 19:24:11 rbuehler Exp $
 
 
 #ifndef RASTERINFO_H
@@ -71,9 +71,9 @@ public:
 
    //I/O
    bool load();
-   bool load( QString &imgFileName );
+   bool load( QString imgFileName );
    bool save( );
-   bool save( QString &imgFileName );
+   bool save( QString imgFileName );
    bool remove();
 
    //Checks

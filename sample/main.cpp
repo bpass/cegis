@@ -1,4 +1,4 @@
-// $Id: main.cpp,v 1.17 2004/10/14 13:22:37 jtrent Exp $
+// $Id: main.cpp,v 1.18 2005/03/01 15:53:24 mschisler Exp $
 
 
 #include <iostream>
@@ -32,7 +32,7 @@ using namespace std;
 		8) When the checkin dialog appears enter a comment and click ok
 
 	Linux Users:
-		3a) Run Cevisia choose File -> Open Sandbox; then point it at the folder that
+		3a) Run Cervisia choose File -> Open Sandbox; then point it at the folder that
 			contains main.cpp
 
 		4a) Right-click on main.cpp and choose "Difference to Repository (BASE)"
@@ -62,7 +62,8 @@ int main()
         << "\tBob Buehler\n"
         << "\tJimmy Hoffa\n"
         << "\tMike Williams\n"
-	<< "\tKyle Williams\n";
+  	    << "\tKyle Williams\n"
+        << "\tMark Schisler\n";
 
    return 0;
 }

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.11 2005/02/13 19:12:30 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.12 2005/02/13 23:12:48 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -336,7 +336,6 @@ void mapimgForm::dropEvent( QDropEvent *evt )
 
       if( openFile( text ) )
       {
-         inInfoAction->setOn(true);
          outInfoAction->setOn(false);
          viewShowAction->setOn(true);
       }
@@ -567,10 +566,11 @@ the reprojection begins.
 */
 void mapimgForm::outSaveClicked()
 {
+   // Check that all input settings are ready
    if( !imgSet )
    {
-      QMessageBox::critical( this, "Input not set",
-         "No input to reproject from." );
+      QMessageBox::critical( this, "Reproject and Save",
+         "No file loaded for reprojection input." );
       return;
    }
 
@@ -578,32 +578,36 @@ void mapimgForm::outSaveClicked()
    if( !mapimg::readytoReproject(input, this) )
       return;
 
+   // Check that all output settings are ready
    RasterInfo output( outInfoFrame->info() );
-   output.setDataType( input.isSigned(), input.bitCount(), input.type() );
-   output.setFillValue( input.fillValue() );
    output.setAuthor( authName, authCompany, authEmail );
 
+   if( !mapimg::readytoFrameIt( output, this ) )
+      return;
+   mapimg::frameIt( output );
+   outInfoFrame->setInfo( output );
    if( !mapimg::readytoReproject( output, this ) )
       return;
 
-   mapimg::frameIt( output );
-
+   // Prompt for destination of new projection
    QString temp = QFileDialog::getSaveFileName(
          outPath, "mapimg Raster Files (*.img)", this, "", "Choose a destination for the reprojection");
-
    if( temp.isNull() )
       return;
 
    if( !output.setFileName( temp ) )
    {
-      QMessageBox::critical( this, "Output Error",
-         "Invalid output file name" );
+      QMessageBox::critical( this, "Reproject and Save",
+         QString( "%1\n"
+         "Invalid output file name." )
+         .arg( temp ) );
       return;
    }
 
+   // Prompt on overwrite of output
    if( QFile::exists( output.imgFileName() ) )
    {
-      int status = QMessageBox::question( this, "Save", 
+      int status = QMessageBox::question( this, "Reproject and Save", 
          output.imgFileName() + " already exists."
          "\nDo you want to replace it?",
          QMessageBox::Yes, QMessageBox::No );
@@ -616,33 +620,31 @@ void mapimgForm::outSaveClicked()
          QFile::remove( output.xmlFileName() );
    }
 
-   if( !output.save( temp ) )
-   {
-      QMessageBox::critical( this, "Output Error", 
-         "Unable to save .xml file" );
-      if( QFile::exists( output.xmlFileName() ) )
-         QFile::remove( output.xmlFileName() );
-      return;
-   }
-
+   // Prompt for resample parameters
    ResampleForm *resForm = new ResampleForm( this, "resForm", false,
       WINDOW_FLAGS );
    resForm->exec();
-
    if( resForm->wasCanceled() )
    {
       delete resForm;
       return;
    }
-
    ResampleInfo resample( resForm->info() );
    resample.setFillValue( input.fillValue() );
    resample.setNoDataValue( input.noDataValue() );
-
-   qDebug( "outSaveClicked" );
-   mapimg::reproject( input, output, resample, this );
    delete resForm;
 
+   // Reproject (finally)
+   if( mapimg::reproject( input, output, resample, this ) )
+   {
+      if( QFile::exists( output.imgFileName() ) )
+         QFile::remove( output.imgFileName() );
+      return;
+   }
+
+   output.save();
+
+   // Save output path to settings
    outPath = temp.left( temp.findRev( "/" ) );
    QSettings *settings = new QSettings( QSettings::Ini );
    settings->setPath( "USGS.gov", "mapimg2" );

@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.12 2005/02/13 19:12:30 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.13 2005/02/13 23:12:48 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -41,7 +41,8 @@ bool mapimg::readytoFrameIt( RasterInfo &input, QWidget * parent )
 
    if( !msg.isEmpty() )
    {
-      QMessageBox::critical( parent, "Unable to frame it", msg );
+      msg.prepend( "Unable to calculate the frame.\n\n" );
+      QMessageBox::critical( parent, "Calculate Frame", msg );
       return false;
    }
    else
@@ -58,10 +59,19 @@ bool mapimg::readytoFrameIt( RasterInfo &input, QWidget * parent )
    return true;
 }
 
+/*
+   Pretty much the same as readytoFrameIt()
+      except it also checks datatype and size
+*/
 bool mapimg::readytoReproject( RasterInfo &input, QWidget *parent )
 {
    QString msg = QString::null;
 
+   if( input.rows() == 0 || input.cols() == 0 )
+   {
+      msg += "Rows and Columns must be greater than 0.\n"
+         "\t-Use calculator button to automate values.\n";
+   }
    if( input.datumNumber() != 19 || input.unitNumber() != 2 )
    {
       msg += "The current spheroid code and unit code are unsupported.\n"
@@ -87,7 +97,7 @@ bool mapimg::readytoReproject( RasterInfo &input, QWidget *parent )
       msg = mapimg::projectionErrors( input );
       if( !msg.isEmpty() )
       {
-         if( QMessageBox::warning( parent, "Parameter Error", msg,
+         if( QMessageBox::warning( parent, "Projection Warning", msg,
             QMessageBox::Cancel, QMessageBox::Ignore ) == QMessageBox::Cancel )
             return false;
       }

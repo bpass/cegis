@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.5 2005/02/05 00:16:55 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.6 2005/02/13 23:12:48 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -606,7 +606,6 @@ bool QInfoFrame::frame()
 
    if( !mapimg::readytoFrameIt( inf, this ) )
       return false;
-
    mapimg::frameIt( inf );
 
    mapTab->rowSpin->setValue( inf.rows() );

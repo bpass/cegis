@@ -1,4 +1,4 @@
-// $Id: resampleinfo.cpp,v 1.5 2005/02/13 19:12:30 rbuehler Exp $
+// $Id: resampleinfo.cpp,v 1.6 2005/02/13 23:12:48 rbuehler Exp $
 
 
 #include "resampleinfo.h"
@@ -11,22 +11,51 @@ ResampleInfo::ResampleInfo()
    fillval = 0.0;
    noval = 0.0;
    ilist.clear();
-   rn = NULL;
+   strcpy( rn, "NullResample" );
 }
 
 
 ResampleInfo::~ResampleInfo()
 {
-   if( rn != NULL )
-      delete [] rn;
 }
 
 
-bool ResampleInfo::setResampleCode( QString codeName )
+void ResampleInfo::setResampleCode( ResampleCode code )
+{
+   rc = code;
+   switch( rc )
+   {
+   case NearestNeighbor:
+      strcpy( rn, "NearestNeighbor" );
+      break;
+   case Add:
+      strcpy( rn, "Add" );
+      break;
+   case Mean:
+      strcpy( rn, "Mean" );
+      break;
+   case Mode:
+      strcpy( rn, "Mode" );
+      break;
+   case Min:
+      strcpy( rn, "Min" );
+      break;
+   case Max:
+      strcpy( rn, "Max" );
+      break;
+   default:
+      strcpy( rn, "NullResample" );
+      break;
+   }
+}
+
+
+bool ResampleInfo::setResampleCode( const QString &codeName )
 {
    QString str( codeName.lower() );
    str.stripWhiteSpace();
    str.remove(' ');
+   strcpy( rn, str.ascii() );
 
    if( str == "nearestneighbor" )
       rc = ResampleInfo::NearestNeighbor;
@@ -45,43 +74,6 @@ bool ResampleInfo::setResampleCode( QString codeName )
 
    return true;
 }
-
-
-/*const char *ResampleInfo::resampleName() const
-{
-   if( rn != NULL )
-      delete [] rn;
-
-   switch( rc )
-   {
-   case NearestNeighbor:
-      printf( "Nearest neighbor" );
-      break;
-   case Add:
-      rn = new char[]; ...
-      return rn;
-      break;
-   case Mean:
-      printf( "Mean" );
-      break;
-   case Mode:
-      printf( "Mode" );
-      break;
-   case Min:
-      printf( "Min" );
-      break;
-   case Max:
-      printf( "Max" );
-      break;
-   case NullResample:
-      printf( "NullResample" );
-      break;
-   default:
-      printf( "Bad resample code!!!" );
-      break;
-   }
-   return NULL;
-}*/
 
 
 void ResampleInfo::setIgnoreList( unsigned int size, const IgnoreValue *vals )
@@ -119,5 +111,6 @@ void ResampleInfo::copy( const ResampleInfo &src )
    noval = src.noval;
    ilist = src.ilist;
    rc = src.rc;
+   strcpy( rn, src.rn );
 }
 

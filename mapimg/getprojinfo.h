@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.9 2005/02/13 19:12:30 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.10 2005/02/13 23:12:48 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -53,33 +53,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
     // mapimg to do the reprojection (no longer called as function in order to provide progress dialog)
     // mapimg written by D. Steinwand and updated by S. Posch
 
-    switch( resample.resampleCode() )
-    {
-    	case ResampleInfo::NearestNeighbor:
-    	     printf( "Nearest neighbor" );
-    	     break;
-    	case ResampleInfo::Add:
-    	     printf( "Add" );
-    	     break;
-    	case ResampleInfo::Mean:
-    	     printf( "Mean" );
-    	     break;
-    	case ResampleInfo::Mode:
-    	     printf( "Mode" );
-    	     break;
-    	case ResampleInfo::Min:
-    	     printf( "Min" );
-    	     break;
-    	case ResampleInfo::Max:
-    	     printf( "Max" );
-    	     break;
-    	case ResampleInfo::NullResample:
-    	     printf( "NullResample" );
-    	     break;
-    	default:
-    	     printf( "Bad resample code!!!" );
-    	     break;
-    }
+    printf( resample.resampleName() );
 
     printf( "\tFill value = %f\tNo data value = %f\n",
             resample.fillValue(),

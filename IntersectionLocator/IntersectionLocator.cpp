@@ -10,7 +10,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionLocator.cpp,v 1.8 2004/11/18 19:54:09 rstelzleni Exp $
+// $Id: IntersectionLocator.cpp,v 1.9 2004/11/18 20:11:03 rstelzleni Exp $
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1300
@@ -66,7 +66,12 @@ OGRDataSource *createOGRFile(const char *pszFName, char *pszDName)
 }
 
 
-/** This is a test comment.  Second sentence.  Typing is fun.
+/** The main function here is just to help run tests on the library as 
+ *  a whole.  If you get rid of the main function (basically of this 
+ *  whole file) then you can build the project as a static library 
+ *  easily, in case you want the thing as a library for linking it to
+ *  a gui or other interface without worrying about what the code in
+ *  this project is.
  * */
 int main( /*int argc, char *argv[]*/ )
 {

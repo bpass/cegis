@@ -1,6 +1,6 @@
 
 // CVS junk
-// $Id: relatedLinks.txt,v 1.1 2004/11/19 18:25:03 rstelzleni Exp $
+// $Id: relatedLinks.txt,v 1.2 2004/11/30 18:30:22 rstelzleni Exp $
 
 /** \page relatedLinks Related Links
  *
@@ -12,6 +12,21 @@
  * should have that somewhere.  This website contains lots of papers on
  * all kinds of stuff, look for Geospatial Data Integration, or 
  * conflation and you should find some information related to this algorithm.
+ *
+ * \subsection technicalInformation Technical Information
+ * <a href="http://www.remotesensing.org/gdal/">GDAL/OGR Website</a>
+ * This is where you can get the GDAL/OGR binaries, source, and general
+ * information on the library.  The IntersectionLocator uses this
+ * library to perform file io on geospatial data file types, like 
+ * shapefiles, Arc coverages, and tiffs.
+ *
+ * <a href="http://www.census.gov/geo/www/tiger/tgrcd108/tgr108cd.html">
+ * TIGER Vector Data</a>
+ * The US Census' site for the TIGER line files that they maintain.  On this
+ * page you can download TIGER format files for any area in the United 
+ * States.  They also have some information about the attribution of the 
+ * files, like what a Cfcc code means, how the TIGER files are structured,
+ * etc.
  *
  * \subsection triangulationLinks Triangulation Links
  * <a href="http://goanna.cs.rmit.edu.au/~gl/research/comp_geom/delaunay/delaunay.html">

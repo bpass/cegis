@@ -1,3 +1,5 @@
+// $Header: /home/dmattli/cvs/mapimg101/mapframeit.cpp,v 1.3 2005/01/06 19:40:53 jtrent Exp $
+
 //Copyright 2002 United States Geological Survey
 //Released under GPL with MapIMG copyright 2003 USGS
 
@@ -27,13 +29,14 @@ extern "C"
  * VC++ math.h does not have the c/c++standard round function!!!
  * One day the evil shall FALL
  */
- #ifdef Q_OS_WIN32_
+#include <qglobal.h>
+#ifdef Q_OS_WIN32
  	double round(double value, unsigned int decimals = 0)
 	{
 		double factor = pow(10,decimals);
 		return floor((value * factor) + 0.5) / factor;
 	}
-#endif //Q_WIN
+#endif //Q_OS_WIN32
 
 
 int mapframeit(char * filename, double pixsiz, double ul_lat, double ul_lon,

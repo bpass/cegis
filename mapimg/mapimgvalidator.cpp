@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.cpp,v 1.3 2005/02/18 16:59:07 jtrent Exp $
+// $Id: mapimgvalidator.cpp,v 1.4 2005/02/22 17:22:09 jtrent Exp $
 
 #include <qvalidator.h>
 #include <qstring.h>
@@ -27,7 +27,7 @@ MapimgValidator::MapimgValidator( QString mapimgDataType, QObject* parent, const
    setDataType( mapimgDataType );
 }
 
-void MapimgValidator::setDataType(  QString mapimgDataType )
+void MapimgValidator::setDataType( QString mapimgDataType )
 {
    if( mapimgDataType.contains( "Unsigned" ) )
    {
@@ -194,3 +194,21 @@ QValidator::State MapimgValidator::validate( QString & input, int & ) const
       return Acceptable;
 }
 
+void MapimgValidator::fixup( QString& input ) const
+{
+   /*fix decimal*/
+   if( d == 0 )
+   {
+      double entered = input.toDouble();
+      input = QString::number( entered );
+
+      int decimalPlace = input.find( '.' );
+
+      if( decimalPlace != -1 )
+      {
+   	input = input.left( input.length() - decimalPlace - 1 );
+      }
+   }
+
+   return;
+}

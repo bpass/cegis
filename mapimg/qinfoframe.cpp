@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.10 2005/02/22 15:17:42 jtrent Exp $
+// $Id: qinfoframe.cpp,v 1.11 2005/02/22 17:22:09 jtrent Exp $
 
 
 #include "qinfoframe.h"
@@ -6,6 +6,7 @@
 #include "mapimgimages.h"
 #include "mapimg.h"
 #include "rasterinfo.h"
+#include "mapimgvalidator.h"
 
 #include <qvalidator.h>
 #include <qmessagebox.h>
@@ -136,14 +137,14 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    QToolTip::add( pixelCombo, "Size of each pixel in the raster image" );
    QToolTip::add( pixelEdit, "Pixel size<br>"
       "<b>Meters:</b> Entered value must be from 0 to 10000000." );
-   pixelEdit->setValidator( new QDoubleValidator( 0, 10000000, 12, pixelEdit ) );
+   pixelEdit->setValidator( new MapimgValidator( 0, 10000000, 12, pixelEdit ) );
    pixelEdit->hide();
 
    //ulBox
-   ulLatEdit->setValidator( new QDoubleValidator( -100000000, 100000000, 12, ulLatEdit ) );
+   ulLatEdit->setValidator( new MapimgValidator( -100000000, 100000000, 12, ulLatEdit ) );
    QToolTip::add( ulLatEdit, "Latitude of upper left corner of map<br>"
       "<b>Meters:</b> Entered value must be from -100000000 to 100000000." );
-   ulLonEdit->setValidator( new QDoubleValidator( -100000000, 100000000, 12, ulLonEdit ) );
+   ulLonEdit->setValidator( new MapimgValidator( -100000000, 100000000, 12, ulLonEdit ) );
    QToolTip::add( ulLonEdit, "Longitude of upper left corner of map<br>"
       "<b>Meters:</b> Entered value must be from -100000000 to 100000000." );
 
@@ -151,19 +152,20 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    dataCombo->insertItem( "" );
    dataCombo->insertStringList( dataTypes );
    QToolTip::add( dataCombo, "Data type of each pixel in the raster image" );
-   fillEdit->setValidator( new QDoubleValidator( -100000000, 100000000, 12, fillEdit ) );
+   fillEdit->setValidator( new MapimgValidator( -100000000, 100000000, INFO_PRECISION, fillEdit ) );
    QToolTip::add( fillEdit, "Fill value to represent a pixel outside the map frame<br>"
       "Entered value must be from -100000000 to 100000000." );
    fillButton->setMaximumSize( 20, 20 );
    QToolTip::add( fillButton, "Recommend fill value by reading file and "
       "solving for the maximum value + 2" );
-   noDataEdit->setValidator( new QDoubleValidator( -100000000, 100000000, 12, fillEdit ) );
+   noDataEdit->setValidator( new MapimgValidator( -100000000, 100000000, INFO_PRECISION, noDataEdit ) );
    QToolTip::add( noDataEdit, "\"No Data\" value to represent a pixel inside the map frame"
       " with no value<br>"
       "Entered value must be from -100000000 to 100000000." );
 
    //This connection is for keeping the pixelEdit hidden until it is needed
    connect(pixelCombo, SIGNAL(activated(int)), this, SLOT(pixelChange(int)));
+   connect(dataCombo, SIGNAL(activated(const QString&)), this, SLOT(dataChange(const QString&)));
 }
 
 /*
@@ -181,15 +183,41 @@ is used for entering custom pixel sizes(meters).
 void QMapTab::pixelChange(int index)
 {
    if( index > 0 && index < 6 )
+   {
       pixelEdit->setText( pixelValues[index-1] );
-    pixelEdit->setShown( index == 6 );
+   }
+   pixelEdit->setShown( index == 6 );
 }
 
+/*
+   The dataChange(qstring) function is connected to the dataCombo so that
+whenever the user selects a different data type this function is called.
+Its purpose is to keep the fill value and no data validators up to date
+with which data type it is trying to validate.
+*/
+void QMapTab::dataChange( const QString& newDataType )
+{
+   QString tempText = "";
+   if( newDataType.stripWhiteSpace() != "" )
+   {
+      ((MapimgValidator*)fillEdit->validator())->setDataType( newDataType );
+      tempText = fillEdit->text();
+      fillEdit->validator()->fixup( tempText );
+      fillEdit->setText( tempText );
+
+      ((MapimgValidator*)noDataEdit->validator())->setDataType( newDataType );
+      tempText = noDataEdit->text();
+      noDataEdit->validator()->fixup( tempText );
+      noDataEdit->setText( tempText );
+   }
+
+   return;
+}
 
 /*
    The QGctpTab has one constructor. It executes in three stages.
 
-   STAGE 1: It sets its appearance by turning off the Horizontal SrcollBar, 
+   STAGE 1: It sets its appearance by turning off the Horizontal SrcollBar,
 forcing on the Vertical ScrollBar, and generating the 'contents' widget for
 holding all the contents.
    
@@ -619,11 +647,19 @@ void QInfoFrame::getFill()
    RasterInfo inf( info() );
 
    double maxValue = mapimg::calcFillValue(inf);
+   QString fillString = "0.000000";
 
    if( maxValue != 0 )
-      mapTab->fillEdit->setText( QString::number(maxValue + 2, 'f', 6 ) );
-   else
-      mapTab->fillEdit->setText( "0.000000" );
+   {
+      fillString = QString::number(maxValue + 2, 'f', 6 );
+   }
+
+   if( mapTab->fillEdit->validator() != 0 )
+   {
+       mapTab->fillEdit->validator()->fixup( fillString );
+   }
+
+   mapTab->fillEdit->setText( fillString );
 }
 
 /*!!!!!!!!!!!!!!!!!
@@ -672,9 +708,27 @@ void QInfoFrame::setInfo( RasterInfo &input )
    dtype += input.dataType();
    mapTab->dataCombo->setCurrentText( dtype );
 
-   mapTab->fillEdit->setText( QString::number( input.fillValue(), 'f', 6 ) );
+   QString fillString = QString::number( input.fillValue(), 'f', 6 );
+
+   if( mapTab->fillEdit->validator() != 0 )
+   {
+       ((MapimgValidator*)mapTab->fillEdit->validator())->setDataType( dtype );
+       mapTab->fillEdit->validator()->fixup( fillString );
+   }
+
+   mapTab->fillEdit->setText( fillString );
    mapTab->fillButton->setShown( input.fillValue() == -1.0 );
-   mapTab->noDataEdit->setText( QString::number( input.noDataValue(), 'f', 6 ) );
+
+
+   QString noDataString = QString::number( input.noDataValue(), 'f', 6 );
+
+   if( mapTab->noDataEdit->validator() != 0 )
+   {
+       ((MapimgValidator*)mapTab->noDataEdit->validator())->setDataType( dtype );
+       mapTab->noDataEdit->validator()->fixup( noDataString );
+   }
+
+   mapTab->noDataEdit->setText( noDataString );
 
    ////////GCTP Params
    //   Complications in here arise from the multiple variations for some
@@ -701,17 +755,15 @@ void QInfoFrame::setInfo( RasterInfo &input )
 }
 
 /*
-   info() saves all of the entered values to a returned RasterInfo. It 
-cleanUp()'s any lineEdits into which the user could potentially put 
-"messy" data.
+   info() saves all of the entered values to a returned RasterInfo. 
 */
 RasterInfo QInfoFrame::info()
 {
-   cleanUp( mapTab->pixelEdit );
-   cleanUp( mapTab->ulLatEdit );
-   cleanUp( mapTab->ulLonEdit );
-   cleanUp( mapTab->fillEdit );
-   cleanUp( mapTab->noDataEdit );
+//   cleanUp( mapTab->pixelEdit );
+//   cleanUp( mapTab->ulLatEdit );
+//   cleanUp( mapTab->ulLonEdit );
+//   cleanUp( mapTab->fillEdit );
+//   cleanUp( mapTab->noDataEdit );
 
    RasterInfo ret;
 
@@ -746,7 +798,6 @@ readable.
 Examples:
    " .01"  --> "0.010000"
    "50 \t" --> "50.000000"
-*/
 void QInfoFrame::cleanUp( QLineEdit *lEdit )
 {
    QString cleanUp = lEdit->text();
@@ -766,5 +817,5 @@ void QInfoFrame::cleanUp( QLineEdit *lEdit )
    lEdit->setText( cleanUp );
    return;
 }
-
+*/
 

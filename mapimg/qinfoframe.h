@@ -1,4 +1,4 @@
-// $Id: qinfoframe.h,v 1.5 2005/02/22 15:17:42 jtrent Exp $
+// $Id: qinfoframe.h,v 1.6 2005/02/22 17:22:09 jtrent Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -38,7 +38,7 @@ resizing the application and it leaves unlimited room for adding parameters.
 class QMapTab : public QScrollView
 {
    Q_OBJECT
-   
+
 public:
    QMapTab( QWidget* parent = 0, const char* name = 0);
    ~QMapTab();
@@ -74,6 +74,7 @@ public:
 
 public slots:
    void pixelChange(int);
+   void dataChange(const QString&);
 };
 
 
@@ -136,7 +137,7 @@ the current values of a loaded map.
 class QInfoFrame : public QTabWidget
 {
    Q_OBJECT
-   
+
 public:
    QInfoFrame( QWidget* parent = 0, const char* name = 0);
    ~QInfoFrame();
@@ -151,7 +152,7 @@ public:
 
    void setInfo( RasterInfo &input );
    RasterInfo info();
-   static void cleanUp( QLineEdit *lEdit );
+//   static void cleanUp( QLineEdit *lEdit );
 
    QMapTab     *mapTab;
    QGctpTab    *gctpTab;

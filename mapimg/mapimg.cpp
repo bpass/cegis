@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.1 2005/01/14 16:18:49 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.2 2005/01/14 16:24:28 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -271,8 +271,6 @@ void mapimg::frameIt( RasterInfo &input )
       pymax - (pixsize/2), 
       round( ((pymax - pymin) / pixsize) ),
       round( ((pxmax - pxmin) / pixsize) ) );
-   QMessageBox::information(0, "DBG", QString("%1\n%2\n%3\n%4").
-      arg( pxmin ).arg( pxmax ).arg( pymin ).arg( pymax ) );
 }
 
 bool mapimg::downSampleImg( RasterInfo &input, int maxDimension )

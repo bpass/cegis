@@ -1,0 +1,20 @@
+// $Id: buildingOnLinux.txt,v 1.1 2004/11/15 18:16:58 ahartman Exp $
+
+/** \page buildingOnLinux Building on Linux
+ * 
+ * \section getGDALLibrary Building the GDAL Library
+ * <P>
+ * Get the GDAL library from the link on the main page.  You'll want to
+ * download the source code version.  After downloading, extract the archive
+ * and run 
+ * <i>configure --prefix=/where/you/want/to/install; make; make install</i>.
+ * Add the /bin subdirectory of the directory to which you installed to your
+ * path if it is not already there.
+ * </P>
+ * \section buildingLinuxLibrary Building the Intersection Locator under Linux
+ * <P>
+ * After building GDAL, you only have to add the line
+ * <i>`gdal-config --libs`</i> to gcc's commandline or your makefile to make
+ * the intersection locator build properly.
+ * </P>
+ */

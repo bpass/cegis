@@ -1,6 +1,6 @@
 
 // CVS magic symbols for voodoo practitioners
-// $Id: doxygenMain.h,v 1.2 2004/11/15 16:35:05 rstelzleni Exp $
+// $Id: doxygenMain.h,v 1.3 2004/11/15 18:16:58 ahartman Exp $
 
 /** \mainpage IntersectionLocator
  *
@@ -62,4 +62,7 @@
  * on how the program works, and that's what this documentation is for.
  * Good Luck.
  * </P>
+ *
+ * \subsection linuxInstallation Installation in Linux
+ * \ref buildingOnLinux Linux Installation Guide
  */

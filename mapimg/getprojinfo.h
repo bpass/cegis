@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.18 2005/02/24 17:59:14 jtrent Exp $
+// $Id: getprojinfo.h,v 1.19 2005/02/25 18:37:49 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -17,6 +17,7 @@
 #include <qtextstream.h>
 #include <qdir.h>
 #include <qcolor.h>
+#include <qmap.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -97,6 +98,8 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
    long in_line, in_samp;			// Input image coordinates of a point
 
+
+   typedef QMap< type, unsigned int> StatisticMap;
 
    jt_time debugTimer;
    debugTimer.start();
@@ -294,6 +297,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                      int coverageIndex = 0;
                      type dataValue = (type)0;
                      bool allIgnored = true;
+                     StatisticMap coverageMap;
 
                      switch( resample.resampleCode() )
                      {
@@ -307,7 +311,58 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                            }
                         }
                         break;
-                     case ResampleInfo::Min:		//Min
+                     case ResampleInfo::Mean:   //Avg
+                        for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+                        {
+                           if( !resample.shouldIgnore(*( (type*)inputCoverage + coverageIndex )) )
+                           {
+                              dataValue += *( (type*)inputCoverage + coverageIndex );
+                              allIgnored = false;
+                           }
+                        }
+                        dataValue /= coverageSize;
+                        break;
+                     case ResampleInfo::Median:  //Median
+                        dataValue = (type)resample.noDataValue();
+
+                        qDebug( QString("Quicksorting %1 elements (%2)...").arg( coverageSize ).ascii() );
+
+                        mapimg::quicksort<type>( inputCoverage, coverageSize );
+                        
+                        qDebug( "Done sorting." );
+
+                        break;
+                     case ResampleInfo::Mode:   //Mode
+                        coverageMap.clear();
+                        dataValue = (type)resample.noDataValue();
+                        for( coverageIndex = 0;  coverageIndex < coverageSize; coverageIndex++ )
+                        {
+                           if( !resample.shouldIgnore( *( (type*)inputCoverage + coverageIndex )) )
+                           {
+                               coverageMap[ *( (type*)inputCoverage + coverageIndex ) ]++;
+                               allIgnored = false;
+                           }
+                        }
+                        if( !coverageMap.empty() )
+                        {
+                           unsigned int maxCount = 0;
+                           type modeValue = (type)resample.noDataValue();
+
+                           for( QMap<type,unsigned int>::Iterator it = coverageMap.begin();
+                                it != coverageMap.end();
+                                ++it )
+                           {
+                           	if( it.data() > maxCount )
+                           	{
+                                    maxCount = it.data();
+                                    modeValue = it.key();
+                           	}
+                           }
+                           dataValue = modeValue;
+                        }
+
+                        break;
+                    case ResampleInfo::Min:		//Min
                         dataValue = (type)Q_UINT64_MAX;
 
                         for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
@@ -332,23 +387,8 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                            }
                         }
                         break;
-                        //case ResampleInfo::Median:  //Median
-                        //break;
-                     case ResampleInfo::Mode:   //Mode
-                        break;
-                     case ResampleInfo::Mean:   //Avg
-                        for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
-                        {
-                           if( !resample.shouldIgnore(*( (type*)inputCoverage + coverageIndex )) )
-                           {
-                              dataValue += *( (type*)inputCoverage + coverageIndex );
-                              allIgnored = false;
-                           }
-                        }
-                        dataValue /= coverageSize;
-                        break;
-                     default:
-                        dataValue = 0;
+                      default:
+                        dataValue = (type)resample.noDataValue();
                         break;
                      }
 

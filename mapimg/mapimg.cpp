@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.16 2005/02/18 00:08:04 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.17 2005/02/25 18:37:49 jtrent Exp $
 
 
 #include "mapimg.h"
@@ -415,4 +415,5 @@ bool mapimg::reproject( RasterInfo &input, RasterInfo &output, ResampleInfo &res
    {  Q_UINT8 data = 0;
       return mapimg_resample( input, output, resample, data, parent);   }
 }
+
 

@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.4 2005/02/17 18:52:59 jtrent Exp $
+// $Id: resampleform.h,v 1.5 2005/02/25 18:37:49 jtrent Exp $
 
 
 /****************************************************************************
@@ -35,8 +35,6 @@ class ResampleForm : public QDialog
 public:
    ResampleForm( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
    ~ResampleForm();
-
-//   enum ResampleCode{NearestNeighbor,Add,Mean,Mode,Min,Max};
 
    ResampleInfo info();
    ResampleInfo::ResampleCode resampleCode(){return rcode;}

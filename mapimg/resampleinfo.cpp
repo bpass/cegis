@@ -1,4 +1,4 @@
-// $Id: resampleinfo.cpp,v 1.6 2005/02/13 23:12:48 rbuehler Exp $
+// $Id: resampleinfo.cpp,v 1.7 2005/02/25 18:37:49 jtrent Exp $
 
 
 #include "resampleinfo.h"
@@ -26,25 +26,28 @@ void ResampleInfo::setResampleCode( ResampleCode code )
    switch( rc )
    {
    case NearestNeighbor:
-      strcpy( rn, "NearestNeighbor" );
+      strncpy( rn, "NearestNeighbor", RN_MAXLENGTH );
       break;
    case Add:
-      strcpy( rn, "Add" );
+      strncpy( rn, "Add", RN_MAXLENGTH );
       break;
    case Mean:
-      strcpy( rn, "Mean" );
+      strncpy( rn, "Mean", RN_MAXLENGTH );
+      break;
+   case Median:
+      strncpy( rn, "Median", RN_MAXLENGTH );
       break;
    case Mode:
-      strcpy( rn, "Mode" );
+      strncpy( rn, "Mode", RN_MAXLENGTH );
       break;
    case Min:
-      strcpy( rn, "Min" );
+      strncpy( rn, "Min", RN_MAXLENGTH );
       break;
    case Max:
-      strcpy( rn, "Max" );
+      strncpy( rn, "Max", RN_MAXLENGTH );
       break;
    default:
-      strcpy( rn, "NullResample" );
+      strncpy( rn, "NullResample", RN_MAXLENGTH );
       break;
    }
 }
@@ -63,6 +66,8 @@ bool ResampleInfo::setResampleCode( const QString &codeName )
       rc = ResampleInfo::Add;
    else if( str == "mean" )
       rc = ResampleInfo::Mean;
+   else if( str == "median" )
+      rc = ResampleInfo::Median;
    else if( str == "mode" )
       rc = ResampleInfo::Mode;
    else if( str == "min" )

@@ -1,4 +1,4 @@
-// $Id: resampleinfo.h,v 1.5 2005/02/13 23:12:48 rbuehler Exp $
+// $Id: resampleinfo.h,v 1.6 2005/02/25 18:37:49 jtrent Exp $
 
 
 #ifndef RESAMPLEINFO_H
@@ -17,7 +17,7 @@ public:
    ResampleInfo();
    ResampleInfo( const ResampleInfo &src ){copy(src);}
    ~ResampleInfo();
-   enum ResampleCode{ NullResample, NearestNeighbor, Add, Mean, Mode, Min, Max };
+   enum ResampleCode{ NullResample, NearestNeighbor, Add, Mean, Median, Mode, Min, Max };
 
    void setResampleCode( ResampleCode code );
    bool setResampleCode( const QString &codeName );
@@ -42,7 +42,9 @@ private:
    double fillval;
    double noval;
    IgnoreList ilist;
-   char rn[16];
+   
+   #define RN_MAXLENGTH 16
+   char rn[RN_MAXLENGTH];
 };
 
 #endif//RESAMPLEINFO_H

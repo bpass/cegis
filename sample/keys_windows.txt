@@ -1,0 +1,84 @@
+Auto-login instructions. After following these instructions you should no longer
+be asked for your password with every CVS operation. Talk to Jason or Austin if
+you have any problems.
+
+Windows Users:
+  Generating public/private keys:
+    1) Goto Labrat folder /cartoresearch/CVS_Tools/Key_Management
+
+    2) Copy the following files to a folder on your D: drive
+       a. pageant.exe
+       b. puttygen.exe
+
+    3) Run puttygen.exe
+
+    4) Select SSH2 DSA as the type of key to generate, then click Generate
+       You will need to move your mouse in teh blank area to generate "random"
+       data.
+
+    5) Change the key comment to username@centaur.er.usgs.gov
+    
+    6) Enter a Key Passphrase (follow similar guidelines to complexity for Windows password)
+
+    7) Click save private key, and save it to teh folder you put puttygen and pageant
+
+    8) Leave puttygen open for the following instructions.
+
+  Adding to authorized_keys:
+    1) Open putty and ssh to centaur and login as usual
+
+    2) Change directories to ~/.ssh using "cd ~/.ssh"
+
+    3) Use "ls" to list files and see if a file called "authorized_keys" exists
+       If not we will create it
+
+    4) You will need to append your PUBLIC key to this file. Whether the file
+       exists or not I find the easiest way to due this is as follows:
+       a. in the terminal type "echo ", but do NOT hit enter (and note the space)
+       b. from puttygen copy the contents of the "Public key for pasting..." box
+       c. go back to the terminal and right-click to paste the public key do NOT hit enter
+       d. in the terminal type " >> authorized_keys" and NOW hit enter
+
+       Note: you should now have a file called authorized_keys with your key in it
+       if you type "more authorized_key" and hit enter you should see something like:
+
+[jtrent@centaur ~/.ssh]$ more authorized_keys
+ssh-dss AAAAB3NzaC1kc3MAAACBAKd/l6E1/NKbZ6GG5qVdDxkMvQ5AwkWe0N3WXtp8XqS+hxLfeUFY
+yO9c2TgbD5xKNn8bM+5Z0uRqhnACtpN91F+rejXBjsX1gPyp+E7b8gel3IlcCnqh+grC62FfiIHxX4C0
+ea+x3ME9u9u73smbtV5nRzjGJeQAlnQ34iq/1hWrAAAAFQDLla6r/NhsFb4AmccRbc2eGS/qjwAAAIBX
+lUZvtXHhNNwP84bmP4skof1BHtVfGWDrrw07AHF4RBQbAHormxX5ZQ9dBjsSTu8elyDw2XtOogeprnm3
+KeF7gvZaUPVFsiUfPlQ/bGCoH6nrwpOcw4fOp14Y/8nMjbOaYd0zyG0gIhYaBKu9d916TgjYMY4KCwpc
+FVVLKe21KgAAAIAD8Xhnp9zbqrVyHN+Ccr8bG1rQZxdJ0BHHX66LeCSuBw0kKS4cNQUP4V8IDQkghGkm
+JOhL2n2WCzzlpkvfM1HubVDlyiPZlnxEWrvi9bvhFY6r9wOYaOHwy1iGgXKNzhx6W3+uE7LrqGy4Ft6l
+jO/SdwNROXcZFBmDQXEGrPlteA== jtrent@centaur.er.usgs.gov
+
+    5) You can now log out of centaur
+
+  Seeting up Pageant to ligin using private key:
+    1) Goto the folder you put pageant.exe; right-click and choose "Copy"
+
+    2) Goto c:\Documents and Settings\username\Start Menu\Programs\
+
+    3) If you have a folder called "Startup" go there and skip to step 5
+
+    4) Right-click and choose New -> Folder; name it "Startup"
+
+    5) If your "Startup" folder right-click and choose "Paste Shortcut"
+       This will now cause Pageant to start every time you start Windows
+
+    6) From your start menu run Pageant ( Start -> Programs -> Startup -> Pageant )
+    
+    7) Pageant will now be in your tray (Computer with a hat on)
+    
+    8) Right-click on the pagent icon and choose "Add Key"
+    
+    9) In the open dialog choose the ppk file you created in Part I.
+       If you followed directions this will be the same folder where the pageant 
+       executable is stored.
+ 
+   10) Enter the passphrase you set when you created the key
+   
+   Note: Your key will now be loaded and you will not be asked for a password on 
+   centaur. You will have to complete steps 7 through 10 EVERY time you login to 
+   your Windows machine. Pageant does not cache private keys because it would be 
+   a security issue.

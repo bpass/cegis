@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.24 2005/03/02 16:26:25 jtrent Exp $
+// $Id: getprojinfo.h,v 1.25 2005/03/03 16:48:05 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -270,7 +270,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                         }//if inBox
                         else
                         {
-                           *( (type*)inputCoverage + offset) = resample.noDataValue();
+                           *( (type*)inputCoverage + offset) = (type)resample.noDataValue();
                         }
 
                         offset++;
@@ -465,7 +465,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                            unsigned int maxCount = 0;
                            type modeValue = (type)resample.noDataValue();
 
-                           for( QMap<type,unsigned int>::Iterator it = coverageMap.begin();
+                           for( typename QMap<type,unsigned int>::Iterator it = coverageMap.begin();
                                 it != coverageMap.end();
                                 ++it )
                            {

@@ -19,13 +19,16 @@
 #define Q_INT32_MAX         2147483647
 #define Q_INT32_MIN       (-Q_INT32_MAX - 1)
 
-#define Q_UINT64_MAX      0xFFFFFFFFFFFFFFFF
-#define Q_UINT64_MIN      0
-
 #if defined (Q_OS_WIN32) || defined (Q_OS_WIN64)
+       #define Q_UINT64_MAX      0xFFFFFFFFFFFFFFFFi64
+       #define Q_UINT64_MIN      0
+       
        #define Q_INT64_MAX         9223372036854775807i64
        #define Q_INT64_MIN       (-Q_INT64_MAX - 1i64)
 #else
+       #define Q_UINT64_MAX      0xFFFFFFFFFFFFFFFFLL
+       #define Q_UINT64_MIN      0
+       
        #define Q_INT64_MAX         9223372036854775807LL
        #define Q_INT64_MIN       (-Q_INT64_MAX - 1LL)
 #endif

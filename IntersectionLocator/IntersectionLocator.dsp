@@ -234,6 +234,10 @@ SOURCE=.\doc\doxygenFiles\preparingForNewData.txt
 # End Source File
 # Begin Source File
 
+SOURCE=.\doc\doxygenFiles\printingInstructions.txt
+# End Source File
+# Begin Source File
+
 SOURCE=.\doc\doxygenFiles\relatedLinks.txt
 # End Source File
 # End Group

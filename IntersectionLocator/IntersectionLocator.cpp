@@ -10,7 +10,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionLocator.cpp,v 1.5 2004/11/10 18:35:11 ahartman Exp $
+// $Id: IntersectionLocator.cpp,v 1.6 2004/11/15 16:45:12 rstelzleni Exp $
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1300
@@ -36,12 +36,14 @@
 void batch( double percent, Filter *filter, const char *filterType );
 void filterTests();
 
+
 /**
  * This function was created because OGR doesn't offer a clear way to
- * select they type of a new data source that is creates.  
+ * select the type of a new data source that it creates.  
  * @param pszFName The name of the new datasource.
  * @param pszDName The name of the driver for the filetype.  
  *        "ESRI Shapefile" is the name for Shapefiles.
+ * 
  */
 OGRDataSource *createOGRFile(const char *pszFName, char *pszDName)
 {
@@ -68,10 +70,12 @@ OGRDataSource *createOGRFile(const char *pszFName, char *pszDName)
  * */
 int main( /*int argc, char *argv[]*/ )
 {
+   // New way of testing filters
    filterTests();
    return 0;
 
 
+   // old way of testing filters
    Filter *F = new VMFilter;
    for( double x=0.1; x < 0.6; x += 0.1 )
    {
@@ -112,13 +116,14 @@ void filterTests()
    std::string szVectorDir = "d:\\rstelzleni\\visualstudioprojects\\"
                      "IntersectionLocator\\Mo2Quads\\OriginalAreas\\";
    std::string szOutputDir = "d:\\rstelzleni\\visualstudioprojects\\"
-                     "IntersectionLocator\\Mo2Quads\\CorrectedAreasMoreTraining\\";
+                     "IntersectionLocator\\Mo2Quads\\Tests\\";
 
+   double templateSize = 50, areaSize = 65;
 
 //   char *aszNames[] = { "305945", "305960", "305975", 
 //                        "320945", "320960", "320975",
 //                        "335945", "335960", "335975" };
-   char *aszNames[] = { "200675", "200690", "200705",
+   char *aszNames[] = { /*"200675", "200690", "200705",
                         "200720", "200735", "200750",
                         "200765",
                         "215675", "215690", "215705",
@@ -128,15 +133,15 @@ void filterTests()
                         "230720", "230735", "230750",
                         "230765",
                         "245675", "245690", "245705",
-                        "245720", "245735", "245750",
+                        "245720", */"245735"/*, "245750",
                         "245765",
                         "260675", "260690", "260705",
                         "260720", "260735", "260750",
                         "260765",
-                        "275675"
+                        "275675"*/
                         };
 
-   int n = 36; // number of names
+   int n = 1;//36; // number of names
 
 
 
@@ -147,7 +152,7 @@ void filterTests()
    printf( "Loading classifier training\n\n" );
    C.inputText( "d:\\rstelzleni\\visualstudioprojects\\"
                    "IntersectionLocator\\Mo2Quads\\"
-                   "classifiertraining\\training.dat" );
+                   "classifiertraining\\testdblrds.dat" );
 
    DelauneyTriangulator *Triangulator = new QuarticTriangulator;
    RubberSheetTransform *Transformer = new SaalfeldRubberSheet;
@@ -195,7 +200,7 @@ void filterTests()
 
 
       printf( "\n50-90\n" );
-      Intersections.findControlPoints( Rasta, 50, 90 );
+      Intersections.findControlPoints( Rasta, templateSize, areaSize );
       printf( "Saving control points\n" );
       std::vector<ControlPoint> originalPoints = 
                                         Intersections.getControlPoints();
@@ -231,6 +236,7 @@ void filterTests()
       delete pOutputDS;
       delete pLinesDS;
 
+      // Now filter the points using all filters and combinations
       for( double r = 0.1; r <= 0.5; r = r + 0.1 )
       {
          char temp[10];

@@ -1,0 +1,48 @@
+Auto-login instructions. After following these instructions you should no longer
+be asked for your password with every CVS operation. Talk to Jason or Austin if
+you have any problems.
+
+Linux Users:
+  Generating public/private keys:
+    1) Run "ssh-keygen -t dsa" in a terminal window.
+    2) This will ask you where you would like to save the key, with a default
+       of "/home/username/.ssh/id_dsa".  Hit enter to accept this default.
+    3) Enter a Key Passphrase (follow similar guidelines to complexity for Windows password)
+    4) You will now be told some information about the keys that were saved
+    5) Run "cd ~/.ssh" to switch to your ssh directory
+    6) Run "cat id_dsa.pub >> authorized_keys2" to append your public key to
+       the list of authorized keys
+    7) Run "chmod 600 authorized_keys2" to set the permissions for that file
+    8) Your keys have now been generated and placed in the proper location
+
+  Setting up linux/KDE to automatically use your key
+    1) Download x11-ssh-askpass from this address:
+       http://www.jmknoble.net/software/x11-ssh-askpass/x11-ssh-askpass-1.2.4.1.tar.gz
+
+       If it is not there, use google and search for "x11-ssh-askpass"
+
+    2) Use "cd" to change to the directory where you downloaded the file
+    3) Run "gunzip < x11-ssh-askpass-1.2.4.1.tar.gz | tar xvf -", substituting
+       the name of the file if it is different than the one you downloaded
+    4) Run "cd x11-ssh-askpass-1.2.4.1", again changing the name of the
+       directory corresponding to the file you downloaded, to switch to
+       this directory
+    5) Run "./configure"
+       (Note: you will not need to change the install option for configure,
+       since you will not be installing this program)
+    6) Run "xmkmf" when configure completes
+    7) Run "make includes" when xmkfm completes
+    8) Run "make" when that finishes
+    9) You should now have an executable named "x11-ssh-askpass" inside that
+       directory
+   10) Run "mkdir ~/bin".  You may ignore the error about the file already
+       existing if you receive it
+   11) Run "cp x11-ssh-askpass ~/bin" to move the program to your home 
+       directory's bin folder
+   12) Run "cd ~" to change to your home directory
+   13) Run "kwrite .bash_profile" to open your bash profile, which may be empty
+   14) Paste in the following line to that file:
+         export SSH_ASKPASS="/home/ahartman/bin/x11-ssh-askpass"
+
+     
+       

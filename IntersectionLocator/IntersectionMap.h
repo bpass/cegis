@@ -14,7 +14,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionMap.h,v 1.3 2004/11/02 01:20:46 rstelzleni Exp $
+// $Id: IntersectionMap.h,v 1.4 2004/11/10 17:07:59 ahartman Exp $
 
 
 #ifndef INTERSECTION_MAP_H
@@ -26,6 +26,7 @@
 
 #include <map>
 #include <vector>
+#include <string>
 #include <functional>
 #include "gdal_priv.h"
 #include "ogrsf_frmts.h"
@@ -56,11 +57,11 @@ struct OGRPointComp : public std::binary_function<OGRPoint, OGRPoint, bool>
    bool operator() (const OGRPoint &P1, const OGRPoint &P2) const
    {
       bool ret = false;
-      if( P1.getX() < P2.getX() )
+      if( const_cast<OGRPoint&>(P1).getX() < const_cast<OGRPoint&>(P2).getX() )
          ret = true;
-      else if( P1.getX() == P2.getX() )
+      else if( const_cast<OGRPoint&>(P1).getX() == const_cast<OGRPoint&>(P2).getX() )
       {
-         if( P1.getY() < P2.getY() )
+         if( const_cast<OGRPoint&>(P1).getY() < const_cast<OGRPoint&>(P2).getY() )
             ret = true;
       }
       return ret;

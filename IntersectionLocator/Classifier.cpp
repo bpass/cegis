@@ -11,7 +11,7 @@
 
 
 // Majic numbers for CVS
-// $Id: Classifier.cpp,v 1.3 2004/10/22 13:30:26 rstelzleni Exp $
+// $Id: Classifier.cpp,v 1.4 2004/11/10 16:54:52 ahartman Exp $
 
 
 #include "Classifier.h"
@@ -290,4 +290,3 @@ void Classifier::inputText( const char *szFilename )
    return;
 }
 
-   

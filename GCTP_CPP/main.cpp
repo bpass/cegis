@@ -19,7 +19,7 @@ int main( int argc, char **argv )
   sinusoid.number = 16;
   sinusoid.unitCode = 2;
   sinusoid.datum = 19;
-  sinusoid.spheroid = 0;   ///what number is thisss???
+  sinusoid.spheroid = 0;   ///what number is this???
 
 
   Equirectangular equirectangular( equirectParams );

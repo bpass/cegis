@@ -46,6 +46,8 @@ public:
 		By default the mean value of the class is calculated
 		each time a new value is added, but this can be disabled by 
 		passing false as the third parameter.
+		\param newVal The value to be inserted.
+		\param position Where to place the new value, in the front or back of the list.
 		\throw GeneralException Value already exists.
 	*/
 	void addValue(T newVal, int position = BACK);
@@ -54,6 +56,7 @@ public:
 
 	/*! This function allows you to remove a value from 
 		the image class located at a particular index.
+		\param index the zero-based index of the value to be removed.
 		\throw GeneralException Index out of bounds.
 	*/
 	void removeValue(int index);
@@ -62,6 +65,7 @@ public:
 
 	/*! This function allows you to remove a value from 
 		the image class located at a particular iterator position.
+		\param pos An iterator pointing to the position of the item to be removed.
 		\throw GeneralException Iterator out of bounds.
 	*/
 	void removeValue(typename std::vector<T>::iterator pos);
@@ -69,17 +73,39 @@ public:
 	//! Set the name of the class.
 
 	/*! This function allows you to specify a name for the class.
+		\param name The name string to assign to the class.
 		\throw GeneralException Setting a null value.
 	*/
 	void setName(const char* name);
 
 	//! Set the initial capacity of the class.
+
+	/*! This function sets the initial capacity of the class.
+		This value is used by the classification algorithm
+		to determine the initial distribution of values before
+		the actual algorithm is executed.
+		\param newSize The initial number of values to be stored in this class.
+	*/
 	void setInitialCapacity(int newSize);
 
 	//! Set the color value for the class.
+	
+	/*! This function sets the color value for the class.
+		Currently this is not used by anything, it only exists
+		for future uses.
+		\param color The new color for the class.
+	*/
 	void setColor(ClassColor color);
 
 	//! Set the color value for the class.
+
+	/*! This function sets the color value for the class.
+		Currently this is not used by anything, it only exists
+		for future uses.
+		\param r The red value.
+		\param g The green value.
+		\param b The blue value.
+	*/
 	void setColor(unsigned int r, unsigned int g, unsigned int b);
 
 	//! Sort the class values in ascending order.
@@ -93,6 +119,7 @@ public:
 	/*! This function sets special textual information that
 		the user might want to include about this class, such
 		as what it represents.
+		\param info The string containing special information about the class.
 		\throw GeneralException Setting a null value
 	*/
 	void setInfo(const char* info);
@@ -101,10 +128,24 @@ public:
 	ClassColor getColor() const;
 
 	//! Get the mean value of the class.
-	double getMean();
+
+	/*! Returns the mean value of the class.
+		If the user passes true to this function, the
+		mean will be recalculated, otherwise the stored value
+		will be returned.
+		\param recalc Tells the function whether or not to recalculate the mean.
+	*/
+	double getMean(bool recalc = false);
 
 	//! Get the current error value for the class.
-	double getError();
+
+	/*! Returns the error value of the class.
+		If the user passes true to this function, the
+		error will be recalculated, otherwise the stored value
+		will be returned.
+		\param recalc Tells the function whether or not to recalculate the mean.
+	*/
+	double getError(bool recalc = false);
 
 	//! Get the number of values in the class.
 	int getNumValues() const;
@@ -128,11 +169,15 @@ public:
 
 	/*! This operator returns the value located at the index
 		passed in.
+		\param index The zero-based index of the value.
 		\throw GeneralException Index out of bounds.
 	*/
 	T operator[](unsigned int index);
     
 	//! Assignment operator.
+
+	/*! \param right The ImageClass object to assign values from.
+	*/
 	ImageClass<T>& operator=(const ImageClass<T>& right);
 	
 	//! Increase the initial capacity of the class.
@@ -160,27 +205,49 @@ private:
 
 	//! Any special info about the class that the user wants to add.
 	char* m_info; 
+
+	//! Holds the current mean value of the class.
+	double m_mean;
+
+	//! Holds the current error value for the class.
+	double m_error;
 	
+	//! Calculates the mean of the class.
+	void calcMean();
+
+	//! Calculates the error of the class.
+	void calcError();
 };
 
 //Default constructor
 template <class T>
-ImageClass<T>::ImageClass(): m_name(NULL),m_info(NULL), m_initialCapacity(0) {
+ImageClass<T>::ImageClass(): m_color(ClassColor(0xff, 0xff, 0xff)) 
+							,m_initialCapacity(0)
+							,m_name(NULL)
+							,m_info(NULL)
+							,m_mean(0)
+							,m_error(0)
+{
       m_values.clear();
-	  m_color.setColor(0xff, 0xff, 0xff);
 }
 
 //Non Default Constructor
 template <class T>
-ImageClass<T>::ImageClass(const char* name, int capacity): m_initialCapacity(capacity), m_info(NULL) {
+ImageClass<T>::ImageClass(const char* name, int capacity): 
+							 m_color(ClassColor(0xff, 0xff, 0xff))
+							,m_initialCapacity(capacity)
+							,m_name(NULL)
+							,m_info(NULL)
+							,m_mean(0)
+							,m_error(0)
+{
 	m_values.clear();
 	if(name) {
 		m_name = new char[strlen(name)+1];
 		strcpy(m_name, name);
 		m_name[strlen(name)] = '\0';
 	}
-	else
-		m_name = NULL;
+	
 }
 
 //Copy Constructor
@@ -188,7 +255,8 @@ template <class T>
 ImageClass<T>::ImageClass(const ImageClass<T>& ic) {
 	m_values = ic.m_values;
 	m_color = ic.m_color;
-	
+	m_mean = ic.m_mean;
+	m_error = ic.m_error;
 	if(ic.m_name) {
 		m_name = new char[strlen(ic.m_name)+1];
 		strcpy(m_name, ic.m_name);
@@ -337,7 +405,6 @@ void ImageClass<T>::addValue(T newVal, int position) {
 		m_values.push_back(newVal);
 	else 
 		m_values.insert(m_values.begin(), newVal);
-	 	
 }
 
 //Set the name of the class.
@@ -390,13 +457,21 @@ const char* ImageClass<T>::getInfo() const{
 
 //Calculate class mean.
 template <class T>
-double ImageClass<T>::getMean() {
+double ImageClass<T>::getMean(bool recalc) {
+	if(recalc)
+		calcMean();
+
+	return(m_mean);
+}
+
+template <class T>
+void ImageClass<T>::calcMean() {
 	int numVals = m_values.size();
 	double sum = 0;
 	for(int i = 0; i < numVals; i++) 
 		sum += m_values[i];
 		
-	return((double)(sum / numVals));
+	m_mean = (double)(sum / numVals);
 }
 
 //Get the number of class values.
@@ -419,8 +494,16 @@ void ImageClass<T>::sort() {
 
 //get the class error.
 template <class T>
-double ImageClass<T>::getError() {
-	double mean = getMean();
+double ImageClass<T>::getError(bool recalc) {
+	if(recalc)
+		calcError();
+
+	return(m_error);
+}
+
+template <class T>
+void ImageClass<T>::calcError() {
+	double mean = m_mean;
 	double error = 0;
 	int numValues = m_values.size();
 	
@@ -429,9 +512,8 @@ double ImageClass<T>::getError() {
 	for(int i = 0; i < numValues; i++) 
 		error += fabs(m_values[i] - mean);
 	
-	return(error);
+	m_error = error;
 }
-
 
 
 //calculate the range for the class.

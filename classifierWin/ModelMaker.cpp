@@ -3,7 +3,7 @@
 #include "tinyXml.h"
 
 ModelMaker::ModelMaker(const char* inFile, const char* outFile, const char* claFile) {
-	
+	//can't continue with null filenames
 	if(!inFile || !outFile || !claFile)
 		throw(GeneralException("Error in ModelMaker constructor: null filename given"));
 
@@ -13,12 +13,19 @@ ModelMaker::ModelMaker(const char* inFile, const char* outFile, const char* claF
 	strcpy(m_outFile, outFile);
 	m_inFile[strlen(inFile)] = '\0';
 	m_outFile[strlen(outFile)] = '\0';
+
+	//swap '\' with '/' 
 	swapSlashes(m_inFile);
 	swapSlashes(m_outFile);
+
+	//parse the CLA file.
 	buildClassInfo(claFile);
 }
 
 ModelMaker::~ModelMaker() {
+
+	//deallocate memory 
+	//because memory leaks = crashy crashy
 	if(m_inFile)
 		delete[] m_inFile;
 	if(m_outFile)
@@ -34,6 +41,7 @@ void ModelMaker::generate(const char* filename) {
 	if(!m_inFile || !m_outFile)
 		throw(GeneralException("Error in ModelMaker::generate(): input or output file is null."));
 	
+	//open new file
 	modelFile = fopen(filename, "w+");
 	if(!modelFile)
 		throw(GeneralException("Error in ModelMaker::generate(): error creating output file."));
@@ -114,16 +122,16 @@ void ModelMaker::buildClassInfo(const char* claFile) {
 		throw(GeneralException("Error in ModelMaker::buildClassInfo(): "
 							   "error loading CLA file"));
 
-	TiXmlElement* curClassInfoE = NULL;
-	TiXmlElement* rootE = NULL;
-	TiXmlElement* curClassRangeE = NULL;
-	TiXmlNode* curClass = NULL;
+	TiXmlElement* curClassInfoE = NULL; //element for current <classificationInformation> tag
+	TiXmlElement* rootE = NULL; //root document element
+	TiXmlElement* curClassRangeE = NULL; //current range for current class
+	TiXmlNode* curClass = NULL; //
 
 	TiXmlHandle handle(&doc);
 	int numLayers = 0; //total number of layers to process
 	int curNumClasses = 0; //number of classes in this layer
-	ClassInfo curClassInfo;
-	std::vector<ClassInfo> curLayerData;
+	ClassInfo curClassInfo; //Store class info for current class
+	std::vector<ClassInfo> curLayerData; //vector to store class data for current layer.
 
 	//get root tag <classificationReport>
 	rootE = handle.FirstChild("classificationReport").Element();
@@ -133,11 +141,17 @@ void ModelMaker::buildClassInfo(const char* claFile) {
 
 	//get number of layers
 	rootE->Attribute("numLayers", &numLayers);
+
+	//get First <classificationData> tag
 	curClassInfoE = rootE->FirstChild("classificationData")->ToElement();
 	if(!curClassInfoE)
 		throw(GeneralException("Error in ModelMaker::buildClassInfo(): "
 								"missing initial <classificationData> tag."));
+	
+	//get number of classes for this layer.
 	curClassInfoE->Attribute("numClasses", &curNumClasses);
+
+	//get first <class> tag 
 	curClass = curClassInfoE->FirstChild("class");
 	if(!curClass)
 		throw(GeneralException("Error in ModelMaker::buildClassInfo(): "
@@ -160,9 +174,17 @@ void ModelMaker::buildClassInfo(const char* claFile) {
 			if(!curClassRangeE)
 				throw(GeneralException("Error in ModelMaker::buildClassInfo(): "
 										"missing <range> tag."));
+
+			//Get low value
 			curClassRangeE->Attribute("low", &curClassInfo.low);
+
+			//Get high value
 			curClassRangeE->Attribute("high", &curClassInfo.high);
+
+			//Assign new pixel value.
 			curClassInfo.outputPixelVal = j+1;
+
+			//add this class info to the current layer vector
 			curLayerData.push_back(curClassInfo);
 
 			//move to next <class> tag

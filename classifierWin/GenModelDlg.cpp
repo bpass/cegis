@@ -123,8 +123,7 @@ void genModelDlg::onBnClickedBrowseInput() {
 					"Imagine Image Files (*.img)|*.img||");
 	if(dlg.DoModal() == IDOK) 
 		m_origFile = dlg.GetPathName();
-	else
-		m_origFile = "";
+	
 	UpdateData(FALSE);
 }
 
@@ -134,8 +133,7 @@ void genModelDlg::onBnClickedBrowseOutput() {
 					"Imagine Image Files (*.img)|*.img||");
 	if(dlg.DoModal() == IDOK) 
 		m_outputFile = dlg.GetPathName();
-	else
-		m_outputFile = "";
+	
 	UpdateData(FALSE);
 }
 
@@ -164,8 +162,7 @@ void genModelDlg::OnBnClickedGenmodelBrowseclafile()
 					"Classification Files (*.cla)|*.cla||");
 	if(dlg.DoModal() == IDOK) 
 		m_claFile = dlg.GetPathName();
-	else
-		m_claFile = "";
+
 	UpdateData(FALSE);
 }
 
@@ -176,7 +173,6 @@ void genModelDlg::OnBnClickedGenmodelBrowsemodeloutput()
 					"Imagine Spatial Modeler File (*.mdl)|*.mdl||");
 	if(dlg.DoModal() == IDOK) 
 		m_modelName = dlg.GetPathName();
-	else
-		m_modelName = "";
+	
 	UpdateData(FALSE);
 }

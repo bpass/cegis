@@ -203,6 +203,7 @@ void ImageClassifier<T>::classify(int numClasses) {
 			curIndex++;
 		}
 
+		curClass.getMean(true);
 		classesTemp.push_back(curClass);
 		k++;
 		
@@ -218,8 +219,8 @@ void ImageClassifier<T>::classify(int numClasses) {
 		double percentError = 0.0;
 		oldError = calcTotalError();
 		for(curIndex = 0; curIndex < (m_numClasses-1); curIndex++) {
-			curMeanClass1 = classesTemp[curIndex].getMean();
-			curMeanClass2 = classesTemp[curIndex+1].getMean();
+			curMeanClass1 = classesTemp[curIndex].getMean(true);
+			curMeanClass2 = classesTemp[curIndex+1].getMean(true);
 			int class1EndpointIndex = classesTemp[curIndex].getNumValues()-1;
 			T class1EndpointValue = classesTemp[curIndex][class1EndpointIndex];
 			T class2FirstValue = classesTemp[curIndex+1][0];
@@ -542,7 +543,7 @@ void ImageClassifier<T>::saveReport(const char* filename) {
 			fprintf(outputFile, "Classification Report:\n\n");
 
 		for(int i = 0; i < m_numClasses; i++) {
-			fprintf(outputFile, "Class %d:\n", i);
+			fprintf(outputFile, "Class %d:\n", i+1);
 			fprintf(outputFile, "Low: %.3f\n", (float)m_classes[i][0]);
 			fprintf(outputFile, "High: %.3f\n\n", (float)m_classes[i][m_classes[i].getNumValues()-1]);
 		}

@@ -232,6 +232,7 @@ void CclassyDlg::OnBnClickedRun()
 	m_progressBar.ShowWindow(SW_SHOW);
 	m_progText.ShowWindow(SW_SHOW);
 	m_progressBar.SetRange(0, numFiles);
+	m_progressBar.SetPos(0);
 	if(numFiles > 1)
 		m_progressBar.SetPos(1);
 	UpdateWindow();
@@ -502,6 +503,7 @@ void CclassyDlg::OnBnClickedRun()
 
 
 void CclassyDlg::enableControls(BOOL enable) {
+	UpdateData();
 	m_dataType.EnableWindow(enable);
 	m_FileEdit.EnableWindow(enable);
 	m_numClassesEdit.EnableWindow(enable);
@@ -514,6 +516,13 @@ void CclassyDlg::enableControls(BOOL enable) {
 	m_addFiles.EnableWindow(enable);
 	m_removeFiles.EnableWindow(enable);
 	m_fileList.EnableWindow(enable);
+
+	if(m_CLAOutput) {
+		m_claFile.EnableWindow(enable);
+		m_claButton.EnableWindow(enable);
+		m_claEditStaticText.EnableWindow(enable);
+	}
+	UpdateData(FALSE);
 }
 void CclassyDlg::OnBnClickedGenmodel()
 {
@@ -547,8 +556,7 @@ void CclassyDlg::OnBnClickedBrowsecla()
 	if(dlg.DoModal() == IDOK) 
 		m_claFileName = dlg.GetPathName();
 	
-	else
-		m_claFileName = "";
+	
 
 	UpdateData(FALSE);
 }

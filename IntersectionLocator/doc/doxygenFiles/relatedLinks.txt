@@ -1,6 +1,6 @@
 
 // CVS junk
-// $Id: relatedLinks.txt,v 1.2 2004/11/30 18:30:22 rstelzleni Exp $
+// $Id: relatedLinks.txt,v 1.3 2004/11/30 19:38:47 rstelzleni Exp $
 
 /** \page relatedLinks Related Links
  *
@@ -13,15 +13,23 @@
  * all kinds of stuff, look for Geospatial Data Integration, or 
  * conflation and you should find some information related to this algorithm.
  *
+ * In case you need it, Dr. Knoblock's shipping address is:
+ *
+ * Dr. Knoblock<BR>
+ * University of Southern California<BR>
+ * Information Sciences Institute<BR>
+ * 4676 Admiralty Way, Suite 1001<BR>
+ * Marina del Rey, CA 90292<BR>
+ *
  * \subsection technicalInformation Technical Information
- * <a href="http://www.remotesensing.org/gdal/">GDAL/OGR Website</a>
+ * <a href="http://www.remotesensing.org/gdal/">GDAL/OGR Website</a><BR>
  * This is where you can get the GDAL/OGR binaries, source, and general
  * information on the library.  The IntersectionLocator uses this
  * library to perform file io on geospatial data file types, like 
  * shapefiles, Arc coverages, and tiffs.
  *
  * <a href="http://www.census.gov/geo/www/tiger/tgrcd108/tgr108cd.html">
- * TIGER Vector Data</a>
+ * TIGER Vector Data</a><BR>
  * The US Census' site for the TIGER line files that they maintain.  On this
  * page you can download TIGER format files for any area in the United 
  * States.  They also have some information about the attribution of the 
@@ -53,6 +61,14 @@
  * Can you tell I had a lot of trouble with this part of the code?  This
  * page has a good list of implementations and comparison of their output.
  *
+ * <a href="http://mathworld.wolfram.com/Circumcircle.html">Circumcircle 
+ * Information</a><BR>
+ * The method I used for calculating the center of a circumcircle about
+ * a triangle was derived from this page.  Working out the determinants
+ * on that page for a, bx and by yielded the equations in the Circle
+ * constructor that takes a triangle.  See that documentation for the 
+ * resulting math.
+ *
  * \subsection colorSpaceLinks Color Space Links
  * <a href="http://en.wikipedia.org/wiki/HSV_color_space">
  * A Good Description of RGB and HSV Colors</a><BR>
@@ -61,7 +77,7 @@
  *
  * <a href="http://www.easyrgb.com/math.php?MATH=M20#text20">
  * Pseudocode for the Color Transformation</a><BR>
- * This page has the pseudocode that I believe I used for the color
+ * This page has the pseudocode that I used for the color
  * transformation.
  *
  * <a href="http://www.cs.bham.ac.uk/~mer/colour/hsv.html">

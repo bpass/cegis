@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.8 2005/02/14 17:29:05 jtrent Exp $
+// $Id: imgio.h,v 1.9 2005/02/14 18:03:37 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -184,7 +184,6 @@ class IMGIO
       // Function to initialize input image, buffers & projection
       // Definition must be in header for
       // Solaris compiler compatability
-      template <class type>
       int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * outimg, type )
       {
       	void * bufptr;		// Pointer to input buffer
@@ -267,7 +266,6 @@ class IMGIO
      // Definition must be in header for
      // Solaris compiler compatability
      // ---------------------------
-     template <class type>
      static type get_max_value( RasterInfo &input, type )
      {
         QString inputFilename = input.imgFileName().ascii();
@@ -312,7 +310,6 @@ class IMGIO
      // Definition must be in header for
      // Solaris compiler compatability
      // ---------------------------
-     template <class type>
      void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
      {
          // check and see if line requested is already in memory
@@ -321,7 +318,7 @@ class IMGIO
 
          if( inputDataMap == NULL )
          {
-      	     inputDataMap = new QCache<type>( Max_Data_Element_Count, 1.6*Max_Data_Element_Count );
+      	     inputDataMap = new QCache<type>( Max_Data_Element_Count, (int)(1.6*Max_Data_Element_Count) );
              inputDataMap->setAutoDelete( true );
          }
 
@@ -385,7 +382,6 @@ class IMGIO
      // Write a line of output image data
      // Definition must be in header for
      // Solaris compiler compatability
-     template <class type>
      void put_line(void * buf, type )
      {
          if( outptr.isOpen() && outptr.isWritable() )

@@ -1,7 +1,7 @@
 /**
  * @file KnuthTriangulator.cpp
  *
- * $Id: KnuthTriangulator.cpp,v 1.1 2005/02/09 16:29:06 ahartman Exp $
+ * $Id: KnuthTriangulator.cpp,v 1.2 2005/02/09 17:53:39 ahartman Exp $
  */
 
 #include "KnuthTriangulator.h"
@@ -159,4 +159,57 @@ Triangulation::iterator KnuthTriangulator::inTriangle(
    return edges.end();
 
 } //  end function inTriangle
+
+bool
+KnuthTriangulator::inCircumcircle( const Point& pointA,
+                                   const Point& pointB,
+                                   const Point& pointC,
+                                   const Point& pointD )
+{
+   // This is an implementation of the function in(A, B, C, D) defined in
+   // the Guibas, Knuth, and Sharir paper
+   double pointAMagnitudeSquared = magnitudeSquared( pointA );
+   double pointBMagnitudeSquared = magnitudeSquared( pointB );
+   double pointCMagnitudeSquared = magnitudeSquared( pointC );
+   double pointDMagnitudeSquared = magnitudeSquared( pointD );
+
+   double coFactor1 = -det3( pointB.x(), pointB.y(), pointBMagnitudeSquared,
+                             pointC.x(), pointC.y(), pointCMagnitudeSquared,
+                             pointD.x(), pointD.y(), pointDMagnitudeSquared );
+   double coFactor2 = +det3( pointA.x(), pointA.y(), pointAMagnitudeSquared,
+                             pointC.x(), pointC.y(), pointCMagnitudeSquared,
+                             pointD.x(), pointD.y(), pointDMagnitudeSquared );
+   double coFactor3 = -det3( pointA.x(), pointA.y(), pointAMagnitudeSquared,
+                             pointB.x(), pointB.y(), pointBMagnitudeSquared,
+                             pointD.x(), pointD.y(), pointDMagnitudeSquared );
+   double coFactor4 = +det3( pointA.x(), pointA.y(), pointAMagnitudeSquared 
+                             pointB.x(), pointB.y(), pointBMagnitudeSquared,
+                             pointC.x(), pointC.y(), pointCMagnitudeSquared );
+   double det = coFactor1 + coFactor2 + coFactor3 + coFactor4;
+   return det > 0;
+}
+
+double
+KnuthTriangulator::magnitudeSquared( const Point& point )
+{
+   // XXX could possibly make this inline
+   double xSquared = point.x() * point.x();
+   double ySquared = point.y() * point.y();
+   return xSquared + ySquared;
+}
+
+double
+KnuthTriangulator::det3( double a11, double a12, double a13,
+                         double a21, double a22, double a23,
+                         double a31, double a32, double a33 )
+{
+    double prod1 = a11 * a22 * a33;
+    double prod2 = a12 * a23 * a31;
+    double prod3 = a13 * a21 * a32;
+    double prod4 = a31 * a22 * a13;
+    double prod5 = a32 * a23 * a11;
+    double prod6 = a33 * a21 * a12;
+
+    return prod1 + prod2 + prod3 - prod4 - prod5 - prod6;
+}
 

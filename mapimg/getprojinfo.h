@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.13 2005/02/18 00:08:04 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.14 2005/02/18 18:22:04 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -17,15 +17,18 @@
 #include <qprogressdialog.h>
 #include <qtextstream.h>
 #include <qdir.h>
+#include <qcolor.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
 
+
 #include "window_flags.h"
 #include "getprojinfo.h"
 #include "imgio.h"
 #include "mapimg.h"
+#include "mapimgform.h"
 
 #include "logform.h"
 #include "jt_time.h"
@@ -112,10 +115,18 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
    void * mapimginbuf = imgIO.mapimginbuf;
    void * mapimgoutbuf = imgIO.mapimgoutbuf;
 
+   QColor inputFrameColor = ((mapimgForm*)mapimgdial)->inputFrameColor();
+   QColor outputFrameColor = ((mapimgForm*)mapimgdial)->outputFrameColor();
+
    // Progress Dialog added in QT
    QProgressDialog progress( "Performing Transformation", "Abort", outimg.nl,
       mapimgdial, "progress", TRUE, WINDOW_FLAGS );
    progress.setCaption( "Processing..." );
+
+   QColor c( inputFrameColor );
+   QPalette p( c );
+   p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
+   progress.setPalette( p );
 
    // Set min Duration required for Dialog at 1 second (try to make it always show)
    progress.setMinimumDuration(1);
@@ -135,6 +146,19 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
       // Set progress of Dialog box and cancel if process was cancelled
 
       progress.setProgress(out_line);
+
+      double red = inputFrameColor.red() + 
+                   (out_line * (outputFrameColor.red()-inputFrameColor.red())/outimg.nl);
+      double green = inputFrameColor.green() +
+                   (out_line * (outputFrameColor.green()-inputFrameColor.green())/outimg.nl);
+      double blue = inputFrameColor.blue() +
+                   (out_line * (outputFrameColor.blue()-inputFrameColor.blue())/outimg.nl);
+
+      QColor c( red, green, blue );
+      QPalette p( c );
+      p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
+      progress.setPalette( p );
+
 
       if(progress.wasCancelled())
       {
@@ -345,7 +369,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
          }
          else
          {
-            *( (type*)mapimgoutbuf + out_samp) = fill; 
+            *( (type*)mapimgoutbuf + out_samp) = fill;
          }
 
       }
@@ -356,7 +380,13 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
       imgIO.put_line(mapimgoutbuf, useType);
    }
 
+
    progress.setProgress( outimg.nl );
+
+   c = QColor( outputFrameColor );
+   p = QPalette( c );
+   p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
+   progress.setPalette( p );
 
    // Close down processing & Exit... Processing is complete.
    // -------------------------------------------------------

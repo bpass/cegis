@@ -1,4 +1,4 @@
-// $Id: mapimgform.h,v 1.4 2005/02/17 18:52:59 jtrent Exp $
+// $Id: mapimgform.h,v 1.5 2005/02/18 18:22:04 jtrent Exp $
 
 
 /****************************************************************************
@@ -38,6 +38,10 @@ public:
    void dropEvent( QDropEvent *evt );
    bool openFile( QString inFile );
    QString dataType() const;
+   
+   QColor inputFrameColor() const;
+   QColor outputFrameColor() const;
+
 
 protected:
    QHBoxLayout    *formLayout;

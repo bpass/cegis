@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.15 2005/02/18 00:08:04 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.16 2005/02/18 18:22:04 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -36,7 +36,7 @@
 
    FILE MENU sets up the File menu actions and connections which users use to
 exit. It also contains an undocumented bigAction which is activated by 
-pressing Ctrl + B. This action returns all toolbar buttons to their actual 
+pressing Ctrl + B. This action returns all toolbar buttons to their actual
 sizes.
 
    INPUT sets up the input parameters view by creating a QInfoFrame and
@@ -298,7 +298,7 @@ mapimgForm::~mapimgForm()
 
 void mapimgForm::dragEnterEvent( QDragEnterEvent *evt )
 {
-   if ( QTextDrag::canDecode( evt ) ) 
+   if ( QTextDrag::canDecode( evt ) )
       evt->accept();
 }
 
@@ -693,5 +693,16 @@ QString mapimgForm::dataType() const
 
    return currentDataType;
 }
+
+QColor mapimgForm::inputFrameColor() const
+{
+   return inInfoFrame->mapTab->viewport()->palette().color( QPalette::Active, QColorGroup::Background );
+}
+
+QColor mapimgForm::outputFrameColor() const
+{
+   return outInfoFrame->mapTab->viewport()->palette().color( QPalette::Active, QColorGroup::Background );
+}
+
 
 

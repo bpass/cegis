@@ -2,7 +2,7 @@
 using namespace std;
 
 /*	This program is very simple. Now that you (should) have compiled and run it
-	please do the following (see me (Jason) if you have any troubles):
+	please do the following (see Jason or Austin if you have any troubles):
 
 
 	1) Add your name to the list in the cout statement below

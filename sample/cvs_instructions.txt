@@ -1,4 +1,5 @@
 CVS Setup and Checkout Instructions
+See Jason or Austin if you have any problems
 
 Windows Users:
 	1) From Labrat goto /cartoresearch/CVS_Tools/ and copy 

@@ -1,4 +1,4 @@
-// $Id: report.c,v 1.3 2005/01/28 17:59:07 jtrent Exp $
+// $Id: report.c,v 1.4 2005/02/01 16:08:13 jtrent Exp $
 
 
 //Copyright 1991 United States Geological Survey
@@ -28,7 +28,7 @@ PROGRAMMER              DATE		REASON
 D. Steinwand, EROS      July, 1991	Initial development.
 T. Mittan		Mar,  1993	Adapted code to new "C" version of
 					GCTP library.
-S. Nelson		Jun, 1993	Added inline code. 
+S. Nelson		Jun, 1993	Added inline code.
 					Added error messages if no filename
 					was specified.
 S. Nelson		Jan, 1998	Returned OK instead of 0.
@@ -80,7 +80,8 @@ if (ipr == 1)
       return(6);
       }
    file_e = TRUE;
-   strcpy(err_file,efile);
+   strncpy(err_file,efile, 256);
+   err_file[255] = '\0';
    }
 else
 if (ipr == 2)
@@ -93,7 +94,8 @@ if (ipr == 2)
       return(6);
       }
    file_e = TRUE;
-   strcpy(err_file,efile);
+   strncpy(err_file,efile, 256);
+   err_file[255] = '\0';
    }
 else
 if (ipr == 3)
@@ -128,7 +130,8 @@ if (jpr == 1)
       return(6);
       }
    file_p = TRUE;
-   strcpy(parm_file,pfile);
+   strncpy(parm_file,pfile, 256);
+   parm_file[255] = '\0';
    }
 else
 if (jpr == 2)
@@ -141,7 +144,8 @@ if (jpr == 2)
       return(6);
       }
    file_p = TRUE;
-   strcpy(parm_file,pfile);
+   strncpy(parm_file,pfile, 256);
+   parm_file[255] = '\0';
    }
 else
 if (jpr == 3)

@@ -1,4 +1,4 @@
-// $Id: getprojinfo.cpp,v 1.2 2005/01/27 18:15:13 jtrent Exp $
+// $Id: getprojinfo.cpp,v 1.3 2005/02/01 16:08:13 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -20,8 +20,11 @@ int get_projInfo(char *name, long *sys, long *unit, long *zone, long *datum, dou
 
 	// Open .proj file
 	// ---------------
-	strcpy(projFile, name);
-	strcat(projFile,".proj");
+	strncpy(projFile, name, 254);
+	projFile[254] = '\0';
+	strncat(projFile,".proj", 254 - strlen(projFile));
+	projFile[254] = '\0';
+
 	inptr = fopen(projFile, "r");
 	if (!inptr)
 	{

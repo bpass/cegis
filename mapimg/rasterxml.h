@@ -1,4 +1,4 @@
-// $Id: rasterxml.h,v 1.3 2005/01/27 18:15:16 jtrent Exp $
+// $Id: rasterxml.h,v 1.4 2005/02/01 16:08:13 jtrent Exp $
 
 
 /*! \mainpage RasterXML class for mapimg
@@ -83,6 +83,9 @@ public:
 
 	//!Get the pixel fill value for the image.
 	double getFillValue() const;
+
+	//!Get the pixel no data value for the image.
+	double getNoDataValue() const;
 
 	//!Get Name of current projection.
 	/*! 
@@ -203,6 +206,9 @@ public:
 	//!Set the pixel fill value for the image.
 	void setFillValue(double val);
 
+	//!Set the pixel no data value for the image.
+	void setNoDataValue(double val);
+
 	//!Set the name of the image author.
 	/*!
 		If NULL is passed, the value "Unknown"
@@ -237,7 +243,7 @@ private:
 		double m_ulx;
 		double m_uly;
 		double m_fillValue;
-      //double m_noDataValue; .setNoDataValue(double) .getNoDataValue()
+                double m_noDataValue;
 		double* m_GCTPParams;
 		char* m_projName;
 		char* m_datumName;
@@ -296,6 +302,7 @@ public:
 		Outputs error message to stream "os"
 	*/
 	friend std::ostream& operator<<(std::ostream& os, XMLException e);
+	char const* getMessage() const { return m_message; }
 private:
 	 char m_message[100];
 };

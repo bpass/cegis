@@ -1,4 +1,4 @@
-// $Id: rasterxml.cpp,v 1.4 2005/01/31 17:24:07 jtrent Exp $
+// $Id: rasterxml.cpp,v 1.5 2005/02/01 16:08:13 jtrent Exp $
 
 
 /*  To Do:
@@ -14,7 +14,7 @@
 /******************************************************
 *File: RasterXML.cpp
 *Description: Implementation file for Image class
-*Programmer: Michael Williams, USGS 
+*Programmer: Michael Williams, USGS
 *Date: 09/24/2004
 *******************************************************/
 
@@ -39,6 +39,7 @@ m_pixelSize(0.0),
 m_ulx(0.0),
 m_uly(0.0),
 m_fillValue(0.0),
+m_noDataValue(0.0),
 m_projName(NULL),
 m_datumName(NULL),
 m_unitsName(NULL),
@@ -54,18 +55,18 @@ m_doc(NULL)
 	m_GCTPParams = new double[15];
 	for(int i = 0; i < 15; i++)
 		m_GCTPParams[i] = 0.0;
-	
+
 	//initialize internal document tree
 	initInternalDocument();
-	
-	
+
+
 }
 
 //Constructor
 //Function: the XML file referred to by filename
 //is loaded.
-RasterXML::RasterXML(const char* filename): 
-m_bits(0), 
+RasterXML::RasterXML(const char* filename):
+m_bits(0),
 m_projNumber(0),
 m_unitsNumber(0),
 m_zone(0),
@@ -76,6 +77,7 @@ m_pixelSize(0.0),
 m_ulx(0.0),
 m_uly(0.0),
 m_fillValue(0.0),
+m_noDataValue(0.0),
 m_projName(NULL),
 m_datumName(NULL),
 m_unitsName(NULL),
@@ -98,8 +100,6 @@ m_doc(NULL)
 		m_GCTPParams[i] = 0.0;
 
 	loadFile(filename);
-
-	
 }
 
 //Copy Constructor
@@ -115,6 +115,7 @@ m_pixelSize(0.0),
 m_ulx(0.0),
 m_uly(0.0),
 m_fillValue(0.0),
+m_noDataValue(0.0),
 m_projName(NULL),
 m_datumName(NULL),
 m_unitsName(NULL),
@@ -128,7 +129,7 @@ m_signed(false),
 m_doc(NULL)
 {
 	//initialize internal document tree
-	//so that as we do sets, the tree gets 
+	//so that as we do sets, the tree gets
 	//updated and eventually is an exact
 	//copy of the other tree.
 	initInternalDocument(c.m_filename);
@@ -142,7 +143,7 @@ m_doc(NULL)
 		paramComment = paramComment->NextSibling();
 	}
 
-	
+
 	setAuthorName(c.m_authorName);
 	setAuthorCompany(c.m_authorCompany);
 	setAuthorEmail(c.m_authorEmail);
@@ -155,6 +156,7 @@ m_doc(NULL)
 	setCols(c.m_cols);
 	setPixelSize(c.m_pixelSize);
 	setFillValue(c.m_fillValue);
+	setNoDataValue(c.m_noDataValue);
 	setBits(c.m_bits);
 
 	if(c.m_signed)
@@ -168,7 +170,7 @@ m_doc(NULL)
 	setZone(c.m_zone);
 	setUlCorner(c.m_ulx,c.m_uly);
 	setFillValue(m_fillValue);
-	
+	setNoDataValue( m_noDataValue );
 }
 
 RasterXML::~RasterXML() {
@@ -236,6 +238,7 @@ void RasterXML::initInternalDocument(const char* filename) {
 	TiXmlElement pixelSizeE("pixelSize");
 	TiXmlElement pixelTypeE("type");
 	TiXmlElement pixelFillValueE("fillValue");
+	TiXmlElement pixelNoDataValueE("noDataValue");
 	TiXmlElement projE("projection");
 	TiXmlElement projNameE("name");
 	TiXmlElement projZoneE("zone");
@@ -277,11 +280,13 @@ void RasterXML::initInternalDocument(const char* filename) {
 	pixelTypeE.InsertEndChild(unknownV);
 	pixelSizeE.InsertEndChild(unknownV);
 	pixelFillValueE.InsertEndChild(TiXmlText("0.0"));
+	pixelNoDataValueE.InsertEndChild(TiXmlText("0.0"));
 	pixelDescE.InsertEndChild(pixelSignE);
 	pixelDescE.InsertEndChild(pixelBitsE);
 	pixelDescE.InsertEndChild(pixelTypeE);
 	pixelDescE.InsertEndChild(pixelSizeE);
 	pixelDescE.InsertEndChild(pixelFillValueE);
+	pixelDescE.InsertEndChild(pixelNoDataValueE);
 
 
     //<projection>
@@ -325,6 +330,7 @@ void RasterXML::loadFile(const char* filename) {
 	int datumNumber = 0;
 	double pixelSize = 0;
 	double fillValue = 0;
+	double noDataValue = 0;
 	int rows = 0;
 	int cols = 0;
 	int sign = -2;
@@ -334,317 +340,330 @@ void RasterXML::loadFile(const char* filename) {
 	double ulx = 0;
 	double uly = 0;
 	double GCTPParam = 0;
-	
-	const char* unitsName = NULL;
-	const char* datumName = NULL;
-	const char* projName = NULL;
-	const char* typeName = NULL;
-	const char* authorName = NULL;
-	const char* authorCompany = NULL;
-	const char* authorEmail = NULL;
 
-	//Create the document object and load the file.
-	TiXmlDocument doc;
-	if(!doc.LoadFile(filename)) 
-		throw(XMLException("Error loading file"));
-	
+      	const char* unitsName = NULL;
+      	const char* datumName = NULL;
+      	const char* projName = NULL;
+      	const char* typeName = NULL;
+      	const char* authorName = NULL;
+      	const char* authorCompany = NULL;
+      	const char* authorEmail = NULL;
+      
+      	//Create the document object and load the file.
+      	TiXmlDocument doc;
+      	if(!doc.LoadFile(filename))
+      		throw(XMLException("Error loading file"));
+      
+      
+      	//Initialize the internal document tree with the current filename.
+      	initInternalDocument(filename);
+      
+      	TiXmlHandle handle(&doc);
+      
+      	//Element pointerts for the top level tags.
+      	TiXmlElement* rootE = handle.FirstChild("rasterInformation").Element();
+      	TiXmlElement* authorE =  handle.FirstChild("rasterInformation").FirstChild("author").Element();
+      	TiXmlElement* pixelDescE =  handle.FirstChild("rasterInformation").FirstChild("pixelDescription").Element();
+      	TiXmlElement* projE = handle.FirstChild("rasterInformation").FirstChild("projection").Element();
+      	TiXmlElement* areaE = handle.FirstChild("rasterInformation").FirstChild("area").Element();
+      	TiXmlElement* paramsRootE = handle.FirstChild("rasterInformation").FirstChild("GCTPParams").Element();
+      
+      	//element pointers for the lower level tags.
+      	TiXmlNode* currentParam = NULL;
+      	TiXmlNode* currentComment = NULL;
+      	TiXmlElement* bitsE= NULL;
+      	TiXmlElement* signedE = NULL;
+      	TiXmlElement* unitsE = NULL;
+      	TiXmlElement* typeE = NULL;
+      	TiXmlElement* projNameE = NULL;
+      	TiXmlElement* zoneE = NULL;
+      	TiXmlElement* datumE = NULL;
+      	TiXmlElement* authorNameE = NULL;
+      	TiXmlElement* authorCompanyE = NULL;
+      	TiXmlElement* authorEmailE = NULL;
+      	TiXmlElement* fillValueE = NULL;
+      	TiXmlElement* noDataValueE = NULL;
+      	TiXmlElement* ulCornerE = NULL;
+      	TiXmlElement* dimensionsE = NULL;
+      	TiXmlElement* pixelSizeE = NULL;
+      
+      
+      	//********************************************************
+      	//*Check to see if any of the top-level tags are missing
+      	//********************************************************
+      	if(!rootE)
+      		throw(XMLException("Error: missing or malformed <rasterInformation> tag"));
+      
+      
+      	if(!pixelDescE)
+      		throw(XMLException("Error, missing or malformed <pixelDescription> tag."));
+      
+      
+      	if(!projE)
+      		throw(XMLException("Error, missing or malformed <projection> tag."));
+      
+      
+      	if(!areaE)
+      		throw(XMLException("Error, missing or malformed <area> tag."));
+      
+      
+      	if(!paramsRootE)
+      		throw(XMLException("Error, missing or malformed <GCTPParams> tag."));
+      
+      
+      	//If none of the tags are missing, instantiate the lower
+      	//level tag element objects.
+      	bitsE= pixelDescE->FirstChild("bits")->ToElement();
+      	signedE = pixelDescE->FirstChild("sign")->ToElement();
+      	typeE = pixelDescE->FirstChild("type")->ToElement();
+      	fillValueE = pixelDescE->FirstChild("fillValue")->ToElement();
+      	noDataValueE = pixelDescE->FirstChild("noDataValue")->ToElement();
+      	pixelSizeE = pixelDescE->FirstChild("pixelSize")->ToElement();
+      	datumE = projE->FirstChild("datum")->ToElement();
+      	projNameE = projE->FirstChild("name")->ToElement();
+      	zoneE = projE->FirstChild("zone")->ToElement();
+      	unitsE = projE->FirstChild("units")->ToElement();
+      	ulCornerE = areaE->FirstChild("ulCorner")->ToElement();
+      	dimensionsE = areaE->FirstChild("dimensions")->ToElement();
+      	authorNameE = authorE->FirstChild("name")->ToElement();
+      	authorCompanyE = authorE->FirstChild("company")->ToElement();
+      	authorEmailE = authorE->FirstChild("email")->ToElement();
+      
+      	//*********************************************************************
+      	//*Check for the existence of lower-level tags
+      	//*********************************************************************
+      	if(!bitsE)
+      		throw(XMLException("Error, missing or malformed <bits> tag under <pixelDescription>."));
+      
+      	if(!signedE)
+      		throw(XMLException("Error, missing or malformed <signed> tag under <pixelDescription>."));
+      
+      
+      	if(!unitsE)
+      		throw(XMLException("Error, missing or malformed <units> tag under <projection>."));
+      
+      
+      	if(!typeE)
+      		throw(XMLException("Error, missing or malformed <type> tag under <pixelDescription>."));
+      
+      
+      	if(!datumE)
+      		throw(XMLException("Error, missing or malformed <datum> tag under <projection>."));
+      
+      	if(!fillValueE)
+      		throw(XMLException("Error, missing or malformed <fillValue> tag under <pixelDescription>."));
+      
+      	if(!noDataValueE)
+      		throw(XMLException("Error, missing or malformed <noDataValue> tag under <pixelDescription>."));
+      
+      	if(!pixelSizeE)
+      		throw(XMLException("Error, missing or malformed <pixelSize> tag under <pixelDescription>."));
+      
+      	if(!projNameE) 
+      		throw(XMLException("Error, missing or malformed <name> tag under <projection>."));
+      	
+      	if(!ulCornerE)
+      		throw(XMLException("Error, missing or malformed <ulCorner> tag under <area>."));
+      
+      	if(!dimensionsE) 
+      		throw(XMLException("Error, missing or malformed <dimensions> tag under <area>."));
 
-	//Initialize the internal document tree with the current filename.
-	initInternalDocument(filename);
-	
-	TiXmlHandle handle(&doc);
+      	if(!zoneE) 
+      		throw(XMLException("Error, missing or malformed <zone> tag under <projection>."));
+      	
+      	if(!authorNameE) 
+      		throw(XMLException("Error, missing or malformed <name> tag under <author>"));
+      
+      	if(!authorCompanyE) 
+      		throw(XMLException("Error, missing or malformed <company> tag under <author>"));
+      
+      	if(!authorEmailE) 
+      		throw(XMLException("Error, missing or malformed <email> tag under <author>"));
+      
+      
+      	if(authorNameE->FirstChild()) 
+      		authorName = authorNameE->FirstChild()->Value();
+      	
+      	else
+      		throw(XMLException("Error, missing value for <name> tag under <author> please put \"unknown\" if you do not know the value."));
+      
+      	if(authorCompanyE->FirstChild()) 
+      		authorCompany = authorCompanyE->FirstChild()->Value();
+      	
+      	else
+      		throw(XMLException("Error, missing value for <company> tag under <author> please put \"unknown\" if you do not know the value."));
+      
+      	if(authorEmailE->FirstChild()) 
+      		authorEmail = authorEmailE->FirstChild()->Value();
+      	
+      	else
+      		throw(XMLException("Error, missing value for <email> tag under <author> please put \"unknown\" if you do not know the value."));
+      
+      	//Get rows attribute from <image>
+      	if(!dimensionsE->Attribute("rows", &rows)) 
+      		throw(XMLException("Error: missing rows attribute in <dimensions> please put \"-1\" if you do not have a value"));
+      	
+      
+      	//Get columns attribute from <image>
+      	if(!dimensionsE->Attribute("columns", &cols)) 
+      		throw(XMLException("Error: missing columns attribute in <image> please put \"-1\" if you do not have a value"));
+      		
+      	//If there is a value inside <bits>
+      	if(bitsE->FirstChild())
+      		bits = atoi(bitsE->FirstChild()->Value());
+      
+      	else 
+      		throw(XMLException("Error: bits value not present, please put \"0\" if you do not have a value"));
+      	
+      	if(fillValueE->FirstChild())
+      		fillValue = atof(fillValueE->FirstChild()->Value());
+      	
+      	else
+      		throw(XMLException("Error, missing value for <fillValue> under <pixelDescription>, please use -2 if it is unknown"));
+      
+      	if(noDataValueE->FirstChild())
+      		noDataValue = atof(noDataValueE->FirstChild()->Value());
+      
+      	else
+      		throw(XMLException("Error, missing value for <noDataValue> under <pixelDescription>, please use -2 if it is unknown"));
+      
+      	if(pixelSizeE->FirstChild())
+      		pixelSize = atof(pixelSizeE->FirstChild()->Value());
+      	
+      	else
+      		throw(XMLException("Error, missing value for <pixelSize> under <pixelDescription>, please use -1 if it is unknown"));
+      
+      	//if there is a value inside <sign>
+      	if(signedE->FirstChild()) {
+      		char temp[30] = {'\0'};
+      		strncpy(temp, signedE->FirstChild()->Value(), 29);
+      		temp[29] = '\0';
+      		for(unsigned int i = 0; i < strlen(temp); i++)
+      			temp[i] = toupper(temp[i]);
+      
+      		if(!strcmp(temp, "UNKNOWN"))
+      			sign = -1;
+      
+      		else if(!strcmp(temp, "SIGNED"))
+      			sign = 1;
+      
+      		else
+      			sign = 0;
+      	}
+      
+      	else
+      		throw(XMLException("Error: signed value not present, please put \"-1\" if you do not have a value"));
+      	
+      
+      	//Load units number from "number" attribute in <units>
+      	if(!unitsE->Attribute("number", &unitsNumber)) 
+      		throw(XMLException("Error: number attribute missing from <units> please put \"-1\" if you do not have a value"));
+      	
+      	//if there is a value inside <units>
+      	if(unitsE->FirstChild()) 
+      		unitsName = unitsE->FirstChild()->Value();
+      
+      	else 
+      		throw(XMLException("Error: units value not present, please put \"unknown\" if you do not have a value"));
+      	
+      
+      	//if there is a value inside <type>
+      	if(typeE->FirstChild())
+      		typeName =typeE->FirstChild()->Value();
+      
+          else 
+      		throw(XMLException("Error: type value not present, please put \"unknown\" if you do not have a value"));
+      	
+      
+      	//get number attribute from <projection>
+      	if(!projE->Attribute("number", &projNumber)) 
+      		throw(XMLException("Error: number attribute missing from <projection> please put \"-1\" if you do not have a value"));
+      	
+      
+      	//if there is a value inside <name>
+      	if(projNameE->FirstChild())
+      		projName = projNameE->FirstChild()->Value();
+      	
+      	else 
+      		throw(XMLException("Error: name value not present for <name> under <projection>, please put \"unknown\" if you do not have a value"));
+      	
+      
+      	//if there is a value inside <zone>
+      	if(zoneE->FirstChild())
+      		zone = atoi(zoneE->FirstChild()->Value());
+      
+      	else 
+      		throw(XMLException("Error: zone value not present, please put \"-1\" if you do not have a value"));
+      
+      
+      	//get number attribute from <datum>
+      	if(!datumE->Attribute("number", &datumNumber)) 
+      		throw(XMLException("Error: missing number attribute from <datum>  please put \"-1\" if you do not have a value."));
+      	
+      	
+      	//if there is a value inside <datum>
+      	if(datumE->FirstChild())
+      		datumName = datumE->FirstChild()->Value();
+      
+      	else 
+      		throw(XMLException("Error: name value not present for <name> under <datum>, please put \"unknown\" if you do not have a value"));
+      
+      	//Get ulx attribute from <boundaries>
+      	if(!ulCornerE->Attribute("ulx", &ulx)) 
+      		throw(XMLException("Error: ulx attribute missing from <boundaries> please put \"-1\" if you do not have a value."));
+      	
+      
+      	//Get uly attribute from <boundaries>
+      	if(!ulCornerE->Attribute("uly", &uly)) 
+      		throw(XMLException("Error: uly attribute missing from <boundaries> please put \"-1\" if you do not have a value."));
+      	
+      	
+      	//Set member variables.
+      	setAuthorName(authorName);
+      	setAuthorEmail(authorEmail);
+      	setAuthorCompany(authorCompany);
+      	setRows(rows);
+      	setCols(cols);
+      	setBits(bits);
+      	setFillValue(fillValue);
+      	setNoDataValue(noDataValue);
+      	setPixelSize(pixelSize);
+      	if(sign == 1)
+      		setSigned(true);
+      	else if(sign == 0)
+      		setSigned(false);
+      	setDatumName(datumName);
+      	setDatumNumber(datumNumber);
+      	setUnitsName(unitsName);
+      	setProjName(projName);
+      	setDataType(typeName);
+      	setProjNumber(projNumber);
+      	setUnitsNumber(unitsNumber);
+      	setZone(zone);
+      	setUlCorner(ulx,uly);
+      	setFilename(filename);
+      
+      	//Set the 15 GCTPParameters values
+      	currentComment = paramsRootE->FirstChild();
+      	currentParam = paramsRootE->FirstChild()->NextSibling();
+      	for(int j = 0; j < 15; j++) {
+      		
+      		if(!currentComment || !currentParam) 
+      			throw(XMLException("Error: missing <param> or comment tag under <GCTPParameters>, there must be 15 parameters and 15 comments."));
+      		
+      		if(currentParam->FirstChild()) {
+      			GCTPParam = atof(currentParam->FirstChild()->Value());
+      			setParam(j, GCTPParam, currentComment->Value());
+      		}
+      		else
+      			throw(XMLException("Error, missing parameter value, use 0.0 if unknown"));
+      		
+      		if(j != 14) {
+      			currentParam = currentParam->NextSibling()->NextSibling();
+      			currentComment = currentComment->NextSibling()->NextSibling();
+      		}
 
-	//Element pointerts for the top level tags.
-	TiXmlElement* rootE = handle.FirstChild("rasterInformation").Element();
-	TiXmlElement* authorE =  handle.FirstChild("rasterInformation").FirstChild("author").Element();
-	TiXmlElement* pixelDescE =  handle.FirstChild("rasterInformation").FirstChild("pixelDescription").Element();
-	TiXmlElement* projE = handle.FirstChild("rasterInformation").FirstChild("projection").Element();
-	TiXmlElement* areaE = handle.FirstChild("rasterInformation").FirstChild("area").Element();
-	TiXmlElement* paramsRootE = handle.FirstChild("rasterInformation").FirstChild("GCTPParams").Element();
-	
-	//element pointers for the lower level tags.
-	TiXmlNode* currentParam = NULL;
-	TiXmlNode* currentComment = NULL;
-	TiXmlElement* bitsE= NULL;
-	TiXmlElement* signedE = NULL;
-	TiXmlElement* unitsE = NULL;
-	TiXmlElement* typeE = NULL;
-	TiXmlElement* projNameE = NULL;
-	TiXmlElement* zoneE = NULL;
-	TiXmlElement* datumE = NULL;
-	TiXmlElement* authorNameE = NULL;
-	TiXmlElement* authorCompanyE = NULL;
-	TiXmlElement* authorEmailE = NULL;
-	TiXmlElement* fillValueE = NULL;
-	TiXmlElement* ulCornerE = NULL;
-	TiXmlElement* dimensionsE = NULL;
-	TiXmlElement* pixelSizeE = NULL;
-
-
-	//********************************************************
-	//*Check to see if any of the top-level tags are missing
-	//********************************************************
-	if(!rootE) 
-		throw(XMLException("Error: missing or malformed <rasterInformation> tag"));
-	
-
-	if(!pixelDescE) 
-		throw(XMLException("Error, missing or malformed <pixelDescription> tag."));
-	
-
-	if(!projE) 
-		throw(XMLException("Error, missing or malformed <projection> tag."));
-	
-
-	if(!areaE) 
-		throw(XMLException("Error, missing or malformed <area> tag."));
-	
-
-	if(!paramsRootE) 
-		throw(XMLException("Error, missing or malformed <GCTPParams> tag."));
-	
-	
-	//If none of the tags are missing, instantiate the lower
-	//level tag element objects.
-	bitsE= pixelDescE->FirstChild("bits")->ToElement();
-	signedE = pixelDescE->FirstChild("sign")->ToElement();
-	typeE = pixelDescE->FirstChild("type")->ToElement();
-	fillValueE = pixelDescE->FirstChild("fillValue")->ToElement();
-	pixelSizeE = pixelDescE->FirstChild("pixelSize")->ToElement();
-	datumE = projE->FirstChild("datum")->ToElement();
-	projNameE = projE->FirstChild("name")->ToElement();
-	zoneE = projE->FirstChild("zone")->ToElement();
-	unitsE = projE->FirstChild("units")->ToElement();
-	ulCornerE = areaE->FirstChild("ulCorner")->ToElement();
-	dimensionsE = areaE->FirstChild("dimensions")->ToElement();
-	authorNameE = authorE->FirstChild("name")->ToElement();
-	authorCompanyE = authorE->FirstChild("company")->ToElement();
-	authorEmailE = authorE->FirstChild("email")->ToElement();
-
-	//*********************************************************************
-	//*Check for the existence of lower-level tags
-	//*********************************************************************
-	if(!bitsE) 
-		throw(XMLException("Error, missing or malformed <bits> tag under <pixelDescription>."));
-
-	if(!signedE) 
-		throw(XMLException("Error, missing or malformed <signed> tag under <pixelDescription>."));
-	
-
-	if(!unitsE) 
-		throw(XMLException("Error, missing or malformed <units> tag under <projection>."));
-	
-
-	if(!typeE) 
-		throw(XMLException("Error, missing or malformed <type> tag under <pixelDescription>."));
-	
-
-	if(!datumE) 
-		throw(XMLException("Error, missing or malformed <datum> tag under <projection>."));
-	
-	if(!fillValueE)
-		throw(XMLException("Error, missing or malformed <fillValue> tag under <pixelDescription>."));
-
-	if(!pixelSizeE)
-		throw(XMLException("Error, missing or malformed <pixelSize> tag under <pixelDescription>."));
-
-	if(!projNameE) 
-		throw(XMLException("Error, missing or malformed <name> tag under <projection>."));
-	
-	if(!ulCornerE) 
-		throw(XMLException("Error, missing or malformed <ulCorner> tag under <area>."));
-
-	if(!dimensionsE) 
-		throw(XMLException("Error, missing or malformed <dimensions> tag under <area>."));
-
-	if(!zoneE) 
-		throw(XMLException("Error, missing or malformed <zone> tag under <projection>."));
-	
-	if(!authorNameE) 
-		throw(XMLException("Error, missing or malformed <name> tag under <author>"));
-
-	if(!authorCompanyE) 
-		throw(XMLException("Error, missing or malformed <company> tag under <author>"));
-
-	if(!authorEmailE) 
-		throw(XMLException("Error, missing or malformed <email> tag under <author>"));
-
-
-	if(authorNameE->FirstChild()) 
-		authorName = authorNameE->FirstChild()->Value();
-	
-	else
-		throw(XMLException("Error, missing value for <name> tag under <author> please put \"unknown\" if you do not know the value."));
-
-	if(authorCompanyE->FirstChild()) 
-		authorCompany = authorCompanyE->FirstChild()->Value();
-	
-	else
-		throw(XMLException("Error, missing value for <company> tag under <author> please put \"unknown\" if you do not know the value."));
-
-	if(authorEmailE->FirstChild()) 
-		authorEmail = authorEmailE->FirstChild()->Value();
-	
-	else
-		throw(XMLException("Error, missing value for <email> tag under <author> please put \"unknown\" if you do not know the value."));
-
-	//Get rows attribute from <image>
-	if(!dimensionsE->Attribute("rows", &rows)) 
-		throw(XMLException("Error: missing rows attribute in <dimensions> please put \"-1\" if you do not have a value"));
-	
-
-	//Get columns attribute from <image>
-	if(!dimensionsE->Attribute("columns", &cols)) 
-		throw(XMLException("Error: missing columns attribute in <image> please put \"-1\" if you do not have a value"));
-		
-	//If there is a value inside <bits>
-	if(bitsE->FirstChild()) 
-		bits = atoi(bitsE->FirstChild()->Value());
-
-	else 
-		throw(XMLException("Error: bits value not present, please put \"0\" if you do not have a value"));
-	
-	if(fillValueE->FirstChild())
-		fillValue = atof(fillValueE->FirstChild()->Value());
-	
-	else
-		throw(XMLException("Error, missing value for <fillValue> under <pixelDescription>, please use -2 if it is unknown"));
-
-	if(pixelSizeE->FirstChild())
-		pixelSize = atof(pixelSizeE->FirstChild()->Value());
-	
-	else
-		throw(XMLException("Error, missing value for <pixelSize> under <pixelDescription>, please use -1 if it is unknown"));
-
-	//if there is a value inside <sign>
-	if(signedE->FirstChild()) {
-		char temp[30] = {'\0'};
-		strcpy(temp, signedE->FirstChild()->Value());
-		for(unsigned int i = 0; i < strlen(temp); i++)
-			temp[i] = toupper(temp[i]);
-
-		if(!strcmp(temp, "UNKNOWN"))
-			sign = -1;
-
-		else if(!strcmp(temp, "SIGNED"))
-			sign = 1;
-
-		else
-			sign = 0;
-	}
-
-	else 
-		throw(XMLException("Error: signed value not present, please put \"-1\" if you do not have a value"));
-	
-
-	//Load units number from "number" attribute in <units>
-	if(!unitsE->Attribute("number", &unitsNumber)) 
-		throw(XMLException("Error: number attribute missing from <units> please put \"-1\" if you do not have a value"));
-	
-	//if there is a value inside <units>
-	if(unitsE->FirstChild()) 
-		unitsName = unitsE->FirstChild()->Value();
-
-	else 
-		throw(XMLException("Error: units value not present, please put \"unknown\" if you do not have a value"));
-	
-
-	//if there is a value inside <type>
-	if(typeE->FirstChild())
-		typeName =typeE->FirstChild()->Value();
-
-    else 
-		throw(XMLException("Error: type value not present, please put \"unknown\" if you do not have a value"));
-	
-
-	//get number attribute from <projection>
-	if(!projE->Attribute("number", &projNumber)) 
-		throw(XMLException("Error: number attribute missing from <projection> please put \"-1\" if you do not have a value"));
-	
-
-	//if there is a value inside <name>
-	if(projNameE->FirstChild())
-		projName = projNameE->FirstChild()->Value();
-	
-	else 
-		throw(XMLException("Error: name value not present for <name> under <projection>, please put \"unknown\" if you do not have a value"));
-	
-
-	//if there is a value inside <zone>
-	if(zoneE->FirstChild())
-		zone = atoi(zoneE->FirstChild()->Value());
-
-	else 
-		throw(XMLException("Error: zone value not present, please put \"-1\" if you do not have a value"));
-	
-
-	//get number attribute from <datum>
-	if(!datumE->Attribute("number", &datumNumber)) 
-		throw(XMLException("Error: missing number attribute from <datum>  please put \"-1\" if you do not have a value."));
-	
-	
-	//if there is a value inside <datum>
-	if(datumE->FirstChild())
-		datumName = datumE->FirstChild()->Value();
-
-	else 
-		throw(XMLException("Error: name value not present for <name> under <datum>, please put \"unknown\" if you do not have a value"));
-
-	//Get ulx attribute from <boundaries>
-	if(!ulCornerE->Attribute("ulx", &ulx)) 
-		throw(XMLException("Error: ulx attribute missing from <boundaries> please put \"-1\" if you do not have a value."));
-	
-
-	//Get uly attribute from <boundaries>
-	if(!ulCornerE->Attribute("uly", &uly)) 
-		throw(XMLException("Error: uly attribute missing from <boundaries> please put \"-1\" if you do not have a value."));
-	
-	
-	//Set member variables.
-	setAuthorName(authorName);
-	setAuthorEmail(authorEmail);
-	setAuthorCompany(authorCompany);
-	setRows(rows);
-	setCols(cols);
-	setBits(bits);
-	setFillValue(fillValue);
-	setPixelSize(pixelSize);
-	if(sign == 1)
-		setSigned(true);
-	else if(sign == 0)
-		setSigned(false);
-	setDatumName(datumName);
-	setDatumNumber(datumNumber);
-	setUnitsName(unitsName);
-	setProjName(projName);
-	setDataType(typeName);
-	setProjNumber(projNumber);
-	setUnitsNumber(unitsNumber);
-	setZone(zone);
-	setUlCorner(ulx,uly);
-	setFilename(filename);
-
-	//Set the 15 GCTPParameters values
-	currentComment = paramsRootE->FirstChild();
-	currentParam = paramsRootE->FirstChild()->NextSibling();
-	for(int j = 0; j < 15; j++) {
-		
-		if(!currentComment || !currentParam) 
-			throw(XMLException("Error: missing <param> or comment tag under <GCTPParameters>, there must be 15 parameters and 15 comments."));
-		
-		if(currentParam->FirstChild()) {
-			GCTPParam = atof(currentParam->FirstChild()->Value());
-			setParam(j, GCTPParam, currentComment->Value());
-		}
-		else
-			throw(XMLException("Error, missing parameter value, use 0.0 if unknown"));
-		
-		if(j != 14) {
-			currentParam = currentParam->NextSibling()->NextSibling();
-			currentComment = currentComment->NextSibling()->NextSibling();
-		}
-		
-	}
+      	}
 }
 
 //Save image info to XML file named filename
@@ -652,7 +671,7 @@ bool RasterXML::save(const char* filename) {
 	if(!m_filename && filename)
 		setFilename(filename);
 	if(m_doc && filename) {
-		if(m_doc->SaveFile(filename)) 
+		if(m_doc->SaveFile(filename))
 			return true;
 	}
 	else
@@ -763,6 +782,10 @@ double RasterXML::getFillValue() const {
 	return m_fillValue;
 }
 
+double RasterXML::getNoDataValue() const {
+	return m_noDataValue;
+}
+
 void RasterXML::setFillValue(double val) {
 
 	if(m_doc) {
@@ -784,6 +807,27 @@ void RasterXML::setFillValue(double val) {
 		throw(XMLException("Error: internal document tree not initialized"));
 }
 
+void RasterXML::setNoDataValue(double val) {
+
+	if(m_doc) {
+		TiXmlHandle handle(m_doc);
+		TiXmlText* noDataValueT = handle.FirstChild("rasterInformation").FirstChild("pixelDescription").FirstChild("noDataValue").FirstChild().Text();
+		if(noDataValueT) {
+			char temp[20] = {'\0'};
+			sprintf(temp, "%f", val);
+			noDataValueT->SetValue(temp);
+		}
+
+		else
+			throw(XMLException("Error: <noDataValue> value not present"));
+
+		m_noDataValue = val;
+	}
+
+	else
+		throw(XMLException("Error: internal document tree not initialized"));
+}
+
 void RasterXML::setAuthorName(const char* name) {
 	if(m_authorName)
 		delete[] m_authorName;
@@ -795,14 +839,15 @@ void RasterXML::setAuthorName(const char* name) {
 			if(name) {
 				authorNameT->SetValue(name);
 				m_authorName = new char[strlen(name)+1];
-				strcpy(m_authorName, name);
+				strncpy(m_authorName, name, strlen(name));
 				m_authorName[strlen(name)] = '\0';
 			}
 
 			else {
 				authorNameT->SetValue("Unknown");
 				m_authorName = new char[8];
-				strcpy(m_authorName, "Unknown\0");
+				strncpy(m_authorName, "Unknown\0", 8);
+				m_authorName[7] = '\0';
 			}
 		}
 
@@ -827,14 +872,15 @@ void RasterXML::setAuthorCompany(const char* company) {
 			if(company) {
 				authorCompanyT->SetValue(company);
 				m_authorCompany = new char[strlen(company)+1];
-				strcpy(m_authorCompany, company);
+				strncpy(m_authorCompany, company, strlen(company));
 				m_authorCompany[strlen(company)] = '\0';
 			}
 
 			else {
 				authorCompanyT->SetValue("Unknown");
 				m_authorCompany = new char[8];
-				strcpy(m_authorCompany, "Unknown\0");
+				strncpy(m_authorCompany, "Unknown\0", 8);
+                                m_authorCompany[7] = '\0';
 			}
 		}
 
@@ -859,14 +905,15 @@ void RasterXML::setAuthorEmail(const char* email) {
 			if(email) {
 				authorEmailT->SetValue(email);
 				m_authorEmail = new char[strlen(email)+1];
-				strcpy(m_authorEmail, email);
+				strncpy(m_authorEmail, email, strlen(email));
 				m_authorEmail[strlen(email)] = '\0';
 			}
 
 			else {
 				authorEmailT->SetValue("Unknown");
 				m_authorEmail = new char[8];
-				strcpy(m_authorEmail, "Unknown\0");
+				strncpy(m_authorEmail, "Unknown\0", 8);
+				m_authorEmail[7] = '\0';
 			}
 		}
 
@@ -948,7 +995,7 @@ void RasterXML::setUnitsNumber(int num) {
 		throw(XMLException("Error: internal document tree not initialized"));
 
 	
-}			
+}
 
 //Set units name
 void RasterXML::setUnitsName(const char* name) {
@@ -959,20 +1006,21 @@ void RasterXML::setUnitsName(const char* name) {
 
 	//update internal document tree with new units name value
 	if(m_doc) {
-		
+
 			TiXmlHandle handle(m_doc);
 			TiXmlText* unitsT = handle.FirstChild("rasterInformation").FirstChild("projection").FirstChild("units").FirstChild().Text();
 			if(unitsT) {
 				if(name) {
 					unitsT->SetValue(name);
 					m_unitsName = new char[strlen(name)+1];
-					strcpy(m_unitsName, name);
+					strncpy(m_unitsName, name, strlen(name));
 					m_unitsName[strlen(name)] = '\0';
 				}
 				else {
 					unitsT->SetValue("Unknown");
 					m_unitsName = new char[8];
-					strcpy(m_unitsName, "Unknown\0");
+					strncpy(m_unitsName, "Unknown\0", 8);
+					m_unitsName[7] = '\0';
 				}
 			}
 			else
@@ -1120,68 +1168,70 @@ void RasterXML::setDataType(const char* type) {
 	
 	//Update internal document tree with new data type value
 	if(m_doc) {
-		
+
 			TiXmlHandle handle(m_doc);
 			TiXmlText* dataTypeT = handle.FirstChild("rasterInformation").FirstChild("pixelDescription").FirstChild("type").FirstChild().Text();
 			if(dataTypeT) {
 				if(type) {
 					dataTypeT->SetValue(type);
 					m_dataType = new char[strlen(type)+1];
-					strcpy(m_dataType, type);
+					strncpy(m_dataType, type, strlen(type));
 					m_dataType[strlen(type)] = '\0';
 				}
 				else {
 					dataTypeT->SetValue("Unknown");
 					m_dataType = new char[8];
-					strcpy(m_dataType, "Unknown\0");
+					strncpy(m_dataType, "Unknown\0", 8);
+					m_dataType[7] = '\0';
 				}
 			}
 			else
 				throw(XMLException("Error: <type> tag missing value"));
 	}
 
-	else 
+	else
 		throw(XMLException("Error: internal document tree not initialized"));
 }
 
 //Set filename
 //Should I keep this?
 void RasterXML::setFilename(const char* filename) {
-	
 
-	if(m_filename) 
+
+	if(m_filename)
 		delete[] m_filename;
 
 	if(filename) {
 		m_filename = new char[strlen(filename)+1];
-		strcpy(m_filename, filename);
+		strncpy(m_filename, filename, strlen(filename));
 		m_filename[strlen(filename)] = '\0';
 	}
-	
+
 
 }
 
 //Set projection name
 void RasterXML::setProjName(const char* name) {
-	
+
 	if(m_projName)
 		delete[] m_projName;
 
 	if(m_doc) {
-		
+
 			TiXmlHandle handle(m_doc);
 			TiXmlText* projNameT = handle.FirstChild("rasterInformation").FirstChild("projection").FirstChild("name").FirstChild().Text();
 			if(projNameT) {
 				if(name) {
 					projNameT->SetValue(name);
 					m_projName = new char[strlen(name)+1];
-					strcpy(m_projName, name);
+					strncpy(m_projName, name, strlen(name));
 					m_projName[strlen(name)] = '\0';
 				}
 				else {
 					projNameT->SetValue("Unknown");
 					m_projName = new char[8];
-					strcpy(m_projName, "Unknown\0");
+					strncpy(m_projName, "Unknown\0", 8);
+					m_projName[7] = '\0';
 				}
 			}
 			else
@@ -1198,20 +1248,21 @@ void RasterXML::setDatumName(const char* name) {
 		delete[] m_datumName;
 
 	if(m_doc) {
-		
+
 			TiXmlHandle handle(m_doc);
 			TiXmlText* datumNameT = handle.FirstChild("rasterInformation").FirstChild("projection").FirstChild("datum").FirstChild().Text();
 			if(datumNameT) {
 				if(name) {
 					datumNameT->SetValue(name);
 					m_datumName = new char[strlen(name)+1];
-					strcpy(m_datumName, name);
+					strncpy(m_datumName, name, strlen(name));
 					m_datumName[strlen(name)] = '\0';
 				}
 				else {
 					datumNameT->SetValue("Unknown");
 					m_datumName = new char[8];
-					strcpy(m_datumName, "Unknown\0");
+					strncpy(m_datumName, "Unknown\0", 8);
+					m_datumName[7]= '\0';
 				}
 			}
 			else
@@ -1304,11 +1355,11 @@ void RasterXML::setSigned(bool isSigned) {
 			throw(XMLException("Error: <sign> tag value missing"));
 
 		m_signed = isSigned;
-		
+
 	}
 
 	else 
-		throw(XMLException("Error: internal document tree not initialized"));	
+		throw(XMLException("Error: internal document tree not initialized"));
 }
 
 //Overloaded output operator for RasterXML class
@@ -1332,6 +1383,7 @@ std::ostream& operator<<(std::ostream& os, const RasterXML& i) {
 
 	os << "Units: " << i.getUnitsName() << endl;
 	os << "Fill Value: " << i.getFillValue() << endl;
+	os << "No Data Value: " << i.getNoDataValue() << endl;
 	os << "Pixel Size: " << i.m_pixelSize << endl;
 	os << "Boundaries:   ulx=" << i.getUlx() << "   uly=" << i.getUly() << endl;
 	os << "Projection: " << i.getProjName() << "     Zone(if UTM):" << i.getZone() << endl;

@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.3 2005/01/31 17:24:02 jtrent Exp $
+// $Id: imgio.h,v 1.4 2005/02/01 16:08:13 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -143,15 +143,16 @@ int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * ou
 // Solaris compiler compatability
 // ---------------------------
 template <class type>
-//type get_max_value(const char* inputFilename, int inputSize, type typeToUse)
 type get_max_value( RasterInfo &input, type )
 {
    char* inputFilename = new char[500];
-   strcpy( inputFilename, input.imgFileName().ascii() );
+   strncpy( inputFilename, input.imgFileName().ascii(), 499 );
+   inputFilename[499] = '\0';
+
    int inputSize = input.rows() * input.cols();
 
      FILE * inputPtr = fopen(inputFilename, "rb");
-   if( inputPtr == NULL ) 
+   if( inputPtr == NULL )
       return (type)0.0;
 
      if( inputSize > 10000 )
@@ -210,7 +211,7 @@ void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
         {
             // end of file or corrupt file found
             printf( "error seeking!!!\n" );
-	    fflush(stdout );
+	    fflush( stdout );
         }
 	
         //then load the line into memory
@@ -219,7 +220,7 @@ void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
 
 	if( amountRead != (long)(sizeof(type) * lineLength) )
 	{
-		printf( "Read %i requested %i\n", amountRead, lineLength );
+		printf( "Read %li requested %i\n", amountRead, lineLength );
 		fflush( stdout );
 
 		if( inptr.atEnd() )

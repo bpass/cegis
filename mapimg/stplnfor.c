@@ -1,4 +1,4 @@
-// $Id: stplnfor.c,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: stplnfor.c,v 1.2 2005/01/28 17:59:09 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -36,8 +36,8 @@ static long id;		/* indicates which projection is to be transformed */
 /* set the initialized values for zone and spheroid.  This value determines
    wheather to initialize or not
   ------------------------------------------------------------------------*/
-static long inzone = 0;		/* previous zone value */
-static long insphere = -1;      /* previous spheroid value */
+//static long inzone = 0;		/* previous zone value */
+//static long insphere = -1;      /* previous spheroid value */
 
 /* the Nad 27 State Plane Zones are set in this array
   --------------------------------------------------*/
@@ -117,14 +117,14 @@ if (zone > 0)
       }
    else
       {
-      sprintf(buf,"Illegal spheroid #%4d",sphere);
+      sprintf(buf,"Illegal spheroid #%4ld",sphere);
       p_error(buf,"state-spheroid");
       return(23);
       }
    }
 if (ind == -1)
    {
-   sprintf(buf,"Illegal zone #%4d  for spheroid #%4d",zone,sphere);
+   sprintf(buf,"Illegal zone #%4ld  for spheroid #%4ld",zone,sphere);
    p_error(buf,"state-init");
    return(21);
    }
@@ -148,7 +148,7 @@ fclose(ptr);
   
 if (id <= 0)
      {
-     sprintf(buf,"Illegal zone #%4d  for spheroid #%4d",zone,sphere);
+     sprintf(buf,"Illegal zone #%4ld  for spheroid #%4ld",zone,sphere);
      p_error(buf,"state-init");
      return(21);
      }

@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.2 2005/01/27 18:15:13 jtrent Exp $
+// $Id: getprojinfo.h,v 1.3 2005/01/28 17:59:06 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -35,9 +35,10 @@ extern "C"
        #include "proj.h"
 }
 
+/*jtrent   I have turned off all logginf for right now, then should be enabled after teh merge */
 static char*  logFile = strdup( QDir::currentDirPath().append("/mapimg.log").ascii() );
-static long   errorMode = 3;    //print both errors and parameters to a precreated
-static long   paramMode = 3;    //FILE* to logFile
+static long   errorMode = 0;    //print both errors and parameters to a precreated
+static long   paramMode = 0;    //FILE* to logFile
 
 
 int get_projInfo(char *name, long *sys, long *unit, long *zone, long *datum, double pparm[]);
@@ -95,7 +96,7 @@ bool nearestNeighbor( RasterInfo input, RasterInfo output, type useType, QWidget
     // Initialize input & output space image & projections
     ioreturnval = init_io(input, output, &inimg, &outimg, useType );
 
-    if(!ioreturnval)
+    if(!ioreturnval)	/* jtrent    is this needed anymore?? */
     {
 	remove("abctempxyz31199.proj");
 	remove("abctempxyz311992.proj");
@@ -223,7 +224,7 @@ bool nearestNeighbor( RasterInfo input, RasterInfo output, type useType, QWidget
 			{
 
                             //Loads into memory the current line of input needed
-                            get_line(  mapimginbuf, in_line*inimg.ns, inimg.ns+1, useType );
+                            get_line(  mapimginbuf, in_line, inimg.ns, useType );
 
                             //references specific element of input
 			    *( (type*)mapimgoutbuf + out_samp) = *((type*)mapimginbuf + in_samp);

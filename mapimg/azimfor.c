@@ -1,4 +1,4 @@
-// $Id: azimfor.c,v 1.1 2005/01/14 16:18:48 rbuehler Exp $
+// $Id: azimfor.c,v 1.2 2005/01/28 17:59:06 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -34,8 +34,8 @@ ALGORITHM REFERENCES
 static double r_major;		/* major axis 				*/
 static double lon_center;	/* Center longitude (projection center) */
 static double lat_origin;	/* center latitude			*/
-static double e0,e1,e2,e3;	/* eccentricity constants		*/
-static double e,es,esp;		/* eccentricity constants		*/
+//static double e0,e1,e2,e3;	/* eccentricity constants		*/
+//static double e,es,esp;		/* eccentricity constants		*/
 static double false_northing;	/* y offset in meters			*/
 static double false_easting;	/* x offset in meters			*/
 static double sin_p12;		/* sin of center latitude		*/

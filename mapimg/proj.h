@@ -1,4 +1,4 @@
-// $Id: proj.h,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: proj.h,v 1.2 2005/01/28 17:59:07 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -136,7 +136,7 @@ long aziminv( double x, double y, double *lon, double *lat);
 void sincos( double val, double *sin_val, double *cos_val);
 double asinz (double con);
 double msfnz (double eccent, double sinphi, double cosphi);
-double qsfnz (double eccent, double sinphi, double cosphi);
+double qsfnz (double eccent, double sinphi ); //, double cosphi);
 double phi1z (double eccent, double qs, long  *flag);
 double phi2z(double eccent, double ts, long *flag);
 double phi3z(double ml, double e0, double e1, double e2, double e3,

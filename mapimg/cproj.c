@@ -1,4 +1,4 @@
-// $Id: cproj.c,v 1.1 2005/01/14 16:18:48 rbuehler Exp $
+// $Id: cproj.c,v 1.2 2005/01/28 17:59:06 jtrent Exp $
 
 
 //Copyright 1991 United States Geological Survey
@@ -95,10 +95,7 @@ double con;
 /* Function to compute constant small q which is the radius of a 
    parallel of latitude, phi, divided by the semimajor axis. 
 ------------------------------------------------------------*/
-double qsfnz (eccent,sinphi,cosphi)
-   double eccent;
-   double sinphi;
-   double cosphi;
+double qsfnz ( double eccent, double sinphi )
 {
 double con;
 
@@ -345,8 +342,7 @@ double tsfnz(eccent,phi,sinphi)
 
 /* Function to return the sign of an argument
   ------------------------------------------*/
-sign(x)
-double x;
+int sign( double x )
 {
 if (x < 0.0)
     return(-1);

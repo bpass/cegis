@@ -1,4 +1,4 @@
-// $Id: alberfor.c,v 1.1 2005/01/14 16:18:48 rbuehler Exp $
+// $Id: alberfor.c,v 1.2 2005/01/28 17:59:06 jtrent Exp $
 
 
 //Copyright 1992 United States Geological Survey
@@ -81,16 +81,16 @@ sincos(lat1, &sin_po, &cos_po);
 con = sin_po;
 
 ms1 = msfnz(e3,sin_po,cos_po);
-qs1 = qsfnz(e3,sin_po,cos_po);
+qs1 = qsfnz(e3,sin_po ); //,cos_po);
 
 sincos(lat2,&sin_po,&cos_po);
 
 ms2 = msfnz(e3,sin_po,cos_po);
-qs2 = qsfnz(e3,sin_po,cos_po);
+qs2 = qsfnz(e3,sin_po ); //,cos_po);
 
 sincos(lat0,&sin_po,&cos_po);
 
-qs0 = qsfnz(e3,sin_po,cos_po);
+qs0 = qsfnz(e3,sin_po ); //,cos_po);
 
 if (fabs(lat1 - lat2) > EPSLN)
    ns0 = (ms1 * ms1 - ms2 *ms2)/ (qs2 - qs1);
@@ -126,7 +126,7 @@ double theta;			/* angle			*/
 double rh1;			/* height above ellipsoid	*/
 
 sincos(lat,&sin_phi,&cos_phi);
-qs = qsfnz(e3,sin_phi,cos_phi);
+qs = qsfnz(e3,sin_phi); //,cos_phi);
 rh1 = r_major * sqrt(c - ns0 * qs)/ns0;
 theta = ns0 * adjust_lon(lon - lon_center); 
 *x = rh1 * sin(theta) + false_easting;

@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.1 2005/01/14 16:18:49 rbuehler Exp $
+// $Id: imgio.h,v 1.2 2005/01/28 17:59:07 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -15,6 +15,16 @@
 #define OUTFILE_NAME	2
 
 
+//#define _LARGEFILE_SOURCE
+//#define _LARGEFILE64_SOURCE
+#define _FILE_OFFSET_BITS 64
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <stdlib.h>
+
+#include <qfile.h>
 #include <qmessagebox.h>
 #include "rasterinfo.h"
 
@@ -49,6 +59,8 @@ void early_error_cleanup();
 extern char infile_name[500];		// Name of input file   from imgio.cpp
 extern char outfile_name[500];		// Name of output file
 
+extern QFile inptr;
+extern QFile outptr;			// Output file pointer  from imgio.cpp
 
 template <class type>
 int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * outimg, type )
@@ -56,8 +68,11 @@ int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * ou
 	void * bufptr;		// Pointer to input buffer
 
 	// Open input file and check for any errors
-	inptr = fopen(infile_name, "rb");
-	if(!inptr)
+	inptr.setName( infile_name );
+	inptr.open( IO_ReadOnly | IO_Raw );
+//	inptr = fopen64(infile_name, "rb");
+
+	if( !inptr.isOpen() || !inptr.isReadable() )
 	{
 	    early_error_cleanup();
 	    QMessageBox::critical( 0, "mapimg",
@@ -66,26 +81,29 @@ int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * ou
 	}
 
 	// Open output file and check for any errors
-	outptr = fopen(outfile_name, "wb");
-	if(!outptr)
+//	outptr = fopen(outfile_name, "wb");
+	outptr.setName( outfile_name );
+        outptr.open( IO_WriteOnly | IO_Raw );
+
+	if(!outptr.isOpen() || !outptr.isWritable() )
 	{
 	    early_error_cleanup();
-	    QMessageBox::critical( 0, "mapimg",
-	    QString("An internal error occurred while trying to open the designated output file\n\nmapimg will not execute."));
+	    QMessageBox::critical( 0, "MapIMG",
+	    QString("An internal error occurred while trying to open the designated output file\n\nMapIMG will not execute."));
 	    return 0;
 	}
 
    raster2IMG( input, inimg );
    raster2IMG( output, outimg );
-
+	
 	// Set input file size and try to allocate that amount of memory
-
+	
    /******* Change here for allocating lines in input *******/
 
 	insize = inimg->nl * inimg->ns;
 
 
-        insize = inimg->ns + 2;
+        insize = inimg->ns;
 
         bufptr = (type *) malloc(insize*sizeof(type));
         Q_CHECK_PTR( bufptr );
@@ -105,6 +123,20 @@ int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * ou
 	mapimginbuf = bufptr;
  	mapimgoutbuf = (void *) malloc(outsize*sizeof(type));
 
+        if(!mapimgoutbuf)
+	{
+	    early_error_cleanup();
+	    QMessageBox::critical(0, "MapIMG",
+	    QString("An internal error occurred while trying to allocate the input image buffer!  Image is too large!\n\nMapIMG will not execute."));
+	    return 0;
+	}
+
+	for( int index = 0; index < outsize; index++ )
+        {
+        	*((type*)mapimgoutbuf + index) = (type)0;
+        }
+
+
         return 1;
 }
 
@@ -114,87 +146,120 @@ int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * ou
 // ---------------------------
 template <class type>
 //type get_max_value(const char* inputFilename, int inputSize, type typeToUse)
-type get_max_value( RasterInfo &input, type typeToUse )
+type get_max_value( RasterInfo &input, type )
 {
    char* inputFilename = new char[500];
    strcpy( inputFilename, input.imgFileName().ascii() );
    int inputSize = input.rows() * input.cols();
 
-   FILE * inputPtr = fopen(inputFilename, "rb");
+     FILE * inputPtr = fopen(inputFilename, "rb");
    if( inputPtr == NULL ) 
       return (type)0.0;
 
-   if( inputSize > 10000 )
-     	inputSize = 10000;
+     if( inputSize > 10000 )
+     	 inputSize = 10000;
 
-   void* bufptrMax = (type *) malloc(inputSize*sizeof(typeToUse));
+     void* bufptrMax = (type *) malloc(inputSize*sizeof(type));
 
-   if( bufptrMax == NULL )
+     if( bufptrMax == NULL )
       return (type)0.0;
 
-   fread(bufptrMax, sizeof(typeToUse), inputSize, inputPtr);
+     fread( bufptrMax, sizeof(type), inputSize, inputPtr );
+     
+     fclose( inputPtr );
 
-   fclose(inputPtr);
+     inputSize = inputSize / sizeof( type );
 
-   inputSize = inputSize / sizeof( typeToUse );
+     type max_value = (type)0.0;
 
-   type max_value = (type)0.0;
+     for( int index = 0; index < (inputSize-1)/2; index++ )
+     {
+           if( *((type*)bufptrMax + index) > max_value )
+              max_value = *((type*)bufptrMax + index);
+     }
 
-   for( int index = 0; index < (inputSize-1)/2; index++ )
-   {
-         if( *((type*)bufptrMax + index*sizeof(typeToUse)) > max_value )
-            max_value = *((type*)bufptrMax + index*sizeof(typeToUse));
-   }
-
-   free(bufptrMax);
+     free(bufptrMax);
    //delete inputPtr;
 
-   return max_value;
+     return max_value;
 }
 
 // Read input image line by line number
 // Definition must be in header for
 // Solaris compiler compatability
 // ---------------------------
-extern FILE * inptr;				// Input file pointer  from imgio.cpp
+extern QFile inptr;				// Input file pointer  from imgio.cpp
 extern long insize;				// Number of bytes in input image
-static long get_line_loadedData;
+//static off64_t get_line_loadedData;
+
+#include <qcache.h>
+static int MAX_DATA_ELEMENT_COUNT = 800;		//20, 23
+static int FRIST_PRIME_AFTER_MAX = 801;
 
 template <class type>
-void get_line(void * buf, long offset, int , type )
+void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
 {
-     // check and see if line requested is already in memory
-     if( get_line_loadedData != offset )
-     {
-        //if not, first, seek to that point in the file
-     	get_line_loadedData = offset;
+  static QCache<type> inputDataMap( MAX_DATA_ELEMENT_COUNT, FRIST_PRIME_AFTER_MAX );
+  inputDataMap.setAutoDelete( true );
 
-        if( fseek( inptr, offset * sizeof(type), 0 ) != 0 )
+     // check and see if line requested is already in memory
+     QString offsetString = "";
+     offsetString.setNum( offset );
+
+     if( inputDataMap.find( offsetString ) ==  0 )
+     {
+        if( !inptr.at( (Q_ULLONG)(offset) * lineLength * sizeof(type)) )
         {
             // end of file or corrupt file found
-            p_error( "seek_image: error!", "[image read]");
-            get_line_loadedData = -1;
+            printf( "error seeking!!!\n" );
+	    fflush(stdout );
         }
-
+	
         //then load the line into memory
-        fread(buf, sizeof(type), insize, inptr);
+        type *newBuffer = new type[lineLength];
+	long amountRead = inptr.readBlock( (char*&)newBuffer, sizeof(type) * lineLength);
+
+	if( amountRead != (long)(sizeof(type) * lineLength) )
+	{
+		printf( "Read %i requested %i\n", amountRead, lineLength );
+		fflush( stdout );
+
+		if( inptr.atEnd() )
+		{
+			printf( "End-of-File reached\n" );
+			fflush( stdout );
+		}
+		else if( amountRead = -1 )
+		{
+			printf( "Error on read.!!!\n" );
+			fflush(stdout);
+
+			/*  Add more descriptive messages here*/
+		}
+	}
+	else
+	{
+        	if( inputDataMap.insert( offsetString, (type*)newBuffer ) != true )
+        	{
+	           printf( "Error deleting least recently used item.\n" );
+        	   fflush( stdout );
+	        }
+	}
+     }
+
+
+     if( inputDataMap.find( offsetString ) !=  0 )
+     {
+       buf = inputDataMap.find( offsetString );
 
      }
-     return;
-}
-
-
-// Read input image line
-// Definition must be in header for
-// Solaris compiler compatability
-// ---------------------------
-extern FILE * inptr;				// Input file pointer  from imgio.cpp
-extern long insize;				// Number of bytes in input image
-
-template <class type>
-void get_line(void * buf, int , type )
-{
-     fread(buf, sizeof(type), insize, inptr);
+     else
+     {
+       printf( "Error inserting into and retreiving from least recently used cache.\n" );
+       fflush( stdout );
+       buf = NULL;
+     }
+     
      return;
 }
 
@@ -203,16 +268,131 @@ void get_line(void * buf, int , type )
 // Definition must be in header for
 // Solaris compiler compatability
 // ---------------------------------
-extern FILE * outptr;				// Output file pointer  from imgio.cpp
+extern QFile outptr;				// Output file pointer  from imgio.cpp
 extern long outsize;				// Number of bytes in output image
 
 template <class type>
 void put_line(void * buf, type )
 {
-     fwrite(buf, sizeof(type), outsize, outptr);
+     if( outptr.isOpen() && outptr.isWritable() )
+     {
+         outptr.writeBlock( (char*&)buf, outsize*sizeof(type) );
+         outptr.flush();
+     }
+     else
+     {
+         printf( "Outptr not open or writable\n" );
+	 fflush( stdout );
+     }
 
      return;
 }
+
+
+// #ifndef RESAMPLE
+// #define RESAMPLE
+// 
+// /******************************************************************
+//   New 10/15/2004 for resample
+// 
+// ******************************************************************/
+// 
+// 
+// // Read input image sample by line and sample number
+// // Definition must be in header for
+// // Solaris compiler compatability
+// // ---------------------------
+// template <class type>
+// void* get_raster_value(void * buf, long offset, long sample, int lineLength, type typeToUse)
+// {
+//      // check and see if line requested is already in memory
+//      //if not load it
+//      get_line( buf, offset, linLength, typeToUse );
+// 
+//      return ((type*)buf + sample);
+// }
+// 
+// 
+// 
+// 
+// //--------------------------------------------------------
+// // get_coords                                             
+// //--------------------------------------------------------
+// // use output pixel coordinate to find the coordinates of 
+// // the corners of the corresponding input pixel           
+// //--------------------------------------------------------
+// 
+// 
+// 
+// //static double in[2];			/* Input projection coordinates of a point */
+// //static double out[2];			/* Output projection coordinates of a point */
+// //static double corner[2];		// for computing values at pixel corners
+// //static double coord[2];		// random coordinates
+// //static double in_line, in_samp;	/* Input image coordinates of a point */
+// //static long status;			/* Return status flag for gctp() call */
+// //static long zero=0;			/* Constant of 0 */
+// //static long num_classes=255;		// number of classes used...
+// //static int preferred;		// most preferred class
+// //static int unpreferred;	// least preferred class
+// 
+// 
+// //---------- flags ----------//
+// //static int dodump=0;		// whether or not to dump minbox to screen
+// //static int domax=0;		// image of most common value per pixel
+// //static int domin=0;		// image of least common value per pixel
+// //static int donn=0;		// create traditional mapimg image
+// //static int dobands=0;		// images of how many hits per pixel per band
+// //static int dochoice=0;		// image of how many classes to choose from per pixel
+// //static int doout=0;		// write "the" output file
+// //static int dopreferred=0;	// most preferred class
+// //static int dounpreferred=0;	// least preferred class
+// //static int boxerr=0;		// true if no minbox pixels are in polygon
+// static int find2corners=0;	// true if previous pixel's corners can be reused
+// //static int classcount[256][2]={0};// flags which classes are used per output pixel
+// 	// classcount[x][0] is true if class x is used
+// 	// classcount[][1] is a list of the classes used in current pixel
+// //static int class2data[256][2]={0};// flags which classes are used in input image
+// 	// class2data[x][0] converts data value x to its internal class number
+// 	// class2data[x][1] converts internal class number x to its data value
+// 
+// 
+// 
+// #define DELTA_LS 0.00005
+// #define DELTA_METERS outimg.pixsize/2
+// 
+// extern "C"
+// {
+//        #include "proj.h"
+// }
+// 
+// #include <math.h>
+// 
+// int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2], long out_line, long out_samp, FILE* paramfile );
+// int onLine(double p1[2], double p2[2], double test[2]);
+// int inBox(double box[4][2], double test[2]);
+// 
+// 
+// /*
+// // Write a line of output image data
+// // Definition must be in header for
+// // Solaris compiler compatability
+// // ---------------------------------
+// extern FILE * outptr;				// Output file pointer  from imgio.cpp
+// 
+// template <class type>
+// void put_line(void * buf, FILE* file, type)
+// {
+//      fwrite(buf, sizeof(type), outsize, file);
+//      return;
+// }
+// 
+// */
+// 
+// 
+// 
+// 
+// #endif //RESAMPLE
+
 
 #endif
 

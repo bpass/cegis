@@ -1,6 +1,6 @@
 
 // CVS magic symbols for voodoo practitioners
-// $Id: doxygenMain.h,v 1.9 2004/11/19 17:51:53 rstelzleni Exp $
+// $Id: doxygenMain.h,v 1.10 2004/11/19 18:23:36 rstelzleni Exp $
 
 /** \mainpage IntersectionLocator
  *
@@ -30,7 +30,8 @@
  *
  * \section usage Usage
  * \ref preparingForNewData Instructions for preparing for a new dataset <BR>
- * \ref overallProcess Explanation of the overall process <BR><BR>
+ * \ref overallProcess Explanation of the overall process <BR>
+ * \ref relatedLinks Web pages that you might find helpful<BR><BR>
  * It is probably worth pointing out here that the 
  * IntersectionMap::findControlPoints function will print out a bunch of
  * messages that say "processing intersection 1 of 543" or some other 
@@ -77,6 +78,7 @@
  * \ref buildingOnLinux Linux Installation Guide
  *
  * \section mainPageNotes Notes
+ *
  * \subsection dependencyOnGDALOGR Dependency on GDAL/OGR
  * One thing that I think it is good to point out is why there is a 
  * dependency on the GDAL/OGR library.  The reason is that parsing 

@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.11 2005/03/15 18:09:53 jtrent Exp $
+// $Id: rasterinfo.cpp,v 1.12 2005/03/16 16:17:07 jtrent Exp $
 
 
 #include "rasterinfo.h"
@@ -183,7 +183,7 @@ bool RasterInfo::setProjection( int projNumber, int zoneNumber, int datumNumber,
 
 bool RasterInfo::setProjectionNumber( int projNumber )
 {
-   if( projcode >= 0 && projcode < 31 )
+   if( projNumber >= 0 && projNumber < 31 )
        projcode = projNumber;
 
    return projcode == projNumber;
@@ -287,6 +287,9 @@ bool RasterInfo::save( QString &imgFileName )
      r.setFillValue( fillval );
      r.setNoDataValue( noval );
 
+     r.setHasFillValue( hasFillVal );
+     r.setHasNoDataValue( hasNoDataVal );
+
      r.setProjNumber( projcode );
      r.setProjName( projNames[projcode] );
      r.setZone( zonecode );
@@ -368,28 +371,31 @@ bool RasterInfo::loadXml()
    try
    {
      RasterXML xml( QString( fileName + ".xml" ).ascii() );
-     
+
      aName = xml.getAuthorName();
      aCompany = xml.getAuthorCompany();
      aEmail = xml.getAuthorEmail();
-     
+
      ulx = xml.getUlx();
      uly = xml.getUly();
      row = xml.getRows();
      col = xml.getCols();
-     
+
      signd = xml.isSigned();
      bits = xml.getBits();
      datatype = xml.getDataType();
      pixsize = xml.getPixelSize();
      fillval = xml.getFillValue();
      noval = xml.getNoDataValue();
-    
+
+     hasFillVal = xml.hasFillValue();
+     hasNoDataVal = xml.hasNoDataValue();
+
      projcode = xml.getProjNumber();
      zonecode = xml.getZone();
      datumcode = xml.getDatumNumber();
      unitcode = xml.getUnitsNumber();
-    
+
      for( int i = 0; i < 15; ++i )
         gctpParams[i] = xml.getGCTPParam( i );
 

@@ -1,4 +1,4 @@
-// $Id: qinfoframe.h,v 1.7 2005/03/11 15:41:34 jtrent Exp $
+// $Id: qinfoframe.h,v 1.8 2005/03/16 16:17:07 jtrent Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -15,6 +15,7 @@
 #include <qtabwidget.h>
 #include <qpushbutton.h>
 #include <qpopupmenu.h>
+#include <qcheckbox.h>
 
 // My classes used
 class QDmsEdit;
@@ -72,11 +73,16 @@ public:
    QPushButton *fillButton;
    QLineEdit   *noDataEdit;
 
+   QCheckBox   *hasFillCheck;
+   QCheckBox   *hasNoDataCheck;
+
    bool eventFilter( QObject* object, QEvent* event );
 
 public slots:
    void pixelChange(int);
    void dataChange(const QString&);
+   void fillCheckToggled( bool state );
+   void noDataCheckToggled( bool state );
 };
 
 

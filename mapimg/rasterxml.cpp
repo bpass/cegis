@@ -1,4 +1,4 @@
-// $Id: rasterxml.cpp,v 1.7 2005/03/15 18:09:53 jtrent Exp $
+// $Id: rasterxml.cpp,v 1.8 2005/03/16 16:17:07 jtrent Exp $
 
 
 /*  To Do:
@@ -828,7 +828,7 @@ bool RasterXML::hasNoDataValue() const {
 void RasterXML::setFillValue(double val) {
 
 	if(m_doc) {
-		TiXmlHandle handle(m_doc);
+/*		TiXmlHandle handle(m_doc);
 		TiXmlText* fillValueT = handle.FirstChild("rasterInformation").FirstChild("pixelDescription").FirstChild("fillValue").FirstChild().Text();
 		if(fillValueT) {
 			char temp[20] = {'\0'};
@@ -836,20 +836,21 @@ void RasterXML::setFillValue(double val) {
 			fillValueT->SetValue(temp);
 		}
 
-		else 
+		else
 			throw(XMLException("Error: <fillValue> value not present"));
-
+*/
 		m_fillValue = val;
+		setHasFillValue( m_hasFillVal );
 	}
 
-	else 
+	else
 		throw(XMLException("Error: internal document tree not initialized"));
 }
 
 void RasterXML::setNoDataValue(double val) {
 
 	if(m_doc) {
-		TiXmlHandle handle(m_doc);
+/*		TiXmlHandle handle(m_doc);
 		TiXmlText* noDataValueT = handle.FirstChild("rasterInformation").FirstChild("pixelDescription").FirstChild("noDataValue").FirstChild().Text();
 		if(noDataValueT) {
 			char temp[20] = {'\0'};
@@ -859,8 +860,9 @@ void RasterXML::setNoDataValue(double val) {
 
 		else
 			throw(XMLException("Error: <noDataValue> value not present"));
-
+*/
 		m_noDataValue = val;
+		setHasNoDataValue( m_hasNoDataVal );
 	}
 
 	else

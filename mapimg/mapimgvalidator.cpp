@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.cpp,v 1.7 2005/03/04 14:58:35 jtrent Exp $
+// $Id: mapimgvalidator.cpp,v 1.8 2005/03/16 16:17:06 jtrent Exp $
 
 #include <qvalidator.h>
 #include <qstring.h>
@@ -13,17 +13,30 @@
 MapimgValidator::MapimgValidator( QObject* parent, const char* name )
 : QValidator( parent, name )
 {
-   b = -HUGE_VAL;
-   t = HUGE_VAL;
-   d = 1000;
+   m_bottom = -HUGE_VAL;
+   m_top = HUGE_VAL;
+   m_decimals = 1000;
+   m_allowUndefined = false;
 }
 
 MapimgValidator::MapimgValidator( QString mapimgDataType, QObject* parent, const char* name )
 : QValidator( parent, name )
 {
-   b = 0.0;
-   t = 0.0;
-   d = 0;
+   m_bottom = 0.0;
+   m_top = 0.0;
+   m_decimals = 0;
+   m_allowUndefined = false;
+
+   setDataType( mapimgDataType );
+}
+
+MapimgValidator::MapimgValidator( QString mapimgDataType, bool allowUndefined, QObject* parent, const char* name )
+: QValidator( parent, name )
+{
+   m_bottom = 0.0;
+   m_top = 0.0;
+   m_decimals = 0;
+   m_allowUndefined = allowUndefined;
 
    setDataType( mapimgDataType );
 }
@@ -32,75 +45,75 @@ void MapimgValidator::setDataType( QString mapimgDataType )
 {
    if( mapimgDataType.contains( "Unsigned" ) )
    {
-      b = 0.0;
-      d = 0;
+      m_bottom = 0.0;
+      m_decimals = 0;
 
       if( mapimgDataType.contains( "8" ) )
-         t = Q_UINT8_MAX;
+         m_top = Q_UINT8_MAX;
       else if( mapimgDataType.contains( "16" ) )
-         t = Q_UINT16_MAX;
+         m_top = Q_UINT16_MAX;
       else if( mapimgDataType.contains( "32" ) )
-         t = Q_UINT32_MAX;
+         m_top = Q_UINT32_MAX;
       else
       {
          QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
-         t = Q_UINT32_MAX;
+         m_top = Q_UINT32_MAX;
       }
    }
    else if( mapimgDataType.contains( "Signed" ) )
    {
-      d = 0;
+      m_decimals = 0;
 
       if( mapimgDataType.contains( "8" ) )
       {
-         b = Q_INT8_MIN;
-         t = Q_INT8_MAX;
+         m_bottom = Q_INT8_MIN;
+         m_top = Q_INT8_MAX;
       }
       else if( mapimgDataType.contains( "16" ) )
       {
-         b = Q_INT16_MIN;
-         t = Q_INT16_MAX;
+         m_bottom = Q_INT16_MIN;
+         m_top = Q_INT16_MAX;
       }
       else if( mapimgDataType.contains( "32" ) )
       {
          if( mapimgDataType.contains( "Integer" ) )
          {
-            b = Q_INT32_MIN;
-            t = Q_INT32_MAX;
+            m_bottom = Q_INT32_MIN;
+            m_top = Q_INT32_MAX;
          }
          else if( mapimgDataType.contains( "Float" ) )
          {
-            d = 6;
-            b = FLOAT_MIN;
-            t = FLOAT_MAX;
+            m_decimals = 6;
+            m_bottom = FLOAT_MIN;
+            m_top = FLOAT_MAX;
          }
          else
          {
             QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
-            b = Q_INT32_MIN;
-            t = Q_INT32_MAX;
+            m_bottom = Q_INT32_MIN;
+            m_top = Q_INT32_MAX;
          }
 
       }
       else if( mapimgDataType.contains( "64" ) && mapimgDataType.contains( "Float" ) )
       {
-         d = 6;
-         b = (double)DOUBLE_MIN;
-         t = (double)DOUBLE_MAX;
+         m_decimals = 6;
+         m_bottom = (double)DOUBLE_MIN;
+         m_top = (double)DOUBLE_MAX;
       }
       else //Signed with out proper bit or int/float string
       {
          QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
-         b = Q_INT32_MIN;
-         t = Q_INT32_MAX;
+         m_bottom = Q_INT32_MIN;
+         m_top = Q_INT32_MAX;
       }
    }
    else //Completely invalid string
    {
       QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
-      b = Q_INT32_MIN;
-      t = Q_INT32_MAX;
-      d = 0;
+      m_bottom = Q_INT32_MIN;
+      m_top = Q_INT32_MAX;
+      m_decimals = 0;
    }
 
    return;
@@ -109,10 +122,21 @@ void MapimgValidator::setDataType( QString mapimgDataType )
 MapimgValidator::MapimgValidator( double bottom, double top, int decimals, QObject* parent, const char* name )
 : QValidator( parent, name )
 {
-   b = bottom;
-   t = top;
-   d = decimals;
+   m_bottom = bottom;
+   m_top = top;
+   m_decimals = decimals;
+   m_allowUndefined = false;
 }
+
+MapimgValidator::MapimgValidator( double bottom, double top, int decimals, bool allowUndefined, QObject* parent, const char* name )
+: QValidator( parent, name )
+{
+   m_bottom = bottom;
+   m_top = top;
+   m_decimals = decimals;
+   m_allowUndefined = allowUndefined;
+}
+
 
 MapimgValidator::~MapimgValidator()
 {
@@ -120,9 +144,9 @@ MapimgValidator::~MapimgValidator()
 
 void MapimgValidator::setRange( double minimum, double maximum, int decimals )
 {
-   b = minimum;
-   t = maximum;
-   d = decimals;
+   m_bottom = minimum;
+   m_top = maximum;
+   m_decimals = decimals;
 }
 
 void MapimgValidator::setBottom( double bottom )
@@ -140,10 +164,22 @@ void MapimgValidator::setDecimals( int decimals )
    setRange( bottom(), top(), decimals );
 }
 
+void MapimgValidator::setAllowUndefined( bool allow )
+{
+    m_allowUndefined = allow;
+    return;
+}
+
 QValidator::State MapimgValidator::validate( QString & input, int & ) const
 {
+   if( input.upper() == "UNDEFINED" && m_allowUndefined )
+   {
+       input = "Undefined";
+       return Acceptable;
+   }
+
    QRegExp empty( QString::fromLatin1(" *-?\\.? *") );
-   if ( b >= 0 &&
+   if ( m_bottom >= 0 &&
       input.stripWhiteSpace().startsWith(QString::fromLatin1("-")) )
         return Invalid;
    if ( empty.exactMatch(input) )
@@ -172,7 +208,7 @@ QValidator::State MapimgValidator::validate( QString & input, int & ) const
    int tempj = tempInput.find( '.' );
    int i = input.find( '.' );
 
-   if( (i >= 0 || tempj >= 0 || input.contains("e-", FALSE)) && d == 0 )
+   if( (i >= 0 || tempj >= 0 || input.contains("e-", FALSE)) && m_decimals == 0 )
    {
       return Invalid;
    }
@@ -183,13 +219,13 @@ QValidator::State MapimgValidator::validate( QString & input, int & ) const
       int j = i;
       while( input[j].isDigit() )
          j++;
-      if ( j - i > d )
+      if ( j - i > m_decimals )
          return Invalid; //Intermediate;
    }
 
-   if( entered > t )
+   if( entered > m_top )
       return Invalid;
-   else if ( entered < b )
+   else if ( entered < m_bottom )
       return Intermediate;
    else
       return Acceptable;
@@ -197,21 +233,27 @@ QValidator::State MapimgValidator::validate( QString & input, int & ) const
 
 void MapimgValidator::fixup( QString& input ) const
 {
+   if( input.upper() == "UNDEFINED" && m_allowUndefined )
+   {
+       input = "Undefined";
+       return;
+   }
+
    double entered = input.toDouble();
 
-   if( entered > t )
+   if( entered > m_top )
    {
-   	entered = t;
+   	entered = m_top;
    }
-   else if( entered < b )
+   else if( entered < m_bottom )
    {
-   	entered = b;
+   	entered = m_bottom;
    }
 
-   input = QString::number( entered, 'f', d );
+   input = QString::number( entered, 'f', m_decimals );
 
    /*fix decimal*/
-   if( d == 0 )
+   if( m_decimals == 0 )
    {
       int decimalPlace = input.find( '.' );
 

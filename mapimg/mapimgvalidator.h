@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.h,v 1.8 2005/02/24 17:59:14 jtrent Exp $
+// $Id: mapimgvalidator.h,v 1.9 2005/03/16 16:17:06 jtrent Exp $
 
 #ifndef MAPIMGVALIDATOR_H
 #define MAPIMGVALIDATOR_H
@@ -23,7 +23,9 @@ class MapimgValidator : public QValidator
 public:
    MapimgValidator( QObject* parent, const char* name = 0 );
    MapimgValidator( QString mapimgDataType, QObject* parent, const char* name = 0 );
+   MapimgValidator( QString mapimgDataType, bool allowUndefined, QObject* parent, const char* name = 0 );
    MapimgValidator( double bottom, double top, int decimals, QObject* parent, const char* name = 0 );
+   MapimgValidator( double bottom, double top, int decimals, bool allowUndefined, QObject* parent = 0, const char* name = 0 );
    ~MapimgValidator();
 
    QValidator::State validate( QString & input, int & ) const;
@@ -31,13 +33,15 @@ public:
 
    virtual void setRange( double bottom, double top, int decimals = 0 );
    void setDataType( QString mapimgDataType );
-   void setBottom( double );
-   void setTop( double );
-   void setDecimals( int );
+   void setBottom( double bottom );
+   void setTop( double top );
+   void setDecimals( int decimals );
+   void setAllowUndefined( bool allow );
 
-   double bottom() const { return b; }
-   double top() const { return t; }
-   int decimals() const { return d; }
+   double bottom() const { return m_bottom; }
+   double top() const { return m_top; }
+   int decimals() const { return m_decimals; }
+   bool allowUndefined() const { return m_allowUndefined; }
 
 private:
 #if defined(Q_DISABLE_COPY)
@@ -45,8 +49,9 @@ private:
    MapimgValidator& operator=( const MapimgValidator & );
 #endif
 
-   double b, t;
-   int d;
+   double m_bottom, m_top;
+   int m_decimals;
+   bool m_allowUndefined;
 };
 
 

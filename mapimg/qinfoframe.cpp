@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.13 2005/03/14 17:52:51 jtrent Exp $
+// $Id: qinfoframe.cpp,v 1.14 2005/03/16 16:17:06 jtrent Exp $
 
 
 #include "qinfoframe.h"
@@ -12,6 +12,7 @@
 #include <qmessagebox.h>
 #include <qtextstream.h>
 #include <qtooltip.h>
+#include <qcheckbox.h>
 
 const uint INFO_PRECISION = 6;
 
@@ -89,12 +90,18 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    dataCombo = new QComboBox( dataBox, "dataCombo" );
    (void) new QLabel( "Fill Value", dataBox );
    QHBox *fillBox = new QHBox( dataBox );
+   hasFillCheck = new QCheckBox( fillBox, "hasFillCheck" );
+   hasFillCheck->hide();
    fillEdit = new QLineEdit( fillBox, "fillEdit" );
    fillEdit->installEventFilter( this );
    fillButton = new QPushButton( "?", fillBox );
+
    (void) new QLabel( "No Data Value", dataBox );
-   noDataEdit = new QLineEdit( dataBox, "noDataEdit" );
-   
+   QHBox *noDataBox = new QHBox( dataBox );
+   hasNoDataCheck = new QCheckBox( noDataBox, "hasNoDataCheck" );
+   hasNoDataCheck->hide();
+   noDataEdit = new QLineEdit( noDataBox, "noDataEdit" );
+
 
    ////////STAGE 3: Polish Widgets
    //
@@ -107,7 +114,7 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
       "<b>Note</b>: Locking this info editor automatically saves to the .xml file." );
    QFont largeFont(  mapLabel->font() );
    largeFont.setPointSize( 12 );
-   mapLabel->setFont( largeFont ); 
+   mapLabel->setFont( largeFont );
    mapLabel->setAlignment( int( QLabel::AlignCenter ) );
    frameButton->setMaximumWidth( 28 ); frameButton->setMaximumHeight( 28 );
    QToolTip::add( frameButton, "Calculate rows, columns, and upper left coordinates." );
@@ -167,6 +174,8 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    //This connection is for keeping the pixelEdit hidden until it is needed
    connect(pixelCombo, SIGNAL(activated(int)), this, SLOT(pixelChange(int)));
    connect(dataCombo, SIGNAL(activated(const QString&)), this, SLOT(dataChange(const QString&)));
+   connect(hasFillCheck, SIGNAL(toggled(bool)), this, SLOT(fillCheckToggled(bool)));
+   connect(hasNoDataCheck, SIGNAL(toggled(bool)), this, SLOT(noDataCheckToggled(bool)));
 }
 
 /*
@@ -206,6 +215,42 @@ bool QMapTab::eventFilter( QObject* object, QEvent* event )
    return QScrollView::eventFilter( object, event );
 }
 
+
+void QMapTab::fillCheckToggled( bool state )
+{
+    if(fillEdit->validator() != 0 )
+       ((MapimgValidator*)fillEdit->validator())->setAllowUndefined( !state );
+
+    if( state == QButton::Off )
+        fillEdit->setText( "Undefined" );
+
+    if( fillEdit->validator() != 0 )
+    {
+    	QString fillString = fillEdit->text();
+        ((MapimgValidator*)fillEdit->validator())->fixup( fillString );
+        fillEdit->setText( fillString );
+    }
+
+    return;
+}
+
+void QMapTab::noDataCheckToggled( bool state )
+{
+   if( noDataEdit->validator() != 0 )
+       ((MapimgValidator*)noDataEdit->validator())->setAllowUndefined( !state );
+
+    if( !state )
+        noDataEdit->setText( "Undefined" );
+
+    if( noDataEdit->validator() != 0 )
+    {
+    	QString noDataString = noDataEdit->text();
+        ((MapimgValidator*)noDataEdit->validator())->fixup( noDataString );
+        noDataEdit->setText( noDataString );
+    }
+
+    return;
+}
 
 /*
    The pixelChange(int) function is connected to the pixelCombo so that
@@ -422,6 +467,8 @@ void QInfoFrame::reset()
    mapTab->dataCombo->setCurrentItem( 0 );
    mapTab->fillEdit->setText( "0.000000" );
    mapTab->noDataEdit->setText( "0.000000" );
+   mapTab->hasFillCheck->setChecked( true );
+   mapTab->hasNoDataCheck->setChecked( true );
 
    gctpTab->projCombo->setCurrentItem( 0 );
    gctpTab->projChange();
@@ -468,6 +515,12 @@ void QInfoFrame::setReadOnly( bool ro )
    mapTab->fillEdit->setDisabled( ro );
    mapTab->fillButton->setDisabled( ro );
    mapTab->noDataEdit->setDisabled( ro );
+
+   mapTab->hasFillCheck->setHidden( ro );
+   mapTab->hasFillCheck->setDisabled( ro );
+   mapTab->hasNoDataCheck->setHidden( ro );
+   mapTab->hasNoDataCheck->setDisabled( ro );
+
 
    gctpTab->projCombo->setDisabled( ro );
    gctpTab->zoneSpin->setDisabled( ro );
@@ -554,6 +607,15 @@ void QInfoFrame::setAsOutput()
    mapTab->dataCombo->setDisabled( true );
    mapTab->fillEdit->setDisabled( true );
    mapTab->noDataEdit->setDisabled( true );
+
+   mapTab->hasFillCheck->setDisabled( true );
+   mapTab->hasFillCheck->setHidden( true );
+   mapTab->hasFillCheck->setChecked( true );
+
+   mapTab->hasNoDataCheck->setDisabled( true );
+   mapTab->hasNoDataCheck->setHidden( true );
+   mapTab->hasNoDataCheck->setChecked( true );
+
 }
 
 /*
@@ -706,7 +768,7 @@ void QInfoFrame::getFill()
 
 /*!!!!!!!!!!!!!!!!!
    setInfo(RasterInfo) will load all the parameters from a the RasterInfo.
-It sets the filename by parsing out the path and then applies the values to 
+It sets the filename by parsing out the path and then applies the values to
 the different edit widgets.
 */
 void QInfoFrame::setInfo( RasterInfo &input )
@@ -750,11 +812,16 @@ void QInfoFrame::setInfo( RasterInfo &input )
    dtype += input.dataType();
    mapTab->dataCombo->setCurrentText( dtype );
 
-   QString fillString = QString::number( input.fillValue(), 'f', 6 );
+   QString fillString = "Undefined";
+   if( input.hasFillValue() )
+       fillString = QString::number( input.fillValue(), 'f', 6 );
 
    if( mapTab->fillEdit->validator() != 0 )
    {
        ((MapimgValidator*)mapTab->fillEdit->validator())->setDataType( dtype );
+       ((MapimgValidator*)mapTab->fillEdit->validator())->setAllowUndefined( fillString.upper() == "UNDEFINED" );
+       mapTab->hasFillCheck->setChecked( !(fillString.upper() == "UNDEFINED") );
+
        mapTab->fillEdit->validator()->fixup( fillString );
    }
 
@@ -762,11 +829,16 @@ void QInfoFrame::setInfo( RasterInfo &input )
 //   mapTab->fillButton->setShown( input.fillValue() == -1.0 );
 
 
-   QString noDataString = QString::number( input.noDataValue(), 'f', 6 );
+   QString noDataString = "Undefined";
+   if( input.hasNoDataValue() )
+       noDataString = QString::number( input.noDataValue(), 'f', 6 );
 
    if( mapTab->noDataEdit->validator() != 0 )
    {
        ((MapimgValidator*)mapTab->noDataEdit->validator())->setDataType( dtype );
+       ((MapimgValidator*)mapTab->noDataEdit->validator())->setAllowUndefined( noDataString.upper() == "UNDEFINED" );
+       mapTab->hasNoDataCheck->setChecked( !(noDataString.upper() == "UNDEFINED") );
+
        mapTab->noDataEdit->validator()->fixup( noDataString );
    }
 
@@ -809,11 +881,11 @@ RasterInfo QInfoFrame::info()
 
    RasterInfo ret;
 
-   ret.setFileName( 
+   ret.setFileName(
       xmlName );
 
-   ret.setArea( 
-      mapTab->ulLatEdit->text().toDouble(), 
+   ret.setArea(
+      mapTab->ulLatEdit->text().toDouble(),
       mapTab->ulLonEdit->text().toDouble(),
       mapTab->rowSpin->value(), mapTab->colSpin->value() );
 
@@ -823,13 +895,23 @@ RasterInfo QInfoFrame::info()
       mapTab->fillEdit->text().toDouble(),
       mapTab->noDataEdit->text().toDouble() );
 
+   if( mapTab->fillEdit->text().upper() == "UNDEFINED" )
+       ret.setHasFillValue( false );
+   else
+       ret.setHasFillValue( true );
+
+   if( mapTab->noDataEdit->text().upper() == "UNDEFINED" )
+       ret.setHasNoDataValue( false );
+   else
+       ret.setHasNoDataValue( true );
+
    ret.setProjection(
       combo2proj( gctpTab->projCombo->currentItem() ),
       gctpTab->zoneSpin->value() );
 
    for( int i = 0; i < 15; ++i )
       ret.setGctpParam( i, gctpTab->gctpBoxes[i]->value() );
-   
+
    return ret;
 }
 

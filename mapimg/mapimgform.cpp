@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.24 2005/03/17 18:57:25 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.25 2005/03/17 20:17:36 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -18,6 +18,7 @@
 #include <qfile.h>
 #include <qdatastream.h>
 #include <qsettings.h>
+#include <qprocess.h>
 
 #include "mapimgversion.h"
 #include "mapimgimages.h"
@@ -182,6 +183,17 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
 
 
    ////////
+   //TOOLS MENU
+   ////////
+
+   //actions
+   webDSS = new QAction( "Decision Support System", QKeySequence(""), this, "webDSS" );
+
+   //signals and slots
+   connect( webDSS, SIGNAL( activated() ), this, SLOT( webDSSClicked() ) );
+
+
+   ////////
    //HELP MENU
    ////////
 
@@ -256,6 +268,13 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    viewResampleAction->addTo( Preview );
    previewProjAction->addTo( Preview );
    menuBar->insertItem( "Preview", Preview);
+
+   //Tools
+   Tools = new QPopupMenu( this );
+   QPopupMenu* webBased = new QPopupMenu( Tools, "webBased" );
+   webDSS->addTo( webBased );
+   Tools->insertItem( "Web Based", webBased );
+   menuBar->insertItem( "Tools", Tools);
 
    //Help
    Help = new QPopupMenu( this );
@@ -818,4 +837,33 @@ QString mapimgForm::dataType() const
    }
 
    return currentDataType;
+}
+
+
+//Tools
+void mapimgForm::webDSSClicked()
+{
+    launchWebTool( "http://mcmcweb.er.usgs.gov/research/DSSMain/DSSApplet.html" );
+
+    return;
+}
+
+void mapimgForm::launchWebTool( const QString& url )
+{
+    QProcess web( this, "webTool" );
+    bool supportedPlatform = true;
+
+#ifdef Q_OS_WIN32
+    web.addArgument( "cmd" );
+    web.addArgument( "/c" );
+    web.addArgument( "start" );
+    web.addArgument( url );
+#else
+    supportedPlatform = false;
+#endif
+
+    if( !web.start() || !supportedPlatform )
+        QMessageBox::information( this, "Mapimg", QString("Unable to launch web browser to %1").arg( url ) );
+
+    return;
 }

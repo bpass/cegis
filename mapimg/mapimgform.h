@@ -1,4 +1,4 @@
-// $Id: mapimgform.h,v 1.9 2005/03/08 17:40:07 rbuehler Exp $
+// $Id: mapimgform.h,v 1.10 2005/03/17 20:17:36 jtrent Exp $
 
 
 /****************************************************************************
@@ -57,6 +57,10 @@ protected slots:
    void aboutClicked();
    void showAboutQt(){QMessageBox::aboutQt( this );}
 
+//Tools
+   void launchWebTool( const QString& url );
+   void webDSSClicked();
+
 private:
    QMenuBar       *menuBar;
    QToolBar       *toolBar;
@@ -88,6 +92,9 @@ private:
    QActionGroup   *prevGroup;
    QAction        *prevInput;
    QAction        *prevOutput;
+
+   QPopupMenu     *Tools;
+   QAction        *webDSS;
 
    QPopupMenu     *Help;
    QAction        *aboutAction;

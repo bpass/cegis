@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.5 2005/02/03 18:12:18 jtrent Exp $
+// $Id: imgio.h,v 1.6 2005/02/10 15:59:30 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -311,7 +311,7 @@ void* get_raster_value(void * buf, long offset, long sample, int lineLength, typ
 {
      // check and see if line requested is already in memory
      //if not load it
-     get_line( buf, offset, linLength, typeToUse );
+     get_line( buf, offset, lineLength, typeToUse );
      return ((type*)buf + sample);
 }
 

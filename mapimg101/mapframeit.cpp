@@ -1,4 +1,4 @@
-// $Header: /home/dmattli/cvs/mapimg101/mapframeit.cpp,v 1.3 2005/01/06 19:40:53 jtrent Exp $
+// $Id: mapframeit.cpp,v 1.4 2005/01/06 19:41:52 jtrent Exp $
 
 //Copyright 2002 United States Geological Survey
 //Released under GPL with MapIMG copyright 2003 USGS

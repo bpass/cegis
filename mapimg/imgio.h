@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.13 2005/02/28 17:55:10 jtrent Exp $
+// $Id: imgio.h,v 1.14 2005/03/01 17:55:24 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -64,15 +64,16 @@ private:
    QString outfile_name;		        // Name of output file
 
    QFile inptr;				// Input file pointer
-   QFile outptr;				// Output file pointer
+   QFile outptr;			// Output file pointer
 
-   Q_ULLONG last_offset;   // Last offset for get_line
+   Q_ULLONG last_offset;                // Last offset for get_line
+
 
 
 
 public:
    long insize;				// Number of bytes in input image
-   long outsize;				// Number of bytes in output image
+   long outsize;			// Number of bytes in output image
 
    void* mapimginbuf;			// Ptr to the input image (all in memory)
    void* mapimgoutbuf;			// Ptr to one line of output image data
@@ -84,6 +85,20 @@ public:
       inputDataMap = NULL;
    }
 
+   IMGIO( int maxCount )
+   {
+      if( maxCount > 0 )
+      {
+          Max_Data_Element_Count = maxCount;
+      }
+      else
+      {
+          Max_Data_Element_Count = DEFAULT_Max_Data_Element_Count;
+      }
+
+      inputDataMap = NULL;
+   }
+
    ~IMGIO()
    {
       if( inputDataMap )
@@ -91,6 +106,21 @@ public:
          inputDataMap->clear();
          delete inputDataMap;
       }
+   }
+
+   int getMaxLineCount() const 
+   { 
+     return Max_Data_Element_Count; 
+   }
+
+   void setMaxLineCount( int count ) 
+   { 
+     Max_Data_Element_Count = count;
+     
+     if( inputDataMap )
+         inputDataMap->setMaxCost( Max_Data_Element_Count );
+         
+     return;
    }
 
    void clearCache()

@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.3 2005/01/28 17:59:06 jtrent Exp $
+// $Id: getprojinfo.h,v 1.4 2005/02/03 18:12:18 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -29,6 +29,7 @@
 #include "logform.h"
 #include "jt_time.h"
 #include "rasterinfo.h"
+#include "resampleinfo.h"
 
 extern "C"
 {
@@ -54,11 +55,55 @@ extern  void * mapimginbuf;			// Ptr to the input image (all in memory)
 extern  void * mapimgoutbuf;			// Ptr to one line of output image data
 
 template <class type>
-bool nearestNeighbor( RasterInfo input, RasterInfo output, type useType, QWidget * mapimgdial)
+bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample, type useType, QWidget * mapimgdial)
 {
     // mapimg STARTS HERE!!!!
     // mapimg to do the reprojection (no longer called as function in order to provide progress dialog)
     // mapimg written by D. Steinwand and updated by S. Posch
+
+    switch( resample.resampleCode() )
+    {
+    	case ResampleInfo::NearestNeighbor:
+    	     printf( "Nearest neighbor" );
+    	     break;
+    	case ResampleInfo::Add:
+    	     printf( "Add" );
+    	     break;
+    	case ResampleInfo::Mean:
+    	     printf( "Mean" );
+    	     break;
+    	case ResampleInfo::Mode:
+    	     printf( "Mode" );
+    	     break;
+    	case ResampleInfo::Min:
+    	     printf( "Min" );
+    	     break;
+    	case ResampleInfo::Max:
+    	     printf( "Max" );
+    	     break;
+    	case ResampleInfo::NullResample:
+    	     printf( "NullResample" );
+    	     break;
+    	default:
+    	     printf( "Bad resample code!!!" );
+    	     break;
+    }
+
+    printf( "\tFill value = %f\tNo data value = %f\n",
+            resample.fillValue(),
+            resample.noDataValue() );
+    fflush( stdout );
+
+    printf( "Ignore List(%i):\n", resample.ignoreList().size() );
+
+    IgnoreList::iterator ignoreVal;
+
+    for( ignoreVal = resample.ignoreList().begin(); ignoreVal != resample.ignoreList().end(); ignoreVal++ )
+    {
+    	printf( "\t%f\n", *ignoreVal );
+    }
+
+    fflush( stdout );
 
     int outputRows = output.rows();
     int outputCols = output.cols();

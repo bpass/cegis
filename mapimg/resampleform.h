@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.1 2005/01/31 03:09:09 rbuehler Exp $
+// $Id: resampleform.h,v 1.2 2005/02/03 18:12:18 jtrent Exp $
 
 
 /****************************************************************************
@@ -35,10 +35,10 @@ public:
    ResampleForm( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
    ~ResampleForm();
 
-   enum ResampleCode{NearestNeighbor,Add,Mean,Mode,Min,Max};
+//   enum ResampleCode{NearestNeighbor,Add,Mean,Mode,Min,Max};
 
    ResampleInfo info();
-   ResampleCode resampleCode(){return rcode;}
+   ResampleInfo::ResampleCode resampleCode(){return rcode;}
    IgnoreList &ignoreList(){return ilist;}
    bool wasCanceled(){return canceled;}
 
@@ -69,7 +69,7 @@ protected slots:
    void cancel();
 
 private:
-   ResampleCode rcode;
+   ResampleInfo::ResampleCode rcode;
    IgnoreList ilist;
    bool canceled;
 };

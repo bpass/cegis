@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.7 2005/01/31 17:24:02 jtrent Exp $
+// $Id: mapimg.cpp,v 1.8 2005/02/03 18:12:18 jtrent Exp $
 
 
 #include "mapimg.h"
@@ -345,7 +345,6 @@ double mapimg::calcFillValue( RasterInfo &input )
 
 bool mapimg::reproject( RasterInfo &input, RasterInfo &output, ResampleInfo resample, QWidget *parent )
 {
-//   resample;
    QString dtype(output.isSigned()?"Signed ":"Unsigned ");
    dtype += QString::number(output.bitCount());
    dtype += " Bit ";
@@ -353,27 +352,27 @@ bool mapimg::reproject( RasterInfo &input, RasterInfo &output, ResampleInfo resa
 
    if( dtype == "Signed 64 Bit IEEE Float" )
    {	double data = 0;
-      return nearestNeighbor( input, output, data, parent);   }
+      return mapimg_resample( input, output, resample, data, parent);   }
    else if( dtype == "Signed 32 Bit IEEE Float" )
    {	float data = 0;
-      return nearestNeighbor( input, output, data, parent);   }
+      return mapimg_resample( input, output, resample, data, parent);   }
    else if( dtype == "Signed 32 Bit Integer" )
    {	Q_INT32 data = 0;
-      return nearestNeighbor( input, output, data, parent);   }
+      return mapimg_resample( input, output, resample, data, parent);   }
    else if( dtype == "Unsigned 32 Bit Integer" )
    {	Q_UINT32 data = 0;
-      return nearestNeighbor( input, output, data, parent);   }
+      return mapimg_resample( input, output, resample, data, parent);   }
    else if( dtype == "Signed 16 Bit Integer" )
    {	Q_INT16 data = 0;
-      return nearestNeighbor( input, output, data, parent);   }
+      return mapimg_resample( input, output, resample, data, parent);   }
    else if( dtype == "Unsigned 16 Bit Integer" )
    {	Q_UINT16 data = 0;
-      return nearestNeighbor( input, output, data, parent);   }
+      return mapimg_resample( input, output, resample, data, parent);   }
    else if( dtype == "Signed 8 Bit Integer" )
    { 	Q_INT8 data = 0;
-      return nearestNeighbor( input, output, data, parent);   }
+      return mapimg_resample( input, output, resample, data, parent);   }
    else //( dtype == "Unsigned 8 Bit Integer" )
    {  Q_UINT8 data = 0;
-      return nearestNeighbor( input, output, data, parent);   }
+      return mapimg_resample( input, output, resample, data, parent);   }
 }
 

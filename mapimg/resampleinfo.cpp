@@ -1,8 +1,37 @@
-// $Id: resampleinfo.cpp,v 1.2 2005/01/31 17:24:07 jtrent Exp $
+// $Id: resampleinfo.cpp,v 1.3 2005/02/03 18:12:18 jtrent Exp $
 
 
 #include "resampleinfo.h"
-#include <qstringlist.h> 
+#include <qstringlist.h>
+
+void ResampleInfo::setIgnoreList( unsigned int size, IgnoreValue *vals )
+{
+   if( size == 0 || vals == NULL )
+      return;
+
+   ilist.clear();
+   for( unsigned int i = 0; i < size; ++i )
+      ilist.append( (IgnoreValue)vals[i] );
+}
+
+
+bool ResampleInfo::shouldIgnore( IgnoreValue val )
+{
+   if( val == (IgnoreValue)fillval )
+      return true;
+
+   if( val == (IgnoreValue)noval )
+      return true;
+
+   for( unsigned int i = 0; i < ilist.size(); ++i )
+   {
+      if( val == (IgnoreValue)ilist[i] )
+         return true;
+   }
+
+   return false;
+}
+
 
 ResampleInfo::ResampleInfo()
 {
@@ -22,17 +51,17 @@ bool ResampleInfo::setResampleCode( QString codeName )
    str.remove(' ');
 
    if( str == "nearest neighbor" )
-      rc = NearestNeighbor;
+      rc = ResampleInfo::NearestNeighbor;
    else if( str == "add" )
-      rc = Add;
+      rc = ResampleInfo::Add;
    else if( str == "mean" )
-      rc = Mean;
+      rc = ResampleInfo::Mean;
    else if( str == "mode" )
-      rc = Mode;
+      rc = ResampleInfo::Mode;
    else if( str == "min" )
-      rc = Min;
+      rc = ResampleInfo::Min;
    else if( str == "max" )
-      rc = Max;
+      rc = ResampleInfo::Max;
    else
       return false;
 
@@ -44,5 +73,6 @@ void ResampleInfo::copy( const ResampleInfo &src )
    fillval = src.fillval;
    noval = src.noval;
    ilist = src.ilist;
+   rc = src.rc;
 }
 

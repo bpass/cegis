@@ -1,4 +1,4 @@
-// $Id: resampleinfo.h,v 1.2 2005/01/31 17:24:07 jtrent Exp $
+// $Id: resampleinfo.h,v 1.3 2005/02/03 18:12:18 jtrent Exp $
 
 
 #ifndef RESAMPLEINFO_H
@@ -28,12 +28,13 @@ public:
    void setNoDataValue( double val ){noval = val;}
    double noDataValue(){return noval;}
 
-   template<class T>
-      void setIgnoreList( unsigned int size, T *vals );
+
+
+
+   void setIgnoreList( unsigned int size, IgnoreValue *vals );
    void setIgnoreList( IgnoreList &slist ){ilist = slist;}
    IgnoreList &ignoreList(){return ilist;}
-   template<class T>
-      bool shouldIgnore( T val );
+   bool shouldIgnore( IgnoreValue val );
 
    void copy( const ResampleInfo &src );
 
@@ -43,35 +44,5 @@ private:
    double noval;
    IgnoreList ilist;
 };
-
-template<class T>
-void ResampleInfo::setIgnoreList( unsigned int size, T *vals )
-{
-   if( size == 0 || vals == NULL )
-      return;
-
-   ilist.clear();
-   for( unsigned int i = 0; i < size; ++i )
-      ilist.append( (IgnoreValue)vals[i] );
-}
-
-
-template<class T>
-bool ResampleInfo::shouldIgnore( T val )
-{
-   if( val == (T)fillval )
-      return true;
-
-   if( val == (T)noval )
-      return true;
-
-   for( unsigned int i = 0; i < sz; ++i )
-   {
-      if( val == (T)ilist[i] )
-         return true;
-   }
-
-   return false;
-}
 
 #endif//RESAMPLEINFO_H

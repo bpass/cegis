@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.4 2005/02/01 16:08:13 jtrent Exp $
+// $Id: imgio.h,v 1.5 2005/02/03 18:12:18 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -61,6 +61,12 @@ extern char outfile_name[500];		// Name of output file
 
 extern QFile inptr;
 extern QFile outptr;			// Output file pointer  from imgio.cpp
+
+extern long insize;				// Number of bytes in input image
+extern long outsize;				// Number of bytes in output image
+
+extern void * mapimginbuf;			// Ptr to the input image (all in memory)
+extern void * mapimgoutbuf;			// Ptr to one line of output image data
 
 template <class type>
 int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * outimg, type )
@@ -288,110 +294,106 @@ void put_line(void * buf, type )
 }
 
 
-// #ifndef RESAMPLE
-// #define RESAMPLE
-// 
-// /******************************************************************
-//   New 10/15/2004 for resample
-// 
-// ******************************************************************/
-// 
-// 
-// // Read input image sample by line and sample number
-// // Definition must be in header for
-// // Solaris compiler compatability
-// // ---------------------------
-// template <class type>
-// void* get_raster_value(void * buf, long offset, long sample, int lineLength, type typeToUse)
-// {
-//      // check and see if line requested is already in memory
-//      //if not load it
-//      get_line( buf, offset, linLength, typeToUse );
-// 
-//      return ((type*)buf + sample);
-// }
-// 
-// 
-// 
-// 
-// //--------------------------------------------------------
-// // get_coords                                             
-// //--------------------------------------------------------
-// // use output pixel coordinate to find the coordinates of 
-// // the corners of the corresponding input pixel           
-// //--------------------------------------------------------
-// 
-// 
-// 
-// //static double in[2];			/* Input projection coordinates of a point */
-// //static double out[2];			/* Output projection coordinates of a point */
-// //static double corner[2];		// for computing values at pixel corners
-// //static double coord[2];		// random coordinates
-// //static double in_line, in_samp;	/* Input image coordinates of a point */
-// //static long status;			/* Return status flag for gctp() call */
-// //static long zero=0;			/* Constant of 0 */
-// //static long num_classes=255;		// number of classes used...
-// //static int preferred;		// most preferred class
-// //static int unpreferred;	// least preferred class
-// 
-// 
-// //---------- flags ----------//
-// //static int dodump=0;		// whether or not to dump minbox to screen
-// //static int domax=0;		// image of most common value per pixel
-// //static int domin=0;		// image of least common value per pixel
-// //static int donn=0;		// create traditional mapimg image
-// //static int dobands=0;		// images of how many hits per pixel per band
-// //static int dochoice=0;		// image of how many classes to choose from per pixel
-// //static int doout=0;		// write "the" output file
-// //static int dopreferred=0;	// most preferred class
-// //static int dounpreferred=0;	// least preferred class
-// //static int boxerr=0;		// true if no minbox pixels are in polygon
-// static int find2corners=0;	// true if previous pixel's corners can be reused
-// //static int classcount[256][2]={0};// flags which classes are used per output pixel
-// 	// classcount[x][0] is true if class x is used
-// 	// classcount[][1] is a list of the classes used in current pixel
-// //static int class2data[256][2]={0};// flags which classes are used in input image
-// 	// class2data[x][0] converts data value x to its internal class number
-// 	// class2data[x][1] converts internal class number x to its data value
-// 
-// 
-// 
-// #define DELTA_LS 0.00005
-// #define DELTA_METERS outimg.pixsize/2
-// 
-// extern "C"
-// {
-//        #include "proj.h"
-// }
-// 
-// #include <math.h>
-// 
-// int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2], long out_line, long out_samp, FILE* paramfile );
-// int onLine(double p1[2], double p2[2], double test[2]);
-// int inBox(double box[4][2], double test[2]);
-// 
-// 
-// /*
-// // Write a line of output image data
-// // Definition must be in header for
-// // Solaris compiler compatability
-// // ---------------------------------
-// extern FILE * outptr;				// Output file pointer  from imgio.cpp
-// 
-// template <class type>
-// void put_line(void * buf, FILE* file, type)
-// {
-//      fwrite(buf, sizeof(type), outsize, file);
-//      return;
-// }
-// 
-// */
-// 
-// 
-// 
-// 
-// #endif //RESAMPLE
+#ifndef RESAMPLE
+#define RESAMPLE
+
+/******************************************************************
+  New 10/15/2004 for resample
+  New 02/02/2005 fpr mapimg 2.0
+******************************************************************/
+
+// Read input image sample by line and sample number
+// Definition must be in header for
+// Solaris compiler compatability
+// ---------------------------
+template <class type>
+void* get_raster_value(void * buf, long offset, long sample, int lineLength, type typeToUse)
+{
+     // check and see if line requested is already in memory
+     //if not load it
+     get_line( buf, offset, linLength, typeToUse );
+     return ((type*)buf + sample);
+}
 
 
-#endif
+
+//--------------------------------------------------------
+// get_coords
+//--------------------------------------------------------
+// use output pixel coordinate to find the coordinates of
+// the corners of the corresponding input pixel
+//--------------------------------------------------------
+
+
+
+//static double in[2];			/* Input projection coordinates of a point */
+//static double out[2];			/* Output projection coordinates of a point */
+//static double corner[2];		// for computing values at pixel corners
+//static double coord[2];		// random coordinates
+//static double in_line, in_samp;	/* Input image coordinates of a point */
+//static long status;			/* Return status flag for gctp() call */
+//static long zero=0;			/* Constant of 0 */
+//static long num_classes=255;		// number of classes used...
+//static int preferred;		// most preferred class
+//static int unpreferred;	// least preferred class
+
+
+//---------- flags ----------//
+//static int dodump=0;		// whether or not to dump minbox to screen
+//static int domax=0;		// image of most common value per pixel
+//static int domin=0;		// image of least common value per pixel
+//static int donn=0;		// create traditional mapimg image
+//static int dobands=0;		// images of how many hits per pixel per band
+//static int dochoice=0;		// image of how many classes to choose from per pixel
+//static int doout=0;		// write "the" output file
+//static int dopreferred=0;	// most preferred class
+//static int dounpreferred=0;	// least preferred class
+//static int boxerr=0;		// true if no minbox pixels are in polygon
+static int find2corners=0;	// true if previous pixel's corners can be reused
+//static int classcount[256][2]={0};// flags which classes are used per output pixel
+	// classcount[x][0] is true if class x is used
+	// classcount[][1] is a list of the classes used in current pixel
+//static int class2data[256][2]={0};// flags which classes are used in input image
+	// class2data[x][0] converts data value x to its internal class number
+	// class2data[x][1] converts internal class number x to its data value
+
+
+
+#define DELTA_LS 0.00005
+#define DELTA_METERS outimg.pixsize/2
+
+extern "C"
+{
+       #include "proj.h"
+}
+
+#include <math.h>
+
+int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2], long out_line, long out_samp, FILE* paramfile );
+int onLine(double p1[2], double p2[2], double test[2]);
+int inBox(double box[4][2], double test[2]);
+
+
+/*
+// Write a line of output image data
+// Definition must be in header for
+// Solaris compiler compatability
+// ---------------------------------
+extern FILE * outptr;				// Output file pointer  from imgio.cpp
+
+template <class type>
+void put_line(void * buf, FILE* file, type)
+{
+     fwrite(buf, sizeof(type), outsize, file);
+     return;
+}
+
+*/
+
+
+
+
+#endif //RESAMPLE
+
+#endif //IMGIO_H
 

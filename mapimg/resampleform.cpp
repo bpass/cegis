@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.2 2005/01/31 15:39:09 jtrent Exp $
+// $Id: resampleform.cpp,v 1.3 2005/02/03 18:12:18 jtrent Exp $
 
 
 /****************************************************************************
@@ -98,7 +98,7 @@ ResampleForm::ResampleForm( QWidget* parent, const char* name, bool modal, WFlag
 
    canceled = false;
    ilist.clear();
-   rcode = NearestNeighbor;
+   rcode = ResampleInfo::NearestNeighbor;
 }
 
 /*
@@ -180,7 +180,7 @@ ResampleInfo ResampleForm::info()
 
    ResampleInfo r;
    r.setResampleCode( resampleCombo->currentText() );
-//   r.setIgnoreList( sz, ivals );       //jtrent   MSVC6 reports that setIgnoreList doesn't take 2 params??
+   r.setIgnoreList( sz, ivals );       //jtrent   MSVC6 reports that setIgnoreList doesn't take 2 params??
 
    return r;
 }

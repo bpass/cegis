@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.7 2005/02/01 18:11:55 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.8 2005/02/03 18:12:18 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -611,7 +611,7 @@ void mapimgForm::outSaveClicked()
       return;
    }
 
-   ResampleForm *resForm = new ResampleForm( this, "resForm", false, 
+   ResampleForm *resForm = new ResampleForm( this, "resForm", false,
       WINDOW_FLAGS );
    resForm->exec();
 

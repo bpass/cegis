@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.14 2005/03/20 19:24:11 rbuehler Exp $
+// $Id: rasterinfo.cpp,v 1.15 2005/03/30 00:54:20 rbuehler Exp $
 
 
 #include "rasterinfo.h"
@@ -55,9 +55,9 @@ bool RasterInfo::setFileName( QString &imgFileName )
 
 bool RasterInfo::setAuthor( QString &name, QString &company, QString &email )
 {
-   aName = name;
-   aCompany = company;
-   aEmail = email;
+   aName = name.length()?name:"Unknown";
+   aCompany = company.length()?company:"Unknown";
+   aEmail = email.length()?email:"Unknown";
 
    return true;
 }

@@ -1,4 +1,4 @@
-// $Id: resampleinfo.h,v 1.11 2005/03/25 21:32:10 rbuehler Exp $
+// $Id: resampleinfo.h,v 1.12 2005/03/30 00:54:20 rbuehler Exp $
 
 
 #ifndef RESAMPLEINFO_H
@@ -33,6 +33,9 @@ public:
    void setNoDataValue( double val ){noval = val;}
    double noDataValue() const {return noval;}
 
+   void setHasNoDataValue( bool has ){hasNoDataVal = has;}
+   bool hasNoDataValue(){return hasNoDataVal;}
+
    void setIgnoreList( unsigned int size, const IgnoreValue *vals );
    void setIgnoreList( const IgnoreList &slist ){ilist = slist;}
    const IgnoreList &ignoreList() const {return ilist;}
@@ -50,6 +53,7 @@ private:
    bool is_cat;
    double fillval;
    double noval;
+   bool hasNoDataVal;
    IgnoreList ilist;
    int lineCacheSize;
 

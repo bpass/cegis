@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.30 2005/03/29 21:44:46 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.31 2005/03/30 00:54:20 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -684,9 +684,13 @@ bool mapimgForm::previewProjection()
    RasterInfo output( outInfoFrame->info() );
    output.setDataType( input.isSigned(), input.bitCount(), input.type() );
    output.setFillValue( input.fillValue() );
-   if( !mapimg::readytoReproject(output, this) )
+
+   if( !mapimg::readytoFrameIt( output, this ) )
       return false;
    mapimg::frameIt( output );
+   outInfoFrame->setInfo( output );
+   if( !mapimg::readytoReproject( output, this ) )
+      return false;
 
    RasterInfo smallInput;
    smallInput.setFileName( QDir::currentDirPath().append("/temp_small.img") );
@@ -784,8 +788,9 @@ void mapimgForm::outSaveClicked()
    }
 
    ResampleInfo resample( resForm->info() );
-   resample.setFillValue( input.fillValue() );
-   resample.setNoDataValue( input.noDataValue() );
+   resample.setFillValue( output.fillValue() );
+   resample.setNoDataValue( output.noDataValue() );
+   resample.setHasNoDataValue( output.hasNoDataValue() );
    delete resForm;
 
    // Reproject (finally)

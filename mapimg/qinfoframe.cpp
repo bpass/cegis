@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.18 2005/03/25 21:25:31 jtrent Exp $
+// $Id: qinfoframe.cpp,v 1.19 2005/03/30 00:54:20 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -20,20 +20,20 @@ const uint INFO_PRECISION = 6;
 #include "mapimgpalette.h"
 
 /*
-   The QMapTab has one constructor. It executes in three stages.
+The QMapTab has one constructor. It executes in three stages.
 
-   STAGE 1: It sets its appearance by turning off the Horizontal SrcollBar, 
+STAGE 1: It sets its appearance by turning off the Horizontal SrcollBar, 
 forcing on the Vertical ScrollBar, and generating the 'contents' widget for
 holding all the contents.
-   
-   STAGE 2: It creates all the QWidgets and their respective QHBoxes in which
+
+STAGE 2: It creates all the QWidgets and their respective QHBoxes in which
 they all reside.
-   
-   STAGE 3: A level of polish is applied to every widget. Adding QTooltips,
+
+STAGE 3: A level of polish is applied to every widget. Adding QTooltips,
 applying QValidators, fixing sizes, and making connections happens here.
 */
 QMapTab::QMapTab( QWidget* parent, const char* name)
-   : QScrollView( parent, name)
+: QScrollView( parent, name)
 {
    ////////STAGE 1: Appearance/Setup
    //
@@ -183,7 +183,7 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
 }
 
 /*
-   Nothing to destruct because QObjects take care of their children.
+Nothing to destruct because QObjects take care of their children.
 */
 QMapTab::~QMapTab()
 {}
@@ -202,13 +202,13 @@ bool QMapTab::eventFilter( QObject* object, QEvent* event )
       if( mouseEvent->button() == Qt::RightButton )
       {
          mouseEvent->accept();
-/*
+         /*
          QPopupMenu* estimatePopup = new QPopupMenu( this, "estimatePopup" );
          estimatePopup->insertItem( "Estimate Value", fillButton, SLOT( animateClick() ) );
 
          estimatePopup->exec( mouseEvent->globalPos() );
          delete estimatePopup;
-*/
+         */
          return true;
       }
       else
@@ -223,60 +223,60 @@ bool QMapTab::eventFilter( QObject* object, QEvent* event )
 
 void QMapTab::fillCheckToggled( bool state )
 {
-    if(fillEdit->validator() != 0 )
-       ((MapimgValidator*)fillEdit->validator())->setAllowUndefined( !state );
+   if(fillEdit->validator() != 0 )
+      ((MapimgValidator*)fillEdit->validator())->setAllowUndefined( !state );
 
-    if( state == QButton::Off )
-    {
-    	lastFillValue = fillEdit->text();
-        fillEdit->setText( "Undefined" );
-        fillEdit->setDisabled( true );
-    }
-    else
-    {
-        fillEdit->setText( lastFillValue );
-        fillEdit->setDisabled( false );
-    }
+   if( state == QButton::Off )
+   {
+      lastFillValue = fillEdit->text();
+      fillEdit->setText( "Undefined" );
+      fillEdit->setDisabled( true );
+   }
+   else
+   {
+      fillEdit->setText( lastFillValue );
+      fillEdit->setDisabled( false );
+   }
 
-    if( fillEdit->validator() != 0 )
-    {
-    	QString fillString = fillEdit->text();
-        ((MapimgValidator*)fillEdit->validator())->fixup( fillString );
-        fillEdit->setText( fillString );
-    }
+   if( fillEdit->validator() != 0 )
+   {
+      QString fillString = fillEdit->text();
+      ((MapimgValidator*)fillEdit->validator())->fixup( fillString );
+      fillEdit->setText( fillString );
+   }
 
-    return;
+   return;
 }
 
 void QMapTab::noDataCheckToggled( bool state )
 {
    if( noDataEdit->validator() != 0 )
-       ((MapimgValidator*)noDataEdit->validator())->setAllowUndefined( !state );
+      ((MapimgValidator*)noDataEdit->validator())->setAllowUndefined( !state );
 
-    if( !state )
-    {
-    	lastNoDataValue = noDataEdit->text();
-        noDataEdit->setText( "Undefined" );
-        noDataEdit->setDisabled( true );
-    }
-    else
-    {
-        noDataEdit->setText( lastNoDataValue );
-        noDataEdit->setDisabled( false );
-    }
+   if( !state )
+   {
+      lastNoDataValue = noDataEdit->text();
+      noDataEdit->setText( "Undefined" );
+      noDataEdit->setDisabled( true );
+   }
+   else
+   {
+      noDataEdit->setText( lastNoDataValue );
+      noDataEdit->setDisabled( false );
+   }
 
-    if( noDataEdit->validator() != 0 )
-    {
-    	QString noDataString = noDataEdit->text();
-        ((MapimgValidator*)noDataEdit->validator())->fixup( noDataString );
-        noDataEdit->setText( noDataString );
-    }
+   if( noDataEdit->validator() != 0 )
+   {
+      QString noDataString = noDataEdit->text();
+      ((MapimgValidator*)noDataEdit->validator())->fixup( noDataString );
+      noDataEdit->setText( noDataString );
+   }
 
-    return;
+   return;
 }
 
 /*
-   The pixelChange(int) function is connected to the pixelCombo so that
+The pixelChange(int) function is connected to the pixelCombo so that
 whenever the user selects a different pixel size this function is called.
 Its purpose is to keep the pixelEdit hidden until it is needed. The pixelEdit
 is used for entering custom pixel sizes(meters).
@@ -291,7 +291,7 @@ void QMapTab::pixelChange(int index)
 }
 
 /*
-   The dataChange(qstring) function is connected to the dataCombo so that
+The dataChange(qstring) function is connected to the dataCombo so that
 whenever the user selects a different data type this function is called.
 Its purpose is to keep the fill value and no data validators up to date
 with which data type it is trying to validate.
@@ -316,20 +316,20 @@ void QMapTab::dataChange( const QString& newDataType )
 }
 
 /*
-   The QGctpTab has one constructor. It executes in three stages.
+The QGctpTab has one constructor. It executes in three stages.
 
-   STAGE 1: It sets its appearance by turning off the Horizontal SrcollBar,
+STAGE 1: It sets its appearance by turning off the Horizontal SrcollBar,
 forcing on the Vertical ScrollBar, and generating the 'contents' widget for
 holding all the contents.
 
-   STAGE 2: It creates all the QWidgets and their respective QHBoxes in which
+STAGE 2: It creates all the QWidgets and their respective QHBoxes in which
 they all reside.
-   
-   STAGE 3: A level of polish is applied to every widget. Adding QTooltips,
+
+STAGE 3: A level of polish is applied to every widget. Adding QTooltips,
 applying QValidators, fixing sizes, and making connections happens here.
 */
 QGctpTab::QGctpTab( QWidget* parent, const char* name)
-   : QScrollView( parent, name)
+: QScrollView( parent, name)
 {
    ////////STAGE 1: Appearance/Setup
    //
@@ -406,7 +406,7 @@ QGctpTab::QGctpTab( QWidget* parent, const char* name)
 }
 
 /*
-   While Qt will destroy all the gctpBoxes, it won't destroy my allocated 
+While Qt will destroy all the gctpBoxes, it won't destroy my allocated 
 array of pointers to them. DELETED!
 */
 QGctpTab::~QGctpTab()
@@ -415,7 +415,7 @@ QGctpTab::~QGctpTab()
 }
 
 /*
-   The projChange() function is connected to the projCombo so that whenever
+The projChange() function is connected to the projCombo so that whenever
 the user selects a new projection this function is called. Its purpose is to
 update the parameter list that the user sees. The zoneBox is shown based on
 whether the selected projection is UTM or not. Then, using the gctpNames()
@@ -435,18 +435,18 @@ void QGctpTab::projChange()
 
 
 /*
-   The QInfoFrame constructor is very simply due to the other two classes
+The QInfoFrame constructor is very simply due to the other two classes
 provided in this file. It is a QTabWidget and its two tabs are one QMapTab and
 then one QGctpTab. After those two tabs are added, all that is left for the
 constructor to do is connect the QPushButtons in those tabs to slots in this
 QInfoFrame.
 
-   The name QInfoFrame implies that this is a class subclassed from a QFrame.
+The name QInfoFrame implies that this is a class subclassed from a QFrame.
 It origionally was but has since been updated to a QTabWidget. Whether or not
 it needs to be renamed is currently undecided.
 */
 QInfoFrame::QInfoFrame( QWidget* parent, const char* name)
-   : QTabWidget( parent, name)
+: QTabWidget( parent, name)
 {
    mapTab = new QMapTab( this, "mapTab" );
    gctpTab = new QGctpTab( this, "gctpTab" );
@@ -466,13 +466,13 @@ QInfoFrame::QInfoFrame( QWidget* parent, const char* name)
 }
 
 /*
-   Nothing to destruct because QObjects take care of their children.
+Nothing to destruct because QObjects take care of their children.
 */
 QInfoFrame::~QInfoFrame()
 {}
 
 /*
-   The reset() function sets all values in both tabs to their defaults, all
+The reset() function sets all values in both tabs to their defaults, all
 zeros except for the first gctpBox.
 */
 void QInfoFrame::reset()
@@ -503,7 +503,7 @@ void QInfoFrame::reset()
 }
 
 /*
-   The fixWidth(uint) function has a very specific purpose within mapimg. It
+The fixWidth(uint) function has a very specific purpose within mapimg. It
 is used to manipulate the appearance of the tabs so they maintain shape, style,
 and whitespace how I want it. It is neither dynamic nor elegant, but it is
 practical and needed for my application in mapimg.
@@ -521,7 +521,7 @@ void QInfoFrame::fixWidth( uint w )
 }
 
 /*
-   This function is mainly used by the lock(bool) function to restrict or
+This function is mainly used by the lock(bool) function to restrict or
 allow all access to the parameters found in a QInfoFrame.
 */
 void QInfoFrame::setReadOnly( bool ro )
@@ -552,13 +552,13 @@ void QInfoFrame::setReadOnly( bool ro )
 }
 
 /*
-   Similar to the fixWidth(uint) function, the setAsInput() and setAsOutput()
+Similar to the fixWidth(uint) function, the setAsInput() and setAsOutput()
 functions are practical for my purposes in mapimg. mapimg needed to info
 editors, one for input and one for output. The differences are significant but
 but not enough to warrant a new class with so much repeated code. Also, I was
 too lazy to create a base class and two subclasses.
 
-   The setAs*() fuctions are not repeatable. Do not call setAsInput() and then
+The setAs*() fuctions are not repeatable. Do not call setAsInput() and then
 setAsOutput(). These functions were not made for that purpose. They are merely
 here as an additional step in initialization.
 */
@@ -592,7 +592,7 @@ void QInfoFrame::setAsInput()
 }
 
 /*
-   See comments on setAsInput().
+See comments on setAsInput().
 */
 void QInfoFrame::setAsOutput()
 {
@@ -635,14 +635,14 @@ void QInfoFrame::setAsOutput()
    mapTab->hasFillCheck->setHidden( true );
    mapTab->hasFillCheck->setChecked( true );
 
-   mapTab->hasNoDataCheck->setDisabled( true );
+   mapTab->hasNoDataCheck->setDisabled( false );
    mapTab->hasNoDataCheck->setHidden( true );
    mapTab->hasNoDataCheck->setChecked( true );
 
 }
 
 /*
-   This setPartner() function is used so that when the copy button is clicked
+This setPartner() function is used so that when the copy button is clicked
 and the copy() function is called it knows where to get the data from. Also,
 the two connect()'s are used to make sure that the data type and fill value
 are the same between the two QInfoFrames.
@@ -656,7 +656,7 @@ void QInfoFrame::setPartner( QInfoFrame *i )
 }
 
 /*
-   The copy(QInfoFrame*) function is used to copy data from one frame into
+The copy(QInfoFrame*) function is used to copy data from one frame into
 another. Its most obvious usage is to pass it a the QInfoFrame that you want
 to copy. However, for my own purposes, I have added an extra feature where the
 function can be called with no parameters and it will rely on a setPartner().
@@ -682,12 +682,12 @@ void QInfoFrame::copy( QInfoFrame *src )
    mapTab->ulLonEdit->setText( source->mapTab->ulLonEdit->text() );
    mapTab->dataCombo->setCurrentItem( 
       source->mapTab->dataCombo->currentItem() );
-      
-   if( source->mapTab->hasFillCheck->isChecked() )
-       mapTab->fillEdit->setText( source->mapTab->fillEdit->text() );
 
-   if( source->mapTab->hasNoDataCheck->isChecked() )
-       mapTab->noDataEdit->setText( source->mapTab->noDataEdit->text() );
+   if( source->mapTab->hasFillCheck->isChecked() )
+      mapTab->fillEdit->setText( source->mapTab->fillEdit->text() );
+
+   mapTab->hasNoDataCheck->setChecked( source->mapTab->hasNoDataCheck->isChecked() );
+   mapTab->noDataEdit->setText( source->mapTab->noDataEdit->text() );
 
    gctpTab->projCombo->setCurrentText( 
       source->gctpTab->projCombo->currentText() );
@@ -695,64 +695,65 @@ void QInfoFrame::copy( QInfoFrame *src )
    gctpTab->zoneSpin->setValue( source->gctpTab->zoneSpin->value() );
    for( int i = 0; i < 15; ++i )
       gctpTab->gctpBoxes[i]->setValue(
-         source->gctpTab->gctpBoxes[i]->value() );
+      source->gctpTab->gctpBoxes[i]->value() );
 }
 
 /*
-   Whenever the partner changes its data type or fill value this slot catches
+Whenever the partner changes its data type or fill value this slot catches
 the signal and updates those two values.
 */
 void QInfoFrame::partnerChanged()
 {
    mapTab->dataCombo->setCurrentItem(
       partner->mapTab->dataCombo->currentItem() );
-   
-    if( mapTab->fillEdit->validator() != 0 )
-    {
-    	QString fillString = mapTab->fillEdit->text();
-        ((MapimgValidator*)mapTab->fillEdit->validator())->setDataType( mapTab->dataCombo->currentText(), true );
-        ((MapimgValidator*)mapTab->fillEdit->validator())->fixup( fillString );
-        mapTab->fillEdit->setText( fillString );
-    }
 
-    if( mapTab->noDataEdit->validator() != 0 )
-    {
-    	QString noDataString = mapTab->noDataEdit->text();
-        ((MapimgValidator*)mapTab->noDataEdit->validator())->setDataType( mapTab->dataCombo->currentText(), true );
-        ((MapimgValidator*)mapTab->noDataEdit->validator())->fixup( noDataString );
-        mapTab->noDataEdit->setText( noDataString );
-    }
+   if( mapTab->fillEdit->validator() != 0 )
+   {
+      QString fillString = mapTab->fillEdit->text();
+      ((MapimgValidator*)mapTab->fillEdit->validator())->setDataType( mapTab->dataCombo->currentText(), true );
+      ((MapimgValidator*)mapTab->fillEdit->validator())->fixup( fillString );
+      mapTab->fillEdit->setText( fillString );
+   }
+
+   if( mapTab->noDataEdit->validator() != 0 )
+   {
+      QString noDataString = mapTab->noDataEdit->text();
+      ((MapimgValidator*)mapTab->noDataEdit->validator())->setDataType( mapTab->dataCombo->currentText(), true );
+      ((MapimgValidator*)mapTab->noDataEdit->validator())->fixup( noDataString );
+      mapTab->noDataEdit->setText( noDataString );
+   }
 
 
    QString fillString = partner->mapTab->fillEdit->text();
 
    if( fillString.upper() == "UNDEFINED" && static_cast<QLabel*>(mapTab->child( "mapLabel" ))->text().contains( "Output", false ) )
    {
-       mapTab->fillEdit->setEnabled( true );
-       mapTab->fillButton->setShown( true );
+      mapTab->fillEdit->setEnabled( true );
+      mapTab->fillButton->setShown( true );
    }
    else
    {
-       mapTab->fillEdit->setEnabled( false );
-       mapTab->fillButton->setShown( false );
-       mapTab->fillEdit->setText( fillString );
+      mapTab->fillEdit->setEnabled( false );
+      mapTab->fillButton->setShown( false );
+      mapTab->fillEdit->setText( fillString );
    }
 
-   QString noDataString = partner->mapTab->noDataEdit->text();
-
-   if( noDataString.upper() == "UNDEFINED" && static_cast<QLabel*>(mapTab->child( "mapLabel" ))->text().contains( "Output", false ) )
-   {
-       mapTab->noDataEdit->setEnabled( true );
+   if( partner->mapTab->hasNoDataCheck->isChecked() )
+   {  // Hide checkbox and disable edit because they are already defined
+      mapTab->hasNoDataCheck->setShown( false );
+      mapTab->hasNoDataCheck->setChecked( true );
+      mapTab->noDataEdit->setEnabled( false );
+      mapTab->noDataEdit->setText( partner->mapTab->noDataEdit->text() );
    }
    else
    {
-       mapTab->noDataEdit->setEnabled( false );
-       mapTab->noDataEdit->setText( noDataString );
+      mapTab->hasNoDataCheck->setShown( true );
+      mapTab->noDataCheckToggled( mapTab->hasNoDataCheck->isChecked() );
    }
 }
 
 /*
-   The lock(bool) function is used for locking and unlocking QInfoFrames. The
+The lock(bool) function is used for locking and unlocking QInfoFrames. The
 event that triggers this function is usually a click of the lockButton found
 in this QInfoFrame's mapTab and gctpTab. They are toggle buttons that emit
 whether they are locking or unlocking with the current click.
@@ -784,7 +785,7 @@ void QInfoFrame::lock( bool on, bool saveFile )
 }
 
 /*
-   The frame() function calls the mapimg::frameIt() function for calculating
+The frame() function calls the mapimg::frameIt() function for calculating
 the ulLatitude, ulLongitude, rows, and columns of the raster based on all
 other parameters.
 */
@@ -808,11 +809,11 @@ void QInfoFrame::getFill()
    RasterInfo inf;
    if( static_cast<QLabel*>(mapTab->child( "mapLabel" ))->text().contains( "Output", false ) )
    {
-       inf.copy( partner->info() );
+      inf.copy( partner->info() );
    }
    else
    {
-   	inf.copy( info() );
+      inf.copy( info() );
    }
 
    double maxValue = mapimg::calcFillValue(inf);
@@ -825,23 +826,23 @@ void QInfoFrame::getFill()
 
    if( mapTab->fillEdit->validator() != 0 )
    {
-       mapTab->fillEdit->validator()->fixup( fillString );
+      mapTab->fillEdit->validator()->fixup( fillString );
    }
 
    if( QMessageBox::question( 0,
-                          "Replace Fill Value?",
-                          QString("Are you sure you wish to replace the current fill "
-                                  "value (%1) with the new estimated value of %2?")
-                                  .arg( mapTab->fillEdit->text() ).arg( fillString ),
-                          QMessageBox::Yes,
-                          QMessageBox::No | QMessageBox::Default | QMessageBox::Escape ) == QMessageBox::Yes )
+      "Replace Fill Value?",
+      QString("Are you sure you wish to replace the current fill "
+      "value (%1) with the new estimated value of %2?")
+      .arg( mapTab->fillEdit->text() ).arg( fillString ),
+      QMessageBox::Yes,
+      QMessageBox::No | QMessageBox::Default | QMessageBox::Escape ) == QMessageBox::Yes )
    {
-       mapTab->fillEdit->setText( fillString );
+      mapTab->fillEdit->setText( fillString );
    }
 }
 
 /*!!!!!!!!!!!!!!!!!
-   setInfo(RasterInfo) will load all the parameters from a the RasterInfo.
+setInfo(RasterInfo) will load all the parameters from a the RasterInfo.
 It sets the filename by parsing out the path and then applies the values to
 the different edit widgets.
 */
@@ -887,33 +888,33 @@ void QInfoFrame::setInfo( RasterInfo &input )
 
    QString fillString = "Undefined";
    if( input.hasFillValue() )
-       fillString = QString::number( input.fillValue(), 'f', 6 );
+      fillString = QString::number( input.fillValue(), 'f', 6 );
 
    if( mapTab->fillEdit->validator() != 0 )
    {
-       ((MapimgValidator*)mapTab->fillEdit->validator())->setDataType( dtype );
-       ((MapimgValidator*)mapTab->fillEdit->validator())->setAllowUndefined( fillString.upper() == "UNDEFINED" );
-       mapTab->hasFillCheck->setChecked( !(fillString.upper() == "UNDEFINED") );
-       mapTab->fillEdit->setDisabled( true );
+      ((MapimgValidator*)mapTab->fillEdit->validator())->setDataType( dtype );
+      ((MapimgValidator*)mapTab->fillEdit->validator())->setAllowUndefined( fillString.upper() == "UNDEFINED" );
+      mapTab->hasFillCheck->setChecked( !(fillString.upper() == "UNDEFINED") );
+      mapTab->fillEdit->setDisabled( true );
 
-       mapTab->fillEdit->validator()->fixup( fillString );
+      mapTab->fillEdit->validator()->fixup( fillString );
    }
 
    mapTab->fillEdit->setText( fillString );
-//   mapTab->fillButton->setShown( input.fillValue() == -1.0 );
+   //   mapTab->fillButton->setShown( input.fillValue() == -1.0 );
 
 
    QString noDataString = "Undefined";
    if( input.hasNoDataValue() )
-       noDataString = QString::number( input.noDataValue(), 'f', 6 );
+      noDataString = QString::number( input.noDataValue(), 'f', 6 );
 
    if( mapTab->noDataEdit->validator() != 0 )
    {
-       ((MapimgValidator*)mapTab->noDataEdit->validator())->setDataType( dtype );
-       ((MapimgValidator*)mapTab->noDataEdit->validator())->setAllowUndefined( noDataString.upper() == "UNDEFINED" );
-       mapTab->hasNoDataCheck->setChecked( !(noDataString.upper() == "UNDEFINED") );
-       mapTab->noDataEdit->setDisabled( true );
-       mapTab->noDataEdit->validator()->fixup( noDataString );
+      ((MapimgValidator*)mapTab->noDataEdit->validator())->setDataType( dtype );
+      ((MapimgValidator*)mapTab->noDataEdit->validator())->setAllowUndefined( noDataString.upper() == "UNDEFINED" );
+      mapTab->hasNoDataCheck->setChecked( !(noDataString.upper() == "UNDEFINED") );
+      mapTab->noDataEdit->setDisabled( true );
+      mapTab->noDataEdit->validator()->fixup( noDataString );
    }
 
    mapTab->noDataEdit->setText( noDataString );
@@ -930,10 +931,10 @@ void QInfoFrame::setInfo( RasterInfo &input )
       variation = 'b';
    if( projNum == 8 || projNum == 20 || projNum == 22 )
       gctpTab->projCombo->setCurrentText( 
-         projNames[input.projectionNumber()] + " " + variation );
+      projNames[input.projectionNumber()] + " " + variation );
    else
       gctpTab->projCombo->setCurrentText( 
-         projNames[input.projectionNumber()] );
+      projNames[input.projectionNumber()] );
    gctpTab->projChange();
 
    gctpTab->zoneSpin->setValue( input.zoneNumber() );
@@ -943,16 +944,10 @@ void QInfoFrame::setInfo( RasterInfo &input )
 }
 
 /*
-   info() saves all of the entered values to a returned RasterInfo. 
+info() saves all of the entered values to a returned RasterInfo. 
 */
 RasterInfo QInfoFrame::info()
 {
-//   cleanUp( mapTab->pixelEdit );
-//   cleanUp( mapTab->ulLatEdit );
-//   cleanUp( mapTab->ulLonEdit );
-//   cleanUp( mapTab->fillEdit );
-//   cleanUp( mapTab->noDataEdit );
-
    RasterInfo ret;
 
    ret.setFileName(
@@ -970,14 +965,14 @@ RasterInfo QInfoFrame::info()
       mapTab->noDataEdit->text().toDouble() );
 
    if( mapTab->fillEdit->text().upper() == "UNDEFINED" )
-       ret.setHasFillValue( false );
+      ret.setHasFillValue( false );
    else
-       ret.setHasFillValue( true );
+      ret.setHasFillValue( true );
 
    if( mapTab->noDataEdit->text().upper() == "UNDEFINED" )
-       ret.setHasNoDataValue( false );
+      ret.setHasNoDataValue( false );
    else
-       ret.setHasNoDataValue( true );
+      ret.setHasNoDataValue( true );
 
    ret.setProjection(
       combo2proj( gctpTab->projCombo->currentItem() ),
@@ -988,36 +983,4 @@ RasterInfo QInfoFrame::info()
 
    return ret;
 }
-
-
-
-
-
-/*
-   cleanUp(QLineEdit*) is designed to format user-entered values to be more
-readable.
-
-Examples:
-   " .01"  --> "0.010000"
-   "50 \t" --> "50.000000"
-void QInfoFrame::cleanUp( QLineEdit *lEdit )
-{
-   QString cleanUp = lEdit->text();
-   cleanUp.stripWhiteSpace();
-
-   uint newLen = cleanUp.find( '.' ) + INFO_PRECISION + 1;
-   if( newLen == INFO_PRECISION ) //No '.' found
-      cleanUp.append( ".000000" );
-   else if( newLen < cleanUp.length() )
-      cleanUp.truncate( newLen );
-   else
-      cleanUp.append( QString("000000").left( newLen - cleanUp.length() ) );
-
-   if( cleanUp.find( '.' ) == 0 )
-      cleanUp.prepend( "0" );
-
-   lEdit->setText( cleanUp );
-   return;
-}
-*/
 

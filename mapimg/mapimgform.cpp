@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.2 2005/01/14 22:50:16 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.3 2005/01/27 18:15:16 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -621,3 +621,4 @@ void mapimgForm::aboutClicked()
 
    delete about;
 }
+

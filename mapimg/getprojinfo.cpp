@@ -1,4 +1,4 @@
-// $Id: getprojinfo.cpp,v 1.1 2005/01/14 16:18:48 rbuehler Exp $
+// $Id: getprojinfo.cpp,v 1.2 2005/01/27 18:15:13 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -32,7 +32,7 @@ int get_projInfo(char *name, long *sys, long *unit, long *zone, long *datum, dou
 	    return 0;
 	}
 
-	if(fscanf(inptr, "%d %d %d %d ", sys, zone, unit, datum) != 4)
+	if(fscanf(inptr, "%ld %ld %ld %ld ", sys, zone, unit, datum) != 4)
 	{
 	    fclose(inptr);
 	    remove(projFile);

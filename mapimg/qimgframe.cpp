@@ -1,4 +1,4 @@
-// $Id: qimgframe.cpp,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: qimgframe.cpp,v 1.2 2005/01/27 18:15:16 jtrent Exp $
 
 
 #include "qimgframe.h"
@@ -44,7 +44,7 @@ QPixmap *QImgFrame::pixmap() const
 }
 
 
-void QImgFrame::loadImg(QString &fileName, bool reload )
+void QImgFrame::loadImg( const QString &fileName, bool reload )
 {
    newFile = ( imgName != fileName ) || reload;
    if( newFile )

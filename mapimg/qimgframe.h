@@ -1,4 +1,4 @@
-// $Id: qimgframe.h,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: qimgframe.h,v 1.2 2005/01/27 18:15:16 jtrent Exp $
 
 
 #ifndef QIMGFRAME_H
@@ -35,7 +35,7 @@ public:
 
    QPixmap *pixmap() const;
    void setPixmap( const QPixmap &);
-   void loadImg( QString &fileName, bool reload = false );
+   void loadImg( const QString &fileName, bool reload = false );
    
 public slots:
    void resample();

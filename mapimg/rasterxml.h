@@ -1,4 +1,4 @@
-// $Id: rasterxml.h,v 1.2 2005/01/20 17:28:50 rbuehler Exp $
+// $Id: rasterxml.h,v 1.3 2005/01/27 18:15:16 jtrent Exp $
 
 
 /*! \mainpage RasterXML class for mapimg
@@ -271,21 +271,22 @@ public:
 		Anything longer will be truncated.
 	*/
 	XMLException(const char* message) {
+		unsigned int i = 0;
 		if(message) {
 			if(strlen(message) > 99) {
-				for(int i = 0; i < 99; i++)
+				for(i = 0; i < 99; i++)
 					m_message[i] = message[i];
 				m_message[i] = '\0';
 			}
 			else {
-				for(unsigned int i = 0; i < strlen(message); i++)
+				for(i = 0; i < strlen(message); i++)
 					m_message[i] = message[i];
 				m_message[i] = '\0';
 			}
 		}
 			
 		else
-			for(int i = 0; i < 100; i++)
+			for(i = 0; i < 100; i++)
 				m_message[i] = '\0';
 		
 	}

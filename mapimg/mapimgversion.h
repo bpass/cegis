@@ -1,4 +1,4 @@
-// $Id: mapimgversion.h,v 1.1 2005/01/14 16:18:49 rbuehler Exp $
+// $Id: mapimgversion.h,v 1.2 2005/01/27 18:15:16 jtrent Exp $
 
 
 //This verison numbering system will be updated soon enough via a script.
@@ -13,3 +13,4 @@
 #define REVISION_NUM 0
 
 #endif
+

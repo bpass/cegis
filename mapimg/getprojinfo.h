@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.1 2005/01/14 16:18:48 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.2 2005/01/27 18:15:13 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -26,7 +26,7 @@
 #include "getprojinfo.h"
 #include "imgio.h"
 
-#include "logForm.h"
+#include "logform.h"
 #include "jt_time.h"
 #include "rasterinfo.h"
 
@@ -59,10 +59,10 @@ bool nearestNeighbor( RasterInfo input, RasterInfo output, type useType, QWidget
     // mapimg to do the reprojection (no longer called as function in order to provide progress dialog)
     // mapimg written by D. Steinwand and updated by S. Posch
 
-	 int outputRows = output.rows();
+    int outputRows = output.rows();
     int outputCols = output.cols();
 
-    type fill = output.fillValue();			// Fill value for mapimg
+    type fill = (type)output.fillValue();			// Fill value for mapimg
 
     parse_input(input.imgFileName().ascii(), output.imgFileName().ascii());
 
@@ -205,8 +205,8 @@ bool nearestNeighbor( RasterInfo input, RasterInfo output, type useType, QWidget
 		// ---------------------------------------------------------------------------
 		else
 		{
-			in_line = ((inimg.ul_y - in[1]) / inimg.pixsize) + 0.5;
-			in_samp = ((in[0] - inimg.ul_x) / inimg.pixsize) + 0.5;
+			in_line = (long int)(((inimg.ul_y - in[1]) / inimg.pixsize) + 0.5);
+			in_samp = (long int)(((in[0] - inimg.ul_x) / inimg.pixsize) + 0.5);
 
 			// Still inside the input image??
   			// ------------------------------

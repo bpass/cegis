@@ -1,4 +1,4 @@
-// $Id: rasterinfo.h,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: rasterinfo.h,v 1.2 2005/01/27 18:15:16 jtrent Exp $
 
 
 #ifndef RASTERINFO_H
@@ -12,7 +12,7 @@ public:
    //Constuctors and Destructor
    RasterInfo();
    RasterInfo( QString &imgFileName );
-   RasterInfo( RasterInfo &src );
+   RasterInfo( const RasterInfo &src );
    ~RasterInfo();
 
    //Files
@@ -34,10 +34,10 @@ public:
    int cols(){return col;}
 
    //Pixel Description
-   bool setPixelDescription( QString &dataType, double pixelSize, double fillValue );
-   bool setPixelDescription( bool isSigned, int bitsCount, QString &type, double pixelSize, double fillValue );
-   bool setDataType( QString &dataType );
-   bool setDataType( bool isSigned, int bitsCount, QString &type );
+   bool setPixelDescription( const QString &dataType, double pixelSize, double fillValue );
+   bool setPixelDescription( bool isSigned, int bitsCount, const QString &type, double pixelSize, double fillValue );
+   bool setDataType( const QString &dataType );
+   bool setDataType( bool isSigned, int bitsCount, const QString &type );
    bool setPixelSize( double pixelSize );
    bool setFillValue( double fillValue );
    QString dataType(){return datatype;}
@@ -62,8 +62,10 @@ public:
    double *allGctpParams(){return gctpParams;}
 
    //I/O
-   bool load( QString &imgFileName = QString::null );
-   bool save( QString &imgFileName = QString::null );
+   bool load();
+   bool load( QString &imgFileName );
+   bool save();
+   bool save( QString &imgFileName );
    bool remove();
 
    //Checks
@@ -73,7 +75,7 @@ public:
    
 private:
    void defaults();
-   void copy( RasterInfo &src );
+   void copy( const RasterInfo &src );
    bool parseFileName();
    void loadInfo();
    void loadXml();
@@ -104,3 +106,4 @@ private:
 };
 
 #endif//RASTERINFO_H
+

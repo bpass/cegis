@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.1 2005/01/14 16:18:49 rbuehler Exp $
+// $Id: mapimg.h,v 1.2 2005/01/27 18:15:13 jtrent Exp $
 
 
 #ifndef MAPIMG_H
@@ -8,7 +8,9 @@ class RasterInfo;
 class QWidget;
 class QString;
 
+ #ifdef Q_OS_WIN32
 double round(double value, unsigned int decimals = 0);
+#endif
 
 namespace mapimg
 {
@@ -24,3 +26,4 @@ namespace mapimg
 };
 
 #endif//MAPIMG_H
+

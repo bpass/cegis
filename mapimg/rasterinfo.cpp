@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: rasterinfo.cpp,v 1.2 2005/01/27 18:15:16 jtrent Exp $
 
 
 #include "rasterinfo.h"
@@ -31,7 +31,7 @@ RasterInfo::RasterInfo( QString &imgFileName )
 
 //Copy constructor
 //
-RasterInfo::RasterInfo( RasterInfo &src )
+RasterInfo::RasterInfo( const RasterInfo &src )
 {
    gctpParams = new double[15];
 
@@ -71,17 +71,17 @@ bool RasterInfo::setArea( double ul_X, double ul_Y, int rows, int cols )
    return (row > 0 && col > 0);
 }
 
-bool RasterInfo::setPixelDescription( QString &dataType, double pixelSize, double fillValue )
+bool RasterInfo::setPixelDescription( const QString &dataType, double pixelSize, double fillValue )
 {
    return setDataType( dataType ) && setPixelSize( pixelSize ) && setFillValue( fillValue );
 }
 
-bool RasterInfo::setPixelDescription( bool isSigned, int bitsCount, QString &type, double pixelSize, double fillValue )
+bool RasterInfo::setPixelDescription( bool isSigned, int bitsCount, const QString &type, double pixelSize, double fillValue )
 {
    return setDataType( isSigned, bitsCount, type ) && setPixelSize( pixelSize ) && setFillValue( fillValue );
 }
 
-bool RasterInfo::setDataType( QString &dataType )
+bool RasterInfo::setDataType( const QString &dataType )
 {
    //Handles "Unsigned/Signed 8/16/32 Bit Integer"
    //    and "Signed 32/64 Bit IEEE Float"
@@ -108,7 +108,7 @@ bool RasterInfo::setDataType( QString &dataType )
    return !dataType.isNull() && bits != 0;
 }
 
-bool RasterInfo::setDataType( bool isSigned, int bitsCount, QString &type )
+bool RasterInfo::setDataType( bool isSigned, int bitsCount, const QString &type )
 {
    signd = isSigned;
 
@@ -173,6 +173,16 @@ bool RasterInfo::setGctpParam(int i, double value)
    }
    
    return false;
+}
+
+bool RasterInfo::load()
+{
+   return load( fileName );
+}
+
+bool RasterInfo::save()
+{
+   return save( fileName );
 }
 
 bool RasterInfo::load( QString &imgFileName )
@@ -383,7 +393,7 @@ void RasterInfo::defaults()
       gctpParams[i] = 0.0;
 }
 
-void RasterInfo::copy( RasterInfo &src )
+void RasterInfo::copy( const RasterInfo &src )
 {
    fileName = src.fileName;
 
@@ -427,3 +437,4 @@ bool RasterInfo::fakeIt()
 
    return ready();
 }
+

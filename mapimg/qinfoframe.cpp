@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.2 2005/01/27 18:15:16 jtrent Exp $
 
 
 #include "qinfoframe.h"
@@ -606,7 +606,7 @@ void QInfoFrame::getFill()
 {
    RasterInfo inf( info() );
 
-   int maxValue = mapimg::calcFillValue(inf);
+   double maxValue = mapimg::calcFillValue(inf);
 
    if( maxValue != 0 )
       mapTab->fillEdit->setText( QString::number(maxValue + 2, 'f', 6 ) );

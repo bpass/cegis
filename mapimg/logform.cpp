@@ -1,14 +1,14 @@
-// $Id: logform.cpp,v 1.1 2005/01/14 22:16:34 rbuehler Exp $
+// $Id: logform.cpp,v 1.2 2005/01/27 18:15:13 jtrent Exp $
 
 
 /****************************************************************************
 ** Form implementation generated from reading ui file 'logForm.ui'
 **
 ** Created: Fri Jan 14 15:46:01 2005
-**      by: The User Interface Compiler ($Id: logform.cpp,v 1.1 2005/01/14 22:16:34 rbuehler Exp $)
+**      by: The User Interface Compiler ($Id: logform.cpp,v 1.2 2005/01/27 18:15:13 jtrent Exp $)
 ****************************************************************************/
 
-#include "logForm.h"
+#include "logform.h"
 #include "getprojinfo.h"
 
 #include <qvariant.h>

@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.2 2005/01/14 16:24:28 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.3 2005/01/27 18:15:13 jtrent Exp $
 
 
 #include "mapimg.h"
@@ -19,11 +19,14 @@ extern "C"
  * VC++ math.h does not have the c/c++standard round function!!!
  * One day the evil shall FALL
  */
+ 
+ #ifdef Q_OS_WIN32
 double round(double value, unsigned int decimals)
 {
   double factor = pow(10,decimals);
   return floor((value * factor) + 0.5) / factor;
 }
+#endif
 
 bool mapimg::readytoFrameIt( RasterInfo &input, QWidget * parent )
 {
@@ -269,8 +272,8 @@ void mapimg::frameIt( RasterInfo &input )
    input.setArea(
       pxmin + (pixsize/2),
       pymax - (pixsize/2), 
-      round( ((pymax - pymin) / pixsize) ),
-      round( ((pxmax - pxmin) / pixsize) ) );
+      (int)(round( ((pymax - pymin) / pixsize) )),
+      (int)(round( ((pxmax - pxmin) / pixsize) )) );
 }
 
 bool mapimg::downSampleImg( RasterInfo &input, int maxDimension )
@@ -407,3 +410,4 @@ bool mapimg::reproject( RasterInfo &input, RasterInfo &output, QWidget *parent )
    {  Q_UINT8 data = 0;
       return nearestNeighbor( input, output, data, parent);   }
 }
+

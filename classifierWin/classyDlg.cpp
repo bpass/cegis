@@ -52,7 +52,6 @@ END_MESSAGE_MAP()
 
 CclassyDlg::CclassyDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CclassyDlg::IDD, pParent)
-	, m_filename(_T(""))
 	, m_CLAOutput(FALSE)
 	, m_numClasses(0)
 	, m_htmlOutput(FALSE)
@@ -69,18 +68,14 @@ void CclassyDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 
-	DDX_Text(pDX, IDC_FILE, m_filename);
-	DDV_MaxChars(pDX, m_filename, 255);
 	DDX_Control(pDX, IDC_DATATYPE, m_dataType);
 
 	DDX_Check(pDX, IDC_CLAOUTPUT, m_CLAOutput);
 	DDX_Text(pDX, IDC_NUMCLASSES, m_numClasses);
 	DDX_Check(pDX, IDC_HTMLOUTPUT, m_htmlOutput);
-	DDX_Control(pDX, IDC_FILE, m_FileEdit);
 	DDX_Control(pDX, IDC_NUMCLASSES, m_numClassesEdit);
 	DDX_Control(pDX, IDC_HTMLOUTPUT, m_htmlCheckBox);
 	DDX_Control(pDX, IDC_CLAOUTPUT, m_claCheckBox);
-	DDX_Control(pDX, IDC_BROWSE, m_browseButton);
 	DDX_Control(pDX, IDQUIT, m_quitButton);
 	DDX_Control(pDX, IDRUN, m_runButton);
 	DDX_Check(pDX, IDC_TextOutput, m_textOutput);
@@ -90,6 +85,11 @@ void CclassyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CLA_STATIC_TEXT, m_claEditStaticText);
 	DDX_Text(pDX, IDC_CLAFILE, m_claFileName);
 	DDX_Control(pDX, IDGENMODEL, m_genModelButton);
+	DDX_Control(pDX, IDC_INPUTFILELIST, m_fileList);
+	DDX_Control(pDX, IDC_PROGRESS1, m_progressBar);
+	DDX_Control(pDX, IDC_PROGRESSTEXT, m_progText);
+	DDX_Control(pDX, IDC_ADDFILES, m_addFiles);
+	DDX_Control(pDX, IDC_REMOVEFILE, m_removeFiles);
 }
 
 BEGIN_MESSAGE_MAP(CclassyDlg, CDialog)
@@ -99,10 +99,11 @@ BEGIN_MESSAGE_MAP(CclassyDlg, CDialog)
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDQUIT, OnBnClickedQuit)
 	ON_BN_CLICKED(IDRUN, OnBnClickedRun)
-	ON_BN_CLICKED(IDC_BROWSE, OnBnClickedBrowse)
 	ON_BN_CLICKED(IDGENMODEL, OnBnClickedGenmodel)
 	ON_BN_CLICKED(IDC_CLAOUTPUT, OnBnClickedClaoutput)
 	ON_BN_CLICKED(IDC_BROWSECLA, OnBnClickedBrowsecla)
+	ON_BN_CLICKED(IDC_ADDFILES, OnBnClickedAddfiles)
+	ON_BN_CLICKED(IDC_REMOVEFILE, OnBnClickedRemovefile)
 END_MESSAGE_MAP()
 
 
@@ -198,35 +199,8 @@ void CclassyDlg::OnBnClickedQuit()
 void CclassyDlg::OnBnClickedRun()
 {
 	UpdateData();
-	/*
-	int*** a;
-	int* b = new int[5];
-
-	a = new int**[5];
-	for(int i = 0; i < 5; i++) {
-		a[i] = new int*[5];
-		b[i] = i;
-		for(int j = 0; j < 5; j++) {
-			a[i][j] = new int[2];
-			a[i][j][0] = 5;
-			a[i][j][1] = 10;
-		}
-	}
-	
-	try {
-	ModelMaker<int> c("d:\\input", "d:\\output", b, a, 5, S16, 5);
-	c.generate("d:\\working\\test.mdl");
-	}
-	catch(GeneralException e) {
-		AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
-				enableControls(TRUE);
-				m_runButton.SetWindowText("Run");
-	}
-	*/
-
-	
-	if(m_filename.IsEmpty()) {
-		AfxMessageBox("Please specify an input file.", MB_ICONWARNING | MB_OK);
+	if(m_fileList.GetCount() == 0) {
+		AfxMessageBox("Please specify at least one input file.", MB_ICONWARNING | MB_OK);
 		return;
 	}
 	
@@ -246,32 +220,48 @@ void CclassyDlg::OnBnClickedRun()
 	}
 	
 	
-	CString cstringHtmlFilename = m_filename + ".html";
-	CString cstringTextFilename = m_filename + ".txt";
+	CString cstringHtmlFilename;
+	CString cstringTextFilename;
+	CString curFile;
 	const char* filename = NULL;
+	
 	m_curDataType = m_dataType.GetCurSel();
-
+	int numFiles = m_fileList.GetCount();
 	//disable all controls
 	enableControls(FALSE);
-	m_runButton.SetWindowText("Working");
+	m_progressBar.ShowWindow(SW_SHOW);
+	m_progText.ShowWindow(SW_SHOW);
+	m_progressBar.SetRange(0, numFiles);
+	if(numFiles > 1)
+		m_progressBar.SetPos(1);
+	UpdateWindow();
 	
 	switch(m_curDataType) {
 		case 0: {
 			try {
-				ImageClassifier<unsigned char> classifier(m_filename, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				for(int i = 0; i < numFiles; i++) {
+					
+					m_fileList.GetText(i, curFile);
+					cstringHtmlFilename = curFile + ".html";
+					cstringTextFilename = curFile + ".txt";
+					ImageClassifier<unsigned char> classifier((LPCSTR)curFile, m_numClasses);
+					classifier.classify();
+					if(m_CLAOutput) 
+						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+					if(m_htmlOutput) 
+						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
-				
-
+					if(m_textOutput) 
+						classifier.saveReport((LPCTSTR)cstringTextFilename);
+					if(i > 0 || numFiles == 1)
+						m_progressBar.SetPos(i);
+					UpdateWindow();
+					
+				}	
+			
 				
 			}
 			catch(GeneralException e) {
@@ -283,19 +273,26 @@ void CclassyDlg::OnBnClickedRun()
 			break;
 		case 1: {
 			try {
-				ImageClassifier<char> classifier(m_filename, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				for(int i = 0; i < numFiles; i++) {
+					m_fileList.GetText(i, curFile);
+					cstringHtmlFilename = curFile + ".html";
+					cstringTextFilename = curFile + ".txt";
+					ImageClassifier<char> classifier((LPCSTR)curFile, m_numClasses);
+					classifier.classify();
+					if(m_CLAOutput) 
+						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+					if(m_htmlOutput) 
+						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
-				
+					if(m_textOutput) 
+						classifier.saveReport((LPCTSTR)cstringTextFilename);
+					if(i > 0 || numFiles == 1)
+						m_progressBar.SetPos(i);
+					UpdateWindow();
+				}	
 			}
 			catch(GeneralException e) {
 				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
@@ -306,18 +303,26 @@ void CclassyDlg::OnBnClickedRun()
 			break;
 		case 2: {
 			try {
-				ImageClassifier<unsigned int> classifier(m_filename, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				for(int i = 0; i < numFiles; i++) {
+					m_fileList.GetText(i, curFile);
+					cstringHtmlFilename = curFile + ".html";
+					cstringTextFilename = curFile + ".txt";
+					ImageClassifier<unsigned int> classifier((LPCSTR)curFile, m_numClasses);
+					classifier.classify();
+					if(m_CLAOutput) 
+						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+					if(m_htmlOutput) 
+						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
+					if(m_textOutput) 
+						classifier.saveReport((LPCTSTR)cstringTextFilename);
+					if(i > 0 || numFiles == 1)
+						m_progressBar.SetPos(i);
+				UpdateWindow();
+				}	
 				
 			}
 			catch(GeneralException e) {
@@ -329,18 +334,26 @@ void CclassyDlg::OnBnClickedRun()
 			break;
 		case 3: {
 			try {
-				ImageClassifier<int> classifier(m_filename, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				for(int i = 0; i < numFiles; i++) {
+					m_fileList.GetText(i, curFile);
+					cstringHtmlFilename = curFile + ".html";
+					cstringTextFilename = curFile + ".txt";
+					ImageClassifier<int> classifier((LPCSTR)curFile, m_numClasses);
+					classifier.classify();
+					if(m_CLAOutput) 
+						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+					if(m_htmlOutput) 
+						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
+					if(m_textOutput) 
+						classifier.saveReport((LPCTSTR)cstringTextFilename);
+					if(i > 0 || numFiles == 1)
+						m_progressBar.SetPos(i);
+					UpdateWindow();
+				}	
 				
 			}
 			catch(GeneralException e) {
@@ -352,18 +365,26 @@ void CclassyDlg::OnBnClickedRun()
 			break;
 		case 4: {
 			try {
-				ImageClassifier<unsigned long> classifier(m_filename, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				for(int i = 0; i < numFiles; i++) {
+					m_fileList.GetText(i, curFile);
+					cstringHtmlFilename = curFile + ".html";
+					cstringTextFilename = curFile + ".txt";
+					ImageClassifier<unsigned long> classifier((LPCSTR)curFile, m_numClasses);
+					classifier.classify();
+					if(m_CLAOutput) 
+						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+					if(m_htmlOutput) 
+						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
+					if(m_textOutput) 
+						classifier.saveReport((LPCTSTR)cstringTextFilename);
+					if(i > 0 || numFiles == 1)
+						m_progressBar.SetPos(i);
+					UpdateWindow();
+				}	
 				
 			}
 			catch(GeneralException e) {
@@ -375,18 +396,26 @@ void CclassyDlg::OnBnClickedRun()
 			break;
 		case 5: {
 			try {
-				ImageClassifier<long> classifier(m_filename, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				for(int i = 0; i < numFiles; i++) {
+					m_fileList.GetText(i, curFile);
+					cstringHtmlFilename = curFile + ".html";
+					cstringTextFilename = curFile + ".txt";
+					ImageClassifier<long> classifier((LPCSTR)curFile, m_numClasses);
+					classifier.classify();
+					if(m_CLAOutput) 
+						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+					if(m_htmlOutput) 
+						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
+					if(m_textOutput) 
+						classifier.saveReport((LPCTSTR)cstringTextFilename);
+					if(i > 0 || numFiles == 1)
+						m_progressBar.SetPos(i);
+					UpdateWindow();
+				}	
 				
 			}
 			catch(GeneralException e) {
@@ -398,18 +427,26 @@ void CclassyDlg::OnBnClickedRun()
 			break;
 		case 6: {
 			try {
-				ImageClassifier<float> classifier(m_filename, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				for(int i = 0; i < numFiles; i++) {
+					m_fileList.GetText(i, curFile);
+					cstringHtmlFilename = curFile + ".html";
+					cstringTextFilename = curFile + ".txt";
+					ImageClassifier<float> classifier((LPCSTR)curFile, m_numClasses);
+					classifier.classify();
+					if(m_CLAOutput) 
+						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+					if(m_htmlOutput) 
+						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
+					if(m_textOutput) 
+						classifier.saveReport((LPCTSTR)cstringTextFilename);
+					if(i > 0 || numFiles == 1)
+						m_progressBar.SetPos(i);
+					UpdateWindow();
+				}	
 				
 			}
 
@@ -422,19 +459,26 @@ void CclassyDlg::OnBnClickedRun()
 			break;
 		case 7: {
 			try {
-				ImageClassifier<double> classifier(m_filename, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				for(int i = 0; i < numFiles; i++) {
+					m_fileList.GetText(i, curFile);
+					cstringHtmlFilename = curFile + ".html";
+					cstringTextFilename = curFile + ".txt";
+					ImageClassifier<double> classifier((LPCSTR)curFile, m_numClasses);
+					classifier.classify();
+					if(m_CLAOutput) 
+						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+					if(m_htmlOutput) 
+						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
-				
+					if(m_textOutput) 
+						classifier.saveReport((LPCTSTR)cstringTextFilename);
+					if(i > 0 || numFiles == 1)
+						m_progressBar.SetPos(i);
+					UpdateWindow();
+				}	
 				
 			}
 			catch(GeneralException e) {
@@ -446,25 +490,16 @@ void CclassyDlg::OnBnClickedRun()
 
 		
 	}
-
+	m_progressBar.SetPos(numFiles);
 	enableControls(TRUE);
-	m_runButton.SetWindowText("Run");
+	m_runButton.SetWindowText("Run Classification");
 	AfxMessageBox("Classification Complete",MB_ICONINFORMATION | MB_OK);
+	m_progressBar.ShowWindow(SW_HIDE);
+	m_progText.ShowWindow(SW_HIDE);
+	
 }
 
-void CclassyDlg::OnBnClickedBrowse()
-{
-	UpdateData();
-	CFileDialog fileDialog(TRUE);
-	
-	if(fileDialog.DoModal() == IDOK) 
-		m_filename = fileDialog.GetPathName();
-	
-	else
-		m_filename = "";
 
-	UpdateData(FALSE);
-}
 
 void CclassyDlg::enableControls(BOOL enable) {
 	m_dataType.EnableWindow(enable);
@@ -472,11 +507,13 @@ void CclassyDlg::enableControls(BOOL enable) {
 	m_numClassesEdit.EnableWindow(enable);
 	m_htmlCheckBox.EnableWindow(enable);
 	m_claCheckBox.EnableWindow(enable);
-	m_browseButton.EnableWindow(enable);
 	m_quitButton.EnableWindow(enable);
 	m_runButton.EnableWindow(enable);
 	m_textCheckBox.EnableWindow(enable);
 	m_genModelButton.EnableWindow(enable);
+	m_addFiles.EnableWindow(enable);
+	m_removeFiles.EnableWindow(enable);
+	m_fileList.EnableWindow(enable);
 }
 void CclassyDlg::OnBnClickedGenmodel()
 {
@@ -514,4 +551,61 @@ void CclassyDlg::OnBnClickedBrowsecla()
 		m_claFileName = "";
 
 	UpdateData(FALSE);
+}
+
+void CclassyDlg::setListHExtent() {
+	int numEntries = m_fileList.GetCount();
+	int max = 0;
+	int curLen = 0;
+	CString currentString;
+	
+	//get the length of the longest string in the list box
+	for(int i  = 0; i < numEntries; i++) {
+		m_fileList.GetText(i, currentString);
+		curLen = currentString.GetLength();
+		if(curLen > max)
+			max = curLen;
+	}
+
+	m_fileList.SetHorizontalExtent(max*5 + max/2);
+}
+
+
+
+void CclassyDlg::OnBnClickedAddfiles()
+{
+	//UpdateData();
+	const long buffSize = 100000;
+	char fileBuffer[buffSize] = {'\0'};
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_ALLOWMULTISELECT);
+	dlg.m_ofn.lpstrFile = fileBuffer;
+	dlg.m_ofn.nMaxFile = buffSize;
+	POSITION pos;
+	CString curString;
+	if(dlg.DoModal() == IDOK) {
+		pos = dlg.GetStartPosition();
+		while(pos) {
+			curString = dlg.GetNextPathName(pos);
+			m_fileList.AddString((LPCSTR)curString);
+		}
+		setListHExtent();
+	}
+}
+
+void CclassyDlg::OnBnClickedRemovefile()
+{
+	const int numSelected = m_fileList.GetSelCount();
+	int* selIndices = new int[numSelected];
+	m_fileList.GetSelItems(numSelected, selIndices);
+	for(int i = 0; i < numSelected; i++) {
+		m_fileList.DeleteString(selIndices[0]);
+		setListHExtent();
+		//get updated selected item list because
+		//deleteString shifts the items each time 
+		//one is deleted.
+		m_fileList.GetSelItems(numSelected, selIndices);
+	}
+
+
+	delete[] selIndices;
 }

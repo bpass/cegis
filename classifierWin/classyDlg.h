@@ -30,14 +30,13 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	void enableControls(BOOL enable);
-	void waitForClassifier();
+	void setListHExtent();
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedQuit();
 	afx_msg void OnBnClickedRun();
-	afx_msg void OnBnClickedBrowse();
 	int m_curDataType;
-	CString m_filename;
+	
 	CComboBox m_dataType;
 	
 	BOOL m_CLAOutput;
@@ -63,6 +62,13 @@ public:
 	afx_msg void OnBnClickedBrowsecla();
 	CString m_claFileName;
 	CButton m_genModelButton;
+	CListBox m_fileList;
+	afx_msg void OnBnClickedAddfiles();
+	afx_msg void OnBnClickedRemovefile();
+	CProgressCtrl m_progressBar;
+	CStatic m_progText;
+	CButton m_addFiles;
+	CButton m_removeFiles;
 };
 
 

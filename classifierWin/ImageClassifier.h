@@ -91,12 +91,21 @@ ImageClassifier<T>::~ImageClassifier() {
 
 template <class T>
 bool ImageClassifier<T>::valueExists(T val) {
+	typename std::vector<T>::iterator iter;
+	iter = std::find(m_values.begin(), m_values.end(), val);
+	if(iter == m_values.end())
+		return(false);
+	else
+		return(true);
+
+	/*
 	for(unsigned int i = 0; i < m_values.size(); i++) {
 		if(m_values[i] == val) 
 			return true;
 	}
 	
 	return false;
+	*/
 }
 
 template <class T>
@@ -183,27 +192,25 @@ void ImageClassifier<T>::classify(int numClasses) {
 	    delete[] number;
 		curClass.clear();
 		curClass.setName(curClassName.c_str());
-		curClass.setCapacity(classSize);
+		curClass.setInitialCapacity(classSize);
 
 		//if we still need to distribute some values across the classes
 		if(k < numRemainingValues) 
 			curClass++; //increase class capacity by 1;
 
-		for(int j = 0; ((j < curClass.getCapacity()) && (curIndex < numValues)); j++) {
+		for(int j = 0; ((j < curClass.getInitialCapacity()) && (curIndex < numValues)); j++) {
 			curClass.addValue(m_values[curIndex]);
 			curIndex++;
 		}
-		
+
 		classesTemp.push_back(curClass);
 		k++;
 		
 	}
 		
 	m_classes = classesTemp;
-	printf("Before Classification\n");
-	printReport();
-	printf("\nAfter Classification\n");
-	//begin classification
+
+
 	curIndex = 0;
 	
 	while(1) {
@@ -268,18 +275,18 @@ void ImageClassifier<T>::classify(int numClasses) {
 template <class T>
 double ImageClassifier<T>::calcTotalError() {
 	double totalError = 0;
-	for(int i = 0; i < m_numClasses; i++) 
+	for(int i = 0; i < m_numClasses; i++) {
 		totalError += m_classes[i].getError();
-	
+	}
 	return(totalError);
 }
 
 template <class T>
 double ImageClassifier<T>::calcTotalError(std::vector< ImageClass<T> > vec) {
 	double totalError = 0;
-	for(unsigned int i = 0; i < vec.size(); i++) 
+	for(unsigned int i = 0; i < vec.size(); i++) {
 		totalError += vec[i].getError();
-	
+	}
 	return(totalError);
 }
 

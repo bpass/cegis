@@ -22,11 +22,11 @@ public:
 private:
     char* m_inFile; //original imagine input file
 	char* m_outFile; //desired imaging output file
-	int m_numLayers; //number of layers in the image
+	unsigned int m_numLayers; //number of layers in the image
 	std::vector< std::vector<ClassInfo> > m_classInfo; //Class Informatin for all
 													   //classes in all layers.
 	DataType m_type; //image data type
-
+	void swapSlashes(char* filename);
 	void buildClassInfo(const char* claFile); //parse .cla XML file
 };
 

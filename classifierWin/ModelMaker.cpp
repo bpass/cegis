@@ -13,7 +13,8 @@ ModelMaker::ModelMaker(const char* inFile, const char* outFile, const char* claF
 	strcpy(m_outFile, outFile);
 	m_inFile[strlen(inFile)] = '\0';
 	m_outFile[strlen(outFile)] = '\0';
-
+	swapSlashes(m_inFile);
+	swapSlashes(m_outFile);
 	buildClassInfo(claFile);
 }
 
@@ -26,6 +27,7 @@ ModelMaker::~ModelMaker() {
 
 void ModelMaker::generate(const char* filename) {
 	FILE* modelFile = NULL;
+	char imageVarDataType[8] = {'\0'}; //either "Float" or "Integer"
 	if(!filename)
 		throw(GeneralException("Error in ModelMaker::generate(): null filename given."));
 	
@@ -45,70 +47,59 @@ void ModelMaker::generate(const char* filename) {
 	//print RASTER variable declarations for input and output files
 	switch(m_type) {
 		case U8:
-			fprintf(modelFile, "Integer RASTER r1_in FILE OLD NEAREST NEIGHBOR AOI NONE \"%s\";\n", m_inFile);
-			break;
-
 		case S8:
-			fprintf(modelFile, "Integer RASTER r1_in FILE OLD NEAREST NEIGHBOR AOI NONE \"%s\";\n", m_inFile);
-			break;
-
 		case U16:
-			fprintf(modelFile, "Integer RASTER r1_in FILE OLD NEAREST NEIGHBOR AOI NONE \"%s\";\n", m_inFile);
-			break;
-
 		case S16:
-			fprintf(modelFile, "Integer RASTER r1_in FILE OLD NEAREST NEIGHBOR AOI NONE \"%s\";\n", m_inFile);
-			break;
-
 		case U32:
-			fprintf(modelFile, "Integer RASTER r1_in FILE OLD NEAREST NEIGHBOR AOI NONE \"%s\";\n", m_inFile);
-			break;
-
 		case S32:
-			fprintf(modelFile, "Integer RASTER r1_in FILE OLD NEAREST NEIGHBOR AOI NONE \"%s\";\n", m_inFile);
+			strcpy(imageVarDataType, "Integer");
 			break;
-
 		case FLOAT32:
-			fprintf(modelFile, "Float RASTER r1_in FILE OLD NEAREST NEIGHBOR AOI NONE \"%s\";\n", m_inFile);
-			break;
-
 		case FLOAT64:
-			fprintf(modelFile, "Float RASTER r1_in FILE OLD NEAREST NEIGHBOR AOI NONE \"%s\";\n", m_inFile);
+			strcpy(imageVarDataType, "Float");
 			break;
 		default:
 			throw(GeneralException("Error in ModelMaker::generate(): invalid data type."));
 	}
 	
+	//input File declaration
+	fprintf(modelFile, "%s RASTER r1_in FILE OLD NEAREST NEIGHBOR AOI NONE \"%s\";\n", imageVarDataType, m_inFile);
+
 	//print declaration for output file
 	fprintf(modelFile, "Integer RASTER r2_out FILE DELETE_IF_EXISTING USEALL THEMATIC 8 BIT UNSIGNED INTEGER \"%s\";\n", m_outFile);
 
-	//generate the conditional statement
-	fprintf(modelFile, "r2_out = CONDITIONAL {\n");
-	for(int i = 0; i < m_numLayers; i++) {
-		for(int j = 0; j < m_classInfo[i].size(); j++) {
+	for(unsigned int i = 0; i < m_numLayers; i++) {
+		//declare the in-memory rasters and generate the conditional statement
+		//for this layer
+		fprintf(modelFile, "#define mem%d %s( CONDITIONAL {(r1_in(%d) == 0.000)0,", i+1, imageVarDataType, i+1);
+		
+		for(unsigned int j = 0; j < m_classInfo[i].size(); j++) {
 			
-			//I had to break this up into all of these 
-			//separate statements, for some *&#!ed up reason
-			//it wouldn't work otherwise
-			fprintf(modelFile, "(r1_in(%d) >= ", i);
+			//print condition for each class range
+			fprintf(modelFile, "(r1_in(%d) > ", i+1);
 			fprintf(modelFile, "%.3f", (double)m_classInfo[i][j].low);
-			fprintf(modelFile, " AND r1_in(%d) <= ", i);
+			fprintf(modelFile, " AND r1_in(%d) <= ", i+1);
 			fprintf(modelFile, "%.3f)", (double)m_classInfo[i][j].high);
 			fprintf(modelFile, "%d", m_classInfo[i][j].outputPixelVal);
 			
 			//if this is not the last line of the conditional, print
 			//a comma.
-			if(!((i+1) >= m_numLayers && (j+1) >= m_classInfo[i].size())) 
+			if((j+1) < m_classInfo[i].size()) 
 				fprintf(modelFile, ",");
-
-			fprintf(modelFile, "\n");
-
-
 		}
-	
+		fprintf(modelFile, "} )\n");
 	}
 
-	fprintf(modelFile, "};\n");
+	//print stacklayers command
+	fprintf(modelFile, "r2_out = STACKLAYERS (\n");
+	for(unsigned int i = 0; i < m_numLayers; i++) {
+		fprintf(modelFile, "$mem%d", i+1);
+		if((i+1) < m_numLayers) 
+			fprintf(modelFile, ",");
+		fprintf(modelFile, "\n");
+	}
+	fprintf(modelFile, ") ;\n");
+
 	fprintf(modelFile, "QUIT;");
 	fclose(modelFile); 
 	
@@ -171,7 +162,7 @@ void ModelMaker::buildClassInfo(const char* claFile) {
 										"missing <range> tag."));
 			curClassRangeE->Attribute("low", &curClassInfo.low);
 			curClassRangeE->Attribute("high", &curClassInfo.high);
-			curClassInfo.outputPixelVal = j;
+			curClassInfo.outputPixelVal = j+1;
 			curLayerData.push_back(curClassInfo);
 
 			//move to next <class> tag
@@ -190,6 +181,20 @@ void ModelMaker::buildClassInfo(const char* claFile) {
 	int dType = 0;
 	rootE->Attribute("dataTypeNumber", &dType);
 	m_type = (DataType)dType;
+}
+
+//if using windows, swap the backslash used 
+//for filenames with the forward slash
+void ModelMaker::swapSlashes(char* input) {
+	if(!input)
+		throw(GeneralException("Error in ModelMaker::swapSlashes():"
+							   "null filename given."));
+	
+	size_t len = strlen(input);
+	for(unsigned int i = 0; i < len; i++) {
+		if(input[i] == '\\')
+			input[i] = '/';
+	}
 }
 
 		

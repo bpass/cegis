@@ -1,0 +1,1149 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>mapimgForm</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>mapimgForm</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>350</width>
+            <height>520</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>5</hsizetype>
+            <vsizetype>5</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>297</width>
+            <height>428</height>
+        </size>
+    </property>
+    <property name="maximumSize">
+        <size>
+            <width>700</width>
+            <height>1040</height>
+        </size>
+    </property>
+    <property name="sizeIncrement">
+        <size>
+            <width>0</width>
+            <height>0</height>
+        </size>
+    </property>
+    <property name="baseSize">
+        <size>
+            <width>0</width>
+            <height>0</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>  U.S. Geological Survey -- MapIMG</string>
+    </property>
+    <property name="focusPolicy">
+        <enum>NoFocus</enum>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>true</bool>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout19</cstring>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget" row="1" column="1">
+                    <property name="name">
+                        <cstring>layout16</cstring>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>layout42</cstring>
+                            </property>
+                            <hbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="QLineEdit">
+                                    <property name="name">
+                                        <cstring>inFilenameEdit</cstring>
+                                    </property>
+                                    <property name="enabled">
+                                        <bool>true</bool>
+                                    </property>
+                                    <property name="sizePolicy">
+                                        <sizepolicy>
+                                            <hsizetype>7</hsizetype>
+                                            <vsizetype>0</vsizetype>
+                                            <horstretch>0</horstretch>
+                                            <verstretch>0</verstretch>
+                                        </sizepolicy>
+                                    </property>
+                                    <property name="frameShape">
+                                        <enum>PopupPanel</enum>
+                                    </property>
+                                    <property name="frameShadow">
+                                        <enum>Sunken</enum>
+                                    </property>
+                                    <property name="text">
+                                        <string></string>
+                                    </property>
+                                    <property name="readOnly">
+                                        <bool>false</bool>
+                                    </property>
+                                </widget>
+                                <widget class="QPushButton">
+                                    <property name="name">
+                                        <cstring>infileButton</cstring>
+                                    </property>
+                                    <property name="focusPolicy">
+                                        <enum>TabFocus</enum>
+                                    </property>
+                                    <property name="text">
+                                        <string>Browse...</string>
+                                    </property>
+                                </widget>
+                            </hbox>
+                        </widget>
+                        <widget class="QComboBox">
+                            <item>
+                                <property name="text">
+                                    <string>Select Image Data Type</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>------------------------------</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Unsigned 8 Bit</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Signed 8 Bit</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Unsigned 16 Bit</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Signed 16 Bit</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Unsigned 32 Bit</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Signed 32 Bit</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>IEEE 32 Bit Float</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>IEEE 64 Bit Float</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>inputDataTypeComboBox</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox">
+                            <item>
+                                <property name="text">
+                                    <string>Select a Projection</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>------------------------------</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Geographic</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>UTM</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>State Plane</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Albers Equal Area</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Lambert Conformal Conic</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Mercator</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Polar Stereographic</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Polyconic</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Equidistant Conic A</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Equidistant Conic B</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Transverse Mercator</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Stereographic</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Lambert Azimuthal</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Azimuthal</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Gnomonic</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Orthographic</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Gen. Vert. Near Per</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Sinusiodal</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Equirectangular</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Miller Cylindrical</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Van der Grinten</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Hotine Oblique Merc A</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Hotine Oblique Merc B</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Robinson</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Space Oblique Merc A</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Space Oblique Merc B</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Alaska Conformal</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Interrupted Goode</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Mollweide</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Interrupted Mollweide</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Hammer</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Wagner IV</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Wagner VII</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Oblated Equal Area</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>Integerized Sinusoid</string>
+                                </property>
+                            </item>
+                            <property name="name">
+                                <cstring>inputProjectionComboBox</cstring>
+                            </property>
+                            <property name="sizeLimit">
+                                <number>15</number>
+                            </property>
+                        </widget>
+                        <widget class="QSpinBox">
+                            <property name="name">
+                                <cstring>numRowsSpin</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                            <property name="focusPolicy">
+                                <enum>StrongFocus</enum>
+                            </property>
+                            <property name="maxValue">
+                                <number>1000000</number>
+                            </property>
+                            <property name="minValue">
+                                <number>0</number>
+                            </property>
+                            <property name="value">
+                                <number>0</number>
+                            </property>
+                        </widget>
+                        <widget class="QSpinBox">
+                            <property name="name">
+                                <cstring>numColsSpin</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                            <property name="maxValue">
+                                <number>1000000</number>
+                            </property>
+                            <property name="value">
+                                <number>0</number>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+                <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>inInfoText</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>5</hsizetype>
+                            <vsizetype>5</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>&lt;u&gt;Input Parameters&lt;/u&gt;</string>
+                    </property>
+                    <property name="alignment">
+                        <set>WordBreak|AlignCenter</set>
+                    </property>
+                </widget>
+                <widget class="QLayoutWidget" row="1" column="0">
+                    <property name="name">
+                        <cstring>layout15</cstring>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>inFilenameLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Input File Name:</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>inputBitageText</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Data Type:</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>inputProjectionText</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Projection:</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>numRowsText</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Rows:</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>numColsText</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Columns:</string>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="Line">
+            <property name="name">
+                <cstring>line7</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout29</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>outInfoText</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&lt;u&gt;Desired Output Parameters&lt;/u&gt;</string>
+                    </property>
+                    <property name="alignment">
+                        <set>WordBreak|AlignCenter</set>
+                    </property>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout17</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLayoutWidget" row="0" column="0">
+                            <property name="name">
+                                <cstring>layout56</cstring>
+                            </property>
+                            <vbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout51</cstring>
+                                    </property>
+                                    <vbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>outFilenameLabel</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Output File Name:</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>outputProjectionText</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Projection:</string>
+                                            </property>
+                                        </widget>
+                                    </vbox>
+                                </widget>
+                                <widget class="QLabel">
+                                    <property name="name">
+                                        <cstring>pixelText</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Pixel Size:</string>
+                                    </property>
+                                </widget>
+                            </vbox>
+                        </widget>
+                        <widget class="QLayoutWidget" row="0" column="1">
+                            <property name="name">
+                                <cstring>layout16</cstring>
+                            </property>
+                            <vbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout46</cstring>
+                                    </property>
+                                    <hbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLineEdit">
+                                            <property name="name">
+                                                <cstring>outFilenameEdit</cstring>
+                                            </property>
+                                            <property name="enabled">
+                                                <bool>true</bool>
+                                            </property>
+                                            <property name="frameShape">
+                                                <enum>LineEditPanel</enum>
+                                            </property>
+                                            <property name="frameShadow">
+                                                <enum>Sunken</enum>
+                                            </property>
+                                            <property name="text">
+                                                <string></string>
+                                            </property>
+                                            <property name="readOnly">
+                                                <bool>false</bool>
+                                            </property>
+                                        </widget>
+                                        <widget class="QPushButton">
+                                            <property name="name">
+                                                <cstring>outfileButton</cstring>
+                                            </property>
+                                            <property name="focusPolicy">
+                                                <enum>TabFocus</enum>
+                                            </property>
+                                            <property name="text">
+                                                <string>Browse...</string>
+                                            </property>
+                                        </widget>
+                                    </hbox>
+                                </widget>
+                                <widget class="QComboBox">
+                                    <item>
+                                        <property name="text">
+                                            <string>Select a Projection</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>------------------------------</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>UTM</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>State Plane</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Albers Equal Area</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Lambert Conformal Conic</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Mercator</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Polar Stereographic</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Polyconic</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Equidistant Conic A</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Equidistant Conic B</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Transverse Mercator</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Stereographic</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Lambert Azimuthal</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Azimuthal</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Gnomonic</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Orthographic</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Gen. Vert. Near Per</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Sinusiodal</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Equirectangular</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Miller Cylindrical</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Van der Grinten</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Hotine Oblique Merc A</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Hotine Oblique Merc B</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Robinson</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Space Oblique Merc A</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Space Oblique Merc B</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Alaska Conformal</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Interrupted Goode</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Mollweide</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Interrupted Mollweide</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Hammer</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Wagner IV</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Wagner VII</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Oblated Equal Area</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Integerized Sinusoid</string>
+                                        </property>
+                                    </item>
+                                    <property name="name">
+                                        <cstring>projectionComboBox</cstring>
+                                    </property>
+                                    <property name="sizeLimit">
+                                        <number>15</number>
+                                    </property>
+                                </widget>
+                                <widget class="QComboBox">
+                                    <item>
+                                        <property name="text">
+                                            <string>Select a Pixel Size</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>-----------------------------</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>5 degrees</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>1 degree</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>30 minutes</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>5 minutes</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>30 arc seconds</string>
+                                        </property>
+                                    </item>
+                                    <item>
+                                        <property name="text">
+                                            <string>Meters...</string>
+                                        </property>
+                                    </item>
+                                    <property name="name">
+                                        <cstring>pixelComboBox</cstring>
+                                    </property>
+                                </widget>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout15</cstring>
+                                    </property>
+                                    <hbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLineEdit">
+                                            <property name="name">
+                                                <cstring>pixelEdit</cstring>
+                                            </property>
+                                            <property name="enabled">
+                                                <bool>false</bool>
+                                            </property>
+                                        </widget>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>pixsizeLabel</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>(in meters)</string>
+                                            </property>
+                                            <property name="alignment">
+                                                <set>WordBreak|AlignCenter</set>
+                                            </property>
+                                        </widget>
+                                    </hbox>
+                                </widget>
+                            </vbox>
+                        </widget>
+                    </grid>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="Line">
+            <property name="name">
+                <cstring>line5</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout63</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>fillvalText</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Fill Value:</string>
+                    </property>
+                </widget>
+                <widget class="QSpinBox">
+                    <property name="name">
+                        <cstring>fillvalSpin</cstring>
+                    </property>
+                    <property name="maxValue">
+                        <number>999999999</number>
+                    </property>
+                    <property name="lineStep">
+                        <number>1</number>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="Line">
+            <property name="name">
+                <cstring>line6</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>HLine</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+        </widget>
+        <widget class="QButtonGroup">
+            <property name="name">
+                <cstring>buttonGroup1</cstring>
+            </property>
+            <property name="title">
+                <string>Options Upon Completion</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>clearRadio</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Clear All Parameters</string>
+                    </property>
+                    <property name="checked">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>keepInputRadio</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Keep Same Input Parameters</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>moveOutputRadio</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Move Output Parameters to Input Parameters</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout15</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>okayButton</cstring>
+                    </property>
+                    <property name="focusPolicy">
+                        <enum>TabFocus</enum>
+                    </property>
+                    <property name="text">
+                        <string>OK</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>exitButton</cstring>
+                    </property>
+                    <property name="focusPolicy">
+                        <enum>TabFocus</enum>
+                    </property>
+                    <property name="text">
+                        <string>Exit</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<connections>
+    <connection>
+        <sender>okayButton</sender>
+        <signal>clicked()</signal>
+        <receiver>mapimgForm</receiver>
+        <slot>executemapimg()</slot>
+    </connection>
+    <connection>
+        <sender>infileButton</sender>
+        <signal>clicked()</signal>
+        <receiver>mapimgForm</receiver>
+        <slot>getInfile()</slot>
+    </connection>
+    <connection>
+        <sender>outfileButton</sender>
+        <signal>clicked()</signal>
+        <receiver>mapimgForm</receiver>
+        <slot>getOutfile()</slot>
+    </connection>
+    <connection>
+        <sender>pixelEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>mapimgForm</receiver>
+        <slot>pixEditCheck()</slot>
+    </connection>
+    <connection>
+        <sender>pixelComboBox</sender>
+        <signal>activated(int)</signal>
+        <receiver>mapimgForm</receiver>
+        <slot>pixelCheck()</slot>
+    </connection>
+    <connection>
+        <sender>exitButton</sender>
+        <signal>clicked()</signal>
+        <receiver>mapimgForm</receiver>
+        <slot>close()</slot>
+    </connection>
+    <connection>
+        <sender>inputProjectionComboBox</sender>
+        <signal>activated(const QString&amp;)</signal>
+        <receiver>mapimgForm</receiver>
+        <slot>comboCheckIn()</slot>
+    </connection>
+    <connection>
+        <sender>projectionComboBox</sender>
+        <signal>activated(const QString&amp;)</signal>
+        <receiver>mapimgForm</receiver>
+        <slot>comboCheck()</slot>
+    </connection>
+    <connection>
+        <sender>inFilenameEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>mapimgForm</receiver>
+        <slot>infileValid(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>outFilenameEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>mapimgForm</receiver>
+        <slot>outfileValid(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>numColsSpin</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mapimgForm</receiver>
+        <slot>calcDataType()</slot>
+    </connection>
+    <connection>
+        <sender>numRowsSpin</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mapimgForm</receiver>
+        <slot>calcDataType()</slot>
+    </connection>
+    <connection>
+        <sender>inputDataTypeComboBox</sender>
+        <signal>activated(const QString&amp;)</signal>
+        <receiver>mapimgForm</receiver>
+        <slot>comboCheckData()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="global" impldecl="in implementation">qlabel.h</include>
+    <include location="local" impldecl="in implementation">mapimgform.ui.h</include>
+</includes>
+<variables>
+    <variable>int outspunit</variable>
+    <variable>int oututmzone</variable>
+    <variable>double inPixelSize</variable>
+    <variable>double * input_gctparray</variable>
+    <variable>QString infilepath</variable>
+    <variable>QString defaultInPath</variable>
+    <variable>QString defaultOutPath</variable>
+    <variable>double pixelSize</variable>
+    <variable>QString outfilepath</variable>
+    <variable>double * output_gctparray</variable>
+    <variable>int inutmzone</variable>
+    <variable>int inspunit</variable>
+</variables>
+<slots>
+    <slot>executemapimg()</slot>
+    <slot>comboCheck()</slot>
+    <slot>pixEditCheck()</slot>
+    <slot>getInfile()</slot>
+    <slot>loadInputInfo( QString &amp; s )</slot>
+    <slot>getOutfile()</slot>
+    <slot>pixelCheck()</slot>
+    <slot returnType="bool">infilenameExist()</slot>
+    <slot returnType="bool">outfilenameExist()</slot>
+    <slot>init()</slot>
+    <slot>setgctpArray( double * ptr )</slot>
+    <slot>comboCheckIn()</slot>
+    <slot>setgctpArrayOut( double * ptr )</slot>
+    <slot>setInPixel( double pixel )</slot>
+    <slot>setUTMout( double * ptr, int val )</slot>
+    <slot>setUTMin( double * ptr, int val )</slot>
+    <slot>setSPout( int val )</slot>
+    <slot>infileValid( const QString &amp; infileName )</slot>
+    <slot>outfileValid( const QString &amp; outfileName )</slot>
+    <slot>calcDataType()</slot>
+    <slot>comboCheckData()</slot>
+    <slot>showAllDataTypes()</slot>
+    <slot>show8BitDataTypes()</slot>
+    <slot>show16BitDataTypes()</slot>
+    <slot>show32BitDataTypes()</slot>
+    <slot>show64BitDataTypes()</slot>
+    <slot>getOutputGCTP( double * ptr )</slot>
+    <slot>getInputGCTP( double * ptr )</slot>
+    <slot>timerDone()</slot>
+    <slot>showAboutMapIMG()</slot>
+    <slot>showAboutQt()</slot>
+</slots>
+<functions>
+    <function access="protected">mousePressEvent( QMouseEvent * e )</function>
+</functions>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

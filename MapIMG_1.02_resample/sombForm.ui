@@ -1,0 +1,506 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>sombForm</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>sombForm</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>250</width>
+            <height>310</height>
+        </rect>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>0</width>
+            <height>0</height>
+        </size>
+    </property>
+    <property name="maximumSize">
+        <size>
+            <width>250</width>
+            <height>310</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>Enter Your Data</string>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>true</bool>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout18</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout246</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>smajorLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Semi-M&amp;ajor Axis:</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>PlainText</enum>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>smajorEdit</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>smajorEdit</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>LineEditPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Sunken</enum>
+                            </property>
+                            <property name="text">
+                                <string>0.000000</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignRight</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>&lt;B&gt;Semi-Major Axis:&lt;/B&gt; value must be between 0 and 10,000 km.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout247</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>sminorLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Semi-M&amp;inor Axis:</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>PlainText</enum>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>sminorEdit</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>sminorEdit</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>LineEditPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Sunken</enum>
+                            </property>
+                            <property name="text">
+                                <string>0.000000</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignRight</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>&lt;B&gt;Semi-Minor Axis:&lt;/B&gt; value must be between 0 and 10,000 km.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout89</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>feLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>False &amp;Easting:</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>PlainText</enum>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>feEdit</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>feEdit</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>LineEditPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Sunken</enum>
+                            </property>
+                            <property name="text">
+                                <string>0.000000</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignRight</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>&lt;B&gt;False Easting:&lt;/B&gt; value must be between -10,000 km and 10,000 km.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout90</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>fnLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>False &amp;Northing:</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>PlainText</enum>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>fnEdit</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>fnEdit</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>LineEditPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Sunken</enum>
+                            </property>
+                            <property name="text">
+                                <string>0.000000</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignRight</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>&lt;B&gt;False Northing:&lt;/B&gt; value must be between -10,000 km and 10,000 km.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>fefnLabel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&lt;i&gt;(In meters)&lt;/i&gt;</string>
+                    </property>
+                    <property name="alignment">
+                        <set>WordBreak|AlignCenter</set>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <spacer>
+            <property name="name">
+                <cstring>spacer122</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout32</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout30</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>satnumLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Landsat &amp;Satellite Number:</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>PlainText</enum>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>satnumSpin</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QSpinBox">
+                            <property name="name">
+                                <cstring>satnumSpin</cstring>
+                            </property>
+                            <property name="maxValue">
+                                <number>7</number>
+                            </property>
+                            <property name="minValue">
+                                <number>1</number>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>&lt;B&gt;Satellite Number:&lt;/B&gt; value must be 1,2,3,4,5 or 7.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout31</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>pathLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Landsat &amp;Path Number:</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>PlainText</enum>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>pathSpin</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QSpinBox">
+                            <property name="name">
+                                <cstring>pathSpin</cstring>
+                            </property>
+                            <property name="maxValue">
+                                <number>251</number>
+                            </property>
+                            <property name="minValue">
+                                <number>1</number>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>&lt;B&gt;Satellite Path:&lt;/B&gt; value must be between 1 and 233.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+            </vbox>
+        </widget>
+        <spacer>
+            <property name="name">
+                <cstring>spacer123</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout430</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>okayButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>OK</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>cancelButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Cancel</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<connections>
+    <connection>
+        <sender>cancelButton</sender>
+        <signal>clicked()</signal>
+        <receiver>sombForm</receiver>
+        <slot>close()</slot>
+    </connection>
+    <connection>
+        <sender>smajorEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>sombForm</receiver>
+        <slot>smajCheck(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>sminorEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>sombForm</receiver>
+        <slot>sminCheck(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>feEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>sombForm</receiver>
+        <slot>feCheck(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>fnEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>sombForm</receiver>
+        <slot>fnCheck(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>okayButton</sender>
+        <signal>clicked()</signal>
+        <receiver>sombForm</receiver>
+        <slot>makeChanges()</slot>
+    </connection>
+    <connection>
+        <sender>satnumSpin</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>sombForm</receiver>
+        <slot>updateToolTip()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>smajorEdit</tabstop>
+    <tabstop>sminorEdit</tabstop>
+    <tabstop>feEdit</tabstop>
+    <tabstop>fnEdit</tabstop>
+    <tabstop>satnumSpin</tabstop>
+    <tabstop>pathSpin</tabstop>
+    <tabstop>okayButton</tabstop>
+    <tabstop>cancelButton</tabstop>
+</tabstops>
+<includes>
+    <include location="local" impldecl="in implementation">sombForm.ui.h</include>
+</includes>
+<variables>
+    <variable>double * gctparray</variable>
+</variables>
+<signals>
+    <signal>changesMade(double * ptr)</signal>
+    <signal>getGCTP(double * ptr)</signal>
+</signals>
+<slots>
+    <slot>makeChanges()</slot>
+    <slot>init()</slot>
+    <slot>getGCTP()</slot>
+    <slot>smajCheck( const QString &amp; check )</slot>
+    <slot>sminCheck( const QString &amp; check )</slot>
+    <slot>feCheck( const QString &amp; check )</slot>
+    <slot>fnCheck( const QString &amp; check )</slot>
+    <slot>updateToolTip()</slot>
+</slots>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

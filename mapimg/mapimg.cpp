@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.18 2005/03/21 17:37:53 jtrent Exp $
+// $Id: mapimg.cpp,v 1.19 2005/03/25 18:06:41 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -24,7 +24,15 @@ int mapimg::round(double value, unsigned int decimals)
    return (int)(floor((value * factor) + 0.5) / factor);
 }
 
-bool mapimg::readytoFrameIt( RasterInfo &input, QWidget * parent )
+/*
+readytoFrameIt() returns true if there are no errors or if the user chooses to
+ignore any projection errors. If any map parameters required for frameit() are
+incorrectly set then it will tell the user without an ignore option. If any
+projection parameters are incorrect then it will tell the user, but also give
+them the option to proceed anyway. This can result in crashes or infinite,
+but I decided to let the user have that power if they want.
+*/
+bool mapimg::readytoFrameIt( const RasterInfo &input, QWidget * parent )
 {
    QString msg = QString::null;
 
@@ -54,6 +62,8 @@ bool mapimg::readytoFrameIt( RasterInfo &input, QWidget * parent )
          if( QMessageBox::warning( parent, "Bad projection parameters", msg,
             QMessageBox::Cancel, QMessageBox::Ignore ) == QMessageBox::Cancel )
             return false;
+         // User has decided to ignore errors...
+         // Don't say I didn't warn you!
       }
    }
 
@@ -61,10 +71,9 @@ bool mapimg::readytoFrameIt( RasterInfo &input, QWidget * parent )
 }
 
 /*
-   Pretty much the same as readytoFrameIt()
-      except it also checks datatype and size
+Pretty much the same as readytoFrameIt except it also checks datatype and size
 */
-bool mapimg::readytoReproject( RasterInfo &input, QWidget *parent )
+bool mapimg::readytoReproject( const RasterInfo &input, QWidget *parent )
 {
    QString msg = QString::null;
 
@@ -90,6 +99,7 @@ bool mapimg::readytoReproject( RasterInfo &input, QWidget *parent )
 
    if( !msg.isEmpty() )
    {
+      msg.prepend( "Cannot perform reprojection.\n\n" );
       QMessageBox::critical( parent, "Parameter Error", msg );
       return false;
    }
@@ -101,13 +111,19 @@ bool mapimg::readytoReproject( RasterInfo &input, QWidget *parent )
          if( QMessageBox::warning( parent, "Projection Warning", msg,
             QMessageBox::Cancel, QMessageBox::Ignore ) == QMessageBox::Cancel )
             return false;
+         // User has decided to ignore errors...
+         // Don't say I didn't warn you!
       }
    }
 
    return true;
 }
 
-QString mapimg::projectionErrors( RasterInfo &input )
+/*
+projectionErrors() will return a description of any errors it finds in the
+projection parameters of the input.
+*/
+QString mapimg::projectionErrors( const RasterInfo &input )
 {
    QString msg = QString::null;
 
@@ -222,59 +238,59 @@ void mapimg::frameIt( RasterInfo &input )
    if (outCoords[1] < pymin) pymin = outCoords[1];
    if (outCoords[1] > pymax) pymax = outCoords[1];
 
-	inCoords[0] = ul_lon;
-	inCoords[1] = lr_lat;
+   inCoords[0] = ul_lon;
+   inCoords[1] = lr_lat;
 
    gctp(inCoords, &inProj, &inZone, inParms, &inUnit, &inDatum, &errorMode, 
       logFile, &paramMode, logFile, paramfile, outCoords, &outProj, &outZone, 
       outParms, &outUnit, &outDatum, "", "", &status);
 
-	if (outCoords[0] < pxmin) pxmin = outCoords[0];
-	if (outCoords[0] > pxmax) pxmax = outCoords[0];
-	if (outCoords[1] < pymin) pymin = outCoords[1];
-	if (outCoords[1] > pymax) pymax = outCoords[1];
+   if (outCoords[0] < pxmin) pxmin = outCoords[0];
+   if (outCoords[0] > pxmax) pxmax = outCoords[0];
+   if (outCoords[1] < pymin) pymin = outCoords[1];
+   if (outCoords[1] > pymax) pymax = outCoords[1];
 
-	inCoords[0] = lr_lon;
-	inCoords[1] = ul_lat;
+   inCoords[0] = lr_lon;
+   inCoords[1] = ul_lat;
 
    gctp(inCoords, &inProj, &inZone, inParms, &inUnit, &inDatum, &errorMode, 
       logFile, &paramMode, logFile, paramfile, outCoords, &outProj, &outZone, 
       outParms, &outUnit, &outDatum, "", "", &status);
 
-	if (outCoords[0] < pxmin) pxmin = outCoords[0];
-	if (outCoords[0] > pxmax) pxmax = outCoords[0];
-	if (outCoords[1] < pymin) pymin = outCoords[1];
-	if (outCoords[1] > pymax) pymax = outCoords[1];
+   if (outCoords[0] < pxmin) pxmin = outCoords[0];
+   if (outCoords[0] > pxmax) pxmax = outCoords[0];
+   if (outCoords[1] < pymin) pymin = outCoords[1];
+   if (outCoords[1] > pymax) pymax = outCoords[1];
 
-	// Now step along the sides -- this is somewhat brute force, and it's accuracy
-	//  is affected by the step size.  This method should be replaced (!!)
-	// ---------------------------------------------------------------------
-	delta_east = fabs(ul_lon - lr_lon) / stepSize;
-	delta_north = fabs(ul_lat - lr_lat) / (stepSize/2.0);
+   // Now step along the sides -- this is somewhat brute force, and it's accuracy
+   //  is affected by the step size.  This method should be replaced (!!)
+   // ---------------------------------------------------------------------
+   delta_east = fabs(ul_lon - lr_lon) / stepSize;
+   delta_north = fabs(ul_lat - lr_lat) / (stepSize/2.0);
 
-	/* Calculate the minimum and maximum coordinates
-	 ---------------------------------------------*/
-	for (long i = 0; i <= stepSize; i++)
-	{
-		inCoords[0] = ul_lon + (delta_east * i);
-		for (long j = 0; j<= (stepSize/2); j++)
-		{
-			inCoords[1] = lr_lat + (delta_north * j);
+   /* Calculate the minimum and maximum coordinates
+   ---------------------------------------------*/
+   for (long i = 0; i <= stepSize; i++)
+   {
+      inCoords[0] = ul_lon + (delta_east * i);
+      for (long j = 0; j<= (stepSize/2); j++)
+      {
+         inCoords[1] = lr_lat + (delta_north * j);
 
          gctp(inCoords, &inProj, &inZone, inParms, &inUnit, &inDatum, &errorMode, 
             logFile, &paramMode, logFile, paramfile, outCoords, &outProj, &outZone, 
             outParms, &outUnit, &outDatum, "", "", &status);
 
-	      if (outCoords[0] < pxmin) pxmin = outCoords[0];
-	      if (outCoords[0] > pxmax) pxmax = outCoords[0];
-	      if (outCoords[1] < pymin) pymin = outCoords[1];
-	      if (outCoords[1] > pymax) pymax = outCoords[1];
-		}
-	}
+         if (outCoords[0] < pxmin) pxmin = outCoords[0];
+         if (outCoords[0] > pxmax) pxmax = outCoords[0];
+         if (outCoords[1] < pymin) pymin = outCoords[1];
+         if (outCoords[1] > pymax) pymax = outCoords[1];
+      }
+   }
    fclose(paramfile);
 
-	// Set output raster area
-	// ---------------------------
+   // Set output raster area
+   // ---------------------------
    input.setArea(
       pxmin + (pixsize/2),
       pymax - (pixsize/2),
@@ -282,7 +298,7 @@ void mapimg::frameIt( RasterInfo &input )
       (int)(mapimg::round( ((pxmax - pxmin) / pixsize) )) );
 }
 
-bool mapimg::downSampleImg( RasterInfo &input, RasterInfo &output, int maxDimension, QWidget *parent )
+bool mapimg::downSampleImg( const RasterInfo &input, RasterInfo &output, int maxDimension, QWidget *parent )
 {
    QString tmp( output.imgFileName() );
    output.copy(input);
@@ -299,25 +315,25 @@ bool mapimg::downSampleImg( RasterInfo &input, RasterInfo &output, int maxDimens
    dtype += input.dataType();
 
    if( dtype == "Signed 64 Bit IEEE Float" )
-   {	double data = 0;
+   {   double data = 0;
       return mapimg_downsample( input, output, data, parent ); }
    else if( dtype == "Signed 32 Bit IEEE Float" )
-   {	float data = 0;
+   {   float data = 0;
       return mapimg_downsample( input, output, data, parent ); }
    else if( dtype == "Signed 32 Bit Integer" )
-   {	Q_INT32 data = 0;
+   {   Q_INT32 data = 0;
       return mapimg_downsample( input, output, data, parent ); }
    else if( dtype == "Unsigned 32 Bit Integer" )
-   {	Q_UINT32 data = 0;
+   {   Q_UINT32 data = 0;
       return mapimg_downsample( input, output, data, parent ); }
    else if( dtype == "Signed 16 Bit Integer" )
-   {	Q_INT16 data = 0;
+   {   Q_INT16 data = 0;
       return mapimg_downsample( input, output, data, parent ); }
    else if( dtype == "Unsigned 16 Bit Integer" )
-   {	Q_UINT16 data = 0;
+   {   Q_UINT16 data = 0;
       return mapimg_downsample( input, output, data, parent ); }
    else if( dtype == "Signed 8 Bit Integer" )
-   { 	Q_INT8 data = 0;
+   {    Q_INT8 data = 0;
       return mapimg_downsample( input, output, data, parent ); }
    else //( dtype == "Unsigned 8 Bit Integer" )
    {  Q_UINT8 data = 0;
@@ -350,7 +366,7 @@ bool mapimg::downSizeProjection( RasterInfo &input, int maxDimension )
    return true;
 }
 
-double mapimg::calcFillValue( RasterInfo &input )
+double mapimg::calcFillValue( const RasterInfo &input )
 {
    QString dtype(input.isSigned()?"Signed ":"Unsigned ");
    dtype += QString::number(input.bitCount());
@@ -358,32 +374,32 @@ double mapimg::calcFillValue( RasterInfo &input )
    dtype += input.dataType();
 
    if( dtype == "Signed 64 Bit IEEE Float" )
-   {	double data = 0;
+   {   double data = 0;
       return IMGIO<double>::get_max_value( input, data );   }
    else if( dtype == "Signed 32 Bit IEEE Float" )
-   {	float data = 0;
+   {   float data = 0;
       return IMGIO<float>::get_max_value( input, data );   }
    else if( dtype == "Signed 32 Bit Integer" )
-   {	Q_INT32 data = 0;
+   {   Q_INT32 data = 0;
       return IMGIO<Q_INT32>::get_max_value( input, data );   }
    else if( dtype == "Unsigned 32 Bit Integer" )
-   {	Q_UINT32 data = 0;
+   {   Q_UINT32 data = 0;
       return IMGIO<Q_UINT32>::get_max_value( input, data );   }
    else if( dtype == "Signed 16 Bit Integer" )
-   {	Q_INT16 data = 0;
+   {   Q_INT16 data = 0;
       return IMGIO<Q_INT16>::get_max_value( input, data );   }
    else if( dtype == "Unsigned 16 Bit Integer" )
-   {	Q_UINT16 data = 0;
+   {   Q_UINT16 data = 0;
       return IMGIO<Q_UINT16>::get_max_value( input, data );   }
    else if( dtype == "Signed 8 Bit Integer" )
-   { 	Q_INT8 data = 0;
+   {    Q_INT8 data = 0;
       return IMGIO<Q_INT8>::get_max_value( input, data );   }
    else //( dtype == "Unsigned 8 Bit Integer" )
    {  Q_UINT8 data = 0;
       return IMGIO<Q_UINT8>::get_max_value( input, data );   }
 }
 
-bool mapimg::reproject( RasterInfo &input, RasterInfo &output, ResampleInfo &resample, QWidget *parent )
+bool mapimg::reproject( const RasterInfo &input, const RasterInfo &output, const ResampleInfo &resample, QWidget *parent )
 {
    QString dtype(output.isSigned()?"Signed ":"Unsigned ");
    dtype += QString::number(output.bitCount());
@@ -391,25 +407,25 @@ bool mapimg::reproject( RasterInfo &input, RasterInfo &output, ResampleInfo &res
    dtype += output.dataType();
 
    if( dtype == "Signed 64 Bit IEEE Float" )
-   {	double data = 0;
+   {   double data = 0;
       return mapimg_resample( input, output, resample, data, parent);   }
    else if( dtype == "Signed 32 Bit IEEE Float" )
-   {	float data = 0;
+   {   float data = 0;
       return mapimg_resample( input, output, resample, data, parent);   }
    else if( dtype == "Signed 32 Bit Integer" )
-   {	Q_INT32 data = 0;
+   {   Q_INT32 data = 0;
       return mapimg_resample( input, output, resample, data, parent);   }
    else if( dtype == "Unsigned 32 Bit Integer" )
-   {	Q_UINT32 data = 0;
+   {   Q_UINT32 data = 0;
       return mapimg_resample( input, output, resample, data, parent);   }
    else if( dtype == "Signed 16 Bit Integer" )
-   {	Q_INT16 data = 0;
+   {   Q_INT16 data = 0;
       return mapimg_resample( input, output, resample, data, parent);   }
    else if( dtype == "Unsigned 16 Bit Integer" )
-   {	Q_UINT16 data = 0;
+   {   Q_UINT16 data = 0;
       return mapimg_resample( input, output, resample, data, parent);   }
    else if( dtype == "Signed 8 Bit Integer" )
-   { 	Q_INT8 data = 0;
+   {    Q_INT8 data = 0;
       return mapimg_resample( input, output, resample, data, parent);   }
    else //( dtype == "Unsigned 8 Bit Integer" )
    {  Q_UINT8 data = 0;

@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.17 2005/03/25 04:16:57 rbuehler Exp $
+// $Id: imgio.h,v 1.18 2005/03/25 18:06:41 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -10,10 +10,10 @@
 #ifndef IMGIO_H
 #define IMGIO_H
 
-#define OK			0
-#define NOT_OK	            -1
-#define INFILE_NAME		1
-#define OUTFILE_NAME	2
+#define OK         0
+#define NOT_OK               -1
+#define INFILE_NAME      1
+#define OUTFILE_NAME   2
 
 
 //#define _LARGEFILE_SOURCE
@@ -39,18 +39,18 @@
 
 struct IMGINFO
 {
-   double pparm[15];				// 15 GCTP projection parameters
-   double ul_y;					// Upper left projection corner y
-   double ul_x;					// Upper left projection corner x
+   double pparm[15];    // 15 GCTP projection parameters
+   double ul_y;         // Upper left projection corner y
+   double ul_x;         // Upper left projection corner x
 
-   float pixsize;					// Image pixel size in meters
+   float pixsize;       // Image pixel size in meters
 
-   long nl;						// Number of lines in image
-   long ns;						// Number of samples in image
-   long sys;					    // Projection system code
-   long zone;						// Projection zone code
-   long unit;
-   long datum;						// Datum code (spheroid code for now)
+   long nl;             // Number of lines in image
+   long ns;             // Number of samples in image
+   long sys;            // Projection system code
+   long zone;           // Projection zone code
+   long unit;           // Unit code (meters code for now)
+   long datum;          // Datum code (spheroid code for now)
 };
 
 
@@ -61,23 +61,20 @@ private:
    int Max_Data_Element_Count;
    QCache<type>* inputDataMap;
 
-   QString infile_name;		        // Name of input file
-   QString outfile_name;		        // Name of output file
+   QString infile_name;       // Name of input file
+   QString outfile_name;      // Name of output file
 
-   QFile inptr;				// Input file pointer
-   QFile outptr;			// Output file pointer
+   QFile inptr;               // Input file pointer
+   QFile outptr;              // Output file pointer
 
-   Q_ULLONG last_offset;                // Last offset for get_line
-
-
-
+   Q_ULLONG last_offset;      // Last offset for get_line
 
 public:
-   long insize;				// Number of bytes in input image
-   long outsize;			// Number of bytes in output image
+   long insize;               // Number of bytes in input image
+   long outsize;              // Number of bytes in output image
 
-   void* mapimginbuf;			// Ptr to the input image (all in memory)
-   void* mapimgoutbuf;			// Ptr to one line of output image data
+   void* mapimginbuf;         // Ptr to the input image (all in memory)
+   void* mapimgoutbuf;        // Ptr to one line of output image data
 
 
    IMGIO()
@@ -132,7 +129,7 @@ public:
    }
 
    // Assigns all values in the IMGINFO to equal the RasterInfo
-   void raster2IMG( RasterInfo &ras, IMGINFO *img )
+   void raster2IMG( const RasterInfo &ras, IMGINFO *img )
    {
       int i;
       img->nl = ras.rows(); img->ns = ras.cols();
@@ -155,12 +152,12 @@ public:
    {
       if(inout == INFILE_NAME)
       {
-         infile_name = name;		// Init infile name
+         infile_name = name;      // Init infile name
       }
 
       if(inout == OUTFILE_NAME)
       {
-         outfile_name = name;		// Init outfile name
+         outfile_name = name;      // Init outfile name
       }
 
       return;
@@ -208,9 +205,9 @@ public:
    // Function to initialize input image, buffers & projection
    // Definition must be in header for
    // Solaris compiler compatability
-   int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * outimg, type )
+   int init_io( const RasterInfo &input, const RasterInfo &output, IMGINFO * inimg, IMGINFO * outimg, type )
    {
-      void * bufptr;		// Pointer to input buffer
+      void * bufptr;      // Pointer to input buffer
 
       // Open input file and check for any errors
       if( inptr.isOpen() )
@@ -290,7 +287,7 @@ public:
    // Definition must be in header for
    // Solaris compiler compatability
    // ---------------------------
-   static type get_max_value( RasterInfo &input, type )
+   static type get_max_value( const RasterInfo &input, type )
    {
       QString inputFilename = input.imgFileName().ascii();
 
@@ -434,6 +431,7 @@ public:
    }
 };
 
+
 #ifndef RESAMPLE
 #define RESAMPLE
 
@@ -456,14 +454,13 @@ void* get_raster_value(void * buf, long offset, long sample, int lineLength, typ
 }
 
 
-
 //--------------------------------------------------------
 // get_coords
 //--------------------------------------------------------
 // use output pixel coordinate to find the coordinates of
 // the corners of the corresponding input pixel
 //--------------------------------------------------------
-static int find2corners=0;	// true if previous pixel's corners can be reused
+static int find2corners=0;   // true if previous pixel's corners can be reused
 
 #define DELTA_LS 0.00005
 #define DELTA_METERS outimg.pixsize/2

@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.17 2005/03/25 14:28:45 jtrent Exp $
+// $Id: mapimg.h,v 1.18 2005/03/25 18:06:41 rbuehler Exp $
 
 
 #ifndef MAPIMG_H
@@ -10,6 +10,7 @@ class QWidget;
 class QString;
 
 /*
+
 This namespace provides functions for checking (re)projectoin parameters,
 manipulating (re)projection parameters, manipulating mapimg .img files, and
 the reprojection function.
@@ -43,7 +44,9 @@ Stereographic.
 downSizeProjection() will alter the rows, columns, upper left coordinate and
 pixel size so that neither rows nor columns are larger than maxDimension.
 
-calcFillValue() will suggest a fill value for a given input file.
+calcFillValue() is a caller for IMGIO<>::get_max_val. It will return the
+largest value it finds in the file. From there it is recommended that the code
+adds at least 2 to the value to get a good fill value.
 
 
 --.img File Manipulation Functions
@@ -71,15 +74,15 @@ round the same way.
 */
 namespace mapimg
 {
-   bool readytoFrameIt( RasterInfo &input, QWidget *parent = 0 );
-   bool readytoReproject( RasterInfo &input, QWidget *parent = 0 );
-   QString projectionErrors( RasterInfo &input );
+   bool readytoFrameIt( const RasterInfo &input, QWidget *parent = 0 );
+   bool readytoReproject( const RasterInfo &input, QWidget *parent = 0 );
+   QString projectionErrors( const RasterInfo &input );
 
    void frameIt( RasterInfo &input);
-   bool downSampleImg( RasterInfo &input, RasterInfo &output, int maxDimension, QWidget *parent );
+   bool downSampleImg( const RasterInfo &input, RasterInfo &output, int maxDimension, QWidget *parent );
    bool downSizeProjection( RasterInfo &input, int maxDimension );
-   double calcFillValue( RasterInfo &input );
-   bool reproject( RasterInfo &input, RasterInfo &output, ResampleInfo &resample, QWidget *parent = 0 );
+   double calcFillValue( const RasterInfo &input );
+   bool reproject( const RasterInfo &input, const RasterInfo &output, const ResampleInfo &resample, QWidget *parent = 0 );
    template <typename type>   // Inlined below;
       int quickSortAndSearch( void* values, type searchValue, int size, int left = 0, int right = -1 );
 

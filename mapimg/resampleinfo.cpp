@@ -1,4 +1,4 @@
-// $Id: resampleinfo.cpp,v 1.11 2005/03/20 19:24:11 rbuehler Exp $
+// $Id: resampleinfo.cpp,v 1.12 2005/03/25 18:06:41 rbuehler Exp $
 
 
 #include "resampleinfo.h"
@@ -109,16 +109,6 @@ bool ResampleInfo::shouldIgnore( IgnoreValue val ) const
    }
 
    return false;
-}
-
-bool ResampleInfo::noDoubleCounting() const
-{
-  bool returnValue = false;
-  
-  if( rc == ResampleInfo::Add )
-      returnValue = true;
-      
-  return returnValue;
 }
 
 

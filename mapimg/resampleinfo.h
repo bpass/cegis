@@ -1,4 +1,4 @@
-// $Id: resampleinfo.h,v 1.9 2005/03/20 19:24:11 rbuehler Exp $
+// $Id: resampleinfo.h,v 1.10 2005/03/25 18:06:41 rbuehler Exp $
 
 
 #ifndef RESAMPLEINFO_H
@@ -25,7 +25,7 @@ public:
    const char * resampleName() const {return rn;}
 
    void setIsCategorical(bool enable){is_cat = enable;}
-   bool isCategorical(){return is_cat;}
+   bool isCategorical() const {return is_cat;}
 
    void setFillValue( double val ){fillval = val;}
    double fillValue() const {return fillval;}
@@ -40,7 +40,7 @@ public:
 
    void copy( const ResampleInfo &src );
 
-   bool noDoubleCounting() const;
+   bool noDoubleCounting() const {return rc==Add;}
 
    void setCacheLineCount( const int lineCount ) { lineCacheSize = lineCount; }
    int cacheLineCount() const { return lineCacheSize; }

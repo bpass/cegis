@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.28 2005/03/22 16:42:17 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.29 2005/03/25 18:06:41 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -34,35 +34,35 @@
 #include "mapimg.h"
 
 /*
-   The mapimgForm has one constructor separated by sections of the form.
+The mapimgForm has one constructor separated by sections of the form.
 
-   FILE MENU sets up the File menu actions and connections which users use to
+FILE MENU sets up the File menu actions and connections which users use to
 exit. It also contains an undocumented bigAction which is activated by 
 pressing Ctrl + B. This action returns all toolbar buttons to their actual
 sizes.
 
-   INPUT sets up the input parameters view by creating a QInfoFrame and
+INPUT sets up the input parameters view by creating a QInfoFrame and
 QActions to interface with it. The inInfoAction is used to Hide/Show the
 QInfoFrame, the inOpenAction prompts the user for a filename to load, and the
 inSaveAction is used to save all parameters out to a file. Then the Input menu
 is created and populated with these three actions.
 
-   PREVIEW sets up the middle section of the form with a QImgFrame and
+PREVIEW sets up the middle section of the form with a QImgFrame and
 QActions to interface with it. The viewShowAction is used to Hide/Show the
 QImgFrame, the viewResampleAction connects with the resample slot of the
 QImgFrame, the viewProjAction starts the procedure to preview a reprojection
 before spending the time on it.
 
-   OUTPUT sets up the output parameters view just like INPUT. The differences
+OUTPUT sets up the output parameters view just like INPUT. The differences
 are that there is no open action and the outSaveAction actually calls the 
 reprojection.
 
-   TOOLBARS creates the button toolbar with the actions to open a new input,
+TOOLBARS creates the button toolbar with the actions to open a new input,
 reproject to a file, hide/show the three frames, resample the imgframe, and
 preview the reprojection.
 */
 mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
-    : QMainWindow( parent, name, fl )
+: QMainWindow( parent, name, fl )
 {
    setIcon( mapimgImage( "USGS Swirl Sphere" ) );
    setCaption( QString("mapimg%1").arg(MAJOR_VERSION) );
@@ -210,7 +210,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    //TOOLBARS
    ////////
    toolBar = new QToolBar( this, "toolBar" );
-   
+
    inOpenAction->addTo( toolBar );
    outSaveAction->addTo( toolBar );
    toolBar->addSeparator();
@@ -320,7 +320,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
 }
 
 /*
-   Delete temporary files.
+Delete temporary files.
 */
 mapimgForm::~mapimgForm()
 {
@@ -412,7 +412,7 @@ void mapimgForm::dropEvent( QDropEvent *evt )
 }
 
 /*
-   The inOpenClicked() function is used to load a new file as input. It has
+The inOpenClicked() function is used to load a new file as input. It has
 checks for the existence of both the .img file and its meta data file. When
 the .img file is missing it bails out. If the meta data is missing then it
 messages the user and asks them to genererate one using the input frame.
@@ -420,7 +420,7 @@ messages the user and asks them to genererate one using the input frame.
 void mapimgForm::inOpenClicked()
 {
    QString temp = QFileDialog::getOpenFileName(
-         inPath, "mapimg Files (*.img);;Tiff Files (*.tif)", this, "", "Choose an image");
+      inPath, "mapimg Files (*.img);;Tiff Files (*.tif)", this, "", "Choose an image");
 
    if( openFile(temp) )
    {   
@@ -528,12 +528,12 @@ bool mapimgForm::openFile( QString inFile )
 }
 
 /*
-   inSaveClicked() is how the user saves changes the input parameters. It is
+inSaveClicked() is how the user saves changes the input parameters. It is
 connected to the locked() signal from the input InfoFrame's lockButton. There
 are three conditions where it will not make it to the end of the function 
 where it saves; If no image has been loaded (!imgSet), the info is corrupt
 (!i.ready()), or the user chooses not to overwrite (arg==1).
-   To speed up the process of generating a new meta data file the overwrite
+To speed up the process of generating a new meta data file the overwrite
 message box is not shown if the current .img file did not have a .info or .xml
 file when it was first loaded. However, when the user us working with a file
 where the parameters were pre defined to message box will always show because
@@ -585,7 +585,7 @@ void mapimgForm::previewClicked( bool on )
       return;
 
    if( !prevLast )               /*if a file is freshly loaded, but not displayed, prevLast will be NULL*/
-       previewInput( true );     /*this addition will generate the preview for this case*/
+      previewInput( true );     /*this addition will generate the preview for this case*/
 
    prevLast->setOn(on);
 
@@ -651,7 +651,7 @@ void mapimgForm::previewOutput( bool on )
 }
 
 /*
-   previewProjection() is used to preview a projection. This is useful
+previewProjection() is used to preview a projection. This is useful
 because many reprojections can take hours but using this function the output
 can be preivewed before investing the time. The reprojection function is
 linear with size increases having a proportional effect on run-time. This
@@ -704,7 +704,7 @@ bool mapimgForm::previewProjection()
 }
 
 /*
-   The outSaveClicked() function is used to actually reproject. If both the
+The outSaveClicked() function is used to actually reproject. If both the
 input and output parameters check out ok then the user is prompted for the
 destination to reproject to. After checking the output filename the
 the reprojection begins.
@@ -736,7 +736,7 @@ void mapimgForm::outSaveClicked()
 
    // Prompt for destination of new projection
    QString temp = QFileDialog::getSaveFileName(
-         outPath, "mapimg Raster Files (*.img)", this, "", "Choose a destination for the reprojection");
+      outPath, "mapimg Raster Files (*.img)", this, "", "Choose a destination for the reprojection");
    if( temp.isNull() )
       return;
 
@@ -759,7 +759,7 @@ void mapimgForm::outSaveClicked()
 
       if( status == QMessageBox::No )
          return;
-      
+
       QFile::remove( output.imgFileName() );
       if( QFile::exists( output.xmlFileName() ) )
          QFile::remove( output.xmlFileName() );
@@ -829,11 +829,11 @@ QString mapimgForm::dataType() const
 
    if( inInfoFrame )
    {
-   	if( inInfoFrame->mapTab )
-   	{
-   	    if( inInfoFrame->mapTab->dataCombo )
-   	        currentDataType = inInfoFrame->mapTab->dataCombo->currentText();
-   	}
+      if( inInfoFrame->mapTab )
+      {
+         if( inInfoFrame->mapTab->dataCombo )
+            currentDataType = inInfoFrame->mapTab->dataCombo->currentText();
+      }
    }
 
    return currentDataType;
@@ -843,80 +843,79 @@ QString mapimgForm::dataType() const
 //Tools
 void mapimgForm::webDSSClicked()
 {
-    launchWebTool( "http://mcmcweb.er.usgs.gov/research/DSSMain/DSSApplet.html" );
+   launchWebTool( "http://mcmcweb.er.usgs.gov/research/DSSMain/DSSApplet.html" );
 
-    return;
+   return;
 }
 
 void mapimgForm::launchWebTool( const QString& url )
 {
-    QProcess* web = new QProcess( this, "webTool" );
-    bool supportedPlatform = true;
-    bool executeProcess = false;
+   QProcess* web = new QProcess( this, "webTool" );
+   bool supportedPlatform = true;
+   bool executeProcess = false;
 
 #if defined(Q_OS_WIN32)
-    #include <windows.h>
+#include <windows.h>
 
-    //Trolltech's Windows Version Independent Default Browser Launch
-    QT_WA( {ShellExecute( winId(), 0, (TCHAR*)url.ucs2(), 0, 0, SW_SHOWNORMAL );},
-           {ShellExecuteA( winId(), 0, url.local8Bit(), 0, 0, SW_SHOWNORMAL );} );
+   //Trolltech's Windows Version Independent Default Browser Launch
+   QT_WA( {ShellExecute( winId(), 0, (TCHAR*)url.ucs2(), 0, 0, SW_SHOWNORMAL );},
+   {ShellExecuteA( winId(), 0, url.local8Bit(), 0, 0, SW_SHOWNORMAL );} );
 
-    supportedPlatform = true;
-    executeProcess = false;
+   supportedPlatform = true;
+   executeProcess = false;
 #elif defined(Q_OS_LINUX)
-    #include <stdio.h>
-    #include <stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-    //get : delimited list of all perferred browsers
-    QCString allBrowsers = getenv( "BROWSER" );
+   //get : delimited list of all perferred browsers
+   QCString allBrowsers = getenv( "BROWSER" );
 
-    if( allBrowsers.isEmpty() ) //if it is empty we're hosed
-    {
-       qDebug( "No $BROWSER environment varialbe set." );
-       supportedPlatform = false;
-       executeProcess = false;
-    }
-    else
-    {
-       //split the list
-       QStringList browsers = QStringList::split( ":" , allBrowsers );
+   if( allBrowsers.isEmpty() ) //if it is empty we're hosed
+   {
+      qDebug( "No $BROWSER environment varialbe set." );
+      supportedPlatform = false;
+      executeProcess = false;
+   }
+   else
+   {
+      //split the list
+      QStringList browsers = QStringList::split( ":" , allBrowsers );
 
-       //grab the first (default)
-       QString browser = *browsers.begin();
-       
-       if( browser.contains( "kfmclient" ) )
-       {
-          web->addArgument( "kfmclient" );
-          web->addArgument( "exec" );
-       }
-       else
-       {
-          web->addArgument( browser );
-       }
+      //grab the first (default)
+      QString browser = *browsers.begin();
 
-       web->addArgument( url );
+      if( browser.contains( "kfmclient" ) )
+      {
+         web->addArgument( "kfmclient" );
+         web->addArgument( "exec" );
+      }
+      else
+      {
+         web->addArgument( browser );
+      }
 
-       qDebug( "command: %s", web->arguments().join( " " ).ascii() );
-       executeProcess = true;
-    }
+      web->addArgument( url );
+
+      executeProcess = true;
+   }
 #elif defined(Q_OS_MACX)
-       //Trolltech's Mac OSX Version Independent Default Browser Launch
-       web->addArgument( "/usr/bin/open" );
-       web->addArgument( url );
-       executeProcess = true;
+   //Trolltech's Mac OSX Version Independent Default Browser Launch
+   web->addArgument( "/usr/bin/open" );
+   web->addArgument( url );
+   executeProcess = true;
 #else
-    supportedPlatform = false;
-    executeProcess = false;
+   supportedPlatform = false;
+   executeProcess = false;
 #endif
 
-    int returnValue = 0;
-    QObject::connect( web, SIGNAL( processExited() ), web, SLOT( deleteLater() ) );
+   int returnValue = 0;
+   QObject::connect( web, SIGNAL( processExited() ), web, SLOT( deleteLater() ) );
 
-    if( executeProcess )
-        returnValue = !web->start();
+   if( executeProcess )
+      returnValue = !web->start();
 
-    if( returnValue || !supportedPlatform )
-        QMessageBox::information( this, "Mapimg", QString("Unable to launch web browser to %1").arg( url ) );
+   if( returnValue || !supportedPlatform )
+      QMessageBox::information( this, "Mapimg", QString("Unable to launch web browser to %1").arg( url ) );
 
-    return;
+   return;
 }

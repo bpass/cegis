@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.30 2005/03/25 04:16:57 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.31 2005/03/25 18:06:41 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -58,7 +58,7 @@ The heart of mapimg. Here is where all the re-projecting and resampling takes
 place. Sorry for the 500+ line function. Enjoy!
 */
 template <typename type>
-bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample, type useType, QWidget * mapimgdial)
+bool mapimg_resample( const RasterInfo input, const RasterInfo output, const ResampleInfo resample, type useType, QWidget * mapimgdial)
 {
    // mapimg STARTS HERE!!!!
    // mapimg to do the reprojection (no longer called as function in order to provide progress dialog)
@@ -67,22 +67,22 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
    int outputRows = output.rows();
    int outputCols = output.cols();
 
-   type fill = (type)output.fillValue();			// Fill value for mapimg
+   type fill = (type)output.fillValue();         // Fill value for mapimg
 
    IMGIO<type> imgIO( resample.cacheLineCount() );
 
    imgIO.parse_input(input.imgFileName().ascii(), output.imgFileName().ascii());
 
-   IMGINFO inimg;				// Image information--input
-   IMGINFO outimg;			// Image information--output
+   IMGINFO inimg;            // Image information--input
+   IMGINFO outimg;         // Image information--output
 
    int ioreturnval;
-   long out_line, out_samp;	// Output image coordinates of a point
+   long out_line, out_samp;   // Output image coordinates of a point
 
    double in[2]={0,0};       // Input projection coordinates of a point
    double out[2];            // Output projection coordinates of a point
 
-   long in_line, in_samp;			// Input image coordinates of a point
+   long in_line, in_samp;         // Input image coordinates of a point
 
 
    typedef QMap< type, unsigned int> StatisticMap;
@@ -113,7 +113,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
    /******* Change bounds here for doing per line or per line section *******/
    FILE *paramfile = fopen( logFile, "wa");
 
-   for(out_line = 0; out_line < outimg.nl; out_line++) 		// For each output image line
+   for(out_line = 0; out_line < outimg.nl; out_line++)       // For each output image line
    {
       // Set progress of Dialog box and cancel if process was cancelled
 
@@ -124,13 +124,13 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
          break;
       }
 
-      out[1] = outimg.ul_y - (out_line * outimg.pixsize);		// Calc out-img proj_Y coord
+      out[1] = outimg.ul_y - (out_line * outimg.pixsize);      // Calc out-img proj_Y coord
 
 
 
-      for (out_samp = 0; out_samp < outimg.ns; out_samp++)	// For each output image sample
+      for (out_samp = 0; out_samp < outimg.ns; out_samp++)   // For each output image sample
       {
-         out[0] = outimg.ul_x + (out_samp * outimg.pixsize);	// Calc out-img proj_X coord
+         out[0] = outimg.ul_x + (out_samp * outimg.pixsize);   // Calc out-img proj_X coord
 
 
          double inbox[5][2];
@@ -180,7 +180,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                      (*( (type*)mapimgoutbuf + out_samp)) = (type)resample.noDataValue();
                   }
                }
-               else	//Analysis
+               else   //Analysis
                {
                   //----- compute minbox -----//
                   int maxx = 0,
@@ -264,7 +264,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                   }//for cury
 
                   //----- finish statistical analysis -----//
-                  if(boxError)	//no pixels from rectangle in the minbox, get NN.
+                  if(boxError)   //no pixels from rectangle in the minbox, get NN.
                   {
                      //Loads into memory the current line of input needed
                      imgIO.get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
@@ -288,7 +288,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                      if( resample.noDoubleCounting() )
                         (*(((type*)mapimginbuf + (int)(inbox[4][0])))) = 0;
                   }
-                  else	//!boxError
+                  else   //!boxError
                   {
                      int coverageIndex = 0;
                      type dataValue = (type)0;
@@ -305,7 +305,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
                      switch( resample.resampleCode() )
                      {
-                     case ResampleInfo::Add:	//Sum
+                     case ResampleInfo::Add:   //Sum
                         if( resample.isCategorical() )
                         {
                            QMessageBox::critical( &progress, "Error", "Add resampling is not supported for categorical data." );
@@ -466,7 +466,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                         }
 
                         break;
-                     case ResampleInfo::Min:		//Min same for categorical and continuous
+                     case ResampleInfo::Min:      //Min same for categorical and continuous
                         dataValue = (type)Q_UINT64_MAX;
 
                         for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
@@ -479,7 +479,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                            }
                         }
                         break;
-                     case ResampleInfo::Max:		//Max same for categorical and continuous
+                     case ResampleInfo::Max:      //Max same for categorical and continuous
                         dataValue = (type)Q_INT64_MIN;
                         for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
                         {
@@ -602,7 +602,7 @@ The mapimg_downsample() function is used to create a lower resolution version
 of the input file.
 */
 template <typename type>
-bool mapimg_downsample( RasterInfo &input, RasterInfo &output, type useType, QWidget *mapimgdial )
+bool mapimg_downsample( const RasterInfo &input, const RasterInfo &output, type useType, QWidget *mapimgdial )
 {
    double pixRatio = output.pixelSize() / input.pixelSize();
    if( pixRatio < 1 ) pixRatio = 0;
@@ -621,7 +621,7 @@ bool mapimg_downsample( RasterInfo &input, RasterInfo &output, type useType, QWi
    progress.setMinimumDuration(1);
 
    long outX, outY;
-   for(outY = 0; outY < outimg.nl; outY++) 		// For each output image line
+   for(outY = 0; outY < outimg.nl; outY++)       // For each output image line
    {
       // Set progress of Dialog box and cancel if process was cancelled
       progress.setProgress( outY );
@@ -634,7 +634,7 @@ bool mapimg_downsample( RasterInfo &input, RasterInfo &output, type useType, QWi
       if( mapimginbuf == NULL )
          break;
 
-      for(outX = 0; outX < outimg.ns; outX++)	// For each output image sample
+      for(outX = 0; outX < outimg.ns; outX++)   // For each output image sample
       {
          (*( (type*)mapimgoutbuf + outX)) = (*(((type*)mapimginbuf + (int)(outX*pixRatio))));
       }

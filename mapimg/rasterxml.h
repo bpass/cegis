@@ -1,4 +1,4 @@
-// $Id: rasterxml.h,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: rasterxml.h,v 1.2 2005/01/20 17:28:50 rbuehler Exp $
 
 
 /*! \mainpage RasterXML class for mapimg
@@ -237,6 +237,7 @@ private:
 		double m_ulx;
 		double m_uly;
 		double m_fillValue;
+      //double m_noDataValue; .setNoDataValue(double) .getNoDataValue()
 		double* m_GCTPParams;
 		char* m_projName;
 		char* m_datumName;

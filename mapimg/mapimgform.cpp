@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.27 2005/03/22 16:00:57 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.28 2005/03/22 16:42:17 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -850,7 +850,7 @@ void mapimgForm::webDSSClicked()
 
 void mapimgForm::launchWebTool( const QString& url )
 {
-    QProcess web( this, "webTool" );
+    QProcess* web = new QProcess( this, "webTool" );
     bool supportedPlatform = true;
     bool executeProcess = false;
 
@@ -883,18 +883,26 @@ void mapimgForm::launchWebTool( const QString& url )
 
        //grab the first (default)
        QString browser = *browsers.begin();
-       web.addArgument( browser );
-       web.addArgument( url );
-       web.addArgument( "&" );
+       
+       if( browser.contains( "kfmclient" ) )
+       {
+          web->addArgument( "kfmclient" );
+          web->addArgument( "exec" );
+       }
+       else
+       {
+          web->addArgument( browser );
+       }
 
-       qDebug( "command: %s", web.arguments().join( " " ).ascii() );
+       web->addArgument( url );
+
+       qDebug( "command: %s", web->arguments().join( " " ).ascii() );
        executeProcess = true;
     }
 #elif defined(Q_OS_MACX)
        //Trolltech's Mac OSX Version Independent Default Browser Launch
-       web.addArgument( "/usr/bin/open" );
-       web.addArgument( url );
-       web.addArgument( "&" );
+       web->addArgument( "/usr/bin/open" );
+       web->addArgument( url );
        executeProcess = true;
 #else
     supportedPlatform = false;
@@ -902,10 +910,10 @@ void mapimgForm::launchWebTool( const QString& url )
 #endif
 
     int returnValue = 0;
-    QObject::connect(&web, SIGNAL(processExited()), &web, SLOT(deleteLater()));
+    QObject::connect( web, SIGNAL( processExited() ), web, SLOT( deleteLater() ) );
 
     if( executeProcess )
-        returnValue = !web.start();
+        returnValue = !web->start();
 
     if( returnValue || !supportedPlatform )
         QMessageBox::information( this, "Mapimg", QString("Unable to launch web browser to %1").arg( url ) );

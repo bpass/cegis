@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.26 2005/03/18 18:52:37 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.27 2005/03/22 16:00:57 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -852,42 +852,62 @@ void mapimgForm::launchWebTool( const QString& url )
 {
     QProcess web( this, "webTool" );
     bool supportedPlatform = true;
+    bool executeProcess = false;
 
 #if defined(Q_OS_WIN32)
-    web.addArgument( "cmd" );
-    web.addArgument( "/c" );
-    web.addArgument( "start" );
-    web.addArgument( url );
+    #include <windows.h>
+
+    //Trolltech's Windows Version Independent Default Browser Launch
+    QT_WA( {ShellExecute( winId(), 0, (TCHAR*)url.ucs2(), 0, 0, SW_SHOWNORMAL );},
+           {ShellExecuteA( winId(), 0, url.local8Bit(), 0, 0, SW_SHOWNORMAL );} );
+
+    supportedPlatform = true;
+    executeProcess = false;
 #elif defined(Q_OS_LINUX)
     #include <stdio.h>
     #include <stdlib.h>
 
-    //get : delimited list of all perferred browsers 
+    //get : delimited list of all perferred browsers
     QCString allBrowsers = getenv( "BROWSER" );
-    
+
     if( allBrowsers.isEmpty() ) //if it is empty we're hosed
     {
        qDebug( "No $BROWSER environment varialbe set." );
        supportedPlatform = false;
+       executeProcess = false;
     }
     else
     {
        //split the list
        QStringList browsers = QStringList::split( ":" , allBrowsers );
-       
+
        //grab the first (default)
        QString browser = *browsers.begin();
        web.addArgument( browser );
        web.addArgument( url );
        web.addArgument( "&" );
-       
+
        qDebug( "command: %s", web.arguments().join( " " ).ascii() );
+       executeProcess = true;
     }
+#elif defined(Q_OS_MACX)
+       //Trolltech's Mac OSX Version Independent Default Browser Launch
+       web.addArgument( "/usr/bin/open" );
+       web.addArgument( url );
+       web.addArgument( "&" );
+       executeProcess = true;
 #else
     supportedPlatform = false;
+    executeProcess = false;
 #endif
 
-    if( !web.start() || !supportedPlatform )
+    int returnValue = 0;
+    QObject::connect(&web, SIGNAL(processExited()), &web, SLOT(deleteLater()));
+
+    if( executeProcess )
+        returnValue = !web.start();
+
+    if( returnValue || !supportedPlatform )
         QMessageBox::information( this, "Mapimg", QString("Unable to launch web browser to %1").arg( url ) );
 
     return;

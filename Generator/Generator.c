@@ -3,154 +3,16 @@
 ** US Geological Survey
 ** July 2001
 ** Last Updated April 2002
-**
-**Updated July 16, 2004: Tim Krupinski
-**COMMENTS: Added the application function 'getAttributes'
 */
 #include "ErdSetup.h"
 #include <process.h>
+#include <string.h>
 
 void floatToBinary(float arg); // Function located at bottom of this file.
 void intToBinary16(int arg);     // Function after that.
 void intToBinary32(int arg);     // Ditto.
 int array[4]={0};                // Used in above functions, numberCells and
                                  //   imageCreation function.
-
-//****************************************************************************
-// FUNCTION NAME
-// getAttributes
-//	Check to see if certain attributes exist in an image's descriptor table
-//
-// SYNTAX
-// extern Estr_StringList *
-//		getAttributes(menu, context, argc, argv, err)
-//
-// ARGUMENTS
-//
-//	Eeml_Menu menu;
-//	Emsc_Opaque *context
-//	long argc;
-//	char **argv
-//	Eerr_ErrorReport **err
-//
-// DESCRIPTION
-// This function opens an input .img file, and then opens the first layer
-// as an Eimg_Layer.  Then a pointer to the descriptor table is returned to
-// descTable, which is passed to Edsc_ColumnExist.  ColumnExist checks to see
-// if certain raster attributes are present in the table that ADGen requires 
-// for its models to run.
-//
-// RETURN VALUE
-// 
-//	Estr_StringList *
-//
-//   
-//****************************************************************************
-extern Estr_StringList *
-getAttributes(
-	Eeml_Menu menu,
-	Emsc_Opaque *context,
-	long argc,
-	char **argv,
-	Eerr_ErrorReport **outerr
-)
-{
-	Estr_StringList*			colNames = NULL;
-	Estr_StringList*			layerNames = NULL;
-	Estr_StringList*			retVal = NULL;
-	Eimg_Layer*					inLayer = NULL;
-	Edsc_Table*					descTable = NULL;
-	Eui_BasePart*				part = NULL;
-	int							i = 0;
-	//Two character arrays to hold the attributes we are looking for in 
-	//the descriptor table
-	char*						landList[9] = {"A", "B", "C", "D", "Manning", 
-												"C-Factor", "Surface-Cond", "COD", "Fertilizer"};
-	char*						soilList[3] = {"SOIL-GROUP", "K-FACTOR", "SOIL-TEXTURE"};
-	
-	//Toolkit Voodoo ceremonial code to initialize
-	EERR_INIT("Get Raster Attributes", outerr, lclerr);
-
-	//Open the list of layernames for argument 1 (Landcover file)
-	layerNames = eimg_LayerGetNames(argv[0], eint_GetInit(), &lclerr);
-	EERR_CHECK(lclerr, EFS0("eimg_LayerGetNames Failed!"));
-
-
-	//Toolkit quirk, needed to append a dummy entry into retVal 
-	//before it would properly append any more values.
-	retVal = estr_StringListAppend(NULL, "Begin", &lclerr);
-	EERR_CHECK(lclerr, EFS0("estr_StringListAppend Failed!"));
-
-	//Open Layer 1 of the image
-	inLayer = eimg_LayerOpen(layerNames->strings[0], eint_GetInit(),
-						&lclerr, EIMG_LAYER_OPTION_READONLY, EIMG_LAYER_OPTION_END);
-	EERR_CHECK(lclerr, EFS0("eimg_LayerOpen Failed!"));
-
-	//Open the descriptor table for layer 1
-	descTable = eimg_LayerTable(inLayer);
-
-	//Check the table for all 9 attributes belonging to landList
-	for (i = 0; i < 9; i++)
-	{
-		if(edsc_ColumnExist(descTable, landList[i], &lclerr))
-		{
-			retVal = estr_StringListAppend(retVal, "Pass", &lclerr);
-			EERR_CHECK(lclerr, EFS0("estr_StringListAppend Failed!"));
-		}
-		else
-		{
-			retVal = estr_StringListAppend(retVal, "Fail", &lclerr);
-			EERR_CHECK(lclerr, EFS0("estr_StringListAppend Failed!"));
-		}
-	}
-
-	//Make sure counter is reset to zero
-	i = 0;
-
-	//Close the layer and delete the layerNames string
-	eimg_LayerClose(inLayer, &lclerr);
-	EERR_SHOW(lclerr, EERR_DEBUG);
-	estr_StringListDelete(layerNames, &lclerr);
-	EERR_SHOW(lclerr, EERR_DEBUG);
-
-	//Open list of layer names for argument 2 (soils file)
-	layerNames = eimg_LayerGetNames(argv[1], eint_GetInit(), &lclerr);
-	EERR_CHECK(lclerr, EFS0("eimg_LayerGetNames Failed!"));
-
-	//Open layer 1 of the file
-	inLayer = eimg_LayerOpen(layerNames->strings[0], eint_GetInit(),
-						&lclerr, EIMG_LAYER_OPTION_READONLY, EIMG_LAYER_OPTION_END);
-	EERR_CHECK(lclerr, EFS0("eimg_LayerOpen Failed!"));
-
-	//Open descriptor table for layer 1
-	descTable = eimg_LayerTable(inLayer);
-
-	//Check table for all 3 attributes belonging to soilList
-	for (i = 0; i < 3; i++)
-	{
-		if(edsc_ColumnExist(descTable, soilList[i], &lclerr))
-		{
-			retVal = estr_StringListAppend(retVal, "Pass", &lclerr);
-			EERR_CHECK(lclerr, EFS0("estr_StringListAppend Failed!"));
-		}
-		else
-		{
-			retVal = estr_StringListAppend(retVal, "Fail", &lclerr);
-			EERR_CHECK(lclerr, EFS0("estr_StringListAppend Failed!"));
-		}
-	}
-
-cleanup:
-
-	eimg_LayerClose(inLayer, &lclerr);
-	EERR_SHOW(lclerr, EERR_DEBUG);
-
-	estr_StringListDelete(layerNames, &lclerr);
-	EERR_SHOW(lclerr, EERR_DEBUG);
-
-	return retVal;
-}
-
 
 /*****************************************************************************
 ** FUNCTION NAME
@@ -956,6 +818,74 @@ cleanup:
 	return rtnVal;
 }
 
+/*****************************************************************************
+** FUNCTION NAME
+** saveHeaderFlags
+**    Saves AGNPS header flags and variables
+** 
+** SYNTAX
+**  extern Estr_StringList *
+**     saveHeaderFlags(menu, context, argc, argv, err )
+**
+** ARGUMENTS
+**
+**  Eeml_Menu menu;
+**	Emsc_Opaque *context;
+**	long argc;
+**	char **argv;
+**	Eerr_ErrorReport **err;
+**
+** DESCRIPTION
+** This function stores AGNPS header flags and variables in Struct hflags
+** hflags is accessed by the formatdata
+**  
+**
+** RETURN VALUE
+**
+**  Estr_StringList *
+**
+**
+******************************************************************************/
+
+extern Estr_StringList *saveHeaderFlags( menu, context, argc, argv, err )
+Eeml_Menu menu;
+Emsc_Opaque *context;
+long argc;
+char **argv;
+Eerr_ErrorReport **err;
+{
+	Estr_StringList		*rtnVal=NULL;
+
+	EERR_INIT ("saveheaderflags", err, lcl);
+
+	//Function to save AGNPS Header Flags (Lines 2, 5, and 6)
+
+	//Line 2 
+	hflags.errorLog = atoi(argv[0]);
+	hflags.srcAcct = atoi(argv[1]);
+	hflags.sediment = atoi(argv[2]);
+	hflags.hydrology = atoi(argv[3]);
+	hflags.nutrient = atoi(argv[4]);
+	hflags.pesticide = atoi(argv[5]);
+
+	//Line 5
+	hflags.hyd_calc = atoi(argv[6]);
+	hflags.geomorph = atoi(argv[7]);
+	hflags.k_coeff = atoi(argv[8]);
+	hflags.prepeak = atof(argv[9]);
+
+	//Line 6
+	//hflags.storm_type = "abc"; //argv[10];
+	strcpy(hflags.storm_type, argv[10]);
+	hflags.energy_int = atof(argv[11]);
+	hflags.duration = atof(argv[12]);
+	hflags.precip = atof(argv[13]);
+	hflags.nitro_conc = atof(argv[14]);
+
+cleanup:
+
+	return rtnVal;
+}
 
 
 /*****************************************************************************
@@ -1010,22 +940,24 @@ Eerr_ErrorReport **err;
 	float								fullmantissa;
 	unsigned char						sign,exponent;
 	float								s,e,f;
-	float								mantissa[3]={0};	
+	float								mantissa[3]={0};
 	int									i,j,n,rows,current;
 	int 								arraylist[23],secondary[23];
 	int									zero = 0, exitloop=0,k=0;
 	FILE								*fptr;
+
 
 	//**** Header Variables ****//
 	//Subject to change depending on info from Dave Bosch.
 	//Don't remember him saying anything about these however.
 	//May have to ask him about this if he sends other info
 	//  without sending header information.
+	char *watershed_name=NULL;
 	int num_cells, total_cells, hyd_calc=1, geomorph=0, k_coeff=1;
 	double prepeak=366.00, energy_int=160.00, duration=0.0;
 	double area;
 	double precip=7.30, nitro_conc=1.10;
-	int storm_type=3,outletcell;
+	char *storm_type="3",outletcell;
 				
 	//****  Soil Info Variables   ****//
 	// Calculate based on lookup table and soil type.
@@ -1046,8 +978,6 @@ Eerr_ErrorReport **err;
 	int clay=1,silt=1,small_agg=1,large_agg=1,sand=1;
 
 
-		
-	
 	EERR_INIT( "formatdata", err, lcl );
 
 	// Create and set a meter to show percentage done to the user.
@@ -1077,7 +1007,7 @@ Eerr_ErrorReport **err;
 	// Create a buffer that will contain one full row at a time 
 	pixelrect = eimg_PixelRectStackCreate(layerstack->count,
 		layerstack->layers[0]->width, 1,
-		layerstack->layers[0]->pixelType, &lcl);	
+		layerstack->layers[0]->pixelType, &lcl);
 	EERR_CHECK(lcl, EFS0("Error creating pixel rect."));
 
 	// Read one full row of data for each layer.
@@ -1132,17 +1062,43 @@ Eerr_ErrorReport **err;
 
 	/******** FILE HEADER ********/
 	fprintf(fptr, "AGNPS Version 5.0 format\n");
-	for(i=0; i<8; i++)
-		fprintf(fptr, "%8i",zero);
+
+	//for(i=0; i<6; i++)
+	//fprintf(fptr, "%8i",atoi(argv[i+25])); //header flags (Line 2)
+
+	/* Header Flags (Line 2) */
+	fprintf(fptr, "%8i", hflags.errorLog);
+	fprintf(fptr, "%8i", hflags.srcAcct);
+	fprintf(fptr, "%8i", hflags.hydrology);
+	fprintf(fptr, "%8i", hflags.sediment);
+	fprintf(fptr, "%8i", hflags.nutrient);
+	fprintf(fptr, "%8i", hflags.pesticide);
+
+	for(i=0; i<2; i++)
+		fprintf(fptr, "%8i", zero);
 	fprintf(fptr, "\n");
 	fprintf(fptr, "Watershed data\n");
 	fprintf(fptr, "%i meters\n",(int)mapinfo->pixelSize->width);
+
+
+	/* Header Flags (Line 5) */
+	hyd_calc = hflags.hyd_calc;
+	geomorph = hflags.geomorph;
+	k_coeff = hflags.k_coeff;
+	prepeak = hflags.prepeak;
+
+	/* Header Flags (Line 6) */
+	storm_type = hflags.storm_type;
+	energy_int = hflags.energy_int;
+	duration = hflags.duration;
+	precip = hflags.precip;
+	nitro_conc = hflags.nitro_conc;
 
 	/******** WATERSHED INFORMATION ***********/
 	fprintf(fptr, "%16.2f%8i%8i",area,num_cells,total_cells);
 	fprintf(fptr, "%8i%8i%8i%8.2f",hyd_calc,geomorph,k_coeff,prepeak);
 	fprintf(fptr, "\n");
-	fprintf(fptr, "%16i%8.2f%8.1f%8.2f%8.2f",storm_type,energy_int,duration,precip,nitro_conc);
+	fprintf(fptr, "%16s%8.2f%8.1f%8.2f%8.2f",storm_type,energy_int,duration,precip,nitro_conc);
 	fprintf(fptr, "\n");
 
 
@@ -1635,8 +1591,7 @@ Eerr_ErrorReport **err;
 	long value[1]={0};
 
 	EERR_INIT( "runflood", err, lcl );
-
-	esmg_LogMessage(ESMG_LOG_TERSE, err, "Argv[0] is %s", argv[0]);
+	
 	value[0] = _spawnv(_P_WAIT, argv[0], argv); 
 
 	rtnVal = estr_LongToStringList(1,value,&lcl);

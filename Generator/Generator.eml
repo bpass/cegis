@@ -47,7 +47,7 @@ component main
     frame npsframe;       /* For creating images from AGNPS out */
     frame p1stackedframe; /* User did not select p1 for stack   */
     frame needfileframe;  /* Need a stacked file for datformat  */
-    frame dataCheck;	  /* Check Landcover and Soils file for required attributes */
+    frame agnpsheaderframe;
 
     variable inffile;
     variable file1;
@@ -81,6 +81,28 @@ component main
     variable here;         /* The $HOME of Imagine where agrun.exe (AGNPS)
                                 should be.                                */
 
+
+	/* AGNPS Header Flags and Variables */
+	/*=== Line 2 ===*/
+	variable hf_errLog;
+	variable hf_srcAcct;
+	variable hf_hydro;
+	variable hf_sed;
+	variable hf_nutr;
+	variable hf_pesti;
+
+	/*=== Line 5 ===*/
+	variable hf_hyd_calc;
+	variable hf_geomorph;
+	variable hf_k_coeff;
+	variable hf_prepeak;
+
+	/*=== Line 6 ===*/
+	variable hf_storm_type;
+	variable hf_energy_int;
+	variable hf_duration;
+	variable hf_precip;
+	variable hf_nitro_conc;
 
     /*
     ** Main Frame
@@ -628,17 +650,6 @@ component main
         /* Other buttons              */
         /******************************/
 
-        button dataChecker 
-        {
-	        geometry 480,450,80,25;
-	        title "Check Input";
-	        info "Checks Landcover and Soil file for required attributes needed for ADGen";
-	        on mousedown 
-	        {
-		        display dataCheck;
-	        }
-        }
-        
         button closebuttn
         {
             geometry 570, 450, 80, 25;
@@ -3388,7 +3399,7 @@ component main
     frame datframe
     {
         title "Format Data for AGNPS v5.0";
-        geometry 300, 200, 200, 180;
+        geometry 300, 200, 200, 250;
 
         filename dataoutfile
         {
@@ -3417,7 +3428,7 @@ component main
         button ok
         {
             title "Run";
-            geometry 25, 130, 70, 30;
+            geometry 25, 170, 70, 30;
             info "Create the AGNPS input data file.";
             on mousedown
             {
@@ -3442,13 +3453,25 @@ component main
         button goback
         {
             title "Cancel";
-            geometry 115, 130, 70, 30;
+            geometry 115, 170, 70, 30;
             info "Close this window.";
             on mousedown
             {
                 undisplay datframe;
             }
         }
+
+
+	  button setheaderflags
+	  {
+		title "Set AGNPS Header Flags";
+		geometry 25, 130, 150, 30;
+		info "Open the AGNPS Headers Frame";
+		on mousedown
+		{
+			display agnpsheaderframe;
+		}
+	  }
 
         on framedisplay
         {
@@ -4684,242 +4707,234 @@ component main
             set phospho = "";
         }
     }
-    
-    frame dataCheck
-    {
-        title "Retrieve Statistics information from file";
-        label lcGroups;
-        label lcOverland;
-        label lcCFactor;
-        label lcSurfaceCond;
-        label lcCOD;
-        label lcFertilizer;
-        
-        label slGroup;
-        label slKFactor;
-        label slTexture;
 
-        button cancelb;
-        button helpb;
-        
-        filename landcover;
-        filename soils;
-        
-        group infobox;
-        variable attrList;
+/*******************************************************************************/
+/*
+/*   agnps headers Frame
+/*      - called during dataformat 
+/*		- allows the user to set header flags for *.dat agnps file
+/*
+/*******************************************************************************/
 
+	frame agnpsheaderframe
+	{
+		title "AGNPS/ADGen headers";
+		geometry 0, 0, 400, 250;
 
-        global i;
-        global x;
-        statusbar;
-
-        button cancelb 
+		tabsheet linetabs
 		{
-            title left center "Exit";
-            geometry 9, 345, 75, 30;
-            on mousedown 
+			geometry 5, 5, 395, 200;
+
+			group line2
 			{
-				undisplay dataCheck;
-				
-                
-            }
-        }
-        
-        on clearAll 
-        {
-	        set lcOverland = "";
-            set lcGroups = "";
-            set lcCFactor = "";
-            set lcSurfaceCond = "";
-            set lcCOD = "";
-            set lcFertilizer = "";
-            
-            set slGroup = "";
-            set slKFactor = "";
-            set slTexture = "";
-            }
-	        
+				geometry 5, 5, 390, 190;
+				title "Line 2";
 
-         
-        filename landcover 
+				checkbox g2t1
+				{
+					title "Error Log";
+					geometry 20, 10, 150, 25;
+					on valuechanged set hf_errLog = $g2t1;
+				}
+
+				checkbox g2t2
+				{
+					title "Source Accounting";
+					geometry 20, 50, 150, 25;
+					on valuechanged set hf_srcAcct = $g2t2;
+				}
+
+				checkbox g2t3
+				{
+					title "Hydrology";
+					geometry 20, 90, 150, 25;
+					on valuechanged set hf_hydro = $g2t3;
+				}
+
+				checkbox g2t4
+				{
+					title "Sediment";
+					geometry 200, 10, 150, 25;
+					on valuechanged set hf_sed = $g2t4;
+				}
+
+				checkbox g2t5
+				{
+					title "Nutrient";
+					geometry 200, 50, 150, 25;
+					on valuechanged set hf_nutr = $g2t5;
+				}
+
+				checkbox g2t6
+				{
+					title "Pesticide";
+					geometry 200, 90, 150, 25;
+					on valuechanged set hf_pesti = $g2t6;
+				}
+			}
+
+			group line5
+			{
+				geometry 5, 5, 390, 190;
+				title "Line 5";
+
+				textnumber g5t4
+				{
+					title "Hyd Calc Ind:";
+					geometry 25, 25, 150, 25;
+					rangespec 0, 1;
+					on valuechanged set hf_hyd_calc = $g5t4;
+				}
+
+				textnumber g5t5
+				{
+					title "Geomorph Ind:";
+					geometry 25, 75, 150, 25;
+					rangespec 0, 1;
+					on valuechanged set hf_geomorph = $g5t5;
+				}
+
+				textnumber g5t6
+				{
+					title "K Coeff:";
+					geometry 225, 25, 150, 25;
+					rangespec 0, 1;
+					on valuechanged set hf_k_coeff = $g5t6;
+				}
+
+				textnumber g5t7
+				{
+					title "Pre peak:";
+					geometry 225, 75, 150, 25;
+					/*format "2.1";*/
+					rangespec 0, 1;
+					on valuechanged set hf_prepeak = $g5t7;
+				}
+			}
+
+			group line6
+			{
+				geometry 5, 5, 390, 190;
+				title "Line 6";
+
+				popuplist g6t1
+				{
+					title "Storm Type:";
+					geometry 10, 10, 150, 25;
+					titlelist{"1", "2", "3", "I", "Ia", "II", "III"};
+					names{"1", "2", "3", "I", "Ia", "II", "III"};
+					on valuechanged set hf_storm_type = $g6t1;
+				}
+
+				textnumber g6t2
+				{
+					title "Energy Int:";
+					geometry 10, 50, 150, 25;
+					format "6.3";
+					rangespec 0, 999;
+					on valuechanged set hf_energy_int = $g6t2;
+				}
+
+				textnumber g6t3
+				{
+					title "Duration:";
+					geometry 10, 90, 150, 25;
+					format "6.3";
+					rangespec 0, 999;
+					on valuechanged set hf_duration = $g6t3;
+				}
+
+				textnumber g6t4
+				{
+					title "Rainfall:";
+					geometry 200, 10, 150, 25;
+					format "6.3";
+					rangespec 0.1, 999;
+					on valuechanged set hf_precip = $g6t4;
+				}
+
+				textnumber g6t5
+				{
+					title "Nitrogen:";
+					geometry 200, 50, 150, 25;
+					format "6.3";
+					rangespec 0, 10;
+					on valuechanged set hf_nitro_conc = $g6t5;
+				}
+			}
+		}
+
+		button saveIt
 		{
-            title above left "Landcover File";
-            geometry 6, 7, 170, 45;
-            shortform;
-            filetypedef "Raster (*.img)";
-            select getpref ("eml" "default_data_path") + "/*.img";
-            on filenamechoosen
-            {
-	            if($landcover != "" && $soils != "")
-	            {
-		            enable helpb;
-	            }      
-	            	            
-            }
-            
-        }
-        
-        button helpb 
-		{
-            title left center "Run!";
-            geometry 223, 345, 75, 30;
+			title "Save";
+			geometry 25, 205, 100, 25;
 			on mousedown
 			{
-				clearAll();
-				set attrList = getAttributes($landcover $soils);
-				
-				set lcGroups = $attrList[5];
-				set lcOverland = $attrList[6];
-				set lcCFactor = $attrList[7];
-				set lcSurfaceCond = $attrList[8];
-				set lcCOD = $attrList[9];
-				set lcFertilizer = $attrList[10];
-				set slGroup = $attrList[11];
-				set slKFactor = $attrList[12];
-				set slTexture = $attrList[13];
-				
+				set thing = saveflags($hf_errLog, $hf_srcAcct, $hf_hydro, $hf_sed, $hf_nutr, $hf_pesti, $hf_hyd_calc, $hf_geomorph, $hf_k_coeff, $hf_prepeak, $hf_storm_type, $hf_energy_int, $hf_duration, $hf_precip, $hf_nitro_conc);
 			}
-        }
-        
-        filename soils
-        {
-	        title above left "Soils File";
-	        geometry 185, 7, 170, 45;
-	        shortform;
-	        filetypedef "Raster (*.img)";
-	        select getpref ("eml" "default_data_path") + "/*.img";
-	        on filenamechoosen {
-		        if($landcover != "" && $soils != "")
-	            {
-		            enable helpb;
-	            } 
-            }
-        }
-        
-        group landcoverAttributes
-		{
-            title above left "Land Cover Attributes";
-            geometry 7, 70, 440,120;
-        
-                    
-            label lcGroups 
-			{
-                title "Groups(A,B,C,D): ";
-                geometry 5, 10, 150, 20;
-                info "Minimum pixel value in the layer";
-                titlegap 30;
-                titleoffset 90 noalign;
-                align left;
-            }
-                    
-            label lcOverland 
-			{
-                title "Overland Manning:  ";
-                geometry 5, 35, 150, 20;
-                info "Maximum pixel value in the layer";
-                titlegap 30;
-                titleoffset 100 noalign;
-                align left;
-            }
-                    
-            label lcCFactor 
-			{
-                title "C-Factor: ";
-                geometry 5, 60, 150, 20;
-                info "Mean pixel value in the layer";
-                titlegap 30;
-                titleoffset 50 noalign;
-                align left;
-            }
-                    
-            label lcSurfaceCond 
-			{
-                title "Surface Condition Constant: ";
-                geometry 200, 10, 270, 20;
-                info "Median pixel value in the layer";
-                titlegap 30;
-                titleoffset 140 noalign;
-                align left;
-            }
-                    
-            label lcCOD
-			{
-                title "COD: ";
-                geometry 200, 35, 270, 20;
-                info "Mode pixel value in the layer";
-                titlegap 40;
-                titleoffset 35 noalign;
-                align left;
-            }
-                    
-            label lcFertilizer 
-			{
-                title "Fertilizer: ";
-                geometry 200, 60, 270, 20;
-                info "Standard deviation value";
-                titlegap 30;
-                titleoffset 50 noalign;
-                align left;
-            }
-                    
+		}
 
-                    
-        }
-        
-        group soilAttributes
-		{
-            title above left "Soil Attributes";
-            geometry 7, 210, 440,120;
-            
-            label slGroup
-            {
-	            title "Soil-Group: ";
-	            geometry 5, 10, 200, 20;
-	            titlegap 30;
-	            titleoffset 80 noalign;
-	            align left;
-            }
-	            
-        	label slKFactor
-        	{
-	        	title "K-Factor: ";
-	        	geometry 5, 35, 200, 20;
-	        	titlegap 30;
-	        	titleoffset 80 noalign; 
-	        	align left;
-        	}
-        	
-        	label slTexture
-        	{
-	        	title "Soil-Texture: ";
-	        	geometry 5, 60, 200, 20;
-	        	titlegap 30;
-	        	titleoffset 80 noalign;
-	        	align left;
-        	}
-        }
-                   
 
-                
-        on framedisplay 
+		/* terminates program */
+		button closeIt
 		{
-            disable helpb;
-            /*set lcOverland = "Check";
-            set lcGroups = "Check";
-            set lcCFactor = "Check";
-            set lcSurfaceCond = "Check";
-            set lcCOD = "Check";
-            set lcFertilizer = "Check";
-            
-            set slGroup = "Check";
-            set slKFactor = "Check";
-            set slTexture = "Check";*/
-        } 
-        
-                        
-    }   
+			title "Close";
+			geometry 275, 205, 100, 25;
+			on mousedown undisplay agnpsheaderframe;
+		}
 
-    on startup
+		button resetToDefaults
+		{
+			title "Reset to Defaults";
+			geometry 125, 205, 150, 25;
+			on mousedown
+			{
+				/* Set all variables to their default values */
+				set g2t1 = 0;
+				set g2t2 = 0;
+				set g2t3 = 0;
+				set g2t4 = 0;
+				set g2t5 = 0;
+				set g2t6 = 0;
+
+				set g5t4 = 1;
+				set g5t5 = 0;
+				set g5t6 = 1;
+				set g5t7 = 366.00;
+
+				set g6t1 = "3";
+				set g6t2 = 160.00;
+				set g6t3 = 0;
+				set g6t4 = 7.30;
+				set g6t5 = 1.10;
+			}
+		}
+
+		on framedisplay
+		{
+			/* Displays the previously stores values for the header variables */
+			set g2t1 = $hf_errLog;
+			set g2t2 = $hf_srcAcct;
+			set g2t3 = $hf_hydro;
+			set g2t4 = $hf_sed;
+			set g2t5 = $hf_nutr;
+			set g2t6 = $hf_pesti;
+
+			set g5t4 = $hf_hyd_calc;
+			set g5t5 = $hf_geomorph;
+			set g5t6 = $hf_k_coeff;
+			set g5t7 = $hf_prepeak;
+
+			set g6t1 = $hf_storm_type;
+			set g6t2 = $hf_energy_int;
+			set g6t3 = $hf_duration;
+			set g6t4 = $hf_precip;
+			set g6t5 = $hf_nitro_conc;
+		}
+	}
+
+on startup
+    
     {
         display mainframe;
         set inffile = "";
@@ -4939,5 +4954,28 @@ component main
         set file17 = "";
         set file22 = "";
         set fileout = "";
+
+	/* Set all header flags to their default values */
+	/* Header Flags */
+	/*=== Line 2 ===*/
+	set hf_errLog = 0;
+	set hf_srcAcct = 0;
+	set hf_hydro = 0;
+	set hf_sed = 0;
+	set hf_nutr = 0;
+	set hf_pesti = 0;
+
+	/*=== Line 5 ===*/
+	set hf_hyd_calc = 1;
+	set hf_geomorph = 0;
+	set hf_k_coeff = 1;
+	set hf_prepeak = 366.00;
+
+	/*=== Line 6 ===*/
+	set hf_storm_type = 3;
+	set hf_energy_int = 160.00;
+	set hf_duration = 0;
+	set hf_precip = 7.30;
+	set hf_nitro_conc = 1.10;
     }
 }

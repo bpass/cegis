@@ -45,6 +45,32 @@ typedef struct
  
 }AppContext;
 
+typedef struct
+{
+	/* Line 2 */
+	int errorLog;
+	int srcAcct;
+	int hydrology;
+	int sediment;
+	int nutrient;
+	int pesticide;
+
+	/* Line 5 */
+	int hyd_calc;
+	int geomorph;
+	int k_coeff;
+	double prepeak;
+
+	/* Line 6 */
+	char storm_type[5];
+	double energy_int;
+	double duration;
+	double precip;
+	double nitro_conc;
+} HeaderFlags;
+
+HeaderFlags hflags;
+
 /*
 ** Declare Globals 
 */
@@ -59,7 +85,7 @@ Eeml_ApplicationFunction runGridnet;
 Eeml_ApplicationFunction imageCreation;
 Eeml_ApplicationFunction imageToAscii;
 Eeml_ApplicationFunction asciiToImage;
-Eeml_ApplicationFunction getAttributes;
+Eeml_ApplicationFunction saveHeaderFlags;
 
 static void selectCB(Emsc_Opaque *,  Esel_SelectionTable *, Emsc_Opaque *);
 

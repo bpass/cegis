@@ -169,7 +169,7 @@ private:
 };
 
 template <class T>
-ImageClassifier<T>::ImageClassifier(const char* filename, int numClasses) {
+ImageClassifier<T>::ImageClassifier(const char* filename, int numClasses):m_numClasses(numClasses) {
 	T curVal; //current value being read
 	FILE* imageFile = NULL;
 	
@@ -361,7 +361,7 @@ void ImageClassifier<T>::classify(int numClasses) {
 	}
 		
 	curIndex = 0;
-	
+	m_classes = classesTemp;
 	while(1) {
 		double errorDiff = 0;
 		double percentError = 0.0;

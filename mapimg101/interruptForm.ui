@@ -1,0 +1,199 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>interruptForm</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>interruptForm</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>346</width>
+            <height>125</height>
+        </rect>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>0</width>
+            <height>0</height>
+        </size>
+    </property>
+    <property name="maximumSize">
+        <size>
+            <width>350</width>
+            <height>125</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>Enter Your Data</string>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>true</bool>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout191</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout58</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>sphereText</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Radius of the Reference Sphere:</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>PlainText</enum>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignVCenter</set>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>sphereEdit</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>sphereEdit</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>LineEditPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Sunken</enum>
+                            </property>
+                            <property name="text">
+                                <string>6370997.000000 </string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignRight</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                               <string>&lt;B&gt;Sphere Radius:&lt;/B&gt; value must be a valid double.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>fefnLabel_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&lt;i&gt;(In meters)&lt;/i&gt;</string>
+                    </property>
+                    <property name="alignment">
+                        <set>WordBreak|AlignCenter</set>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <spacer>
+            <property name="name">
+                <cstring>spacer83</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout289</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>okayButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>OK</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>cancelButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Cancel</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<connections>
+    <connection>
+        <sender>cancelButton</sender>
+        <signal>clicked()</signal>
+        <receiver>interruptForm</receiver>
+        <slot>close()</slot>
+    </connection>
+    <connection>
+        <sender>sphereEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>interruptForm</receiver>
+        <slot>sphereCheck(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>okayButton</sender>
+        <signal>clicked()</signal>
+        <receiver>interruptForm</receiver>
+        <slot>makeChanges()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>sphereEdit</tabstop>
+    <tabstop>okayButton</tabstop>
+    <tabstop>cancelButton</tabstop>
+</tabstops>
+<includes>
+    <include location="local" impldecl="in implementation">interruptForm.ui.h</include>
+</includes>
+<variables>
+    <variable>double * gctparray</variable>
+</variables>
+<signals>
+    <signal>changesMade(double * ptr)</signal>
+    <signal>getGCTP(double * ptr)</signal>
+</signals>
+<slots>
+    <slot>makeChanges()</slot>
+    <slot>init()</slot>
+    <slot>getGCTP()</slot>
+    <slot>sphereCheck( const QString &amp; check )</slot>
+</slots>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

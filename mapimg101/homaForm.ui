@@ -1,0 +1,763 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>homaForm</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>homaForm</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>350</width>
+            <height>450</height>
+        </rect>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>0</width>
+            <height>0</height>
+        </size>
+    </property>
+    <property name="maximumSize">
+        <size>
+            <width>350</width>
+            <height>450</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>Enter Your Data</string>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>true</bool>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout19</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>factorLabel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Scale Factor at Center of Projection:</string>
+                    </property>
+                    <property name="textFormat">
+                        <enum>PlainText</enum>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>factorEdit</cstring>
+                    </property>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>factorEdit</cstring>
+                    </property>
+                    <property name="text">
+                        <string>1.000000</string>
+                    </property>
+                    <property name="alignment">
+                        <set>AlignRight</set>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <spacer>
+            <property name="name">
+                <cstring>spacer64</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout18</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout246</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>smajorLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Semi-M&amp;ajor Axis:</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>PlainText</enum>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>smajorEdit</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>smajorEdit</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>LineEditPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Sunken</enum>
+                            </property>
+                            <property name="text">
+                                <string>0.000000</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignRight</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>&lt;B&gt;Semi-Major Axis:&lt;/B&gt; value must be between 0 and 10,000 km.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout247</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>sminorLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Semi-M&amp;inor Axis:</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>PlainText</enum>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>sminorEdit</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>sminorEdit</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>LineEditPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Sunken</enum>
+                            </property>
+                            <property name="text">
+                                <string>0.000000</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignRight</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>&lt;B&gt;Semi-Minor Axis:&lt;/B&gt; value must be between 0 and 10,000 km.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout89</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>feLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>False &amp;Easting:</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>PlainText</enum>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>feEdit</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>feEdit</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>LineEditPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Sunken</enum>
+                            </property>
+                            <property name="text">
+                                <string>0.000000</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignRight</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>&lt;B&gt;False Easting:&lt;/B&gt; value must be between -10,000 km and 10,000 km.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout90</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>fnLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>False &amp;Northing:</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>PlainText</enum>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>fnEdit</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>fnEdit</cstring>
+                            </property>
+                            <property name="frameShape">
+                                <enum>LineEditPanel</enum>
+                            </property>
+                            <property name="frameShadow">
+                                <enum>Sunken</enum>
+                            </property>
+                            <property name="text">
+                                <string>0.000000</string>
+                            </property>
+                            <property name="alignment">
+                                <set>AlignRight</set>
+                            </property>
+                            <property name="toolTip" stdset="0">
+                                <string>&lt;B&gt;False Northing:&lt;/B&gt; value must be between -10,000 km and 10,000 km.</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>fefnLabel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&lt;i&gt;(In meters)&lt;/i&gt;</string>
+                    </property>
+                    <property name="alignment">
+                        <set>WordBreak|AlignCenter</set>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <spacer>
+            <property name="name">
+                <cstring>spacer63</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout79</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout72</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>origLatLabel</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Latitude of Projection &amp;Origin:</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>PlainText</enum>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>origLatButton</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>origLatButton</cstring>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout72_2</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>long1Label</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Longitude of 1st Center Line Point:</string>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>long1Button</cstring>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout72_3</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>long2Label</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Longitude of 2nd Center Line Point:</string>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>long2Button</cstring>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout72_4</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>lat1Label</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Latitude of 1st Center Line Point:</string>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>lat1Button</cstring>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout72_5</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>lat2Label</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Latitude of 2nd Center Line Point:</string>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>lat2Button</cstring>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>zeroAssumed</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&lt;i&gt;(Zero assumed unless specified)&lt;/i&gt;</string>
+                    </property>
+                    <property name="alignment">
+                        <set>WordBreak|AlignCenter</set>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <spacer>
+            <property name="name">
+                <cstring>spacer62</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>16</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout208</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>okayButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>OK</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>cancelButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Cancel</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<connections>
+    <connection>
+        <sender>origLatButton</sender>
+        <signal>clicked()</signal>
+        <receiver>homaForm</receiver>
+        <slot>getlat()</slot>
+    </connection>
+    <connection>
+        <sender>long1Button</sender>
+        <signal>clicked()</signal>
+        <receiver>homaForm</receiver>
+        <slot>getlon1()</slot>
+    </connection>
+    <connection>
+        <sender>long2Button</sender>
+        <signal>clicked()</signal>
+        <receiver>homaForm</receiver>
+        <slot>getlon2()</slot>
+    </connection>
+    <connection>
+        <sender>lat1Button</sender>
+        <signal>clicked()</signal>
+        <receiver>homaForm</receiver>
+        <slot>getlat1()</slot>
+    </connection>
+    <connection>
+        <sender>lat2Button</sender>
+        <signal>clicked()</signal>
+        <receiver>homaForm</receiver>
+        <slot>getlat2()</slot>
+    </connection>
+    <connection>
+        <sender>cancelButton</sender>
+        <signal>clicked()</signal>
+        <receiver>homaForm</receiver>
+        <slot>close()</slot>
+    </connection>
+    <connection>
+        <sender>factorEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>homaForm</receiver>
+        <slot>scaleCheck(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>smajorEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>homaForm</receiver>
+        <slot>smajCheck(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>sminorEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>homaForm</receiver>
+        <slot>sminCheck(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>fnEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>homaForm</receiver>
+        <slot>fnCheck(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>okayButton</sender>
+        <signal>clicked()</signal>
+        <receiver>homaForm</receiver>
+        <slot>makeChanges()</slot>
+    </connection>
+    <connection>
+        <sender>feEdit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>homaForm</receiver>
+        <slot>feCheck(const QString&amp;)</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>factorEdit</tabstop>
+    <tabstop>smajorEdit</tabstop>
+    <tabstop>sminorEdit</tabstop>
+    <tabstop>feEdit</tabstop>
+    <tabstop>fnEdit</tabstop>
+    <tabstop>origLatButton</tabstop>
+    <tabstop>long1Button</tabstop>
+    <tabstop>long2Button</tabstop>
+    <tabstop>lat1Button</tabstop>
+    <tabstop>lat2Button</tabstop>
+    <tabstop>okayButton</tabstop>
+    <tabstop>cancelButton</tabstop>
+</tabstops>
+<includes>
+    <include location="local" impldecl="in implementation">homaForm.ui.h</include>
+</includes>
+<variables>
+    <variable>double * gctparray</variable>
+</variables>
+<signals>
+    <signal>changesMade(double * ptr)</signal>
+    <signal>getGCTP(double * ptr)</signal>
+</signals>
+<slots>
+    <slot>makeChanges()</slot>
+    <slot>init()</slot>
+    <slot>getGCTP()</slot>
+    <slot>getlat()</slot>
+    <slot>setLat( double l )</slot>
+    <slot>getlon1()</slot>
+    <slot>setLon1( double l )</slot>
+    <slot>getlon2()</slot>
+    <slot>setLon2( double l )</slot>
+    <slot>getlat1()</slot>
+    <slot>setLat1( double l )</slot>
+    <slot>getlat2()</slot>
+    <slot>setLat2( double l )</slot>
+    <slot>smajCheck( const QString &amp; check )</slot>
+    <slot>sminCheck( const QString &amp; check )</slot>
+    <slot>scaleCheck( const QString &amp; check )</slot>
+    <slot>feCheck( const QString &amp; check )</slot>
+    <slot>fnCheck( const QString &amp; check )</slot>
+    <slot returnType="bool">valueCheck()</slot>
+    <slot>sendLon1st( double * ptr )</slot>
+    <slot>sendLon2n( double * ptr )</slot>
+    <slot>sendLat1st( double * ptr )</slot>
+    <slot>sendLat2nd( double * ptr )</slot>
+    <slot>sendLatOrig( double * ptr )</slot>
+</slots>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -1,0 +1,239 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>aboutForm</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>aboutForm</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>360</width>
+            <height>342</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>5</hsizetype>
+            <vsizetype>5</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>360</width>
+            <height>340</height>
+        </size>
+    </property>
+    <property name="maximumSize">
+        <size>
+            <width>500</width>
+            <height>500</height>
+        </size>
+    </property>
+    <property name="paletteBackgroundColor">
+        <color>
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+        </color>
+    </property>
+    <property name="caption">
+        <string>Disclaimer</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLayoutWidget" row="0" column="0">
+            <property name="name">
+                <cstring>layout6</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout5</cstring>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>layout4</cstring>
+                            </property>
+                            <hbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="QLabel">
+                                    <property name="name">
+                                        <cstring>pixmapLogo</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string></string>
+                                    </property>
+                                    <property name="pixmap">
+                                        <pixmap>image0</pixmap>
+                                    </property>
+                                    <property name="scaledContents">
+                                        <bool>false</bool>
+                                    </property>
+                                </widget>
+                                <widget class="QLabel">
+                                    <property name="name">
+                                        <cstring>lblUSGS</cstring>
+                                    </property>
+                                    <property name="paletteForegroundColor">
+                                        <color>
+                                            <red>9</red>
+                                            <green>111</green>
+                                            <blue>40</blue>
+                                        </color>
+                                    </property>
+                                    <property name="font">
+                                        <font>
+                                            <family>Arial</family>
+                                            <pointsize>20</pointsize>
+                                            <bold>1</bold>
+                                        </font>
+                                    </property>
+                                    <property name="text">
+                                        <string>United States Geological Survey</string>
+                                    </property>
+                                    <property name="alignment">
+                                        <set>WordBreak|AlignVCenter</set>
+                                    </property>
+                                </widget>
+                            </hbox>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>lblVersion</cstring>
+                            </property>
+                            <property name="paletteForegroundColor">
+                                <color>
+                                    <red>9</red>
+                                    <green>111</green>
+                                    <blue>40</blue>
+                                </color>
+                            </property>
+                            <property name="font">
+                                <font>
+                                    <family>Arial</family>
+                                    <pointsize>18</pointsize>
+                                    <bold>1</bold>
+                                </font>
+                            </property>
+                            <property name="text">
+                                <string>&lt;i&gt;MapIMG&lt;/i&gt; v0.0.000</string>
+                            </property>
+                            <property name="alignment">
+                                <set>WordBreak|AlignCenter</set>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer1</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>21</width>
+                            <height>16</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout1</cstring>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>lblDisclaim</cstring>
+                            </property>
+                            <property name="paletteForegroundColor">
+                                <color>
+                                    <red>9</red>
+                                    <green>111</green>
+                                    <blue>40</blue>
+                                </color>
+                            </property>
+                            <property name="font">
+                                <font>
+                                    <family>Arial</family>
+                                    <pointsize>12</pointsize>
+                                </font>
+                            </property>
+                            <property name="text">
+                                <string>MapIMG is a research-oriented project. Its source and binaries are provided with no warranty or support. &lt;b&gt;Use at your own risk.&lt;/b&gt; We will, however, provide minimal technical support as time allows. We are also very interested in feedback as well as bug reports. All questions and comments may be sent to:</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>RichText</enum>
+                            </property>
+                            <property name="alignment">
+                                <set>WordBreak|AlignJustify|AlignTop</set>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>lblDisclaim_2</cstring>
+                            </property>
+                            <property name="paletteForegroundColor">
+                                <color>
+                                    <red>9</red>
+                                    <green>111</green>
+                                    <blue>40</blue>
+                                </color>
+                            </property>
+                            <property name="font">
+                                <font>
+                                    <family>Arial</family>
+                                    <pointsize>12</pointsize>
+                                </font>
+                            </property>
+                            <property name="text">
+                                <string>&lt;p align="center"&gt;mapimg@usgs.gov&lt;/p&gt;</string>
+                            </property>
+                            <property name="textFormat">
+                                <enum>RichText</enum>
+                            </property>
+                            <property name="alignment">
+                                <set>WordBreak|AlignJustify|AlignTop</set>
+                            </property>
+                        </widget>
+                    </vbox>
+                </widget>
+            </vbox>
+        </widget>
+    </grid>
+</widget>
+<images>
+    <image name="image0">
+        <data format="XPM.GZ" length="24529">789ced9ad9725c3992a6efeb296485bbb231742c67b5b1b92019dc578994b8b4cd05d6b330c8a0b8936df3eee3e1bf9f2331825256576756ea223b2ccbfa1300c70f87c3e138d27ffce3c3d9d1fe877ffcc7dfeeeecd7de33eb8dadc7ef8877fb8ba7af9cffffb7ffeeb6f7fcff30fc5e0439e0c3e8cfefebffef677f7f0c17d508341e693c19cd5aa7018c73987a663b4db6f3ce4f6ab9ed99e3e158e18af0e3ac6783deb99c7eb49cf3cbefa0ace07a267dc33fab73d737f75dbf378cea61b3f045729f33073b0d7dcf5cce39b91b087fd26ef197a6e853b7fb88e612fda9e79bc59ed99c787136159af59e919febfed19fab7c1ddfa9bfd9eb1de959eb9bfb23d27acb7621e6516e3ab536127f3df08cbfacc89b0e857673d633e272c7ac361cf3cbf5e0777fa22ec8d3bffb6ebc2e2df50f7cced7e43b8f35fdd33ec15c2e23f7b04eee2a1feda33f66bd433fbc375edc324e5f5ac3127fdfe9f0a07aca7be1396f5eac79e114f88bfa4b3af3f32a79d7feb5a3862be1afb9b76faf44dcf3cdea03dcb0a8cf7ebc251da3330f5677b6e5b7824eb533d67ec1fcf9cf7eb3b16f6d06f5be16ebdb09f77f655232cfe7269cf6cbf7d1096f95cc95c74e36b252cfdab23e191d88bc2e324673df05749f1ca7ac25761f15f44fe28c91ef7afb5f02829d85ed73e96fed0633a7b15fc65bafe76249cc05eb5de33b757d81fdbeb39178e584f8df96caf07e7c3917f71fe863d73bbc3797464bf64ff1a669f95b0a70f859df877139c6789e576e80f790a6e27c279e2b8fdb370016e70fe22e9c37c3bc289d8db1396f12e08178967fb8fc26582fccde76338cfa7f0cf99700e7bf554b81bbf262ce3db556197225ff2fe0f87a487e7b7d7c2b23efbb1676e6f9f843370e0781dcef313eb695a30ed3ff49c0bcb78bf2a9c419f1d0b97e09af77b38ce72b1b70deeecb92b61d1e76ae1ceffb097e425d6e7787f8769377fbd2a6cd05e617d599620bee2104cf6d85f1efec9a93fe78396f3fdb0a0f8e3f9d5084cebe1fe76265ca27fbd2b6c53e4eb2de632cf307ffbcc6c28ded85e03ff5b6ac7f84a38073707c205ecd587c236453e297a463e3a11f629ce3be6a7f8873d1b8453e80f53e152ec1961037bf644d8a5c837c7c2011cf8fe1b7ad207bdebc262afd91136e07a4558c6d72f3df3790d9c3f8781ce2fef5fc4fe069a1ff9edb3b0c778fd2a1c31de497b31005bcc1fa91de7e7124cedccba121ea67c5e0dfb6b44e747e62b85459f4bc0349efbbb2fc232deb2bdd190d68bf117c25ef40cc1c528c5fe73fc8c46b47fbc1e7f2d2c7a3deb1d8d693ec3fe817dbaffe0efea4e3893fd2ec05d7f03fb29f933307f06931ee83deb19e77f5d38627ce47c34ca88b9bdaac1a41ff980efa71185abc44b222cf63db8a00ebcfe96f76b5466925fdd2730f90bf3476199cf72fe199922cd50bff27e8e2cf91bf96b57389376ae67468e0e28ea1f8eaf91a7f978fd16ebf7e46fe4cb2be1000ec760b20f7fedf48cfc702a3c02aba78e31bf9f0927e00ae3e7f1c9f635f62b74ed5e0b8b5ecbf7f728923e5e9f71e0cebeaa85cb0ce7f559d864bcff0dc7d778d0eb09c205dabd122ec12e17b6d2cef1351e16038cb713e104fa2a3e0fe3797cc21fc2b43fbcff9ecfeb784cfbc11c5f8473d1cbfb3d4ea81df37d11ce65fc93b0e8ad39ff8cd3aeddde0b9b0ce783e39dae0f87fd6a5e8563c6e7c3b1ffc7743d627c037d05d9c779e47c3a2e493f9fbff8209c6788df5de102ed2dd7476343f981e753186f3a3d81e36b6ca93fb3e1fc3876d48ef384764ffa584f0d7d9ef683dbfd40d865b8bfe02f5fd20b8dc763be500e73d4eb7c3f8c23e9c7f9c27cb1a417018fdfef19f70bfb2fa1fc86f9cd1d98e205f937086758bf3a118e19afd73f82697edc674a789ce3bcb99e91ef399f27c36ebd7a0426ffe03ebd132ec17e055c0eb15e7bd3b1d8177b641fef19ce17c988eca15e31e07220fec9853bbd585f520470e07a2f493bf677c211e3e31eb8f39fe5784eb23cc05f6e1f4cfe62fde148d8427f7528ecc01eebc93b7d8ef30985fb10e39b7b61037f2b8eb7641e8fc81ff04f497a501f5f085385c4f637855370c5e72b31b99c6ffd042ef31cfaf9fe4f6c675f613d8efc85f357088f73bc6fb8be4c7cee11df3101d37a50ff73fc2681fc87f37c05267bb8afcf844762af6b4f739cb789700e56dbc236c7fe727e4a6267af4984a902621e085305c3f6f8bca583b214fbfbc206fdfd8130554ccc27c25e98f73f1d12737fc3f75d3aa20d61fb35e79b744ceb413eb1c225f436fcbe4c135a0fe6e3fb254d693cee97576183f9ccb9b0ac27603ca51bd833c7c27423b17dce0f695106700d7da51914a8bf385e52437a305f256c0bc43ffb3bb5640fef558ea7d451c2437b2eecc0f569cf981ffef5866e008e37e8a7fd43ff88f982a10ccff1c6e7378d9dfd38039bb4403c71fd930dcc18fd0dc75b3624fbc8a71ccfd988da111f9c8fb231e947fe76e06ebc437b4a7af0fee7f39565a407f505c7579693ff78bc190a47cca7bf824d5ef0fe38d69b15341fdb6f26c2111cd95f5949fe413dd70a7bd80b0760d287fd4d848b82f727707ec88c290bce170def6766491fc75b7309267fe0bc0e85e984f2fef0f783ccd1fa50cfacf7ccf6f5a5708af6a6eb6f4be4d371cfb8ef39fe33dfcdef0ec1a41fe763242cf3e9a467dcc75bc225ec8542d88135f633903dee1f5f85bbf156d8627d0dd73f592407215e77856dc9f926f0f87c40fec17bf45838833f43296c60cf703eca87a40ff91ded23da4ff817f6466628febb1296fe61d433ecb19e7c4ceb633d2daf3f4f4c8176cbf5699e9a4cfab33ff38c0a0af89bf763fefc042b3e4f7941f6105f1c1f39c58ff88ff3596ec83ef275226c4ac4f3b5309d681e6f843dda1b7e0fe7b6ebdf3c826d56a25ec6fc8eda515fbe806d5ae27d06ff7ad28bfd7906dba4447c3d09a725fb5ff3fee5c1c412ef996d30f5c77e3f0867e8df5c756c385f18ce1f79ecfaab5cb830a89f395e8b01ad97edab6361ba4178be4f609bc25e60ff15433b06ab4c58da3de7c322217fe1fbc58370c0fa15c77391da21fad7ac978a9b21f479dedf22a7eb07efb527b0a12b9afb1f812d451833e7bba2b003ac3f6c0853c6e2f5df0b9706f53bc74351d2fea09efa02b6cee0fb1f9fe7c2905ef813edc626f05738132e60df72bc93f9eefc276013b0bec60847b01b8069fd380f1d27b0577f114e0de25dc6d37a90afc0aeebef397e0a4ffb81ef1db9708af5d603e102eb0b2bc2cee0fdcef54f112c650ce62be108b65cdf1591ec235e0be10cf64dc794f199a76037c0f8f0d833ee638e877240f6f11ee6f75c39ececd5cfc239f47a8ebf725c06ecbfde045b0ffb0dc6277420512fec085bd8af381ecb94e205e7795fb8447f3511f6e8ef389f50719da27f3d14a690e0f1ec9fb2305efc7103a6f5207ef9fea1eb6c64514f73bd4d93058bf3c1fb43e196589c3ffede56d2fd017b4a8169fdf81ec1fb577a1b61cfe99ef1f7214760b287fd35c2a9c5f72de8a7fd95f99cb0d8abb6c06e80769f091716f50038923f918fe09fd8f56f3684657eb5274c051333fbc3ccf307f6ff4258f4843530d9c3fa8f8453d86b0e8533e889f7c239b8e2f830437a50e2fb6400937d9c1fd66b46641ff7cb86f0c872bc851761994f73fc9984da711f4c84c7323fc6a75d7b407f2a38b09e0afd0beb317f15852338ae83693d1ccf91e3d9947ee0f0f7855c4fd3f523f6fd56cf88ff284c570eaf07feb0343fe69b8269bdc867fbc2638bfbe34e38c5f8fa5238477bc47c96f4607fb91e358ef4e3bdfb04a6f8407ed0c211fa3df6d377f69517ce2deebfae9d2c326f0bcbf838e919f98cef5b133a7bd10b1716e7ed4c38a07fdc01fba1637f388e77cabe11f16bb1de48070ef721f63f527fe4733e9f7640edd0b70a267fe0fdc8f58a1dd27e205f8ec05d7bcbfeb063f217fbd30ec0ce405f25ed8e7688c7bf083bf1f7aa7074787fde823bfb0de7079b74fd03e7533b7f60e0bef90aa6fe88ef2fc24387f723e77f9b598bfd34fc3ea1c7a2cc17613fa7f1dcae2e8447e0d00a8f1df223d7f7b67029e6575c0f5a7a4eca7ef279a664ece0df083dc6170ef5c64dcfc80fbc3fd6921e9c2fd89fc723f209c7bb75d41ff526c7a7f5ae807f14fa7b5f3a7c3f807f02f907f36b610ffb11eb0b9dbdf8a967d4571c3f6e40fb85efef7bc2117a3ce75b3724c6793e0577e31dd7136e44fab1de6be1c2a31ee0f3e8128a0fe4cfcf609f8b7ef61f7937c5fed853e112fbd15e82a93fcfd7727e7019e9c17d780fa6fdc379dc1216fb8ecf17792fa03dee82491fee1b8c2f693cde1bb530fd09db5b17761ef508ec99f98fe3f713d8a7b0e731defae8115f1a1c06e0c0e7d7d1fe7ad43b67c225d8bf0807f4d71998c6e3efc3389f3aef0df4543361e7f1f7c5cf3de3fb24f4f830f4c8af7cfe5de8f4e9a267bc6f4b30cdc7fdab203cf678ef717e7491f69bfd5b8f8473e8b7b7609a0fdf433684138f7cbcd533ea175e9fa7d5417f14eec76f0acb78cff5a81f7a0ffd35bf07fd88fc87ef0d1c5f7eec2dd6536d087bac470d8483d85f078711f4341cff9ed4a17fb306eeda2bcc9786d4e37dcef1ea33d28bef35fbc2638fef7d4a38417fc3f1e373b2c75c3f08a7e8ef39ff93371cf4198e2f7a6e4bffea5e982cf07ef079f386f60befaba9b0e8d1fc5ef32e98c0f1a238febd0f49c0fb625b3883bd8ae3c707ba70f0f77b9c4f293a22f419f8338622e0beff285c06c45f1036185fad09bb807ae645d8832de7f3300829ecd5d7c2d23ff07e8411e9c57a6dcf78df5f0a6760f3289c4bfbaa7029f3bf0a5b997fda33fe3dc2a6b0cc1f39bec3b8b31757840bac2f427fd2e96ba7c221e07ee4fb805697a17f180acb789b093bf47723e118f0f761d09bcf7fec9f4761f228af17fee1070ec7cfb6b0c778cbf529adde48fbb9b0b4ebae3d80abd59e711ece84653eb70b8e8380fa04fb61baf9ab41cfa81f4a6199cf849e719e9c7008f83ec5f144a365fe3a0a47b49b041c8798df5d0a8f22ee9b67e13158a13f25388c8f4fc262af45bcb96e3d15d8d378bc1f768513e1939ef1bd85efafc0ffc7fe403c04b287f7ba121ec9f86361195f713e2635117a35e68bdd7875253c94f5f1fec4c1fcc7ebb91316fbf6a267c4e34c388d782f717ccfad617c732e2cfdd547e131d8ad0b8b5edf08a711f538d707f3d1688fe7c2325eaf0a27d29ff31bb50aab879ef1f7411d8bdeea40b88838bf7cfee6bd653d1361e95f07e14cc63ff48cef239cbfa8770ab607c279c479e6f34bbda57f3de919ed67c2d2bf3912167dfab867fc7b28f4cfe72b64ff0d8565bc19f78cf53d0a97181fd39e711f17c206eca1b7982b62be1596f9db8e65bcdd12a60703fbff93b003473e4fd45bec192d2cf6f485b0d8736bc2a2a7bde919f960b3679c7f256cc1ee48d8819b20ec23f20fe7471a5dc87a9d7009fbe15e58e6d346d8825ddb33de93773de3df0b5961993f3ef78c7c772e4c1720b7c39eedf4e8a1b0accfbd08cbfce6b967e4dbad9eb1be282cfe777b3da39eddec197a2e7ac6bf971a0b8bbeeaaa677c9f86bf5ca7af7eea19eb57c2a2cfeef78cf6176199dfb43da3de288565bf54ec19f5c79a700087eb9e516f233e7dafaf1596f9cd53cff8defa282c7aec71cf98ef4058e6571b3dc31fd7c2a247fb9ef1bec0fca18bafc60b8b9ed808cb7cea52b89b6fda33e6eb58ecebd033eaa975e1086e613f76f3a956b81b3fe899fb7fbc178e1dffaa3fa8d34a1b6d7fb19fd38885a0a3ae7eb95fddab6b74fbcbfd2ef5f42f757fa9fb4bdd9bdf95befe25d5cdf48dfeaa6f7f4975337da7eff5839ee2aef8a5d43dea27fdac5fbedd64bf90ba57bda257f5daf7f7ec2fa16ea2d7f586ded45bf31dfde5d46deb1dbdfbbdb25f44dd8cfcb6a7f7f5c1fb15d49faeee501fe98345bffde9ea66faa3fea48ff5f47b65445bfa447fd65ffed4bbe2549fe9737da107df7b8bb40df5488fa93d1175539dea4ce7bad0a5d24a29a32cc5c21faa4d39e55578ebb58ff72aaa4ad50abe1275aa55976a3aff4fcffff74a5dab99ba515fd5ed1fa6ed4eddab87c548d32fea513dd17eb7dfab5b8cc5f98af4817a562fea55adfcbe1ad5aa5a5313b5ae36dec69ada545b6a5bedd09efd86ba7ecc40edaa3db5af0e7e37753375a88ed4c7b75e236d9fd4b13a59e8fb1bea64e467f5459dfe0e71385367ea5c5da8c5fd3c500335542335feb93a5292a854652aa75fa14aa3e76bd453a38c31b6f7f8bff833ce781316634d4d4d341545cf8275539ba63bb3a63597666aaeccb599991b43e7c1dc9a3b734f7ff2601ecd9379362fe6d5acfc4bba266695e65a3313fdf2bd36b3aebdd9309b66eb6d7f3536db66c7ec9abd5eddbe3978df3764f9d01c198a14f3c91c9b937fc18333f3d97c31c1ac2f444c34a7e66c296226e6c49c9b0bac035f32cce0a7b34eccd08cccd8242635d97f4b1fdda12637c5b79aa8d3664a7aeeabe599acb176eeb5ef6eb281754b3139b1deceff6551656bdbe8996deda5a53c6eafecf53fafceceec8dfdaafda2367b6bef96563933abf6de3ed8c7857bf67b751353db27fb4cbf17fb6a57ecaa5db313e675bb6137ed96ddb63bf3e8f8b92e8a9e15bb6bf7ecfec21d3ab5073ab387f668c1c2cc7eb49fd4ae3d5eaaefbea99bd913fbd97e792fb3d8537b66cfed85f676608776f4d3fd9cd9b14d6cba94e50f6c66f3f746d8c296cb3514d4393d8f4e37ff5b7cfb5e25d347cbb373f37db2c7cebbe0e27b31aa27ae72b56b16e7d253d7ba4b375d8e5b9af7ca5d2f9e9af9ef9b3a75eb666ffdfaf32c4d4a6fdcd7a5996e4dedee545cb6a3afddbd7b58ceeacabac7e5fe73fb5d46714feed9bdfc4819b5bfba15b7ba6c013fb7e6266edd6dccf3d962d521e337dd96db5e3e796ec7edbabd65bb6edf1db843f94236a52a6bba78f7b923f7d17dc2b73477ec4edc67feffbeb85377e6ce177bbfa74aec5cb881fb6c5616b5a9153774a3c571a6756397b894f6ff87358a8a2e73b92bd43bd9d2955e7be5cdfccda9a7de7af7639feb03ef7df0cbf139f395af7db3b846bbef5b7f2973fe409d9ffa2bffb3ac4639d6cffc8dff4aea6ef5277fe7efb55fda9f03ffe01ffdd3d2fae8aef4cffe65f9d4f857bfe257fbfeefa8a33e6b7ee2d77f2b9fd1ea37fca6a7d7a7dff63b7ed7eff97d7fe00ffd91ffe83ff9637fe23ffb2fdf556bfdcf9ffa337fbe5c0df80bfff6c67aa38ef761e8477e6c175e19f3fad3273ea55aaffff9cce7bef065d07a2be0efcb9d9e041f4288a10ab56ec3f25b65161a751edab7efaff9bce1d2ac8569b87ad3fb8dba701d66e1262ce508b2796baec25d583af1e1213c86a7f04c79e825bc845773f3b32a509db99db01256dfe6b5790484b54075cc627c87757d207f2330353a6c84cd259b93b015b6c3ce4fe2de84dd7904e969d80bfbe180bcb65c254cc26138329e6e89a5576bf8183e85e3c511e1247c0e5fa08e2c9f86b370beb8a3d4eb220cf40ff3e0b76cc291436fa7300ca3300e4948c5d62464210f4528a35eb6a3a791caa825afb5f87b3fd5dd15d318c262553f8b3156b18ecdd24ecc6fcb47b511db784939decffdd1cd4b39e1586fc569bc8ad771c6bf9bf8d5edc5dba53ae520dec5fbf840d1fac6d76a1c1f69ec537c9ecffb6e054577657c89afdd57b437ab5d89ab56c7b53889eb71236ec6adb81d77e2ee7b77d7cfbcad9efd0ec5e962ae59897b715fc5aee73bea26f1201ec6a3456da4ec63fc148fe3c962ec9baff173fc124fe399bc439e7fa694ec9cc78b38583e7d7168f238fa490535d736ffd711e9a27df3ccff0aa1f85165ac0e6249179da27d3ea84c65ab1fdc2095af4215ab6af90eaaeaaab1c76f7bbf5137a9daeab29a5657dfe7717a9d4cabeb6a56dd54cbd9e6adfddbeaaebaaf1eaa4775573d55cfd54bf55aada8cbf94e9ae76ab55aa33f99e8f579367cfbabd65d526d549bef7ebf1b54fc2eaab6ab1d7fbbb80f2a56bbd5de4f757dbfcb2bd57e75a0a6d56175a467d5c7ea93d9ab8eab93ea73f5a53a7d77ccac3aabce97efb56ff59da8bb583c59f3b3550daae13fab8dad8caaf13c1b54c93fd93fadb2f7e6a50c847c17aadced2e67caaaa8ca5abf7323fdd66f52abdacc2330a8dad6ee47fd6aef76ebf0f68bcadc6b75acabbaae9bfefbddc1e217bebaad2f7555b5efdde3ff94be697da5b7f48179aeafab977a56dfd45fd5b8bea5ffeeaa517d5f3fd09f3e2ed68534ef53fd5cbfd0bb7ef2a30a4ab55ad5aff5bff6f2ffe699d57aaddb8f7a52afd71bf4dbe4ffb6eaedf7be1253a5ba51efd4bb3fabeff441bd57efd7bfc377a7fab0fec1f7e0f77e2ad61feb4ffab11fff5e7df7521fd7f37cfb3b7cfba45dfc5c7f79cf4bcbbf3ad4a7faeecdac6fd49975b5519fc5aa3eff1dbfd7b5f5453d3054d1d5c37a548f973d4991f914eeeba44eeb6ca1e2fd4eddfc3b549dd7c5efa7abd75736549f34aa31a1686ce3f441e39b40f9e245ab26365553374dd32eee953a682e3b757ada4c9babe6fa8ff996ddcc9a1bb5d97c6d6e9bbbe6be7930be796c9ee8f7dcbc34afd12e8f70b7cd4ab3da5550cd5af3477e639f35ebcd06f96cb3d96ae455fbb3afd1cd4eb3dbeccde315eaac6bf6ffa7df367f43df4173d81c85fbe663f3a939fee19b6ad69c349f9b2f758b3cf8c32f64bffbaf390d2f0dd558cd7973d10c9af9ed38fbbe2e6e46cdb8499ab4c916ab807f873af24bde145c634d9b92fe40f995d6b4967faef56d68e3b7baf3dfae8e7f6dd5d66e0d7985ea9f69dbb4addd5f7eabff39ea746b7d7bd9fef0bbcbfbeafed033b1ecc1abf6ba9dfd58e1bca5bde9eabb7fb73a3a03fbedd7f6f647b71c69bb6befbfa9fbf7edec9bdfa47d681fdba77ada3eb72fed6bbbd2aeb66bede4fb0aea4f5487df6cfec20e75bbfee6def855d4bdfffb4bdd5feafe52f74375d5d6ffd8d61fa8eed7f6dd5feafe52f727a89bb61bede62ff7dbd2077fff7ffffb6fff1f99dae639</data>
+    </image>
+</images>
+<includes>
+    <include location="local" impldecl="in implementation">aboutform.ui.h</include>
+</includes>
+<slots>
+    <slot>init()</slot>
+    <slot>mousePressEvent( QMouseEvent * e )</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

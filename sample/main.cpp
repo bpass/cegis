@@ -1,7 +1,5 @@
 #include <iostream.h>
 
-
-
 /*	This program is very simple. Now that you (should) have compiled and run it
 	please do the following (see me (Jason) if you have any troubles):
 
@@ -20,17 +18,29 @@
 		5) Review the diff and make sure that what it displays makes "sense"
 
 		6) Right-click on the FOLDER containing main.cpp and choose "CVS Update"
-		   This will get the newest version of all files in the project and merge them
-		   with yours
+			This will get the newest version of all files in the project and merge them
+			with yours
 
 		7) Right-click on the FOLDER containing main.cpp and choose "CVS Commit..."
-		   This will commit your file changes to the repository
+			This will commit your file changes to the repository
 
 		8) When the checkin dialog appears enter a comment and click ok
 
 	Linux Users:
-		3a) 
+		3a) Run Cevisia choose File -> Open Sandbox; then point it at the folder that
+			contains main.cpp
 
+		4a) Right-click on main.cpp and choose "Difference to Repository (BASE)"
+			Review the diff and make sure it makes "sense"
+
+		5a) In Cervisia choose File -> Update
+			This will get the newest version of all files in the project and merge them
+			with yours
+
+		6a) In Cervisia choose File -> Commit
+			This will commit your file changes to the repository
+
+		7a) When the checkin dialog appears enter a comment and click ok
 
 */
 
@@ -39,7 +49,7 @@
 int main()
 {
    cout << "CVS Demo\n";
-   cout << "\nOthers who have checked out:\n"
+   cout << "Others who have checked out:\n"
         << "\tJason Trent\n";
 
    return 0;

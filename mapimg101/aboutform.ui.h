@@ -1,3 +1,6 @@
+// $Id: aboutform.ui.h,v 1.2 2005/01/06 19:55:34 jtrent Exp $
+
+
 /****************************************************************************
 ** ui.h extension file, included from the uic-generated form implementation.
 **

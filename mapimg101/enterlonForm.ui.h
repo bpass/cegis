@@ -1,3 +1,6 @@
+// $Id: enterlonForm.ui.h,v 1.2 2005/01/06 19:55:34 jtrent Exp $
+
+
 //Copyright 2002 United States Geological Survey
 //Released under GPL with MapIMG copyright 2003 USGS
 

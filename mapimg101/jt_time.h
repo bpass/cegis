@@ -1,3 +1,6 @@
+// $Id: jt_time.h,v 1.2 2005/01/06 19:55:34 jtrent Exp $
+
+
 #ifndef JT_TIME_H
 #define JT_TIME_H
 

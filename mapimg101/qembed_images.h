@@ -1,3 +1,6 @@
+// $Id: qembed_images.h,v 1.2 2005/01/06 19:55:35 jtrent Exp $
+
+
 #ifndef _QEMBED_41
 #define _QEMBED_41
 #include <qimage.h>

@@ -1,3 +1,6 @@
+// $Id: tiff2img.h,v 1.2 2005/01/06 19:55:35 jtrent Exp $
+
+
 #ifndef TIFF2IMG_H
 #define TIFF2IMG_H
 

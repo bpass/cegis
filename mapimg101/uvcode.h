@@ -1,3 +1,6 @@
+// $Id: uvcode.h,v 1.2 2005/01/06 19:55:35 jtrent Exp $
+
+
 /* Version 1.0 generated April 7, 1997 by Greg Ward Larson, SGI */
 #define UV_SQSIZ	(float)0.003500
 #define UV_NDIVS	16289

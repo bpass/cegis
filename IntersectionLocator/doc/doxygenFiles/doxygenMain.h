@@ -1,6 +1,6 @@
 
 // CVS magic symbols for voodoo practitioners
-// $Id: doxygenMain.h,v 1.3 2004/11/15 18:16:58 ahartman Exp $
+// $Id: doxygenMain.h,v 1.4 2004/11/15 22:33:49 rstelzleni Exp $
 
 /** \mainpage IntersectionLocator
  *
@@ -30,6 +30,16 @@
  *
  * \section usage Usage
  * \ref preparingForNewData Instructions for preparing for a new dataset
+ *
+ * It is probably worth pointing out here that the 
+ * IntersectionMap::findControlPoints function will print out a bunch of
+ * messages that say "processing intersection 1 of 543" or some other 
+ * numbers.  The total number of intersections isn't correct in this
+ * output, what it actually uses as the total number of intersections
+ * is the total number of points in all the lines.  This could be fixed
+ * by looping through the vControl vector once and counting the number of
+ * points that are intersections, but I didn't go to the trouble, so ... 
+ * sorry.
  *
  * \section installation Installation
  * <P>

@@ -16,7 +16,10 @@ proj15::proj15( double* params )
      if( params == NULL )
          m_paramValues = new double[15];
      else
-         m_paramValues = params;
+     {
+         for( int index = 0; index < 15; index++ )
+              m_paramValues[index] = params[index];
+     }
 
      setInvalid();
 }
@@ -26,7 +29,10 @@ proj15::proj15( const int projNumber, double* params )
      if( params == NULL )
          m_paramValues = new double[15];
      else
-         m_paramValues = params;
+     {
+         for( int index = 0; index < 15; index++ )
+              m_paramValues[index] = params[index];
+     }
 
      setParamNames( projNumber );
 }
@@ -36,7 +42,10 @@ proj15::proj15( const QString projectionName, double* params )
      if( params == NULL )
          m_paramValues = new double[15];
      else
-         m_paramValues = params;
+     {
+         for( int index = 0; index < 15; index++ )
+              m_paramValues[index] = params[index];
+     }
 
      setParamNames( projectionName );
 }

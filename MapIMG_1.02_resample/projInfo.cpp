@@ -210,7 +210,7 @@ void projInfo::setProjectionDatum()
 
 void projInfo::setProjectionParameters()
 {
-     proj15 m_15( getProjNumber(), m_parameters );
+     proj15 m_15( getProjNumber() );
      QString *m_pParam = m_15.getParameters();
 
      for( int index = 0; index < 15; index++ )

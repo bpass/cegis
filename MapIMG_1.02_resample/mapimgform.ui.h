@@ -478,13 +478,8 @@ void mapimgForm::executemapimg()
 
 
 
-/* jtrent temp removal for testing with resample
-
-
-
 		remove(mitempproj);
 		remove(mitemp2proj);
-*/
 		remove( logFile );
 
                 //if dialog was not cancelled

@@ -56,13 +56,14 @@ extern char infile_name[500];		// Name of input file   from imgio.cpp
 extern char outfile_name[500];		// Name of output file
 extern char infile_info[500];		// Name of input info file
 extern char outfile_info[500];		// Name of output info file
-extern FILE * ininfoptr;				// Input .info file pointer
-extern FILE * outinfoptr;				// Output .info file pointer
+extern FILE * ininfoptr;		// Input .info file pointer
+extern FILE * outinfoptr;		// Output .info file pointer
 
 extern QFile inptr;
+extern FILE * outptr;			// Output file pointer  from imgio.cpp
 
 template <class type>
-int init_io(IMGINFO * inimg, IMGINFO * outimg, type typeToUse)
+int init_io(IMGINFO * inimg, IMGINFO * outimg, type)
 {
 	void * bufptr;		// Pointer to input buffer
 	long i;				// Loop counter
@@ -244,7 +245,7 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type typeToUse)
 // ---------------------------
 
 template <class type>
-type get_max_value(const char* inputFilename, int inputSize, type typeToUse)
+type get_max_value(const char* inputFilename, int inputSize, type)
 {
      FILE * inputPtr = fopen(inputFilename, "rb");
      if( inputPtr == NULL ) return (type)0.0;
@@ -254,42 +255,26 @@ type get_max_value(const char* inputFilename, int inputSize, type typeToUse)
      	 inputSize = 10000;
      }
 
-     void* bufptrMax = (type *) malloc(inputSize*sizeof(typeToUse));
+     void* bufptrMax = (type *) malloc(inputSize*sizeof(type));
      if( bufptrMax == NULL ) return (type)0.0;
 
-     fread(bufptrMax, sizeof(typeToUse), inputSize, inputPtr);
+     fread(bufptrMax, sizeof(type), inputSize, inputPtr);
 
-     inputSize = inputSize / sizeof( typeToUse );
+     inputSize = inputSize / sizeof( type );
 
      type max_value = (type)0.0;
 
      for( int index = 0; index < (inputSize-1)/2; index++ )
      {
-           if( *((type*)bufptrMax + index*sizeof(typeToUse)) > max_value )
-              max_value = *((type*)bufptrMax + index*sizeof(typeToUse));
+           if( *((type*)bufptrMax + index*sizeof(type)) > max_value )
+              max_value = *((type*)bufptrMax + index*sizeof(type));
      }
 
-     delete bufptrMax;
-     delete inputPtr;
-
+     free(bufptrMax);
+     free(inputPtr);
+     
      return max_value;
 }
-
-/*
-// Read the entire input image (no longer used)
-// Definition must be in header for
-// Solaris compiler compatability
-// ---------------------------
-extern QFile inptr;				// Input file pointer  from imgio.cpp
-extern long insize;				// Number of bytes in input image
-
-template <class type>
-void get_image(void * buf, type typeToUse)
-{
-     fread(buf, sizeof(type), insize, inptr);
-     return;
-}
-*/
 
 // Read input image line by line number
 // Definition must be in header for
@@ -297,14 +282,14 @@ void get_image(void * buf, type typeToUse)
 // ---------------------------
 extern QFile inptr;				// Input file pointer  from imgio.cpp
 extern long insize;				// Number of bytes in input image
-static off64_t get_line_loadedData;
+//static off64_t get_line_loadedData;
 
 #include <qcache.h>
 static int MAX_DATA_ELEMENT_COUNT = 800;		//20, 23
 static int FRIST_PRIME_AFTER_MAX = 801;
 
 template <class type>
-void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type typeToUse)
+void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
 {
   static QCache<type> inputDataMap( MAX_DATA_ELEMENT_COUNT, FRIST_PRIME_AFTER_MAX );
   inputDataMap.setAutoDelete( true );
@@ -328,7 +313,7 @@ void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type typeToUse)
 //  	long amountRead = fread(newBuffer, sizeof(type), insize, inptr);
 	long amountRead = inptr.readBlock( (char*&)newBuffer, sizeof(type) * insize);
 	
-	if( amountRead != insize )
+	if( amountRead != sizeof(type) * insize )
 	{
 		printf( "Read %i requested %i\n", amountRead, insize );
 		fflush( stdout );
@@ -390,22 +375,6 @@ void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type typeToUse)
      return;
 }
 
-/*
-// Read input image line
-// Definition must be in header for
-// Solaris compiler compatability
-// ---------------------------
-extern FILE * inptr;				// Input file pointer  from imgio.cpp
-extern long insize;				// Number of bytes in input image
-
-template <class type>
-void get_line(void * buf, int lineLength, type typeToUse)
-{
-     fread(buf, sizeof(type), insize, inptr);
-     return;
-}
-*/
-
 
 
 // Write a line of output image data
@@ -416,7 +385,7 @@ extern FILE * outptr;				// Output file pointer  from imgio.cpp
 extern long outsize;				// Number of bytes in output image
 
 template <class type>
-void put_line(void * buf, type typeToUse)
+void put_line(void * buf, type)
 {
      fwrite(buf, sizeof(type), outsize, outptr);
      fflush( outptr );
@@ -473,7 +442,7 @@ void* get_raster_value(void * buf, long offset, long sample, int lineLength, typ
 
 
 //---------- flags ----------//
-static int dodump=0;		// whether or not to dump minbox to screen
+//static int dodump=0;		// whether or not to dump minbox to screen
 //static int domax=0;		// image of most common value per pixel
 //static int domin=0;		// image of least common value per pixel
 //static int donn=0;		// create traditional mapimg image
@@ -508,7 +477,7 @@ int onLine(double p1[2], double p2[2], double test[2]);
 int inBox(double box[4][2], double test[2]);
 
 
-
+/*
 // Write a line of output image data
 // Definition must be in header for
 // Solaris compiler compatability
@@ -516,13 +485,13 @@ int inBox(double box[4][2], double test[2]);
 extern FILE * outptr;				// Output file pointer  from imgio.cpp
 
 template <class type>
-void put_line(void * buf, FILE* file, type typeToUse)
+void put_line(void * buf, FILE* file, type)
 {
      fwrite(buf, sizeof(type), outsize, file);
      return;
 }
 
-
+*/
 
 
 

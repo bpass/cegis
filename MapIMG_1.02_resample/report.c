@@ -378,16 +378,16 @@ void genrpt_long(A,S)
   long A; char *S;
    {
    if (terminal_p)
-      printf("   %s %d\n", S, A);
+      printf("   %s %i\n", S, A);
    if (file_p)
       {
       fptr_p = (FILE *)fopen(parm_file,"a");
-      fprintf(fptr_p,"   %s %d\n", S, A);
+      fprintf(fptr_p,"   %s %i\n", S, A);
       fclose(fptr_p);
       }
   if (pFile_p_flag && pFile_p)//if pFile_p is not a valid open FILE * the parameter will be lost
       {
-      fprintf(pFile_p,"   %s %d\n", S, A);
+      fprintf(pFile_p,"   %s %i\n", S, A);
       }
    }
 void pblank()

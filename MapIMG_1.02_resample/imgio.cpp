@@ -428,9 +428,9 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
        //----- Success! Got all four corners, OK to reuse these next time
        find2corners = 1;
 
-       if(dodump && dumpflag)
-         return 0;
-       else
+//       if(dodump && dumpflag)
+//         return 0;
+//       else
 	return 1;
 }// get_coords
 

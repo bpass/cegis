@@ -1,9 +1,13 @@
 /* reads the .geoinfo file that accompanies .img file */
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#include "getgeoinfo.h"
 
 void get_geoInfo(name, nl, ns, nb, ulx, uly, pixSiz)
 char *name;
-double *pixSiz;
+float *pixSiz;
 double *ulx;
 double *uly;
 long *ns;

@@ -8,7 +8,14 @@
 // ---------------------------------------------------------------------------
 #include <stdio.h>
 #include <math.h>
+
+
+
 #include "imgio.h"
+#include "init.h"
+
+
+
 
 #define DELTA_LS 0.00005
 #define DELTA_METERS outimg.pixsize/2
@@ -36,13 +43,13 @@ FILE *outptr;			/* Output file pointer */
 FILE *classptr[256];	// array of ptrs to class files
 FILE *maxfile, *minfile, *choicefile;	// random statistics
 FILE *nnfile;			// nearest neighbor resample
-unsigned char *inbuf;		/* Ptr to the input image (all in memory) */
-unsigned char *outbuf;		/* Ptr to one line of output image data */
-unsigned char *classbuf[256];	// array of ptrs to class buffers
-unsigned char *maxbuf;		// buffer to store which class was used most in pixel
-unsigned char *minbuf;		// stores which class was used least in pixel
-unsigned char *nnbuf;		// stores NN output
-unsigned char *choicebuf;	// stores how many classes were in pixel
+unsigned int *inbuf;		/* Ptr to the input image (all in memory) */
+unsigned int *outbuf;		/* Ptr to one line of output image data */
+unsigned int *classbuf[256];	// array of ptrs to class buffers
+unsigned int *maxbuf;		// buffer to store which class was used most in pixel
+unsigned int *minbuf;		// stores which class was used least in pixel
+unsigned int *nnbuf;		// stores NN output
+unsigned int *choicebuf;	// stores how many classes were in pixel
 
 
 //---------- flags ----------//
@@ -103,8 +110,17 @@ outbuf = init_output(&outimg);
 init_stats(outimg.ns);
 
 //----- Read input image into memory -----//
-printf("Reading input image...\n");
-get_image(inbuf);
+printf("Openning input image...\n");
+char temp_filename[255];
+sprintf(temp_filename, "%s.img",infile_name);
+
+inptr = fopen( temp_filename. "rb" ); 
+if(!inptr)
+{
+	printf("ERROR opening input file!\n");
+	exit(-1);
+}
+
 
 printf("Generating output...\n");
   /*-------------*/

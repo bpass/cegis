@@ -1,5 +1,11 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
 #include "imgio.h"
+#include "init.h"
+#include "getgeoinfo.h"
+#include "getprojinfo.h"
 
 /*---------------------------------*\
 \* init.c                          */
@@ -34,7 +40,7 @@ long outsize;
   /*----------------------------------------------------*/
  /* Parse the input arguments and initalize processing */
 /*----------------------------------------------------*/
-parse_input(int *argc, char *argv[], float *fill) 
+void parse_input(int *argc, char *argv[], float *fill) 
 {
 int i;
 char ch[200];
@@ -143,12 +149,14 @@ else
 	sscanf(argv[6],"%d",&unpreferred);
   printf("Class %d is least preferred.\n",unpreferred);
  } 
+ 
+ return;
 }// parse_input
 
 
 // Read the entire input image
 // ---------------------------
-get_image(unsigned char *buf)
+void get_image(unsigned char *buf)
 { 
 char filename[255];
 sprintf(filename, "%s.img",infile_name);
@@ -156,26 +164,31 @@ inptr = fopen(filename,"r");	// Open input file
 if(!inptr)
 {
 	printf("ERROR opening input file!\n");
-	exit();
+	exit(-1);
 }
 fread(buf,1,insize,inptr); 
 fclose(inptr);
+return;
 }
 
 // set all values in buffer to zero
 // --------------------------------
-clear_buffer(unsigned char* buf, long bufsize)
+void clear_buffer(unsigned char* buf, long bufsize)
 {
-long i;
-for(i = 0; i < bufsize; ++i)
-	buf[i] = 0;
+	long i;
+	for(i = 0; i < bufsize; ++i)
+	{
+		buf[i] = 0;
+	}
+	
+	return;
 }
 
    /*---------------------------------------------------------------*/
   /* init_input   --  edited 6/2001 to reflect changes in .geoinfo */
  /* and .proj file formats                                        */
 /*---------------------------------------------------------------*/
-unsigned char *init_input(struct IMGINFO *inimg)
+unsigned char *init_input( struct IMGINFO* inimg)
 {
 unsigned char *bufptr;			// Ptr to input buffer
 long i;					// Loop counter 
@@ -188,12 +201,12 @@ get_geoInfo(infile_name,&inimg->nl,&inimg->ns,&i,
 	&inimg->ul_x,&inimg->ul_y,&inimg->pixsize);
 
 get_projInfo(infile_name,&inimg->sys,&inimg->zone,&inimg->unit,&inimg->datum,
-	&inimg->pparm);
+	inimg->pparm);
 
 insize = inimg->nl * inimg->ns;
 bufptr = (unsigned char *) malloc(insize);
 if (!bufptr) 
-   {printf("Error allocating input image buffer!  Image too large!\n");exit();}
+   {printf("Error allocating input image buffer!  Image too large!\n");exit(-1);}
 return(bufptr);
 }
 
@@ -201,7 +214,7 @@ return(bufptr);
   /* init_output   --  edited to reflect changes in .geoinfo & .proj */
  /* file formats, 6/2001                                            */
 /*-----------------------------------------------------------------*/
-unsigned char* init_output(struct IMGINFO *outimg)
+unsigned char* init_output( struct IMGINFO* outimg)
 {
 long i;                                 /* Loop counter */
 
@@ -211,7 +224,7 @@ get_geoInfo(outfile_name,&outimg->nl,&outimg->ns,&i,
 	&outimg->ul_x,&outimg->ul_y,&outimg->pixsize);
 
 get_projInfo(outfile_name,&outimg->sys,&outimg->zone,&outimg->unit,&outimg->datum,
-	&outimg->pparm);
+	outimg->pparm);
 
 outsize = outimg->ns;
 return((unsigned char *) malloc(outsize));
@@ -296,3 +309,40 @@ if(dobands)
 	init_class(bufsize);
 
 }// init_stats
+
+
+
+void get_image_line( FILE* file, unsigned int lineNumber, unsigned int lineSize, unsigned int *buffer )
+{ 
+	if( file && buffer )
+	{
+		if( ftell( file ) != (long)(lineNumber)*lineSize )
+		{
+			if( fseek( file, SEEK_SET, lineNumber * lineSize ) != 0 )
+			{
+				fprintf( stderr, "Error getting line: Could not seek to location %i in file.\n", lineNumber*lineSize );
+				fflush( stdout );
+			}
+		}
+		
+		if( ftell( file ) == (long)(lineNumber)*lineSize )
+		{
+			if( fread( buffer, sizeof( unsigned int ), lineSize, file ) != lineSize )
+			{
+				fprintf( stderr, "Error getting line: could not read %i elements from file starting at %i.\n", lineSize, lineNumber*lineSize );
+				fflush( stdout );
+			}
+		}
+	}
+	else
+	{
+		fprintf( stderr, "Error getting line: Not a valid file pointer or buffer.\n" );
+		fflush( stdout );
+	}
+	
+	return;	
+}
+
+
+
+

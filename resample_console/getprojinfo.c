@@ -1,5 +1,9 @@
 /* reads the .proj file that accompanies .img file */
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#include "getprojinfo.h"
 
 void get_projInfo(char *name, long *sys, long *zone, long *unit, long *datum, double pparm[])
 {

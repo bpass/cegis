@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.7 2005/02/18 00:08:04 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.8 2005/02/19 00:43:53 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -12,8 +12,6 @@
 #include <qtextstream.h>
 #include <qtooltip.h>
 
-QColor INPUT_COLOR = QColor( 151, 160, 148 );
-QColor OUTPUT_COLOR = QColor( 163, 146, 146 );
 const uint INFO_PRECISION = 6;
 
 #include "gctpnames.h"

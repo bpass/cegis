@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.16 2005/02/18 18:22:04 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.17 2005/02/19 00:43:53 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -693,16 +693,3 @@ QString mapimgForm::dataType() const
 
    return currentDataType;
 }
-
-QColor mapimgForm::inputFrameColor() const
-{
-   return inInfoFrame->mapTab->viewport()->palette().color( QPalette::Active, QColorGroup::Background );
-}
-
-QColor mapimgForm::outputFrameColor() const
-{
-   return outInfoFrame->mapTab->viewport()->palette().color( QPalette::Active, QColorGroup::Background );
-}
-
-
-

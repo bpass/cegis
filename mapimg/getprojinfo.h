@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.14 2005/02/18 18:22:04 jtrent Exp $
+// $Id: getprojinfo.h,v 1.15 2005/02/19 00:43:53 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -29,6 +29,7 @@
 #include "imgio.h"
 #include "mapimg.h"
 #include "mapimgform.h"
+#include "qinfoframe.h"
 
 #include "logform.h"
 #include "jt_time.h"
@@ -115,15 +116,19 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
    void * mapimginbuf = imgIO.mapimginbuf;
    void * mapimgoutbuf = imgIO.mapimgoutbuf;
 
-   QColor inputFrameColor = ((mapimgForm*)mapimgdial)->inputFrameColor();
-   QColor outputFrameColor = ((mapimgForm*)mapimgdial)->outputFrameColor();
-
    // Progress Dialog added in QT
    QProgressDialog progress( "Performing Transformation", "Abort", outimg.nl,
       mapimgdial, "progress", TRUE, WINDOW_FLAGS );
    progress.setCaption( "Processing..." );
 
-   QColor c( inputFrameColor );
+   double red = INPUT_COLOR.red();
+   double grn = INPUT_COLOR.green();
+   double blu = INPUT_COLOR.blue();
+   double dRed = (OUTPUT_COLOR.red() - red) / outimg.nl;
+   double dGrn = (OUTPUT_COLOR.green() - grn) / outimg.nl;
+   double dBlu = (OUTPUT_COLOR.blue() - blu) / outimg.nl;
+
+   QColor c( INPUT_COLOR );
    QPalette p( c );
    p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
    progress.setPalette( p );
@@ -134,27 +139,20 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
    // Perform inverse mapping--loop thru output image and get appropriate input
    // -----------------------------------------------------------------------------------------
 
-
    /******* Change bounds here for doing per line or per line section *******/
    FILE *paramfile = fopen( logFile, "wa");
 
    bool noDoubleCount = false;
    type ignoreValue = (type)fill;
 
+
    for(out_line = 0; out_line < outimg.nl; out_line++) 		// For each output image line
    {
       // Set progress of Dialog box and cancel if process was cancelled
 
       progress.setProgress(out_line);
-
-      double red = inputFrameColor.red() + 
-                   (out_line * (outputFrameColor.red()-inputFrameColor.red())/outimg.nl);
-      double green = inputFrameColor.green() +
-                   (out_line * (outputFrameColor.green()-inputFrameColor.green())/outimg.nl);
-      double blue = inputFrameColor.blue() +
-                   (out_line * (outputFrameColor.blue()-inputFrameColor.blue())/outimg.nl);
-
-      QColor c( red, green, blue );
+      red += dRed; blu += dBlu; grn += dGrn;
+      QColor c( red, grn, blu );
       QPalette p( c );
       p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
       progress.setPalette( p );
@@ -382,9 +380,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
 
    progress.setProgress( outimg.nl );
-
-   c = QColor( outputFrameColor );
-   p = QPalette( c );
+   p = QPalette( OUTPUT_COLOR );
    p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
    progress.setPalette( p );
 

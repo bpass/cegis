@@ -1,4 +1,4 @@
-// $Id: qinfoframe.h,v 1.3 2005/01/31 17:24:07 jtrent Exp $
+// $Id: qinfoframe.h,v 1.4 2005/02/19 00:43:53 rbuehler Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -21,6 +21,8 @@ class QDmsEdit;
 class QGctpBox;
 class RasterInfo;
 
+const QColor INPUT_COLOR( 151, 160, 148 );
+const QColor OUTPUT_COLOR( 163, 146, 146 );
 
 /*
    QMapTab is the first of two tabs made for use in the QInfoFrame. It uses

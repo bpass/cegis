@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.11 2005/02/18 00:08:04 rbuehler Exp $
+// $Id: imgio.h,v 1.12 2005/02/18 16:59:07 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -33,6 +33,8 @@
 
 
 #define DEFAULT_Max_Data_Element_Count 100;
+
+
 
 struct IMGINFO
 {
@@ -355,12 +357,15 @@ public:
          {
             if( inputDataMap->insert( offsetString, (type*)newBuffer ) != true )
             {
+               buf = 0;
                printf( "Error deleting least recently used item.\n" );
                fflush( stdout );
             }
+            else
+            {
+            	buf = (type*)newBuffer;
+            }
          }
-         
-         buf = inputDataMap->find( offsetString );
 
          if( buf ==  0 )
          {

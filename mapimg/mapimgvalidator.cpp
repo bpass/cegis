@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.cpp,v 1.2 2005/02/18 00:08:04 rbuehler Exp $
+// $Id: mapimgvalidator.cpp,v 1.3 2005/02/18 16:59:07 jtrent Exp $
 
 #include <qvalidator.h>
 #include <qstring.h>
@@ -24,7 +24,11 @@ MapimgValidator::MapimgValidator( QString mapimgDataType, QObject* parent, const
    t = 0.0;
    d = 0;
 
+   setDataType( mapimgDataType );
+}
 
+void MapimgValidator::setDataType(  QString mapimgDataType )
+{
    if( mapimgDataType.contains( "Unsigned" ) )
    {
       b = 0.0;
@@ -97,6 +101,8 @@ MapimgValidator::MapimgValidator( QString mapimgDataType, QObject* parent, const
       t = _I32_MAX;
       d = 0;
    }
+   
+   return;
 }
 
 MapimgValidator::MapimgValidator( double bottom, double top, int decimals, QObject* parent, const char* name )
@@ -162,10 +168,10 @@ QValidator::State MapimgValidator::validate( QString & input, int & ) const
 
    QString tempInput = QString::number( entered );
 
-   int j = tempInput.find( '.' );
+   int tempj = tempInput.find( '.' );
    int i = input.find( '.' );
 
-   if( (i >= 0 || j >= 0 || input.contains("e-", FALSE)) && d == 0 )
+   if( (i >= 0 || tempj >= 0 || input.contains("e-", FALSE)) && d == 0 )
    {
       return Invalid;
    }
@@ -177,7 +183,7 @@ QValidator::State MapimgValidator::validate( QString & input, int & ) const
       while( input[j].isDigit() )
          j++;
       if ( j - i > d )
-         return Intermediate;
+         return Invalid; //Intermediate;
    }
 
    if( entered > t )

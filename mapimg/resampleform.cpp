@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.7 2005/02/18 00:08:04 rbuehler Exp $
+// $Id: resampleform.cpp,v 1.8 2005/02/18 16:59:07 jtrent Exp $
 
 
 /****************************************************************************
@@ -198,12 +198,22 @@ void ResampleForm::newVal()
 {
    if( ignoreEdit->hasAcceptableInput() )
    {
-     IgnoreValue i = ignoreEdit->text().toDouble();
+     IgnoreValue i = (IgnoreValue)ignoreEdit->text().toDouble();
 
-     if( ilist.contains( i ) < 1 )
+      int decimals = 6;
+
+      if( ignoreEdit->validator() != NULL )
+          decimals = ((MapimgValidator*)ignoreEdit->validator())->decimals();
+
+     if(  ilist.contains( i ) < 1 )
      {
         ilist.append( i );
-        ignoreListBox->insertItem( QString::number( i, 'f', 6 ) );
+        ignoreListBox->insertItem( QString::number( i, 'f', decimals ) );
+     }
+     else
+     {
+        QListBoxItem* ignoreListItem = ignoreListBox->findItem( QString::number( i, 'f', decimals ), Qt::ExactMatch );
+     	ignoreListBox->setSelected( ignoreListItem, TRUE );
      }
 
      if( ignoreListBox->count() > 0 )

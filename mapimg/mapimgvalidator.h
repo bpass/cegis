@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.h,v 1.2 2005/02/18 00:08:04 rbuehler Exp $
+// $Id: mapimgvalidator.h,v 1.3 2005/02/18 16:59:07 jtrent Exp $
 
 #ifndef MAPIMGVALIDATOR_H
 #define MAPIMGVALIDATOR_H
@@ -24,6 +24,7 @@ public:
 
    QValidator::State validate( QString & input, int & ) const;
    virtual void setRange( double bottom, double top, int decimals = 0 );
+   void setDataType( QString mapimgDataType );
    void setBottom( double );
    void setTop( double );
    void setDecimals( int );

@@ -53,7 +53,8 @@ int main()
    cout << "Others who have checked out:\n"
         << "\tJason Trent\n"
         << "\tAustin Hartman\n"
-        << "\tRyan Stelzleni\n";
+        << "\tRyan Stelzleni\n"
+        << "\tJames Muo\n";
 
    return 0;
 }

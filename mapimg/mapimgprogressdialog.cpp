@@ -103,7 +103,7 @@ void MapimgProgressDialog::setProgress( int progress )
 
     if( progress%stepsPerUpdate == 0 && colorStart && colorEnd )
     {
-        QColor c( currentRed, currentGreen, currentBlue );
+        QColor c( (int)currentRed, (int)currentGreen, (int)currentBlue );
         QPalette p( c );
         p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
         setPalette( p );

@@ -44,15 +44,17 @@ Windows Users:
 
 [jtrent@centaur ~/.ssh]$ more authorized_keys
 ssh-dss AAAAB3NzaC1kc3MAAACBAKd/l6E1/NKbZ6GG5qVdDxkMvQ5AwkWe0N3WXtp8XqS+hxLfeUFY
-yO9c2TgbD5xKNn8bM+5Z0uRqhnACtpN91F+rejXBjsX1gPyp+E7b8gel3IlcCnqh+grC62FfiIHxX4C0
+yO9c2TgzD5xKNn8bM+5Z0uRqhnACtpN91F+rejXBjsX1gPyp+E7b8gel3IlcCnqh+grC62FfiIHxX4C0
 ea+x3ME9u9u73smbtV5nRzjGJeQAlnQ34iq/1hWrAAAAFQDLla6r/NhsFb4AmccRbc2eGS/qjwAAAIBX
-lUZvtXHhNNwP84bmP4skof1BHtVfGWDrrw07AHF4RBQbAHormxX5ZQ9dBjsSTu8elyDw2XtOogeprnm3
+lUZvtXHhNNwP84bmP4skof1BHtVfGWDrrw08AHF4RBQbAHormxX5ZQ9dBjsSTu8elyDw2XtOogeprnm3
 KeF7gvZaUPVFsiUfPlQ/bGCoH6nrwpOcw4fOp14Y/8nMjbOaYd0zyG0gIhYaBKu9d916TgjYMY4KCwpc
 FVVLKe21KgAAAIAD8Xhnp9zbqrVyHN+Ccr8bG1rQZxdJ0BHHX66LeCSuBw0kKS4cNQUP4V8IDQkghGkm
 JOhL2n2WCzzlpkvfM1HubVDlyiPZlnxEWrvi9bvhFY6r9wOYaOHwy1iGgXKNzhx6W3+uE7LrqGy4Ft6l
 jO/SdwNROXcZFBmDQXEGrPlteA== jtrent@centaur.er.usgs.gov
 
-    5) You can now log out of centaur
+    5) now run the following command "chmod 600 authorized_keys"
+
+    6) You can now log out of centaur
 
   Seeting up Pageant to ligin using private key:
     1) Goto the folder you put pageant.exe; right-click and choose "Copy"

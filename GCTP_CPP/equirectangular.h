@@ -1,8 +1,11 @@
 #ifndef EQUIRECTANGULAR_H
 #define EQUIRECTANGULAR_H
 
+#include "projection.h"
+#include "cproj.h"
 
-class Equirectangular {
+class Equirectangular : public Projection
+{
   // Associations
   // Attributes
   protected:
@@ -15,9 +18,9 @@ class Equirectangular {
     double earthRadius;
   // Operations
   public:
-   void Equirectangular( double gctpParameters[15] );
-   long forward( double lon, double lat, double* x = null, double* y = null );
-   long inverse( double x, double y, double* lon = null, double* lat = null );
+   Equirectangular( double gctpParameters[15] );
+   long forward( double lon, double lat, double* x = NULL, double* y = NULL );
+   long inverse( double x, double y, double* lon = NULL, double* lat = NULL );
 
   protected:
    long forward_init (  );

@@ -22,12 +22,12 @@ double Projection::getLon()
 
 long Projection::getXY ( double* x, double* y )
 {
-  if( x != null )
+  if( x != NULL )
   {
      *x = x_coord;
   }
   
-  if( y != null )
+  if( y != NULL )
   {
      *y = y_coord;
   }
@@ -37,28 +37,26 @@ long Projection::getXY ( double* x, double* y )
 
 long Projection::getLatLon ( double* lat, double* lon )
 {
-  if( lat != null )
+  if( lat != NULL )
   {
      *lat = latitude;
   }
   
-  if( lon != null )
+  if( lon != NULL )
   {
      *lon = longitude;
   }
   
   return 0;
 }
-}
 
-void Projection::Projection ( double gctpParameters[15] )
+Projection::Projection ( double gctpParameters[15] )
 {
   for( int index = 0; index < 15; index++ )
   {
      gctpParams[index] = gctpParameters[index];
   }
   
-  return;
-}   
+  return; 
 }
 

@@ -2,6 +2,8 @@
 #define PROJECTION_H
 
 #include <math.h>
+#include "cproj.h"
+
 
 class Projection
 {
@@ -20,8 +22,8 @@ class Projection
     double gctpParams[15];
   // Operations
   public:
-    virtual long forward ( double lon, double lat, double* x = null, double* y = null ) = 0;
-    virtual long inverse ( double x, double y, double* lon = null, double* lat = null ) = 0;
+    virtual long forward ( double lon, double lat, double* x = NULL, double* y = NULL ) = 0;
+    virtual long inverse ( double x, double y, double* lon = NULL, double* lat = NULL ) = 0;
     virtual long forward_init (  ) = 0;
     virtual long inverse_init (  ) = 0;
     double getX (  );
@@ -30,7 +32,7 @@ class Projection
     double getLon (  );
     long getXY ( double* x, double* y );
     long getLatLon ( double* lat, double* lon );
-    void Projection ( double gctpParameters[15] );
+    Projection ( double gctpParameters[15] );
 };
 
 #endif

@@ -1,12 +1,14 @@
+#include <stdio.h>
+
 #include "equirectangular.h"
 
-void Equirectangular::Equirectangular( double gctpParameters[15] ) : Projection( gctpParameters )
+Equirectangular::Equirectangular( double gctpParameters[15] ) : Projection( gctpParameters )
 {
 
   return;
 }
 
-long Equirectangular::forward( double lon, double lat, double* x = null, double* y = null )
+long Equirectangular::forward( double lon, double lat, double* x, double* y )
 {
   double deltaLon;		/* delta longitude value			*/
 
@@ -31,13 +33,9 @@ long Equirectangular::forward( double lon, double lat, double* x = null, double*
   return 0;
 }
 
-long Equirectangular::inverse ( double x, double y, double* lon = null, double* lat = null )
+long Equirectangular::inverse ( double x, double y, double* lon, double* lat )
 {
-  double sinPhi, cosPhi;	/* sin and cos value				*/
-  double deltaLon;	        /* delta longitude value			*/
-  double cosLon;		/* cos of longitude				*/
-  double ksp;		        /* scale factor					*/
-  double g;
+//  double deltaLon;	        /* delta longitude value			*/
 
   x_coord = x;
   y_coord = y;
@@ -73,7 +71,7 @@ long Equirectangular::inverse ( double x, double y, double* lon = null, double* 
 long Equirectangular::forward_init()
 {
   /* Place parameters in static storage for common use */
-  earthRaidus = gctpParams[0];
+  earthRadius = gctpParams[0];
   centerLongitude = gctpParams[4];
   centerLatitude = gctpParams[5];
   falseNorthing = gctpParams[6];
@@ -93,7 +91,7 @@ long Equirectangular::forward_init()
 long Equirectangular::inverse_init()
 {
   /* Place parameters in static storage for common use */
-  earthRaidus = gctpParams[0];
+  earthRadius = gctpParams[0];
   centerLongitude = gctpParams[4];
   centerLatitude = gctpParams[5];
   falseNorthing = gctpParams[6];

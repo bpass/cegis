@@ -36,9 +36,9 @@ function oracleEscape(&$query, $searching) {
 						<option value=\"dec\">December
 					</select>&nbsp;
 					<input type=\"text\" name=\"day\" maxlength=\"2\" size=\"2\" value=\"dd\">&nbsp;
-					<input type=\"text\" name=\"year\" maxlength=\"2\" size=\"2\" value=\"mm\">&nbsp;&nbsp; 
+					<input type=\"text\" name=\"year\" maxlength=\"2\" size=\"2\" value=\"yy\">&nbsp;&nbsp; 
 					<b>Satellite</b>&nbsp;<select name=\"satellite\" maxlength=\"50\" onChange=\"listSensors(document.forms[0].satellite);\">
-							    <option value=\"0\" SELECTED>
+							    <option value=\"-1\" SELECTED>
 							    <option value=\"aster\">ASTER
 							    <option value=\"ls5\">Landsat 5
 							    <option value=\"ls7\">Landsat 7
@@ -68,7 +68,12 @@ function oracleEscape(&$query, $searching) {
 		if(!($GLOBALS['AUTH_ADMIN'] || $GLOBALS['AUTH_WRITE'])) {
 			print "<p><b>You do not have permission to access this resource.</b><p>\n";
 			return(0);
-		} 
+		}
+		
+		if(($id != "") && (!is_numeric($id) || ($id < 0))) {
+			print "<p>Error: invalid ID</p>\n";
+			return(0);
+		}
 		//pull out form values.
 		$month = $_POST['month'];
 		$day = $_POST['day'];
@@ -276,7 +281,7 @@ function oracleEscape(&$query, $searching) {
 			}
 		}
 		
-		else {
+		else if(!empty($spat_r) && preg_match('/^\s+$/s', $spat_r)){
 			$errorList[$errorCount] = "<p>Spatial resolution cannot be blank</p>";
 			$error = true;
 			$errorCount++;
@@ -504,8 +509,8 @@ function oracleEscape(&$query, $searching) {
 	//displays the information	
 	function doViewImage($ID) {
 	
-		if(!is_numeric($ID)) {
-			print "<p>ID must be numeric</p>";
+		if(!is_numeric($ID) || ($ID < 0)) {
+			print "<p>ID must be numeric and positive</p>";
 			return(0);
 		}
 		
@@ -599,8 +604,8 @@ function oracleEscape(&$query, $searching) {
 		$comments = "";
 		$action = "";
 		$caption = "";
-		if(!is_numeric($id) && !empty($id)) {
-			print "<p>Image ID must be numeric</p>\n";
+		if(!empty($id) && (!is_numeric($id) || ($id < 0))) {
+			print "<p>Image ID must be numeric and positive</p>\n";
 			return(0);
 		}
 		
@@ -734,7 +739,7 @@ function oracleEscape(&$query, $searching) {
 					<input type=\"text\" name=\"day\" maxlength=\"2\" size=\"2\" value=\"%day%\">&nbsp;
 					<input type=\"text\" name=\"year\" maxlength=\"2\" size=\"2\" value=\"%year%\">&nbsp;&nbsp; 
 					<b>Satellite</b>&nbsp;<select name=\"satellite\" maxlength=\"50\" onChange=\"listSensors(document.forms[0].satellite, false);\">
-							    <option value=\"0\">
+							    <option value=\"-1\">
 							    <option value=\"aster\" %aster%>ASTER
 							    <option value=\"ls5\" %ls5%>Landsat 5
 							    <option value=\"ls7\" %ls7%>Landsat 7
@@ -747,18 +752,21 @@ function oracleEscape(&$query, $searching) {
 		//all of the $xOptions variables are used to properly populate the 
 		//dropdown menus, based on what values were selected.
 		//we have to do it this way as it was done via javascript before.
-		$asterSensorOptions = "<option value=\"vnir\" %vnir%>VNIR
+		$asterSensorOptions = "<option value=\"all\" %all%>All
+					<option value=\"vnir\" %vnir%>VNIR
 				       <option value=\"swir\" %swir%>SWIR
 				       <option value=\"TIR\" %tir%>TIR\n";
 		
-		$ls7SensorOptions = "<option value =\"etm\" %etm%>ETM
+		$ls7SensorOptions = "<option value =\"all\" %all%>All
+				     <option value =\"etm\" %etm%>ETM
 				     <option value =\"bw\" %bw%>BW\n";
 				     
 		$eo1SensorOptions = "<option value =\"hyperion\" %hyperion%>Hyperion
 		                     <option value =\"ali\" %ali%>ALI\n";
 		
-		$doqSensorOptions = "<option value =\"cir\" %cir%>CIR
-				    <option value =\"bw\" %bw%>BW\n";
+		$doqSensorOptions = " <option value =\"all\" %all%>All
+				     <option value =\"cir\" %cir%>CIR
+				     <option value =\"bw\" %bw%>BW\n";
 		
 		$amserESensorOptions = "<option value =\"25km\" %25km%>25km
 				        <option value =\"50km\" %50km%>50km\n";
@@ -878,7 +886,7 @@ function oracleEscape(&$query, $searching) {
 		$imageQ = "";
 		$countQ = "";
 		
-		if(!is_numeric($year) && !empty($year)) {
+		if(!empty($year) && (!is_numeric($year) || ($year < 0))) {
 			print "<p>Year must be numeric</p>";
 			return(0);
 		}
@@ -1119,6 +1127,10 @@ function oracleEscape(&$query, $searching) {
 			print "<p><b>You do not have permission to access this resource.</b><p>\n";
 			return(0);
 		} 
+		if(!empty($id) && (!is_numeric($id) || ($id < 0))) {
+			print "<p>Error, ID must be numeric and positive</p>\n";
+			return(0);
+		}
 		$date = date('d') . '-' . date('m') . '-' . date('y');
 		$subject = strip_tags($subject);
 		$article = strip_tags($article);
@@ -1156,6 +1168,11 @@ function oracleEscape(&$query, $searching) {
 	function editNews($article, $subject, $op="preview", $id="") {
 		if(!($GLOBALS['AUTH_ADMIN'] || $GLOBALS['AUTH_WRITE'])) {
 			print "<p><b>You do not have permission to access this resource.</b></p>\n";
+			return(0);
+		}
+		
+		if(!empty($id) && (!is_numeric($id) || ($id < 0))) {
+		
 			return(0);
 		} 
 		$subject = removeEscapedQuotes($subject);
@@ -1212,6 +1229,11 @@ function oracleEscape(&$query, $searching) {
 	}
 	
 	function getNewsStory($id) {
+	
+		if(!empty($id) && (!is_numeric($id) || ($id < 0))) {
+			print "<p>Error, ID must be numeric and positive</p>\n";
+			return(0);
+		}
 		$cred=getCred();
 		$conn = OCILogon($cred['user'], $cred['passhash'], 'prod85');
 		if(!$conn) {
@@ -1247,6 +1269,11 @@ function oracleEscape(&$query, $searching) {
 			print "<p><b>You do not have permission to access this resource.</b><p>\n";
 			return(0);
 		} 
+		
+		if(!empty($id) && (!is_numeric($id) || ($id < 0))) {
+			print "<p>Error, ID must be numeric and positive</p>\n";
+			return(0);
+		}
 		//strip all html tags from subject
 		$subject = strip_tags($subject);
 		if(preg_match('/^\s+$/s', $subject) || empty($subject)) {
@@ -1290,7 +1317,10 @@ function oracleEscape(&$query, $searching) {
 	 
 	//Displays the most recent news articles on the main page		
 	function doMain($index) {
-		
+		if(!empty($index) && (!is_numeric($index) || ($index < 0))) {
+			print "<p>Error, index must be numeric and positive\n";
+			return(0);
+		}
 		$displayMax = 11;
 		
 		$cred=getCred();
@@ -1367,7 +1397,7 @@ function oracleEscape(&$query, $searching) {
 	
 	//View the whole news article.
 	function doViewArticle($id) {
-		if(!is_numeric($id)) {
+		if(!empty($id) && (!is_numeric($id) || ($id < 0))) {
 			print "<p>Id must be numeric</p>";
 			return(0);
 		}

@@ -25,7 +25,7 @@ function ora_change_auth($cred, $file_loc)
 	$con=ocilogon($cred['user'],$cred['passhash'], $cred['db']);
 	if($con && is_writable($file_loc))
 	{
-		if(ocipasswordchange($con, $cred['user'], 'ghgh456654AA', $new))
+		if(@ocipasswordchange($con, $cred['user'], 'ghgh456654AA', $new))
 		{
 			$cred['passhash']=$new;
 			$cred['passbirth']=time();

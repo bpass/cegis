@@ -39,29 +39,22 @@ switch($mode) {
 	    
       	  if(isset($_GET['id'])) {      
 	     		 $id = $_GET['id'];
-		  	}	 
-	      if(is_numeric($id)) {
-		      editImage($id, "", "");
-	      }
-	      break;
+	  }	 
+	     
+	
+	  editImage($id, "", "");
+	      
+	  break;
       case 'doEditImage':
 	    
       	  if(isset($_GET['id'])) {      
-	     		 $id = $_GET['id'];
-				 }
-	      if(is_numeric($id)) {
-		      doImgOp("edit", $id);
-	      }
-	      break;
-      case 'delete':
-	     
-      	  if(isset($_GET['id'])) {      
-	     		 $id = $_GET['id'];
-				 }
-	      if(is_numeric($id)) {
-		      doDeleteRequest($id);
-	      }
-	      break;
+	     	$id = $_GET['id'];
+	}
+	      
+	  doImgOp("edit", $id);
+	      
+	  break;
+    
       case 'showImages':
 	      if($index == "") {
 		      showImages();
@@ -72,13 +65,13 @@ switch($mode) {
 	      }
 	      break;
       case 'viewImage':
-	       if(isset($_GET['id'])) {      
-	     		 $id = $_GET['id'];
-				 }
-	      if(is_numeric($id)) {
-		      doViewImage($id) ;
-	      }
-	      break;
+	if(isset($_GET['id'])) {      
+	     $id = $_GET['id'];
+	}
+	      
+	doViewImage($id) ;
+	      
+	 break;
       case 'search':
 	      printSearchForm();
 	      break;
@@ -128,7 +121,7 @@ switch($mode) {
 			      //new image
 		              if(isset($_POST["hidden"])) {
 			      	   $previewMode = $_POST["hidden"];
-				       $id = $_POST["id"];
+				   $id = $_POST["id"];
 			       }
 			       
 			       else {
@@ -178,18 +171,18 @@ switch($mode) {
 		     //else if we are submiting an edit of an existing story
 		     else if($_POST["hidden"] == "edit" && $action == "Submit") {
 			    
-			    if(isset($_POST['id'])) { 
-			        $id = $_POST["id"];
-			    }
+			if(isset($_POST['id'])) { 
+			     $id = $_POST["id"];
+			}
 				
-			    if(is_numeric($id)) {
-				   $subject = str_replace("~q~", '\"', $subject);
-			           $article = str_replace("~q~", '\"', $article);
-				   $article = html_entity_decode($article, ENT_QUOTES);
-				   $article = htmlentities($article, ENT_QUOTES);
+			    
+			$subject = str_replace("~q~", '\"', $subject);
+			$article = str_replace("~q~", '\"', $article);
+			$article = html_entity_decode($article, ENT_QUOTES);
+			$article = htmlentities($article, ENT_QUOTES);
 			
-				   doEditNews($id, $article, $subject);
-			    }
+			doEditNews($id, $article, $subject);
+			    
 			   
 		     }
 		     
@@ -209,15 +202,15 @@ switch($mode) {
       
       		
       case 'viewArticle':
-	      if(isset($_GET['id'])) {      
-	     	$id = $_GET['id'];
-		 }
-	      if(is_numeric($id)) {
-		      doViewArticle($id);
-	      }
-	      break;
+	if(isset($_GET['id'])) {      
+	     $id = $_GET['id'];
+	}
+	     
+	doViewArticle($id);
+	     
+	break;
       default:
-	      //$index = $_SERVER['PHP_SELF'];
+	      
 	      doMain($index);
 
 }

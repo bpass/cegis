@@ -1,10 +1,11 @@
-// $Id: imgio.h,v 1.16 2005/03/14 17:52:51 jtrent Exp $
+// $Id: imgio.h,v 1.17 2005/03/25 04:16:57 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
 //Released under GPL with mapimg copyright 2003 USGS
 
 // Modified by Jason Trent to allow for templating -- 7/03
+// Modified again by Jason Trent for object oriented approach with IMGIO class -- 11/04
 
 #ifndef IMGIO_H
 #define IMGIO_H
@@ -89,11 +90,11 @@ public:
    {
       if( maxCount > 0 )
       {
-          Max_Data_Element_Count = maxCount;
+         Max_Data_Element_Count = maxCount;
       }
       else
       {
-          Max_Data_Element_Count = DEFAULT_Max_Data_Element_Count;
+         Max_Data_Element_Count = DEFAULT_Max_Data_Element_Count;
       }
 
       inputDataMap = NULL;
@@ -110,17 +111,17 @@ public:
 
    int getMaxLineCount() const
    {
-     return Max_Data_Element_Count;
+      return Max_Data_Element_Count;
    }
 
    void setMaxLineCount( int count )
    {
-     Max_Data_Element_Count = count;
+      Max_Data_Element_Count = count;
 
-     if( inputDataMap )
+      if( inputDataMap )
          inputDataMap->setMaxCost( Max_Data_Element_Count );
 
-     return;
+      return;
    }
 
    void clearCache()
@@ -301,7 +302,7 @@ public:
       if( !inputPtr.isOpen() || !inputPtr.isReadable() )
       {
          if( inputPtr.isOpen() )
-             inputPtr.close();
+            inputPtr.close();
          return (type)0.0;
       }
 
@@ -347,7 +348,7 @@ public:
       }
       else if( last_offset == offset )
          return;
-      
+
       last_offset = offset;
 
       // check and see if line requested is already in memory
@@ -397,7 +398,7 @@ public:
             }
             else
             {
-            	buf = (type*)newBuffer;
+               buf = (type*)newBuffer;
             }
          }
 

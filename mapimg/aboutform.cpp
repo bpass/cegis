@@ -1,4 +1,4 @@
-// $Id: aboutform.cpp,v 1.6 2005/03/20 19:24:11 rbuehler Exp $
+// $Id: aboutform.cpp,v 1.7 2005/03/25 04:16:56 rbuehler Exp $
 
 
 /****************************************************************************
@@ -25,18 +25,19 @@
 #include <qpixmap.h>
 
 /*
- *  Constructs an aboutForm as a child of 'parent', with the
- *  name 'name' and widget flags set to 'f'.
- *
- *  The dialog will by default be modeless, unless you set 'modal' to
- *  TRUE to construct a modal dialog.
- */
+*  Constructs an aboutForm as a child of 'parent', with the
+*  name 'name' and widget flags set to 'f'.
+*
+*  The dialog will by default be modeless, unless you set 'modal' to
+*  TRUE to construct a modal dialog.
+*/
 aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
-    : QDialog( parent, name, modal, fl )
+: QDialog( parent, name, modal, fl )
 {
    if ( !name )
-	   setName( "aboutForm" );
+      setName( "aboutForm" );
 
+   // Load in the preset colors form mapimgpalette.h
    setPalette( ABOUTFORM_COLOR );
    setPaletteForegroundColor( ABOUTTEXT_COLOR );
 
@@ -103,19 +104,19 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
 }
 
 /*
- *  Sets the strings of the subwidgets using the current
- *  language.
- */
+*  Sets the strings of the subwidgets using the current
+*  language.
+*/
 void aboutForm::languageChange()
 {
-    setCaption( tr( "About mapimg2" ) );
-    titleLabel->setText( QString("mapimg v%1.%2.%3").arg(MAJOR_VERSION).arg(MINOR_VERSION).arg(REVISION_NUM) );
-    descLabel1->setText( tr( "MapImage is a research-oriented project. Its source and binaries"
-       " are provided with no warranty or support. <b>Use at your own risk.</b>"
-       " We will, however, provide minimal technical support as time allows."
-       " We are also very interested in feedback as well as bug reports. All"
-       " questions and comments may be sent to:" ) );
-    descLabel2->setText( tr( "<p align=\"center\">mapimg@usgs.gov</p>" ) );
-    descLabel3->setText( tr( "Libraries used: Qt, Libtiff, and TinyXML." ) );
-    okButton->setText( tr( "Ok" ) );
+   setCaption( tr( "About mapimg2" ) );
+   titleLabel->setText( QString("mapimg v%1.%2.%3").arg(MAJOR_VERSION).arg(MINOR_VERSION).arg(REVISION_NUM) );
+   descLabel1->setText( tr( "MapImage is a research-oriented project. Its source and binaries"
+      " are provided with no warranty or support. <b>Use at your own risk.</b>"
+      " We will, however, provide minimal technical support as time allows."
+      " We are also very interested in feedback as well as bug reports. All"
+      " questions and comments may be sent to:" ) );
+   descLabel2->setText( tr( "<p align=\"center\">mapimg@usgs.gov</p>" ) );
+   descLabel3->setText( tr( "Libraries used: Qt, Libtiff, and TinyXML." ) );
+   okButton->setText( tr( "Ok" ) );
 }

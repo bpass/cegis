@@ -1,4 +1,4 @@
-// $Id: gctpnames.h,v 1.7 2005/03/20 19:24:11 rbuehler Exp $
+// $Id: gctpnames.h,v 1.8 2005/03/25 04:16:57 rbuehler Exp $
 
 
 #ifndef GCTPNAMES_H
@@ -6,6 +6,10 @@
 
 #include <qstringlist.h>
 
+/*
+A quick subclassing of the QStringList to make it faster at dealing with
+negative indexes in the operator[]() function.
+*/
 class SmartQStringList : public QStringList
 {
 public:
@@ -67,14 +71,14 @@ namespace
          retList << "SMajor" << "SMinor" << "" << "" << "CentMer" << "OriginLat"
             << "FE" << "FN";
          break;
-         
+
       case 8:  //Equid. Conic
          if( variation == 'a' )
             retList << "SMajor" << "SMinor" << "STDPAR" << "" << "CentMer" 
-               << "OriginLat" << "FE" << "FN" << "one";
+            << "OriginLat" << "FE" << "FN" << "one";
          else
             retList << "SMajor" << "SMinor" << "STDPR1" << "STDPR2" << "CentMer" 
-               << "OriginLat" << "FE" << "FN" << "zero";
+            << "OriginLat" << "FE" << "FN" << "zero";
          break;
 
       case 9: //Transverse Mercator
@@ -127,19 +131,19 @@ namespace
       case 20: //Hotin Oblique Merc
          if( variation == 'a' )
             retList << "SMajor" << "SMinor" << "FactorH" << "" << "" << "OriginLat" 
-               << "FE" << "FN" << "Long1" << "Lat1" << "Long2" << "Lat2" << "zero";
+            << "FE" << "FN" << "Long1" << "Lat1" << "Long2" << "Lat2" << "zero";
          else
             retList << "SMajor" << "SMinor" << "FactorH" << "AziAng" << "AzmthPt" 
-               << "OriginLat" << "FE" << "FN" << "" << "" << "" << "" << "one";
+            << "OriginLat" << "FE" << "FN" << "" << "" << "" << "" << "one";
          break;
 
       case 22: //Space Oblique Merc
          if( variation == 'a' )
             retList << "SMajor" << "SMinor" << "" << "IncAng" << "AscLong" << "" 
-               << "FE" << "FN" << "PSRev" << "LRat" << "PFlag" << "" << "zero";
+            << "FE" << "FN" << "PSRev" << "LRat" << "PFlag" << "" << "zero";
          else
             retList << "SMajor" << "SMinor" << "Satnum" << "Path" << "" << "" 
-               << "FE" << "FN" << "" << "" << "" << "" << "one";
+            << "FE" << "FN" << "" << "" << "" << "" << "one";
          break;
 
       case 23: //Alaska Conformal

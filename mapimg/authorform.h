@@ -1,4 +1,4 @@
-// $Id: authorform.h,v 1.4 2005/02/13 00:27:17 rbuehler Exp $
+// $Id: authorform.h,v 1.5 2005/03/25 04:16:57 rbuehler Exp $
 
 
 /****************************************************************************
@@ -24,39 +24,44 @@ class QGroupBox;
 class QLineEdit;
 class QPushButton;
 
+/*
+The authorForm will edit the author signature settings saved using QSettings.
+It has a description box, edit fields for the name, company, and email, and
+an Ok and Cancel button.
+*/
 class authorForm : public QDialog
 {
-    Q_OBJECT
+   Q_OBJECT
 
 public:
-    authorForm( QSettings *settings = 0, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
-    ~authorForm();
+   authorForm( QSettings *settings = 0, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
+   ~authorForm();
 
-    QLabel* descrLabel;
-    QGroupBox* inputBox;
-    QLabel* emailLabel;
-    QLabel* nameLabel;
-    QLabel* companyLabel;
-    QLabel* infoLabel;
-    QLineEdit* nameEdit;
-    QLineEdit* companyEdit;
-    QLineEdit* emailEdit;
-    QPushButton* okButton;
-    QPushButton* cancelButton;
+   QLabel* descrLabel;
+   QGroupBox* inputBox;
+   QLabel* emailLabel;
+   QLabel* nameLabel;
+   QLabel* companyLabel;
+   QLabel* infoLabel;
+   QLineEdit* nameEdit;
+   QLineEdit* companyEdit;
+   QLineEdit* emailEdit;
+   QPushButton* okButton;
+   QPushButton* cancelButton;
 
 protected:
-    QVBoxLayout* authorFormLayout;
-    QSpacerItem* spacer1;
-    QSpacerItem* spacer3;
-    QGridLayout* layout1;
-    QHBoxLayout* layout2;
-    QSpacerItem* spacer4;
+   QVBoxLayout* authorFormLayout;
+   QSpacerItem* spacer1;
+   QSpacerItem* spacer3;
+   QGridLayout* layout1;
+   QHBoxLayout* layout2;
+   QSpacerItem* spacer4;
 
-    QSettings *set;
+   QSettings *set;
 
 protected slots:
-    virtual void languageChange();
-    void okClicked();
+   virtual void languageChange();
+   void okClicked();
 
 };
 

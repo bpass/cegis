@@ -1,4 +1,4 @@
-// $Id: imgio.cpp,v 1.7 2005/02/28 17:55:10 jtrent Exp $
+// $Id: imgio.cpp,v 1.8 2005/03/25 04:16:57 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -8,8 +8,11 @@
 // mapimg I/O functions:  These functions read and write files associated with mapimg
 // Written by D. Steinwand
 //
+// Note: These functions are used by the IMGIO class but not actually members of it.
+//
 // Updated by Stephan Posch for GUI implementation -- 8/02
 // Updated by Jason Trent for templating to allow multiple data types -- 7/03
+// Updated again by Jason Trent for object oriented approach with IMGIO class -- 11/04
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -22,17 +25,6 @@
 #include "imgio.h"
 
 #include "mapimg.h"
-
-
-
-
-
-
-
-
-
-
-/**************** 2/2/2005 jtrent resample   *********/
 
 
 int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2], long, long, FILE* paramfile, bool centerOnly )
@@ -376,8 +368,8 @@ int onLine(double p1[2], double p2[2], double test[2])
    float dx, dy, dxt, dyt;
 
    if( (test[0] == p1[0] && test[1] == p1[1]) ||
-       (test[0] == p2[0] && test[1] == p2[1]) )
-       return 1;
+      (test[0] == p2[0] && test[1] == p2[1]) )
+      return 1;
 
    if( !((p1[0] <= test[0] && test[0] < p2[0]) || (p2[0] <= test[0] && test[0] < p1[0])) )
       return 0;
@@ -404,10 +396,10 @@ int inBox(double box[5][2], double test[2])
    {
       if(onLine(box[j], box[i], test))
          return 1;
-       if( (test[1] < box[j][1] || test[1] < box[i][1]) &&
+      if( (test[1] < box[j][1] || test[1] < box[i][1]) &&
          ( (box[j][0] <= test[0] && test[0] < box[i][0]) ||
          (box[i][0] <= test[0] && test[0] < box[j][0]) ) )
-          intersections++;
+         intersections++;
       j = i;
    }
 

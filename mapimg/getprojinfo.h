@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.29 2005/03/21 17:31:54 jtrent Exp $
+// $Id: getprojinfo.h,v 1.30 2005/03/25 04:16:57 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -11,6 +11,7 @@
 // Header files for updated get_projInfo, mapimg, mapframeit, geo2eqr, and random  functions
 // Created by Stephan Posch -- 8/02
 // Modified by Jason Trent to allow for templating  -- 7/03
+// Modified by Jason Trent and Bob Buehler to add resampling -- 2/05
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <qwidget.h>
 #include <qmessagebox.h>
@@ -41,7 +42,7 @@
 
 extern "C"
 {
-   #include "proj.h"
+#include "proj.h"
 }
 
 static char*  logFile = strdup( QDir::currentDirPath().append("/mapimg.log").ascii() );
@@ -52,13 +53,17 @@ static long   paramMode = 3;    //FILE* to logFile
 extern  void * mapimginbuf;         // Ptr to the input image (all in memory)
 extern  void * mapimgoutbuf;         // Ptr to one line of output image data
 
+/*
+The heart of mapimg. Here is where all the re-projecting and resampling takes
+place. Sorry for the 500+ line function. Enjoy!
+*/
 template <typename type>
 bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample, type useType, QWidget * mapimgdial)
 {
    // mapimg STARTS HERE!!!!
    // mapimg to do the reprojection (no longer called as function in order to provide progress dialog)
    // mapimg written by D. Steinwand and updated by S. Posch
-   
+
    int outputRows = output.rows();
    int outputCols = output.cols();
 
@@ -161,18 +166,18 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
                   if( mapimginbuf != NULL )
                   {
-                    if( !resample.shouldIgnore( (*(((type*)mapimginbuf + (int)(inbox[4][0]))))) )
-                    {
+                     if( !resample.shouldIgnore( (*(((type*)mapimginbuf + (int)(inbox[4][0]))))) )
+                     {
                         (*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
-                    }
-                    else
-                    {
+                     }
+                     else
+                     {
                         (*( (type*)mapimgoutbuf + out_samp)) = (type)resample.noDataValue();
-                    }
+                     }
                   }
                   else
                   {
-                      (*( (type*)mapimgoutbuf + out_samp)) = (type)resample.noDataValue();
+                     (*( (type*)mapimgoutbuf + out_samp)) = (type)resample.noDataValue();
                   }
                }
                else	//Analysis
@@ -266,18 +271,18 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
                      if( mapimginbuf != NULL )
                      {
-                         if( !resample.shouldIgnore( (*(((type*)mapimginbuf + (int)(inbox[4][0]))))) )
-                         {
-                             (*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
-                         }
-                         else
-                         {
-                             (*( (type*)mapimgoutbuf + out_samp)) = (type)resample.noDataValue();
-                         }
+                        if( !resample.shouldIgnore( (*(((type*)mapimginbuf + (int)(inbox[4][0]))))) )
+                        {
+                           (*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
+                        }
+                        else
+                        {
+                           (*( (type*)mapimgoutbuf + out_samp)) = (type)resample.noDataValue();
+                        }
                      }
                      else
                      {
-                         (*( (type*)mapimgoutbuf + out_samp)) = (type)resample.noDataValue();
+                        (*( (type*)mapimgoutbuf + out_samp)) = (type)resample.noDataValue();
                      }
 
                      if( resample.noDoubleCounting() )
@@ -303,38 +308,38 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                      case ResampleInfo::Add:	//Sum
                         if( resample.isCategorical() )
                         {
-                            QMessageBox::critical( &progress, "Error", "Add resampling is not supported for categorical data." );
-                            progress.cancel();
+                           QMessageBox::critical( &progress, "Error", "Add resampling is not supported for categorical data." );
+                           progress.cancel();
                         }
                         else
                         {
-                            for( coverageIndex = 0;  coverageIndex < coverageSize; coverageIndex++ )
-                            {
-                               if( !resample.shouldIgnore( *( (type*)inputCoverage + coverageIndex )) )
-                               {
-                                  dataValue += *( (type*)inputCoverage + coverageIndex );
-                                  allIgnored = false;
-                               }
-                            }
+                           for( coverageIndex = 0;  coverageIndex < coverageSize; coverageIndex++ )
+                           {
+                              if( !resample.shouldIgnore( *( (type*)inputCoverage + coverageIndex )) )
+                              {
+                                 dataValue += *( (type*)inputCoverage + coverageIndex );
+                                 allIgnored = false;
+                              }
+                           }
                         }
                         break;
                      case ResampleInfo::Mean:   //Avg
                         if( resample.isCategorical() )
                         {
-                            QMessageBox::critical( &progress, "Error", "Mean resampling is not supported for categorical data." );
-                            progress.cancel();
+                           QMessageBox::critical( &progress, "Error", "Mean resampling is not supported for categorical data." );
+                           progress.cancel();
                         }
                         else
                         {
-                            for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
-                            {
-                               if( !resample.shouldIgnore(*( (type*)inputCoverage + coverageIndex )) )
-                               {
-                                  dataValue += *( (type*)inputCoverage + coverageIndex );
-                                  allIgnored = false;
-                               }
-                            }
-                            dataValue /= coverageSize;
+                           for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+                           {
+                              if( !resample.shouldIgnore(*( (type*)inputCoverage + coverageIndex )) )
+                              {
+                                 dataValue += *( (type*)inputCoverage + coverageIndex );
+                                 allIgnored = false;
+                              }
+                           }
+                           dataValue /= coverageSize;
                         }
                         break;
                      case ResampleInfo::Median:  //Median
@@ -344,91 +349,91 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
                         for( bob = firstPosition; bob >= 0 && bob < coverageSize; bob-- )
                         {
-                            if( !resample.shouldIgnore(*((type*)inputCoverage + bob)) )
-                            {
-                            	firstPosition = bob+1;
-                            	bob = -1;
-                            	break;
-                            }
-                            else
-                                firstPosition = bob;
+                           if( !resample.shouldIgnore(*((type*)inputCoverage + bob)) )
+                           {
+                              firstPosition = bob+1;
+                              bob = -1;
+                              break;
+                           }
+                           else
+                              firstPosition = bob;
                         }
 
                         for( bob = lastPosition; bob >= 0 && bob < coverageSize; bob++ )
                         {
-                            if( !resample.shouldIgnore(*((type*)inputCoverage + bob)) )
-                            {
-                            	lastPosition = bob;
-                               	bob = -1;
-                            	break;
-                            }
-                            lastPosition = bob+1;
+                           if( !resample.shouldIgnore(*((type*)inputCoverage + bob)) )
+                           {
+                              lastPosition = bob;
+                              bob = -1;
+                              break;
+                           }
+                           lastPosition = bob+1;
                         }
 
                         effectiveSize = coverageSize - ( lastPosition - firstPosition );
 
 
                         if( effectiveSize > 0 )
-                            allIgnored = false;
+                           allIgnored = false;
 
                         if( effectiveSize%2 == 0 )   //even number of elements
                         {
-                            int index_point1 = (effectiveSize-2)/2;
-                            int index_point2 = effectiveSize/2;
+                           int index_point1 = (effectiveSize-2)/2;
+                           int index_point2 = effectiveSize/2;
 
-                            if( index_point1 >= 0 && index_point1 >= firstPosition && firstPosition > -1 )
-                            {
-                            	if( firstPosition == 0 )
-                            	{
-                                    index_point1 = lastPosition + index_point1;
-                            	}
-                                else
-                                {
-                                    index_point1 = lastPosition + (index_point1%firstPosition);
-                                }
-                            }
-                            if( index_point2 >= 0 && index_point2 >= firstPosition && firstPosition > -1 )
-                            {
-                            	if( firstPosition == 0 )
-                            	{
-                                    index_point2 = lastPosition + index_point2;
-                            	}
-                                else
-                                {
-                                    index_point2 = lastPosition + (index_point2%firstPosition);
-                                }
-                            }
+                           if( index_point1 >= 0 && index_point1 >= firstPosition && firstPosition > -1 )
+                           {
+                              if( firstPosition == 0 )
+                              {
+                                 index_point1 = lastPosition + index_point1;
+                              }
+                              else
+                              {
+                                 index_point1 = lastPosition + (index_point1%firstPosition);
+                              }
+                           }
+                           if( index_point2 >= 0 && index_point2 >= firstPosition && firstPosition > -1 )
+                           {
+                              if( firstPosition == 0 )
+                              {
+                                 index_point2 = lastPosition + index_point2;
+                              }
+                              else
+                              {
+                                 index_point2 = lastPosition + (index_point2%firstPosition);
+                              }
+                           }
 
-                            if( resample.isCategorical() )
-                            {
-                                dataValue = *((type*)inputCoverage + index_point1);
-                            }
-                            else
-                            {
-                                dataValue = *((type*)inputCoverage + index_point1);
-                                dataValue += *((type*)inputCoverage + index_point2);
-                                dataValue /= 2;
-                            }
+                           if( resample.isCategorical() )
+                           {
+                              dataValue = *((type*)inputCoverage + index_point1);
+                           }
+                           else
+                           {
+                              dataValue = *((type*)inputCoverage + index_point1);
+                              dataValue += *((type*)inputCoverage + index_point2);
+                              dataValue /= 2;
+                           }
                         }
                         else                        //odd number of elements
                         {
-                            int index_point = (effectiveSize-1)/2;
+                           int index_point = (effectiveSize-1)/2;
 
-                            //if( index_point >= 0 && index_point < firstPosition ) //don't do anything these numbers are fine
-                            if( index_point >= 0 && index_point >= firstPosition && firstPosition > -1 )
-                            {
-                            	if( firstPosition == 0 )
-                            	{
-                                   index_point = lastPosition + index_point;
-                            	}
-                                else
-                                {
-                                   index_point = lastPosition + (index_point%firstPosition);
-                                }
-                            }
+                           //if( index_point >= 0 && index_point < firstPosition ) //don't do anything these numbers are fine
+                           if( index_point >= 0 && index_point >= firstPosition && firstPosition > -1 )
+                           {
+                              if( firstPosition == 0 )
+                              {
+                                 index_point = lastPosition + index_point;
+                              }
+                              else
+                              {
+                                 index_point = lastPosition + (index_point%firstPosition);
+                              }
+                           }
 
-                            //This case is the same for categorical and continuous
-                            dataValue = *((type*)inputCoverage + index_point);
+                           //This case is the same for categorical and continuous
+                           dataValue = *((type*)inputCoverage + index_point);
                         }
                         break;
                      case ResampleInfo::Mode:   //Mode same for categorical and continuous
@@ -438,8 +443,8 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                         {
                            if( !resample.shouldIgnore( *( (type*)inputCoverage + coverageIndex )) )
                            {
-                               coverageMap[ *( (type*)inputCoverage + coverageIndex ) ]++;
-                               allIgnored = false;
+                              coverageMap[ *( (type*)inputCoverage + coverageIndex ) ]++;
+                              allIgnored = false;
                            }
                         }
                         if( !coverageMap.empty() )
@@ -448,20 +453,20 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                            type modeValue = (type)resample.noDataValue();
 
                            for( typename QMap<type,unsigned int>::Iterator it = coverageMap.begin();
-                                it != coverageMap.end();
-                                ++it )
+                              it != coverageMap.end();
+                              ++it )
                            {
-                           	if( it.data() > maxCount )
-                           	{
-                                    maxCount = it.data();
-                                    modeValue = it.key();
-                           	}
+                              if( it.data() > maxCount )
+                              {
+                                 maxCount = it.data();
+                                 modeValue = it.key();
+                              }
                            }
                            dataValue = modeValue;
                         }
 
                         break;
-                    case ResampleInfo::Min:		//Min same for categorical and continuous
+                     case ResampleInfo::Min:		//Min same for categorical and continuous
                         dataValue = (type)Q_UINT64_MAX;
 
                         for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
@@ -486,18 +491,18 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                            }
                         }
                         break;
-                      default:
+                     default:
                         dataValue = (type)resample.noDataValue();
                         break;
                      }
 
                      if( !allIgnored )
                      {
-                         *( (type*)mapimgoutbuf + out_samp) = dataValue;
+                        *( (type*)mapimgoutbuf + out_samp) = dataValue;
                      }
                      else
                      {
-                     	 *( (type*)mapimgoutbuf + out_samp) = (type)resample.noDataValue();
+                        *( (type*)mapimgoutbuf + out_samp) = (type)resample.noDataValue();
                      }
                   }
 
@@ -569,11 +574,11 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
       //exec() will be an integer, 0 if OK is clicked, 1 if Log is clicked, or -1 if the X is clicked
       QMessageBox informationDisplay( "Completed", out,
-                                      QMessageBox::Information,
-                                      QMessageBox::Ok | QMessageBox::Default | QMessageBox::Escape,
-                                      QMessageBox::Yes,
-                                      QMessageBox::NoButton,
-                                      mapimgdial, false );
+         QMessageBox::Information,
+         QMessageBox::Ok | QMessageBox::Default | QMessageBox::Escape,
+         QMessageBox::Yes,
+         QMessageBox::NoButton,
+         mapimgdial, false );
       informationDisplay.setButtonText( QMessageBox::Yes, "View Log" );
       informationDisplay.setPalette( ABOUTFORM_COLOR );
 
@@ -592,6 +597,10 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
    return cancelled;
 }
 
+/*
+The mapimg_downsample() function is used to create a lower resolution version
+of the input file.
+*/
 template <typename type>
 bool mapimg_downsample( RasterInfo &input, RasterInfo &output, type useType, QWidget *mapimgdial )
 {
@@ -623,7 +632,7 @@ bool mapimg_downsample( RasterInfo &input, RasterInfo &output, type useType, QWi
       imgIO.get_line( mapimginbuf, (Q_ULLONG)(outY*pixRatio), inimg.ns, useType );
 
       if( mapimginbuf == NULL )
-          break;
+         break;
 
       for(outX = 0; outX < outimg.ns; outX++)	// For each output image sample
       {

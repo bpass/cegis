@@ -1,11 +1,11 @@
-// $Id: logform.h,v 1.1 2005/01/14 22:16:34 rbuehler Exp $
+// $Id: logform.h,v 1.2 2005/03/25 04:16:57 rbuehler Exp $
 
 
 /****************************************************************************
 ** Form interface generated from reading ui file 'logForm.ui'
 **
 ** Created: Fri Jan 14 15:41:20 2005
-**      by: The User Interface Compiler ($Id: logform.h,v 1.1 2005/01/14 22:16:34 rbuehler Exp $)
+**      by: The User Interface Compiler ($Id: logform.h,v 1.2 2005/03/25 04:16:57 rbuehler Exp $)
 ****************************************************************************/
 
 #ifndef LOGFORM_H
@@ -21,6 +21,10 @@ class QSpacerItem;
 class QPushButton;
 class QTextEdit;
 
+/*
+The logFrom is used for showing the user what the output of gctp was
+throughout the reprojection.
+*/
 class logForm : public QDialog
 {
     Q_OBJECT

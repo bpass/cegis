@@ -1,4 +1,4 @@
-// $Id: aboutform.h,v 1.4 2005/03/20 19:24:11 rbuehler Exp $
+// $Id: aboutform.h,v 1.5 2005/03/25 04:16:57 rbuehler Exp $
 
 
 /****************************************************************************
@@ -23,31 +23,36 @@ class QLabel;
 class QFrame;
 class QPushButton;
 
+/*
+The aboutForm is simply a dialog to provide a disclaimer for any of our
+mistakes, some contact info, and some credits for libraries used. It goes away
+when the user clicks Ok.
+*/
 class aboutForm : public QDialog
 {
-    Q_OBJECT
+   Q_OBJECT
 
 public:
-    aboutForm( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
-    ~aboutForm(){}
+   aboutForm( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
+   ~aboutForm(){}
 
-    QLabel* logoLabel;
-    QLabel* titleLabel;
-    QFrame* descFrame;
-    QLabel* descLabel1;
-    QLabel* descLabel2;
-    QLabel* descLabel3;
-    QPushButton* okButton;
+   QLabel* logoLabel;
+   QLabel* titleLabel;
+   QFrame* descFrame;
+   QLabel* descLabel1;
+   QLabel* descLabel2;
+   QLabel* descLabel3;
+   QPushButton* okButton;
 
 protected:
-    QVBoxLayout* aboutFormLayout;
-    QVBoxLayout* descFrameLayout;
-    QHBoxLayout* okLayout;
-    QSpacerItem* okLeft;
-    QSpacerItem* okRight;
+   QVBoxLayout* aboutFormLayout;
+   QVBoxLayout* descFrameLayout;
+   QHBoxLayout* okLayout;
+   QSpacerItem* okLeft;
+   QSpacerItem* okRight;
 
 protected slots:
-    virtual void languageChange();
+   virtual void languageChange();
 };
 
 #endif // ABOUTFORM_H

@@ -1,4 +1,4 @@
-// $Id: cproj.h,v 1.1 2005/01/14 16:18:48 rbuehler Exp $
+// $Id: cproj.h,v 1.2 2005/03/25 04:16:57 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -26,7 +26,7 @@
 #define IN_BREAK -2
 
 /* Misc macros
-  -----------*/
+-----------*/
 #define SQUARE(x)       x * x   /* x**2 */
 #define CUBE(x)     x * x * x   /* x**3 */
 #define QUAD(x) x * x * x * x   /* x**4 */

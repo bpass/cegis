@@ -1,4 +1,4 @@
-// $Id: authorform.cpp,v 1.6 2005/02/22 15:17:42 jtrent Exp $
+// $Id: authorform.cpp,v 1.7 2005/03/25 04:16:57 rbuehler Exp $
 
 
 /****************************************************************************
@@ -22,15 +22,15 @@
 #include <qwhatsthis.h>
 
 /*
- *  Constructs a authorForm as a child of 'parent', with the
- *  name 'name'.
- */
+*  Constructs a authorForm as a child of 'parent', with the
+*  name 'name'.
+*/
 authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, bool modal, WFlags fl )
-    : QDialog( parent, name, modal, fl )
+: QDialog( parent, name, modal, fl )
 {
    set = settings;
    if ( !name )
-	   setName( "authorForm" );
+      setName( "authorForm" );
 
    setPalette( AUTHORFORM_COLOR );
 
@@ -92,15 +92,15 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, 
 }
 
 /*
- *  Destroys the object and frees any allocated resources
- */
+*  Destroys the object and frees any allocated resources
+*/
 authorForm::~authorForm()
 {}
 
 /*
- *  Sets the strings of the subwidgets using the current
- *  language.
- */
+*  Sets the strings of the subwidgets using the current
+*  language.
+*/
 void authorForm::languageChange()
 {
    setCaption( tr( "Author Properties" ) );
@@ -116,6 +116,7 @@ void authorForm::languageChange()
    emailEdit->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorEmail" ) ) );
 }
 
+// okClicked() saves the changes made by the user before exitting.
 void authorForm::okClicked()
 {
    set->writeEntry( "/USGS/mapimg2/AuthorName", nameEdit->text() );

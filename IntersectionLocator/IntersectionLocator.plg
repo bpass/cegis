@@ -6,14 +6,23 @@
 --------------------Configuration: IntersectionLocator - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "e:\wintemp\RSPFC1.tmp" with contents
+Creating temporary file "e:\wintemp\RSP3193.tmp" with contents
 [
 /nologo /MLd /W3 /Gm /GX /ZI /Od /I "d:\rstelzleni\dataintegration\featurelibrary\gdal\gdal120\include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"Debug/IntersectionLocator.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\rstelzleni\VisualStudioProjects\IntersectionLocator\Circle.cpp"
+"D:\rstelzleni\VisualStudioProjects\IntersectionLocator\Classifier.cpp"
+"D:\rstelzleni\VisualStudioProjects\IntersectionLocator\DelauneyTriangulator.cpp"
+"D:\rstelzleni\VisualStudioProjects\IntersectionLocator\DistanceFilter.cpp"
 "D:\rstelzleni\VisualStudioProjects\IntersectionLocator\IntersectionLocator.cpp"
+"D:\rstelzleni\VisualStudioProjects\IntersectionLocator\IntersectionMap.cpp"
+"D:\rstelzleni\VisualStudioProjects\IntersectionLocator\QuarticTriangulator.cpp"
 "D:\rstelzleni\VisualStudioProjects\IntersectionLocator\RecursiveTriangulator.cpp"
+"D:\rstelzleni\VisualStudioProjects\IntersectionLocator\SaalfeldRubberSheet.cpp"
+"D:\rstelzleni\VisualStudioProjects\IntersectionLocator\Template.cpp"
+"D:\rstelzleni\VisualStudioProjects\IntersectionLocator\VMFilter.cpp"
 ]
-Creating command line "cl.exe @e:\wintemp\RSPFC1.tmp" 
-Creating temporary file "e:\wintemp\RSPFC2.tmp" with contents
+Creating command line "cl.exe @e:\wintemp\RSP3193.tmp" 
+Creating temporary file "e:\wintemp\RSP3194.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/IntersectionLocator.pdb" /debug /machine:I386 /out:"Debug/IntersectionLocator.exe" /pdbtype:sept 
 .\Debug\Circle.obj
@@ -30,11 +39,20 @@ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32
 .\Debug\VMFilter.obj
 "..\..\DataIntegration\FeatureLibrary\GDAL\gdal-1.2.0b\gdal_i.lib"
 ]
-Creating command line "link.exe @e:\wintemp\RSPFC2.tmp"
+Creating command line "link.exe @e:\wintemp\RSP3194.tmp"
 <h3>Output Window</h3>
 Compiling...
+Classifier.cpp
+DelauneyTriangulator.cpp
+DistanceFilter.cpp
 IntersectionLocator.cpp
+IntersectionMap.cpp
+QuarticTriangulator.cpp
 RecursiveTriangulator.cpp
+SaalfeldRubberSheet.cpp
+Template.cpp
+VMFilter.cpp
+Circle.cpp
 Linking...
    Creating library Debug/IntersectionLocator.lib and object Debug/IntersectionLocator.exp
 

@@ -162,10 +162,6 @@ SOURCE=.\DistanceFilter.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\doxygenMain.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\Error.h
 # End Source File
 # Begin Source File
@@ -216,6 +212,26 @@ SOURCE=.\VMFilter.h
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# End Group
+# Begin Group "doxygenFiles"
+
+# PROP Default_Filter "*.h"
+# Begin Source File
+
+SOURCE=.\doc\doxygenFiles\buildingOnLinux.txt
+# End Source File
+# Begin Source File
+
+SOURCE=.\doc\doxygenFiles\doxygenMain.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\doc\doxygenFiles\overallProcess.txt
+# End Source File
+# Begin Source File
+
+SOURCE=.\doc\doxygenFiles\preparingForNewData.txt
+# End Source File
 # End Group
 # End Target
 # End Project

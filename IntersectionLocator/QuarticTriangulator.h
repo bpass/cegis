@@ -12,7 +12,7 @@
 
 
 // Majic numbers for CVS
-// $Id: QuarticTriangulator.h,v 1.5 2004/11/15 23:56:51 rstelzleni Exp $
+// $Id: QuarticTriangulator.h,v 1.6 2004/12/03 17:27:26 ahartman Exp $
 
 
 #ifndef QUARTICTRIANGULATOR_H
@@ -39,8 +39,8 @@ public:
 
    /**
     * This function performs the triangulation.
-    * Pre: points should already contain identified control points.
-    * Post: result will contain a Triangulation (defined in 
+    * @pre points should already contain identified control points.
+    * @post result will contain a Triangulation (defined in 
     *       DelauneyTriangulator.h) of the control points.
     * @param points The ControlPoints to triangulate.
     * @param result The resulting triangulation. 

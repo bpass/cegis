@@ -14,7 +14,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionMap.h,v 1.5 2004/11/10 18:35:12 ahartman Exp $
+// $Id: IntersectionMap.h,v 1.6 2004/12/03 17:27:26 ahartman Exp $
 
 
 #ifndef INTERSECTION_MAP_H
@@ -100,8 +100,8 @@ public:
     * using the IntersectionMap you initialized with them.  This
     * function will do some analysis on both datasets and will extract
     * a set of intersection points from the pInDS.
-    * Pre: pInDS and pRasterIn should be valid, open, overlapping datasets.
-    * Post: The IntersectionMap will have the set of intersections stored
+    * @pre pInDS and pRasterIn should be valid, open, overlapping datasets.
+    * @post The IntersectionMap will have the set of intersections stored
     *       and will have pointers to these datasets to be used for
     *       further analysis.
     * @param pInDS The vector formatted file that contains the road map.
@@ -120,9 +120,9 @@ public:
     * already opened and classified as road or non-road.  tempSize is
     * the size in meters of the Template to be created, and rasterDim
     * is the size of the area over the rasta to move the template.
-    * Pre: tempSize and rasterDim are nonnegative, rasta is classified
+    * @pre tempSize and rasterDim are nonnegative, rasta is classified
     *      as road and non-road.
-    * Post: The IntersectionMap will have identified a control point
+    * @post The IntersectionMap will have identified a control point
     *       for each intersection.  These are stored in the member
     *       variable vControl.
     * @param rasta A raster image that has been classified as road and
@@ -147,9 +147,9 @@ public:
     * if any control point has a higher normalized correlation value
     * then it will replace the corresponding control point in the
     * vControl member variable.
-    * Pre: Each pair in size has no negative values, and the rasta is
+    * @pre Each pair in size has no negative values, and the rasta is
     *      already classified as road or non-road.
-    * Post: The vControl member variable is populated with a hopefully
+    * @post The vControl member variable is populated with a hopefully
     *       improved set of control points for the intersections.
     * @param rasta The image to use for correction.
     * @param size A vector of pairs of integers. The first integer in
@@ -169,10 +169,10 @@ public:
     * will be saved in the pOutDS DataSource, which should be open 
     * and available for writing when passed in.  If either Tri or
     * Tra is null the function will return without doing anything.
-    * Pre: Tri and Tra point to valid data and pOutDS is open for
+    * @pre Tri and Tra point to valid data and pOutDS is open for
     *      writing.  A findControlPoints function should have already
     *      been called as well.
-    * Post: The data in pInDS from the constructor is rubber sheeted
+    * @post The data in pInDS from the constructor is rubber sheeted
     *       using the control points obtained previously with a
     *       findControlPoints function and the output is placed
     *       into pOutDS.
@@ -194,12 +194,12 @@ public:
     * triangulated using triangulator and rubber sheeted using transformer.
     * If filter is NULL then no filtration is performed, if triangulator
     * or transformer is NULL then the function does nothing.
-    * Pre: transformer and triangulator are not NULL, pOutDS is a valid
+    * @pre transformer and triangulator are not NULL, pOutDS is a valid
     *      pointer to an OGRDataSource open for writing, and ratio is
     *      in the range [0,1].  Also the IntersectionMap should contain
     *      some control points, so a findControlPoints function should
     *      have been called.
-    * Post: The dataset pInDS from the constructor is adjusted and 
+    * @post The dataset pInDS from the constructor is adjusted and 
     *       saved in pOutDS.
     * @param triangulator A pointer to an object that can triangulate
     *        the data points.  Is triangulate a verb?
@@ -221,8 +221,8 @@ public:
     * This function will filter the identified control points using
     * filter F with a ratio of ratio.  This is mostly so that you can
     * perform multiple filters if you would like to.
-    * Pre: A findControlPoints function should have already been called.
-    * Post: The control points in vControl have been filtered by the
+    * @pre A findControlPoints function should have already been called.
+    * @post The control points in vControl have been filtered by the
     *       filter F.
     * @param F A filter to use on the control points.
     * @param ratio The ratio of points to filter out.
@@ -251,8 +251,8 @@ public:
    /**
     * Outputs the currently contained intersections to the writable 
     * datasource provided in the pDS variables.
-    * Pre: pDS is a writable OGRDataSource.
-    * Post: The intersections are dumped to pDS.
+    * @pre pDS is a writable OGRDataSource.
+    * @post The intersections are dumped to pDS.
     * @param pDS An open and writable OGRDataSource for the output.
     */
    void outputIntersections( OGRDataSource *pDS );
@@ -260,8 +260,8 @@ public:
    /**
     * Outputs the currently contained control points to the writable 
     * datasource provided in the pDS variables.
-    * Pre: pDS is a writable OGRDataSource.
-    * Post: The control points are dumped to pDS.
+    * @pre pDS is a writable OGRDataSource.
+    * @post The control points are dumped to pDS.
     * @param pDS An open and writable OGRDataSource for the output.
     */
    void outputControlPoints( OGRDataSource *pDS );
@@ -272,8 +272,8 @@ public:
     * identified and outputs that template to a text file that is
     * a grid of ones and zeros, where each represents one pixel and
     * a one is a road and a zero isn't.
-    * Pre: A findControlPoint function should have already been called.
-    * Post: A lot of text files will be created, one for each intersection
+    * @pre A findControlPoint function should have already been called.
+    * @post A lot of text files will be created, one for each intersection
     *       The text files will be named 
     *       szFilename + intersectionNumber + .txt
     *       Don't forget to include a path in szFilename
@@ -291,8 +291,8 @@ public:
     * triangulation as lines into pDS.  Note that the output isn't
     * very clean, and each triangle outputs its borders each time, so
     * there are many lines that are three lines stacked up.
-    * Pre: pDS is a writable datasource.
-    * Post: The triangulation is output to the datasource, note that
+    * @pre pDS is a writable datasource.
+    * @post The triangulation is output to the datasource, note that
     *       the triandulation isn't saved in the IntersectionMap.
     * @param triangulator An object that can triangulate the dataset.
     * @param pDS An open and writable OGRDataSource to contain the

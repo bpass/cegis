@@ -14,7 +14,7 @@
 
 
 // Majic numbers for CVS
-// $Id: SaalfeldRubberSheet.h,v 1.3 2004/11/02 01:20:46 rstelzleni Exp $
+// $Id: SaalfeldRubberSheet.h,v 1.4 2004/12/03 17:27:26 ahartman Exp $
 
 
 #ifndef SAALFELDRUBBERSHEET_H
@@ -49,11 +49,11 @@ public:
 
    /**
     * This function performs the transformation.  
-    * Pre: pOutDS is a data source that has already been set up, as 
+    * @pre pOutDS is a data source that has already been set up, as 
     *      is pInDS.  triangles should already be filled by a Triangulator
     *      of some kind.  points should already contain a set of 
     *      ControlPoints  to use as the basis for the transformation.
-    * Post: pOutDS will contain the vector roads from pInDS but transformed
+    * @post pOutDS will contain the vector roads from pInDS but transformed
     *       within the triangles from the triangles argument by
     *       transformations generated based on the ControlPoint's
     *       displacement from the original points.

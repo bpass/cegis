@@ -12,7 +12,7 @@
 
 
 // Majic numbers for CVS
-// $Id: DelauneyTriangulator.h,v 1.5 2004/11/10 18:35:11 ahartman Exp $
+// $Id: DelauneyTriangulator.h,v 1.6 2004/12/03 17:27:26 ahartman Exp $
 
 
 #ifndef DELAUNEYTRIANGULATOR_H
@@ -72,11 +72,11 @@ public:
     * so that there is a way to test out new triangulators that you
     * may be designing.  The output isn't pretty, each line can be
     * output several times, but at least it is already written.
-    * Pre: pDS should be a writable datasource, mToSR should be
+    * @pre pDS should be a writable datasource, mToSR should be
     *      the spatial reference to use in the datasource and
     *      triangles is a Triangulation that has already been 
     *      generated in triangulate.
-    * Post: The triangulation is dumped to the pDS file.
+    * @post The triangulation is dumped to the pDS file.
     * @param pDS A writable datasource to output a set of vector lines
     *        to.
     * @param mToSR An OGRSpatialReference to be used for the output file.

@@ -13,7 +13,7 @@
 
 
 // Majic numbers for CVS
-// $Id: VMFilter.h,v 1.3 2004/11/02 01:20:46 rstelzleni Exp $
+// $Id: VMFilter.h,v 1.4 2004/12/03 17:27:26 ahartman Exp $
 
 
 #ifndef VMFILTER_H
@@ -43,9 +43,9 @@ public:
     * function doesn't check to see if info is valid and if passed
     * and info outside the range then the behavior can be thought
     * of as undefined.
-    * Pre: point should contain identified ControlPoints and
+    * @pre point should contain identified ControlPoints and
     *      info should be in the range [0,1].
-    * Post: The info*points.size() control points with displacement
+    * @post The info*points.size() control points with displacement
     *       furthest from the vector median are removed.
     * @param point The set of points to be filtered.
     * @param info The percentage of points to filter.

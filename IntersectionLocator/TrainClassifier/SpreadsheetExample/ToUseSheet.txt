@@ -1,0 +1,8 @@
+
+To use this spreadsheet just open the save file that a Classifier outputs,
+select all and copy it into the A1 cell of the spreadsheet.  The graphs
+will update automatically and the data will also be normalized automatically.
+
+
+
+

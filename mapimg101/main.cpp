@@ -1,3 +1,6 @@
+// $Id: main.cpp,v 1.3 2005/01/06 19:45:38 jtrent Exp $
+
+
 //Copyright 2002 United States Geological Survey
 //Released under GPL with MapIMG copyright 2003 USGS
 

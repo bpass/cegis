@@ -1,0 +1,8 @@
+{N:*|P['Type']<enum length: ["name"], <"name2">,...,<"name_n">,>["item name"], ... ,}["Object name"],...}, {...}, {...}, ... ,.
+
+
+{} = item definition
+[] = required field
+<> = optional field
+N = number of occurences in object
+

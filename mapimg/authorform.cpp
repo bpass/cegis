@@ -1,4 +1,4 @@
-// $Id: authorform.cpp,v 1.7 2005/03/25 04:16:57 rbuehler Exp $
+// $Id: authorform.cpp,v 1.8 2005/03/31 02:14:48 rbuehler Exp $
 
 
 /****************************************************************************
@@ -48,11 +48,6 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, 
    inputBox = new QGroupBox( this, "inputBox" );
    layout1 = new QGridLayout( inputBox, 1, 1, 10, 3, "layout1"); 
 
-   emailLabel = new QLabel( inputBox, "emailLabel" );
-   layout1->addWidget( emailLabel, 2, 0 );
-   emailEdit = new QLineEdit( inputBox, "emailEdit" );
-   layout1->addWidget( emailEdit, 2, 1 );
-
    nameLabel = new QLabel( inputBox, "nameLabel" );
    layout1->addWidget( nameLabel, 0, 0 );
    nameEdit = new QLineEdit( inputBox, "nameEdit" );
@@ -62,6 +57,11 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, 
    layout1->addWidget( companyLabel, 1, 0 );
    companyEdit = new QLineEdit( inputBox, "companyEdit" );
    layout1->addWidget( companyEdit, 1, 1 );
+
+   emailLabel = new QLabel( inputBox, "emailLabel" );
+   layout1->addWidget( emailLabel, 2, 0 );
+   emailEdit = new QLineEdit( inputBox, "emailEdit" );
+   layout1->addWidget( emailEdit, 2, 1 );
 
    authorFormLayout->addWidget( inputBox );
 
@@ -89,6 +89,8 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, 
 
    connect( okButton, SIGNAL( clicked() ), this, SLOT(okClicked()) );
    connect( cancelButton, SIGNAL( clicked() ), this, SLOT(close()) );
+
+   nameEdit->setFocus();
 }
 
 /*

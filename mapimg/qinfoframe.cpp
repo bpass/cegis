@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.19 2005/03/30 00:54:20 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.20 2005/03/31 02:14:48 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -165,9 +165,15 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    dataCombo->insertStringList( dataTypes );
    QToolTip::add( dataCombo, "Data type of each pixel in the raster image" );
    fillEdit->setValidator( new MapimgValidator( -100000000, 100000000, INFO_PRECISION, fillEdit ) );
+   QToolTip::add( hasFillCheck, "Toggle whether fill value is defined.<br>"
+      "<b>Note</b>: The fill value is optional for input parameters only, "
+      "but if it is defined in the input then it is forced in the output." );
    QToolTip::add( fillEdit, "Fill value to represent a pixel outside the map frame<br>"
       "Entered value must be from -100000000 to 100000000." );
    fillButton->setMaximumSize( 20, 20 );
+   QToolTip::add( hasNoDataCheck, "Toggle whether No Data Value is defined.<br>"
+      "<b>Note</b>: The no data value is optional for both input and output parameters, "
+      "but if it is defined in the input then it is forced in the output." );
    QToolTip::add( fillButton, "Recommend fill value by reading file and "
       "solving for the maximum value + 2" );
    noDataEdit->setValidator( new MapimgValidator( -100000000, 100000000, INFO_PRECISION, noDataEdit ) );
@@ -535,15 +541,17 @@ void QInfoFrame::setReadOnly( bool ro )
    mapTab->ulLatEdit->setDisabled( ro );
    mapTab->ulLonEdit->setDisabled( ro );
    mapTab->dataCombo->setDisabled( ro );
-   mapTab->fillEdit->setDisabled( ro );
-   mapTab->fillButton->setDisabled( ro );
-   mapTab->noDataEdit->setDisabled( ro );
 
    mapTab->hasFillCheck->setHidden( ro );
    mapTab->hasFillCheck->setDisabled( ro );
+   mapTab->fillButton->setDisabled( ro );
    mapTab->hasNoDataCheck->setHidden( ro );
    mapTab->hasNoDataCheck->setDisabled( ro );
 
+   if( ro || (!ro && mapTab->hasFillCheck->isChecked()) )
+      mapTab->fillEdit->setDisabled( ro );
+   if( ro || (!ro && mapTab->hasNoDataCheck->isChecked()) )
+      mapTab->noDataEdit->setDisabled( ro );
 
    gctpTab->projCombo->setDisabled( ro );
    gctpTab->zoneSpin->setDisabled( ro );

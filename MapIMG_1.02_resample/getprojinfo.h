@@ -117,9 +117,8 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 
     /* jtrent resample */
     static int call_count = 0;
-    FILE* bobFile = fopen( "bob.img", "wr" );
-    void* bobBuffer = malloc( sizeof( type )* outimg.ns );
-
+    FILE* bobFile = fopen( "sum.img", "wb" );
+    void* bobBuffer = (void*) malloc( sizeof( type ) * outsize );
 
     for(out_line = 0; out_line < outimg.nl; out_line++) 		// For each output image line
     {
@@ -156,17 +155,17 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 
                             call_count++;
 
-                            unsigned char *fill_bob = new unsigned char;
-                            *fill_bob = (unsigned char)(fillval);
+                            type* fill_bob = new type;
+                            *fill_bob = (type)(fillval);
 
                             if( get_coords( outimg, inimg, out, inbox, out_line, out_samp, paramfile ) )
                             {
-                            	printf( "get_coords call %i returned these points:\n", call_count );
+//                            	printf( "get_coords call %i returned these points:\n", call_count );
 
-                            	for( int indexii = 0; indexii < 5; indexii++ )
-                            	{
-                            		printf( "\t ( %f, %f )\n", inbox[indexii][0], inbox[indexii][1] );
-                            	}
+//                            	for( int indexii = 0; indexii < 5; indexii++ )
+//                            	{
+//                            		printf( "\t ( %f, %f )\n", inbox[indexii][0], inbox[indexii][1] );
+//                            	}
 
 //                                in_line = ((inimg.ul_y - in[1]) / inimg.pixsize) + 0.5;
 //			        in_samp = ((in[0] - inimg.ul_x) / inimg.pixsize) + 0.5;
@@ -176,7 +175,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
              			if (in_line<0||in_samp<0||in_line>=inimg.nl||in_samp>=inimg.ns)
                 		{
                          	   //fwrite( fill_bob, sizeof( type ), 1, bobFile );
-			           *( (type*)bobBuffer + out_samp) = 33;
+			           *( (type*)bobBuffer + out_samp) = *fill_bob;
 			        }
 
 			        // Assign the appropriate input image pixel to the output image using
@@ -185,85 +184,89 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 	              		// ---------------------------------------------
 		        	else
 			        {
-
-                                  //Loads into memory the current line of input needed
-                                  get_line(  mapimginbuf, inbox[4][1]*inimg.ns, inimg.ns+1, useType );
-
-
-/*
                                   //----- compute minbox -----//
-	                          maxx = maxy = 0; minx = inimg.ns; miny = inimg.ns;
-	                          for(i = 0; i < 4; ++i)
+	                          int maxx = 0,
+                                      maxy = 0,
+                                      minx = inimg.ns,
+                                      miny = inimg.ns;
+
+	                          for(int inbox_index = 0; inbox_index < 4; ++inbox_index)
 	                          {
-	                                if(maxx < inbox[i][0])
-		                           maxx = inbox[i][0];
+	                                if(maxx < inbox[inbox_index][0])
+		                           maxx = inbox[inbox_index][0];
 	                                else
 	                                {
-	                                   if(minx > inbox[i][0])
-		                              minx = inbox[i][0];
+	                                   if(minx > inbox[inbox_index][0])
+		                              minx = inbox[inbox_index][0];
 	                                }
 
-	                                if(maxy < inbox[i][1])
-		                           maxy = inbox[i][1];
+	                                if(maxy < inbox[inbox_index][1])
+		                           maxy = inbox[inbox_index][1];
 	                                else
 	                                {
-	                                    if(miny > inbox[i][1])
-		                               miny = inbox[i][1];
+	                                    if(miny > inbox[inbox_index][1])
+		                               miny = inbox[inbox_index][1];
 	                                }
-	                        } //for i
+	                            } //for inbox_index
 
                                 //----- check each pixel in minbox & compile stats -----//
-	                        boxerr = 1;
-	                        for(cury = (long)(miny+0.5); cury <= (long)(maxy+0.5); ++cury)
+	                        int boxError = 1;
+	                        int coverageSize =  (int)(((long)(maxy+0.5) - (long)(miny+0.5)) *  ((long)(maxx+0.5) - (long)(minx+0.5)));
+	                        void* inputCoverage = (void*)malloc( sizeof(type) * coverageSize );
+                                int offset = 0;
+                                double coord[2] = { 0 };
+	                        for(long currentY = (long)(miny+0.5); currentY <= (long)(maxy+0.5); ++currentY)
 	                        {
-	                            coord[1] = cury;
-	                            for(curx = (long)(minx+0.5); curx <= (long)(maxx+0.5); ++curx)
+	                            coord[1] = currentY;
+	                            for(long currentX = (long)(minx+0.5); currentX <= (long)(maxx+0.5); ++currentX)
 	                            {
-	                                coord[0] = curx;
-	                                if(inBox(inbox, coord))
+	                                coord[0] = currentX;
+	                                if( inBox( inbox, coord ) )
 	                                {
-                                 	      boxerr = 0;
-                                              temp = inbuf[(long)(coord[1]*inimg.ns + coord[0])];
+                                 	      boxError = 0;
+
+                                              //Loads into memory the current line of input needed
+                                              get_line(  mapimginbuf, coord[1]*inimg.ns, inimg.ns+1, useType );
+                                              *( (type*)inputCoverage + offset) = *(((type*)mapimginbuf + (int)coord[0]));
 	                                }//if inBox
+	                                else
+	                                {
+                                              *( (type*)inputCoverage + offset) = 0;
+                                        }
+
+                                        offset++;
 	                            }// for curx
 	                        }//for cury
 
                                 //----- finish statistical analysis -----//
-                                if(boxerr)	//no pixels from rectangle in the minbox, get NN.
+                                if(boxError)	//no pixels from rectangle in the minbox, get NN.
 	                        {
-		                    choicebuf[out_samp]=255;
+                                   //Loads into memory the current line of input needed
+                                   get_line(  mapimginbuf, inbox[4][1]*inimg.ns, inimg.ns+1, useType );
 
-                                    if(doout)
-                                      outbuf[out_samp] = nnbuf[out_samp];
+                                   //references specific element of input
+                                   *( (type*)bobBuffer + out_samp) = *(((type*)mapimginbuf + (int)(inbox[4][0])));
                                 }
-	                        else	//!boxerr
+	                        else	//!boxError
 	                        {
-	                            temp = t2 = 0;
-	                            for(i = 0; i < num_classes; ++i)
-	                                if(classcount[i][0])
-	                                {
-		                            classcount[t2][1] = i;	// make list of used classes
-		                            t2++;			// increment current list subscript
-		                            temp++;			// increment number of choices
-	                                }
+	                           type sumValue = (type)0;
 
-                                    choicebuf[out_samp] = temp;
-                         }
-*/
-                                  //references specific element of input
-                                  *( (type*)bobBuffer + out_samp) = *(((type*)mapimginbuf + (int)(inbox[4][0])));
+	                           for( int coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+	                           {
+                                       sumValue += *( (type*)inputCoverage + coverageIndex );
+	                           }
+	                           *( (type*)bobBuffer + out_samp) = *( (type*)inputCoverage + coverageIndex);
 			        }
-
-                            	fflush( stdout );
+                              }
+//                            	fflush( stdout );
                             }
                             else
                             {
-                            	printf( "get_coords call %i returned zero\n", call_count );
-                            	fflush( stdout );
+//                            	printf( "get_coords call %i returned zero\n", call_count );
+//                            	fflush( stdout );
                          	//fwrite( fill_bob, sizeof( type ), 1, bobFile );
-   		                *( (type*)bobBuffer + out_samp) = 33;
+   		                *( (type*)bobBuffer + out_samp) = *fill_bob;
                             }
-                       	    fflush( stdout );
 
 /********** resample jtrent *******************/
 
@@ -365,7 +368,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 	// Spit out a processing message & write the output image line to disk
 	// -------------------------------------------------------------------
 	put_line(mapimgoutbuf, useType);
-	fwrite( bobBuffer, sizeof( type ), outsize, bobFile );
+	put_line(bobBuffer, bobFile, useType );
     }
 
     progress.setProgress( outimg.nl );

@@ -366,6 +366,26 @@ extern "C"
 #include <math.h>
 
 int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2], long out_line, long out_samp, FILE* paramfile );
+int onLine(double p1[2], double p2[2], double test[2]);
+int inBox(double box[4][2], double test[2]);
+
+
+
+// Write a line of output image data
+// Definition must be in header for
+// Solaris compiler compatability
+// ---------------------------------
+extern FILE * outptr;				// Output file pointer  from imgio.cpp
+
+template <class type>
+void put_line(void * buf, FILE* file, type typeToUse)
+{
+     fwrite(buf, sizeof(type), outsize, file);
+     return;
+}
+
+
+
 
 
 

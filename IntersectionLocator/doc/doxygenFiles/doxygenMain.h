@@ -1,6 +1,6 @@
 
 // CVS magic symbols for voodoo practitioners
-// $Id: doxygenMain.h,v 1.7 2004/11/16 00:33:24 rstelzleni Exp $
+// $Id: doxygenMain.h,v 1.8 2004/11/18 20:11:39 rstelzleni Exp $
 
 /** \mainpage IntersectionLocator
  *
@@ -75,4 +75,24 @@
  *
  * \subsection linuxInstallation Installation in Linux
  * \ref buildingOnLinux Linux Installation Guide
+ *
+ * \section mainPageNotes Notes
+ * One thing that I think it is good to point out is why there is a 
+ * dependency on the GDAL/OGR library.  The reason is that parsing 
+ * geospatial data files, like Arc Coverages and Shapefiles, isn't a
+ * simple task, and the GDAL/OGR library already does it.  Basically
+ * I saved myself about 3 months of coding by using this open source
+ * tool.  I have tried not to depend on it more than is necessary in 
+ * the code, but if you ever want to get rid of it you will probably 
+ * be in for some work.  Off the top of my head, the main place in the
+ * code that uses GDAL/OGR is the driver, but a little of this stuff
+ * snuck into my classes from time to time.  Any output function that
+ * outputs to something other than text or generic binary will require
+ * GDAL/OGR, and The IntersectionMap class also relies on the library
+ * pretty heavily.  Also, I seem to remember that InMemRaster uses the
+ * library's functions for reading in Tiff images.  
+ *
+ * I definitely should have encapsulated that library instead of using
+ * it directly, but hindsight is 20/20 and I'm pretty sure I'm blind
+ * when it comes to foresight.  
  */

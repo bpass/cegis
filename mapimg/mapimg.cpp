@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.15 2005/02/15 23:40:39 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.16 2005/02/18 00:08:04 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -284,9 +284,13 @@ void mapimg::frameIt( RasterInfo &input )
 
 bool mapimg::downSampleImg( RasterInfo &input, RasterInfo &output, int maxDimension, QWidget *parent )
 {
+   QString tmp( output.imgFileName() );
    output.copy(input);
+   if( tmp != QString::null )
+      output.setFileName( tmp );
+   else
+      output.setFileName( QDir::currentDirPath().append("/temp_small.img") );
 
-   output.setFileName( QDir::currentDirPath().append("/temp.img") );
    mapimg::downSizeProjection(output, maxDimension);
 
    QString dtype(input.isSigned()?"Signed ":"Unsigned ");

@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.10 2005/02/15 23:40:39 rbuehler Exp $
+// $Id: imgio.h,v 1.11 2005/02/18 00:08:04 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -63,8 +63,9 @@ private:
 
    QFile inptr;				// Input file pointer
    QFile outptr;				// Output file pointer
-   QFile ininfoptr;				// Input .info file pointer
-   QFile outinfoptr;				// Output .info file pointer
+
+   Q_ULLONG last_offset;   // Last offset for get_line
+
 
 
 public:
@@ -165,16 +166,6 @@ public:
       if(outptr.isOpen())
       {
          outptr.close();
-      }
-
-      if(ininfoptr.isOpen())
-      {
-         ininfoptr.close();
-      }
-
-      if(outinfoptr.isOpen())
-      {
-         outinfoptr.close();
       }
 
       remove(outfile_name);
@@ -312,17 +303,24 @@ public:
    // ---------------------------
    void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
    {
-      // check and see if line requested is already in memory
-      QString offsetString = "";
-      offsetString.setNum( offset );
-
       if( inputDataMap == NULL )
       {
          inputDataMap = new QCache<type>( Max_Data_Element_Count, (int)(1.6*Max_Data_Element_Count) );
          inputDataMap->setAutoDelete( true );
+         last_offset = offset;
       }
+      else if( last_offset == offset )
+         return;
+      
+      last_offset = offset;
 
-      if( inputDataMap->find( offsetString ) ==  0 )
+      // check and see if line requested is already in memory
+      QString offsetString(QString::number( offset ));
+
+
+      buf = inputDataMap->find( offsetString );
+
+      if( buf ==  0 )
       {
          if( !inptr.at( (Q_ULLONG)(offset) * lineLength * sizeof(type)) )
          {
@@ -361,18 +359,15 @@ public:
                fflush( stdout );
             }
          }
-      }
-
-
-      if( inputDataMap->find( offsetString ) !=  0 )
-      {
+         
          buf = inputDataMap->find( offsetString );
-      }
-      else
-      {
-         printf( "Error inserting into and retreiving from least recently used cache.\n" );
-         fflush( stdout );
-         buf = NULL;
+
+         if( buf ==  0 )
+         {
+            printf( "Error inserting into and retreiving from least recently used cache.\n" );
+            fflush( stdout );
+            buf = NULL;
+         }
       }
 
       return;
@@ -440,7 +435,7 @@ extern "C"
 
 #include <math.h>
 
-int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2], long out_line, long out_samp, FILE* paramfile );
+int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2], long out_line, long out_samp, FILE* paramfile, bool centerOnly = false );
 int onLine(double p1[2], double p2[2], double test[2]);
 int inBox(double box[4][2], double test[2]);
 

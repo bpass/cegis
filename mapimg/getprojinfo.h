@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.12 2005/02/15 23:40:39 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.13 2005/02/18 00:08:04 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -158,7 +158,8 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
          find2corners = 0;  // must get all 4 corners at beg. of line
 
-         if( get_coords( outimg, inimg, out, inbox, out_line, out_samp, paramfile ) )
+         if( get_coords( outimg, inimg, out, inbox, out_line, out_samp, paramfile,
+            (resample.resampleCode() == ResampleInfo::NearestNeighbor) ) )
          {
             in_line = (long int)(((inimg.ul_y - in[1]) / inimg.pixsize) + 0.5);
             in_samp = (long int)(((in[0] - inimg.ul_x) / inimg.pixsize) + 0.5);
@@ -424,7 +425,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 template <typename type>
 bool mapimg_downsample( RasterInfo &input, RasterInfo &output, type useType, QWidget *mapimgdial )
 {
-   double pixRatio = input.pixelSize() / output.pixelSize();
+   double pixRatio = output.pixelSize() / input.pixelSize();
    if( pixRatio < 1 ) pixRatio = 0;
 
    IMGIO<type> imgIO;
@@ -432,27 +433,34 @@ bool mapimg_downsample( RasterInfo &input, RasterInfo &output, type useType, QWi
    IMGINFO inimg, outimg;
    imgIO.init_io(input, output, &inimg, &outimg, useType );
 
+   void * mapimginbuf = imgIO.mapimginbuf;
+   void * mapimgoutbuf = imgIO.mapimgoutbuf;
+
    QProgressDialog progress( "Down Sample Input", "Abort", outimg.nl,
       mapimgdial, "progress", TRUE, WINDOW_FLAGS );
    progress.setCaption( "Sampling..." );
    progress.setMinimumDuration(1);
 
    long outX, outY;
-   for( outX = 0; outX < outimg.nl; outX++) 		// For each output image line
+   for(outY = 0; outY < outimg.nl; outY++) 		// For each output image line
    {
       // Set progress of Dialog box and cancel if process was cancelled
-      progress.setProgress( outX );
+      progress.setProgress( outY );
 
       if(progress.wasCancelled())
          break;
 
-      for (outY = 0; outY < outimg.ns; outY++)	// For each output image sample
+      imgIO.get_line( mapimginbuf, (Q_ULLONG)(outY*pixRatio), inimg.ns, useType );
+
+      for(outX = 0; outX < outimg.ns; outX++)	// For each output image sample
       {
-//         imgIO.get_line( mapimginbuf, (Q_ULLONG)/*?*/, inimg.ns, useType );
-//                  (*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
+         (*( (type*)mapimgoutbuf + outX)) = (*(((type*)mapimginbuf + (int)(outX*pixRatio))));
       }
+
+      imgIO.put_line( mapimgoutbuf, useType );
    }
 
+   progress.setProgress( progress.totalSteps() );
 
    return true;
 }

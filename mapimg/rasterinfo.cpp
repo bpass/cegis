@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.7 2005/02/10 15:48:20 jtrent Exp $
+// $Id: rasterinfo.cpp,v 1.8 2005/02/18 00:08:04 rbuehler Exp $
 
 
 #include "rasterinfo.h"
@@ -102,7 +102,10 @@ bool RasterInfo::setDataType( const QString &dataType )
       bits = 8;
 
    if( dataType.contains("IEEE", false) > 0 || dataType.contains("Float", false) > 0 )
+   {
       datatype = "IEEE Float";
+      signd = true;
+   }
    else
       datatype = "Integer";
 

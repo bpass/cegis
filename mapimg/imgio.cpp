@@ -1,4 +1,4 @@
-// $Id: imgio.cpp,v 1.5 2005/02/14 17:29:05 jtrent Exp $
+// $Id: imgio.cpp,v 1.6 2005/02/18 00:08:04 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -13,7 +13,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-//#include <qmessagebox.h>
+#include <qmessagebox.h>
 #include <qstring.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,362 +33,370 @@
 /**************** 2/2/2005 jtrent resample   *********/
 
 
-int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2], long out_line, long out_samp, FILE* paramfile )
+int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2], long, long, FILE* paramfile, bool centerOnly )
 {
-    long sys=0;
-    long zone=62;
-    long unit=4;
-    long datum=19;
-    double pparm[15]={0};
-    double coordt1[2];
-    double coordt2[2];
-    double temp1;
-    double temp2;
-//    int dumpflag=0;
+   long sys=0;
+   long zone=62;
+   long unit=4;
+   long datum=19;
+   double pparm[15]={0};
+   double coordt1[2];
+   double coordt2[2];
+   double temp1;
+   double temp2;
+   //    int dumpflag=0;
 
-    double in_line, in_samp;	/* Input image coordinates of a point */
-    long status;		/* Return status flag for gctp() call */
-    long zero=0;		/* Constant of 0 */
-    double in[2];		/* Input projection coordinates of a point */
-    double corner[2];		/* for computing values at pixel corners */
+   double in_line, in_samp;	/* Input image coordinates of a point */
+   long status;		/* Return status flag for gctp() call */
+   long zero=0;		/* Constant of 0 */
+   double in[2];		/* Input projection coordinates of a point */
+   double corner[2];		/* for computing values at pixel corners */
 
-    /*-------------------------*/
-    /* get "center" coordinate */
-    /*-------------------------*/
+   /*-------------------------*/
+   /* get "center" coordinate */
+   /*-------------------------*/
 
-    // convert input to geographic coordinates, check for wrapping,
-    // convert geographic coords to output.
+   // convert input to geographic coordinates, check for wrapping,
+   // convert geographic coords to output.
 
-    coordt1[1] = coordt2[1] = out[1];
-    coordt1[0] = coordt2[0] = out[0];
+   coordt1[1] = coordt2[1] = out[1];
+   coordt1[0] = coordt2[0] = out[0];
 
-    if( outimg.sys == 24 )
-    // Goode's already masks fill areas, Equirectangular freaks out...
-    {
-       // This is the "normal" mapimg gctp call, output => input
-       gctp(out,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
-             &zero,"",&zero,"",paramfile,in,&inimg.sys,&inimg.zone,inimg.pparm,&inimg.unit,
-             &inimg.datum,"","",&status);
-
-       if(status != OK)
-           return 0;
-
-     }//if Goode's
-     else
-     {
-       //------ output => lat/long ------//
-       gctp(out,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
-           &zero,"",&zero,"",0,coordt1,&sys,&zone,pparm,&unit,
-           &datum,"","",&status);
-
-       //----- lat/long => output -----//
-       gctp(coordt1,&sys,&zone,pparm,&unit,&datum,&zero,"",&zero,"",0,coordt2,&outimg.sys,
-            &outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,"","",&status);
-
-       //----- compare values... if different we're in a fill area -----//
-       temp1=fabs(coordt2[0] - out[0]);
-       temp2=fabs(coordt2[1] - out[1]);
-
-       if(temp1 > DELTA_METERS || temp2 > DELTA_METERS)
-       	return 0;
-
-        //----- lat/long => input -----//
-        gctp(coordt1,&sys,&zone,pparm,&unit,&datum,&zero,"",&zero,"",paramfile,in,&inimg.sys,
-             &inimg.zone,inimg.pparm,&inimg.unit,&inimg.datum,"","",&status);
-
-        if(status != OK)
-           return 0;
-     } //else not goode's
-
-     in_line = (inimg.ul_y - in[1]) / inimg.pixsize+0.5;
-     in_samp = (in[0] - inimg.ul_x) / inimg.pixsize+0.5;
-
-      if(in_line < 0 && in_line < -DELTA_LS)
-   	 in_line = 0;
-      if(in_samp < 0 && in_samp < -DELTA_LS)
-	  in_samp = 0;
-
-      //----- Are we in bounds? -----//
-      if( (long)in_line <0 || (long)in_samp <0 ||
-          (long)in_line >= inimg.nl || (long)in_samp >= inimg.ns )
-	return 0;
-
-      inbox[4][1] = (long)(in_line);
-      inbox[4][0] = (long)(in_samp);
-
-      //----- last pixel's right side is this pixel's left side -----//
-      find2corners = 0;
-      if(find2corners)
-      {
-	inbox[0][0] = inbox[1][0];	// old ur = new ul
-	inbox[0][1] = inbox[1][1];
-	inbox[3][0] = inbox[2][0];
-	inbox[3][1] = inbox[2][1];	// old lr = new ll
-      }
-      else	// find ul & ll
-      {
-         /*------------------------*/
-         /* find upper left corner */
-         /*------------------------*/
-
-         corner[0] = out[0] - outimg.pixsize/2;
-         corner[1] = out[1] + outimg.pixsize/2;
-
-         if(outimg.sys == 24)
-         {
-             gctp(corner,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
-                 &zero,"",&zero,"",paramfile,in,&inimg.sys,&inimg.zone,inimg.pparm,&inimg.unit,
-                 &inimg.datum,"","",&status);
-
-             if(status != OK)
-             	return 0;
-        }
-        else
-        {
-            //------ output => lat/long ------//
-            gctp(corner,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
-                 &zero,"",&zero,"",0,coordt1,&sys,&zone,pparm,&unit,
-                 &datum,"","",&status);
-
-            //----- lat/long => output -----//
-            gctp(coordt1,&sys,&zone,pparm,&unit,&datum,&zero,"",&zero,"",0,coordt2,&outimg.sys,
-                 &outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,"","",&status);
-
-            //----- compare values... if different we're in a fill area -----//
-            temp1=fabs(coordt2[0] - corner[0]);
-            temp2=fabs(coordt2[1] - corner[1]);
-            if(temp1 > DELTA_METERS || temp2 > DELTA_METERS)
-            	return 0;
-
-             //----- lat/long => input -----//
-             gctp(coordt1,&sys,&zone,pparm,&unit,&datum,&zero,"",&zero,"",paramfile,in,&inimg.sys,
-                &inimg.zone,inimg.pparm,&inimg.unit,&inimg.datum,"","",&status);
-
-             if(status != OK)
-              	return 0;
-        }	// not goode's
-
-        in_line = (inimg.ul_y - in[1]) / inimg.pixsize;
-        in_samp = (in[0] - inimg.ul_x) / inimg.pixsize;
-
-        //----- adjust for tolerance around zero -----//
-        if(in_line < 0 && in_line < -DELTA_LS)
-	   in_line = 0;
-
-        if(in_samp < 0 && in_samp < -DELTA_LS)
-    	   in_samp = 0;
-
-        //----- bounds checking -----//
-        if((long)in_line+DELTA_LS < 0 || (long)in_samp+DELTA_LS < 0 ||
-          (long)in_line > inimg.nl   || (long)in_samp > inimg.ns)
-	        return 0;
-
-         //----- save coordinates -----//
-         inbox[0][1] = in_line;
-         inbox[0][0] = in_samp;
-
-/// jtrent
-//          printf( "get_coords  Upper Left ( %f, %f )\n", inbox[0][0], inbox[0][1] );
-//          fflush( stdout );
-
-
-
-         /*------------------------*/
-         /* find lower left corner */
-         /*------------------------*/
-
-         corner[0] = out[0] - outimg.pixsize/2;
-         corner[1] = out[1] - outimg.pixsize/2;
-         if(outimg.sys == 24)
-         {
-            gctp(corner,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
-                &zero,"",&zero,"",paramfile,in,&inimg.sys,&inimg.zone,inimg.pparm,&inimg.unit,
-                &inimg.datum,"","",&status);
-
-            if(status != OK)
-	        return 0;
-         }
-         else
-         {
-              //------ output => lat/long ------//
-              gctp(corner,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
-                   &zero,"",&zero,"",0,coordt1,&sys,&zone,pparm,&unit,
-                   &datum,"","",&status);
-
-             //----- lat/long => output -----//
-             gctp(coordt1,&sys,&zone,pparm,&unit,&datum,&zero,"",&zero,"",0,coordt2,&outimg.sys,
-                  &outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,"","",&status);
-
-
-             //----- compare values... if different we're in a fill area -----//
-             temp1=fabs(coordt2[0] - corner[0]);
-             temp2=fabs(coordt2[1] - corner[1]);
-             if(temp1 > DELTA_METERS || temp2 > DELTA_METERS)
-	        return 0;
-
-             //----- lat/long => input -----//
-             gctp(coordt1,&sys,&zone,pparm,&unit,&datum,&zero,"",&zero,"",paramfile,in,&inimg.sys,
-                  &inimg.zone,inimg.pparm,&inimg.unit,&inimg.datum,"","",&status);
-
-             if(status != OK)
-	        return 0;
-         }
-
-         in_line = (inimg.ul_y - in[1]) / inimg.pixsize;
-         in_samp = (in[0] - inimg.ul_x) / inimg.pixsize;
-
-         //----- adjust for tolerance around zero -----//
-         if(in_line < 0 && in_line < -DELTA_LS)
-	     in_line = 0;
-
-         if(in_samp < 0 && in_samp < -DELTA_LS)
-	     in_samp = 0;
-
-        //----- bounds checking -----//
-        if((long)in_line+DELTA_LS < 0 || (long)in_samp+DELTA_LS < 0 ||
-           (long)in_line > inimg.nl   || (long)in_samp > inimg.ns)
-	       return 0;
-
-        //----- save coordinates -----//
-         inbox[3][1] = in_line;
-         inbox[3][0] = in_samp;
-
-
-/// jtrent
-//          printf( "get_coords  Lower Left ( %f, %f )\n", inbox[3][0], inbox[3][1] );
-//          fflush( stdout );
-
-
-      } //else(need to get ul&ll corners)
-
-
-      /*-------------------------*/
-      /* find upper right corner */
-      /*-------------------------*/
-      corner[0] = out[0] + outimg.pixsize/2;
-      corner[1] = out[1] + outimg.pixsize/2;
-
-      gctp(corner,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
-          &zero,"",&zero,"",paramfile,in,&inimg.sys,&inimg.zone,inimg.pparm,&inimg.unit,
-          &inimg.datum,"","",&status);
+   if( outimg.sys == 24 )
+      // Goode's already masks fill areas, Equirectangular freaks out...
+   {
+      // This is the "normal" mapimg gctp call, output => input
+      gctp(out,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
+         &zero,"",&zero,"",paramfile,in,&inimg.sys,&inimg.zone,inimg.pparm,&inimg.unit,
+         &inimg.datum,"","",&status);
 
       if(status != OK)
-	return 0;
+         return 0;
+
+   }//if Goode's
+   else
+   {
+      //------ output => lat/long ------//
+      gctp(out,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
+         &zero,"",&zero,"",0,coordt1,&sys,&zone,pparm,&unit,
+         &datum,"","",&status);
+
+      //----- lat/long => output -----//
+      gctp(coordt1,&sys,&zone,pparm,&unit,&datum,&zero,"",&zero,"",0,coordt2,&outimg.sys,
+         &outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,"","",&status);
+
+      //----- compare values... if different we're in a fill area -----//
+      temp1=fabs(coordt2[0] - out[0]);
+      temp2=fabs(coordt2[1] - out[1]);
+
+      if(temp1 > DELTA_METERS || temp2 > DELTA_METERS)
+         return 0;
+
+      //----- lat/long => input -----//
+      gctp(coordt1,&sys,&zone,pparm,&unit,&datum,&zero,"",&zero,"",paramfile,in,&inimg.sys,
+         &inimg.zone,inimg.pparm,&inimg.unit,&inimg.datum,"","",&status);
+
+      if(status != OK)
+         return 0;
+   } //else not goode's
+
+   in_line = (inimg.ul_y - in[1]) / inimg.pixsize+0.5;
+   in_samp = (in[0] - inimg.ul_x) / inimg.pixsize+0.5;
+
+   if(in_line < 0 && in_line < -DELTA_LS)
+      in_line = 0;
+   if(in_samp < 0 && in_samp < -DELTA_LS)
+      in_samp = 0;
+
+   //----- Are we in bounds? -----//
+   if( (long)in_line <0 || (long)in_samp <0 ||
+      (long)in_line >= inimg.nl || (long)in_samp >= inimg.ns )
+      return 0;
+
+   inbox[4][1] = (long)(in_line);
+   inbox[4][0] = (long)(in_samp);
+
+   //----- Are we only looking for the center? -----//
+   if( centerOnly )
+   {
+      inbox[0][0] = inbox[0][1] = inbox[1][0] = inbox[1][1] = 0;
+      inbox[2][0] = inbox[2][1] = inbox[3][0] = inbox[3][1] = 0;
+      return 1;
+   }
+
+   //----- last pixel's right side is this pixel's left side -----//
+   find2corners = 0;
+   if(find2corners)
+   {
+      inbox[0][0] = inbox[1][0];	// old ur = new ul
+      inbox[0][1] = inbox[1][1];
+      inbox[3][0] = inbox[2][0];
+      inbox[3][1] = inbox[2][1];	// old lr = new ll
+   }
+   else	// find ul & ll
+   {
+      /*------------------------*/
+      /* find upper left corner */
+      /*------------------------*/
+
+      corner[0] = out[0] - outimg.pixsize/2;
+      corner[1] = out[1] + outimg.pixsize/2;
+
+      if(outimg.sys == 24)
+      {
+         gctp(corner,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
+            &zero,"",&zero,"",paramfile,in,&inimg.sys,&inimg.zone,inimg.pparm,&inimg.unit,
+            &inimg.datum,"","",&status);
+
+         if(status != OK)
+            return 0;
+      }
+      else
+      {
+         //------ output => lat/long ------//
+         gctp(corner,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
+            &zero,"",&zero,"",0,coordt1,&sys,&zone,pparm,&unit,
+            &datum,"","",&status);
+
+         //----- lat/long => output -----//
+         gctp(coordt1,&sys,&zone,pparm,&unit,&datum,&zero,"",&zero,"",0,coordt2,&outimg.sys,
+            &outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,"","",&status);
+
+         //----- compare values... if different we're in a fill area -----//
+         temp1=fabs(coordt2[0] - corner[0]);
+         temp2=fabs(coordt2[1] - corner[1]);
+         if(temp1 > DELTA_METERS || temp2 > DELTA_METERS)
+            return 0;
+
+         //----- lat/long => input -----//
+         gctp(coordt1,&sys,&zone,pparm,&unit,&datum,&zero,"",&zero,"",paramfile,in,&inimg.sys,
+            &inimg.zone,inimg.pparm,&inimg.unit,&inimg.datum,"","",&status);
+
+         if(status != OK)
+            return 0;
+      }	// not goode's
 
       in_line = (inimg.ul_y - in[1]) / inimg.pixsize;
       in_samp = (in[0] - inimg.ul_x) / inimg.pixsize;
 
       //----- adjust for tolerance around zero -----//
       if(in_line < 0 && in_line < -DELTA_LS)
-	in_line = 0;
+         in_line = 0;
 
       if(in_samp < 0 && in_samp < -DELTA_LS)
-	in_samp = 0;
+         in_samp = 0;
 
       //----- bounds checking -----//
-      if((long)in_line < 0 || (long)in_samp < 0 ||
-        (long)in_line > inimg.nl || (long)in_samp > inimg.ns)
-	        return 0;
+      if((long)in_line+DELTA_LS < 0 || (long)in_samp+DELTA_LS < 0 ||
+         (long)in_line > inimg.nl   || (long)in_samp > inimg.ns)
+         return 0;
 
-       //----- save coordinates -----//
-       inbox[1][1] = in_line;
-       inbox[1][0] = in_samp;
+      //----- save coordinates -----//
+      inbox[0][1] = in_line;
+      inbox[0][0] = in_samp;
 
-
-/// jtrent
-//          printf( "get_coords  Upper Right ( %f, %f )\n", inbox[1][0], inbox[1][1] );
-//          fflush( stdout );
-
+      /// jtrent
+      //          printf( "get_coords  Upper Left ( %f, %f )\n", inbox[0][0], inbox[0][1] );
+      //          fflush( stdout );
 
 
 
-       /*-------------------------*/
-       /* find lower right corner */
-       /*-------------------------*/
+      /*------------------------*/
+      /* find lower left corner */
+      /*------------------------*/
 
-       //----- adjust for tolerance around zero -----//
-       corner[0] = out[0] + outimg.pixsize/2;
-       corner[1] = out[1] - outimg.pixsize/2;
-
-       gctp(corner,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
+      corner[0] = out[0] - outimg.pixsize/2;
+      corner[1] = out[1] - outimg.pixsize/2;
+      if(outimg.sys == 24)
+      {
+         gctp(corner,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
             &zero,"",&zero,"",paramfile,in,&inimg.sys,&inimg.zone,inimg.pparm,&inimg.unit,
             &inimg.datum,"","",&status);
 
-       if(status != OK)
-	return 0;
+         if(status != OK)
+            return 0;
+      }
+      else
+      {
+         //------ output => lat/long ------//
+         gctp(corner,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
+            &zero,"",&zero,"",0,coordt1,&sys,&zone,pparm,&unit,
+            &datum,"","",&status);
 
-       in_line = (inimg.ul_y - in[1]) / inimg.pixsize;
-       in_samp = (in[0] - inimg.ul_x) / inimg.pixsize;
-
-       if(in_line < 0 && in_line < -DELTA_LS)
-	in_line = 0;
-
-       if(in_samp < 0 && in_samp < -DELTA_LS)
-	in_samp = 0;
-
-       //----- bounds checking -----//
-       if((long)in_line < 0 || (long)in_samp < 0 ||
-          (long)in_line > inimg.nl || (long)in_samp > inimg.ns)
-          	return 0;
-
-       //----- save coordinates -----//
-       inbox[2][1] = in_line;
-       inbox[2][0] = in_samp;
+         //----- lat/long => output -----//
+         gctp(coordt1,&sys,&zone,pparm,&unit,&datum,&zero,"",&zero,"",0,coordt2,&outimg.sys,
+            &outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,"","",&status);
 
 
-/// jtrent
-//          printf( "get_coords  Lower Right ( %f, %f )\n", inbox[2][0], inbox[2][1] );
-//          fflush( stdout );
+         //----- compare values... if different we're in a fill area -----//
+         temp1=fabs(coordt2[0] - corner[0]);
+         temp2=fabs(coordt2[1] - corner[1]);
+         if(temp1 > DELTA_METERS || temp2 > DELTA_METERS)
+            return 0;
 
-       //----- Success! Got all four corners, OK to reuse these next time
-       find2corners = 1;
+         //----- lat/long => input -----//
+         gctp(coordt1,&sys,&zone,pparm,&unit,&datum,&zero,"",&zero,"",paramfile,in,&inimg.sys,
+            &inimg.zone,inimg.pparm,&inimg.unit,&inimg.datum,"","",&status);
 
-//       if(dodump && dumpflag)
-//         return 0;
-//       else
-	return 1;
+         if(status != OK)
+            return 0;
+      }
+
+      in_line = (inimg.ul_y - in[1]) / inimg.pixsize;
+      in_samp = (in[0] - inimg.ul_x) / inimg.pixsize;
+
+      //----- adjust for tolerance around zero -----//
+      if(in_line < 0 && in_line < -DELTA_LS)
+         in_line = 0;
+
+      if(in_samp < 0 && in_samp < -DELTA_LS)
+         in_samp = 0;
+
+      //----- bounds checking -----//
+      if((long)in_line+DELTA_LS < 0 || (long)in_samp+DELTA_LS < 0 ||
+         (long)in_line > inimg.nl   || (long)in_samp > inimg.ns)
+         return 0;
+
+      //----- save coordinates -----//
+      inbox[3][1] = in_line;
+      inbox[3][0] = in_samp;
+
+
+      /// jtrent
+      //          printf( "get_coords  Lower Left ( %f, %f )\n", inbox[3][0], inbox[3][1] );
+      //          fflush( stdout );
+
+
+   } //else(need to get ul&ll corners)
+
+
+   /*-------------------------*/
+   /* find upper right corner */
+   /*-------------------------*/
+   corner[0] = out[0] + outimg.pixsize/2;
+   corner[1] = out[1] + outimg.pixsize/2;
+
+   gctp(corner,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
+      &zero,"",&zero,"",paramfile,in,&inimg.sys,&inimg.zone,inimg.pparm,&inimg.unit,
+      &inimg.datum,"","",&status);
+
+   if(status != OK)
+      return 0;
+
+   in_line = (inimg.ul_y - in[1]) / inimg.pixsize;
+   in_samp = (in[0] - inimg.ul_x) / inimg.pixsize;
+
+   //----- adjust for tolerance around zero -----//
+   if(in_line < 0 && in_line < -DELTA_LS)
+      in_line = 0;
+
+   if(in_samp < 0 && in_samp < -DELTA_LS)
+      in_samp = 0;
+
+   //----- bounds checking -----//
+   if((long)in_line < 0 || (long)in_samp < 0 ||
+      (long)in_line > inimg.nl || (long)in_samp > inimg.ns)
+      return 0;
+
+   //----- save coordinates -----//
+   inbox[1][1] = in_line;
+   inbox[1][0] = in_samp;
+
+
+   /// jtrent
+   //          printf( "get_coords  Upper Right ( %f, %f )\n", inbox[1][0], inbox[1][1] );
+   //          fflush( stdout );
+
+
+
+
+   /*-------------------------*/
+   /* find lower right corner */
+   /*-------------------------*/
+
+   //----- adjust for tolerance around zero -----//
+   corner[0] = out[0] + outimg.pixsize/2;
+   corner[1] = out[1] - outimg.pixsize/2;
+
+   gctp(corner,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
+      &zero,"",&zero,"",paramfile,in,&inimg.sys,&inimg.zone,inimg.pparm,&inimg.unit,
+      &inimg.datum,"","",&status);
+
+   if(status != OK)
+      return 0;
+
+   in_line = (inimg.ul_y - in[1]) / inimg.pixsize;
+   in_samp = (in[0] - inimg.ul_x) / inimg.pixsize;
+
+   if(in_line < 0 && in_line < -DELTA_LS)
+      in_line = 0;
+
+   if(in_samp < 0 && in_samp < -DELTA_LS)
+      in_samp = 0;
+
+   //----- bounds checking -----//
+   if((long)in_line < 0 || (long)in_samp < 0 ||
+      (long)in_line > inimg.nl || (long)in_samp > inimg.ns)
+      return 0;
+
+   //----- save coordinates -----//
+   inbox[2][1] = in_line;
+   inbox[2][0] = in_samp;
+
+
+   /// jtrent
+   //          printf( "get_coords  Lower Right ( %f, %f )\n", inbox[2][0], inbox[2][1] );
+   //          fflush( stdout );
+
+   //----- Success! Got all four corners, OK to reuse these next time
+   find2corners = 1;
+
+   //       if(dodump && dumpflag)
+   //         return 0;
+   //       else
+   return 1;
 }// get_coords
 
 
 int onLine(double p1[2], double p2[2], double test[2])
 {
-  float dx, dy, dxt, dyt;
+   float dx, dy, dxt, dyt;
 
-  if(test == p1 || test == p2) return 1;
+   if(test == p1 || test == p2) return 1;
 
-  if( !((p1[0] <= test[0] && test[0] < p2[0]) || (p2[0] <= test[0] && test[0] < p1[0])) )
-	return 0;
+   if( !((p1[0] <= test[0] && test[0] < p2[0]) || (p2[0] <= test[0] && test[0] < p1[0])) )
+      return 0;
 
-  dx = p2[1] - p1[1];
-  dy = p2[0]-p1[0];
+   dx = p2[1] - p1[1];
+   dy = p2[0]-p1[0];
 
-  dxt = test[1] - p1[1];
-  dyt = test[0] - p1[0];
+   dxt = test[1] - p1[1];
+   dyt = test[0] - p1[0];
 
-  if(dx*dyt - dy*dxt)
-	return 0;
-  else
-	return 1;
+   if(dx*dyt - dy*dxt)
+      return 0;
+   else
+      return 1;
 }      //onLine
 
 int inBox(double box[4][2], double test[2])
 {
-  int intersections = 0;	// # of times test line crosses a polgon line
-  int i;			// loop counter
-  int j = 3;		// another placeholder
+   int intersections = 0;	// # of times test line crosses a polgon line
+   int i;			// loop counter
+   int j = 3;		// another placeholder
 
-  for(i = 0; i < 4; ++i)
-  {
-    if(onLine(box[j], box[i], test))
-	return 1;
-    if( (test[1] < box[j][1] || test[1] < box[i][1]) &&
-      ( (box[j][0] <= test[0] && test[0] < box[i][0]) ||
-        (box[i][0] <= test[0] && test[0] < box[j][0]) ) )
-  	intersections++;
-    j = i;
-  }
+   for(i = 0; i < 4; ++i)
+   {
+      if(onLine(box[j], box[i], test))
+         return 1;
+      if( (test[1] < box[j][1] || test[1] < box[i][1]) &&
+         ( (box[j][0] <= test[0] && test[0] < box[i][0]) ||
+         (box[i][0] <= test[0] && test[0] < box[j][0]) ) )
+         intersections++;
+      j = i;
+   }
 
-  return ( intersections % 2 );
+   return ( intersections % 2 );
 }//inBox
 
 

@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.6 2005/02/17 18:52:59 jtrent Exp $
+// $Id: resampleform.cpp,v 1.7 2005/02/18 00:08:04 rbuehler Exp $
 
 
 /****************************************************************************
@@ -186,7 +186,7 @@ bool ResampleForm::eventFilter( QObject* object, QEvent* event )
 }
 
 
-void ResampleForm::ignoreListKeyPress( QKeyEvent* e )
+void ResampleForm::ignoreListKeyPress( QKeyEvent* )
 {
 
    delButton->animateClick();

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.14 2005/02/17 18:52:59 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.15 2005/02/18 00:08:04 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -147,10 +147,6 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
       "Resample Preview", QKeySequence("F5"), this, "resampleAction" );
    previewProjAction = new QAction( QIconSet( mapimgImage( "previewproject" ) ), 
       "&Preview Reprojection", QKeySequence("Ctrl+P"), this, "resampleAction" );
-   //DBG
-   previewProjAction->setEnabled( false );
-   previewProjAction->setToolTip( "Under reconstruction. Check back soon :)" );
-
 
    //signals and slots
    connect( viewShowAction, SIGNAL( toggled(bool) ), imgFrame, SLOT( setShown(bool) ) );
@@ -287,17 +283,17 @@ mapimgForm::~mapimgForm()
    if( QFile::exists( "mapimg.log" ) )
       QFile::remove( "mapimg.log" );
 
-   if( QFile::exists( "temp.xml" ) )
-      QFile::remove( "temp.xml" );
+   if( QFile::exists( "temp_preview.xml" ) )
+      QFile::remove( "temp_preview.xml" );
 
-   if( QFile::exists( "temp.img" ) )
-      QFile::remove( "temp.img" );
+   if( QFile::exists( "temp_preview.img" ) )
+      QFile::remove( "temp_preview.img" );
 
-   if( QFile::exists( "mapimg.xml" ) )
-      QFile::remove( "mapimg.xml" );
+   if( QFile::exists( "temp_small.xml" ) )
+      QFile::remove( "temp_small.xml" );
 
-   if( QFile::exists( "mapimg.img" ) )
-      QFile::remove( "mapimg.img" );
+   if( QFile::exists( "temp_small.img" ) )
+      QFile::remove( "temp_small.img" );
 }
 
 void mapimgForm::dragEnterEvent( QDragEnterEvent *evt )
@@ -536,6 +532,7 @@ void mapimgForm::previewProjClicked()
    mapimg::frameIt( output );
 
    RasterInfo smallInput;
+   smallInput.setFileName( QDir::currentDirPath().append("/temp_small.img") );
    mapimg::downSampleImg( input, smallInput, 720, this );
    smallInput.save();
 
@@ -546,7 +543,7 @@ void mapimgForm::previewProjClicked()
       return;
    }
 
-   output.setFileName( QDir::currentDirPath().append("/mapimg.img") );
+   output.setFileName( QDir::currentDirPath().append("/temp_preview.img") );
    output.save();
 
    ResampleInfo resample;

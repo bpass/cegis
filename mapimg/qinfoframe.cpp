@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.6 2005/02/13 23:12:48 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.7 2005/02/18 00:08:04 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -649,9 +649,6 @@ void QInfoFrame::setInfo( RasterInfo &input )
       mapTab->fillButton->show();
    }
    
-   if( input.rows() == 0 || input.cols() == 0 )
-      return;
-
    ////////Inputs
    mapTab->rowSpin->setValue( input.rows() );
    mapTab->colSpin->setValue( input.cols() );

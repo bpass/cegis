@@ -1,9 +1,10 @@
+
 //////////////////////////////////////////////////////////////////////
 //
 // Original Programmer: Matt Zykan
 // 
 // Last Modified by   : Mark Schisler
-// Last Modified on   : 2/18/2005
+// Last Modified on   : Fri Mar 11 21:40:19 CST 2005
 //
 // File: SlaveManager.cpp
 // 
@@ -14,11 +15,13 @@
 //
 /////////////////////////////////////////////////////////////////////// 
 
+#include <sstream>
 #include "SlaveManager.h"
+#include "GeneralException.h"
 
-SlaveManager::SlaveManager(WorkManager * newforeman)
+SlaveManager::SlaveManager(WorkManager * workMan)
 {
-  foreman = newforeman;
+  m_workManager = workMan;
   inwork = new WorkUnit;
   outwork = NULL;
 }
@@ -54,26 +57,31 @@ void SlaveManager::Work()
     
     // TODO: modularize this code	  
     serversock = socket(AF_INET, SOCK_STREAM, 0);
-    if(serversock < 0)
-      throw("socket() failed");
+    
+    if(serversock < 0) 
+        throw USGSMosix::GeneralException("socket() failed");
+    
     serveraddr.sin_family = AF_INET;
     serveraddr.sin_port = htons(0);
     serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
     memset(&(serveraddr.sin_zero), '\0', 8);
     socklen_t addrlen = sizeof(sockaddr_in);
     if(bind(serversock, (sockaddr*)&serveraddr, addrlen) != 0)
-      throw("bind() failed");
+        throw USGSMosix::GeneralException("bind() failed");
+    
     getsockname(serversock, (sockaddr*)&serveraddr, &addrlen);
+    
     if(listen(serversock, MASTERBACKLOG) < 0)
-      throw("listen() failed");
+      throw USGSMosix::GeneralException("listen() failed");
 
     // at this point socket setup is complete
     printf("listening on port %d\n", ntohs(serveraddr.sin_port));
 
-    // TODO: spawn slaves here with fork()
+    // spawn the slave processes to do the work for us    
+    spawnSlaves();
 
     // Service requests at the socket until all work is done
-    while(foreman->getBigResult() == NULL) 
+    while(m_workManager->getBigResult() == NULL) 
     {
       // Assume results haven't come yet
       gotresults = false;
@@ -115,11 +123,11 @@ void SlaveManager::Work()
         case GOB_WORKREQUEST:
 
 	      // gets work to be done from the work manager
-     	  outwork = foreman->getWorkUnit();
+     	  outwork = m_workManager->getWorkUnit();
           
 	  // If there is Remaining work
 	  if(outwork != NULL)
-          {
+      {
             printf("out:"); fflush(stdout);
             gobout.contents = GOB_WORKUNIT;
             send(sock, &gobout, sizeof(gobout), 0);
@@ -147,17 +155,19 @@ void SlaveManager::Work()
       
       if(gotresults)
       {
-	// hands off the result of work being performed 
-	// to the work manager
-        foreman->putWorkResult(inwork);
+        // hands off the result of work being performed 
+        // to the work manager
+        m_workManager->putWorkResult(inwork);
       }
       
     }
-  // TODO: make msg a std::string
-  } catch(const char * msg)
+
+    
+  } catch( USGSMosix::Exception& e)
   {
-    printf("exception: %s\n", msg);
+    std::cerr << e.toString() << std::endl;
   }
+  
   if(inwork != NULL)
   {
     delete inwork;
@@ -165,23 +175,60 @@ void SlaveManager::Work()
   }
   if(serversock != -1)
     close(serversock);
+
+
+  
 }
 
-//************************************************************************
-// private
-
-// isn't used for some reason, probably needs to be developed ... MS
-void SlaveManager::spawnslave()
+void SlaveManager::joinSlaves() 
 {
-  char ** arg;
-  // construct argument table
-  if(fork() == 0)
-    if(fork() == 0)
+    int status = 0; 
+    for( unsigned int i = 0; i < childPIDs.size(); ++i )
     {
-      // launch slave
-      (void)arg;
+        if ( waitpid(childPIDs[i], &status,WNOHANG|WUNTRACED) == -1 )
+            std::cerr << "Error joining slave" << i << std::endl;
     }
-    else
-      exit(0);
+
+    return;
+}
+
+
+
+
+void SlaveManager::spawnSlaves()
+{
+  std::stringstream strStream;
+  std::string path, arg1, arg2, arg3;
+  int slaveStatus(0); 
+ 
+  childPIDs.reserve(m_workManager->getTotalUnits());
+  
+  for( unsigned int i = 0; i < m_workManager->getTotalUnits(); ++i )
+  {
+    if( (childPIDs[i] = fork()) == 0 ) // child's context
+    {
+        path = "/home/mschisler/MOSIX/slave";
+        arg1 = "slave";
+        arg2 = "localhost";
+
+        strStream << ntohs(serveraddr.sin_port);
+        arg3 = strStream.str();
+        
+        slaveStatus = execl(path.c_str(),
+                            arg1.c_str(), 
+                            arg2.c_str(), 
+                            arg3.c_str(), 
+                            (char*)NULL);
+        exit(slaveStatus);
+        
+    } else if ( childPIDs[i] == -1 ) // parent' context failure
+    {
+        strStream << "Fork Failure in Slave Spawning; i = " << i;
+        std::string failMsg = strStream.str();
+        throw USGSMosix::GeneralException(failMsg);
+    }
+  }
+
+  return;
 }
 

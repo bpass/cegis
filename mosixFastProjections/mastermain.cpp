@@ -23,7 +23,7 @@ int main(int argc,char ** argv)
   msx_lock();
 #endif
   
-  BigJob *thetask = new BigJob;
+  BigJob *thetask = new BigJob(true);
   thetask->setnumworkunits((workunitid_t)workunits);
 
 

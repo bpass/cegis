@@ -18,13 +18,13 @@
 SHELL = /bin/sh
 
 #set our prefix to the current directory
-PREFIX = /home/mschisler/MSX
+PREFIX = /work/mosixFastProjections
 
 #this is the directory where the projector projector is
 PRJRDIR = $(PREFIX)/include/Projector
 
 INCPATHS = -I$(PREFIX)/include \
-		   -I/usr/src/linux/include -I$(PREFIX)/boost \
+		   -I/usr/src/linux/include \
 		   -I$(PREFIX)/include/Projector
 
 CXX = g++

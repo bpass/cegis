@@ -1,14 +1,21 @@
-// part of MSXProject by Matt Zykan
+/******************************************************************************
+ * Last Modified by    : Mark Schisler (glad to not be taking credit for this)
+ * Original Programmer : Matt Zykan
+ * Date                : Fri Mar 11 18:41:18 CST 2005
+ * Filename            : BigJob.h
+ ******************************************************************************
+ * Purpose             : Inherits Projector.  The BigJob is created by the 
+ * Workmanager to setup the initial "Big Job" which will be divided up 
+ * among different nodes in the cluster.  These nodes get what's called a 
+ * WorkUnit currently, which is essentially the same thing as a "big job," 
+ * only with a trivial amount of differences in private data.  As to why
+ * BigJob and WorkUnit are not both inheriting off of an interface, or 
+ * use Projector as a Composition relation, the world has no idea.
+ *****************************************************************************/
 
 #include "BigJob.h"
 
-BigJob::BigJob() : Projector(), numworkunits(2), usethread(false)
-{
-}
-
-BigJob::~BigJob()
-{
-}
+BigJob::~BigJob() {}
 
 //////////////////////////////////////////////////
 
@@ -17,14 +24,9 @@ void BigJob::setnumworkunits(workunitid_t newnumworkunits)
   numworkunits = newnumworkunits;
 }
 
-void BigJob::setusethread(bool newusethread)
-{
-  usethread = newusethread;
-}
-
 //////////////////////////////////////////////////
 
-void BigJob::insertscanline(void * scanline, long row)
+void BigJob::insertscanline(unsigned char * scanline, long row)
 {
   /*FILE * dump = fopen("scanlines", "a");
   fprintf(dump, "%4ld:", row);
@@ -32,12 +34,15 @@ void BigJob::insertscanline(void * scanline, long row)
     fprintf(dump, "%02x", ((char*)scanline)[i]);
   fprintf(dump, "\n");
   fclose(dump);*/
-  if(usethread)
+  if(m_useThreads)
   {
-    /*
-    StitcherNode * temp = new StitcherNode(scanline, size, row);
-    TODO feed temp node to stitcher, which should destroy it at its leisure
-    */
+    StitcherNode * temp = new StitcherNode(static_cast<void*>(scanline),
+                                           sizeof(scanline), 
+                                           row);
+    m_workStitcher.add(temp);
+    
+   /* TODO feed temp node to stitcher, which should destroy it at its leisure */
+   
   }
   else
   {

@@ -7,7 +7,7 @@
 // Original Programmer: Matt Zykan
 // 
 // Last Modified by   : Mark Schisler
-// Last Modified on   : 2/18/2005
+// Last Modified on   : Fri Mar 11 22:22:26 CST 2005
 //
 // File: WorkManager.cpp
 // 
@@ -77,6 +77,8 @@ class WorkManager
     // returns NULL if the results aren't ready
     BigResult *getBigResult();
 
+    workunitid_t getTotalUnits() { return workunitcount; } 
+    
   private:
     // check that id is a workunit that exists
     inline bool idvalid(workunitid_t);
@@ -89,13 +91,13 @@ class WorkManager
     
     WorkUnit * m_baseWorkUnit; ///< This is where the workUnits come from 
                                ///< They are generated at run-time and 
-			       ///< set equal to this pointer.  As to why, 
-			       ///< there doesn't seem to be a reason.
+			                   ///< set equal to this pointer.  As to why, 
+               			       ///< there doesn't seem to be a reason.
    
     workunitid_t workunitcount; ///< The total number of work units we're using. 
-    workunitid_t baseid;        ///< This base id is completely random, but should
-                                ///< be a static int, incremented with every
-				///< new instantiation of the class
+    workunitid_t baseid;    ///< This base id is completely random, but should
+                            ///< be a static int, incremented with every
+		              		///< new instantiation of the class
     
     // TODO: Erroneous Transmissions?  From Where?
     // REGARDING: 
@@ -105,7 +107,10 @@ class WorkManager
     
     // TODO: This deque needs to be for ACTUAL work units and not
     // just ID numbers
-    WorkUnitBlueprint_t * blueprints;  ///< TODO: should integrate with workunitdeque
+
+    ///< TODO: should integrate with workunitdeque
+    WorkUnitBlueprint_t * blueprints;  
+    
     deque<workunitid_t> workunitdeque; // queue of work unit IDs pending
     
     set<workunitid_t> resultset; // track which results received and integrated

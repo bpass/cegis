@@ -3,7 +3,7 @@
 // Original Programmer: Matt Zykan
 // 
 // Last Modified by   : Mark Schisler
-// Last Modified on   : 2/18/2005
+// Last Modified on   : Fri Mar 11 22:22:34 CST 2005
 //
 // File               : WorkManager.cpp
 // 
@@ -33,7 +33,7 @@ WorkManager::WorkManager(BigJob* job)
   // TODO:  You need to have a static integer count here
   // not randomness
   srand(time(NULL));
-  baseid = rand() >> 12; // just for giggles
+  baseid = rand() >> 12; 
   
   // figure out how to split up the work
   m_externJob->dogetExtents();
@@ -47,10 +47,9 @@ WorkManager::WorkManager(BigJob* job)
   { 
       // Enqueue the IDs to be worked on
       for(workunitid_t i = 0; i < workunitcount; ++i)
-        workunitdeque.push_back(i + baseid); // fill the queue with all workunits
+        workunitdeque.push_back(i + baseid); 
+        // fill the queue with all workunits
 
-      // MS: used to split up work here
-      
       // spread the love evenly among the workunits
       // this is where different work distribution methods may be applied
       long int linesleft = lines;
@@ -90,9 +89,6 @@ WorkManager::WorkManager(BigJob* job)
 
 WorkManager::~WorkManager()
 {
-  workunitdeque.clear();   ///< TODO: why?
-  resultset.clear();       ///< TODO: why?
-
   if(blueprints != NULL)
     delete[] blueprints;
   if(m_baseWorkUnit != NULL)

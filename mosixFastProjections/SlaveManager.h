@@ -1,3 +1,7 @@
+
+#ifndef SLAVEMANAGER_H_
+#define SLAVEMANAGER_H_
+
 //////////////////////////////////////////////////////////////////////
 //
 // Original Programmer: Matt Zykan
@@ -14,9 +18,7 @@
 //
 /////////////////////////////////////////////////////////////////////// 
 
-#ifndef SLAVEMANAGER_H_
-#define SLAVEMANAGER_H_
-
+#include <iostream>
 #include <cstdlib>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -36,7 +38,7 @@ class SlaveManager
   public:
     // this object merely copies the pointer to newforeman
     //  therefore, leave newforeman alone until work is done
-    SlaveManager(WorkManager * newforeman);
+    SlaveManager(WorkManager * workMan);
     ~SlaveManager();
 
     // go forth! huzzah!
@@ -50,12 +52,13 @@ class SlaveManager
 
   private:
     // fork off and execute the slave executable with proper arguments
-    void spawnslave();
+    void spawnSlaves();
+    void joinSlaves(); 
 
-    WorkManager * foreman; // meaningless to slaves
+    std::vector<int> childPIDs;
+    WorkManager * m_workManager; // meaningless to slaves
     WorkUnit * outwork; // for sending workunits
     WorkUnit * inwork; // for receiving workunits
-
     sockaddr_in serveraddr;
 };
 

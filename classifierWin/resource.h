@@ -21,16 +21,17 @@
 #define IDC_MAINGROUP                   1011
 #define IDC_TextOutput                  1012
 #define IDC_CLAFILE                     1013
-#define IDC_BROWSE2                     1014
 #define IDC_BROWSECLA                   1014
 #define IDC_GENMODEL_OUTPUT             1015
 #define IDC_GENMODEL_ORIGINPUT          1016
-#define IDC_GENMODEL_INPUTFILES         1018
-#define IDC_GENMODEL_ADDFILE            1019
+#define IDC_GENMODEL_CLAFILEEDIT        1017
+#define IDC_GENMODEL_OUTPUT2            1018
 #define IDC_GENMODEL_BROWSEOUTPUT       1020
 #define IDC_GENMODEL_BROWSEINPUT        1021
+#define IDC_GENMODEL_BROWSECLAFILE      1022
+#define IDC_GENMODEL_BROWSEOUTPUT2      1023
+#define IDC_GENMODEL_BROWSEMODELOUTPUT  1023
 #define ID_GENMODEL_GENERATE            1025
-#define IDC_GENMODEL_REMOVEFILE         1026
 #define IDC_CLA_STATIC_TEXT             1028
 
 // Next default values for new objects

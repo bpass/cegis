@@ -24,6 +24,8 @@ genModelDlg::genModelDlg(CWnd* pParent /*=NULL*/)
 	, m_outputFile(_T(""))
 	, m_origFile(_T(""))
 	
+	, m_claFile(_T(""))
+	, m_modelName(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_USGS);
 	
@@ -39,8 +41,9 @@ void genModelDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_GENMODEL_OUTPUT, m_outputFile);
 	DDV_MaxChars(pDX, m_outputFile, 255);
 
-	DDX_Control(pDX, IDC_GENMODEL_INPUTFILES, m_inputList);
-	
+
+	DDX_Text(pDX, IDC_GENMODEL_CLAFILEEDIT, m_claFile);
+	DDX_Text(pDX, IDC_GENMODEL_OUTPUT2, m_modelName);
 }
 
 BEGIN_MESSAGE_MAP(genModelDlg, CDialog)
@@ -51,9 +54,9 @@ BEGIN_MESSAGE_MAP(genModelDlg, CDialog)
 	
 	ON_BN_CLICKED(IDC_GENMODEL_BROWSEINPUT, onBnClickedBrowseInput)
 	ON_BN_CLICKED(IDC_GENMODEL_BROWSEOUTPUT, onBnClickedBrowseOutput)
-	ON_BN_CLICKED(IDC_GENMODEL_ADDFILE, onBnClickedAddFile)
 	ON_BN_CLICKED(ID_GENMODEL_GENERATE, onBnClickedGenerate)
-	ON_BN_CLICKED(IDC_GENMODEL_REMOVEFILE, onBnClickedRemoveFile)
+	ON_BN_CLICKED(IDC_GENMODEL_BROWSECLAFILE, OnBnClickedGenmodelBrowseclafile)
+	ON_BN_CLICKED(IDC_GENMODEL_BROWSEMODELOUTPUT, OnBnClickedGenmodelBrowsemodeloutput)
 END_MESSAGE_MAP()
 
 
@@ -115,59 +118,65 @@ HCURSOR genModelDlg::OnQueryDragIcon()
 
 
 void genModelDlg::onBnClickedBrowseInput() {
-}
-
-void genModelDlg::onBnClickedBrowseOutput() {
-}
-
-void genModelDlg::onBnClickedAddFile() {
 	UpdateData();
-	POSITION startPosition;
-	CString curPathName;
-	CFileDialog fileDialog(TRUE, NULL, NULL, OFN_ALLOWMULTISELECT | OFN_EXPLORER, NULL, NULL, 0);
-	char fileBuffer[20000] ={'\0'};
-	fileDialog.m_ofn.lpstrFile = fileBuffer;
-	fileDialog.m_ofn.nMaxFile = 20000;
-
-	if(fileDialog.DoModal() == IDOK) {
-		startPosition = fileDialog.GetStartPosition();
-		while(startPosition) {
-			curPathName = fileDialog.GetNextPathName(startPosition);
-			m_inputList.AddString((LPCTSTR)curPathName);
-			m_files.push_back(curPathName);
-			setExtent();
-		}
-	}
+	CFileDialog dlg(TRUE, "*.img", NULL, OFN_EXPLORER | OFN_FILEMUSTEXIST, 
+					"Imagine Image Files (*.img)|*.img||");
+	if(dlg.DoModal() == IDOK) 
+		m_origFile = dlg.GetPathName();
+	else
+		m_origFile = "";
 	UpdateData(FALSE);
 }
 
-void genModelDlg::onBnClickedRemoveFile() {
-	int i = 0;
-	int selected = m_inputList.GetCurSel();
-	m_inputList.DeleteString(selected);
-	std::vector<CString>::iterator iter;
-	for(iter = m_files.begin(); i < selected; iter++) {
-		i++;
-	}
-
-	m_files.erase(iter);
-	setExtent();
-	
-	
+void genModelDlg::onBnClickedBrowseOutput() {
+	UpdateData();
+	CFileDialog dlg(FALSE, "*.img", NULL, OFN_EXPLORER | OFN_OVERWRITEPROMPT, 
+					"Imagine Image Files (*.img)|*.img||");
+	if(dlg.DoModal() == IDOK) 
+		m_outputFile = dlg.GetPathName();
+	else
+		m_outputFile = "";
+	UpdateData(FALSE);
 }
 
 void genModelDlg::onBnClickedGenerate() {
+	UpdateData();
+	if((m_origFile.GetLength() == 0) || (m_outputFile.GetLength() == 0) 
+		|| (m_claFile.GetLength() == 0) || (m_modelName.GetLength() == 0)) {
+		AfxMessageBox("All fields must be filled in to continue", MB_ICONWARNING | MB_OK);
+		return;
+	}
+	try {
+		ModelMaker mm((LPCTSTR)m_origFile, (LPCTSTR)m_outputFile, (LPCTSTR)m_claFile);
+		mm.generate((LPCTSTR)m_modelName);
+		AfxMessageBox("Model Generation Complete!",MB_ICONINFORMATION | MB_OK);
+	}
+	catch(GeneralException e) {
+		AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
+	}
 }
 
-void genModelDlg::setExtent() {
-	int numStrings = m_inputList.GetCount();
-	int largest = 0;
-	CString curString;
-	for(int i = 0; i < numStrings; i++) {
-		m_inputList.GetText(i, curString);
-		if(curString.GetLength() > largest)
-			largest = curString.GetLength();
-	}
 
-	m_inputList.SetHorizontalExtent(largest*5 + largest/2);
+void genModelDlg::OnBnClickedGenmodelBrowseclafile()
+{
+	UpdateData();
+	CFileDialog dlg(TRUE, "*.img", NULL, OFN_EXPLORER | OFN_FILEMUSTEXIST, 
+					"Classification Files (*.cla)|*.cla||");
+	if(dlg.DoModal() == IDOK) 
+		m_claFile = dlg.GetPathName();
+	else
+		m_claFile = "";
+	UpdateData(FALSE);
+}
+
+void genModelDlg::OnBnClickedGenmodelBrowsemodeloutput()
+{
+	UpdateData();
+	CFileDialog dlg(FALSE, "*.img", NULL, OFN_EXPLORER | OFN_OVERWRITEPROMPT, 
+					"Imagine Spatial Modeler File (*.mdl)|*.mdl||");
+	if(dlg.DoModal() == IDOK) 
+		m_modelName = dlg.GetPathName();
+	else
+		m_modelName = "";
+	UpdateData(FALSE);
 }

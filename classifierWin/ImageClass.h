@@ -318,7 +318,7 @@ T ImageClass<T>::getRange() const{
 }
 
 template <class T>
-void ImageClass<T>::printValues() const{
+void ImageClass<T>::printValues() const {
 	printf("Values: ");
 	for(int i = 0; i < m_values.size(); i++)
 		printf("%f,", m_values[i]);

@@ -255,14 +255,13 @@ void CclassyDlg::OnBnClickedRun()
 	enableControls(FALSE);
 	m_runButton.SetWindowText("Working");
 	
-	
 	switch(m_curDataType) {
 		case 0: {
 			try {
 				ImageClassifier<unsigned char> classifier(m_filename, m_numClasses);
 				classifier.classify();
 				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName);
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
 				if(m_htmlOutput) 
@@ -287,7 +286,7 @@ void CclassyDlg::OnBnClickedRun()
 				ImageClassifier<char> classifier(m_filename, m_numClasses);
 				classifier.classify();
 				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName);
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
 				if(m_htmlOutput) 
@@ -310,7 +309,7 @@ void CclassyDlg::OnBnClickedRun()
 				ImageClassifier<unsigned int> classifier(m_filename, m_numClasses);
 				classifier.classify();
 				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName);
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
 				if(m_htmlOutput) 
@@ -333,7 +332,7 @@ void CclassyDlg::OnBnClickedRun()
 				ImageClassifier<int> classifier(m_filename, m_numClasses);
 				classifier.classify();
 				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName);
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
 				if(m_htmlOutput) 
@@ -356,7 +355,7 @@ void CclassyDlg::OnBnClickedRun()
 				ImageClassifier<unsigned long> classifier(m_filename, m_numClasses);
 				classifier.classify();
 				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName);
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
 				if(m_htmlOutput) 
@@ -379,7 +378,7 @@ void CclassyDlg::OnBnClickedRun()
 				ImageClassifier<long> classifier(m_filename, m_numClasses);
 				classifier.classify();
 				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName);
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
 				if(m_htmlOutput) 
@@ -402,7 +401,7 @@ void CclassyDlg::OnBnClickedRun()
 				ImageClassifier<float> classifier(m_filename, m_numClasses);
 				classifier.classify();
 				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName);
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
 				if(m_htmlOutput) 
@@ -426,7 +425,7 @@ void CclassyDlg::OnBnClickedRun()
 				ImageClassifier<double> classifier(m_filename, m_numClasses);
 				classifier.classify();
 				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName);
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
 				if(m_htmlOutput) 

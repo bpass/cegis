@@ -10,6 +10,7 @@
 #include "GeneralException.h"
 #include "ImageClass.h"
 #include "tinyxml.h"
+#include "DataType.h"
 
 template <class T>
 class ImageClassifier {
@@ -20,7 +21,7 @@ public:
 	void classify(int numClasses=0);
 	void printReport(); //print report to stdout
 	void printReportHTML(const char* filename); //print report in html format to file
-	void saveReportXML(const char* filename); //save xml file
+	void saveReportXML(const char* filename, DataType type); //save xml file
 	void saveReportHTML(const char* filename=NULL);
 	void saveReport(const char* filename=NULL);
 	ImageClass<T> getClass(unsigned int index);
@@ -295,7 +296,7 @@ void ImageClassifier<T>::printReport() {
 }
 
 template <class T>
-void ImageClassifier<T>::saveReportXML(const char* filename) {
+void ImageClassifier<T>::saveReportXML(const char* filename, DataType type ) {
 	if(m_classes.size() == 0) 
 		throw GeneralException("Error: Classification not yet performed\n");
 	
@@ -408,7 +409,47 @@ void ImageClassifier<T>::saveReportXML(const char* filename) {
 	else {
 		rootE = new TiXmlElement("classificationReport");
 		rootE->SetAttribute("numLayers", 1);
+		rootE->SetAttribute("dataTypeNumber", type);
 		dataE.SetAttribute("layerNumber", 1);
+
+		//set the proper name for the integer data type value
+		switch(type) {
+		case U8:
+			rootE->SetAttribute("dataTypeName", "Unsigned 8-bit");
+			break;
+
+		case S8:
+			rootE->SetAttribute("dataTypeName", "Signed 8-bit");
+			break;
+
+		case U16:
+			rootE->SetAttribute("dataTypeName", "Unsigned 16-bit");
+			break;
+
+		case S16:
+			rootE->SetAttribute("dataTypeName", "Signed 16-bit");
+			break;
+
+		case U32:
+			rootE->SetAttribute("dataTypeName", "Unsigned 32-bit");
+			break;
+
+		case S32:
+			rootE->SetAttribute("dataTypeName", "Signed 32-bit");
+			break;
+
+		case FLOAT32:
+			rootE->SetAttribute("dataTypeName", "32-bit Floating Point");
+			break;
+
+		case FLOAT64:
+			rootE->SetAttribute("dataTypeName", "64-bit Floating Point");
+			break;
+		
+		default:
+			throw(GeneralException("Error in ImageClassifier::saveReportXML():"
+								   "invalid data type"));
+		}
 		rootE->InsertEndChild(dataE);
 		doc.InsertEndChild(decl);
 		doc.InsertEndChild(*rootE);

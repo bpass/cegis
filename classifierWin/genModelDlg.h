@@ -29,16 +29,16 @@ protected:
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
-	void setExtent();
 	DECLARE_MESSAGE_MAP()
 public:
-	CListBox m_inputList;
 	CString m_origFile;
 	CString m_outputFile;
 	std::vector<CString> m_files;
 	afx_msg void onBnClickedBrowseInput();
 	afx_msg void onBnClickedBrowseOutput();
-	afx_msg void onBnClickedAddFile();
-	afx_msg void onBnClickedRemoveFile();
 	afx_msg void onBnClickedGenerate();
+	CString m_claFile;
+	afx_msg void OnBnClickedGenmodelBrowseclafile();
+	CString m_modelName;
+	afx_msg void OnBnClickedGenmodelBrowsemodeloutput();
 };

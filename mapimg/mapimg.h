@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.12 2005/02/27 04:24:05 rbuehler Exp $
+// $Id: mapimg.h,v 1.13 2005/02/27 05:30:01 rbuehler Exp $
 
 
 #ifndef MAPIMG_H
@@ -30,33 +30,34 @@ namespace mapimg
       if( right == -1 )
          right = size -1;
 
+      type *castValues = (type*)values;
       int left_hold_point = left;
       int right_hold_point = right;
-      type pivot_value = *((type*)values+((right-left)/2)); //(rand()%right)+left));
+      type pivot_value = castValues[left]; //(rand()%right)+left));
 
-      qDebug( QString("Here pivot = %1").arg( pivot_value ).ascii() );
+      //qDebug( QString("Here pivot = %1").arg( pivot_value ).ascii() );
 
       while( left < right )
       {
-         while( (*((type*)values+right) >= pivot_value) && (left < right) )
+         while( (castValues[right] >= pivot_value) && (left < right) )
             right--;
          if( left != right )
         	{
-            *((type*)values+left) = *((type*)values+right);
+            castValues[left] = castValues[right];
             left++;
         	}
 
-         while( (*((type*)values+left) <= pivot_value) && (left < right) )
+         while( (castValues[left] <= pivot_value) && (left < right) )
             left++;
          if( left != right )
         	{
-            *((type*)values+right) = *((type*)values+left);
+            castValues[right] = castValues[left];
             right--;
         	}
       }
       //        qDebug( "Here 2" );
 
-      *((type*)values+left) = pivot_value;
+      castValues[left] = pivot_value;
       int pivot_point = left;
       left = left_hold_point;
       right = right_hold_point;
@@ -64,16 +65,16 @@ namespace mapimg
       if( left < pivot_point )
          mapimg::quicksort<type>( values, size, left, pivot_point-1 );
 
-      qDebug( QString("Here 3, %1 %2 %3").arg( size ).arg( pivot_point+1 ).arg( right ).ascii() );
+      //qDebug( QString("Here 3, %1 %2 %3").arg( size ).arg( pivot_point+1 ).arg( right ).ascii() );
 
       if( right > pivot_point )
       {
-         qDebug( "Here 3a" );
+         //qDebug( "Here 3a" );
          mapimg::quicksort<type>( values, size, pivot_point+1, right );
-         qDebug( "Here 3b" );
+         //qDebug( "Here 3b" );
       }
 
-      qDebug( "Here 4" );
+      //qDebug( "Here 4" );
 
 
       return;

@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.20 2005/02/27 04:24:05 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.21 2005/02/27 05:30:01 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -298,6 +298,9 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                      type dataValue = (type)0;
                      bool allIgnored = true;
                      StatisticMap coverageMap;
+                     //DBG
+                     QString coverageString;
+                     int bob;
 
                      switch( resample.resampleCode() )
                      {
@@ -325,11 +328,23 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                      case ResampleInfo::Median:  //Median
                         dataValue = (type)resample.noDataValue();
 
-                        qDebug( QString("Quicksorting %1 elements (%2)...").arg( coverageSize ).ascii() );
+                        //DBG qDebug( QString("Quicksorting %1 elements (%2)...").arg( coverageSize ).ascii() );
+
+                        //coverageString = "";
+                        //for( bob = 0; bob < coverageSize; ++bob )
+                        //   coverageString += QString::number( *((type*)inputCoverage + bob) ) + ",";
+                        //qDebug( "Elements Pre-sort: " + coverageString );
 
                         mapimg::quicksort<type>( inputCoverage, coverageSize );
+                        dataValue = *((type*)inputCoverage + coverageSize/2);
                         
-                        qDebug( "Done sorting." );
+                        //coverageString = "";
+                        //for( bob = 0; bob < coverageSize; ++bob )
+                        //   coverageString += QString::number( *((type*)inputCoverage + bob) ) + ",";
+                        //qDebug( "Elements Post-sort: " + coverageString );
+                        //qDebug( "~Median: " + QString::number( dataValue ) + "\n" );
+                        
+                        //DBG qDebug( "Done sorting." );
 
                         break;
                      case ResampleInfo::Mode:   //Mode

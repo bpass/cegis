@@ -1,36 +1,8 @@
-// $Id: resampleinfo.cpp,v 1.4 2005/02/10 15:48:20 jtrent Exp $
+// $Id: resampleinfo.cpp,v 1.5 2005/02/13 19:12:30 rbuehler Exp $
 
 
 #include "resampleinfo.h"
 #include <qstringlist.h>
-
-void ResampleInfo::setIgnoreList( unsigned int size, IgnoreValue *vals )
-{
-   if( size == 0 || vals == NULL )
-      return;
-
-   ilist.clear();
-   for( unsigned int i = 0; i < size; ++i )
-      ilist.append( (IgnoreValue)vals[i] );
-}
-
-
-bool ResampleInfo::shouldIgnore( IgnoreValue val )
-{
-   if( val == (IgnoreValue)fillval )
-      return true;
-
-   if( val == (IgnoreValue)noval )
-      return true;
-
-   for( unsigned int i = 0; i < ilist.size(); ++i )
-   {
-      if( val == (IgnoreValue)ilist[i] )
-         return true;
-   }
-
-   return false;
-}
 
 
 ResampleInfo::ResampleInfo()
@@ -39,10 +11,16 @@ ResampleInfo::ResampleInfo()
    fillval = 0.0;
    noval = 0.0;
    ilist.clear();
+   rn = NULL;
 }
 
+
 ResampleInfo::~ResampleInfo()
-{}
+{
+   if( rn != NULL )
+      delete [] rn;
+}
+
 
 bool ResampleInfo::setResampleCode( QString codeName )
 {
@@ -67,6 +45,73 @@ bool ResampleInfo::setResampleCode( QString codeName )
 
    return true;
 }
+
+
+/*const char *ResampleInfo::resampleName() const
+{
+   if( rn != NULL )
+      delete [] rn;
+
+   switch( rc )
+   {
+   case NearestNeighbor:
+      printf( "Nearest neighbor" );
+      break;
+   case Add:
+      rn = new char[]; ...
+      return rn;
+      break;
+   case Mean:
+      printf( "Mean" );
+      break;
+   case Mode:
+      printf( "Mode" );
+      break;
+   case Min:
+      printf( "Min" );
+      break;
+   case Max:
+      printf( "Max" );
+      break;
+   case NullResample:
+      printf( "NullResample" );
+      break;
+   default:
+      printf( "Bad resample code!!!" );
+      break;
+   }
+   return NULL;
+}*/
+
+
+void ResampleInfo::setIgnoreList( unsigned int size, const IgnoreValue *vals )
+{
+   if( size == 0 || vals == NULL )
+      return;
+
+   ilist.clear();
+   for( unsigned int i = 0; i < size; ++i )
+      ilist.append( (IgnoreValue)vals[i] );
+}
+
+
+bool ResampleInfo::shouldIgnore( IgnoreValue val ) const
+{
+   if( val == (IgnoreValue)fillval )
+      return true;
+
+   if( val == (IgnoreValue)noval )
+      return true;
+
+   for( unsigned int i = 0; i < ilist.size(); ++i )
+   {
+      if( val == (IgnoreValue)ilist[i] )
+         return true;
+   }
+
+   return false;
+}
+
 
 void ResampleInfo::copy( const ResampleInfo &src )
 {

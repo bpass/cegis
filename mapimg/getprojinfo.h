@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.8 2005/02/13 00:27:17 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.9 2005/02/13 19:12:30 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -43,8 +43,8 @@ static long   errorMode = 0;    //print both errors and parameters to a precreat
 static long   paramMode = 0;    //FILE* to logFile
 
 // Bring in the buffers
-extern  void * mapimginbuf;			// Ptr to the input image (all in memory)
-extern  void * mapimgoutbuf;			// Ptr to one line of output image data
+extern  void * mapimginbuf;         // Ptr to the input image (all in memory)
+extern  void * mapimgoutbuf;         // Ptr to one line of output image data
 
 template <class type>
 bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample, type useType, QWidget * mapimgdial)
@@ -88,7 +88,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
     printf( "Ignore List(%i):\n", resample.ignoreList().size() );
 
-    IgnoreList::iterator ignoreVal;
+    IgnoreList::ConstIterator ignoreVal;
 
     for( ignoreVal = resample.ignoreList().begin(); ignoreVal != resample.ignoreList().end(); ignoreVal++ )
     {
@@ -110,12 +110,12 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
     int ioreturnval;
     long out_line, out_samp;	// Output image coordinates of a point
 
-    double in[2];				// Input projection coordinates of a point
-    double out[2];				// Output projection coordinates of a point
-//    double t1[2];				// Temp coords for comparing
-//    double t2[2];				// Temp coords for comparing
-//    double temp1, temp2;			// Temp vars
-//    double pparm[15] = {0};			// 15 GCTP projection parameters
+    double in[2]={0,0};       // Input projection coordinates of a point
+    double out[2];            // Output projection coordinates of a point
+//    double t1[2];           // Temp coords for comparing
+//    double t2[2];           // Temp coords for comparing
+//    double temp1, temp2;    // Temp vars
+//    double pparm[15] = {0}; // 15 GCTP projection parameters
 
 //    long zero = 0;
 //    long four = 4;

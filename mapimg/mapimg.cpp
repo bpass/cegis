@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.11 2005/02/10 16:59:12 jtrent Exp $
+// $Id: mapimg.cpp,v 1.12 2005/02/13 19:12:30 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -67,27 +67,27 @@ bool mapimg::readytoReproject( RasterInfo &input, QWidget *parent )
       msg += "The current spheroid code and unit code are unsupported.\n"
          "\t-Only Spheroid of Radius and Meters are supported at this time.\n";
    }
-
    if( input.pixelSize() <= 0 )
    {
       msg += "Pixel Size must be greater than 0.\n"
          "\t-Please select an appropriate Pixel Size.\n";
    }
-
    if( input.bitCount() == 0 || input.dataType().isNull() )
+   {
       msg += "Please select a valid data type for each pixel.";
+   }
 
    if( !msg.isEmpty() )
    {
-      QMessageBox::critical( parent, "Input Error", msg );
+      QMessageBox::critical( parent, "Parameter Error", msg );
       return false;
    }
    else
    {
-      msg = projectionErrors( input );
+      msg = mapimg::projectionErrors( input );
       if( !msg.isEmpty() )
       {
-         if( QMessageBox::warning( parent, "Input Error", msg,
+         if( QMessageBox::warning( parent, "Parameter Error", msg,
             QMessageBox::Cancel, QMessageBox::Ignore ) == QMessageBox::Cancel )
             return false;
       }

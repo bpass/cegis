@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.10 2005/02/10 15:48:19 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.11 2005/02/13 19:12:30 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -309,7 +309,8 @@ void mapimgForm::dropEvent( QDropEvent *evt )
 
    if ( QTextDrag::decode( evt, text ) )
    {
-      int gi = text.findRev( "img" ), li = text.findRev( "xml" );
+      int gi = text.findRev( "img" );
+      int li = text.findRev( "xml" );
       int fi = text.findRev( "tif" );
       if( gi > li && gi > fi )
       {
@@ -332,6 +333,7 @@ void mapimgForm::dropEvent( QDropEvent *evt )
       text.replace( "%20", " " );
       text.replace( "%5c", "/" );
       text.replace( '\\', '/' );
+
       if( openFile( text ) )
       {
          inInfoAction->setOn(true);
@@ -369,26 +371,31 @@ bool mapimgForm::openFile( QString inFile )
 
    if( !QFile::exists( inFile ) )
    {
-      QMessageBox::information( this, "File not found", inFile );
+      QMessageBox::warning( this, "Open", QString( "%1\n"
+         "File not found.\n"
+         "Please verify that the correct file name was given.")
+         .arg(inFile) );
       return false;
    }
 
    if( inFile.endsWith( ".tif" ) )
    {
-      int convert = QMessageBox::information( this, "Tiff Image",
+      int convert = QMessageBox::information( this, "Open",
          "Tiff images cannot be projected directly\n"
          "Would you like to export to generic binary?",
          QMessageBox::Yes, QMessageBox::No );
 
-      if( convert == 4 ) //"No" Button
+      if( convert == QMessageBox::No )
          return false;
 
       QString tiffFile = inFile;
-      inFile.replace( ".tif", ".img" );
+      inFile.append( ".img" );
 
       if( tiff2img( tiffFile, inFile ) )
-         QMessageBox::information( this, "Tiff Image",
-            "Conversion completed succesfully." );
+      {
+         QMessageBox::information( this, "Open",
+            "TIFF conversion completed succesfully." );
+      }
       else
       {
          QMessageBox::information( this, "Tiff Image",
@@ -399,7 +406,11 @@ bool mapimgForm::openFile( QString inFile )
 
    if( !inFile.endsWith( ".img" ) )
    {
-      QMessageBox::information( this, "Unknown file type", inFile );
+      QMessageBox::information( this, "Open", 
+         QString( "%1\n"
+         "mapimg2 cannot read this file.\n"
+         "This is not a valid raster image, or its format is not currently supported." )
+         .arg(inFile) );
       return false;
    }
 
@@ -425,14 +436,17 @@ bool mapimgForm::openFile( QString inFile )
       viewShowAction->setOn( false );
       inInfoFrame->setInfo( info );
 
-      QMessageBox::information( this, "XML file not found",
-         "Please use the Input Info Editor to define the map and projection parameters.\n"
-         "\n-The lock button saves changes."
-         "\n-The calculator button figures out the rows, columns and upper left coordinates.");
+      QMessageBox::information( this, "Open", 
+         QString( "%1\n"
+         "XML file corrupted or not found.\n\n"
+         "Please use the Input Info Editor to define the map and projection parameters.\n\n"
+         "-The lock button saves changes.\n"
+         "-The calculator button figures out the rows, columns and upper left coordinates." )
+         .arg( info.xmlFileName() ) );
       newInfo = true;
    }
 
-   ////////Parse fileName
+   ////////Parse fileName for window caption
    QString cap( imgName );
    cap.replace('\\', '/');
    int index = cap.findRev("/");
@@ -459,8 +473,8 @@ void mapimgForm::inSaveClicked()
 {
    if( !imgSet )
    {
-      QMessageBox::critical( this, "Input not set",
-         "No input to save." );
+      QMessageBox::critical( this, "Save Input Parameters",
+         "No input image has been loaded yet." );
       return;
    }
 
@@ -474,8 +488,8 @@ void mapimgForm::inSaveClicked()
 
    if( !newInfo && QFile::exists( i.xmlFileName() ) )
    {
-      int arg = QMessageBox::question( this, "Overwrite File?",
-         QString("%1\n\nInput XML file already exists. Do you want to overwrite it?").arg(i.xmlFileName()),
+      int arg = QMessageBox::warning( this, "Save Input Parameters",
+         QString("%1 already exists.\nDo you want to replace it?").arg(i.xmlFileName()),
          QMessageBox::Yes, QMessageBox::No);
 
       if( arg == QMessageBox::No )

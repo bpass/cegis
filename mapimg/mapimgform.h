@@ -1,4 +1,4 @@
-// $Id: mapimgform.h,v 1.8 2005/02/22 18:24:12 rbuehler Exp $
+// $Id: mapimgform.h,v 1.9 2005/03/08 17:40:07 rbuehler Exp $
 
 
 /****************************************************************************
@@ -35,6 +35,7 @@ class mapimgForm : public QMainWindow
 public:
    mapimgForm( QWidget* parent = 0, const char* name = 0, WFlags fl = WType_TopLevel );
    ~mapimgForm();
+
    void dragEnterEvent( QDragEnterEvent *evt );
    void dropEvent( QDropEvent *evt );
    bool openFile( QString inFile );
@@ -42,6 +43,7 @@ public:
 
 protected:
    QHBoxLayout    *formLayout;
+   bool eventFilter( QObject* object, QEvent* event );
 
 protected slots:
    void inOpenClicked();

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.21 2005/02/23 17:25:35 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.22 2005/03/08 17:40:07 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -138,6 +138,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    imgFrame->setMinimumSize( QSize( 167, 62 ) );
    imgFrame->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding );
    imgFrame->setShown( false );
+   imgFrame->installEventFilter( this );
    formLayout->addWidget( imgFrame );
 
    //actions
@@ -204,6 +205,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    inInfoAction->addTo( toolBar );
    viewShowButton = new QToolButton( QIconSet( mapimgImage( "preview" ) ), 
       "Show Preview", "", NULL, 0, toolBar, "previewButton" );
+   viewShowButton->installEventFilter( this );
    outInfoAction->addTo( toolBar );
    toolBar->addSeparator();
    viewResampleAction->addTo( toolBar );
@@ -219,8 +221,8 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    prevOutput->setToggleAction( true );
    prevOutput->addTo( viewShowPopup );
 
-   viewShowButton->setPopup( viewShowPopup );
-   viewShowButton->setPopupDelay( 400 );
+   //viewShowButton->setPopup( viewShowPopup );
+   //viewShowButton->setPopupDelay( 400 );
    viewShowButton->setToggleButton(true);
 
    connect( viewShowButton, SIGNAL( toggled(bool) ), this, SLOT( previewClicked(bool) ) );
@@ -317,6 +319,32 @@ mapimgForm::~mapimgForm()
 
    if( QFile::exists( "temp_small.img" ) )
       QFile::remove( "temp_small.img" );
+}
+
+bool mapimgForm::eventFilter( QObject* object, QEvent* event )
+{
+   if( object == imgFrame && event->type() == QEvent::MouseButtonPress )
+   {
+      QMouseEvent *mouseEvent = (QMouseEvent*)event;
+      if( mouseEvent->button() == Qt::RightButton )
+         viewShowPopup->exec(mouseEvent->globalPos());
+   }
+   else if( object == viewShowButton && event->type() == QEvent::MouseButtonPress )
+   {
+      QMouseEvent *mouseEvent = (QMouseEvent*)event;
+      if( mouseEvent->button() == Qt::LeftButton )
+      {
+         QRect hotspot( viewShowButton->geometry() );
+         hotspot.moveTopLeft( QPoint(0,0) );
+         hotspot.setTopLeft( QPoint(hotspot.center().x(), hotspot.height()*3/5) );
+         if( hotspot.contains( mouseEvent->pos() ) )
+            viewShowPopup->exec( viewShowButton->mapToGlobal( QPoint(0,viewShowButton->height()) ) );
+         else
+            viewShowButton->toggle();
+         return true;
+      }
+   }
+   return QMainWindow::eventFilter( object, event );
 }
 
 void mapimgForm::dragEnterEvent( QDragEnterEvent *evt )
@@ -546,7 +574,6 @@ void mapimgForm::previewClicked( bool on )
    {
       viewShowButton->setOn(on);
    }
-
    ignorePreviewSignals = false;
 }
 

@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.26 2005/03/04 14:58:35 jtrent Exp $
+// $Id: getprojinfo.h,v 1.27 2005/03/08 17:40:07 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -605,8 +605,8 @@ bool mapimg_downsample( RasterInfo &input, RasterInfo &output, type useType, QWi
    void * mapimginbuf = imgIO.mapimginbuf;
    void * mapimgoutbuf = imgIO.mapimgoutbuf;
 
-   MapimgProgressDialog progress( "Down Sample Input", "Abort", outimg.nl, NULL, NULL,
-      mapimgdial, "progress", TRUE, WINDOW_FLAGS );
+   MapimgProgressDialog progress( "Down Sample Input", "Abort", outimg.nl, 
+      &INPUT_COLOR, &ABOUTFORM_COLOR, mapimgdial, "progress", TRUE, WINDOW_FLAGS );
    progress.setCaption( "Sampling..." );
    progress.setMinimumDuration(1);
 

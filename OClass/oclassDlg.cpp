@@ -446,6 +446,7 @@ void COClassDlg::OnBnClickedRun()
 						classifier.saveReport((LPCTSTR)cstringTextFilename);
 					if(i > 0 || numFiles == 1)
 						m_progressBar.SetPos(i);
+					
 					UpdateWindow();
 				}	
 				

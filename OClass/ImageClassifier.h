@@ -44,7 +44,6 @@ public:
 	*/
 	ImageClassifier(T values[], int length, int numClasses=5);
 
-	~ImageClassifier();
 	
 	//! Perform the classification
 
@@ -165,7 +164,7 @@ private:
 	int m_numClasses;
 
 	//! Image file being used.
-	char* m_filename;
+	std::string m_filename;
 };
 
 template <class T>
@@ -182,10 +181,7 @@ ImageClassifier<T>::ImageClassifier(const char* filename, int numClasses):m_numC
 	imageFile = fopen(filename, "rb");
 	if(imageFile) {
 		
-		//set m_filename to filename
-		m_filename = new char[strlen(filename)+1];
-		strcpy(m_filename, filename);
-		m_filename[strlen(filename)+1] = '\0';
+		m_filename.append(filename);
 
 		while(!feof(imageFile)) {
 			
@@ -207,7 +203,8 @@ ImageClassifier<T>::ImageClassifier(const char* filename, int numClasses):m_numC
 }
 
 template <class T>
-ImageClassifier<T>::ImageClassifier(T values[], int length, int numClasses): m_numClasses(numClasses) {
+ImageClassifier<T>::ImageClassifier(T values[], int length, int numClasses): 
+	m_numClasses(numClasses), m_filename("") {
 	if(numClasses < 2)
 		throw(GeneralException("Error in ImageClassifier constructor:"
 								"number of classes must be >= 2"));
@@ -225,11 +222,8 @@ ImageClassifier<T>::ImageClassifier(T values[], int length, int numClasses): m_n
 
 }
 
-template <class T>
-ImageClassifier<T>::~ImageClassifier() {
-	if(m_filename)
-		delete[] m_filename;
-}
+
+
 
 template <class T>
 bool ImageClassifier<T>::valueExists(T val) {
@@ -472,8 +466,8 @@ void ImageClassifier<T>::saveReportXML(const char* filename, DataType type ) {
 	TiXmlElement dataE("classificationData");
 	TiXmlDeclaration decl("1.0", NULL, "yes");
 	dataE.SetAttribute("numClasses", m_numClasses);
-	if(m_filename)
-		dataE.SetAttribute("imageFile", m_filename);
+	if(!m_filename.empty())
+		dataE.SetAttribute("imageFile", m_filename.c_str());
 	else
 		dataE.SetAttribute("imageFile", "Not Set");
 
@@ -632,8 +626,8 @@ void ImageClassifier<T>::saveReportHTML(const char* filename) {
 	if(!htmlFile) 
 		throw(GeneralException("Error in saveReportHTML(): error creating output file"));
 
-	if(m_filename)
-		fprintf(htmlFile, "<html>\n<head><title>Classification Report for %s</title></head>\n", m_filename);
+	if(!m_filename.empty())
+		fprintf(htmlFile, "<html>\n<head><title>Classification Report for %s</title></head>\n", m_filename.c_str());
 	else
 		fprintf(htmlFile, "<html>\n<head><title>Classification Report</title></head>\n");
 	

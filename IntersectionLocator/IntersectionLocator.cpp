@@ -10,7 +10,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionLocator.cpp,v 1.12 2004/12/23 18:05:12 ahartman Exp $
+// $Id: IntersectionLocator.cpp,v 1.13 2004/12/23 18:28:18 ahartman Exp $
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1300
@@ -135,7 +135,7 @@ void filterTests()
         "065750",
         "065765",
         "065780",
-        "080630",
+        //"080630",
         "080645",
         "080660",
         "080675",
@@ -167,7 +167,7 @@ void filterTests()
         "110735",
         "110750",
         "110765",
-        "110780",
+        //"110780",
         "125630",
         "125645",
         "125660",
@@ -291,7 +291,7 @@ void filterTests()
         "275780"
     };
 
-   int n = 165; // number of names
+   int n = 163; // number of names
 
 
 

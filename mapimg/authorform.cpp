@@ -2,9 +2,7 @@
 ** Form implementation generated from reading ui file 'form1.ui'
 **
 ** Created: Thu Jan 13 17:33:43 2005
-**      by: The User Interface Compiler ($Id: authorform.cpp,v 1.1 2005/01/14 16:18:48 rbuehler Exp $)
-**
-** WARNING! All changes made in this file will be lost!
+**      by: The User Interface Compiler ($Id: authorform.cpp,v 1.2 2005/01/14 22:50:16 rbuehler Exp $)
 ****************************************************************************/
 
 #include "authorform.h"
@@ -22,8 +20,8 @@
  *  Constructs a authorForm as a child of 'parent', with the
  *  name 'name'.
  */
-authorForm::authorForm( QWidget* parent, const char* name, QSettings *settings )
-    : QDialog( parent, name )
+authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, bool modal, WFlags fl )
+    : QDialog( parent, name, modal, fl )
 {
     set = settings;
     if ( !name )
@@ -83,7 +81,7 @@ authorForm::authorForm( QWidget* parent, const char* name, QSettings *settings )
     layout2->addWidget( pushButton1 );
     authorFormLayout->addLayout( layout2 );
     languageChange();
-    resize( QSize(259, 181).expandedTo(minimumSizeHint()) );
+    resize( QSize(265, 174).expandedTo(minimumSizeHint()) );
     clearWState( WState_Polished );
 
     connect( pushButton1, SIGNAL( clicked() ), this, SLOT(close()) );

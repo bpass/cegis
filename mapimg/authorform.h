@@ -2,7 +2,7 @@
 ** Form interface generated from reading ui file 'form1.ui'
 **
 ** Created: Thu Jan 13 17:33:43 2005
-**      by: The User Interface Compiler ($Id: authorform.h,v 1.1 2005/01/14 16:18:48 rbuehler Exp $)
+**      by: The User Interface Compiler ($Id: authorform.h,v 1.2 2005/01/14 22:50:16 rbuehler Exp $)
 **
 ** WARNING! All changes made in this file will be lost!
 ****************************************************************************/
@@ -27,7 +27,7 @@ class authorForm : public QDialog
     Q_OBJECT
 
 public:
-    authorForm( QWidget* parent = 0, const char* name = 0, QSettings *settings = 0 );
+    authorForm( QSettings *settings = 0, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
     ~authorForm();
 
     QLabel* textLabel1;

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.1 2005/01/14 16:18:49 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.2 2005/01/14 22:50:16 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -600,7 +600,8 @@ void mapimgForm::editAuthor()
    QSettings *settings = new QSettings( QSettings::Ini );
    settings->setPath( "USGS.gov", "mapimg2" );
 
-   authorForm *form = new authorForm(this, "form", settings );
+   authorForm *form = new authorForm(settings, this, "about", false,
+      Qt::WStyle_Customize | Qt::WStyle_NormalBorder );
    form->exec();
    delete form;
 

@@ -15,7 +15,7 @@
 
 
 // Majic numbers for CVS
-// $Id: Circle.h,v 1.3 2004/10/22 13:30:26 rstelzleni Exp $
+// $Id: Circle.h,v 1.4 2004/11/10 16:52:04 ahartman Exp $
 
 
 #ifndef CIRCLE_H
@@ -110,6 +110,5 @@ private:
    double mRadius;
 };
 
-
-#endif CIRCLE_H
+#endif
 

@@ -1,0 +1,177 @@
+
+body {
+     background-color: #FFF9DF;
+     }
+
+
+table a {
+     color: black;
+     text-decoration: underline;
+     
+}
+
+table a:link {
+     color: black;
+     text-decoration: underline;
+    
+}
+
+table a:link:hover {
+     color: black;
+     text-decoration: underline;
+     
+}
+
+table a:visited {
+     color: black;
+     text-decoration: underline;
+    
+}
+
+table a:visited:hover {
+     color: black;
+     text-decoration: underline;
+   
+}
+ 
+div.spacer {
+      border-bottom: thin solid black;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	width: 100%;
+	text-align: center;
+	font-weight: bold;
+}
+
+div.spacertop {
+ 	border-top: thin solid black;
+	border-bottom: none;
+	border-left: none;
+	border-right: none;
+	width: 100%;
+	text-align: center;
+	font-weight: bold;
+}
+
+#footer {
+	position: absolute;
+	top: 900px;
+	left: 2px;
+}
+#content {
+	 word-wrap: break-word;
+         width: 900px;
+         height: 700px;
+         background-color: #BFAC60;
+         border: thin solid black;
+         position: absolute;
+         top: 150px;
+         left: 170px;
+	 overflow: auto;
+}
+
+#content p {
+         color: black;
+         font-family: timesroman;
+}
+
+#content p a {
+     color: black;
+     text-decoration: underline;
+}
+
+#content p a:link {
+      color: black;
+     text-decoration: underline;
+}
+
+#content p a:link:hover {
+     color: black;
+
+
+     text-decoration: underline;
+}
+
+#content p a:visited {
+   color: black;
+     text-decoration: underline;
+}
+
+
+#content p a:visited:hover {
+     color: black;
+     text-decoration: underline;
+}
+
+#content table {
+	width: 700px;
+	border: thin solid black;
+}
+#content td {
+	
+	
+}
+#nav {
+     width: 150px;
+     border: thin solid black;
+     font-family: timesroman, helvetica;
+     background-color: #DFD4A7;
+     position: absolute;
+     top: 150px;
+     left: 5px;
+}
+
+#nav a {
+     color: black;
+     text-decoration: none;
+}
+
+#nav a:link {
+     color: black;
+
+     text-decoration: none;
+}
+
+#nav a:link:hover {
+     color: black;
+
+
+     text-decoration: underline;
+}
+
+#nav a:visited {
+     color: black;
+
+     text-decoration: none;
+}
+
+
+#nav a:visited:hover {
+     color: black;
+     text-decoration: underline;
+}
+
+
+
+#logo {
+      width: 525px;
+      height: 140px;
+      position: absolute;
+      top: 0px;
+      left: 320px;
+      background-image: url(images/banner.jpg);
+}
+
+#login {
+       width: 200px;
+       height: 200px;
+       position: absolute;
+       top: 300px;
+       left: 500px;
+       background-color: #BFAC60;
+       border: thin solid black;
+}
+
+
+

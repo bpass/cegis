@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.19 2005/02/22 15:17:42 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.20 2005/02/22 18:24:12 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -150,7 +150,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
       "&Preview Reprojection", QKeySequence("Ctrl+P"), this, "resampleAction" );
 
    //signals and slots
-   connect( viewShowAction, SIGNAL( toggled(bool) ), imgFrame, SLOT( setShown(bool) ) );
+   connect( viewShowAction, SIGNAL( toggled(bool) ), this, SLOT( previewClicked(bool) ) );
    connect( viewResampleAction, SIGNAL( activated() ), imgFrame, SLOT( resample() ) );
    connect( previewProjAction, SIGNAL( activated() ), this, SLOT( previewOutput() ) );
 
@@ -223,15 +223,10 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    viewShowButton->setPopupDelay( 400 );
    viewShowButton->setToggleButton(true);
 
-   connect( viewShowButton, SIGNAL( toggled(bool) ), imgFrame, SLOT( setShown(bool) ) );
+   connect( viewShowButton, SIGNAL( toggled(bool) ), this, SLOT( previewClicked(bool) ) );
    connect( prevInput, SIGNAL( toggled(bool) ), this, SLOT( previewInput(bool) ) );
    connect( prevOutput, SIGNAL( toggled(bool) ), this, SLOT( previewOutput(bool) ) );
 
-   ///DBG --- UNDER CONSTRUCTION. CHECK BACK SOON :)
-//   prevInput->setDisabled(true);
-//   prevOutput->setDisabled(true);
-   prevInput->setEnabled(false);
-   prevOutput->setEnabled(false);
 
    ////////
    //MENUBAR
@@ -298,6 +293,9 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    imgName = "";
    imgSet = false;
    newInfo = false;
+
+   ignorePreviewSignals = false;
+   prevLast = prevInput;
 }
 
 /*
@@ -445,9 +443,10 @@ bool mapimgForm::openFile( QString inFile )
    {
       inInfoFrame->setInfo( info );
       inInfoFrame->lock( true, false );
-
-      imgFrame->loadImg( info.imgFileName() );
       newInfo = false;
+
+      prevLast = NULL;
+      previewInput( imgFrame->isShown() );
    }
    else
    {
@@ -468,6 +467,7 @@ bool mapimgForm::openFile( QString inFile )
          .arg( info.xmlFileName() ) );
       newInfo = true;
    }
+
 
    ////////Parse fileName for window caption
    QString cap( imgName );
@@ -524,59 +524,112 @@ void mapimgForm::inSaveClicked()
    }
 
    i.save();
-   imgFrame->loadImg( imgName, true );
+   prevLast = NULL;
+   previewInput( imgFrame->isShown() );
    return;
 }
 
 /*
-   prevGroupSelect() "Preview Group Selected"
+   
 */
+void mapimgForm::previewClicked( bool on )
+{
+   if( ignorePreviewSignals )
+      return;
+
+   prevLast->setOn(on);
+
+   ignorePreviewSignals = true;
+   {
+      viewShowButton->setOn(on);
+   }
+   ignorePreviewSignals = false;
+}
+
 void mapimgForm::previewInput( bool on )
 {
-   if( on )
+   if( ignorePreviewSignals )
+      return;
+
+
+   if( on && prevLast != prevInput )
    {
       imgFrame->loadImg( inInfoFrame->info().imgFileName() );
-      //QMessageBox::information( this, "DBG", "On" );
-
-      viewShowButton->setOn(true);
-      prevOutput->setOn(false);
+      prevLast = prevInput;
    }
-   else if( !prevOutput->isOn() )
-      viewShowButton->setOn(false);
+
+   ignorePreviewSignals = true;
+   {
+      prevInput->setOn(on);
+      prevOutput->setOn(false);
+      viewShowButton->setOn(on);
+      imgFrame->setShown(on);
+   }
+   ignorePreviewSignals = false;
+}
+
+void mapimgForm::previewOutput( bool on )
+{
+   if( ignorePreviewSignals )
+      return;
+
+   ignorePreviewSignals = true;
+   {
+      prevOutput->setOn(on);
+      if( on )
+      {
+         if( previewProjection() )
+         {
+            imgFrame->loadImg( QDir::currentDirPath().append("/temp_preview.img"), true );
+            prevLast = prevOutput;
+            prevInput->setOn(false);
+            viewShowButton->setOn(true);
+            imgFrame->setShown(true);
+         }
+         else
+         {
+            prevOutput->setOn(false);
+         }
+      }
+      else
+      {
+         prevInput->setOn(false);
+         viewShowButton->setOn(false);
+         imgFrame->setShown(false);
+      }
+   }
+   ignorePreviewSignals = false;
 }
 
 /*
-   previewOutput() is used to preview a projection. This is useful
+   previewProjection() is used to preview a projection. This is useful
 because many reprojections can take hours but using this function the output
 can be preivewed before investing the time. The reprojection function is
 linear with size increases having a proportional effect on run-time. This
 preview down samples the input with a constant time algorithm and then
 reprojects to a much smaller output.
 */
-void mapimgForm::previewOutput( bool on )
+bool mapimgForm::previewProjection()
 {
-   if( !on && !prevInput->isOn() )
-   {
-      viewShowButton->setOn(false);
-      return;
-   }
 
    if( !imgSet )
    {
       QMessageBox::critical( this, "Input not set",
          "No input to preview reprojection from." );
-      return;
+      prevOutput->setOn(false);
+      ignorePreviewSignals = false;
+      return false;
    }
 
    RasterInfo input( inInfoFrame->info() );
    if( !mapimg::readytoReproject(input, this) )
-      return;
+      return false;
 
    RasterInfo output( outInfoFrame->info() );
    output.setDataType( input.isSigned(), input.bitCount(), input.type() );
    output.setFillValue( input.fillValue() );
    if( !mapimg::readytoReproject(output, this) )
-      return;
+      return false;
    mapimg::frameIt( output );
 
    RasterInfo smallInput;
@@ -588,7 +641,7 @@ void mapimgForm::previewOutput( bool on )
    {
       QMessageBox::critical( this, "Output Error",
          "Unexpected failure with output operations" );
-      return;
+      return false;
    }
 
    output.setFileName( QDir::currentDirPath().append("/temp_preview.img") );
@@ -599,13 +652,7 @@ void mapimgForm::previewOutput( bool on )
    resample.setFillValue( input.fillValue() );
    resample.setNoDataValue( input.noDataValue() );
 
-   mapimg::reproject( smallInput, output, resample );
-
-   inInfoAction->setOn(false);
-   viewShowButton->setOn(true);
-   imgFrame->loadImg( output.imgFileName(), true );
-   prevInput->setOn(false);
-   imgFrame->show();
+   return !mapimg::reproject( smallInput, output, resample );
 }
 
 /*

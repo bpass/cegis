@@ -1,4 +1,4 @@
-// $Id: mapimgform.h,v 1.7 2005/02/20 05:23:27 rbuehler Exp $
+// $Id: mapimgform.h,v 1.8 2005/02/22 18:24:12 rbuehler Exp $
 
 
 /****************************************************************************
@@ -46,8 +46,10 @@ protected:
 protected slots:
    void inOpenClicked();
    void inSaveClicked();
+   void previewClicked( bool on = true );
    void previewInput( bool on = true );
    void previewOutput( bool on = true );
+   bool previewProjection();
    void outSaveClicked();
    void editAuthor();
    void aboutClicked();
@@ -99,6 +101,9 @@ private:
    bool imgSet; //Has the user opened a .img file?
       //Used to determine wether or not to save .info files when the user says to
    bool newInfo; //Is the user generating a new .xml file for the .img?
+
+   bool ignorePreviewSignals; //Are actions being automated on/off?
+   QAction *prevLast; //What was the user looking at when imgFrame->hide()
 };
 
 #endif // mapimgFORM_H

@@ -1,11 +1,11 @@
-// $Id: imgio.cpp,v 1.2 2005/01/06 19:55:34 jtrent Exp $
+// $Id: imgio.cpp,v 1.3 2005/01/11 17:11:27 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
-//Released under GPL with MapIMG copyright 2003 USGS
+//Released under GPL with mapimg copyright 2003 USGS
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// MapIMG I/O functions:  These functions read and write files associated with MapIMG
+// mapimg I/O functions:  These functions read and write files associated with mapimg
 // Written by D. Steinwand
 //
 // Updated by Stephan Posch for GUI implementation -- 8/02

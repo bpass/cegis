@@ -1,8 +1,8 @@
-// $Id: getprojinfo.cpp,v 1.2 2005/01/06 19:55:34 jtrent Exp $
+// $Id: getprojinfo.cpp,v 1.3 2005/01/11 17:11:27 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
-//Released under GPL with MapIMG copyright 2003 USGS
+//Released under GPL with mapimg copyright 2003 USGS
 
 /* reads the .proj file that accompanies generic binary file */
 #include <qmessagebox.h>
@@ -27,8 +27,8 @@ int get_projInfo(char *name, long *sys, long *unit, long *zone, long *datum, dou
 	{
 	    fclose(inptr);
 	    remove(projFile);
-	    QMessageBox::critical( 0, "MapIMG",
-                 QString("An internal error occurred while trying to open the designated project file\n\nMapIMG will not execute."));
+	    QMessageBox::critical( 0, "mapimg",
+                 QString("An internal error occurred while trying to open the designated project file\n\nmapimg will not execute."));
 	    return 0;
 	}
 
@@ -36,8 +36,8 @@ int get_projInfo(char *name, long *sys, long *unit, long *zone, long *datum, dou
 	{
 	    fclose(inptr);
 	    remove(projFile);
-	    QMessageBox::critical( 0, "MapIMG",
-                 QString("An internal error occurred while trying to read the designated project file\n\nMapIMG will not execute." ));
+	    QMessageBox::critical( 0, "mapimg",
+                 QString("An internal error occurred while trying to read the designated project file\n\nmapimg will not execute." ));
 	    return 0;
 	}
 
@@ -46,8 +46,8 @@ int get_projInfo(char *name, long *sys, long *unit, long *zone, long *datum, dou
 	{
 	    fclose(inptr);
 	    remove(projFile);
-	    QMessageBox::critical( 0, "MapIMG",
-                 QString("An internal error occurred while trying to read the designated project file\n\nMapIMG will not execute." ));
+	    QMessageBox::critical( 0, "mapimg",
+                 QString("An internal error occurred while trying to read the designated project file\n\nmapimg will not execute." ));
 	    return 0;
 	}
 

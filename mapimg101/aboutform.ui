@@ -130,7 +130,7 @@
                                 </font>
                             </property>
                             <property name="text">
-                                <string>&lt;i&gt;MapIMG&lt;/i&gt; v0.0.000</string>
+                                <string>&lt;i&gt;mapimg&lt;/i&gt; v0.0.000</string>
                             </property>
                             <property name="alignment">
                                 <set>WordBreak|AlignCenter</set>
@@ -181,7 +181,7 @@
                                 </font>
                             </property>
                             <property name="text">
-                                <string>MapIMG is a research-oriented project. Its source and binaries are provided with no warranty or support. &lt;b&gt;Use at your own risk.&lt;/b&gt; We will, however, provide minimal technical support as time allows. We are also very interested in feedback as well as bug reports. All questions and comments may be sent to:</string>
+                                <string>mapimg is a research-oriented project. Its source and binaries are provided with no warranty or support. &lt;b&gt;Use at your own risk.&lt;/b&gt; We will, however, provide minimal technical support as time allows. We are also very interested in feedback as well as bug reports. All questions and comments may be sent to:</string>
                             </property>
                             <property name="textFormat">
                                 <enum>RichText</enum>

@@ -1,4 +1,4 @@
-// $Id: aboutform.ui.h,v 1.2 2005/01/06 19:55:34 jtrent Exp $
+// $Id: aboutform.ui.h,v 1.3 2005/01/11 17:11:26 jtrent Exp $
 
 
 /****************************************************************************
@@ -16,7 +16,7 @@
 
 void aboutForm::init()
 {
-    QString version = "<i>MapIMG</i> v",
+    QString version = "<i>mapimg</i> v",
             major_version = "",
             minor_version = "",
             revision_version = "";

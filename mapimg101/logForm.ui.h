@@ -1,4 +1,4 @@
-// $Id: logForm.ui.h,v 1.2 2005/01/06 19:55:34 jtrent Exp $
+// $Id: logForm.ui.h,v 1.3 2005/01/11 17:11:27 jtrent Exp $
 
 
 /****************************************************************************
@@ -22,8 +22,8 @@
 //save a copy of the log to a file
 void logForm::saveLog()
 {
-    // get the output file to MapIMG
-    QString fileTypes = "MapIMG Log files (*.txt);;All Files (*.*)";
+    // get the output file to mapimg
+    QString fileTypes = "mapimg Log files (*.txt);;All Files (*.*)";
 
     QString s = QFileDialog::getSaveFileName(
                     "",
@@ -42,7 +42,7 @@ void logForm::saveLog()
     if( s  &&  QFile::exists(s) )
     {
                 answer = QMessageBox::warning(
-                               this, "MapIMG -- Overwrite Log File",
+                               this, "mapimg -- Overwrite Log File",
                                 QString( "Overwrite -- Process is Not Reversable\n\'%1\'?" ).
                                     arg( s ),
                                 "&Yes", "&No", QString::null, 1, 1 );
@@ -72,7 +72,7 @@ void logForm::saveLog()
 	if ( !logFileOutput.open( IO_WriteOnly ) )
 	{
              //error opening the file
-	    QMessageBox::critical( 0, "MapIMG",
+	    QMessageBox::critical( 0, "mapimg",
 	    QString("An internal error occurred while trying to open the designated output file\n\nLog could not be saved."));
 
 
@@ -107,7 +107,7 @@ void logForm::init()
    }
    else
    {
-       QMessageBox::warning( this, "Error", "MapIMG Log File Not Found." );
+       QMessageBox::warning( this, "Error", "mapimg Log File Not Found." );
    }
 
    return;

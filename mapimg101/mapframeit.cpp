@@ -1,7 +1,7 @@
-// $Id: mapframeit.cpp,v 1.4 2005/01/06 19:41:52 jtrent Exp $
+// $Id: mapframeit.cpp,v 1.5 2005/01/11 17:11:27 jtrent Exp $
 
 //Copyright 2002 United States Geological Survey
-//Released under GPL with MapIMG copyright 2003 USGS
+//Released under GPL with mapimg copyright 2003 USGS
 
 // MapFrame calculates an output space mapping frame based on given projection
 // parameters, the pixel stepSize of the output image, and a bounding box given
@@ -181,7 +181,7 @@ int mapframeit(char * filename, double pixsiz, double ul_lat, double ul_lon,
 	{
 		fclose(file2);
 		remove(outfilename);
-		QMessageBox::critical(0, "MapIMG", QString("An internal error occurred while trying to open the designated output file\n\nMapIMG will not execute."));
+		QMessageBox::critical(0, "mapimg", QString("An internal error occurred while trying to open the designated output file\n\nmapimg will not execute."));
 		return 0;
 	}
 	fprintf(file2, "%d %d\n", numLines, numSamps);

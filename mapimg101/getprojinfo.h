@@ -1,8 +1,8 @@
-// $Id: getprojinfo.h,v 1.2 2005/01/06 19:55:34 jtrent Exp $
+// $Id: getprojinfo.h,v 1.3 2005/01/11 17:11:27 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
-//Released under GPL with MapIMG copyright 2003 USGS
+//Released under GPL with mapimg copyright 2003 USGS
 
 #ifndef GETPROJINFO_H
 #define GETPROJINFO_H
@@ -59,7 +59,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 	        int fillval, const char * outfilename, QDialog * mapimgdial,
 	        int outputRows, int outputCols, type useType)
 {
-    // MapIMG STARTS HERE!!!!
+    // mapimg STARTS HERE!!!!
     // mapimg to do the reprojection (no longer called as function in order to provide progress dialog)
     // mapimg written by D. Steinwand and updated by S. Posch
 
@@ -243,7 +243,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
     // -------------------------------------------------------
     cleanup_input();
     cleanup_output();
-    // END of MapIMG!!
+    // END of mapimg!!
 
     bool cancelled = false;
     // if process was Aborted, output aborted message
@@ -253,7 +253,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
     {
 	remove(mapimgoutfilename);
 	remove(outfilename);
-	QMessageBox::information (mapimgdial, "Aborted!","MapIMG has been aborted",
+	QMessageBox::information (mapimgdial, "Aborted!","mapimg has been aborted",
 					  QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton);
 	cancelled = true;
     }
@@ -261,7 +261,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
     // if process Completed output completion message
     else
     {
-   	QString out = "MapIMG has completed\n\nOutput Rows: " ;
+   	QString out = "mapimg has completed\n\nOutput Rows: " ;
 	QString str = QString::number(outputRows, 10);
 	out += str;
 	out += "\n\nOutput Columns: ";

@@ -1,8 +1,8 @@
-// $Id: geo2eqr.cpp,v 1.2 2005/01/06 19:55:34 jtrent Exp $
+// $Id: geo2eqr.cpp,v 1.3 2005/01/11 17:11:27 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
-//Released under GPL with MapIMG copyright 2003 USGS
+//Released under GPL with mapimg copyright 2003 USGS
 
 // Mapframe calculates an output space mapping frame base on a given projection
 // parameters, the pixel stepSize of the output image, and a bounding box given
@@ -196,14 +196,14 @@ int geo2eqr(long numLines, long numSamps, const char * infilename, int projnum)
 	       * Geographic to Eqirectangular projection (or variant)
                *
                * "An internal error occurred while trying to open the designated output file"
-               * "MapIMG will not execute."
+               * "mapimg will not execute."
                *
                * The Output file could not be opened for storing the parameter file.
                * Check for a write protected .info associated with the input .img
                ***/
 
-	    QMessageBox::critical( 0, "MapIMG",
-		QString("An internal error occurred while trying to open the designated output file\n\nMapIMG will not execute."));
+	    QMessageBox::critical( 0, "mapimg",
+		QString("An internal error occurred while trying to open the designated output file\n\nmapimg will not execute."));
 	    return 0;
 	}
 	fprintf(file, "%d %d\n", numLines, numSamps);

@@ -1,8 +1,8 @@
-// $Id: globals.h,v 1.2 2005/01/06 19:55:34 jtrent Exp $
+// $Id: globals.h,v 1.3 2005/01/11 17:11:27 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
-//Released under GPL with MapIMG copyright 2003 USGS
+//Released under GPL with mapimg copyright 2003 USGS
 
 #ifndef GLOBALS_H
 #define GLOBALS_H

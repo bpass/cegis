@@ -1,8 +1,8 @@
-// $Id: vandgfor.c,v 1.2 2005/01/06 19:55:35 jtrent Exp $
+// $Id: vandgfor.c,v 1.3 2005/01/11 17:11:28 jtrent Exp $
 
 
 //Copyright 1993 United States Geological Survey
-//Released under GPL with MapIMG copyright 2003 USGS
+//Released under GPL with mapimg copyright 2003 USGS
 
 /*******************************************************************************
 NAME                    VAN DER GRINTEN 

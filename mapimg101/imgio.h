@@ -1,8 +1,8 @@
-// $Id: imgio.h,v 1.2 2005/01/06 19:55:34 jtrent Exp $
+// $Id: imgio.h,v 1.3 2005/01/11 17:11:27 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
-//Released under GPL with MapIMG copyright 2003 USGS
+//Released under GPL with mapimg copyright 2003 USGS
 
 // Modified by Jason Trent to allow for templating -- 7/03
 
@@ -71,8 +71,8 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type typeToUse)
 	if(!inptr)
 	{
 	    early_error_cleanup();
-	    QMessageBox::critical( 0, "MapIMG",
-	    QString("An internal error occurred while trying to open the designated input file\n\nMapIMG will not execute."));
+	    QMessageBox::critical( 0, "mapimg",
+	    QString("An internal error occurred while trying to open the designated input file\n\nmapimg will not execute."));
 	    return 0;
 	}
 
@@ -81,8 +81,8 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type typeToUse)
 	if(!outptr)
 	{
 	    early_error_cleanup();
-	    QMessageBox::critical( 0, "MapIMG",
-	    QString("An internal error occurred while trying to open the designated output file\n\nMapIMG will not execute."));
+	    QMessageBox::critical( 0, "mapimg",
+	    QString("An internal error occurred while trying to open the designated output file\n\nmapimg will not execute."));
 	    return 0;
 	}
 
@@ -93,8 +93,8 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type typeToUse)
 	if(!ininfoptr)
 	{
 	    early_error_cleanup();
-	    QMessageBox::critical( 0, "MapIMG",
-	    QString("An internal error occurred while trying to open the designated input info file\n\nMapIMG will not execute."));
+	    QMessageBox::critical( 0, "mapimg",
+	    QString("An internal error occurred while trying to open the designated input info file\n\nmapimg will not execute."));
 	    return 0;
 	}
 
@@ -104,8 +104,8 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type typeToUse)
 	if(!outinfoptr)
 	{
 	    early_error_cleanup();
-	    QMessageBox::critical( 0, "MapIMG",
-	    QString("An internal error occurred while trying to open the designated output info file\n\nMapIMG will not execute."));
+	    QMessageBox::critical( 0, "mapimg",
+	    QString("An internal error occurred while trying to open the designated output info file\n\nmapimg will not execute."));
 	    return 0;
 	}
 
@@ -152,8 +152,8 @@ int init_io(IMGINFO * inimg, IMGINFO * outimg, type typeToUse)
 	if(!bufptr)
 	{
 	    early_error_cleanup();
-	    QMessageBox::critical(0, "MapIMG",
-	    QString("An internal error occurred while trying to allocate the input image buffer!  Image is too large!\n\nMapIMG will not execute."));
+	    QMessageBox::critical(0, "mapimg",
+	    QString("An internal error occurred while trying to allocate the input image buffer!  Image is too large!\n\nmapimg will not execute."));
 	    return 0;
 	}
 

@@ -1138,7 +1138,7 @@
     <slot>getOutputGCTP( double * ptr )</slot>
     <slot>getInputGCTP( double * ptr )</slot>
     <slot>timerDone()</slot>
-    <slot>showAboutMapIMG()</slot>
+    <slot>showAboutmapimg()</slot>
     <slot>showAboutQt()</slot>
 </slots>
 <functions>

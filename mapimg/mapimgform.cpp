@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.3 2005/01/27 18:15:16 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.4 2005/01/27 19:22:35 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -358,7 +358,7 @@ void mapimgForm::inOpenClicked()
    }
 }
 
-bool mapimgForm::openFile( QString &inFile )
+bool mapimgForm::openFile( QString inFile )
 {
    if( inFile == "" )
       return false;

@@ -1,11 +1,11 @@
-// $Id: mapimgform.h,v 1.1 2005/01/14 16:18:49 rbuehler Exp $
+// $Id: mapimgform.h,v 1.2 2005/01/27 19:22:35 jtrent Exp $
 
 
 /****************************************************************************
 ** Form interface generated from reading ui file 'mapimgform.ui'
 **
 ** Created: Thu Jul 29 12:27:35 2004
-**      by: The User Interface Compiler ($Id: mapimgform.h,v 1.1 2005/01/14 16:18:49 rbuehler Exp $)
+**      by: The User Interface Compiler ($Id: mapimgform.h,v 1.2 2005/01/27 19:22:35 jtrent Exp $)
 **
 ** WARNING! All changes made in this file will be lost!
 ****************************************************************************/
@@ -38,7 +38,7 @@ public:
    ~mapimgForm();
    void dragEnterEvent( QDragEnterEvent *evt );
    void dropEvent( QDropEvent *evt );
-   bool openFile( QString &inFile );
+   bool openFile( QString inFile );
 
 protected:
    QHBoxLayout    *formLayout;

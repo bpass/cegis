@@ -12,7 +12,7 @@
 
 
 // Majic numbers for CVS
-// $Id: VMFilter.cpp,v 1.2 2004/10/18 22:42:52 rstelzleni Exp $
+// $Id: VMFilter.cpp,v 1.3 2004/11/10 17:35:30 ahartman Exp $
 
 
 #include "Point.h"
@@ -95,3 +95,4 @@ void VMFilter::filter( std::vector<ControlPoint> &point, const double &info )
 
    return;
 } // end function filter
+

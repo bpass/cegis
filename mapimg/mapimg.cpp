@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.4 2005/01/27 18:56:17 jtrent Exp $
+// $Id: mapimg.cpp,v 1.5 2005/01/28 14:53:43 jtrent Exp $
 
 
 #include "mapimg.h"
@@ -14,15 +14,13 @@ extern "C"
 #include "proj.h"
 }
 
-#include <qglobal.h>
 #include <math.h>
-#ifdef Q_OS_WIN32
-double round(double value, unsigned int decimals )
+
+double mapimg::round(double value, unsigned int decimals )
 {
   double factor = pow(10,decimals);
   return floor((value * factor) + 0.5) / factor;
 }
-#endif
 
 bool mapimg::readytoFrameIt( RasterInfo &input, QWidget * parent )
 {
@@ -268,8 +266,8 @@ void mapimg::frameIt( RasterInfo &input )
    input.setArea(
       pxmin + (pixsize/2),
       pymax - (pixsize/2), 
-      (int)(round( ((pymax - pymin) / pixsize) )),
-      (int)(round( ((pxmax - pxmin) / pixsize) )) );
+      (int)(mapimg::round( ((pymax - pymin) / pixsize) )),
+      (int)(mapimg::round( ((pxmax - pxmin) / pixsize) )) );
 }
 
 bool mapimg::downSampleImg( RasterInfo &input, int maxDimension )

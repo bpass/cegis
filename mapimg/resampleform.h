@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.6 2005/03/14 17:52:51 jtrent Exp $
+// $Id: resampleform.h,v 1.7 2005/03/25 23:31:41 rbuehler Exp $
 
 
 /****************************************************************************
@@ -23,13 +23,15 @@ class QGridLayout;
 class QSpacerItem;
 class QGroupBox;
 class QComboBox;
+class QLabel;
+class QButtonGroup;
+class QRadioButton;
 class QLineEdit;
 class QPushButton;
 class QListBox;
 class QListBoxItem;
 class QEvent;
 class QSlider;
-class QLabel;
 
 class ResampleForm : public QDialog
 {
@@ -40,13 +42,17 @@ public:
    ~ResampleForm();
 
    ResampleInfo info();
-   ResampleInfo::ResampleCode resampleCode(){return rcode;}
    IgnoreList &ignoreList(){return ilist;}
    bool wasCanceled(){return canceled;}
 
 protected:
    QGroupBox* resampleBox;
    QComboBox* resampleCombo;
+   QLabel* catconLabel;
+   QButtonGroup* catconButtonGroup;
+   QRadioButton* catRadio;
+   QRadioButton* conRadio;
+
    QGroupBox* ignoreBox;
    QLineEdit* ignoreEdit;
    QPushButton* newButton;
@@ -56,6 +62,7 @@ protected:
    QPushButton* cancelButton;
 
    QVBoxLayout* ResampleFormLayout;
+   QHBoxLayout* categoricalLayout;
    QVBoxLayout* inputLayout;
    QVBoxLayout* resampleBoxLayout;
    QHBoxLayout* ignoreBoxLayout;
@@ -73,6 +80,7 @@ protected:
 
 protected slots:
    virtual void languageChange();
+   void rcodeChanged( const QString &rcode );
    void newVal();
    void delVal();
    void cancel();
@@ -81,7 +89,6 @@ protected slots:
    void updateMemoryAllocation();
 
 private:
-   ResampleInfo::ResampleCode rcode;
    IgnoreList ilist;
    bool canceled;
    

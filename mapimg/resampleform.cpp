@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.13 2005/03/25 21:32:10 rbuehler Exp $
+// $Id: resampleform.cpp,v 1.14 2005/03/25 23:31:41 rbuehler Exp $
 
 
 /****************************************************************************
@@ -14,6 +14,9 @@
 #include <qpushbutton.h>
 #include <qgroupbox.h>
 #include <qcombobox.h>
+#include <qlabel.h>
+#include <qbuttongroup.h>
+#include <qradiobutton.h>
 #include <qlineedit.h>
 #include <qlistbox.h>
 #include <qlayout.h>
@@ -23,7 +26,6 @@
 #include <qvalidator.h>
 #include <qmessagebox.h>
 #include <qslider.h>
-#include <qlabel.h>
 
 #include "mapimgform.h"
 #include "mapimgvalidator.h"
@@ -63,6 +65,19 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    resampleCombo->setMinimumSize( QSize( 125, 0 ) );
    resampleCombo->installEventFilter( this );
    resampleBoxLayout->addWidget( resampleCombo );
+
+   categoricalLayout = new QHBoxLayout( resampleBoxLayout );
+   catconLabel = new QLabel( "", resampleBox, "catconLabel" );
+   conRadio = new QRadioButton( "Continuous Data", resampleBox, "conRadio" );
+   catRadio = new QRadioButton( "Categorical Data", resampleBox, "catRadio" );
+   catconButtonGroup = new QButtonGroup( resampleBox, "catconButtonGroup" );
+   catconButtonGroup->hide();
+   catconButtonGroup->insert( catRadio );
+   catconButtonGroup->insert( conRadio );
+   categoricalLayout->addWidget( catconLabel );
+   categoricalLayout->addWidget( conRadio );
+   categoricalLayout->addWidget( catRadio );
+
    inputLayout->addWidget( resampleBox );
 
    ignoreBox = new QGroupBox( this, "ignoreBox" );
@@ -96,8 +111,6 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    ignoreBoxLayout->addWidget( ignoreListBox );
    inputLayout->addWidget( ignoreBox );
    ResampleFormLayout->addLayout( inputLayout );
-
-
 
    memoryBox = new QGroupBox( this, "memoryBox" );
    memoryBox->setColumnLayout(0, Qt::Vertical );
@@ -142,6 +155,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
 
    connect( okButton, SIGNAL( clicked() ), this, SLOT( accept() ) );
+   connect( resampleCombo, SIGNAL( activated(const QString&) ), this, SLOT( rcodeChanged(const QString&) ) );
    connect( ignoreEdit, SIGNAL( returnPressed() ), this, SLOT( newVal() ) );
    connect( ignoreEdit, SIGNAL( returnPressed() ), newButton, SLOT( animateClick() ) );
    connect( newButton, SIGNAL( clicked() ), this, SLOT( newVal() ) );
@@ -152,7 +166,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
    canceled = false;
    ilist.clear();
-   rcode = ResampleInfo::NearestNeighbor;
+   rcodeChanged( resampleCombo->currentText() );
 }
 
 /*
@@ -221,6 +235,58 @@ bool ResampleForm::eventFilter( QObject* object, QEvent* event )
    }
 
    return QDialog::eventFilter( object, event );
+}
+
+
+void ResampleForm::rcodeChanged( const QString &rcode )
+{
+   bool showLabel;
+   if( rcode.startsWith( "Nearest" ) )
+   {
+      catconLabel->setText( "Categorical and Continuous use same algorithm." );
+      showLabel = true;
+   }
+   else if( rcode == "Sum" )
+   {
+      catconLabel->setText( "Sum only works with Continuous data." );
+      showLabel = true;
+      conRadio->setChecked(true);
+   }
+   else if( rcode == "Mean" )
+   {
+      catconLabel->setText( "Mean only works with Continuous data." );
+      showLabel = true;
+   }
+   else if( rcode == "Median" )
+   {
+      catconLabel->setText( "Categorical and Continuous use differet algorithms." );
+      showLabel = false;
+      resampleBox->setFixedHeight( resampleBox->height() );
+   }
+   else if( rcode == "Mode" )
+   {
+      catconLabel->setText( "Categorical and Continuous use same algorithm." );
+      showLabel = true;
+   }
+   else if( rcode == "Min" )
+   {
+      catconLabel->setText( "Categorical and Continuous use same algorithm." );
+      showLabel = true;
+   }
+   else if( rcode == "Max" )
+   {
+      catconLabel->setText( "Categorical and Continuous use same algorithm." );
+      showLabel = true;
+   }
+   else
+   {
+      catconLabel->setText( "Unknown resample method selected." );
+      showLabel = true;
+   }
+
+   catconLabel->setShown( showLabel );
+   catRadio->setShown( !showLabel );
+   conRadio->setShown( !showLabel );
 }
 
 
@@ -320,6 +386,7 @@ ResampleInfo ResampleForm::info()
 
    ResampleInfo r;
    r.setResampleCode( resampleCombo->currentText() );
+   r.setIsCategorical( catRadio->isChecked() );
    r.setIgnoreList( sz, ivals );   
    r.setCacheLineCount( memoryAllocation->value() );
 

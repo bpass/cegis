@@ -1,4 +1,4 @@
-// $Id: resampleinfo.cpp,v 1.13 2005/03/25 21:32:10 rbuehler Exp $
+// $Id: resampleinfo.cpp,v 1.14 2005/03/25 23:31:41 rbuehler Exp $
 
 
 #include "resampleinfo.h"
@@ -118,6 +118,7 @@ void ResampleInfo::copy( const ResampleInfo &src )
    noval = src.noval;
    ilist = src.ilist;
    rc = src.rc;
+   is_cat = src.is_cat;
    lineCacheSize = src.lineCacheSize;
    strncpy( rn, src.rn, RN_MAXLENGTH );
 }

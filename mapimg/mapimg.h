@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.19 2005/03/25 21:25:31 jtrent Exp $
+// $Id: mapimg.h,v 1.20 2005/03/25 23:31:41 rbuehler Exp $
 
 
 #ifndef MAPIMG_H
@@ -62,14 +62,14 @@ progress bar is implemented to show the user why they are waiting.
 
 --Miscellaneous Helper Functions
 
+round() is used for cross-platform compatability because not all platforms
+round the same way.
+
 <>quickSortAndSearch() does a recursive, in place, quick sort on values and returns
 the index of AN occurance of searchValue in the list, or -1 if it is not present.
 It is not guaranteed whether this index will point to teh first, last, or middle 
 occurance, just AN occurance. This allows the median resample method to quickly
 find the section of the list that should be ignored, if it exists.
-
-round() is used for cross-platform compatability because not all platforms
-round the same way.
 
 */
 namespace mapimg
@@ -86,7 +86,7 @@ namespace mapimg
    int round(double value, unsigned int decimals = 0);
 
 
-   template <typename type>  //defined below
+   template <typename type>
       int quickSortAndSearch( void* values, type searchValue, int size, int left = 0, int right = -1 )
       {
          int returnValue = -1;

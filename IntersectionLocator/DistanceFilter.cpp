@@ -1,5 +1,5 @@
 /*
- * File: DistanceFilter.cpp
+ * @file DistanceFilter.cpp
  * Purpose: This file contains the implementation of a class
  *          for a control point filter.  This filter uses the
  *          magnitude of each control point's displacement
@@ -7,13 +7,15 @@
  *          worse than others.  This class implements the
  *          Filter interface.
  *
- * Programmer: Ryan Stelzleni
- * Date: 8-24-04
+ * @author Ryan Stelzleni
+ * @date 8-24-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
 
 // Majic numbers for CVS
-// $Id: DistanceFilter.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+// $Id: DistanceFilter.cpp,v 1.3 2004/10/22 13:30:26 rstelzleni Exp $
 
 
 #include "DistanceFilter.h"

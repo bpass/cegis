@@ -1,15 +1,17 @@
-/*
- * File: ControlPoint.h
+/**
+ * @file ControlPoint.h
  * Purpose: This file contains the declaration of a struct to
  *          hold control points for processing.
  *
- * Programmer: Ryan Stelzleni
- * Date: 8-16-04
+ * @author Ryan Stelzleni
+ * @date 8-16-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
 
 // Majic numbers for CVS
-// $Id: ControlPoint.h,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+// $Id: ControlPoint.h,v 1.3 2004/10/22 13:30:26 rstelzleni Exp $
 
 
 #ifndef CONTROLPOINT_H
@@ -17,7 +19,8 @@
 
 #include "ogrsf_frmts.h"
 
-/* Struct to hold control points and to track their correlation value
+/**
+ * Struct to hold control points and to track their correlation value.
  * point is the control point, origPoint is a copy of the point from
  * the dataset (so can be used to find the intersection in the
  * intersection std::map) and correlation is the correlation value
@@ -25,8 +28,9 @@
  */
 struct ControlPoint
 {
-   OGRPoint point, origPoint;
-   double correlation;
+   OGRPoint point;      //!< The new point that was identified
+   OGRPoint origPoint;  //!< The original point from the data
+   double correlation;  //!< The correlation value for the new point
 };
 
 

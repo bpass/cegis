@@ -1,15 +1,16 @@
 /*
- * File: Circle.cpp
+ * @file Circle.cpp
  * Purpose: This file contains the implementation of functions for
  *          the circle and point classes.
  *
- * Programmer: Ryan Stelzleni
- * Date: 8-12-04
+ * @author Ryan Stelzleni
+ * @date 8-12-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
-
 // Majic numbers for CVS
-// $Id: Circle.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+// $Id: Circle.cpp,v 1.3 2004/10/22 13:30:26 rstelzleni Exp $
 
 
 #include "Circle.h"
@@ -18,7 +19,8 @@
 
 Circle::Circle( const Triangle &triangle )
 {
-   // This method is based on equations from Mathworld
+   // Math for circumscribing a triangle
+   // This method is based on equations from the website Mathworld
    // Here is what this is supposed to implement:
    // a = x1(y2 - y3) + x2(y3 - y1) + x3(y1 - y2)
    // bx = (x1^2 + y1^2)(y2 - y3) + (x2^2 + y2^2)(y3 - y1) + 

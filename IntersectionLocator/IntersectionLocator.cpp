@@ -1,14 +1,16 @@
-/*
- * File: IntersectionLocator.cpp
- * Purpose: This file is intended to test out locating intersections
- *          using OGR to open vector format files.
- * Programmer: Ryan Stelzleni
- * Date: 6-28-04
+/**
+ * @file IntersectionLocator.cpp
+ * Description: This file is intended to test out locating intersections
+ *              using OGR to open vector format files.
+ * @author Ryan Stelzleni
+ * @date 6-28-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
 
 // Majic numbers for CVS
-// $Id: IntersectionLocator.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+// $Id: IntersectionLocator.cpp,v 1.3 2004/10/22 13:30:26 rstelzleni Exp $
 
 
 #pragma warning(disable: 4786)
@@ -52,7 +54,8 @@ OGRDataSource *createOGRFile(const char *pszFName, char *pszDName)
 }
 
 
-
+/** This is a test comment.  Second sentence.  Typing is fun.
+ * */
 int main( int argc, char *argv[] )
 {
    filterTests();
@@ -230,9 +233,12 @@ void filterTests()
 
    std::string szRaster, szVector, szOutput, szLines, szAbbrev;
 
-   std::string szRasterDir = "f:\\rstelzleni\\IntersectionData\\15SYC";
-   std::string szVectorDir = "f:\\rstelzleni\\IntersectionData\\MODOT";
-   std::string szOutputDir = "f:\\rstelzleni\\IntersectionData\\output\\";
+   std::string szRasterDir = "L:\\sdir_snap\\rstelzleni\\GeorgiaLines\\"
+                             "Orthos\\16SGC";
+   std::string szVectorDir = "L:\\sdir_snap\\rstelzleni\\GeorgiaLines\\"
+                             "ClippedGaDOT\\";
+   std::string szOutputDir = "L:\\sdir_snap\\rstelzleni\\GeorgiaLines\\"
+                             "CorrectedIntersections\\";
 /*   std::string szRasterDir = "d:\\rstelzleni\\visualstudioprojects\\"
                      "IntersectionLocator\\data\\FloOrthos\\15syc";
    std::string szVectorDir = "d:\\rstelzleni\\visualstudioprojects\\"
@@ -247,13 +253,26 @@ void filterTests()
                       //"smooth5\\";
 */
 
-/*   char *aszNames[] = { "305945", "305960", "305975", 
-                        "320945", "320960", "320975",
-                        "335945", "335960", "335975" };
-   int n = 9; // number of names
-*/
-   char *aszNames[] = { "140750" };
-   int n = 1;
+//   char *aszNames[] = { "305945", "305960", "305975", 
+//                        "320945", "320960", "320975",
+//                        "335945", "335960", "335975" };
+   char *aszNames[] = { "440515", "440530", "440545",
+                        "440560", "440575", "440590",
+                        "440605", "440620", "440635", "440650",
+                        
+              "455500", "455515", "455530", "455545",
+                        "455560", "455575", "455590",
+                        "455605", "455620", "455635", "455650",
+                        
+              "470500", "470515", "470530", "470545",
+                        "470560", "470575", "470590",
+                        "470605", "470620", "470635", "470650",
+
+              "485500", "485515", "485530", "485545"   };
+
+   int n = 36; // number of names
+
+
 
    OGRRegisterAll();
    GDALAllRegister();
@@ -317,11 +336,11 @@ void filterTests()
       // Got the control points, now start manipulating the data
 
       // First dump the unfiltered data and lines
-      szOutput = szOutputDir + "Diff";
+      szOutput = szOutputDir;
       szOutput += "Unfiltered\\";
       szOutput += aszNames[i];
-      szLines = szOutput + "Diff_Lines.shp";
-      szOutput += "Diff_Points.shp";
+      szLines = szOutput + "_Lines.shp";
+      szOutput += "_Points.shp";
 
       pOutputDS = createOGRFile( szOutput.c_str(), "ESRI Shapefile" );
       if( pOutputDS == NULL )
@@ -351,11 +370,11 @@ void filterTests()
          sprintf( temp, "_%02dVMF", static_cast<int>(100*r) );
          szAbbrev = temp;
 
-         szOutput = szOutputDir + "Diff";
+         szOutput = szOutputDir + "Filter" ;
          szOutput += szAbbrev + "\\";
          szOutput += aszNames[i];
-         szLines = szOutput + szAbbrev + "Diff_Lines.shp";
-         szOutput += szAbbrev + "Diff_Points.shp";
+         szLines = szOutput + szAbbrev + "_Lines.shp";
+         szOutput += szAbbrev + "_Points.shp";
 
          pOutputDS = createOGRFile( szOutput.c_str(), "ESRI Shapefile" );
          if( pOutputDS == NULL )
@@ -388,11 +407,11 @@ void filterTests()
          sprintf( temp, "_%02dDF", static_cast<int>(100*r) );
          szAbbrev = temp;
 
-         szOutput = szOutputDir + "Diff";
+         szOutput = szOutputDir + "Filter";
          szOutput += szAbbrev + "\\";
          szOutput += aszNames[i];
-         szLines = szOutput + szAbbrev + "Diff_Lines.shp";
-         szOutput += szAbbrev + "Diff_Points.shp";
+         szLines = szOutput + szAbbrev + "_Lines.shp";
+         szOutput += szAbbrev + "_Points.shp";
 
          pOutputDS = createOGRFile( szOutput.c_str(), "ESRI Shapefile" );
          if( pOutputDS == NULL )

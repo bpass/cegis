@@ -1,20 +1,22 @@
-/*
- * File: InMemRaster.h
+/**
+ * @file InMemRaster.h
  * Purpose: This file contains the declaration of the InMemRaster 
  *          class.  This class is intended to hold a Raster file
  *          in memory for processing.  Currently it only supports
  *          8 bit word RGB format files.
  *
- * Programmer: Ryan Stelzleni
- * Date: 7-9-04
+ * @author Ryan Stelzleni
+ * @date 7-9-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
-// Warning: Each instance of this class for a 5000x5000 pixel
-// tiff uses a ton of memory
+/// Warning: Each instance of this class for a 5000x5000 pixel
+/// tiff uses a ton of memory
 
 
 // Majic numbers for CVS
-// $Id: InMemRaster.h,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+// $Id: InMemRaster.h,v 1.3 2004/10/22 13:30:26 rstelzleni Exp $
 
 
 #ifndef IN_MEM_RASTER
@@ -72,14 +74,15 @@ public:
 
 private:
 
-   int   *mpadHue;
-   int   *mpadSat;
-   int   *mpadVal;
+   int   *mpadHue; //!< The Hue values for this raster
+   int   *mpadSat; //!< The Sat values for this raster
+   int   *mpadVal; //!< The Val values for this raster
 
-   int mnXSize, mnYSize;
+   int mnXSize;    //!< The X size in pixels
+   int mnYSize;    //!< The Y size in pixels
 
-   double madAffine[6];
-   char *mpszProjectionWkt;
+   double madAffine[6];     //!< The affine transformation from the input tiff
+   char *mpszProjectionWkt; //!< Well Known Text projection string
 
    void readBand( GDALRasterBand *pBand, int *pDestBuff,
                             unsigned char *pBuff, 

@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.13 2005/02/27 05:30:01 rbuehler Exp $
+// $Id: mapimg.h,v 1.14 2005/03/02 16:26:25 jtrent Exp $
 
 
 #ifndef MAPIMG_H
@@ -25,8 +25,13 @@ namespace mapimg
    int round(double value, unsigned int decimals = 0);
 
    template <typename type>
-      void quicksort( void* values, int size, int left = 0, int right = -1 )
+      int quickSortAndSearch( void* values, type searchValue, int size, int left = 0, int right = -1 )
    {
+      int returnValue = -1;
+
+      if( size <= 0 )
+          return returnValue;
+
       if( right == -1 )
          right = size -1;
 
@@ -40,46 +45,62 @@ namespace mapimg
       while( left < right )
       {
          while( (castValues[right] >= pivot_value) && (left < right) )
+         {
+
             right--;
+         }
          if( left != right )
-        	{
+       	 {
             castValues[left] = castValues[right];
             left++;
-        	}
+         }
 
          while( (castValues[left] <= pivot_value) && (left < right) )
+         {
             left++;
+         }
          if( left != right )
-        	{
+       	 {
             castValues[right] = castValues[left];
             right--;
-        	}
+         }
       }
       //        qDebug( "Here 2" );
 
       castValues[left] = pivot_value;
+
+      if( castValues[left] == searchValue )
+          returnValue = left;
+
       int pivot_point = left;
       left = left_hold_point;
       right = right_hold_point;
 
       if( left < pivot_point )
-         mapimg::quicksort<type>( values, size, left, pivot_point-1 );
+      {
+         int leftReturn = mapimg::quickSortAndSearch<type>( values, searchValue, size, left, pivot_point-1 );
 
+         if( leftReturn != -1 )
+             returnValue = leftReturn;
+      }
       //qDebug( QString("Here 3, %1 %2 %3").arg( size ).arg( pivot_point+1 ).arg( right ).ascii() );
 
       if( right > pivot_point )
       {
          //qDebug( "Here 3a" );
-         mapimg::quicksort<type>( values, size, pivot_point+1, right );
+         int rightReturn = mapimg::quickSortAndSearch<type>( values, searchValue, size, pivot_point+1, right );
+
+         if( rightReturn != -1 )
+             returnValue = rightReturn;
+
          //qDebug( "Here 3b" );
       }
 
       //qDebug( "Here 4" );
 
 
-      return;
+      return returnValue;
    }
-
 };
 
 

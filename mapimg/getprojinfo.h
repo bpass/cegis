@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.23 2005/03/01 17:55:24 jtrent Exp $
+// $Id: getprojinfo.h,v 1.24 2005/03/02 16:26:25 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -314,6 +314,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
                      int firstPosition = -1;
                      int lastPosition = -1;
+
                      int effectiveSize = -1;
 
                      switch( resample.resampleCode() )
@@ -341,39 +342,40 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                         break;
                      case ResampleInfo::Median:  //Median
                         dataValue = (type)resample.noDataValue();
-/*
-                        qDebug( QString("Quicksorting %1 elements (%2)...").arg( coverageSize ).ascii() );
+
+/*                        qDebug( QString("Quicksorting %1 elements (%2)...").arg( coverageSize ).ascii() );
 
                         coverageString = "";
                         for( bob = 0; bob < coverageSize; ++bob )
                            coverageString += QString::number( *((type*)inputCoverage + bob) ) + ",";
                         qDebug( "Elements Pre-sort: " + coverageString );
 */
-                        mapimg::quicksort<type>( inputCoverage, coverageSize );
+                        firstPosition = lastPosition = mapimg::quickSortAndSearch<type>( inputCoverage, (type)resample.noDataValue(), coverageSize  );
 
-                        firstPosition = -1;
-                        lastPosition = -1;
+//                        qDebug( QString( "returned %1" ).arg( firstPosition ).ascii() );
 
-                        //this is really slow; replace with a faster algorithm
-                        for( bob = 0; bob < coverageSize; ++bob )
+
+                        for( bob = firstPosition; bob >= 0 && bob < coverageSize; bob-- )
                         {
-                           if( resample.shouldIgnore(*((type*)inputCoverage + bob)) )
-                           {
-                           	firstPosition = bob;
-                                lastPosition = coverageSize;
+                            if( !resample.shouldIgnore(*((type*)inputCoverage + bob)) )
+                            {
+                            	firstPosition = bob+1;
+                            	bob = -1;
+                            	break;
+                            }
+                            else
+                                firstPosition = bob;
+                        }
 
-                                for( int ted = bob; ted < coverageSize; ++ted )
-                                {
-                                     if( !resample.shouldIgnore(*((type*)inputCoverage + ted)) )
-                                     {
-                                     	lastPosition = ted;
-                                     	ted = coverageSize+1;
-                                     	break;
-                                     }
-                                }
-                           	bob = coverageSize + 1;
-                           	break;
-                           }
+                        for( bob = lastPosition; bob >= 0 && bob < coverageSize; bob++ )
+                        {
+                            if( !resample.shouldIgnore(*((type*)inputCoverage + bob)) )
+                            {
+                            	lastPosition = bob;
+                               	bob = -1;
+                            	break;
+                            }
+                            lastPosition = bob+1;
                         }
 
                         effectiveSize = coverageSize - ( lastPosition - firstPosition );
@@ -392,9 +394,27 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
                             //if( index_point1 >= 0 && index_point1 < firstPosition ) //don't do anything these numbers are fine
                             if( index_point1 >= 0 && index_point1 >= firstPosition && firstPosition > -1 )
-                                index_point1 = lastPosition + (index_point1%firstPosition);
+                            {
+                            	if( firstPosition == 0 )
+                            	{
+                                    index_point1 = lastPosition + index_point1;
+                            	}
+                                else
+                                {
+                                    index_point1 = lastPosition + (index_point1%firstPosition);
+                                }
+                            }
                             if( index_point2 >= 0 && index_point2 >= firstPosition && firstPosition > -1 )
-                                index_point2 = lastPosition + (index_point2%firstPosition);
+                            {
+                            	if( firstPosition == 0 )
+                            	{
+                                    index_point2 = lastPosition + index_point2;
+                            	}
+                                else
+                                {
+                                    index_point2 = lastPosition + (index_point2%firstPosition);
+                                }
+                            }
 
                             dataValue = *((type*)inputCoverage + index_point1);
                             dataValue += *((type*)inputCoverage + index_point2);
@@ -406,7 +426,16 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
                             //if( index_point >= 0 && index_point < firstPosition ) //don't do anything these numbers are fine
                             if( index_point >= 0 && index_point >= firstPosition && firstPosition > -1 )
-                                index_point = lastPosition + (index_point%firstPosition);
+                            {
+                            	if( firstPosition == 0 )
+                            	{
+                                   index_point = lastPosition + index_point;
+                            	}
+                                else
+                                {
+                                   index_point = lastPosition + (index_point%firstPosition);
+                                }
+                            }
 
                             dataValue = *((type*)inputCoverage + index_point);
                         }

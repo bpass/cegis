@@ -1,13 +1,13 @@
 
 // CVS magic symbols for voodoo practitioners
-// $Id: doxygenMain.h,v 1.5 2004/11/15 23:30:46 rstelzleni Exp $
+// $Id: doxygenMain.h,v 1.6 2004/11/16 00:06:02 rstelzleni Exp $
 
 /** \mainpage IntersectionLocator
  *
  * \section intro Introduction
  * <P>
  * The intersection locator is an attempt to automatically correct vector
- * road maps without human intevention.  The basic idea is to use a raster
+ * road maps without human intervention.  The basic idea is to use a raster
  * image, like an aerial photograph of an area, to locate the true
  * locations of the intersections, and then to use a rubber sheeting 
  * transformation with the newly identified better intersection locations

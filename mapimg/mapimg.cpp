@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.17 2005/02/25 18:37:49 jtrent Exp $
+// $Id: mapimg.cpp,v 1.18 2005/03/21 17:37:53 jtrent Exp $
 
 
 #include "mapimg.h"
@@ -177,7 +177,7 @@ void mapimg::frameIt( RasterInfo &input )
    long inProj = 0; //Geographic
    long inUnit = 4; //Degress of Arc
    long inZone = 62; //Null Zone code
-   long inDatum = 0; //Sphere of Radius 6370997
+   long inDatum = 19; //Sphere of Radius 6370997
    double inParms[15] = {0.0};
 
    long outProj = input.projectionNumber();

@@ -52,7 +52,8 @@ int main()
    cout << "CVS Demo\n";
    cout << "Others who have checked out:\n"
         << "\tJason Trent\n"
-        << "\tAustin Hartman\n";
+        << "\tAustin Hartman\n"
+        << "\tRyan Stelzleni\n";
 
    return 0;
 }

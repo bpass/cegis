@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.28 2005/03/14 17:52:51 jtrent Exp $
+// $Id: getprojinfo.h,v 1.29 2005/03/21 17:31:54 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -58,6 +58,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
    // mapimg STARTS HERE!!!!
    // mapimg to do the reprojection (no longer called as function in order to provide progress dialog)
    // mapimg written by D. Steinwand and updated by S. Posch
+   
    int outputRows = output.rows();
    int outputCols = output.cols();
 
@@ -154,7 +155,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
             // ---------------------------------------------
             else
             {
-               if( resample.resampleCode() == ResampleInfo::NearestNeighbor )
+               if( resample.resampleCode() == ResampleInfo::NearestNeighbor ) //NN same for categorical and continuous
                {
                   imgIO.get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
 
@@ -300,40 +301,46 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                      switch( resample.resampleCode() )
                      {
                      case ResampleInfo::Add:	//Sum
-                        for( coverageIndex = 0;  coverageIndex < coverageSize; coverageIndex++ )
+                        if( resample.isCategorical() )
                         {
-                           if( !resample.shouldIgnore( *( (type*)inputCoverage + coverageIndex )) )
-                           {
-                              dataValue += *( (type*)inputCoverage + coverageIndex );
-                              allIgnored = false;
-                           }
+                            QMessageBox::critical( &progress, "Error", "Add resampling is not supported for categorical data." );
+                            progress.cancel();
+                        }
+                        else
+                        {
+                            for( coverageIndex = 0;  coverageIndex < coverageSize; coverageIndex++ )
+                            {
+                               if( !resample.shouldIgnore( *( (type*)inputCoverage + coverageIndex )) )
+                               {
+                                  dataValue += *( (type*)inputCoverage + coverageIndex );
+                                  allIgnored = false;
+                               }
+                            }
                         }
                         break;
                      case ResampleInfo::Mean:   //Avg
-                        for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+                        if( resample.isCategorical() )
                         {
-                           if( !resample.shouldIgnore(*( (type*)inputCoverage + coverageIndex )) )
-                           {
-                              dataValue += *( (type*)inputCoverage + coverageIndex );
-                              allIgnored = false;
-                           }
+                            QMessageBox::critical( &progress, "Error", "Mean resampling is not supported for categorical data." );
+                            progress.cancel();
                         }
-                        dataValue /= coverageSize;
+                        else
+                        {
+                            for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
+                            {
+                               if( !resample.shouldIgnore(*( (type*)inputCoverage + coverageIndex )) )
+                               {
+                                  dataValue += *( (type*)inputCoverage + coverageIndex );
+                                  allIgnored = false;
+                               }
+                            }
+                            dataValue /= coverageSize;
+                        }
                         break;
                      case ResampleInfo::Median:  //Median
                         dataValue = (type)resample.noDataValue();
 
-/*                        qDebug( QString("Quicksorting %1 elements (%2)...").arg( coverageSize ).ascii() );
-
-                        coverageString = "";
-                        for( bob = 0; bob < coverageSize; ++bob )
-                           coverageString += QString::number( *((type*)inputCoverage + bob) ) + ",";
-                        qDebug( "Elements Pre-sort: " + coverageString );
-*/
                         firstPosition = lastPosition = mapimg::quickSortAndSearch<type>( inputCoverage, (type)resample.noDataValue(), coverageSize  );
-
-//                        qDebug( QString( "returned %1" ).arg( firstPosition ).ascii() );
-
 
                         for( bob = firstPosition; bob >= 0 && bob < coverageSize; bob-- )
                         {
@@ -361,9 +368,6 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                         effectiveSize = coverageSize - ( lastPosition - firstPosition );
 
 
-//                        qDebug( QString("Effective Size = %1 (%2 -> %3)").arg( effectiveSize ).arg( firstPosition ).arg( lastPosition ).ascii() );
-
-
                         if( effectiveSize > 0 )
                             allIgnored = false;
 
@@ -372,7 +376,6 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                             int index_point1 = (effectiveSize-2)/2;
                             int index_point2 = effectiveSize/2;
 
-                            //if( index_point1 >= 0 && index_point1 < firstPosition ) //don't do anything these numbers are fine
                             if( index_point1 >= 0 && index_point1 >= firstPosition && firstPosition > -1 )
                             {
                             	if( firstPosition == 0 )
@@ -396,9 +399,16 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                                 }
                             }
 
-                            dataValue = *((type*)inputCoverage + index_point1);
-                            dataValue += *((type*)inputCoverage + index_point2);
-                            dataValue /= 2;
+                            if( resample.isCategorical() )
+                            {
+                                dataValue = *((type*)inputCoverage + index_point1);
+                            }
+                            else
+                            {
+                                dataValue = *((type*)inputCoverage + index_point1);
+                                dataValue += *((type*)inputCoverage + index_point2);
+                                dataValue /= 2;
+                            }
                         }
                         else                        //odd number of elements
                         {
@@ -417,19 +427,11 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                                 }
                             }
 
+                            //This case is the same for categorical and continuous
                             dataValue = *((type*)inputCoverage + index_point);
                         }
-/*
-                        coverageString = "";
-                        for( bob = 0; bob < coverageSize; ++bob )
-                           coverageString += QString::number( *((type*)inputCoverage + bob) ) + ",";
-                        qDebug( "Elements Post-sort: " + coverageString );
-                        qDebug( "~Median: " + QString::number( dataValue ) + "\n" );
-
-                        qDebug( "Done sorting." );
-*/
                         break;
-                     case ResampleInfo::Mode:   //Mode
+                     case ResampleInfo::Mode:   //Mode same for categorical and continuous
                         coverageMap.clear();
                         dataValue = (type)resample.noDataValue();
                         for( coverageIndex = 0;  coverageIndex < coverageSize; coverageIndex++ )
@@ -459,7 +461,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                         }
 
                         break;
-                    case ResampleInfo::Min:		//Min
+                    case ResampleInfo::Min:		//Min same for categorical and continuous
                         dataValue = (type)Q_UINT64_MAX;
 
                         for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
@@ -472,7 +474,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
                            }
                         }
                         break;
-                     case ResampleInfo::Max:		//Max
+                     case ResampleInfo::Max:		//Max same for categorical and continuous
                         dataValue = (type)Q_INT64_MIN;
                         for( coverageIndex = 0; coverageIndex < coverageSize; coverageIndex++ )
                         {
@@ -604,7 +606,7 @@ bool mapimg_downsample( RasterInfo &input, RasterInfo &output, type useType, QWi
    void * mapimginbuf = imgIO.mapimginbuf;
    void * mapimgoutbuf = imgIO.mapimgoutbuf;
 
-   MapimgProgressDialog progress( "Down Sample Input", "Abort", outimg.nl, 
+   MapimgProgressDialog progress( "Down Sample Input", "Abort", outimg.nl,
       &INPUT_COLOR, &ABOUTFORM_COLOR, mapimgdial, "progress", TRUE, WINDOW_FLAGS );
    progress.setCaption( "Sampling..." );
    progress.setMinimumDuration(1);

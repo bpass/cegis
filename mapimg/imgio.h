@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.6 2005/02/10 15:59:30 jtrent Exp $
+// $Id: imgio.h,v 1.7 2005/02/10 20:30:30 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -74,6 +74,9 @@ int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * ou
 	void * bufptr;		// Pointer to input buffer
 
 	// Open input file and check for any errors
+	if( inptr.isOpen() )
+	    inptr.close();
+
 	inptr.setName( infile_name );
 	inptr.open( IO_ReadOnly | IO_Raw );
 
@@ -86,6 +89,9 @@ int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * ou
 	}
 
 	// Open output file and check for any errors
+	if( outptr.isOpen() )
+	    outptr.close();
+
 	outptr.setName( outfile_name );
         outptr.open( IO_WriteOnly | IO_Raw );
 
@@ -99,10 +105,9 @@ int init_io(RasterInfo &input, RasterInfo &output, IMGINFO * inimg, IMGINFO * ou
 
    raster2IMG( input, inimg );
    raster2IMG( output, outimg );
-	
+
 	// Set input file size and try to allocate that amount of memory
-	
-   /******* Change here for allocating lines in input *******/
+
 
 	insize = inimg->nl * inimg->ns;
 
@@ -198,8 +203,8 @@ extern long insize;				// Number of bytes in input image
 //static off64_t get_line_loadedData;
 
 #include <qcache.h>
-static int MAX_DATA_ELEMENT_COUNT = 800;		//20, 23
-static int FRIST_PRIME_AFTER_MAX = 801;
+static int MAX_DATA_ELEMENT_COUNT = 2;		//20, 23
+static int FRIST_PRIME_AFTER_MAX = 3;
 
 template <class type>
 void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)

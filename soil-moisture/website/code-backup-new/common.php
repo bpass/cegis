@@ -284,11 +284,8 @@ function oracleEscape(&$query, $searching) {
 		
 		if(!empty($comments) ) {
 			oracleEscape($comments, false);
-			$comments = strip_tags($comments);
-			
-			//replace newlines with <br> tags so that we 
-			//can see line breaks when the data is viewed.
-			$comments = str_replace("\n", "<br>", $comments);
+			$comments = html_entity_decode($comments, ENT_QUOTES);
+			$comments = htmlentities($comments, ENT_QUOTES);
 			
 		}
 		
@@ -526,7 +523,8 @@ function oracleEscape(&$query, $searching) {
 		print "<br>";
 		print "<div class=\"spacer\">Comments</div>\n";
 		print "<br>";
-		print "$comments[0]</div>\n";
+		print "<pre>";
+		print "$comments[0]</pre></div>\n";
 		
 		OCILogoff($conn);
 	}

@@ -27,6 +27,7 @@ Linux Users:
   Setting up linux/KDE to automatically use your key
     1) Download x11-ssh-askpass from this address:
        http://www.jmknoble.net/software/x11-ssh-askpass/x11-ssh-askpass-1.2.4.1.tar.gz
+       or if you have labrat mounted, $LABRAT_FOLDER/cartoresearch/CVS_Tools/Linux/
        If it is not there, use google and search for "x11-ssh-askpass"
 
     2) Use "cd" to change to the directory where you downloaded the file

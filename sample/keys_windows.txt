@@ -4,7 +4,7 @@ you have any problems.
 
 Windows Users:
   Generating public/private keys:
-    1) Goto Labrat folder /cartoresearch/CVS_Tools/Key_Management
+    1) Goto Labrat folder /cartoresearch/CVS_Tools/Windows/Key_Management
 
     2) Copy the following files to a folder on your D: drive
        a. pageant.exe

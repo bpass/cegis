@@ -2,7 +2,7 @@ CVS Setup and Checkout Instructions
 See Jason or Austin if you have any problems
 
 Windows Users:
-	1) From Labrat goto /cartoresearch/CVS_Tools/ and copy 
+	1) From Labrat goto /cartoresearch/CVS_Tools/Windows and copy
 	        TortoiseCVS-1.6.14.exe and
 	        WinMerge202-exe.zip
 	
@@ -14,10 +14,12 @@ Windows Users:
 
         4) Under the Tools tab of the TortoiseCVS - Preferences window enter the following:
                 External diff: Browse to windiff.exe (usually in c:\Program Files\Visual Studio\Common\Tools\)
+                               or use WinMerge
+                Diff supporst Unicode: Check this box ONLY if using WinMerge
                 External merge: Browse to the location you installed WinMerge
                 Merge supports Unicode: Check this box
-       
-        5) Create a folder to store your work in, right-click on the folder and choose 
+
+        5) Create a folder to store your work in, right-click on the folder and choose
                 "CVS Checkout..." and enterh the following:
                 CVSROOT:  /cvs
                 Protocol: Secure shell (:ext:)

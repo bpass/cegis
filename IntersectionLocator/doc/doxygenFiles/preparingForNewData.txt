@@ -1,6 +1,6 @@
 
 // Mystical symbols to please the CVS Gods
-// $Id: preparingForNewData.txt,v 1.2 2004/11/15 18:04:34 rstelzleni Exp $
+// $Id: preparingForNewData.txt,v 1.3 2004/11/15 22:35:14 rstelzleni Exp $
 
 
 /** \page preparingForNewData Preparing For New Data
@@ -72,10 +72,12 @@
  * aois icon from the tool box.  This should group and select all of your
  * aois.  With the large aoi group selected select the "subset image" icon
  * from the main window toolbar (if you used a Geospatial Light Table) or
- * from the main menu under raster (I think) if you used a normal viewer.
+ * from the main menu under interpreter if you used a normal viewer.  A 
+ * small window will open in the upper left of the screen, you can close
+ * it, you only need the larger dialog that also opened.
  * This dialog box will prompt you for a name to save the new file under, 
  * so give it one.  At the bottom of the dialog there is a button labeled
- * Aoi, click this button and select the radio button labeled "In Viewer".
+ * Aoi, click this button and select the radio button labeled "Viewer".
  * Then click ok in the Aoi dialog.  I usually click the "ignore zeros in
  * output" checkbox in the subset dialog too, but it doesn't seem to 
  * actually do anything.  Now click ok in the subset dialog box and wait
@@ -111,16 +113,30 @@
  * InMemRaster::classify functions to prepare the image.  
  * Then call the InMemRaster::dumpToBinary
  * function to output the classified file.  The file can be imported by
- * Imagine using the Import dialog box.  Select Generic Binary as the type
- * of file to import.  The file is a single band, it contains only ones
- * and zeros.  You should only have to set the dimensions of the raster
+ * Imagine using the Import dialog box that is accessable from the main
+ * Imagine application toolbar.  Select Generic Binary as the type
+ * of file to import, and file as the media.  Select your file and give the
+ * output file a name, when you click the ok button you will be presented
+ * with another dialog called Import Generic Binary Data.  All you should
+ * have to change here are the number of rows and columns.
+ * You should only have to set the dimensions of the raster
  * (the same as the dimensions of the raster that you classified, usually
  * 5000 x 5000).  Once this is done you can select the preview button to
  * see if the settings are correct, and then convert the image to an img
- * file.  Open the file in a viewer and compare it to the original image.
+ * file using the Ok button.  Open the file in a viewer and compare 
+ * it to the original image.
  * This is a good way to see if there is a particular type of road color
  * that you are under trained for, or if there is a particular off road
  * item that is being misclassified as a road.
+ *
+ * To ease the process of training and testing a Classifier somewhat 
+ * I've included a project called TrainClassifier that is in its own
+ * folder in the main directory of this project.  It should be pretty
+ * self explanatory if you look over the code.  To build and use it you
+ * will need the gdall12.dll file in the search path for the executable.
+ * This project also includes an example of the spreadsheet that I 
+ * mentioned above.  Feel free to cut and paste your own training set
+ * into it to analyze your data.
  *
  * \section oddsAndEnds Odds And Ends
  * Other things that should probably be mentioned.

@@ -1,6 +1,6 @@
 
 
-// $Id: overallProcess.txt,v 1.1 2004/11/15 23:30:13 rstelzleni Exp $
+// $Id: overallProcess.txt,v 1.2 2004/11/23 20:42:52 rstelzleni Exp $
 
 /** \page overallProcess The Big Picture
  *
@@ -16,16 +16,62 @@
  * sure that all the file type drivers are loaded for the gdal/ogr
  * stuff.  Also at this time I usually load some training into the
  * classifier.  It will save some time if you do this from an already
- * saved training dataset, some instruction for doing this can be 
- * found at \ref gettingAGoodTrainingSet.  
+ * saved training dataset, some instructions for doing this can be 
+ * found at \ref gettingAGoodTrainingSet. 
+ * 
+ * \code
+ * OGRRegisterAll();  // For vector drivers
+ * GDALAllRegister(); // For raster drivers
+ *
+ * Classifier C;
+ * C.inputText( "training.dat" );
+ * \endcode 
  *
  * \subsection stepTwo Step Two
- * Next I usually open all of the files I'll need with gdal/ogr.  Make
+ * Next I usually open all of the files I'll need with GDAL/OGR.  Make
  * sure to check and see if the pointers that are returned are null
  * when you do this, gdal has a tendency to fail for really 
  * touchy reasons.  If you don't know how to do this, generate the
  * the doxygen docs for gdal and read up!  Or just look at a driver
  * in cvs that does it.
+ *
+ * \code
+ * GDALDataset *pRaster;
+ * OGRDataSource *pVector, *pPoints, *pLines;
+ *
+ * pRaster = static_cast<GDALDataset *>
+ *          ( GDALOpen( "image.tiff", GA_ReadOnly ) );
+ *
+ * // Check to see if the raster opened
+ * if( pRaster == NULL )
+ * {
+ *    fprintf( stderr, "Failed to open raster file\n" );
+ *    exit( -1 );
+ * }
+ *
+ * pVector = OGRSFDriverRegistrar::Open( "VectorRoads", FALSE, NULL );
+ *
+ * // Check to see if the vector opened and print a detailed message if not
+ * if( pVector == NULL )
+ * {
+ *    printf("Failed opening vector file\n");
+ *    printf("%d\n", CPLGetLastErrorNo());
+ *    printf(CPLGetLastErrorMsg());
+ *    exit( -1 );
+ * }
+ *
+ * // The output files are a little more tricky to open.  This uses
+ * // a helper function createOGRFile that I wrote.
+ * pLines = createOGRFile( "WhereIWantMyOutput.shp", "ESRI Shapefile" );
+ *
+ * if( pLines == NULL )
+ * {
+ *    fprintf( stderr, "pLinesDS is NULL\n" );
+ *    exit( -1 );
+ * }
+ *
+ * // pPoints would be opened in the same way.
+ * \endcode
  *
  * \subsection stepThree Step Three
  * At this point I usually load the raster I'll be using into memory,
@@ -35,12 +81,22 @@
  * InMemRaster::classify functions to prepare the image for use.
  * This generally takes a minute or less.
  *
+ * \code
+ * InMemRaster Rasta( pRaster );
+ * Rasta.convertToHSV();
+ * Rasta.classify( C );  // C was the Classifier we created earlier
+ * \endcode
+ *
  * \subsection stepFour Step Four
  * Now that the image is ready to go we need to locate the 
  * intersections that we will be trying to use for control point
- * location.  To do this create an IntersectionMap and giving it
+ * location.  To do this create an IntersectionMap and give it
  * pointers to both the vector format file and the raster that 
  * goes under that vector line file.
+ *
+ * \code
+ * IntersectionMap Intersections( pVector, pRaster );
+ * \endcode
  *
  * \subsection stepFive Step Forever
  * This is what takes a long time.  Next we call one of the 
@@ -48,6 +104,14 @@
  * take a pointer to an InMemRaster and to a size for a template
  * and an area to move the template within.  See \ref oddsAndEnds
  * for a description of how to choose those values.
+ * 
+ * \code
+ * // Find the control points using a template that is 50mx50m and
+ * // moving that template over a 70mx70m area.  This would mean
+ * // that new intersection control points must be within 20 meters
+ * // of the original intersection to be found.
+ * Intersections.findControlPoints( Rasta, 50, 70 );
+ * \endcode
  *
  * \subsection stepSize Step Six
  * Now we have a set of control points picked out, we need to 
@@ -59,14 +123,34 @@
  * can save time by saving the ControlPoint vector before you do this,
  * instead of recreating the set of points every time you want to test this
  * area.  To save the vector use the IntersectionMap::getControlPoints
- * function, and to resture it use IntersectionMap::setControlPoints.
+ * function, and to restore it use IntersectionMap::setControlPoints.
+ *
+ * \code
+ * // Get the filter we want
+ * Filter *filter = new VMFilter;
+ *
+ * // Do the filtration, removing 50% of the points
+ * Intersections.filter( filter, 0.5 );
+ *
+ * // Save the set of filtered points
+ * Intersections.outputControlPoints( pPoints );
+ *
+ * // Do the adjustment and output the new roads
+ * Intersections.triangulateAndAdjust( Triangulator, Transformer,
+ *                                     pLines );
+ *
+ * // Deleting the datasets here writes them to disk and closes the
+ * // files, so don't forget to do this.
+ * delete pOutput;
+ * delete pLines;
+ * \endcode
  *
  * \subsection finallyFinished Finished
  * Now, wasn't that easy?  All that is left is to clean up your memory
  * and you are done.  The program will take a long time to run any
  * large number of areas, but if you are just going to run one or two
  * it will take under an hour, I think it takes less than 30 minutes to
- * do this process on one 5000x5000 tile.
+ * do this process on one 5000x5000 tile with about 80 intersections.
  */
 
 

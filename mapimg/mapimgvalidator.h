@@ -1,10 +1,11 @@
-// $Id: mapimgvalidator.h,v 1.6 2005/02/23 17:47:40 jtrent Exp $
+// $Id: mapimgvalidator.h,v 1.7 2005/02/23 18:23:27 jtrent Exp $
 
 #ifndef MAPIMGVALIDATOR_H
 #define MAPIMGVALIDATOR_H
 
 #include <qobject.h>
 #include <qvalidator.h>
+#include <qglobal.h>
 
 #define Q_UINT8_MAX      0xFF
 #define Q_UINT8_MIN      0
@@ -27,14 +28,19 @@
 #define Q_UINT64_MAX      0xFFFFFFFFFFFFFFFF
 #define Q_UINT64_MIN      0
 
-#define Q_INT64_MAX         9223372036854775807LL
-#define Q_INT64_MIN       (-Q_INT64_MAX - 1LL)
+#if defined (Q_OS_WIN32) || defined (Q_OS_WIN64)
+       #define Q_INT64_MAX         9223372036854775807i64
+       #define Q_INT64_MIN       (-Q_INT64_MAX - 1i64)
+#else
+       #define Q_INT64_MAX         9223372036854775807LL
+       #define Q_INT64_MIN       (-Q_INT64_MAX - 1LL)
+#endif
 
-#define FLOAT32_MAX         Q_INT32_MAX                    /* Update Here  */
-#define FLOAT32_MIN         Q_INT32_MIN                    /* Update Here  */
+#define FLOAT32_MAX         3.402823466e+38F
+#define FLOAT32_MIN         1.175494351e-38F
 
-#define FLOAT64_MAX         Q_INT64_MAX                    /* Update Here  */
-#define FLOAT64_MIN         Q_INT64_MIN                    /* Update Here  */
+#define FLOAT64_MAX         1.7976931348623158e+308
+#define FLOAT64_MIN         2.2250738585072014e-308
 
 
 class QString;

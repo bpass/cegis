@@ -1,6 +1,6 @@
 
 // CVS magic symbols for voodoo practitioners
-// $Id: doxygenMain.h,v 1.10 2004/11/19 18:23:36 rstelzleni Exp $
+// $Id: doxygenMain.h,v 1.11 2004/11/23 01:29:42 rstelzleni Exp $
 
 /** \mainpage IntersectionLocator
  *
@@ -31,7 +31,8 @@
  * \section usage Usage
  * \ref preparingForNewData Instructions for preparing for a new dataset <BR>
  * \ref overallProcess Explanation of the overall process <BR>
- * \ref relatedLinks Web pages that you might find helpful<BR><BR>
+ * \ref relatedLinks Web pages that you might find helpful<BR>
+ * \ref printingInstructions In case you need to plot some maps<BR><BR>
  * It is probably worth pointing out here that the 
  * IntersectionMap::findControlPoints function will print out a bunch of
  * messages that say "processing intersection 1 of 543" or some other 
@@ -102,7 +103,7 @@
  * \subsection transformationProblems Transformation Problems
  * The rubber sheeting transformation that the program currently uses
  * has some major problems that could be improved upon.  The transformation
- * works by creating a set of traingles (a triangulation) that includes
+ * works by creating a set of triangles (a triangulation) that includes
  * every control point as a triangle vertex.  Then it creates a set of
  * linear transformations, one for each triangle, that move the original
  * points onto the control points.  Once this transformation is defined

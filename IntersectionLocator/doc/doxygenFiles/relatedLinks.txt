@@ -1,0 +1,68 @@
+
+// CVS junk
+// $Id: relatedLinks.txt,v 1.1 2004/11/19 18:25:03 rstelzleni Exp $
+
+/** \page relatedLinks Related Links
+ *
+ * \section links Links
+ * <a href="http://www.isi.edu/~knoblock/index.html">Dr. Knoblock's 
+ * Homepage</a> <BR>
+ * The paper that this code is based on is on Dr. Knoblock's webpage.
+ * The better paper on the process is not there, Mike Finn or Dr. Usery
+ * should have that somewhere.  This website contains lots of papers on
+ * all kinds of stuff, look for Geospatial Data Integration, or 
+ * conflation and you should find some information related to this algorithm.
+ *
+ * \subsection triangulationLinks Triangulation Links
+ * <a href="http://goanna.cs.rmit.edu.au/~gl/research/comp_geom/delaunay/delaunay.html">
+ * A Website on Delauney Triangulation</a><BR>
+ * This site describes delauney triangulation briefly, offers some broken C
+ * code for performing delauney triangulations, and has a Java applet that
+ * does delauney triangulation on the website.  This page is mostly useful
+ * for getting a graphical example of how the triangulation works.
+ *
+ * <a href="http://astronomy.swin.edu.au/~pbourke/terrain/triangulate/">
+ * A Link to Some Triangulation Code</a><BR>
+ * This site has a program ported to several languages for performing
+ * the delauney triangulation.  It seems a little complicated and I'm not
+ * sure if it would really be an improvement over the current method, but
+ * it might be useful for a reference implementation.
+ *
+ * <a href="http://www.cs.wustl.edu/~pless/506/l18.html">
+ * Good Code Based Description of Delauney Triangulation</a><BR>
+ * This site is mostly description of the process and pseudocode, but it is
+ * a pretty good reference.
+ *
+ * <a href="http://www.csit.fsu.edu/~burkardt/papers/delaunay.html">
+ * A List of Delauney Triangulation Implementations</a><BR>
+ * Can you tell I had a lot of trouble with this part of the code?  This
+ * page has a good list of implementations and comparison of their output.
+ *
+ * \subsection colorSpaceLinks Color Space Links
+ * <a href="http://en.wikipedia.org/wiki/HSV_color_space">
+ * A Good Description of RGB and HSV Colors</a><BR>
+ * This page has a good description of the color spaces and how to 
+ * transform between them.
+ *
+ * <a href="http://www.easyrgb.com/math.php?MATH=M20#text20">
+ * Pseudocode for the Color Transformation</a><BR>
+ * This page has the pseudocode that I believe I used for the color
+ * transformation.
+ *
+ * <a href="http://www.cs.bham.ac.uk/~mer/colour/hsv.html">
+ * A Very Nice Description of HSV Color Space</a><BR>
+ * With cool pictures!!
+ *
+ * \subsection classifierLinks Classifier Links
+ * <a href="http://www.geocities.com/ResearchTriangle/Forum/1203/NaiveBayes.html">
+ * Naive Bayesian Classification</a><BR>
+ * This page contains a nice description of naive bayesian classifiers.
+ * Also ahs a pretty good description of the statistics involved.
+ *
+ * <a href="http://www-2.cs.cmu.edu/~awm/tutorials/">
+ * Overall Classification Reference</a><BR>
+ * This site has a pretty good overview of lots of different methods of
+ * classifying things, and has links to more in depth discussions of these
+ * methods.  Probably a good source if you are trying to improve the 
+ * classification.
+ */

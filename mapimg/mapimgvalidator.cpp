@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.cpp,v 1.4 2005/02/22 17:22:09 jtrent Exp $
+// $Id: mapimgvalidator.cpp,v 1.5 2005/02/23 17:25:35 jtrent Exp $
 
 #include <qvalidator.h>
 #include <qstring.h>
@@ -35,15 +35,15 @@ void MapimgValidator::setDataType( QString mapimgDataType )
       d = 0;
 
       if( mapimgDataType.contains( "8" ) )
-         t = _UI8_MAX;
+         t = Q_UINT8_MAX;
       else if( mapimgDataType.contains( "16" ) )
-         t = _UI16_MAX;
+         t = Q_UINT16_MAX;
       else if( mapimgDataType.contains( "32" ) )
-         t = _UI32_MAX;
+         t = Q_UINT32_MAX;
       else
       {
          QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
-         t = _UI32_MAX;
+         t = Q_UINT32_MAX;
       }
    }
    else if( mapimgDataType.contains( "Signed" ) )
@@ -52,56 +52,56 @@ void MapimgValidator::setDataType( QString mapimgDataType )
 
       if( mapimgDataType.contains( "8" ) )
       {
-         b = _I8_MIN;
-         t = _I8_MAX;
+         b = Q_INT8_MIN;
+         t = Q_INT8_MAX;
       }
       else if( mapimgDataType.contains( "16" ) )
       {
-         b = _I16_MIN;
-         t = _I16_MAX;
+         b = Q_INT16_MIN;
+         t = Q_INT16_MAX;
       }
       else if( mapimgDataType.contains( "32" ) )
       {
          if( mapimgDataType.contains( "Integer" ) )
          {
-            b = _I32_MIN;
-            t = _I32_MAX;
+            b = Q_INT32_MIN;
+            t = Q_INT32_MAX;
          }
          else if( mapimgDataType.contains( "Float" ) )
          {
             d = 6;
-            b = _I32_MIN;                                   /* what are float min/max */
-            t = _I32_MAX;
+            b = FLOAT32_MIN;
+            t = FLOAT32_MAX;
          }
          else
          {
             QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
-            b = _I32_MIN;
-            t = _I32_MAX;
+            b = Q_INT32_MIN;
+            t = Q_INT32_MAX;
          }
 
       }
       else if( mapimgDataType.contains( "64" ) && mapimgDataType.contains( "Float" ) )
       {
          d = 6;
-         b = (double)_I64_MIN;                                   /* what are double min/max */
-         t = (double)_I64_MAX;
+         b = (double)FLOAT64_MIN;
+         t = (double)FLOAT64_MAX;
       }
       else //Signed with out proper bit or int/float string
       {
          QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
-         b = _I32_MIN;
-         t = _I32_MAX;
+         b = Q_INT32_MIN;
+         t = Q_INT32_MAX;
       }
    }
-   else //Completely invalid
+   else //Completely invalid string
    {
       QMessageBox::information( NULL, "MapimgValidator", "Bad data type string" );
-      b = _I32_MIN;
-      t = _I32_MAX;
+      b = Q_INT32_MIN;
+      t = Q_INT32_MAX;
       d = 0;
    }
-   
+
    return;
 }
 
@@ -196,19 +196,30 @@ QValidator::State MapimgValidator::validate( QString & input, int & ) const
 
 void MapimgValidator::fixup( QString& input ) const
 {
+   double entered = input.toDouble();
+
+   if( entered > t )
+   {
+   	entered = t;
+   }
+   else if( entered < b )
+   {
+   	entered = b;
+   }
+
+   input = QString::number( entered, 'f', d );
+
    /*fix decimal*/
    if( d == 0 )
    {
-      double entered = input.toDouble();
-      input = QString::number( entered );
-
       int decimalPlace = input.find( '.' );
 
       if( decimalPlace != -1 )
       {
-   	input = input.left( input.length() - decimalPlace - 1 );
+   	input = input.left( decimalPlace );
       }
    }
+
 
    return;
 }

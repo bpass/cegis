@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.20 2005/02/22 18:24:12 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.21 2005/02/23 17:25:35 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -76,7 +76,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    //actions
    exitAction = new QAction( QIconSet( mapimgImage( "exit" ) ), 
       "E&xit", QKeySequence("Ctrl+X"), this, "exitAction" );
-   bigAction = new QAction( 
+   bigAction = new QAction(
       "Use &Big Icons", QKeySequence("Ctrl+B"), this, "bigAction" );
    bigAction->setToggleAction( true );
 
@@ -141,7 +141,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    formLayout->addWidget( imgFrame );
 
    //actions
-   viewShowAction = new QAction( QIconSet( mapimgImage( "preview" ) ), 
+   viewShowAction = new QAction( QIconSet( mapimgImage( "preview" ) ),
       "Show Preview", QKeySequence(), this, "inViewAction" );
    viewShowAction->setToggleAction( true );
    viewResampleAction = new QAction( QIconSet( mapimgImage( "resample" ) ), 
@@ -530,12 +530,15 @@ void mapimgForm::inSaveClicked()
 }
 
 /*
-   
+
 */
 void mapimgForm::previewClicked( bool on )
 {
    if( ignorePreviewSignals )
       return;
+
+   if( !prevLast )               /*if a file is freshly loaded, but not displayed, prevLast will be NULL*/
+       previewInput( true );     /*this addition will generate the preview for this case*/
 
    prevLast->setOn(on);
 
@@ -543,6 +546,7 @@ void mapimgForm::previewClicked( bool on )
    {
       viewShowButton->setOn(on);
    }
+
    ignorePreviewSignals = false;
 }
 
@@ -551,14 +555,13 @@ void mapimgForm::previewInput( bool on )
    if( ignorePreviewSignals )
       return;
 
-
    if( on && prevLast != prevInput )
    {
       imgFrame->loadImg( inInfoFrame->info().imgFileName() );
       prevLast = prevInput;
    }
 
-   ignorePreviewSignals = true;
+   ignorePreviewSignals = true;                      /* what is this block? is it conditional? */
    {
       prevInput->setOn(on);
       prevOutput->setOn(false);
@@ -611,7 +614,6 @@ reprojects to a much smaller output.
 */
 bool mapimgForm::previewProjection()
 {
-
    if( !imgSet )
    {
       QMessageBox::critical( this, "Input not set",

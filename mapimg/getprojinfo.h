@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.16 2005/02/22 15:17:42 jtrent Exp $
+// $Id: getprojinfo.h,v 1.17 2005/02/23 17:25:35 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -14,7 +14,6 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <qwidget.h>
 #include <qmessagebox.h>
-#include <qprogressdialog.h>
 #include <qtextstream.h>
 #include <qdir.h>
 #include <qcolor.h>
@@ -31,6 +30,7 @@
 #include "mapimgform.h"
 
 #include "mapimgpalette.h"
+#include "mapimgprogressdialog.h"
 
 #include "logform.h"
 #include "jt_time.h"
@@ -109,21 +109,10 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
    void * mapimgoutbuf = imgIO.mapimgoutbuf;
 
    // Progress Dialog added in QT
-   QProgressDialog progress( "Performing Transformation", "Abort", outimg.nl,
+   //INPUT_COLOR and OUTPUT_COLOR are defined in mapimgpalette.h
+   MapimgProgressDialog progress( "Performing Transformation", "Abort", outimg.nl, &INPUT_COLOR, &OUTPUT_COLOR,
       mapimgdial, "progress", TRUE, WINDOW_FLAGS );
    progress.setCaption( "Processing..." );
-
-   double red = INPUT_COLOR.red();                             //INPUT_COLOR is defined in mapimgpalette.h
-   double grn = INPUT_COLOR.green();
-   double blu = INPUT_COLOR.blue();
-   double dRed = (OUTPUT_COLOR.red() - red) / outimg.nl;       //OUTPUT_COLOR is defined in mapimgpalette.h
-   double dGrn = (OUTPUT_COLOR.green() - grn) / outimg.nl;
-   double dBlu = (OUTPUT_COLOR.blue() - blu) / outimg.nl;
-
-   QColor c( INPUT_COLOR );                                    //INPUT_COLOR is defined in mapimgpalette.h
-   QPalette p( c );
-   p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
-   progress.setPalette( p );
 
    // Set min Duration required for Dialog at 1 second (try to make it always show)
    progress.setMinimumDuration(1);
@@ -143,16 +132,6 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
       // Set progress of Dialog box and cancel if process was cancelled
 
       progress.setProgress(out_line);
-      red += dRed; blu += dBlu; grn += dGrn;
-      
-      if( out_line%10 == 0 )
-      {
-          QColor c( red, grn, blu );
-          QPalette p( c );
-          p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
-          progress.setPalette( p );
-      }
-
 
       if(progress.wasCancelled())
       {
@@ -376,9 +355,6 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
 
    progress.setProgress( outimg.nl );
-   p = QPalette( OUTPUT_COLOR );            //OUTPUT_COLOR is defined in mapimgpalette.h
-   p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
-   progress.setPalette( p );
 
    // Close down processing & Exit... Processing is complete.
    // -------------------------------------------------------
@@ -458,7 +434,7 @@ bool mapimg_downsample( RasterInfo &input, RasterInfo &output, type useType, QWi
    void * mapimginbuf = imgIO.mapimginbuf;
    void * mapimgoutbuf = imgIO.mapimgoutbuf;
 
-   QProgressDialog progress( "Down Sample Input", "Abort", outimg.nl,
+   MapimgProgressDialog progress( "Down Sample Input", "Abort", outimg.nl, NULL, NULL,
       mapimgdial, "progress", TRUE, WINDOW_FLAGS );
    progress.setCaption( "Sampling..." );
    progress.setMinimumDuration(1);

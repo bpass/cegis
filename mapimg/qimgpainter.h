@@ -1,4 +1,4 @@
-// $Id: qimgpainter.h,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: qimgpainter.h,v 1.2 2005/02/23 17:25:35 jtrent Exp $
 
 
 #ifndef QIMGPAINTER_H
@@ -10,7 +10,7 @@
 ** Date: 6/29/04
 **
 ** Class definition of the qImgPainter.
-** Pass the qImgPainter a file and it will be ready to return a pixmap 
+** Pass the qImgPainter a file and it will be ready to return a pixmap
 ** of a requested size.
 *****************************************************************************/
 
@@ -21,8 +21,8 @@
 #include <qpainter.h>
 #include <qfile.h>
 #include <qdatastream.h>
-#include <qprogressdialog.h>
 
+#include "mapimgprogressdialog.h"
 #include "rasterinfo.h"
 
 class QImgPainter
@@ -33,7 +33,7 @@ public:
    ~QImgPainter();
    
    void setFile(QString imgFile);
-   
+
    //returns a pixmap of default size unless otherwise specified
    QPixmap getSample(QSize sampleSize);
    
@@ -219,8 +219,8 @@ template <class Type>
    }
    
    ////////LOAD IN COLOR TABLE ENTRIES
-   QProgressDialog pd("Reading data entries...", 
-                      "Abort", pixmap.height(),
+   MapimgProgressDialog pd( "Reading data entries...",
+                      "Abort", pixmap.height(), NULL, NULL,
                       0, "progress", TRUE);
    pd.setMinimumDuration(500);
    Q_ULLONG yOffSet, xOffSet;
@@ -357,12 +357,12 @@ template <class Type>
    //	 - read in the corresponding value from the file
    //	 - use the colorTable to lookup what color to use
    //	 - paint the pixel
+   //INPUT_COLOR and IMGCOLOR are defined in mapimgpalette.h
    QMap<Type, QColor> *colorTable =
          static_cast<QMap<Type, QColor> *>( vColorTable );
-   QProgressDialog pd("Generating preview...",
-                      "Abort", 11, 0, "progress", TRUE);
+   MapimgProgressDialog pd( "Generating preview...",
+                      "Abort", pixmap.height(), &INPUT_COLOR, &IMGCOLOR, 0, "progress", TRUE);
    pd.setMinimumDuration(500);
-   pd.setTotalSteps(pixmap.height());
    Q_ULLONG yOffSet, xOffSet;
    QPainter painter( &pixmap );
    painter.setWindow( 0, 0, pixmap.width(), pixmap.height() );

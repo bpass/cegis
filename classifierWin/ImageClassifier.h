@@ -12,68 +12,210 @@
 #include "tinyxml.h"
 #include "DataType.h"
 
+//! ImageClassifier object, performs a Jenks-Caspall classification on generic binary image data.
+
+/*! The ImageClassifier object is responsible for performing the image classification.
+	It makes use of the ImageClass object to store all class information, and the 
+	ModelMaker object to build the spatial modeler script.
+*/
 template <class T>
 class ImageClassifier {
 public:
+
+	//! Contruct an ImageClassifier object using an image file and a certain number of classes.
+
+	/*! This constructor instantiates an ImageClassifier object
+		loading the image referenced by filename, numClasses number of
+		classes.
+		\param filename The image file.
+		\param numClasses the number of classes to generate.
+		\throw GeneralException 
+	*/
 	ImageClassifier(const char* filename, int numClasses=5);
+
+	//! Construct an ImageClassifier object with an array of values and a certain number of classes.
+
+	/*! This constructor allows the user to pass the pixel values in in an 
+		array rather than loading a generic binary image file.
+		\param values The pixel values.
+		\param length The length of the pixel values array.
+		\param numClasses The number of classes to generate.
+		\throw GeneralException
+	*/
 	ImageClassifier(T values[], int length, int numClasses=5);
+
 	~ImageClassifier();
+	
+	//! Perform the classification
+
+	/*! This function runs the classification algorithm on
+		the current data values.  If the user passes in a
+		value for numClasses other than 0, he/she will override
+		the number of generated classes that was specified in the
+		constructor.
+		\param numClasses Number of classes to generate, overrides current value if not 0.
+		\throw GeneralException.
+	*/
 	void classify(int numClasses=0);
-	void printReport(); //print report to stdout
-	void printReportHTML(const char* filename); //print report in html format to file
-	void saveReportXML(const char* filename, DataType type); //save xml file
+
+	//! Print classification report to stdout
+	void printReport();
+	
+	//! Save results to an XML file.
+
+	/*! This function saves your classification results to an XML file.
+		If the file referenced by "filename" allready exists and is 
+		properly formatted, the classification results will be appended
+		to the file, rather than writing a new file.  This allows you
+		to have classification data for multiple image layers (which 
+		are each stored in a separate file) in one XML file.
+		\param filename The XML output file.
+		\param type The DataType of the original image.
+		\throw GeneralException.
+	*/
+	void saveReportXML(const char* filename, DataType type); 
+
+	//! Save a classification report to an HTML file.
+
+	/*! This function allows you to save your classification
+		results to an HTML file.
+		\param filename HTML output file.
+		\throw GeneralException.
+	*/
 	void saveReportHTML(const char* filename=NULL);
+
+	//! Save a classification report to a text file.
+
+	/*! This function allows you to save your classification
+		results to an ASCII text file.
+		\param filename Text output file.
+		\throw GeneralException.
+	*/
 	void saveReport(const char* filename=NULL);
+
+	//! Get the ImageClass object referenced by "index".
+
+	/*! This function allows you to get the ImageClass object
+		corresponding to the zero-based index of classes being generated.
+		\param index The index of the desired class.
+		\throw GeneralException
+	*/
 	ImageClass<T> getClass(unsigned int index);
+
+	//! Set the class color value for class number "index".
+
+	/*! This function allows you to set the RGB color values for 
+		a particular class being generated, referenced by "index".
+		\param index zero-based index of class to use.
+		\param r Red value.
+		\param g Green value.
+		\param b Blue value.
+		\throw GeneralException.
+	*/
 	void setClassColor(unsigned int index, unsigned int r, unsigned int g, unsigned int b);
+	
+	//! Set the color for a particular class using a ClassColor object.
+
+	/*! This function allows you to set the RGB color values for 
+		a particular class being generated, referenced by "index".
+		\param index zero-based index of class to use.
+		\param color ClassColor object used to set color.
+		\throw GeneralException.
+	*/
 	void setClassColor(unsigned int index, ClassColor color);
+
+	//! Set the the textual info for a class.
+
+	/*! This function allows you to set any special textual 
+		information you wish to about a particular class.
+		\param index Zero-based index of class to use.
+		\param info String of text to apply to the class.
+		\throw GeneralException.
+	*/
 	void setClassInfo(unsigned int index, const char* info);
 private:
+
+	//! Determine if a value exists.
+
+	/*! This function allows you to determine if a particular value
+		exists in any of the current ImageClass objects. 
+		returns true of the value exists, false otherwise.
+		\param val The value to search for.
+	*/
 	bool valueExists(T val);
+
+	//! Calculate and return the total error of all classes.
 	double calcTotalError();
+
+	//! Calculate and return the total error for a vector of ImageClass objects.
+
+	/*! This function calculates and returns the total error for
+		a vector of ImageClass objects.
+		\param vec The vector of ImageClass objects to use.
+	*/
 	double calcTotalError(std::vector< ImageClass<T> > vec);
+
+	//! Classes being used in classification.
 	std::vector< ImageClass<T> > m_classes;
+
+	//! Array of unique values to classify.
 	std::vector<T> m_values;
+
+	//! Number of classes.
 	int m_numClasses;
+
+	//! Image file being used.
 	char* m_filename;
 };
 
 template <class T>
-ImageClassifier<T>::ImageClassifier(const char* filename, int numClasses): m_numClasses(numClasses) {
-	T curVal;
+ImageClassifier<T>::ImageClassifier(const char* filename, int numClasses) {
+	T curVal; //current value being read
 	FILE* imageFile = NULL;
 	
+	if(numClasses < 2)
+		throw(GeneralException("Error in ImageClassifier constructor:"
+								"number of classes must be >= 2"));
 	if(!filename) 
 		throw(GeneralException("Error in ImageClassifier constructor: null filename given"));
 		
 	imageFile = fopen(filename, "rb");
 	if(imageFile) {
-
+		
+		//set m_filename to filename
 		m_filename = new char[strlen(filename)+1];
 		strcpy(m_filename, filename);
 		m_filename[strlen(filename)+1] = '\0';
 
 		while(!feof(imageFile)) {
 			
-			fread((void*)&curVal, sizeof(T), 1, imageFile);
-	
+			//read the next value from the file and 
+			//check to see if we allready have it.
+			fread((void*)&curVal, sizeof(T), 1, imageFile);	
 			if(!valueExists(curVal))
 				m_values.push_back(curVal);
 		}
+		//sort all unique values
 		std::sort(m_values.begin(), m_values.end());
 	}
 		
-	else {
-		m_filename = NULL;
+	else 
 		throw(GeneralException("Error reading image file"));
-	}
+	
 	
 	fclose(imageFile);
 }
 
 template <class T>
 ImageClassifier<T>::ImageClassifier(T values[], int length, int numClasses): m_numClasses(numClasses) {
+	if(numClasses < 2)
+		throw(GeneralException("Error in ImageClassifier constructor:"
+								"number of classes must be >= 2"));
+	
 	m_values.clear();
+
+	//read all values in array,
+	//put every unique value into m_values and then sort it.
 	for(int i = 0; i < length; i++) {
 		if(!valueExists(values[i]))
 			m_values.push_back(values[i]);
@@ -93,6 +235,8 @@ template <class T>
 bool ImageClassifier<T>::valueExists(T val) {
 	typename std::vector<T>::iterator iter;
 	iter = std::find(m_values.begin(), m_values.end(), val);
+
+	//if the value was now found return false.
 	if(iter == m_values.end())
 		return(false);
 	else
@@ -147,35 +291,40 @@ void ImageClassifier<T>::setClassInfo(unsigned int index, const char* info) {
 
 template <class T>
 void ImageClassifier<T>::classify(int numClasses) {
-	int numRemainingValues = 0;
-	int k = 0;
+	int numRemainingValues = 0; //values left to distribute
+	int k = 0; //counter
+	bool oneGoodIterationDone = false; //did we do at least one iteration
+									   //that reduced the error?
+	//if numClasses != 0, the user 
+	//wants to override the number of classes
+	//to be generated as specified in the constructor.
 	if(numClasses > 0) 
 		m_numClasses = numClasses;
 
 	if(m_numClasses <= 0)
 		throw(GeneralException("Error in classify(): number of classes must be greater than zero"));
 	
-	std::vector< ImageClass<T> > classesTemp;		
-	int numValues = m_values.size();
-	int classSize = (int)(numValues / m_numClasses);
+	std::vector< ImageClass<T> > classesTemp;	//temp storage for classes	
+	int numValues = m_values.size(); //number of unique values.
+	int classSize = (int)(numValues / m_numClasses);//how big each class should be
 
 	//if the number of values does not distribute out evenly among the classes,
-	//calculate the number of extra values that 
+	//calculate the number of extra values that we need to place.
 	numRemainingValues = numValues - (classSize*m_numClasses);
 	
 	if(classSize <= 0) 
 		throw(GeneralException("Error in classify(): number of classes exceeds number of unique values."));
 	
-	int curIndex = 0;
-	double curMeanClass1 = 0;
-	double curMeanClass2 = 0;
-	double diff1 = 0;
-	double diff2 = 0;
-	double oldError = 0;
-	double newError = 0;
-	//double errorLimit = 0.01;
-	std::string curClassName;
-	ImageClass<T> curClass;
+	int curIndex = 0; //current value index.
+	double curMeanClass1 = 0;//mean of current class
+	double curMeanClass2 = 0;//mean of next class in list
+	double diff1 = 0; //distance from mean of second class to boundary value of first class.
+	double diff2 = 0; //distance from mean of first class to first value of second class.
+	double oldError = 0; //error before new algorithm iteration.
+	double newError = 0; //error after latest iteration
+	std::string curClassName; //name for current new class.
+	ImageClass<T> curClass; //current class being built
+
 	//build initial classes of size classSize
 	for(int i = 0; i < m_numClasses; i++) {
 		char* number = new char[7];
@@ -197,21 +346,20 @@ void ImageClassifier<T>::classify(int numClasses) {
 		//if we still need to distribute some values across the classes
 		if(k < numRemainingValues) 
 			curClass++; //increase class capacity by 1;
-
+		
+		//fill current class with next chunk of values.
 		for(int j = 0; ((j < curClass.getInitialCapacity()) && (curIndex < numValues)); j++) {
 			curClass.addValue(m_values[curIndex]);
 			curIndex++;
 		}
-
+		
+		//calculate the mean of the new class and add it to the classes vector.
 		curClass.getMean(true);
 		classesTemp.push_back(curClass);
 		k++;
 		
 	}
 		
-	m_classes = classesTemp;
-
-
 	curIndex = 0;
 	
 	while(1) {
@@ -261,12 +409,15 @@ void ImageClassifier<T>::classify(int numClasses) {
 			
 		//else save our changes
 		else if(errorDiff == 0) {
+			oneGoodIterationDone = true;
 			m_classes = classesTemp;
 			break;
 		}
 		
-		else
+		else {
+			oneGoodIterationDone = true;
 			m_classes = classesTemp;
+		}
 		
 	}
 	for(int j = 0; j < m_numClasses; j++)

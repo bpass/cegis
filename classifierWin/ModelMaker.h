@@ -52,6 +52,7 @@ public:
 		\param inFile The original Imagine image file.
 		\param outFile The desired Imagine output file.
 		\param claFile The CLA file that contains the pixel ranges for each class in each layer of the original image.
+		\throw GeneralException 
 	*/
 	ModelMaker(const char* inFile, const char* outFile, const char* claFile);
 
@@ -63,6 +64,7 @@ public:
 	/*! This function takes all information loaded from the CLA file
 		and generates a working spatial modeler script.
 		\param filename The desired output file name for the generated script. 
+		\throw GeneralException
 	*/
 	void generate(const char* filename);
 private:
@@ -88,6 +90,7 @@ private:
 		scripts use forward slashes; this function corrects file path 
 		errors by replacing the backward slashes with forward slashes.
 		\param[out] filename The file path to be modified.
+		\throw GeneralException 
 	*/
 	void swapSlashes(char* filename);
 
@@ -97,6 +100,7 @@ private:
 		that contains the pixel ranges for each class and initializes
 		all appropriate class members accordingly.
 		\param claFile The path to the CLA file to parse.
+		\throw GeneralException 
 	*/
 	void buildClassInfo(const char* claFile); //parse .cla XML file
 };

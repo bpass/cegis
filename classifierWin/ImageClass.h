@@ -45,10 +45,11 @@ public:
 		specify FRONT to insert at the front of the list.
 		By default the mean value of the class is calculated
 		each time a new value is added, but this can be disabled by 
-		passing false as the third parameter.
+		passing false as the third parameter. Only unique values can
+		be inserted into a class, duplicates are not allowed.
 		\param newVal The value to be inserted.
 		\param position Where to place the new value, in the front or back of the list.
-		\throw GeneralException Value already exists.
+		\throw GeneralException 
 	*/
 	void addValue(T newVal, int position = BACK);
 
@@ -57,7 +58,7 @@ public:
 	/*! This function allows you to remove a value from 
 		the image class located at a particular index.
 		\param index the zero-based index of the value to be removed.
-		\throw GeneralException Index out of bounds.
+		\throw GeneralException 
 	*/
 	void removeValue(int index);
 
@@ -66,7 +67,7 @@ public:
 	/*! This function allows you to remove a value from 
 		the image class located at a particular iterator position.
 		\param pos An iterator pointing to the position of the item to be removed.
-		\throw GeneralException Iterator out of bounds.
+		\throw GeneralException 
 	*/
 	void removeValue(typename std::vector<T>::iterator pos);
 
@@ -74,7 +75,7 @@ public:
 
 	/*! This function allows you to specify a name for the class.
 		\param name The name string to assign to the class.
-		\throw GeneralException Setting a null value.
+		\throw GeneralException 
 	*/
 	void setName(const char* name);
 
@@ -120,7 +121,7 @@ public:
 		the user might want to include about this class, such
 		as what it represents.
 		\param info The string containing special information about the class.
-		\throw GeneralException Setting a null value
+		\throw GeneralException 
 	*/
 	void setInfo(const char* info);
 
@@ -170,7 +171,7 @@ public:
 	/*! This operator returns the value located at the index
 		passed in.
 		\param index The zero-based index of the value.
-		\throw GeneralException Index out of bounds.
+		\throw GeneralException
 	*/
 	T operator[](unsigned int index);
     

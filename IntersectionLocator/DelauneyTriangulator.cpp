@@ -11,7 +11,7 @@
 
 
 // Majic numbers for CVS
-// $Id: DelauneyTriangulator.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+// $Id: DelauneyTriangulator.cpp,v 1.3 2004/11/10 16:56:31 ahartman Exp $
 
 
 #include "DelauneyTriangulator.h"
@@ -29,7 +29,7 @@ void DelauneyTriangulator::outputTriangles( OGRDataSource *pDS,
    char *papszOptions[] = { "SHPT=ARC" };
    pLayer = pDS->CreateLayer( "LayerOne", &mToSR, wkbUnknown, papszOptions );
 
-   for( int i = 0; i < triangles.size(); ++i )
+   for( unsigned int i = 0; i < triangles.size(); ++i )
    {
       // A to B
       OGRLineString lineA;
@@ -78,3 +78,4 @@ void DelauneyTriangulator::outputTriangles( OGRDataSource *pDS,
 
    return;
 }
+

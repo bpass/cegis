@@ -1,0 +1,48 @@
+
+// Mystical symbols to please the CVS Gods
+// $Id: preparingForNewData.txt,v 1.1 2004/11/15 16:35:05 rstelzleni Exp $
+
+
+/** \page preparingForNewData Preparing For New Data
+ * 
+ * \section newDataInstructions Instructions to Prepare to Process New Data
+ * <P>
+ * When you get a new set of data to work with you will need to do some
+ * work to prepare to process it.  The most difficult part is training
+ * the classifier, but there are some other steps that can be a pain.
+ * </P>
+ * \section clippingVectorData Clipping Vector Data
+ * <P> One thing that will need to get done is clipping the vector data
+ * so that it covers the same region as the orthoimage you want to
+ * process.  The first step in doing this is to open the ortho in a
+ * viewer in Imagine and create an area of interest (aoi) outline of
+ * it.  This can be rough, it doesn't need to be perfect.  At this point
+ * I usually save the aoi layer in case I need it again later. Next go to
+ * file->new->Vector Layer ... in the veiwer's menu.  You will then 
+ * want to select Arc Coverage as the file type and give it a name.
+ * When the program prompts for a precision I usually select single.
+ * Next select the aoi and go to vector->Copy Selection To Vector ...
+ * After that is done go to file->save->Top Layer As to save the
+ * new vector file.
+ * </P><P>
+ * Ok, almost there.  Before continuing you have to close the vector
+ * coverage file in the viewer, or Imagine will corrupt your data.
+ * Next go to the main Imagine toolbar and select
+ * Vector.  In the dialog menu thingy that pops up select Build Vector
+ * Layer Topology.  That will pop up another dialog where you will 
+ * select your coverage file you created.  Then change the dropdown
+ * at the bottom of the screen from "Polygon" to "Line" and click ok.
+ * After that completes go back to the Vector dialog-menu and select
+ * Subset Vector Layer.  In this poorly designed dialog you will first
+ * select the vector coverage for the original road map file (the big
+ * map that we are subsetting).  In the second box select the name of
+ * the new coverage that you just created.  Then in the third box
+ * put the name of the output coverage that you want to create.  Lastly
+ * change the Subsetting Features drop-down box to say Lines instead of
+ * Polygons.  
+ * </P>
+ *
+ * When this finishes open up your new coverage in a viewer
+ * and make sure that it overlaps the raster, if it does then it worked.
+ * 
+ */

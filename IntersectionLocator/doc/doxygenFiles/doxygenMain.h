@@ -1,3 +1,7 @@
+
+// CVS magic symbols for voodoo practitioners
+// $Id: doxygenMain.h,v 1.2 2004/11/15 16:35:05 rstelzleni Exp $
+
 /** \mainpage IntersectionLocator
  *
  * \section intro Introduction
@@ -25,7 +29,7 @@
  * </P>
  *
  * \section usage Usage
- * This will need to be filled in later.
+ * \ref preparingForNewData Instructions for preparing for a new dataset
  *
  * \section installation Installation
  * <P>

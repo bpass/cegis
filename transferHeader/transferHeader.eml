@@ -1,0 +1,100 @@
+
+component transferHeader {
+
+	
+	frame firstframe;
+	frame firstframe {
+		title "Transfer ASTER Header Information";
+		filename infile1;
+		filename infile2;
+		filename infile3;
+		filename outfile;
+		button okb;
+		button closeb;
+		
+		
+		
+		button okb {
+			title "OK";
+			geometry 235, 150,50,25;
+			on mousedown {
+				doTransfer($infile1,$infile2,$infile3, $outfile);
+				set infile1 = "";
+				set infile2 = "";
+				set infile3 = "";
+				set outfile = "";
+				disable infile2;
+				disable infile3;
+				disable okb;
+			}
+		}
+
+		button closeb {
+			title "Cancel";
+			geometry 290,150,50,25;
+			on mousedown {unload;}
+		}
+		
+		filename infile1 {
+			title above left "Image 1";
+			geometry 0,0,175,50;
+			shortform;
+			select getpref ("eml" "default_data_path") + "/*.img";
+			on filenamechoosen {
+				if($infile1 != "") {
+					
+					enable infile2;
+				}
+			}
+			
+		}
+
+		filename infile2 {
+			title above left "Image 2";
+			geometry 0,65,175,50;
+			shortform;
+			select getpref ("eml" "default_data_path") + "/*.img";
+			on filenamechoosen {
+				if(($infile1 != "") && ($infile2 != "")) {
+					enable infile3;
+				}
+			}
+			
+		}
+
+		filename infile3 {
+			title above left "Image 3";
+			geometry 0,130,175,50;
+			shortform;
+			select getpref ("eml" "default_data_path") + "/*.img";
+			on filenamechoosen {
+				
+			}
+			
+		}
+
+		filename outfile {
+			title above left "Ouput File";
+			geometry 195, 65, 175, 50;
+			shortform;
+			select getpref ("eml" "default_data_path") + "/*.img";
+			on filenamechoosen {
+				if($infile1 != "" && $outfile != "") {
+					enable okb;
+				}
+			}
+			
+		}
+
+		on framedisplay {
+			disable okb;
+			disable infile2;
+			disable infile3;
+		}
+	}
+	on startup { 
+		display firstframe;
+		
+	}
+	
+}

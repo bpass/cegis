@@ -1,6 +1,6 @@
 
 // CVS junk
-// $Id: relatedLinks.txt,v 1.3 2004/11/30 19:38:47 rstelzleni Exp $
+// $Id: relatedLinks.txt,v 1.4 2004/12/20 18:35:43 ahartman Exp $
 
 /** \page relatedLinks Related Links
  *
@@ -20,6 +20,11 @@
  * Information Sciences Institute<BR>
  * 4676 Admiralty Way, Suite 1001<BR>
  * Marina del Rey, CA 90292<BR>
+ *
+ * <a href="mailto:rstelzleni@gmail.com">Ryan Stelzleni's Email Address</a> <BR>
+ * This is the contact information for the original author of this software
+ * and documentation, who has since left USGS but can be contacted through the
+ * above email address. <BR> 
  *
  * \subsection technicalInformation Technical Information
  * <a href="http://www.remotesensing.org/gdal/">GDAL/OGR Website</a><BR>

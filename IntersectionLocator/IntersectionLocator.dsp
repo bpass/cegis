@@ -215,7 +215,7 @@ SOURCE=.\VMFilter.h
 # End Group
 # Begin Group "doxygenFiles"
 
-# PROP Default_Filter "*.h"
+# PROP Default_Filter "*.h *.txt"
 # Begin Source File
 
 SOURCE=.\doc\doxygenFiles\buildingOnLinux.txt
@@ -231,6 +231,10 @@ SOURCE=.\doc\doxygenFiles\overallProcess.txt
 # Begin Source File
 
 SOURCE=.\doc\doxygenFiles\preparingForNewData.txt
+# End Source File
+# Begin Source File
+
+SOURCE=.\doc\doxygenFiles\relatedLinks.txt
 # End Source File
 # End Group
 # End Target

@@ -18,7 +18,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionMap.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+// $Id: IntersectionMap.cpp,v 1.3 2004/11/02 01:20:46 rstelzleni Exp $
 
 
 #include "IntersectionMap.h"
@@ -109,7 +109,7 @@ std::vector<ControlPoint> IntersectionMap::getControlPoints() const
    return vControl;
 }
 
-// Not a reference so that a copy is made
+// Not a reference so that a copy is made (why did I do this?)
 void IntersectionMap::setControlPoints( const std::vector<ControlPoint> 
                                         newPoints )
 {
@@ -396,8 +396,7 @@ void IntersectionMap::findControlPoints( InMemRaster &rasta,
 } // End Function findControlPoints
 
 
-// Denominator stuff is commented out to help solve a problem with identifying
-// control points near image borders.
+
 double IntersectionMap::correlate( InMemRaster &rasta, Template &T, 
                                    int X, int Y )
 {
@@ -414,14 +413,19 @@ double IntersectionMap::correlate( InMemRaster &rasta, Template &T,
          {
             if( T.isRoad( x, y ) && rasta.isRoad( X+x, Y+y ) )
                ++numMatch;
-            //else if( !T.isRoad( x, y ) && !rasta.isRoad( X+x, Y+y ) )
-            //   ++numMatch;
          }
       } // End for x
    } // End for y
 
    return numMatch + numDiff;
 }
+
+// Commented this out and went with the simpler version above.  They seem
+// to give the same output, but I saved this one in case some oddity comes
+// up.  
+// Denominator stuff is commented out to help solve a problem with identifying
+// control points near image borders.
+
 /*   // The numerator, denominator for the template information, and
    // the denominator for the raster information
    double iNumer = 0;//, iDenomT = 0, iDenomI = 0;

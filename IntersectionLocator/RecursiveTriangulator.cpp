@@ -27,7 +27,7 @@
 
 
 // Majic numbers for CVS
-// $Id: RecursiveTriangulator.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+// $Id: RecursiveTriangulator.cpp,v 1.3 2004/11/02 01:20:46 rstelzleni Exp $
 
 
 #include "RecursiveTriangulator.h"
@@ -37,7 +37,7 @@
 
 void RecursiveTriangulator::triangulate( 
                           const std::vector<ControlPoint> &points,
-                          Triangulation &edges )
+                          Triangulation &result )
 {
    // Initialization
    createInfiniteTri( points );
@@ -45,10 +45,10 @@ void RecursiveTriangulator::triangulate(
    // Perform on each point (this should really be randomized, but
    // I don't think I'll lose anything by just doing it this way.)
    for( int i=0; i<points.size(); ++i )
-      insert( points[i], i, points, edges );
+      insert( points[i], i, points, result );
 
    // Get rid of triangles that go to infinity
-   cleanTriangulation( edges );
+   cleanTriangulation( result );
 
    return;
 } // end function triangulate

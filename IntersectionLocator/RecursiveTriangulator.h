@@ -5,8 +5,11 @@
  *
  * Programmer: Ryan Stelzleni
  * Date: 8-18-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
+/**
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////                                                                         
 // Important note:
@@ -17,7 +20,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-
+*/
 // NOTE
 // This does not work.  It returns all triangles with one vertice
 // at 0, 0.
@@ -25,7 +28,7 @@
 
 
 // Majic numbers for CVS
-// $Id: RecursiveTriangulator.h,v 1.2 2004/10/18 22:42:52 rstelzleni Exp $
+// $Id: RecursiveTriangulator.h,v 1.3 2004/11/02 01:20:46 rstelzleni Exp $
 
 
 
@@ -42,14 +45,20 @@ struct RDTEdge
    int from, to;
 };
 
-
+/**                                                                        
+// Important note:
+//
+// This class doesn't work at all at the moment.  I might fix it
+// in the future, but the QuarticTriangulator is doing the task
+// so this is on the scrap heap
+*/
 class RecursiveTriangulator : public DelauneyTriangulator
 {
 public:
    virtual ~RecursiveTriangulator() {}
 
    virtual void triangulate( const std::vector<ControlPoint> &points,
-                             Triangulation &edges );
+                             Triangulation &result );
 
 private:
    void insert( const ControlPoint &point, int index, 

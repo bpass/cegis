@@ -162,6 +162,10 @@ SOURCE=.\DistanceFilter.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\doxygenMain.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Error.h
 # End Source File
 # Begin Source File

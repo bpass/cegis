@@ -12,7 +12,7 @@
 
 
 // Majic numbers for CVS
-// $Id: DelauneyTriangulator.h,v 1.3 2004/10/22 13:30:26 rstelzleni Exp $
+// $Id: DelauneyTriangulator.h,v 1.4 2004/11/02 01:20:46 rstelzleni Exp $
 
 
 #ifndef DELAUNEYTRIANGULATOR_H
@@ -58,7 +58,7 @@ public:
     * to take in a set of ControlPoints called points and create a
     * triangulation in edges for those points.
     * @param points The vector of control points to triangulate
-    * @param edges The resulting triangulation, this is an output parameter.
+    * @param result The resulting triangulation, this is an output parameter.
     */
    virtual void triangulate( const std::vector<ControlPoint> &points, 
                              Triangulation &result ) = 0;

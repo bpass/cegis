@@ -51,6 +51,15 @@ int geo2eqr(long numLines, long numSamps, const char * infilename, int projnum);
 extern  void * mapimginbuf;			// Ptr to the input image (all in memory)
 extern  void * mapimgoutbuf;			// Ptr to one line of output image data
 
+
+
+template <class type>
+int iround(type value, unsigned int decimals = 0)
+{
+  double factor = pow(10,decimals);
+  return floor((value * factor) + 0.5) / factor;
+}
+
 template <class type>
 bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 	        int fillval, const char * outfilename, QDialog * mapimgdial,
@@ -116,9 +125,6 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 
 
     /* jtrent resample */
-    static int call_count = 0;
-    FILE* bobFile = fopen( "sum.img", "wb" );
-    void* bobBuffer = (void*) malloc( sizeof( type ) * outsize );
 
     for(out_line = 0; out_line < outimg.nl; out_line++) 		// For each output image line
     {
@@ -153,31 +159,23 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 			         for( int inbox_j = 0; inbox_j < 2; inbox_j++ )
 			              inbox[inbox_i][inbox_j] = 0;
 
-                            call_count++;
-
-                            type* fill_bob = new type;
-                            *fill_bob = (type)(fillval);
-
                             find2corners = 0;
 
                             if( get_coords( outimg, inimg, out, inbox, out_line, out_samp, paramfile ) )
                             {
-//                            	printf( "get_coords call %i returned these points:\n", call_count );
-
 //                            	for( int indexii = 0; indexii < 5; indexii++ )
 //                            	{
 //                            		printf( "\t ( %f, %f )\n", inbox[indexii][0], inbox[indexii][1] );
 //                            	}
 
-//                                in_line = ((inimg.ul_y - in[1]) / inimg.pixsize) + 0.5;
-//			        in_samp = ((in[0] - inimg.ul_x) / inimg.pixsize) + 0.5;
+                              in_line = ((inimg.ul_y - in[1]) / inimg.pixsize) + 0.5;
+                              in_samp = ((in[0] - inimg.ul_x) / inimg.pixsize) + 0.5;
 
 			        // Still inside the input image??
   			        // ------------------------------
              			if (in_line<0||in_samp<0||in_line>=inimg.nl||in_samp>=inimg.ns)
                 		{
-                         	   //fwrite( fill_bob, sizeof( type ), 1, bobFile );
-			           *( (type*)bobBuffer + out_samp) = *fill_bob;
+			           *( (type*)mapimgoutbuf + out_samp) = fill; // Barely ever happans, if at all
 			        }
 
 			        // Assign the appropriate input image pixel to the output image using
@@ -213,14 +211,28 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 
                                 //----- check each pixel in minbox & compile stats -----//
 	                        int boxError = 1;
-	                        int coverageSize =  (int)(((long)(maxy+0.5) - (long)(miny+0.5)) *  ((long)(maxx+0.5) - (long)(minx+0.5)));
-	                        
+	                        int yCoverageArea = iround( maxy ) - iround( miny ) + 1;
+	                        int xCoverageArea = iround( maxx ) - iround( minx ) + 1;
+
+//	                        long yCoverageArea = ((long)(maxy+0.5) - (long)(miny+0.5));
+//                              long xCoverageArea = ((long)(maxx+0.5) - (long)(minx+0.5));
+
+                                if( yCoverageArea < 1 ) yCoverageArea = 1;
+                                if( yCoverageArea == 1 && maxy != miny ) yCoverageArea++;
+
+                                if( xCoverageArea < 1 ) xCoverageArea = 1;
+                                if( xCoverageArea == 1 && maxx != minx ) xCoverageArea++;
+
+	                        int coverageSize =  (int)( yCoverageArea * xCoverageArea );
+
+//                                printf( "minx = %i\tmaxx = %i\tminy = %i\tmaxy = %i\n", minx, maxx, miny, maxy );
 //	                        printf( "coverageSize = %i\n", coverageSize );
 //	                        fflush( stdout );
 
                                 void* inputCoverage = (void*)malloc( sizeof(type) * coverageSize+1 );
                                 int offset = 0;
                                 double coord[2] = { 0 };
+
 /*
                                 printf( "Computing box centered @ ( %f , %f )\n", inbox[4][0], inbox[4][1] );
                                 printf( "Y length is from %i to  %i ..... %f %f %f %f\n", miny, maxy,
@@ -230,16 +242,17 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
                                         inbox[3][1] );
                                 fflush( stdout );
   */
-	                        for(long currentY = (long)(miny+0.5); currentY <= (long)(maxy+0.5); ++currentY)
+
+                                offset = 0;
+
+	                        for(int currentY = iround(miny); currentY <= iround(maxy); currentY++)
 	                        {
                                     coord[1] = currentY;
 
                                     //Loads into memory the current line of input needed
                                     get_line(  mapimginbuf, coord[1]*inimg.ns, inimg.ns+1, useType );
 
-                                    offset = 0;
-
-	                            for(long currentX = (long)(minx+0.5); currentX <= (long)(maxx+0.5); ++currentX)
+	                            for(int currentX = iround(minx); currentX <= iround(maxx); currentX++)
 	                            {
 	                                coord[0] = currentX;
 	                                if( inBox( inbox, coord ) )
@@ -247,15 +260,14 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
                                  	      boxError = 0;
 
                                                 *( (type*)inputCoverage + offset) = *(((type*)mapimginbuf + (int)coord[0]));
-
-//                                                printf( "offset = %i    ... coverageSize = %i\n", offset, coverageSize );
-//                                                fflush( stdout );
-
 	                                }//if inBox
 	                                else
 	                                {
                                               *( (type*)inputCoverage + offset) = 0;
                                         }
+
+//                                        printf( "offset = %i    ... coverageSize = %i\n", offset, coverageSize );
+//                                        fflush( stdout );
 
                                         offset++;
 	                            }// for curx
@@ -270,11 +282,13 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 	                        {
                                    //Loads into memory the current line of input needed
                                    get_line(  mapimginbuf, inbox[4][1]*inimg.ns, inimg.ns+1, useType );
-//
+
 //                                   printf( "boxError doing nearest neighbor\n" );
 //                                   fflush( stdout );
                                    //references specific element of input
-                                   *( (type*)bobBuffer + out_samp) = *(((type*)mapimginbuf + (int)(inbox[4][0])));
+//                                   *( (type*)mapimgoutbuf + out_samp) = 2;  //Purple 4228 edges
+//                                   *( (type*)mapimgoutbuf + out_samp) = fill;
+                                   *( (type*)mapimgoutbuf + out_samp) = *(((type*)mapimginbuf + (int)(inbox[4][0])));
                                 }
 	                        else	//!boxError
 	                        {
@@ -288,22 +302,26 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 	                           {
                                        sumValue += *( (type*)inputCoverage + coverageIndex );
 	                           }
-	                           *( (type*)bobBuffer + out_samp) = *( (type*)inputCoverage + coverageIndex);
+//	                           *( (type*)bobBuffer + out_samp) = *( (type*)inputCoverage + coverageIndex);
+	                           *( (type*)mapimgoutbuf + out_samp) = sumValue;
+//	                           *( (type*)mapimgoutbuf + out_samp) = 2; //dark green most of image  36654
+
+//                                   printf( "finished sum = %u\n", (unsigned int)sumValue );
+//                               	   fflush( stdout );
 			        }
+
+			        free( inputCoverage );
                               }
-//                                printf( "finished sum\n" );
-//                              	fflush( stdout );
                             }
                             else
                             {
-//                            	printf( "get_coords call %i returned zero\n", call_count );
-//                            	fflush( stdout );
-                         	//fwrite( fill_bob, sizeof( type ), 1, bobFile );
-   		                *( (type*)bobBuffer + out_samp) = *fill_bob;
+//                            	printf( "get_coords returned zero\n" );
+//                           	fflush( stdout );
+   		                *( (type*)mapimgoutbuf + out_samp) = fill; //light gray 23918 fill
                             }
 
 /********** resample jtrent *******************/
-
+/*
 		// Goode's already does error checking; skip the wrap-around check
 		// ---------------------------------------------------------------
 		if(outimg.sys == 24)
@@ -333,7 +351,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 				&outimg.datum,"","",&status);
 
 */
-			gctp(out,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
+/*			gctp(out,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,
 				&errorMode,logFile,&paramMode,logFile,paramfile,t1,&zero,&outimg.zone,pparm,&four,
 				&outimg.datum,"","",&status);
 
@@ -396,13 +414,13 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 			    *( (type*)mapimgoutbuf + out_samp) = *((type*)mapimginbuf + in_samp);
 			}
 		}
+		*/
 	}
 
 
 	// Spit out a processing message & write the output image line to disk
 	// -------------------------------------------------------------------
 	put_line(mapimgoutbuf, useType);
-	put_line(bobBuffer, bobFile, useType );
     }
 
     progress.setProgress( outimg.nl );
@@ -436,7 +454,7 @@ bool mapimg(const char * mapimginfilename, const char * mapimgoutfilename,
 	str = QString::number(outputCols, 10);
 	out += str;
 	out += "\n";
-                   fclose( bobFile );
+
 	//debug timing purposes
 	out += "\nDuration: ";
 	out += debugTimer.stop();

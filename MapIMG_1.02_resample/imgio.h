@@ -228,10 +228,49 @@ extern FILE * inptr;				// Input file pointer  from imgio.cpp
 extern long insize;				// Number of bytes in input image
 static long get_line_loadedData;
 
+#include <qintcache.h>
+static int MAX_DATA_ELEMENT_COUNT = 10;
+static int FRIST_PRIME_AFTER_MAX = 11;
+
 template <class type>
-void get_line(void * buf, long offset, int lineLength, type typeToUse)
+void get_line(void* &buf, long offset, int lineLength, type typeToUse)
 {
+  static QIntCache<type> inputDataMap( MAX_DATA_ELEMENT_COUNT, FRIST_PRIME_AFTER_MAX );
+  inputDataMap.setAutoDelete( true );
+
      // check and see if line requested is already in memory
+     if( inputDataMap.find( offset ) ==  0 )
+     {
+
+        if( fseek( inptr, offset * sizeof(type), 0 ) != 0 )
+        {
+            // end of file or corrupt file found
+            p_error( "seek_image: error!", "[image read]");
+        }
+
+        //then load the line into memory
+        type *newBuffer = new type[insize];
+        fread( newBuffer, sizeof(type), insize, inptr );
+
+        if( inputDataMap.insert( offset, (type*)newBuffer ) != true )
+        {
+           printf( "Error deleting least recently used item.\n" );
+           fflush( stdout );
+        }
+     }
+
+
+     if( inputDataMap.find( offset ) !=  0 )
+     {
+       buf = inputDataMap.find( offset );
+
+     }
+     else
+     {
+       printf( "Error inserting into and retreiving from least recently used cache.\n" );
+       fflush( stdout );
+     }
+/*
      if( get_line_loadedData != offset )
      {
         //if not, first, seek to that point in the file
@@ -248,6 +287,8 @@ void get_line(void * buf, long offset, int lineLength, type typeToUse)
         fread(buf, sizeof(type), insize, inptr);
 
      }
+  }
+ */
      return;
 }
 
@@ -280,7 +321,7 @@ template <class type>
 void put_line(void * buf, type typeToUse)
 {
      fwrite(buf, sizeof(type), outsize, outptr);
-
+     fflush( outptr );
      return;
 }
 

@@ -1,4 +1,4 @@
-# $Revision: 1.13 $
+// $Id: main.cpp,v 1.14 2004/10/07 16:00:25 ahartman Exp $
 
 
 #include <iostream>

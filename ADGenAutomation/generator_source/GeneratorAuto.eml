@@ -1,0 +1,320 @@
+/********************************************************************/
+/*Programmer: Kyle Williams                                         */
+/*Creation Date: January, 2005                                      */
+/*                                                                  */
+/*ADGen Automation Program                                          */
+/*This program takes as input 4 images (.img) and converts them into*/
+/*    22 parameters to be used by AGNPS.                            */
+/********************************************************************/
+
+component main
+{
+    frame waitframe;
+    frame mainframe;
+
+	frame mainframe
+    {
+        title "ADGen Automation";
+        geometry 250, 40, 328, 311;
+
+        filename f_dem;		    /* Input - Original DEM file		*/
+        filename f_asciidem;    /* Input - DEM file in ASCII format */
+        filename f_waterCutout; /* Input - Watershed                */
+        
+        filename f_flow;        /* Temp  - Holds flowfile *p.asc    */
+        filename f_asciiflow;   /* Temp  - Holds ascii flowfile     */
+        
+        filename f_p1;          /* Output- Parameter 1              */
+        filename f_p3;          /* Output- Parameter 3              */
+        filename f_p5;          /* Output- Parameter 5              */
+        filename f_p6;          /* Output- Parameter 6 !Not yet implemented!*/
+        filename f_p7;          /* Output- Parameter 7              */
+        
+        
+        filename file1;
+        filename file3;
+        filename file5;
+        filename file6;
+        filename file7;
+        
+        
+        button b_run;
+        button b_p5Cancel;
+        
+        variable p5temp;
+        variable here;
+        variable thing;        
+        
+
+		/*********************************/
+		/* Input files                   */
+		/*********************************/        
+        filename f_dem
+        {
+            title above left "Original DEM";
+            info "Select the file containing elevation data.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+				disable f_asciidem;
+				if($f_waterCutout != "" && (($f_dem != "") OR ($f_asciiDem != "")))
+					enable b_run;
+            }
+        }
+
+        filename f_asciidem
+        {
+            title "ASCII DEM";
+            info "Select the file containing the DEM in ASCII format";
+            geometry 5, 55, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.asc";
+            on filenamechoosen
+            {
+				disable f_asciidem;
+				if($f_waterCutout != "" && (($f_dem != "") OR ($f_asciiDem != "")))
+					enable b_run;
+            }
+        }
+        
+        filename f_waterCutout
+        {
+            title above left "Watershed cutout";
+            info "Select the file containing the watershed cutout of the DEM.";
+            geometry 5, 107, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                if($f_waterCutout != "" && (($f_dem != "") OR ($f_asciiDem != "")))
+                {
+					enable b_run;
+                }
+            }
+         
+        }
+        
+        /*********************************/
+        /* Temporary files               */
+        /* Note: This was done because   */
+        /*  the EML would not allow me to*/
+        /*  use the file unless it had a */
+        /*  file selector.               */
+        /*********************************/
+        filename f_asciiflow
+        {
+            title above left "Flow Direction image";
+            info "Choose the flow image name converted from 'p'.";
+            geometry 5, 240, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+        }
+        
+        /*********************************/
+        /* Output files for parameters   */
+        /*********************************/
+        
+        filename f_p1
+        {
+            title above left "Parameter 1";
+            info "Parameter 1 output.";
+            geometry 170, 3, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+        }
+        
+		filename f_p3
+		{
+			title above left "Parameter 3";
+			info "Parameter 3 Output";
+			geometry 170, 55, 150, 35;
+			newfile;
+			shortform;
+			filetypedef "raster (*.img)";
+		}
+		
+        filename f_p5
+        {
+            title above left "Parameter 5";
+            info "Parameter 5 Output";
+            geometry 170, 107, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+        }
+        
+        filename f_p6
+        {
+			title above left "Parameter 6";
+            info "Parameter 6 Output";
+            geometry 170, 159, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+        }
+        
+        filename f_p7
+        {
+			title above left "Parameter 7";
+            info "Parameter 7 Output";
+            geometry 170, 211, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+		}
+        
+        
+        
+        /*********************************/
+        /* The big RUN BUTTON            */
+        /*         (dun dun DUNNNNNNN)   */
+        /*********************************/
+        button b_run
+        {
+            title "Run";
+            info "Run parameter generation";
+            geometry 3, 179, 75, 30;
+            on mousedown
+            {
+				if($f_asciidem == "")
+				{
+					set f_asciidem = img2ascii($f_dem);
+				}
+            	display waitframe;
+                set here = "flood.exe";
+                set thing = flood($here $f_asciidem);
+                set here = "d8.exe";
+                set thing = flow($here $f_asciidem);
+                set f_flow = fpath($f_dem) + froot($f_dem) + "p.asc";
+                set f_asciiflow = ascii2img($f_flow, $f_dem);
+                
+                
+                enable f_p1;
+				enable f_p3;
+				enable f_p5;
+				enable f_p6;
+				enable f_p7;
+					set f_p1 = fpath($f_dem) + "Parameter1.img";
+					set f_p3 = fpath($f_dem) + "Parameter3.img";
+					set f_p5 = fpath($f_dem) + "Parameter5.img";
+					set f_p6 = fpath($f_dem) + "Parameter6.img";
+					set f_p7 = fpath($f_dem) + "Parameter7.img";
+				disable f_p1;
+				disable f_p3;
+				disable f_p5;
+				disable f_p6;
+				disable f_p7;
+                
+                
+                
+                
+                
+                /*********************************/
+                /* Note: The "job" command was   */
+                /*    used instead of the syncjob*/
+                /*    command because syncjob    */
+                /*    causes stack errors.       */
+                /*********************************/
+                
+                /*********************************/
+                /* Parameter 1 creation          */
+                /*********************************/
+                set thing = cells($f_waterCutout $f_p1);
+                
+                /*********************************/
+                /* Parameter 5 creation          */
+                /*********************************/
+                job modeler "$IMAGINE_HOME/etc/models/p5_flowconversion_model.mdl" -s -m $f_asciiflow $f_p5;
+                
+                /*********************************/
+                /* Parameter 7 creation          */
+                /* Syncjob will suspend execution*/
+                /*   until it is finished.  This */
+                /*   keeps parameter 3 from      */
+                /*   running until 1 and 5 are   */
+                /*   finished.                   */
+                /*********************************/
+                syncjob modeler "$IMAGINE_HOME/etc/models/p7_slope_model.mdl" -s -m $f_dem $f_p7;
+                
+                /*********************************/
+                /* Parameter 3 creation:         */
+                /*   uses parameters 1 and 5 for */
+                /*   creation.                   */
+                /*********************************/
+                job modeler "$IMAGINE_HOME/etc/models/p3_rec_cell_model.mdl" -s -m $f_p1 $f_p5 $f_p3;
+                
+                
+                set file1 = $f_p1;
+                set file3 = $f_p3;
+                set file5 = $f_p5;
+                set file7 = $f_p7;
+                
+                undisplay waitframe;
+            }
+        }
+
+        button b_p5Cancel
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 80, 179, 75, 30;
+            on mousedown
+            {
+				dismiss();
+				unload;
+            }
+        }
+
+        on framedisplay
+        {
+			/*********************************/
+			/* Disable 'Run' button until    */
+			/* appropriate inputs have been  */
+			/* declared                      */
+			/*********************************/
+            disable b_run;
+            
+            /*********************************/
+            /* Hide needed temporary files   */
+            /*********************************/
+            hide f_asciiflow;
+            
+            /*********************************/
+            /* Disable output file selection */
+            /*********************************/
+            disable f_p1;
+            disable f_p3;
+            disable f_p5;
+            disable f_p6;
+            disable f_p7;
+        }
+    }    
+        
+
+/****************************************************************************************/
+/*
+/*   Wait Frame
+/*      - called while a process is running.
+/*
+/****************************************************************************************/
+    frame waitframe
+    {
+        title "Running Processes...";
+        geometry 400, 350, 200, 100;
+
+        label wait
+        {
+            geometry 20,40,100,25;
+            title "Running a Process.  Please wait...";
+        }
+    }
+
+
+
+
+	on startup display mainframe;
+}

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.9 2005/02/05 00:16:55 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.10 2005/02/10 15:48:19 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -478,7 +478,7 @@ void mapimgForm::inSaveClicked()
          QString("%1\n\nInput XML file already exists. Do you want to overwrite it?").arg(i.xmlFileName()),
          QMessageBox::Yes, QMessageBox::No);
 
-      if( arg == QMessageBox::Yes )
+      if( arg == QMessageBox::No )
       {
          i.load();
          inInfoFrame->setInfo( i );
@@ -495,8 +495,8 @@ void mapimgForm::inSaveClicked()
    previewProjClicked() is used to preview a projection. This is useful
 because many reprojections can take hours but using this function the output
 can be preivewed before investing the time. The reprojection function is
-linear with size increases having a proportional effect on run-time. This 
-preview down samples the input with a constant time algorithm and then 
+linear with size increases having a proportional effect on run-time. This
+preview down samples the input with a constant time algorithm and then
 reprojects to a much smaller output.
 */
 void mapimgForm::previewProjClicked()
@@ -525,7 +525,7 @@ void mapimgForm::previewProjClicked()
 
    if( !mapimg::downSizeProjection( output, 720 ) )
    {
-      QMessageBox::critical( this, "Output Error", 
+      QMessageBox::critical( this, "Output Error",
          "Unexpected failure with output operations" );
       return;
    }
@@ -582,7 +582,7 @@ void mapimgForm::outSaveClicked()
 
    if( !output.setFileName( temp ) )
    {
-      QMessageBox::critical( this, "Output Error", 
+      QMessageBox::critical( this, "Output Error",
          "Invalid output file name" );
       return;
    }
@@ -625,6 +625,7 @@ void mapimgForm::outSaveClicked()
    resample.setFillValue( input.fillValue() );
    resample.setNoDataValue( input.noDataValue() );
 
+   qDebug( "outSaveClicked" );
    mapimg::reproject( input, output, resample, this );
    delete resForm;
 

@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.6 2005/02/01 18:11:55 rbuehler Exp $
+// $Id: rasterinfo.cpp,v 1.7 2005/02/10 15:48:20 jtrent Exp $
 
 
 #include "rasterinfo.h"
@@ -211,8 +211,11 @@ bool RasterInfo::load( QString &imgFileName )
       parseFileName();
    }
 
+
    if( QFile::exists( fileName + ".xml" ) )
+   {
       return loadXml();
+   }
    else if( QFile::exists( fileName + ".img.info" ) )
    {
       loadInfo();
@@ -220,7 +223,9 @@ bool RasterInfo::load( QString &imgFileName )
       QFile::remove( fileName + ".img.info" );
    }
    else
+   {
       return false;
+   }
 
    return true;
 }

@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.3 2005/02/03 18:12:18 jtrent Exp $
+// $Id: resampleform.cpp,v 1.4 2005/02/10 15:48:20 jtrent Exp $
 
 
 /****************************************************************************
@@ -180,7 +180,7 @@ ResampleInfo ResampleForm::info()
 
    ResampleInfo r;
    r.setResampleCode( resampleCombo->currentText() );
-   r.setIgnoreList( sz, ivals );       //jtrent   MSVC6 reports that setIgnoreList doesn't take 2 params??
+   r.setIgnoreList( sz, ivals );      
 
    return r;
 }

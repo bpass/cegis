@@ -26,8 +26,6 @@ int main( int argc, char ** argv )
     //    or drap drop  usage:  MapIMG xxxx.extension   or
     //                          MapIMG xxxx.extension.info
 
-    argc = 2;
-    argv[1] = "orig_08b_u.img\0";
     if( argc > 1 )
     {
         QString fileName = argv[1];

@@ -21,7 +21,7 @@
 				AdditionalOptions="-Zm200 -GX -w34100 -w34189"
 				Optimization="1"
 				AdditionalIncludeDirectories="$(QTDIR)\include,.,D:\Qt\mkspecs\win32-msvc.net"
-				PreprocessorDefinitions="QT_NO_DEBUG,NDEBUG,_WINDOWS,UNICODE,WIN32,QT_DLL,QT_THREAD_SUPPORT"
+				PreprocessorDefinitions="QT_NO_DEBUG;NDEBUG,_WINDOWS,UNICODE,WIN32,QT_DLL,QT_THREAD_SUPPORT"
 				GeneratePreprocessedFile="0"
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="2"

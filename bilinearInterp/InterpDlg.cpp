@@ -33,8 +33,8 @@ InterpDlg::InterpDlg(QWidget* parent, const char* name)
 	pointsFileButton = new QPushButton("Browse", fileGroup);
 
 	//image info group
-	imageWidthLabel = new QLabel("Width", imageGroup);
-	imageHeightLabel = new QLabel("Height", imageGroup);
+	imageWidthLabel = new QLabel("Columns", imageGroup);
+	imageHeightLabel = new QLabel("Rows", imageGroup);
 	numLayersLabel = new QLabel("# Layers", imageGroup);
 	imageWidthEdit = new QLineEdit(imageGroup);
 	imageWidthEdit->setValidator(new QIntValidator(this));
@@ -105,6 +105,51 @@ void InterpDlg::run() {
 	if(pointsFile)
 		delete pointsFile;
 	
+	if(imageFileEdit->text().isEmpty()) {
+		QMessageBox::critical(this, "Error", "You must specify an image file.");
+		return;
+	}
+
+	if(pointsFileEdit->text().isEmpty()) {
+		QMessageBox::critical(this, "Error", "You must specify a points file.");
+		return;
+	}
+
+	if(imageWidthEdit->text().isEmpty()) {
+		QMessageBox::critical(this, "Error", "You must specify the number of columns.");
+		return;
+	}
+
+	if(imageHeightEdit->text().isEmpty()) {
+		QMessageBox::critical(this, "Error", "You must specify the number of rows.");
+		return;
+	}
+
+	if(numLayersEdit->text().isEmpty()) {
+		QMessageBox::critical(this, "Error", "You must specify the number of layers in the image.");
+		return;
+	}
+
+	if(ulxEdit->text().isEmpty()) {
+		QMessageBox::critical(this, "Error", "You must specify the upper-left X coordinate of the image.");
+		return;
+	}
+
+	if(ulyEdit->text().isEmpty()) {
+		QMessageBox::critical(this, "Error", "You must specify the upper-left Y coordinate of the image.");
+		return;
+	}
+
+	if(pixelWidthEdit->text().isEmpty()) {
+		QMessageBox::critical(this, "Error", "You must specify the width of the image pixels (in meters).");
+		return;
+	}
+
+	if(pixelHeightEdit->text().isEmpty()) {
+		QMessageBox::critical(this, "Error", "You must specify the height of the image pixels (in meters).");
+		return;
+	}
+
 	imageFile = new QString(imageFileEdit->text());
 	pointsFile = new QString(pointsFileEdit->text());
 	params.width = imageWidthEdit->text().toLong();
@@ -114,15 +159,14 @@ void InterpDlg::run() {
 	params.uly = ulyEdit->text().toDouble();
 	params.pixelWidth = pixelWidthEdit->text().toFloat();
 	params.pixelHeight = pixelHeightEdit->text().toFloat();
+
 	try {
 	//	QProgressDialog pd(this, "Progress", TRUE);
 		BilInterpolator* b = NULL;
 	//	connect(b, SIGNAL(updateProgress(int progress, int totalSteps)), pd, SLOT(setProgress(int progress, int totalSteps)));
 		
 		b = new BilInterpolator(imageFile->ascii(), pointsFile->ascii(), params);
-		QString outputFile = *imageFile;
-		outputFile += "-results.txt";
-		b->saveResults(outputFile.ascii());
+		b->saveResults(imageFile->ascii());
 		delete b;
 	}
 

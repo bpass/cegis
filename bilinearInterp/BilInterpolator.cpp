@@ -17,14 +17,14 @@ BilInterpolator::BilInterpolator(const char* imageFile, const char* pointsFile, 
 m_params(params), m_imageFilePtr(NULL) 
 
 {
-	
 	if(!imageFile || !pointsFile) {
 		std::string error = "null filename given";
+		destruct();
 		throw(GeneralException(error));
 	}
 	
 	for(unsigned int i = 0; i < m_params.numLayers; i++) {
-		std::vector<float> a;
+		std::vector<double> a;
 		m_results.push_back(a);
 	}
 
@@ -33,12 +33,18 @@ m_params(params), m_imageFilePtr(NULL)
 }
 
 BilInterpolator::~BilInterpolator() {
+	destruct();
+}
+
+void BilInterpolator::destruct() {
 	if(m_imageFilePtr)
 		fclose(m_imageFilePtr);
 }
+
 void BilInterpolator::setImage(const char* filename) {
 	if(!filename) {
 		std::string error = "null filename given";
+		destruct();
 		throw(GeneralException(error));
 	}
 
@@ -54,41 +60,43 @@ void BilInterpolator::setParams(const ImageParameters& params) {
 }
 
 void BilInterpolator::interpolate(const char* pointsFile) {
-	float result = 0;
+	double result = 0;
 
 	if(!pointsFile) {
 		std::string error = "null filename given";
+		destruct();
 		throw(GeneralException(error));
 	}
 	
 	loadPoints(pointsFile);
 	for(unsigned int i = 0; i < m_params.numLayers; i++) {
 		for(unsigned int j = 0; j < m_points.size(); j++) {
-			result = doInterpolation(m_points[j], i+1);
+			result = doInterpolation(m_points[j], i);
 			m_results[i].push_back(result);
 //			emit updateProgress((m_points.size()*(i) + j), (m_points.size()*m_params.numLayers));
 		}
 	}
 }
 
-float BilInterpolator::doInterpolation(const Point& p, int band) {
+double BilInterpolator::doInterpolation(const Point& p, int band) {
 	if(band < 0) {
 		std::string error = "Band < 0";
+		destruct();
 		throw(GeneralException(error));
 	}
 
-	float result = 0.0;
+	double result = 0.0;
 	double fCol = 0;
 	double fRow = 0;
 	double temp = 0;
-	long row = 0;
-	long col = 0;
-	float fracX = 0;
-	float fracY = 0;
+	unsigned long row = 0;
+	unsigned long col = 0;
+	double fracX = 0;
+	double fracY = 0;
 
 	float f00,f10,f01,f11 = 0; //each represents a value in the 2x2 square of pixels 
 								//closest to the point of interest.
-	float x,y=0; //the position of our point inside of the 2x2 grid.
+	double x,y=0; //the position of our point inside of the 2x2 grid.
 
 	double ulx = m_params.ulx;
 	double uly = m_params.uly;
@@ -100,6 +108,15 @@ float BilInterpolator::doInterpolation(const Point& p, int band) {
 	//get row,column coordinate of point
 	col = (long)floor(fCol);
 	row = (long)floor(fRow);
+	if(col > m_params.width) {
+		std::string error("Column out of bounds");
+		throw(GeneralException(error));
+	}
+
+	if(row > m_params.height) {
+		std::string error("Column out of bounds");
+		throw(GeneralException(error));
+	}
 
 	//get x and y position within pixels 
 	fracX = modf(fCol, &temp);
@@ -116,62 +133,52 @@ float BilInterpolator::doInterpolation(const Point& p, int band) {
 	//we must rotate our x and y axes accordingly.
 	if((fracX <= 50) && (fracY <= 50)) {	
 		printf("ul\n");
-		f10 = getValue(row-1, col, band);
-		f01 = getValue(row, col-1, band);
+
+		f01 = getValue(row-1, col, band);
+		f10 = getValue(row, col-1, band);
 		f11 = getValue(row-1, col-1, band);
 
-		x = (50 - fracY) / 100;
-		y = (50 - fracX) / 100;
+		x = (100 - fracX) / 200;
+		y = (100 - fracY) / 200;
 
-		if(x == 0)
-			x = 0.01;
-		if(y == 0)
-			y = 0.01;
+	
+		
 	}
 
 	else if((fracX <= 50) && (fracY > 50)) {
 		printf("ll\n");
-		f01 = getValue(row, col-1, band);
-		f10 = getValue(row+1, col, band);
-		f11 = getValue(row+1, col-1, band);
 	
-		x = (fracY - 50) / 100;
-		y = (50 - fracX) / 100;
+		f01 = getValue(row+1, col, band);
+		f10 = getValue(row, col-1, band);
+		f11 = getValue(row+1, col-1, band);
 
-		if(x == 0)
-			x = 0.01;
-		if(y == 0)
-			y = 0.01;
+		x = (100 - fracX) / 200;
+		y = fracY/200;
+	
+		
 	}
 
 	else if((fracX > 50) && (fracY <= 50)) {
 		printf("ur\n");
-		f01 = getValue(row, col+1, band);
-		f10 = getValue(row-1, col, band);
+		
+		f01 = getValue(row-1, col, band);
+		f10 = getValue(row, col+1, band);
 		f11 = getValue(row-1, col+1, band);
-	
-		x = (50 - fracY) / 100;
-		y = (fracX - 50) / 100;
 
-		if(x == 0)
-			x = 0.01;
-		if(y == 0)
-			y = 0.01;
+		x = fracX / 200;
+		y = (100 - fracY) / 200;
+		
 	}
 
 	else if((fracX > 50) && (fracY > 50)) {
 		printf("lr\n");
-		f01 = getValue(row, col+1, band);
-		f10 = getValue(row+1, col, band);
+		
+		f01 = getValue(row+1, col, band);
+		f10 = getValue(row, col+1, band);
 		f11 = getValue(row+1, col+1, band);
-	
-		x = (fracY - 50) / 100;
-		y = (fracX - 50) / 100;
 
-		if(x == 0)
-			x = 0.01;
-		if(y == 0)
-			y = 0.01;
+		x = fracX / 200;
+		y = fracY / 200;
 	}
 
 	//calculate interpolation value.
@@ -181,14 +188,17 @@ float BilInterpolator::doInterpolation(const Point& p, int band) {
 }
 
 float BilInterpolator::getValue(unsigned long row, unsigned long col, unsigned int band) {
-	unsigned long offset = (m_params.width*(row-1) + (col-1)) * band;
+	//pixel offset within the file
+	unsigned long offset = (m_params.width*(row-1) + (col-1)) + (m_params.width*m_params.height*band);
 	float value = 0;
 	if(!m_imageFilePtr) {
 		std::string error = "Image file is null";
+		destruct();
 		throw(GeneralException(error));
 	}
 
 	//seek to value, assume 32 bit data (4 bytes per pixel);
+	fflush(m_imageFilePtr);
 	fseek(m_imageFilePtr, offset*4, SEEK_SET);
 	fread((void*)&value, 4, 1, m_imageFilePtr);
 
@@ -202,6 +212,7 @@ void BilInterpolator::loadPoints(const char* pointsFilename) {
 	Point curPoint;
 	if(!pointsFilename) {
 		std::string error = "null filename";
+		destruct();
 		throw(GeneralException(error));
 	}
 
@@ -209,10 +220,14 @@ void BilInterpolator::loadPoints(const char* pointsFilename) {
 
 	if(!pointsFile) {
 		std::string error = "Points file is null";
+		destruct();
 		throw(GeneralException(error));
 	}
 	char c = '\0';
 	while(c != EOF) {
+		bool decimal = false; //have we found a decimal point yet?
+		bool plus = false;//have we seen a plus sign?
+		bool minus = false;//have we seen a minus sign?
 		c = fgetc(pointsFile);
 		if(c == EOF)
 			break;
@@ -222,8 +237,39 @@ void BilInterpolator::loadPoints(const char* pointsFilename) {
 		curNumber = new std::string;
 		curPoint.x = 0;
 		curPoint.y = 0;
+		
+		while(!isdigit(c) && c != '.' && c != '-' && c != '+' && c != EOF)
+			c = fgetc(pointsFile);
 
-		while(c != ',' && (isdigit(c) || c == '.') && c != EOF) {
+		while((isdigit(c) || c == '.' || c == '-' || c == '+') && c != EOF) {
+			if(c == '.') {
+				if(decimal) {
+					std::string error("Duplicate decimal points found in points file");
+					destruct();
+					throw(GeneralException(error));
+				}
+				decimal = true;
+			}
+
+				//if we see a decimal point, check that we have not seen one before
+			if(c == '-') {
+				if(minus) {
+					std::string error("Duplicate minus signs found in points file");
+					destruct();
+					throw(GeneralException(error));
+				}
+				minus = true;
+			}
+
+			//if we see a decimal point, check that we have not seen one before
+			if(c == '+') {
+				if(plus) {
+					std::string error("Duplicate plus signs found in points file");
+					destruct();
+					throw(GeneralException(error));
+				}
+				plus = true;
+			}
 			curNumber->append(1,c);
 			c = fgetc(pointsFile);
 		}
@@ -232,55 +278,96 @@ void BilInterpolator::loadPoints(const char* pointsFilename) {
 		
 		if(curNumber)
 			delete curNumber;
+
+		decimal = false;
+		plus = false;
+		minus = false;
 		curNumber = new std::string;
 
 		c = fgetc(pointsFile);
-		while((isdigit(c) || c == '.') && c != EOF) {
-			curNumber->append(1,c);
+
+		while(!isdigit(c) && c != '.' && c != '-' && c != '+' && c != EOF)
 			c = fgetc(pointsFile);
-			
+
+		while((isdigit(c) || c == '.' || c == '-' || c == '+') && c != EOF) {
+
+			//if we see a decimal point, check that we have not seen one before
+			if(c == '.') {
+				if(decimal) {
+					std::string error("Duplicate decimal points found in points file");
+					destruct();
+					throw(GeneralException(error));
+				}
+				decimal = true;
+			}
+
+			//if we see a decimal point, check that we have not seen one before
+			if(c == '-') {
+				if(minus) {
+					std::string error("Duplicate minus signs found in points file");
+					destruct();
+					throw(GeneralException(error));
+				}
+				minus = true;
+			}
+
+			//if we see a decimal point, check that we have not seen one before
+			if(c == '+') {
+				if(plus) {
+					std::string error("Duplicate plus signs found in points file");
+					destruct();
+					throw(GeneralException(error));
+				}
+				plus = true;
+			}
+
+			curNumber->append(1,c);
+			c = fgetc(pointsFile);		
 		}
 
 		curPoint.y = atof(curNumber->c_str());
 
 		m_points.push_back(curPoint);
 	}
+
 	if(curNumber)
 		delete curNumber;
 	fclose(pointsFile);
 }
 
 void BilInterpolator::saveResults(const char* outputFilename) {
+	char* csvFileName = NULL;
 	if(!outputFilename) {
 		std::string error = "Null filename";
+		destruct();
 		throw(GeneralException(error));
 	}
-
-	FILE* outputFile = fopen(outputFilename, "w+");
+	
+	csvFileName = new char[strlen(outputFilename)+5];
+	strcpy(csvFileName, outputFilename);
+	strcat(csvFileName, ".csv\0");
+	FILE* outputFile = fopen(csvFileName, "w+");
 	if(!outputFile) {
 			std::string error = "Error opening output file";
+			destruct();
 			throw(GeneralException(error));
 	}
 
 	fprintf(outputFile, "Interpolation Results for %s:\n\n", m_imageFileName.c_str());
+	fprintf(outputFile, "X, ,Y, ,Layer, ,Result\n");
 	for(unsigned int i = 0; i < m_params.numLayers; i++) {
-		fprintf(outputFile, "Layer %d\n", i+1);
 		for(unsigned int j = 0; j < m_points.size(); j++) {
-		/*	printf("i : %d  j: %d  x : %f  y : %f  result : %f\n\n"
-					,i
-					,j
+		
+			fprintf(outputFile, "     %f,      ,     %f,     ,%d,     ,     %f\n"
 					,m_points[j].x
 					,m_points[j].y
-					,m_results[i][j]);
-					*/
-			fprintf(outputFile, "%f,%f  -->  %f\n"
-					,m_points[j].x
-					,m_points[j].y
+					,i+1
 					,m_results[i][j]);
 		}
 	}
 
 	fclose(outputFile);
+	delete[] csvFileName;
 }
 
 

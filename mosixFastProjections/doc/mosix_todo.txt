@@ -1,0 +1,77 @@
+
+Some Recommendations:
+===================================================================
+
+ 0 This project needs more documentation. 
+
+ 1 Currently, Big Job inherets from Projector.  This type of relationship
+   restricts the code from being used with future types of "jobs" as Big
+   Job is further down the inheretance tree from the implementation we're
+   using (i.e., further down from the Projector class implementation.)  
+   I feel this restricts the code from being extended to many different 
+   types of map operations.  
+   	Paradoxically, it appears as if the solution to this problem 
+   already existed at one point in time in the MPI project.  There was a 
+   Projection Factory in it.  My proposed solution is to see if I can 
+   integrate that Projection Factory into this project, or perhaps instead 
+   make a Job Factory.  This will make the code more extendible so that 
+   it can be used for many different types of jobs.
+
+ 2 Currently, Slave processes are compiled seperately and must be launched 
+   from the command line.  The slave launching mechanism is also written 
+   like it is proceduaral C code.  
+	I think the program would benefit from the Slaves being integrated
+   into a class system so that the code base is more easily maintainable.
+	WARNING: This next point is for the really ambitious:  
+   	I think the program would also benefit from slave processes being 
+   spawned off from the master process with fork().  However, that said, 
+   there seems to have been a prior issue with compiling a program with 
+   thread support that is intended for use with MOSIX (i.e.  the program 
+   ends up seg-faulting during runtime.)  Obviously there would be some 
+   issues to be worked out if we were to consider integrating the slaves 
+   into the main program.  Regardless, I think it would make everything 
+   run more smoothly further on down the road.
+
+ 3 The code for the WorkManager is somewhat obfuscated; a lot of the 
+   work in making up WorkUnits is poorly coordinated, resulting 
+   in losses in run-time performance. 
+   	The code could be simplified and thus be more easily 
+   maintained if the structure of the class was rewritten to encapsulate 
+   relationships that are obvious.  In particular, currently WorkUnits 
+   elemental pieces are stored seperately in the class and brought 
+   together at the last minute on the fly.  This code could be rewritten in a 
+   more object-oriented way so that the way data is stored takes advantage
+   of spacial locality, and so that less data copying is done during runtime.
+   The same applies for the way "Result" data is stored.
+
+ 4 A directory structure was present in an old implementation of the project,
+   but none is apparent now.  I recommend reinstating one.
+
+ 5 Currently, Results are designed to go back to the Job itself in segments.  
+   From there, the job is charged with the task of passing the results again on 
+   to the Stitcher.  (I say "supposed to" because the Stitcher is currently 
+   not functioning.  A blocking call is currently made to another library to 
+   write out the results.)  The question is, why does the Job want to pass 
+   anything along and not do anything with it?  It's just being bothered. :) 
+   Why not give it directly to the stitcher?
+
+ 6 As mentioned in the previous point, the Stitcher is not working.  That may
+   take a while to figure out because Matt said in his note to me that it 
+   wasn't compiling when he left.
+
+ 7 Some of the names of classes in the project are strange (e.g., Gob, Pulsar, 
+   etc.) Their names tell me nothing about about what they are doing.  They 
+   need to be renamed for me (and anyone else) to easily understand what is 
+   going on with this project.
+
+ 8 The pulsar object integrates some of the functionality of a socket into a 
+   wrapper class.  
+   In principle, that's a great idea.  However, in this case the functionality
+   that the pulsar object integrates into it is somewhat arbitrary.  It seems
+   this project would benefit from a new wrapper class for sockets, one which 
+   integrates more of the code that is repeated throughout the project.
+
+ 9 The project currently can't tell if slave processes have died.  There are 
+   many possible solutions to this, but perhaps a check-up message should be 
+   made to check on the slave's status. 
+

@@ -10,7 +10,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionLocator.cpp,v 1.11 2004/12/23 17:50:23 ahartman Exp $
+// $Id: IntersectionLocator.cpp,v 1.12 2004/12/23 18:05:12 ahartman Exp $
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1300
@@ -385,10 +385,10 @@ void filterTests()
       delete pLinesDS;
 
       // Now filter the points using all filters and combinations
-      for( double r = 0.1; r <= 0.9; r = r + 0.1 )
+      for( int r = 10; r <= 90; r = r + 10 )
       {
          char temp[10];
-         sprintf( temp, "_%02dVMF", static_cast<int>(100*r) );
+         sprintf( temp, "_%02dVMF", r );
          szAbbrev = temp;
 
          szOutput = szOutputDir + "Filter" ;
@@ -415,7 +415,7 @@ void filterTests()
          printf( "VMF Filtering and outputting control points\n\n" );
          Filter *filter = new VMFilter;
          Intersections.setControlPoints( originalPoints );
-         Intersections.filter( filter, r );
+         Intersections.filter( filter, static_cast<double>(r)/100 );
          Intersections.outputControlPoints( pOutputDS );
          Intersections.triangulateAndAdjust( Triangulator, Transformer,
                                              pLinesDS );
@@ -425,7 +425,7 @@ void filterTests()
          delete pLinesDS;
 
 /*
-         sprintf( temp, "_%02dDF", static_cast<int>(100*r) );
+         sprintf( temp, "_%02dDF", r );
          szAbbrev = temp;
 
          szOutput = szOutputDir + "Filter";
@@ -452,7 +452,7 @@ void filterTests()
          printf( "DF Filtering and outputting control points\n\n" );
          filter = new DistanceFilter;
          Intersections.setControlPoints( originalPoints );
-         Intersections.filter( filter, r );
+         Intersections.filter( filter, static_cast<double>(r)/100 );
          Intersections.outputControlPoints( pOutputDS );
          Intersections.triangulateAndAdjust( Triangulator, Transformer,
                                              pLinesDS );

@@ -10,6 +10,11 @@
  */
 
 
+
+// Majic numbers for CVS
+// $Id: IntersectionMap.h,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #ifndef INTERSECTION_MAP_H
 #define INTERSECTION_MAP_H
 

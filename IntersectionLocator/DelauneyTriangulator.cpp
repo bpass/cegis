@@ -9,6 +9,11 @@
  * Date: 8-12-04
  */
 
+
+// Majic numbers for CVS
+// $Id: DelauneyTriangulator.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #include "DelauneyTriangulator.h"
 #include "Error.h"
 

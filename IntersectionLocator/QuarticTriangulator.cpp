@@ -7,6 +7,11 @@
  * Date: 8-16-04
  */
 
+
+// Majic numbers for CVS
+// $Id: QuarticTriangulator.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #include "QuarticTriangulator.h"
 
 // This is a horrible function but it is intended to be a brute force 

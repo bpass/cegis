@@ -8,6 +8,10 @@
  */
 
 
+// Majic numbers for CVS
+// $Id: Triangle.h,v 1.2 2004/10/18 22:42:52 rstelzleni Exp $
+
+
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 

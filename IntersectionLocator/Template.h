@@ -8,6 +8,11 @@
  * Date: 7-22-04
  */
 
+
+// Majic numbers for CVS
+// $Id: Template.h,v 1.2 2004/10/18 22:42:52 rstelzleni Exp $
+
+
 #ifndef TEMPLATE_H
 #define TEMPLATE_H
 

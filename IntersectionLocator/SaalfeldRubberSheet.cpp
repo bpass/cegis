@@ -11,6 +11,11 @@
  */
 
 
+
+// Majic numbers for CVS
+// $Id: SaalfeldRubberSheet.cpp,v 1.2 2004/10/18 22:42:52 rstelzleni Exp $
+
+
 #include "SaalfeldRubberSheet.h"
 
 

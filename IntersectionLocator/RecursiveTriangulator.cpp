@@ -26,6 +26,10 @@
 // function.
 
 
+// Majic numbers for CVS
+// $Id: RecursiveTriangulator.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #include "RecursiveTriangulator.h"
 #include <assert.h>
 

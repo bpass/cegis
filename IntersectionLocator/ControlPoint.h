@@ -7,6 +7,11 @@
  * Date: 8-16-04
  */
 
+
+// Majic numbers for CVS
+// $Id: ControlPoint.h,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #ifndef CONTROLPOINT_H
 #define CONTROLPOINT_H
 

@@ -16,6 +16,11 @@
 // from meters to pixels.  I should probably fix that.
 
 
+
+// Majic numbers for CVS
+// $Id: IntersectionMap.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #include "IntersectionMap.h"
 
 

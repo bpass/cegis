@@ -9,6 +9,10 @@
  */
 
 
+// Majic numbers for CVS
+// $Id: InMemRaster.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #include "InMemRaster.h"
 
 InMemRaster::InMemRaster( GDALDataset *pRaster )

@@ -12,6 +12,10 @@
  */
 
 
+// Majic numbers for CVS
+// $Id: DistanceFilter.h,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #ifndef DISTANCEFILTER_H
 #define DISTANCEFILTER_H
 

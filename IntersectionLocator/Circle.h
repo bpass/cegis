@@ -11,6 +11,11 @@
 // encloses only returns true if the point is within the circle, not if
 // it is on the perimeter.
 
+
+// Majic numbers for CVS
+// $Id: Circle.h,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #ifndef CIRCLE_H
 #define CIRCLE_H
 

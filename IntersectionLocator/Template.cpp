@@ -18,6 +18,11 @@
 // try both, and a few in between.
 
 
+
+// Majic numbers for CVS
+// $Id: Template.cpp,v 1.2 2004/10/18 22:42:52 rstelzleni Exp $
+
+
 #include "Template.h"
 
 Template::Template()

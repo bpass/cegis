@@ -13,6 +13,10 @@
 // tiff uses a ton of memory
 
 
+// Majic numbers for CVS
+// $Id: InMemRaster.h,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #ifndef IN_MEM_RASTER
 #define IN_MEM_RASTER
 

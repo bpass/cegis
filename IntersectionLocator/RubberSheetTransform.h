@@ -10,6 +10,11 @@
  * Date: 8-20-04
  */
 
+
+// Majic numbers for CVS
+// $Id: RubberSheetTransform.h,v 1.2 2004/10/18 22:42:52 rstelzleni Exp $
+
+
 #ifndef RUBBERSHEETTRANSFORM_H
 #define RUBBERSHEETTRANSFORM_H
 

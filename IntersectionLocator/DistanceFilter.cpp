@@ -11,6 +11,11 @@
  * Date: 8-24-04
  */
 
+
+// Majic numbers for CVS
+// $Id: DistanceFilter.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #include "DistanceFilter.h"
 
 void DistanceFilter::filter( std::vector<ControlPoint> &point, 

@@ -8,6 +8,11 @@
  * Date: 7-9-04
  */
 
+
+// Majic numbers for CVS
+// $Id: Error.h,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #ifndef ERROR_H_INCLUDED
 #define ERROR_H_INCLUDED
 

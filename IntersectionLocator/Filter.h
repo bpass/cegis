@@ -11,6 +11,11 @@
  * Date: 8-23-04
  */
 
+
+// Majic numbers for CVS
+// $Id: Filter.h,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #ifndef FILTER_H
 #define FILTER_H
 

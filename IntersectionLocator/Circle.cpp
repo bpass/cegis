@@ -8,6 +8,10 @@
  */
 
 
+// Majic numbers for CVS
+// $Id: Circle.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #include "Circle.h"
 #include "Triangle.h"
 #include "Error.h"

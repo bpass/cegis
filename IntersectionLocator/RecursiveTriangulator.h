@@ -24,6 +24,10 @@
 
 
 
+// Majic numbers for CVS
+// $Id: RecursiveTriangulator.h,v 1.2 2004/10/18 22:42:52 rstelzleni Exp $
+
+
 
 #ifndef RECURSIVETRIANGULATOR_H
 #define RECURSIVETRIANGULATOR_H

@@ -9,6 +9,10 @@
  */
 
 
+// Majic numbers for CVS
+// $Id: DelauneyTriangulator.h,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #ifndef DELAUNEYTRIANGULATOR_H
 #define DELAUNEYTRIANGULATOR_H
 

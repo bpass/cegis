@@ -10,6 +10,11 @@
  */
 
 
+
+// Majic numbers for CVS
+// $Id: VMFilter.cpp,v 1.2 2004/10/18 22:42:52 rstelzleni Exp $
+
+
 #include "Point.h"
 #include "VMFilter.h"
 

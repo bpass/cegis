@@ -7,6 +7,10 @@
  */
 
 
+// Majic numbers for CVS
+// $Id: IntersectionLocator.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+
+
 #pragma warning(disable: 4786)
 
 #include "gdal_priv.h"

@@ -5,11 +5,13 @@
  *
  * Programmer: Ryan Stelzleni
  * Date: 8-16-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
 
 // Majic numbers for CVS
-// $Id: QuarticTriangulator.cpp,v 1.3 2004/11/10 17:33:12 ahartman Exp $
+// $Id: QuarticTriangulator.cpp,v 1.4 2004/11/23 20:50:30 rstelzleni Exp $
 
 
 #include "QuarticTriangulator.h"

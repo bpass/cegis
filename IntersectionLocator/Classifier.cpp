@@ -1,17 +1,17 @@
 /*
- * @file Classifier.cpp
+ * file Classifier.cpp
  * Purpose: This file contains the implementation of the Classifier 
  *          class.  This class uses a Naive Bayes classification
  *          scheme to group road and non road pixels.
- * @author Ryan Stelzleni
- * @date 7-16-04
+ * author Ryan Stelzleni
+ * date 7-16-04
  *
  * This code was written for the United States Geological Survey.
  */
 
 
 // Majic numbers for CVS
-// $Id: Classifier.cpp,v 1.4 2004/11/10 16:54:52 ahartman Exp $
+// $Id: Classifier.cpp,v 1.5 2004/11/23 20:50:30 rstelzleni Exp $
 
 
 #include "Classifier.h"

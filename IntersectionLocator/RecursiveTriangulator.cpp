@@ -5,6 +5,8 @@
  *
  * Programmer: Ryan Stelzleni
  * Date: 8-18-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
 //////////////////////////////////////////////////////////////////////////
@@ -27,7 +29,7 @@
 
 
 // Majic numbers for CVS
-// $Id: RecursiveTriangulator.cpp,v 1.4 2004/11/10 17:33:51 ahartman Exp $
+// $Id: RecursiveTriangulator.cpp,v 1.5 2004/11/23 20:50:30 rstelzleni Exp $
 
 
 #include "RecursiveTriangulator.h"

@@ -1,16 +1,16 @@
 /*
- * @file Circle.cpp
+ * file Circle.cpp
  * Purpose: This file contains the implementation of functions for
  *          the circle and point classes.
  *
- * @author Ryan Stelzleni
- * @date 8-12-04
+ * author Ryan Stelzleni
+ * date 8-12-04
  *
  * This code was written for the United States Geological Survey.
  */
 
 // Majic numbers for CVS
-// $Id: Circle.cpp,v 1.3 2004/10/22 13:30:26 rstelzleni Exp $
+// $Id: Circle.cpp,v 1.4 2004/11/23 20:50:30 rstelzleni Exp $
 
 
 #include "Circle.h"

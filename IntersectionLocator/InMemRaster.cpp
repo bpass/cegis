@@ -6,11 +6,13 @@
  *          8 bit word RGB format files.
  * Programmer: Ryan Stelzleni
  * Date: 7-9-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
 
 // Majic numbers for CVS
-// $Id: InMemRaster.cpp,v 1.2 2004/10/18 22:42:51 rstelzleni Exp $
+// $Id: InMemRaster.cpp,v 1.3 2004/11/23 20:50:30 rstelzleni Exp $
 
 
 #include "InMemRaster.h"

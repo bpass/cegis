@@ -8,12 +8,14 @@
  *
  * Programmer: Ryan Stelzleni
  * Date: 8-20-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
 
 
 // Majic numbers for CVS
-// $Id: SaalfeldRubberSheet.cpp,v 1.3 2004/11/10 17:34:49 ahartman Exp $
+// $Id: SaalfeldRubberSheet.cpp,v 1.4 2004/11/23 20:50:30 rstelzleni Exp $
 
 
 #include "SaalfeldRubberSheet.h"

@@ -5,6 +5,8 @@
  *          that represents a template of two intersecting roads.
  * Programmer: Ryan Stelzleni
  * Date: 7-22-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
 // Notes:
@@ -20,7 +22,7 @@
 
 
 // Majic numbers for CVS
-// $Id: Template.cpp,v 1.3 2004/11/10 17:35:17 ahartman Exp $
+// $Id: Template.cpp,v 1.4 2004/11/23 20:50:30 rstelzleni Exp $
 
 
 #include "Template.h"

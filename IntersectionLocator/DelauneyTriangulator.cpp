@@ -7,11 +7,13 @@
  *
  * Programmer: Ryan Stelzleni
  * Date: 8-12-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
 
 // Majic numbers for CVS
-// $Id: DelauneyTriangulator.cpp,v 1.3 2004/11/10 16:56:31 ahartman Exp $
+// $Id: DelauneyTriangulator.cpp,v 1.4 2004/11/23 20:50:30 rstelzleni Exp $
 
 
 #include "DelauneyTriangulator.h"

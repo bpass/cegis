@@ -7,12 +7,14 @@
  *
  * Programmer: Ryan Stelzleni
  * Date: 8-23-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
 
 
 // Majic numbers for CVS
-// $Id: VMFilter.cpp,v 1.4 2004/11/10 18:35:12 ahartman Exp $
+// $Id: VMFilter.cpp,v 1.5 2004/11/23 20:50:30 rstelzleni Exp $
 
 
 #include "Point.h"

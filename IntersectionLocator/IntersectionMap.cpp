@@ -7,6 +7,8 @@
  *          supported by gdal.
  * Programmer: Ryan Stelzleni
  * Date: 7-7-04
+ *
+ * This code was written for the United States Geological Survey.
  */
 
 
@@ -18,7 +20,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionMap.cpp,v 1.5 2004/11/10 18:35:12 ahartman Exp $
+// $Id: IntersectionMap.cpp,v 1.6 2004/11/23 20:50:30 rstelzleni Exp $
 
 
 #include "IntersectionMap.h"

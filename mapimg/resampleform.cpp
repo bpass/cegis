@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.9 2005/02/20 05:23:27 rbuehler Exp $
+// $Id: resampleform.cpp,v 1.10 2005/02/22 15:17:42 jtrent Exp $
 
 
 /****************************************************************************
@@ -24,7 +24,8 @@
 #include <qmessagebox.h>
 
 #include "mapimgform.h"
-#include "mapimgvalidator.h"
+#include "mapimgvalidator.h"         
+#include "mapimgpalette.h"
 
 /*
 *  Constructs a ResampleForm as a child of 'parent', with the
@@ -39,9 +40,9 @@ ResampleForm::ResampleForm( QWidget* parent, const char* name, bool modal, WFlag
    if ( !name )
       setName( "ResampleForm" );
 
-   setPalette( QColor( 159, 159, 149 ) );
+   setPalette( RESAMPLEFORM_COLOR );
 
-   ResampleFormLayout = new QVBoxLayout( this, 11, 6, "ResampleFormLayout"); 
+   ResampleFormLayout = new QVBoxLayout( this, 11, 6, "ResampleFormLayout");
 
    inputLayout = new QVBoxLayout( 0, 0, 6, "inputLayout"); 
 

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.18 2005/02/20 05:23:27 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.19 2005/02/22 15:17:42 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -228,8 +228,10 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    connect( prevOutput, SIGNAL( toggled(bool) ), this, SLOT( previewOutput(bool) ) );
 
    ///DBG --- UNDER CONSTRUCTION. CHECK BACK SOON :)
-   prevInput->setDisabled(true);
-   prevOutput->setDisabled(true);
+//   prevInput->setDisabled(true);
+//   prevOutput->setDisabled(true);
+   prevInput->setEnabled(false);
+   prevOutput->setEnabled(false);
 
    ////////
    //MENUBAR

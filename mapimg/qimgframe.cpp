@@ -1,11 +1,9 @@
-// $Id: qimgframe.cpp,v 1.3 2005/01/31 17:24:05 jtrent Exp $
+// $Id: qimgframe.cpp,v 1.4 2005/02/22 15:17:42 jtrent Exp $
 
 
 #include "qimgframe.h"
 #include "qimgpainter.h"
-
-
-const QColor IMGCOLOR = QColor( 148, 153, 186 );
+#include "mapimgpalette.h"
 
 QImgFrame::QImgFrame( QWidget* parent, const char* name)
    : QFrame( parent, name)

@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.9 2005/02/20 05:23:27 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.10 2005/02/22 15:17:42 jtrent Exp $
 
 
 #include "qinfoframe.h"
@@ -15,6 +15,7 @@
 const uint INFO_PRECISION = 6;
 
 #include "gctpnames.h"
+#include "mapimgpalette.h"
 
 /*
    The QMapTab has one constructor. It executes in three stages.
@@ -430,7 +431,7 @@ void QInfoFrame::setAsInput()
    paletteBackgroundColor().getHsv(&ph,&ps,&pv);
    int ih,is,iv;
    INPUT_COLOR.getHsv(&ih,&is,&iv);*/
-   QColor c(INPUT_COLOR);
+   //QColor c(INPUT_COLOR);
    //c.setHsv(ih,is,pv>100?pv:100);
 
    static_cast<QLabel*>(mapTab->child( "mapLabel" ))->setText( "Input Map Info" );
@@ -443,12 +444,12 @@ void QInfoFrame::setAsInput()
    gctpTab->copyButton->hide();
    gctpTab->lockButton->show();
 
-   QPalette p( c );
+   QPalette p( INPUT_COLOR );
    p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
    mapTab->viewport()->setPalette( p );
-   mapTab->viewport()->setEraseColor( c );
+   mapTab->viewport()->setEraseColor( INPUT_COLOR );
    gctpTab->viewport()->setPalette( p );
-   gctpTab->viewport()->setEraseColor( c );
+   gctpTab->viewport()->setEraseColor( INPUT_COLOR );
 
    lock( true, false );
 }
@@ -462,7 +463,7 @@ void QInfoFrame::setAsOutput()
    paletteBackgroundColor().getHsv(&ph,&ps,&pv);
    int oh,os,ov;
    OUTPUT_COLOR.getHsv(&oh,&os,&ov);*/
-   QColor c(OUTPUT_COLOR);
+   //QColor c(OUTPUT_COLOR);
    //c.setHsv(oh,os,pv>100?pv:100);
 
    static_cast<QLabel*>(mapTab->child( "mapLabel" ))->setText( "Output Map Info" );
@@ -476,12 +477,12 @@ void QInfoFrame::setAsOutput()
    gctpTab->copyButton->show();
    gctpTab->lockButton->hide();
 
-   QPalette p( c );
+   QPalette p( OUTPUT_COLOR );
    p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
    mapTab->viewport()->setPalette( p );
-   mapTab->viewport()->setEraseColor( c );
+   mapTab->viewport()->setEraseColor( OUTPUT_COLOR );
    gctpTab->viewport()->setPalette( p );
-   gctpTab->viewport()->setEraseColor( c );
+   gctpTab->viewport()->setEraseColor( OUTPUT_COLOR );
 
    lock( false, false );
 

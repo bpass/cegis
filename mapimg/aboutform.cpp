@@ -1,4 +1,4 @@
-// $Id: aboutform.cpp,v 1.4 2005/02/13 00:27:17 rbuehler Exp $
+// $Id: aboutform.cpp,v 1.5 2005/02/22 15:17:42 jtrent Exp $
 
 
 /****************************************************************************
@@ -12,6 +12,7 @@
 
 #include "mapimgversion.h"
 #include "mapimgimages.h"
+#include "mapimgpalette.h"
 
 #include <qvariant.h>
 #include <qpushbutton.h>
@@ -36,10 +37,10 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    if ( !name )
 	   setName( "aboutForm" );
 
-   setPalette( QColor( 180, 173, 165 ) );
-   setPaletteForegroundColor( QColor( 0, 102, 51 ) );
+   setPalette( ABOUTFORM_COLOR );
+   setPaletteForegroundColor( ABOUTTEXT_COLOR );
 
-   aboutFormLayout = new QVBoxLayout( this, 4, 3, "aboutFormLayout"); 
+   aboutFormLayout = new QVBoxLayout( this, 4, 3, "aboutFormLayout");
 
    logoLabel = new QLabel( this, "logoLabel" );
    logoLabel->setMaximumSize( QSize( 400, 147 ) );

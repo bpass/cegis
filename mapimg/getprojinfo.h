@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.15 2005/02/19 00:43:53 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.16 2005/02/22 15:17:42 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -29,7 +29,8 @@
 #include "imgio.h"
 #include "mapimg.h"
 #include "mapimgform.h"
-#include "qinfoframe.h"
+
+#include "mapimgpalette.h"
 
 #include "logform.h"
 #include "jt_time.h"
@@ -92,16 +93,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
    double in[2]={0,0};       // Input projection coordinates of a point
    double out[2];            // Output projection coordinates of a point
-   //    double t1[2];           // Temp coords for comparing
-   //    double t2[2];           // Temp coords for comparing
-   //    double temp1, temp2;    // Temp vars
-   //    double pparm[15] = {0}; // 15 GCTP projection parameters
 
-   //    long zero = 0;
-   //    long four = 4;
-
-
-   //    long status;				// Return status flag for gctp() call
    long in_line, in_samp;			// Input image coordinates of a point
 
 
@@ -121,14 +113,14 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
       mapimgdial, "progress", TRUE, WINDOW_FLAGS );
    progress.setCaption( "Processing..." );
 
-   double red = INPUT_COLOR.red();
+   double red = INPUT_COLOR.red();                             //INPUT_COLOR is defined in mapimgpalette.h
    double grn = INPUT_COLOR.green();
    double blu = INPUT_COLOR.blue();
-   double dRed = (OUTPUT_COLOR.red() - red) / outimg.nl;
+   double dRed = (OUTPUT_COLOR.red() - red) / outimg.nl;       //OUTPUT_COLOR is defined in mapimgpalette.h
    double dGrn = (OUTPUT_COLOR.green() - grn) / outimg.nl;
    double dBlu = (OUTPUT_COLOR.blue() - blu) / outimg.nl;
 
-   QColor c( INPUT_COLOR );
+   QColor c( INPUT_COLOR );                                    //INPUT_COLOR is defined in mapimgpalette.h
    QPalette p( c );
    p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
    progress.setPalette( p );
@@ -152,10 +144,14 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
       progress.setProgress(out_line);
       red += dRed; blu += dBlu; grn += dGrn;
-      QColor c( red, grn, blu );
-      QPalette p( c );
-      p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
-      progress.setPalette( p );
+      
+      if( out_line%10 == 0 )
+      {
+          QColor c( red, grn, blu );
+          QPalette p( c );
+          p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
+          progress.setPalette( p );
+      }
 
 
       if(progress.wasCancelled())
@@ -380,7 +376,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
 
    progress.setProgress( outimg.nl );
-   p = QPalette( OUTPUT_COLOR );
+   p = QPalette( OUTPUT_COLOR );            //OUTPUT_COLOR is defined in mapimgpalette.h
    p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
    progress.setPalette( p );
 

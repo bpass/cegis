@@ -1,4 +1,4 @@
-// $Id: authorform.cpp,v 1.5 2005/02/13 00:27:17 rbuehler Exp $
+// $Id: authorform.cpp,v 1.6 2005/02/22 15:17:42 jtrent Exp $
 
 
 /****************************************************************************
@@ -10,6 +10,7 @@
 
 #include "authorform.h"
 #include "mapimgversion.h"
+#include "mapimgpalette.h"
 
 #include <qvariant.h>
 #include <qgroupbox.h>
@@ -31,7 +32,7 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, 
    if ( !name )
 	   setName( "authorForm" );
 
-   setPalette( QColor( 159, 149, 154) );
+   setPalette( AUTHORFORM_COLOR );
 
    authorFormLayout = new QVBoxLayout( this, 5, 3, "authorFormLayout"); 
 

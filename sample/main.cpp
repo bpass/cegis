@@ -1,4 +1,4 @@
-// $Id: main.cpp,v 1.15 2004/10/08 16:16:46 jtrent Exp $
+// $Id: main.cpp,v 1.16 2004/10/13 19:21:20 kdwilliams Exp $
 
 
 #include <iostream>
@@ -61,7 +61,8 @@ int main()
         << "\tJames Muo\n"
         << "\tBob Buehler\n"
         << "\tJimmy Hoffa\n"
-	<< "\tMike Williams\n";
+        << "\tMike Williams\n"
+		<< "\tKyle Williams\n";
 
    return 0;
 }

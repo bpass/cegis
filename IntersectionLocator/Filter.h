@@ -15,13 +15,17 @@
 
 
 // Majic numbers for CVS
-// $Id: Filter.h,v 1.3 2004/10/22 13:30:26 rstelzleni Exp $
+// $Id: Filter.h,v 1.4 2004/11/10 18:35:11 ahartman Exp $
 
 
 #ifndef FILTER_H
 #define FILTER_H
 
+#ifdef _MSC_VER
+#if _MSC_VER < 1300
 #pragma warning(disable: 4786)
+#endif
+#endif
 
 #include <vector>
 

@@ -18,7 +18,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionMap.cpp,v 1.4 2004/11/10 17:04:09 ahartman Exp $
+// $Id: IntersectionMap.cpp,v 1.5 2004/11/10 18:35:12 ahartman Exp $
 
 
 #include "IntersectionMap.h"
@@ -326,7 +326,7 @@ void IntersectionMap::findControlPoints( InMemRaster &rasta,
 // </crap>
 
       // Set up a template centered on the current point
-      Template T( tempSize, tempSize, i->first );
+      Template T( static_cast<int>(tempSize), static_cast<int>(tempSize), i->first );
 
       // Populate the template with the roads in the intersection
       fillTemplate( T, static_cast<OGRPoint>(i->first) );
@@ -349,11 +349,11 @@ void IntersectionMap::findControlPoints( InMemRaster &rasta,
       // of the raster.  The correlate function should handle the case
       // of going over the top of the raster.
       if( (startY - areaHeight/2) > 0 )
-         y = startY - areaHeight/2;
+         y = static_cast<int>(startY - areaHeight/2);
       else
          y = 0;
       if( (startX - areaWidth/2) > 0 )
-         restartX = startX - areaWidth/2;
+         restartX = static_cast<int>(startX - areaWidth/2);
       else
          restartX = 0;
 
@@ -563,7 +563,7 @@ void IntersectionMap::outputControlPoints( OGRDataSource *pDS )
    // This is ugly, but I need an iterator
    std::vector<ControlPoint>::iterator iter;
    //std::string textfile;
-   int count = 0;
+   //int count = 0;
    //FILE *textout;
    OGRLayer *pLayer = NULL;
    OGRFeature *pFeature = NULL;

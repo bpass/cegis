@@ -10,10 +10,13 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionLocator.cpp,v 1.4 2004/11/02 01:20:46 rstelzleni Exp $
+// $Id: IntersectionLocator.cpp,v 1.5 2004/11/10 18:35:11 ahartman Exp $
 
-
+#ifdef _MSC_VER
+#if _MSC_VER < 1300
 #pragma warning(disable: 4786)
+#endif
+#endif
 
 #include "gdal_priv.h"
 #include "ogrsf_frmts.h"
@@ -63,7 +66,7 @@ OGRDataSource *createOGRFile(const char *pszFName, char *pszDName)
 
 /** This is a test comment.  Second sentence.  Typing is fun.
  * */
-int main( int argc, char *argv[] )
+int main( /*int argc, char *argv[]*/ )
 {
    filterTests();
    return 0;

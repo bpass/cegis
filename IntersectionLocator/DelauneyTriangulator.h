@@ -12,13 +12,17 @@
 
 
 // Majic numbers for CVS
-// $Id: DelauneyTriangulator.h,v 1.4 2004/11/02 01:20:46 rstelzleni Exp $
+// $Id: DelauneyTriangulator.h,v 1.5 2004/11/10 18:35:11 ahartman Exp $
 
 
 #ifndef DELAUNEYTRIANGULATOR_H
 #define DELAUNEYTRIANGULATOR_H
 
+#ifdef _MSC_VER
+#if _MSC_VER < 1300
 #pragma warning(disable: 4786)
+#endif
+#endif
 
 #include <vector>
 #include <algorithm>

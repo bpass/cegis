@@ -14,7 +14,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionMap.h,v 1.4 2004/11/10 17:07:59 ahartman Exp $
+// $Id: IntersectionMap.h,v 1.5 2004/11/10 18:35:12 ahartman Exp $
 
 
 #ifndef INTERSECTION_MAP_H
@@ -22,7 +22,11 @@
 
 // Stop MSVC from creating lots of unreadable warnings about the
 // stl classes I used.
+#ifdef _MSC_VER
+#if _MSC_VER < 1300
 #pragma warning(disable: 4786)
+#endif
+#endif
 
 #include <map>
 #include <vector>

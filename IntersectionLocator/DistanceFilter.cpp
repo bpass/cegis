@@ -15,7 +15,7 @@
 
 
 // Majic numbers for CVS
-// $Id: DistanceFilter.cpp,v 1.3 2004/10/22 13:30:26 rstelzleni Exp $
+// $Id: DistanceFilter.cpp,v 1.4 2004/11/10 18:35:11 ahartman Exp $
 
 
 #include "DistanceFilter.h"
@@ -41,7 +41,7 @@ void DistanceFilter::filter( std::vector<ControlPoint> &point,
    } // end for i
 
    
-   numToRemove = n * info;
+   numToRemove = static_cast<int>(n * info);
 
    // Erase all the elements that are furthest away from the original 
    // points.

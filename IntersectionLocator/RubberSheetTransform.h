@@ -15,13 +15,17 @@
 
 
 // Majic numbers for CVS
-// $Id: RubberSheetTransform.h,v 1.3 2004/11/02 01:20:46 rstelzleni Exp $
+// $Id: RubberSheetTransform.h,v 1.4 2004/11/10 18:35:12 ahartman Exp $
 
 
 #ifndef RUBBERSHEETTRANSFORM_H
 #define RUBBERSHEETTRANSFORM_H
 
+#ifdef _MSC_VER
+#if _MSC_VER < 1300
 #pragma warning(disable: 4786)
+#endif
+#endif
 
 #include <vector>
 #include "ogrsf_frmts.h"

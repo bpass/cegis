@@ -12,7 +12,7 @@
 
 
 // Majic numbers for CVS
-// $Id: VMFilter.cpp,v 1.3 2004/11/10 17:35:30 ahartman Exp $
+// $Id: VMFilter.cpp,v 1.4 2004/11/10 18:35:12 ahartman Exp $
 
 
 #include "Point.h"
@@ -67,7 +67,7 @@ void VMFilter::filter( std::vector<ControlPoint> &point, const double &info )
    // 
    // Now remove the "bad" control points
    //
-   numToRemove = info * n;
+   numToRemove = static_cast<int>(info * n);
    for( int k=0; k<numToRemove; ++k )
    {
       aveDist = distances[0];

@@ -1,4 +1,4 @@
-// $Id: imgio.cpp,v 1.3 2005/02/03 18:12:18 jtrent Exp $
+// $Id: imgio.cpp,v 1.4 2005/02/10 16:59:12 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -137,7 +137,7 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
     double coordt2[2];
     double temp1;
     double temp2;
-    int dumpflag=0;
+//    int dumpflag=0;
 
     double in_line, in_samp;	/* Input image coordinates of a point */
     long status;		/* Return status flag for gctp() call */

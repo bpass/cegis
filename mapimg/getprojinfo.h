@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.6 2005/02/10 15:48:19 jtrent Exp $
+// $Id: getprojinfo.h,v 1.7 2005/02/10 16:59:12 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -124,10 +124,10 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 //    double t1[2];				// Temp coords for comparing
 //    double t2[2];				// Temp coords for comparing
 //    double temp1, temp2;			// Temp vars
-    double pparm[15] = {0};			// 15 GCTP projection parameters
+//    double pparm[15] = {0};			// 15 GCTP projection parameters
 
-    long zero = 0;
-    long four = 4;
+//    long zero = 0;
+//    long four = 4;
 
 
 //    long status;				// Return status flag for gctp() call
@@ -190,8 +190,8 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 
 		if( get_coords( outimg, inimg, out, inbox, out_line, out_samp, paramfile ) )
 		{
-			in_line = ((inimg.ul_y - in[1]) / inimg.pixsize) + 0.5;
-			in_samp = ((in[0] - inimg.ul_x) / inimg.pixsize) + 0.5;
+			in_line = (long int)(((inimg.ul_y - in[1]) / inimg.pixsize) + 0.5);
+			in_samp = (long int)(((in[0] - inimg.ul_x) / inimg.pixsize) + 0.5);
 
 			// Still inside the input image??
 			// ------------------------------
@@ -208,7 +208,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 			{
 				if( resample.resampleCode() == ResampleInfo::NearestNeighbor )
 				{
-					get_line(  mapimginbuf, inbox[4][1], inimg.ns, useType );
+					get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
 					(*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
 				}
 				else	//Analysis
@@ -222,19 +222,19 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 					for(int inbox_index = 0; inbox_index < 4; ++inbox_index)
 					{
 						if(maxx < inbox[inbox_index][0])
-							maxx = inbox[inbox_index][0];
+							maxx = mapimg::round(inbox[inbox_index][0]);
 					else
 					{
 						if(minx > inbox[inbox_index][0])
-							minx = inbox[inbox_index][0];
+							minx = mapimg::round(inbox[inbox_index][0]);
 					}
 
 					if(maxy < inbox[inbox_index][1])
-						maxy = inbox[inbox_index][1];
+						maxy = mapimg::round(inbox[inbox_index][1]);
 					// else
 					// {
 						if(miny > inbox[inbox_index][1])
-						miny = inbox[inbox_index][1];
+						miny = mapimg::round(inbox[inbox_index][1]);
 					//}
 					} //for inbox_index
 
@@ -266,7 +266,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 						coord[1] = currentY;
 
 						//Loads into memory the current line of input needed
-						get_line(  mapimginbuf, coord[1], inimg.ns, useType );
+						get_line(  mapimginbuf, (Q_ULLONG)coord[1], inimg.ns, useType );
 						if( mapimginbuf == NULL )
 						break;
 
@@ -297,7 +297,7 @@ bool mapimg_resample( RasterInfo input, RasterInfo output, ResampleInfo resample
 					if(boxError)	//no pixels from rectangle in the minbox, get NN.
 					{
 						//Loads into memory the current line of input needed
-						get_line(  mapimginbuf, inbox[4][1], inimg.ns, useType );
+						get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
 
 						(*( (type*)mapimgoutbuf + out_samp)) = (*(((type*)mapimginbuf + (int)(inbox[4][0]))));
 

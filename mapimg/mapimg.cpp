@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.10 2005/02/10 15:48:19 jtrent Exp $
+// $Id: mapimg.cpp,v 1.11 2005/02/10 16:59:12 jtrent Exp $
 
 
 #include "mapimg.h"
@@ -17,10 +17,10 @@ extern "C"
 }
 
 #include <math.h>
-double mapimg::round(double value, unsigned int decimals)
+int mapimg::round(double value, unsigned int decimals)
 {
   double factor = pow(10,decimals);
-  return floor((value * factor) + 0.5) / factor;
+  return (int)(floor((value * factor) + 0.5) / factor);
 }
 
 bool mapimg::readytoFrameIt( RasterInfo &input, QWidget * parent )

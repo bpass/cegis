@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.8 2005/02/10 15:48:19 jtrent Exp $
+// $Id: mapimg.h,v 1.9 2005/02/10 16:59:12 jtrent Exp $
 
 
 #ifndef MAPIMG_H
@@ -22,7 +22,7 @@ namespace mapimg
    double calcFillValue( RasterInfo &input );
    bool reproject( RasterInfo &input, RasterInfo &output, ResampleInfo &resample, QWidget *parent = 0 );
 
-   double round(double value, unsigned int decimals = 0);
+   int round(double value, unsigned int decimals = 0);
 };
 
 #endif//MAPIMG_H

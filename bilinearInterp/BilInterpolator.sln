@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BilInterpolator", "BilInterpolator.vcproj", "{7CDCB2AF-E372-4F88-8265-C5C77CE61298}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		debug = debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{7CDCB2AF-E372-4F88-8265-C5C77CE61298}.debug.ActiveCfg = Release|Win32
+		{7CDCB2AF-E372-4F88-8265-C5C77CE61298}.debug.Build.0 = Release|Win32
+		{7CDCB2AF-E372-4F88-8265-C5C77CE61298}.Release.ActiveCfg = Release|Win32
+		{7CDCB2AF-E372-4F88-8265-C5C77CE61298}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

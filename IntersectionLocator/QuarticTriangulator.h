@@ -1,4 +1,4 @@
-/*
+/**
  * @file QuarticTriangulator.h
  * Purpose: This file contains the declaration of a class for
  *          performing a O(n^4) Delauney triangulation.
@@ -12,7 +12,7 @@
 
 
 // Majic numbers for CVS
-// $Id: QuarticTriangulator.h,v 1.4 2004/11/10 18:35:12 ahartman Exp $
+// $Id: QuarticTriangulator.h,v 1.5 2004/11/15 23:56:51 rstelzleni Exp $
 
 
 #ifndef QUARTICTRIANGULATOR_H

@@ -10,7 +10,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionLocator.cpp,v 1.9 2004/11/18 20:11:03 rstelzleni Exp $
+// $Id: IntersectionLocator.cpp,v 1.10 2004/11/26 17:03:00 ahartman Exp $
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1300
@@ -116,204 +116,22 @@ void filterTests()
 
    std::string szRaster, szVector, szOutput, szLines, szAbbrev;
 
-   std::string szRasterDir = "F:\\working\\Georgia\\orthoimages\\16SGC";
-   std::string szVectorDir = "F:\\rstelzleni\\GA2Quads\\OriginalRoads\\";
-   std::string szOutputDir = "F:\\rstelzleni\\GA2Quads\\CorrectedRoads\\";
+   std::string szRasterDir = "/snap/ahartman/Data/GeorgiaLines/orthos/16SGC";
+   std::string szVectorDir = "/work/Data/IntersectionLocator/GeorgiaLines/OriginalRoads/";
+   std::string szOutputDir = "/work/Data/IntersectionLocator/GeorgiaLines/CorrectedRoads/";
 
    double templateSize = 50, areaSize = 65;
 
 
    char *aszNames[] = {
-"410500",
-"410515",
-"410530",
-"410545",
-"410560",
-"410575",
-"410590",
-"410605",
-"410620",
-"410635",
-"410650",
-"425500",
-"425515",
-"425530",
-"425545",
-"425560",
-"425575",
-"425590",
-"425605",
-"425620",
-"425635",
-"425650",
-"440500",
-"440515",
-"440530",
-"440545",
-"440560",
-"440575",
-"440590",
-"440605",
-"440620",
-"440635",
-"440650",
-"455500",
-"455515",
-"455530",
-"455545",
-"455560",
-"455575",
-"455590",
-"455605",
-"455620",
-"455635",
-"455650",
-"470500",
-"470515",
-"470530",
-"470545",
-"470560",
-"470575",
-"470590",
-"470605",
-"470620",
-"470635",
-"470650",
-"485500",
-"485515",
-"485530",
-"485545",
-"485560",
-"485575",
-"485590",
-"485605",
-"485620",
-"485635",
-"485650",
-"500500",
-"500515",
-"500530",
-"500545",
-"500560",
-"500575",
-"500590",
-"500605",
-"500620",
-"500635",
-"500650",
-"515500",
-"515515",
-"515530",
-"515545",
-"515560",
-"515575",
-"515590",
-"515605",
-"515620",
-"515635",
-"515650",
-"530500",
-"530515",
-"530530",
-"530545",
-"530560",
-"530575",
-"530590",
-"530605",
-"530620",
-"530635",
-"530650",
-"545500",
-"545515",
-"545530",
-"545545",
-"545560",
-"545575",
-"545590",
-"545605",
-"545620",
-"545635",
-"545650",
-"560500",
-"560515",
-"560530",
-"560545",
-"560560",
-"560575",
-"560590",
-"560605",
-"560620",
-"560635",
-"560650",
-"575500",
-"575515",
-"575530",
-"575545",
-"575560",
-"575575",
-"575590",
-"575605",
-"575620",
-"575635",
-"575650",
-"590500",
-"590515",
-"590530",
-"590545",
-"590560",
-"590575",
-"590590",
-"590605",
-"590620",
-"590635",
-"590650",
-"605500",
-"605515",
-"605530",
-"605545",
-"605560",
-"605575",
-"605590",
-"605605",
-"605620",
-"605635",
-"605650",
-"620500",
-"620515",
-"620530",
-"620545",
-"620560",
-"620575",
-"620590",
-"620605",
-"620620",
-"620635",
-"620650",
-"635500",
-"635515",
-"635530",
-"635545",
-"635560",
-"635575",
-"635590",
-"635605",
-"635620",
-"635635",
-"635650",
-"650500",
-"650515",
-"650530",
-"650545",
-"650560",
-"650575",
-"650590",
-"650605",
-"650620",
-"650635",
-"650650"
-};
+        "500560",
+        "500575",
+        "500590",
+        "500605",
+        "500620"
+    };
 
-   int n = 187; // number of names
+   int n = 5; // number of names
 
 
 
@@ -322,7 +140,7 @@ void filterTests()
 
    Classifier C;
    printf( "Loading classifier training\n\n" );
-   C.inputText( "F:\\rstelzleni\\GA2Quads\\classifierTraining\\training.dat" );
+   C.inputText("/work/Data/IntersectionLocator/GeorgiaLines/classifiertraining/training.dat");
 
    DelauneyTriangulator *Triangulator = new QuarticTriangulator;
    RubberSheetTransform *Transformer = new SaalfeldRubberSheet;
@@ -332,7 +150,7 @@ void filterTests()
       
       printf( "\n\nBeginning area %s\n\n", aszNames[i] );
       szRaster = szRasterDir + aszNames[i];
-      szRaster += ".tif";
+      szRaster += ".TIF";
       szVector = szVectorDir + aszNames[i];
 
 

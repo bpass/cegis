@@ -1,4 +1,4 @@
-// $Id: qgctpbox.h,v 1.2 2005/01/27 18:15:16 jtrent Exp $
+// $Id: qgctpbox.h,v 1.3 2005/01/31 03:09:09 rbuehler Exp $
 
 
 #ifndef QGCTPBOX_H
@@ -42,4 +42,3 @@ private:
 };
 
 #endif
-

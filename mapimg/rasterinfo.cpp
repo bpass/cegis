@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.2 2005/01/27 18:15:16 jtrent Exp $
+// $Id: rasterinfo.cpp,v 1.3 2005/01/31 03:09:09 rbuehler Exp $
 
 
 #include "rasterinfo.h"
@@ -71,14 +71,14 @@ bool RasterInfo::setArea( double ul_X, double ul_Y, int rows, int cols )
    return (row > 0 && col > 0);
 }
 
-bool RasterInfo::setPixelDescription( const QString &dataType, double pixelSize, double fillValue )
+bool RasterInfo::setPixelDescription( const QString &dataType, double pixelSize, double fillValue, double noDataValue )
 {
-   return setDataType( dataType ) && setPixelSize( pixelSize ) && setFillValue( fillValue );
+   return setDataType( dataType ) && setPixelSize( pixelSize ) && setFillValue( fillValue ) && setNoDataValue( noDataValue );
 }
 
-bool RasterInfo::setPixelDescription( bool isSigned, int bitsCount, const QString &type, double pixelSize, double fillValue )
+bool RasterInfo::setPixelDescription( bool isSigned, int bitsCount, const QString &type, double pixelSize, double fillValue, double noDataValue )
 {
-   return setDataType( isSigned, bitsCount, type ) && setPixelSize( pixelSize ) && setFillValue( fillValue );
+   return setDataType( isSigned, bitsCount, type ) && setPixelSize( pixelSize ) && setFillValue( fillValue ) && setNoDataValue( noDataValue );
 }
 
 bool RasterInfo::setDataType( const QString &dataType )
@@ -134,8 +134,25 @@ bool RasterInfo::setPixelSize( double pixelSize )
 
 bool RasterInfo::setFillValue( double fillValue )
 {
-   fillval = fillValue;
+   if( fillValue < 0 && !signd )
+   {
+      fillval = 0;
+      return false;
+   }
 
+   fillval = fillValue;
+   return true;
+}
+
+bool RasterInfo::setNoDataValue( double noDataValue )
+{
+   if( noDataValue < 0 && !signd )
+   {
+      noval = 0;
+      return false;
+   }
+
+   noval = noDataValue;
    return true;
 }
 
@@ -230,6 +247,7 @@ bool RasterInfo::save( QString &imgFileName )
    r.setDataType( datatype.ascii() );
    r.setPixelSize( pixsize );
    r.setFillValue( fillval );
+   //r.setNoDataValue( noval );
 
    r.setProjNumber( projcode );
    r.setProjName( projNames[projcode] );
@@ -314,6 +332,7 @@ void RasterInfo::loadXml()
    datatype = xml.getDataType();
    pixsize = xml.getPixelSize();
    fillval = xml.getFillValue();
+   //noval = xml.getNoDataValue();
 
    projcode = xml.getProjNumber();
    zonecode = xml.getZone();
@@ -437,4 +456,3 @@ bool RasterInfo::fakeIt()
 
    return ready();
 }
-

@@ -1,4 +1,4 @@
-// $Id: rasterinfo.h,v 1.2 2005/01/27 18:15:16 jtrent Exp $
+// $Id: rasterinfo.h,v 1.3 2005/01/31 03:09:09 rbuehler Exp $
 
 
 #ifndef RASTERINFO_H
@@ -34,18 +34,20 @@ public:
    int cols(){return col;}
 
    //Pixel Description
-   bool setPixelDescription( const QString &dataType, double pixelSize, double fillValue );
-   bool setPixelDescription( bool isSigned, int bitsCount, const QString &type, double pixelSize, double fillValue );
+   bool setPixelDescription( const QString &dataType, double pixelSize, double fillValue, double noDataValue );
+   bool setPixelDescription( bool isSigned, int bitsCount, const QString &type, double pixelSize, double fillValue, double noDataValue );
    bool setDataType( const QString &dataType );
    bool setDataType( bool isSigned, int bitsCount, const QString &type );
    bool setPixelSize( double pixelSize );
    bool setFillValue( double fillValue );
+   bool setNoDataValue( double noDataValue );
    QString dataType(){return datatype;}
    bool isSigned(){return signd;}
    int bitCount(){return bits;}
    QString type(){return datatype;}
    double pixelSize(){return pixsize;}
    double fillValue(){return fillval;}
+   double noDataValue(){return noval;}
 
    //Projection
    bool setProjection( int projNumber, int zoneNumber = 62, int datumNumber = 19, int unitNumber = 2 );
@@ -64,7 +66,7 @@ public:
    //I/O
    bool load();
    bool load( QString &imgFileName );
-   bool save();
+   bool save( );
    bool save( QString &imgFileName );
    bool remove();
 
@@ -96,6 +98,7 @@ private:
    QString  datatype;
    double   pixsize;
    double   fillval;
+   double   noval;
 
    long     projcode;
    long     zonecode;
@@ -106,4 +109,3 @@ private:
 };
 
 #endif//RASTERINFO_H
-

@@ -1,13 +1,11 @@
-// $Id: mapimgform.h,v 1.2 2005/01/27 19:22:35 jtrent Exp $
+// $Id: mapimgform.h,v 1.3 2005/01/31 03:09:09 rbuehler Exp $
 
 
 /****************************************************************************
 ** Form interface generated from reading ui file 'mapimgform.ui'
 **
 ** Created: Thu Jul 29 12:27:35 2004
-**      by: The User Interface Compiler ($Id: mapimgform.h,v 1.2 2005/01/27 19:22:35 jtrent Exp $)
-**
-** WARNING! All changes made in this file will be lost!
+**      by: The User Interface Compiler (Id: qt/main.cpp   3.3.3   edited Nov 24 2003)
 ****************************************************************************/
 
 #ifndef mapimgFORM_H

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.4 2005/01/27 19:22:35 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.5 2005/01/31 03:09:09 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -23,6 +23,8 @@
 #include "qimgframe.h"
 #include "qinfoframe.h"
 #include "rasterinfo.h"
+#include "resampleform.h"
+#include "resampleinfo.h"
 #include "aboutform.h"
 #include "authorform.h"
 #include "tiff2img.h"
@@ -227,26 +229,11 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    authAction->addTo( Options );
    menuBar->insertItem( "Options", Options );
 
-/*   //Input
-   Input = new QPopupMenu( this );
-   inInfoAction->addTo( Input );
-   Input->insertSeparator();
-   inOpenAction->addTo( Input );
-   inSaveAction->addTo( Input );
-   menuBar->insertItem( "Input", Input);*/
-
    //Preview
    Preview = new QPopupMenu( this );
    viewResampleAction->addTo( Preview );
    previewProjAction->addTo( Preview );
    menuBar->insertItem( "Preview", Preview);
-
-/*   //Output
-   Output = new QPopupMenu( this );
-   outInfoAction->addTo( Output );
-   Output->insertSeparator();
-   outSaveAction->addTo( Output );
-   menuBar->insertItem( "Output", Output);*/
 
    //Help
    Help = new QPopupMenu( this );
@@ -279,7 +266,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
 
    delete settings;
 
-   resize( QSize(600, 490).expandedTo(minimumSizeHint()) );
+   resize( QSize(600, 524).expandedTo(minimumSizeHint()) );
    clearWState( WState_Polished );
    setAcceptDrops( true );
 
@@ -289,10 +276,25 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
 }
 
 /*
-   Nothing to destruct because QObjects take care of their children.
+   Delete temporary files.
 */
 mapimgForm::~mapimgForm()
-{}
+{
+   if( QFile::exists( "mapimg.log" ) )
+      QFile::remove( "mapimg.log" );
+
+   if( QFile::exists( "temp.xml" ) )
+      QFile::remove( "temp.xml" );
+
+   if( QFile::exists( "temp.img" ) )
+      QFile::remove( "temp.img" );
+
+   if( QFile::exists( "mapimg.xml" ) )
+      QFile::remove( "mapimg.xml" );
+
+   if( QFile::exists( "mapimg.img" ) )
+      QFile::remove( "mapimg.img" );
+}
 
 void mapimgForm::dragEnterEvent( QDragEnterEvent *evt )
 {
@@ -327,6 +329,7 @@ void mapimgForm::dropEvent( QDropEvent *evt )
       if( text.left(8) == "file:///" )
          text.remove( 0, 8 );
       text.replace( "%20", " " );
+      text.replace( "%5c", "/" );
       text.replace( '\\', '/' );
       if( openFile( text ) )
       {
@@ -528,11 +531,16 @@ void mapimgForm::previewProjClicked()
    output.setFileName( QDir::currentDirPath().append("/mapimg.img") );
    output.save();
 
-   mapimg::reproject( input, output );
+   ResampleInfo resample;
+   resample.setResampleCode( ResampleInfo::NearestNeighbor );
+   resample.setFillValue( input.fillValue() );
+   resample.setNoDataValue( input.noDataValue() );
 
+   mapimg::reproject( input, output, resample );
+
+   imgFrame->loadImg( output.imgFileName(), true );
    inInfoAction->setOn(false);
    viewShowAction->setOn(true);
-   imgFrame->loadImg( output.imgFileName(), true );
 }
 
 /*
@@ -557,36 +565,67 @@ void mapimgForm::outSaveClicked()
    RasterInfo output( outInfoFrame->info() );
    output.setDataType( input.isSigned(), input.bitCount(), input.type() );
    output.setFillValue( input.fillValue() );
+   output.setAuthor( authName, authCompany, authEmail );
 
    if( !mapimg::readytoReproject( output, this ) )
       return;
 
    mapimg::frameIt( output );
+   outInfoFrame->setInfo( output );
 
    QString temp = QFileDialog::getSaveFileName(
          outPath, "mapimg Raster Files (*.img)", this, "", "Choose a destination for the reprojection");
 
    if( temp.isNull() )
       return;
-   
-   outInfoFrame->setInfo( output );
-   
+
    if( !output.setFileName( temp ) )
    {
       QMessageBox::critical( this, "Output Error", 
          "Invalid output file name" );
       return;
    }
-   output.setAuthor( authName, authCompany, authEmail );
 
-   if( !output.save() )
+   if( QFile::exists( output.imgFileName() ) )
+   {
+      int status = QMessageBox::question( this, "Save", 
+         output.imgFileName() + " already exists."
+         "\nDo you want to replace it?",
+         QMessageBox::Yes, QMessageBox::No );
+
+      if( status == QMessageBox::No )
+         return;
+      
+      QFile::remove( output.imgFileName() );
+      if( QFile::exists( output.xmlFileName() ) )
+         QFile::remove( output.xmlFileName() );
+   }
+
+   if( !output.save( temp ) )
    {
       QMessageBox::critical( this, "Output Error", 
          "Unable to save .xml file" );
+      if( QFile::exists( output.xmlFileName() ) )
+         QFile::remove( output.xmlFileName() );
       return;
    }
 
-   mapimg::reproject( input, output, this );
+   ResampleForm *resForm = new ResampleForm( this, "resForm", false, 
+      Qt::WStyle_Customize | Qt::WStyle_NormalBorder );
+   resForm->exec();
+
+   if( resForm->wasCanceled() )
+   {
+      delete resForm;
+      return;
+   }
+
+   ResampleInfo resample( resForm->info() );
+   resample.setFillValue( input.fillValue() );
+   resample.setNoDataValue( input.noDataValue() );
+
+   mapimg::reproject( input, output, resample, this );
+   delete resForm;
 
    outPath = temp.left( temp.findRev( "/" ) );
    QSettings *settings = new QSettings( QSettings::Ini );
@@ -616,9 +655,6 @@ void mapimgForm::aboutClicked()
 {
    aboutForm *about = new aboutForm(this, "about", false,
       Qt::WStyle_Customize | Qt::WStyle_NormalBorder );
-
    about->exec();
-
    delete about;
 }
-

@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.5 2005/01/28 14:53:43 jtrent Exp $
+// $Id: mapimg.cpp,v 1.6 2005/01/31 03:09:09 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -8,6 +8,8 @@
 #include <qstring.h>
 
 #include "rasterinfo.h"
+#include "resampleinfo.h"
+
 #include "getprojinfo.h"
 extern "C"
 {
@@ -15,8 +17,7 @@ extern "C"
 }
 
 #include <math.h>
-
-double mapimg::round(double value, unsigned int decimals )
+double mapimg::round(double value, unsigned int decimals)
 {
   double factor = pow(10,decimals);
   return floor((value * factor) + 0.5) / factor;
@@ -267,7 +268,7 @@ void mapimg::frameIt( RasterInfo &input )
       pxmin + (pixsize/2),
       pymax - (pixsize/2), 
       (int)(mapimg::round( ((pymax - pymin) / pixsize) )),
-      (int)(mapimg::round( ((pxmax - pxmin) / pixsize) )) );
+      (int)(round( ((pxmax - pxmin) / pixsize) )) );
 }
 
 bool mapimg::downSampleImg( RasterInfo &input, int maxDimension )
@@ -277,42 +278,12 @@ bool mapimg::downSampleImg( RasterInfo &input, int maxDimension )
 
    input.setFileName( QDir::currentDirPath().append("/temp.img") );
 
-   mapimg::reproject(old, input);
+   ResampleInfo resample;
+   resample.setResampleCode( ResampleInfo::NearestNeighbor );
+   resample.setFillValue( old.fillValue() );
+   resample.setNoDataValue( old.noDataValue() );
 
-   /*int bytes = input.bitCount() / 8;
-   int inLen = old.cols() * bytes;
-   int outLen = input.cols() * bytes;
-   double inoutRatio = static_cast<double>(old.cols()) /
-      static_cast<double>(input.cols());
-
-   char *inbuf = new char[inLen];
-   char *outbuf = new char[outLen];
-
-   QFile in(old.imgFileName());
-   QFile out(input.imgFileName());
-   if( out.exists() )
-      out.remove();
-
-   in.open(IO_ReadOnly);
-   out.open(IO_WriteOnly);
-   for( int row = 0; row < input.rows(); ++row )
-   {
-      in.at( static_cast<QIODevice::Offset>(row * inoutRatio) * inLen );
-      //QMessageBox::information(0,"DBG",QString("row: %1\noffset: %2").arg(row).arg(in.at()));
-      in.readBlock(inbuf, inLen);
-      for( int col = 0; col < input.cols(); ++col );
-      {
-         int offset = static_cast<QIODevice::Offset>(col * inoutRatio) * bytes;
-         for( int i = 0; i < bytes; ++i )
-            outbuf[col+i] = 0;//inbuf[offset+i];
-      }
-      out.writeBlock(outbuf, outLen);
-   }
-   in.close();
-   out.close();
-
-   delete [] inbuf;
-   delete [] outbuf;*/
+   mapimg::reproject(old, input, resample);
 
    return true;
 }
@@ -372,8 +343,9 @@ double mapimg::calcFillValue( RasterInfo &input )
       return get_max_value( input, data );   }
 }
 
-bool mapimg::reproject( RasterInfo &input, RasterInfo &output, QWidget *parent )
+bool mapimg::reproject( RasterInfo &input, RasterInfo &output, ResampleInfo resample, QWidget *parent )
 {
+   resample;
    QString dtype(output.isSigned()?"Signed ":"Unsigned ");
    dtype += QString::number(output.bitCount());
    dtype += " Bit ";
@@ -404,4 +376,3 @@ bool mapimg::reproject( RasterInfo &input, RasterInfo &output, QWidget *parent )
    {  Q_UINT8 data = 0;
       return nearestNeighbor( input, output, data, parent);   }
 }
-

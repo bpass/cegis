@@ -1,8 +1,11 @@
+// $Id: authorform.cpp,v 1.3 2005/01/31 03:09:04 rbuehler Exp $
+
+
 /****************************************************************************
 ** Form implementation generated from reading ui file 'form1.ui'
 **
 ** Created: Thu Jan 13 17:33:43 2005
-**      by: The User Interface Compiler ($Id: authorform.cpp,v 1.2 2005/01/14 22:50:16 rbuehler Exp $)
+**      by: The User Interface Compiler (Id: qt/main.cpp   3.3.3   edited Nov 24 2003)
 ****************************************************************************/
 
 #include "authorform.h"
@@ -30,40 +33,40 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, 
     spacer5 = new QSpacerItem( 20, 41, QSizePolicy::Minimum, QSizePolicy::Expanding );
     authorFormLayout->addItem( spacer5 );
 
-    textLabel1 = new QLabel( this, "textLabel1" );
-    textLabel1->setFrameShape( QLabel::WinPanel );
-    textLabel1->setFrameShadow( QLabel::Sunken );
-    textLabel1->setLineWidth( 2 );
-    textLabel1->setAlignment( int( QLabel::WordBreak | QLabel::AlignVCenter ) );
-    authorFormLayout->addWidget( textLabel1 );
+    descrLabel = new QLabel( this, "descrLabel" );
+    descrLabel->setFrameShape( QLabel::WinPanel );
+    descrLabel->setFrameShadow( QLabel::Sunken );
+    descrLabel->setLineWidth( 2 );
+    descrLabel->setAlignment( int( QLabel::WordBreak | QLabel::AlignVCenter ) );
+    authorFormLayout->addWidget( descrLabel );
     spacer1 = new QSpacerItem( 20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding );
     authorFormLayout->addItem( spacer1 );
 
     layout1 = new QGridLayout( 0, 1, 1, 0, 3, "layout1"); 
 
-    textLabel4 = new QLabel( this, "textLabel4" );
+    emailLabel = new QLabel( this, "emailLabel" );
 
-    layout1->addWidget( textLabel4, 2, 0 );
+    layout1->addWidget( emailLabel, 2, 0 );
 
-    textLabel2 = new QLabel( this, "textLabel2" );
+    nameLabel = new QLabel( this, "nameLabel" );
 
-    layout1->addWidget( textLabel2, 0, 0 );
+    layout1->addWidget( nameLabel, 0, 0 );
 
-    lineEdit1 = new QLineEdit( this, "lineEdit1" );
+    nameEdit = new QLineEdit( this, "nameEdit" );
 
-    layout1->addWidget( lineEdit1, 0, 1 );
+    layout1->addWidget( nameEdit, 0, 1 );
 
-    textLabel3 = new QLabel( this, "textLabel3" );
+    companyLabel = new QLabel( this, "companyLabel" );
 
-    layout1->addWidget( textLabel3, 1, 0 );
+    layout1->addWidget( companyLabel, 1, 0 );
 
-    lineEdit2 = new QLineEdit( this, "lineEdit2" );
+    companyEdit = new QLineEdit( this, "companyEdit" );
 
-    layout1->addWidget( lineEdit2, 1, 1 );
+    layout1->addWidget( companyEdit, 1, 1 );
 
-    lineEdit3 = new QLineEdit( this, "lineEdit3" );
+    emailEdit = new QLineEdit( this, "emailEdit" );
 
-    layout1->addWidget( lineEdit3, 2, 1 );
+    layout1->addWidget( emailEdit, 2, 1 );
     authorFormLayout->addLayout( layout1 );
     spacer3 = new QSpacerItem( 20, 21, QSizePolicy::Minimum, QSizePolicy::Expanding );
     authorFormLayout->addItem( spacer3 );
@@ -76,27 +79,26 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, 
     spacer4 = new QSpacerItem( 31, 21, QSizePolicy::Expanding, QSizePolicy::Minimum );
     layout2->addItem( spacer4 );
 
-    pushButton1 = new QPushButton( this, "pushButton1" );
-    pushButton1->setMaximumSize( QSize( 80, 32767 ) );
-    layout2->addWidget( pushButton1 );
+    okButton = new QPushButton( this, "okButton" );
+    okButton->setMaximumSize( QSize( 80, 32767 ) );
+    cancelButton = new QPushButton( this, "cancelButton" );
+    cancelButton->setMaximumSize( QSize( 80, 32767 ) );
+    layout2->addWidget( okButton );
+    layout2->addWidget( cancelButton );
     authorFormLayout->addLayout( layout2 );
     languageChange();
     resize( QSize(265, 174).expandedTo(minimumSizeHint()) );
     clearWState( WState_Polished );
 
-    connect( pushButton1, SIGNAL( clicked() ), this, SLOT(close()) );
+    connect( okButton, SIGNAL( clicked() ), this, SLOT(okClicked()) );
+    connect( cancelButton, SIGNAL( clicked() ), this, SLOT(close()) );
 }
 
 /*
  *  Destroys the object and frees any allocated resources
  */
-#include <qmessagebox.h>
 authorForm::~authorForm()
-{
-   set->writeEntry( "/USGS/mapimg2/AuthorName", lineEdit1->text() );
-   set->writeEntry( "/USGS/mapimg2/AuthorCompany", lineEdit2->text() );
-   set->writeEntry( "/USGS/mapimg2/AuthorEmail", lineEdit3->text() );
-}
+{}
 
 /*
  *  Sets the strings of the subwidgets using the current
@@ -104,15 +106,24 @@ authorForm::~authorForm()
  */
 void authorForm::languageChange()
 {
-    setCaption( tr( "Form1" ) );
-    textLabel1->setText( tr( "For your covenience mapimg%1 can attach your information to the re-projections that you create." ).arg(MAJOR_VERSION) );
-    textLabel4->setText( tr( "Email address" ) );
-    textLabel2->setText( tr( "Name:" ) );
-    textLabel3->setText( tr( "Company" ) );
+    setCaption( tr( "Author Properties" ) );
+    descrLabel->setText( tr( "For your covenience mapimg%1 can attach your information to the re-projections that you create." ).arg(MAJOR_VERSION) );
+    emailLabel->setText( tr( "Email address" ) );
+    nameLabel->setText( tr( "Name:" ) );
+    companyLabel->setText( tr( "Company" ) );
     textLabel5->setText( tr( "These fields can be changed at any time by clicking \"Edit Author\" under the options menu." ) );
-    pushButton1->setText( tr( "Ok" ) );
-    lineEdit1->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorName" ) ) );
-    lineEdit2->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorCompany" ) ) );
-    lineEdit3->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorEmail" ) ) );
+    okButton->setText( tr( "Ok" ) );
+    cancelButton->setText( tr( "Cancel" ) );
+    nameEdit->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorName" ) ) );
+    companyEdit->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorCompany" ) ) );
+    emailEdit->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorEmail" ) ) );
 }
 
+void authorForm::okClicked()
+{
+   set->writeEntry( "/USGS/mapimg2/AuthorName", nameEdit->text() );
+   set->writeEntry( "/USGS/mapimg2/AuthorCompany", companyEdit->text() );
+   set->writeEntry( "/USGS/mapimg2/AuthorEmail", emailEdit->text() );
+
+   close();
+}

@@ -1,12 +1,14 @@
-// $Id: mapimg.h,v 1.4 2005/01/28 14:53:43 jtrent Exp $
+// $Id: mapimg.h,v 1.5 2005/01/31 03:09:09 rbuehler Exp $
 
 
 #ifndef MAPIMG_H
 #define MAPIMG_H
 
 class RasterInfo;
+class ResampleInfo;
 class QWidget;
 class QString;
+
 
 namespace mapimg
 {
@@ -18,10 +20,9 @@ namespace mapimg
    bool downSampleImg( RasterInfo &input, int maxDimension );
    bool downSizeProjection( RasterInfo &input, int maxDimension );
    double calcFillValue( RasterInfo &input );
-   bool reproject( RasterInfo &input, RasterInfo &output, QWidget *parent = 0 );
+   bool reproject( RasterInfo &input, RasterInfo &output, ResampleInfo resample, QWidget *parent = 0 );
 
    double round(double value, unsigned int decimals = 0);
 };
 
 #endif//MAPIMG_H
-

@@ -1,10 +1,11 @@
+// $Id: authorform.h,v 1.3 2005/01/31 03:09:04 rbuehler Exp $
+
+
 /****************************************************************************
 ** Form interface generated from reading ui file 'form1.ui'
 **
 ** Created: Thu Jan 13 17:33:43 2005
-**      by: The User Interface Compiler ($Id: authorform.h,v 1.2 2005/01/14 22:50:16 rbuehler Exp $)
-**
-** WARNING! All changes made in this file will be lost!
+**      by: The User Interface Compiler (Id: qt/main.cpp   3.3.3   edited Nov 24 2003)
 ****************************************************************************/
 
 #ifndef AUTHORFORM_H
@@ -30,15 +31,16 @@ public:
     authorForm( QSettings *settings = 0, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
     ~authorForm();
 
-    QLabel* textLabel1;
-    QLabel* textLabel4;
-    QLabel* textLabel2;
-    QLabel* textLabel3;
+    QLabel* descrLabel;
+    QLabel* emailLabel;
+    QLabel* nameLabel;
+    QLabel* companyLabel;
     QLabel* textLabel5;
-    QLineEdit* lineEdit1;
-    QLineEdit* lineEdit2;
-    QLineEdit* lineEdit3;
-    QPushButton* pushButton1;
+    QLineEdit* nameEdit;
+    QLineEdit* companyEdit;
+    QLineEdit* emailEdit;
+    QPushButton* okButton;
+    QPushButton* cancelButton;
 
 protected:
     QVBoxLayout* authorFormLayout;
@@ -53,6 +55,7 @@ protected:
 
 protected slots:
     virtual void languageChange();
+    void okClicked();
 
 };
 

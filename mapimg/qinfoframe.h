@@ -1,4 +1,4 @@
-// $Id: qinfoframe.h,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: qinfoframe.h,v 1.2 2005/01/31 03:09:09 rbuehler Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -70,6 +70,7 @@ public:
    QComboBox   *dataCombo;
    QLineEdit   *fillEdit;
    QPushButton *fillButton;
+   QLineEdit   *noDataEdit;
 
 public slots:
    void pixelChange(int);

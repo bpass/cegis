@@ -1,4 +1,4 @@
-// $Id: gctpnames.h,v 1.2 2005/01/27 18:15:13 jtrent Exp $
+// $Id: gctpnames.h,v 1.3 2005/01/31 03:09:04 rbuehler Exp $
 
 
 #ifndef GCTPNAMES_H
@@ -277,4 +277,3 @@ namespace
 }
 
 #endif
-

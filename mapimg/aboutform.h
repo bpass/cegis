@@ -1,13 +1,11 @@
-// $Id: aboutform.h,v 1.1 2005/01/14 16:18:48 rbuehler Exp $
+// $Id: aboutform.h,v 1.2 2005/01/31 03:09:04 rbuehler Exp $
 
 
 /****************************************************************************
 ** Form interface generated from reading ui file 'aboutform.ui'
 **
 ** Created: Thu Jan 6 17:24:08 2005
-**      by: The User Interface Compiler ($Id: aboutform.h,v 1.1 2005/01/14 16:18:48 rbuehler Exp $)
-**
-** WARNING! All changes made in this file will be lost!
+**      by: The User Interface Compiler (Id: qt/main.cpp   3.3.3   edited Nov 24 2003)
 ****************************************************************************/
 
 #ifndef ABOUTFORM_H

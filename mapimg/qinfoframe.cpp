@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.2 2005/01/27 18:15:16 jtrent Exp $
+// $Id: qinfoframe.cpp,v 1.3 2005/01/31 03:09:09 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -91,6 +91,9 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    QHBox *fillBox = new QHBox( dataBox );
    fillEdit = new QLineEdit( fillBox, "fillEdit" );
    fillButton = new QPushButton( "?", fillBox );
+   (void) new QLabel( "No Data Value", dataBox );
+   noDataEdit = new QLineEdit( dataBox, "noDataEdit" );
+   
 
    ////////STAGE 3: Polish Widgets
    //
@@ -150,11 +153,15 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    dataCombo->insertStringList( dataTypes );
    QToolTip::add( dataCombo, "Data type of each pixel in the raster image" );
    fillEdit->setValidator( new QDoubleValidator( -100000000, 100000000, 12, fillEdit ) );
-   QToolTip::add( fillEdit, "\"No Data\" value to represent a pixel outside the map<br>"
+   QToolTip::add( fillEdit, "Fill value to represent a pixel outside the map frame<br>"
       "Entered value must be from -100000000 to 100000000." );
    fillButton->setMaximumSize( 20, 20 );
    QToolTip::add( fillButton, "Recommend fill value by reading file and "
       "solving for the maximum value + 2" );
+   noDataEdit->setValidator( new QDoubleValidator( -100000000, 100000000, 12, fillEdit ) );
+   QToolTip::add( noDataEdit, "\"No Data\" value to represent a pixel inside the map frame"
+      " with no value<br>"
+      "Entered value must be from -100000000 to 100000000." );
 
    //This connection is for keeping the pixelEdit hidden until it is needed
    connect(pixelCombo, SIGNAL(activated(int)), this, SLOT(pixelChange(int)));
@@ -354,6 +361,7 @@ void QInfoFrame::reset()
    mapTab->ulLonEdit->setText( "0.000000" );
    mapTab->dataCombo->setCurrentItem( 0 );
    mapTab->fillEdit->setText( "0.000000" );
+   mapTab->noDataEdit->setText( "0.000000" );
 
    gctpTab->projCombo->setCurrentItem( 0 );
    gctpTab->projChange();
@@ -399,6 +407,7 @@ void QInfoFrame::setReadOnly( bool ro )
    mapTab->dataCombo->setDisabled( ro );
    mapTab->fillEdit->setDisabled( ro );
    mapTab->fillButton->setDisabled( ro );
+   mapTab->noDataEdit->setDisabled( ro );
 
    gctpTab->projCombo->setDisabled( ro );
    gctpTab->zoneSpin->setDisabled( ro );
@@ -484,6 +493,7 @@ void QInfoFrame::setAsOutput()
    mapTab->ulLonEdit->setDisabled( true );
    mapTab->dataCombo->setDisabled( true );
    mapTab->fillEdit->setDisabled( true );
+   mapTab->noDataEdit->setDisabled( true );
 }
 
 /*
@@ -497,6 +507,7 @@ void QInfoFrame::setPartner( QInfoFrame *i )
    partner = i;
    connect( i->mapTab->dataCombo, SIGNAL(activated(int)), this, SLOT(partnerChanged()) );
    connect( i->mapTab->fillEdit, SIGNAL(textChanged(const QString &)), this, SLOT(partnerChanged()) );
+   connect( i->mapTab->noDataEdit, SIGNAL(textChanged(const QString &)), this, SLOT(partnerChanged()) );
 }
 
 /*
@@ -527,6 +538,7 @@ void QInfoFrame::copy( QInfoFrame *src )
    mapTab->dataCombo->setCurrentItem( 
       source->mapTab->dataCombo->currentItem() );
    mapTab->fillEdit->setText( source->mapTab->fillEdit->text() );
+   mapTab->noDataEdit->setText( source->mapTab->noDataEdit->text() );
 
    gctpTab->projCombo->setCurrentText( 
       source->gctpTab->projCombo->currentText() );
@@ -547,6 +559,8 @@ void QInfoFrame::partnerChanged()
       partner->mapTab->dataCombo->currentItem() );
    mapTab->fillEdit->setText(
       partner->mapTab->fillEdit->text() );
+   mapTab->noDataEdit->setText(
+      partner->mapTab->noDataEdit->text() );
 }
 
 /*
@@ -665,6 +679,7 @@ void QInfoFrame::setInfo( RasterInfo &input )
 
    mapTab->fillEdit->setText( QString::number( input.fillValue(), 'f', 6 ) );
    mapTab->fillButton->setShown( input.fillValue() == -1.0 );
+   mapTab->noDataEdit->setText( QString::number( input.noDataValue(), 'f', 6 ) );
 
    ////////GCTP Params
    //   Complications in here arise from the multiple variations for some
@@ -702,6 +717,7 @@ RasterInfo QInfoFrame::info()
    cleanUp( mapTab->ulLatEdit );
    cleanUp( mapTab->ulLonEdit );
    cleanUp( mapTab->fillEdit );
+   cleanUp( mapTab->noDataEdit );
 
    RasterInfo ret;
 
@@ -716,7 +732,8 @@ RasterInfo QInfoFrame::info()
    ret.setPixelDescription(
       mapTab->dataCombo->currentText(),
       mapTab->pixelEdit->text().toDouble(),
-      mapTab->fillEdit->text().toDouble() );
+      mapTab->fillEdit->text().toDouble(),
+      mapTab->noDataEdit->text().toDouble() );
 
    ret.setProjection(
       combo2proj( gctpTab->projCombo->currentItem() ),

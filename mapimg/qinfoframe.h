@@ -1,4 +1,4 @@
-// $Id: qinfoframe.h,v 1.8 2005/03/16 16:17:07 jtrent Exp $
+// $Id: qinfoframe.h,v 1.9 2005/03/17 16:31:01 jtrent Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -74,7 +74,9 @@ public:
    QLineEdit   *noDataEdit;
 
    QCheckBox   *hasFillCheck;
+   QString     lastFillValue;
    QCheckBox   *hasNoDataCheck;
+   QString     lastNoDataValue;
 
    bool eventFilter( QObject* object, QEvent* event );
 

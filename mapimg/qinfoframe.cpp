@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.14 2005/03/16 16:17:06 jtrent Exp $
+// $Id: qinfoframe.cpp,v 1.15 2005/03/17 16:31:01 jtrent Exp $
 
 
 #include "qinfoframe.h"
@@ -102,6 +102,8 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    hasNoDataCheck->hide();
    noDataEdit = new QLineEdit( noDataBox, "noDataEdit" );
 
+   lastFillValue = "";
+   lastNoDataValue = "";
 
    ////////STAGE 3: Polish Widgets
    //
@@ -198,12 +200,13 @@ bool QMapTab::eventFilter( QObject* object, QEvent* event )
       if( mouseEvent->button() == Qt::RightButton )
       {
          mouseEvent->accept();
-
+/*
          QPopupMenu* estimatePopup = new QPopupMenu( this, "estimatePopup" );
          estimatePopup->insertItem( "Estimate Value", fillButton, SLOT( animateClick() ) );
 
          estimatePopup->exec( mouseEvent->globalPos() );
          delete estimatePopup;
+*/
          return true;
       }
       else
@@ -222,7 +225,16 @@ void QMapTab::fillCheckToggled( bool state )
        ((MapimgValidator*)fillEdit->validator())->setAllowUndefined( !state );
 
     if( state == QButton::Off )
+    {
+    	lastFillValue = fillEdit->text();
         fillEdit->setText( "Undefined" );
+        fillEdit->setDisabled( true );
+    }
+    else
+    {
+        fillEdit->setText( lastFillValue );
+        fillEdit->setDisabled( false );
+    }
 
     if( fillEdit->validator() != 0 )
     {
@@ -240,7 +252,16 @@ void QMapTab::noDataCheckToggled( bool state )
        ((MapimgValidator*)noDataEdit->validator())->setAllowUndefined( !state );
 
     if( !state )
+    {
+    	lastNoDataValue = noDataEdit->text();
         noDataEdit->setText( "Undefined" );
+        noDataEdit->setDisabled( true );
+    }
+    else
+    {
+        noDataEdit->setText( lastNoDataValue );
+        noDataEdit->setDisabled( false );
+    }
 
     if( noDataEdit->validator() != 0 )
     {
@@ -298,7 +319,7 @@ void QMapTab::dataChange( const QString& newDataType )
    STAGE 1: It sets its appearance by turning off the Horizontal SrcollBar,
 forcing on the Vertical ScrollBar, and generating the 'contents' widget for
 holding all the contents.
-   
+
    STAGE 2: It creates all the QWidgets and their respective QHBoxes in which
 they all reside.
    
@@ -552,7 +573,7 @@ void QInfoFrame::setAsInput()
    mapTab->fileEdit->setDisabled( true );
    mapTab->copyButton->hide();
    mapTab->lockButton->show();
-//   mapTab->fillButton->hide();
+   mapTab->fillButton->hide();
 
    static_cast<QLabel*>(gctpTab->child( "gctpLabel" ))->setText( "Input Projection Info" );
    gctpTab->copyButton->hide();
@@ -785,9 +806,9 @@ void QInfoFrame::setInfo( RasterInfo &input )
       cap = cap.right(cap.length() - index);
 
       mapTab->fileEdit->setText( cap );
-      mapTab->fillButton->show();
+//      mapTab->fillButton->show();
    }
-   
+
    ////////Inputs
    mapTab->rowSpin->setValue( input.rows() );
    mapTab->colSpin->setValue( input.cols() );
@@ -914,6 +935,10 @@ RasterInfo QInfoFrame::info()
 
    return ret;
 }
+
+
+
+
 
 /*
    cleanUp(QLineEdit*) is designed to format user-entered values to be more

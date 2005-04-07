@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.20 2005/03/31 02:14:48 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.21 2005/04/07 17:22:05 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -901,9 +901,9 @@ void QInfoFrame::setInfo( RasterInfo &input )
    if( mapTab->fillEdit->validator() != 0 )
    {
       ((MapimgValidator*)mapTab->fillEdit->validator())->setDataType( dtype );
-      ((MapimgValidator*)mapTab->fillEdit->validator())->setAllowUndefined( fillString.upper() == "UNDEFINED" );
-      mapTab->hasFillCheck->setChecked( !(fillString.upper() == "UNDEFINED") );
-      mapTab->fillEdit->setDisabled( true );
+      ((MapimgValidator*)mapTab->fillEdit->validator())->setAllowUndefined( !input.hasFillValue() );
+
+      mapTab->hasFillCheck->setChecked( input.hasFillValue() );
 
       mapTab->fillEdit->validator()->fixup( fillString );
    }

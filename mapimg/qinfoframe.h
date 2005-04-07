@@ -1,4 +1,4 @@
-// $Id: qinfoframe.h,v 1.9 2005/03/17 16:31:01 jtrent Exp $
+// $Id: qinfoframe.h,v 1.10 2005/04/07 17:22:05 rbuehler Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -44,6 +44,8 @@ public:
    QMapTab( QWidget* parent = 0, const char* name = 0);
    ~QMapTab();
 
+   bool eventFilter( QObject* object, QEvent* event );
+
    QVBox       *contents;
 
    QPushButton *copyButton;
@@ -78,7 +80,9 @@ public:
    QCheckBox   *hasNoDataCheck;
    QString     lastNoDataValue;
 
-   bool eventFilter( QObject* object, QEvent* event );
+   QString     authName;
+   QString     authCompany;
+   QString     authEmail;
 
 public slots:
    void pixelChange(int);

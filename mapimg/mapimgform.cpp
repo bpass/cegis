@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.31 2005/03/30 00:54:20 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.32 2005/04/07 17:22:05 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -207,8 +207,9 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
 
 
    ////////
-   //TOOLBARS
+   //TOOLBAR
    ////////
+
    toolBar = new QToolBar( this, "toolBar" );
 
    inOpenAction->addTo( toolBar );
@@ -256,31 +257,31 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    outSaveAction->addTo( File );
    File->insertSeparator();
    exitAction->addTo( File );
-   menuBar->insertItem( "File", File);
+   menuBar->insertItem( "&File", File);
 
    //Options
    Options = new QPopupMenu( this );
    authAction->addTo( Options );
-   menuBar->insertItem( "Options", Options );
+   menuBar->insertItem( "&Options", Options );
 
    //Preview
    Preview = new QPopupMenu( this );
    viewResampleAction->addTo( Preview );
    previewProjAction->addTo( Preview );
-   menuBar->insertItem( "Preview", Preview);
+   menuBar->insertItem( "&Preview", Preview);
 
    //Tools
    Tools = new QPopupMenu( this );
    QPopupMenu* webBased = new QPopupMenu( Tools, "webBased" );
    webDSS->addTo( webBased );
    Tools->insertItem( "Web Based", webBased );
-   menuBar->insertItem( "Tools", Tools);
+   menuBar->insertItem( "&Tools", Tools);
 
    //Help
    Help = new QPopupMenu( this );
    aboutAction->addTo( Help );
    aboutQtAction->addTo( Help );
-   menuBar->insertItem( "Help", Help);
+   menuBar->insertItem( "&Help", Help);
 
 
    ////////
@@ -305,11 +306,13 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
       settings->writeEntry( "/USGS/mapimg2/AuthorName", QString("Unknown") );
       settings->writeEntry( "/USGS/mapimg2/AuthorCompany", QString("Unknown") );
       settings->writeEntry( "/USGS/mapimg2/AuthorEmail", QString("Unknown") );
+      delete settings;
 
       editAuthor();
    }
+   else
+      delete settings;
 
-   delete settings;
 
    resize( QSize(600, 524).expandedTo(minimumSizeHint()) );
    clearWState( WState_Polished );
@@ -348,6 +351,15 @@ mapimgForm::~mapimgForm()
       QFile::remove( "temp_small.img" );
 }
 
+/*
+The eventFilter() function is used to capture left clicks on the preview
+toolbar button and right clicks in the imgFrame. If the left click is on the
+triangle of the preview button then the result is the viewShowPopup to allow
+the user to select between input and output. Right-clicking anywhere in the
+imgFrame will have the same effect.
+
+The arrow in the 
+*/
 bool mapimgForm::eventFilter( QObject* object, QEvent* event )
 {
    if( object == imgFrame && event->type() == QEvent::MouseButtonPress )
@@ -505,6 +517,7 @@ bool mapimgForm::openFile( QString inFile )
    }
    else
    {
+      info.setAuthor( authName, authCompany, authEmail );
       inInfoFrame->lock( false, false );
       inInfoAction->setOn( true );
       outInfoAction->setOn( false );
@@ -683,7 +696,6 @@ bool mapimgForm::previewProjection()
 
    RasterInfo output( outInfoFrame->info() );
    output.setDataType( input.isSigned(), input.bitCount(), input.type() );
-   output.setFillValue( input.fillValue() );
 
    if( !mapimg::readytoFrameIt( output, this ) )
       return false;

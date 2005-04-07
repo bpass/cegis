@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.19 2005/03/25 18:06:41 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.20 2005/04/07 17:22:05 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -23,6 +23,15 @@ int mapimg::round(double value, unsigned int decimals)
    double factor = pow(10,decimals);
    return (int)(floor((value * factor) + 0.5) / factor);
 }
+
+#ifndef EPSILON
+#define EPSILON   1.0e-10
+#endif
+
+#ifndef DMSHALF_PI
+#define DMSHALF_PI   90000000.000000
+#endif//DMSHALF_PI
+
 
 /*
 readytoFrameIt() returns true if there are no errors or if the user chooses to
@@ -135,43 +144,62 @@ QString mapimg::projectionErrors( const RasterInfo &input )
    {
       switch( input.projectionNumber() )
       {
-      case 0:
+      case 0:  // Geographic
          msg += "Geographic is an unsupported projection at this time.\n"
             "\t-The framing generates zeros for rows and cols.\n";
          break;
-      case 1:
+      case 1:  // UTM
          msg += "UTM is an unsupported projection at this time.\n"
             "\t-The reprojection created will be uselessly distorted out of zone.";
          if( input.zoneNumber() == 0 )
             msg += "0 is not a standard UTM Zone code\n"
             "\t-Please select a number for -60 to 60 not including 0\n";
          break;
-      case 2:
+      case 2:  // State Plane Coordinates
          msg += "State Plane Coordinates is an unsupported projection at this time.\n"
             "\t-mapimg will crash if you choose to use this projection.\n";
          break;
-      case 4:
+      case 4:  // Lambert Conformal Conic
          msg += "Lambert Conformal Conic is an unsupported projection at this time.\n"
             "\t-The framing generates zeros for rows and cols.\n";
-      case 3:
-         if( input.gctpParam(3) == input.gctpParam(4) ||
-            input.gctpParam(3) == -1*input.gctpParam(4) )
+      case 3:  // Alber's Equal Area
+      case 8:  // Equidistan Conic B
+         if( input.projectionNumber() == 8 && input.gctpParam( 9 ) == 0.0 )
+            break;
+         if( fabs(input.gctpParam(2) + input.gctpParam(3)) < EPSILON )
             msg += "Standard parallel values may produce invalid data.\n"
-            "\t-Make sure their absolute values are not equal\n";
+            "\t-Make sure they don't add up to zero\n";
          break;
-      case 6:
+      case 9:  // Transverse Mercator
+         if( input.gctpParam(2) < 0 || input.gctpParam(2) > 2 )
+            msg += "Unexpected Scale Factor value.\n"
+            "\t-Most usage of Scale Factor is closer to a value of 1\n";
+         break;
+      case 6:  // Polar Stereographic
          msg += "Polar Stereographic is an unsupported projection at this time.\n"
             "\t-The framing generates huge values for rows and cols.\n";
          break;
-      case 10:
+      case 10: // Stereographic
          msg += "Stereographic is an unsupported projection at this time.\n"
             "\t-The framing generates huge values for rows and cols.\n";
          break;
-      case 13:
+      case 13: // Gnomic
          msg += "Gnomic is an unsupported projection at this time.\n"
             "\t-The framing generates zeros for rows and cols.\n";
          break;
-      case 23:
+      case 20: // Hotine Oblique Mercators
+         if( input.gctpParam(2) < 0 || input.gctpParam(2) > 2 )
+            msg += "Unexpected Scale Factor value.\n"
+            "\t-Most usage of Scale Factor is closer to a value of 1\n";
+         if( input.gctpParam(5)
+         if( input.gctpParam( 13 ) == 0.0 )  // Version A
+         {
+         }/////////////////
+         else  // Version B//////////////////
+         {/////////////////
+         }
+         break;
+      case 23: // Modified Stereographic Conformal--Alaska
          msg += "Modified Stereographic Conformal--Alaska is an unsupported projection at this time.\n"
             "\t-The framing generates zeros for rows and cols.\n";
          break;

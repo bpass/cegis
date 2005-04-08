@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.20 2005/04/07 17:22:05 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.21 2005/04/08 21:51:30 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -69,7 +69,7 @@ bool mapimg::readytoFrameIt( const RasterInfo &input, QWidget * parent )
       if( !msg.isEmpty() )
       {
          if( QMessageBox::warning( parent, "Bad projection parameters", msg,
-            QMessageBox::Cancel, QMessageBox::Ignore ) == QMessageBox::Cancel )
+            QMessageBox::Ok, QMessageBox::Ignore ) == QMessageBox::Ok )
             return false;
          // User has decided to ignore errors...
          // Don't say I didn't warn you!
@@ -118,7 +118,7 @@ bool mapimg::readytoReproject( const RasterInfo &input, QWidget *parent )
       if( !msg.isEmpty() )
       {
          if( QMessageBox::warning( parent, "Projection Warning", msg,
-            QMessageBox::Cancel, QMessageBox::Ignore ) == QMessageBox::Cancel )
+            QMessageBox::Ok, QMessageBox::Ignore ) == QMessageBox::Ok )
             return false;
          // User has decided to ignore errors...
          // Don't say I didn't warn you!
@@ -191,17 +191,36 @@ QString mapimg::projectionErrors( const RasterInfo &input )
          if( input.gctpParam(2) < 0 || input.gctpParam(2) > 2 )
             msg += "Unexpected Scale Factor value.\n"
             "\t-Most usage of Scale Factor is closer to a value of 1\n";
-         if( input.gctpParam(5)
          if( input.gctpParam( 13 ) == 0.0 )  // Version A
          {
-         }/////////////////
-         else  // Version B//////////////////
-         {/////////////////
+            if( fabs(input.gctpParam(9) - input.gctpParam(11)) <= EPSILON )
+               msg += "Specified latitudes of points 1 and 2 may produce invalid data.\n"
+               "\t-Make sure they are not equal to one another\n";
+            if( fabs(fabs(input.gctpParam(9)) - DMSHALF_PI) <= EPSILON || fabs(input.gctpParam(9)) <= EPSILON )
+               msg += "Latitude of point 1 may produce invalid data.\n"
+               "\t-Make sure it is not equal to +/-90 or 0 degrees\n";
+            if( fabs(input.gctpParam(5)) == DMSHALF_PI )
+               msg += "Latitude of Projection Origin may produce invalid data.\n"
+               "\t-Make sure it is not equal to +/-90 degrees\n";
+         }
+         else  // Version B
+         {
+            if( fabs(fabs(input.gctpParam(5)) - DMSHALF_PI) <= EPSILON || fabs(input.gctpParam(5)) <= EPSILON )
+               msg += "Latitude of Projection Origin may produce invalid data.\n"
+               "\t-Make sure it is not equal to +/-90 or 0 degrees\n";
          }
          break;
       case 23: // Modified Stereographic Conformal--Alaska
          msg += "Modified Stereographic Conformal--Alaska is an unsupported projection at this time.\n"
             "\t-The framing generates zeros for rows and cols.\n";
+         break;
+      case 30:
+         if( input.gctpParam(2) < 0 || input.gctpParam(2) > 2 )
+            msg += "Oval Shape Parameter m may produce invalid data.\n"
+            "\t-Value must be between 0 and 2.\n";
+         if( input.gctpParam(3) < 2 )
+            msg += "Oval Shape Parameter n may produce invalid data.\n"
+            "\t-Value must be greater than 2.\n";
          break;
       }
    }

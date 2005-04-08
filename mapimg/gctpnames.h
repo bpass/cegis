@@ -1,4 +1,4 @@
-// $Id: gctpnames.h,v 1.8 2005/03/25 04:16:57 rbuehler Exp $
+// $Id: gctpnames.h,v 1.9 2005/04/08 21:51:30 rbuehler Exp $
 
 
 #ifndef GCTPNAMES_H
@@ -155,7 +155,7 @@ namespace
          retList << "Sphere";
          break;
 
-      case 30:
+      case 30: //Oblated Equal Area
          retList << "Sphere" << "" << "Shapem" << "Shapen" << "CentLon" 
             << "CenterLat" << "FE" << "FN" << "Angle";
          break;

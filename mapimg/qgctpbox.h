@@ -1,4 +1,4 @@
-// $Id: qgctpbox.h,v 1.4 2005/01/31 17:24:05 jtrent Exp $
+// $Id: qgctpbox.h,v 1.5 2005/04/08 21:51:30 rbuehler Exp $
 
 
 #ifndef QGCTPBOX_H
@@ -9,6 +9,7 @@
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qspinbox.h>
+#include <qmap.h>
 
 class QDmsEdit;
 
@@ -31,6 +32,7 @@ public slots:
 
 private:
    void disappear();
+   void initializeHoldValues();
 
    QLabel      *label;
 
@@ -39,6 +41,8 @@ private:
    QDmsEdit    *dmsEdit;
 
    QWidget     *activeEdit;
+
+   static QMap<QString,double> holdValues;        
 };
 
 #endif

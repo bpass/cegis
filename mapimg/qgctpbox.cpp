@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.2 2005/01/31 17:24:04 jtrent Exp $
+// $Id: qgctpbox.cpp,v 1.3 2005/04/08 21:51:30 rbuehler Exp $
 
 
 #include <qtooltip.h>
@@ -24,6 +24,7 @@ QGctpBox::QGctpBox( QWidget* parent, const char* name )
 
    activeEdit = NULL;
    hide();
+   initializeHoldValues();
 }
 
 QGctpBox::~QGctpBox()
@@ -422,4 +423,49 @@ void QGctpBox::setGctpName( const QString & gctpName )
          activeEdit->show();
       show();
    }
+}
+
+void QGctpBox::initializeHoldValues()
+{
+   /*if( holdValues.size() > 0 )
+      return;
+
+   holdValues["Angle"] = 0;
+   holdValues["AscLong"] = 0;
+   holdValues["AziAng"] = 0;
+   holdValues["AzmthPt"] = 0;
+   holdValues["CenterLat"] = 0;
+   holdValues["CentLon"] = 0;
+   holdValues["CentMer"] = 0;
+   holdValues["FactorH"] = 0;
+   holdValues["FactorM"] = 0;
+   holdValues["FE"] = 0;
+   holdValues["FN"] = 0;
+   holdValues["Height"] = 0;
+   holdValues["IncAng"] = 0;
+   holdValues["Lat/Z"] = 0;
+   holdValues["Lat1"] = 0;
+   holdValues["Lat2"] = 0;
+   holdValues["Lon/Z"] = 0;
+   holdValues["Long1"] = 0;
+   holdValues["Long2"] = 0;
+   holdValues["LongPol"] = 0;
+   holdValues["LRat"] = 0;
+   holdValues["OriginLat"] = 0;
+   holdValues["Path"] = 0;
+   holdValues["PFlag"] = 0;
+   holdValues["PSRev"] = 0;
+   holdValues["Satnum"] = 0;
+   holdValues["Shapem"] = 0;
+   holdValues["Shapen"] = 0;
+   holdValues["SMajor"] = 0;
+   holdValues["SMinor"] = 0;
+   holdValues["Sphere"] = 0;
+   holdValues["STDPAR"] = 0;
+   holdValues["STDPR1"] = 0;
+   holdValues["STDPR2"] = 0;
+   holdValues["TrueScale"] = 0;
+   holdValues["NoWay"] = 0;
+   holdValues["one"] = 0;
+   holdValues["zero"] = 0;*/
 }

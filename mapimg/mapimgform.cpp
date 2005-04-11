@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.32 2005/04/07 17:22:05 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.33 2005/04/11 14:29:47 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -943,4 +943,9 @@ void mapimgForm::launchWebTool( const QString& url )
       QMessageBox::information( this, "Mapimg", QString("Unable to launch web browser to %1").arg( url ) );
 
    return;
+}
+
+bool mapimgForm::allowIgnoreValues() const
+{
+    return outInfoFrame->mapTab->hasNoDataCheck->isChecked();
 }

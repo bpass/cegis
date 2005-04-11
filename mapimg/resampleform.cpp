@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.14 2005/03/25 23:31:41 rbuehler Exp $
+// $Id: resampleform.cpp,v 1.15 2005/04/11 14:29:47 jtrent Exp $
 
 
 /****************************************************************************
@@ -26,6 +26,7 @@
 #include <qvalidator.h>
 #include <qmessagebox.h>
 #include <qslider.h>
+#include <qhbox.h>
 
 #include "mapimgform.h"
 #include "mapimgvalidator.h"
@@ -110,6 +111,8 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    ignoreListBox->installEventFilter( this );
    ignoreBoxLayout->addWidget( ignoreListBox );
    inputLayout->addWidget( ignoreBox );
+   if( !((mapimgForm*)parent)->allowIgnoreValues() )
+       ignoreBox->setHidden( true );
    ResampleFormLayout->addLayout( inputLayout );
 
    memoryBox = new QGroupBox( this, "memoryBox" );
@@ -119,20 +122,33 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    memoryBoxLayout = new QVBoxLayout( memoryBox->layout() );
    memoryBoxLayout->setAlignment( Qt::AlignHCenter | Qt::AlignTop );
 
+   memoryLabelResetLayout = new QHBoxLayout();
+
    memoryLabel = new QLabel( memoryBox, "memoryLabel" );
    memoryLabel->setAlignment( Qt::AlignCenter );
+   
+   memoryResetButton = new QPushButton( "Default", memoryBox, "memoryResetButton" );
+   QFontMetrics metrics( memoryResetButton->font() );
+   memoryResetButton->setMaximumWidth( metrics.width(memoryResetButton->text()) + (metrics.maxWidth()) );
+   memoryResetButton->setMaximumHeight( 1.5*metrics.height() );
+
+   memoryResetButton->setSizePolicy( QSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum ) );
 
    //DEFAULT_Max_Data_Element_Count is defined in imgio.h
    //minimum computed as the ratio of output to input plus 2% of the input
-   memoryAllocation = new QSlider( (int)((output.pixelSize()/input.pixelSize()) + 0.02*(float)input.rows()), //min
+   minimumMemory = (int)((output.pixelSize()/input.pixelSize()) + 0.02*(float)input.rows());
+   memoryAllocation = new QSlider( minimumMemory,                          //min
                                    input.rows(),                           //max
                                    10,                                     //step size
                                    DEFAULT_Max_Data_Element_Count,         //default
                                    Qt::Horizontal,                         //orientation
                                    memoryBox,                              //parent
                                    "memoryAllocationSlider" );             //name
+   defaultMemory = memoryAllocation->value();
 
-   memoryBoxLayout->addWidget( memoryLabel );
+   memoryLabelResetLayout->addWidget( memoryLabel );
+   memoryLabelResetLayout->addWidget( memoryResetButton );
+   memoryBoxLayout->addLayout( memoryLabelResetLayout );
    memoryBoxLayout->addWidget( memoryAllocation );
    inputLayout->addWidget( memoryBox );
 
@@ -162,6 +178,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    connect( delButton, SIGNAL( clicked() ), this, SLOT( delVal() ) );
    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( reject() ) );
    connect( memoryAllocation, SIGNAL( valueChanged( int ) ), this, SLOT( updateMemoryAllocation() ) );
+   connect( memoryResetButton, SIGNAL( clicked() ), this, SLOT( resetMemory() ) );
 
 
    canceled = false;
@@ -387,8 +404,14 @@ ResampleInfo ResampleForm::info()
    ResampleInfo r;
    r.setResampleCode( resampleCombo->currentText() );
    r.setIsCategorical( catRadio->isChecked() );
-   r.setIgnoreList( sz, ivals );   
+   r.setIgnoreList( sz, ivals );
    r.setCacheLineCount( memoryAllocation->value() );
 
    return r;
+}
+
+void ResampleForm::resetMemory()
+{
+   memoryAllocation->setValue( defaultMemory );
+   return;
 }

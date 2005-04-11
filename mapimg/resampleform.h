@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.7 2005/03/25 23:31:41 rbuehler Exp $
+// $Id: resampleform.h,v 1.8 2005/04/11 14:29:47 jtrent Exp $
 
 
 /****************************************************************************
@@ -32,6 +32,7 @@ class QListBox;
 class QListBoxItem;
 class QEvent;
 class QSlider;
+class QHBox;
 
 class ResampleForm : public QDialog
 {
@@ -73,6 +74,8 @@ protected:
 
    QGroupBox* memoryBox;
    QSlider* memoryAllocation;
+   QPushButton* memoryResetButton;
+   QHBoxLayout* memoryLabelResetLayout;
    QVBoxLayout* memoryBoxLayout;
    QLabel* memoryLabel;
 
@@ -87,10 +90,13 @@ protected slots:
    void reject();
    void ignoreListKeyPress( QKeyEvent* e );
    void updateMemoryAllocation();
+   void resetMemory();
 
 private:
    IgnoreList ilist;
    bool canceled;
+   int defaultMemory;
+   int minimumMemory;
    
    float bytesPerRow;
 };

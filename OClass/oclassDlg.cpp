@@ -54,14 +54,14 @@ COClassDlg::COClassDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(COClassDlg::IDD, pParent)
 	, m_CLAOutput(FALSE)
 	, m_numClasses(0)
+	, m_numLayers(0)
 	, m_htmlOutput(FALSE)
 	, m_textOutput(FALSE)
-	
 	, m_claFileName(_T(""))
+	, m_imageWidth(0)
+	, m_imageHeight(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_USGS);
-	
-
 }
 
 void COClassDlg::DoDataExchange(CDataExchange* pDX)
@@ -72,6 +72,12 @@ void COClassDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Check(pDX, IDC_CLAOUTPUT, m_CLAOutput);
 	DDX_Text(pDX, IDC_NUMCLASSES, m_numClasses);
+	DDX_Text(pDX, IDC_NUM_LAYERS, m_numLayers);
+	DDX_Text(pDX, IDC_IMAGE_FILE, m_imageFileName);
+	DDX_Text(pDX, IDC_IMAGE_HEIGHT, m_imageHeight);
+	DDX_Text(pDX, IDC_IMAGE_WIDTH, m_imageWidth);
+	DDX_Control(pDX, IDC_IMAGE_HEIGHT, m_imageHeightEdit);
+	DDX_Control(pDX, IDC_IMAGE_WIDTH, m_imageWidthEdit);
 	DDX_Check(pDX, IDC_HTMLOUTPUT, m_htmlOutput);
 	DDX_Control(pDX, IDC_NUMCLASSES, m_numClassesEdit);
 	DDX_Control(pDX, IDC_HTMLOUTPUT, m_htmlCheckBox);
@@ -85,11 +91,9 @@ void COClassDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CLA_STATIC_TEXT, m_claEditStaticText);
 	DDX_Text(pDX, IDC_CLAFILE, m_claFileName);
 	DDX_Control(pDX, IDGENMODEL, m_genModelButton);
-	DDX_Control(pDX, IDC_INPUTFILELIST, m_fileList);
-	DDX_Control(pDX, IDC_PROGRESS1, m_progressBar);
-	DDX_Control(pDX, IDC_PROGRESSTEXT, m_progText);
-	DDX_Control(pDX, IDC_ADDFILES, m_addFiles);
-	DDX_Control(pDX, IDC_REMOVEFILE, m_removeFiles);
+	DDX_Control(pDX, IDC_IMAGE_FILE, m_imageFileEdit);
+	DDX_Control(pDX, IDC_NUM_LAYERS, m_numLayersEdit);
+	DDX_Control(pDX, IDC_BROWSE_IMAGE, m_imageFileButton);
 }
 
 BEGIN_MESSAGE_MAP(COClassDlg, CDialog)
@@ -102,8 +106,7 @@ BEGIN_MESSAGE_MAP(COClassDlg, CDialog)
 	ON_BN_CLICKED(IDGENMODEL, OnBnClickedGenmodel)
 	ON_BN_CLICKED(IDC_CLAOUTPUT, OnBnClickedClaoutput)
 	ON_BN_CLICKED(IDC_BROWSECLA, OnBnClickedBrowsecla)
-	ON_BN_CLICKED(IDC_ADDFILES, OnBnClickedAddfiles)
-	ON_BN_CLICKED(IDC_REMOVEFILE, OnBnClickedRemovefile)
+	ON_BN_CLICKED(IDC_BROWSE_IMAGE, OnBnClickedBrowseImage)
 END_MESSAGE_MAP()
 
 
@@ -199,8 +202,8 @@ void COClassDlg::OnBnClickedQuit()
 void COClassDlg::OnBnClickedRun()
 {
 	UpdateData();
-	if(m_fileList.GetCount() == 0) {
-		AfxMessageBox("Please specify at least one input file.", MB_ICONWARNING | MB_OK);
+	if(m_imageFileName.GetLength() == 0) {
+		AfxMessageBox("Please specify an image file.", MB_ICONWARNING | MB_OK);
 		return;
 	}
 	
@@ -229,284 +232,232 @@ void COClassDlg::OnBnClickedRun()
 	int numFiles = m_fileList.GetCount();
 	//disable all controls
 	enableControls(FALSE);
-	m_progressBar.ShowWindow(SW_SHOW);
-	m_progText.ShowWindow(SW_SHOW);
-	m_progressBar.SetRange(0, numFiles);
-	m_progressBar.SetPos(0);
-	if(numFiles > 1)
-		m_progressBar.SetPos(1);
-	UpdateWindow();
 	
 	switch(m_curDataType) {
 		case 0: {
 			try {
-				for(int i = 0; i < numFiles; i++) {
-					
-					m_fileList.GetText(i, curFile);
-					cstringHtmlFilename = curFile + ".html";
-					cstringTextFilename = curFile + ".txt";
-					ImageClassifier<unsigned char> classifier((LPCSTR)curFile, m_numClasses);
-					classifier.classify();
-					if(m_CLAOutput) 
-						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+						
+				cstringHtmlFilename = m_imageFileName + ".html";
+				cstringTextFilename = m_imageFileName + ".txt";
+				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
+				classifier.classify();
+				if(m_CLAOutput) 
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-					if(m_htmlOutput) 
-						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				if(m_htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-					if(m_textOutput) 
-						classifier.saveReport((LPCTSTR)cstringTextFilename);
-					if(i > 0 || numFiles == 1)
-						m_progressBar.SetPos(i);
-					UpdateWindow();
-					
-				}	
-			
-				
+				if(m_textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
 			}
 			catch(GeneralException e) {
 				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
 				enableControls(TRUE);
 				m_runButton.SetWindowText("Run");
+				return;
 			}
 		}
 			break;
 		case 1: {
 			try {
-				for(int i = 0; i < numFiles; i++) {
-					m_fileList.GetText(i, curFile);
-					cstringHtmlFilename = curFile + ".html";
-					cstringTextFilename = curFile + ".txt";
-					ImageClassifier<char> classifier((LPCSTR)curFile, m_numClasses);
-					classifier.classify();
-					if(m_CLAOutput) 
-						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				
+				cstringHtmlFilename = m_imageFileName + ".html";
+				cstringTextFilename = m_imageFileName + ".txt";
+				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
+				classifier.classify();
+				if(m_CLAOutput) 
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-					if(m_htmlOutput) 
-						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				if(m_htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-					if(m_textOutput) 
-						classifier.saveReport((LPCTSTR)cstringTextFilename);
-					if(i > 0 || numFiles == 1)
-						m_progressBar.SetPos(i);
-					UpdateWindow();
-				}	
+				if(m_textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
+					
 			}
 			catch(GeneralException e) {
 				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
 				enableControls(TRUE);
 				m_runButton.SetWindowText("Run");
+				return;
 			}
 		}
 			break;
 		case 2: {
 			try {
-				for(int i = 0; i < numFiles; i++) {
-					m_fileList.GetText(i, curFile);
-					cstringHtmlFilename = curFile + ".html";
-					cstringTextFilename = curFile + ".txt";
-					ImageClassifier<unsigned int> classifier((LPCSTR)curFile, m_numClasses);
-					classifier.classify();
-					if(m_CLAOutput) 
-						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				
+				cstringHtmlFilename = m_imageFileName + ".html";
+				cstringTextFilename = m_imageFileName + ".txt";
+				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
+				classifier.classify();
+				if(m_CLAOutput) 
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-					if(m_htmlOutput) 
-						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				if(m_htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-					if(m_textOutput) 
-						classifier.saveReport((LPCTSTR)cstringTextFilename);
-					if(i > 0 || numFiles == 1)
-						m_progressBar.SetPos(i);
-				UpdateWindow();
-				}	
-				
+				if(m_textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
 			}
 			catch(GeneralException e) {
 				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
 				enableControls(TRUE);
 				m_runButton.SetWindowText("Run");
+				return;
 			}
 		}
 			break;
 		case 3: {
 			try {
-				for(int i = 0; i < numFiles; i++) {
-					m_fileList.GetText(i, curFile);
-					cstringHtmlFilename = curFile + ".html";
-					cstringTextFilename = curFile + ".txt";
-					ImageClassifier<int> classifier((LPCSTR)curFile, m_numClasses);
-					classifier.classify();
-					if(m_CLAOutput) 
-						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				
+				cstringHtmlFilename = m_imageFileName + ".html";
+				cstringTextFilename = m_imageFileName + ".txt";
+				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
+				classifier.classify();
+				if(m_CLAOutput) 
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-					if(m_htmlOutput) 
-						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				if(m_htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-					if(m_textOutput) 
-						classifier.saveReport((LPCTSTR)cstringTextFilename);
-					if(i > 0 || numFiles == 1)
-						m_progressBar.SetPos(i);
-					UpdateWindow();
-				}	
-				
+				if(m_textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
 			}
 			catch(GeneralException e) {
 				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
 				enableControls(TRUE);
 				m_runButton.SetWindowText("Run");
+				return;
 			}
 		}
 			break;
 		case 4: {
 			try {
-				for(int i = 0; i < numFiles; i++) {
-					m_fileList.GetText(i, curFile);
-					cstringHtmlFilename = curFile + ".html";
-					cstringTextFilename = curFile + ".txt";
-					ImageClassifier<unsigned long> classifier((LPCSTR)curFile, m_numClasses);
-					classifier.classify();
-					if(m_CLAOutput) 
-						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				
+				cstringHtmlFilename = m_imageFileName + ".html";
+				cstringTextFilename = m_imageFileName + ".txt";
+				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
+				classifier.classify();
+				if(m_CLAOutput) 
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-					if(m_htmlOutput) 
-						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				if(m_htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-					if(m_textOutput) 
-						classifier.saveReport((LPCTSTR)cstringTextFilename);
-					if(i > 0 || numFiles == 1)
-						m_progressBar.SetPos(i);
-					UpdateWindow();
-				}	
-				
+				if(m_textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
 			}
 			catch(GeneralException e) {
 				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
 				enableControls(TRUE);
 				m_runButton.SetWindowText("Run");
+				return;
 			}
 		}
 			break;
 		case 5: {
 			try {
-				for(int i = 0; i < numFiles; i++) {
-					m_fileList.GetText(i, curFile);
-					cstringHtmlFilename = curFile + ".html";
-					cstringTextFilename = curFile + ".txt";
-					ImageClassifier<long> classifier((LPCSTR)curFile, m_numClasses);
-					classifier.classify();
-					if(m_CLAOutput) 
-						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				
+		
+				cstringHtmlFilename = m_imageFileName + ".html";
+				cstringTextFilename = m_imageFileName + ".txt";
+				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
+				classifier.classify();
+				if(m_CLAOutput) 
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-					if(m_htmlOutput) 
-						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				if(m_htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-					if(m_textOutput) 
-						classifier.saveReport((LPCTSTR)cstringTextFilename);
-					if(i > 0 || numFiles == 1)
-						m_progressBar.SetPos(i);
-					UpdateWindow();
-				}	
-				
+				if(m_textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
 			}
 			catch(GeneralException e) {
 				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
 				enableControls(TRUE);
 				m_runButton.SetWindowText("Run");
+				return;
 			}
 		}
 			break;
 		case 6: {
 			try {
-				for(int i = 0; i < numFiles; i++) {
-					m_fileList.GetText(i, curFile);
-					cstringHtmlFilename = curFile + ".html";
-					cstringTextFilename = curFile + ".txt";
-					ImageClassifier<float> classifier((LPCSTR)curFile, m_numClasses);
-					classifier.classify();
-					if(m_CLAOutput) 
-						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+				
+				
+				cstringHtmlFilename = m_imageFileName + ".html";
+				cstringTextFilename = m_imageFileName + ".txt";
+				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
+				classifier.classify();
+				if(m_CLAOutput) 
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-					if(m_htmlOutput) 
-						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				if(m_htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-					if(m_textOutput) 
-						classifier.saveReport((LPCTSTR)cstringTextFilename);
-					if(i > 0 || numFiles == 1)
-						m_progressBar.SetPos(i);
-					
-					UpdateWindow();
-				}	
-				
+				if(m_textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
 			}
 
 			catch(GeneralException e) {
 				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
 				enableControls(TRUE);
 				m_runButton.SetWindowText("Run");
+				return;
 			}
 		}
 			break;
 		case 7: {
 			try {
-				for(int i = 0; i < numFiles; i++) {
-					m_fileList.GetText(i, curFile);
-					cstringHtmlFilename = curFile + ".html";
-					cstringTextFilename = curFile + ".txt";
-					ImageClassifier<double> classifier((LPCSTR)curFile, m_numClasses);
-					classifier.classify();
-					if(m_CLAOutput) 
-						classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
+							
+				cstringHtmlFilename = m_imageFileName + ".html";
+				cstringTextFilename = m_imageFileName + ".txt";
+				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
+				classifier.classify();
+				if(m_CLAOutput) 
+					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
 				
 
-					if(m_htmlOutput) 
-						classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				if(m_htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
 				
 
-					if(m_textOutput) 
-						classifier.saveReport((LPCTSTR)cstringTextFilename);
-					if(i > 0 || numFiles == 1)
-						m_progressBar.SetPos(i);
-					UpdateWindow();
-				}	
-				
+				if(m_textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
 			}
 			catch(GeneralException e) {
 				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
 				enableControls(TRUE);
 				m_runButton.SetWindowText("Run");
+				return;
 			}
-		}
-
-		
+		}	
 	}
-	m_progressBar.SetPos(numFiles);
+
 	enableControls(TRUE);
 	m_runButton.SetWindowText("Run Classification");
 	AfxMessageBox("Classification Complete",MB_ICONINFORMATION | MB_OK);
-	m_progressBar.ShowWindow(SW_HIDE);
-	m_progText.ShowWindow(SW_HIDE);
-	
-}
 
+}
 
 
 void COClassDlg::enableControls(BOOL enable) {
 	UpdateData();
 	m_dataType.EnableWindow(enable);
-	m_FileEdit.EnableWindow(enable);
+	m_imageFileEdit.EnableWindow(enable);
 	m_numClassesEdit.EnableWindow(enable);
 	m_htmlCheckBox.EnableWindow(enable);
 	m_claCheckBox.EnableWindow(enable);
@@ -514,9 +465,6 @@ void COClassDlg::enableControls(BOOL enable) {
 	m_runButton.EnableWindow(enable);
 	m_textCheckBox.EnableWindow(enable);
 	m_genModelButton.EnableWindow(enable);
-	m_addFiles.EnableWindow(enable);
-	m_removeFiles.EnableWindow(enable);
-	m_fileList.EnableWindow(enable);
 
 	if(m_CLAOutput) {
 		m_claFile.EnableWindow(enable);
@@ -525,13 +473,12 @@ void COClassDlg::enableControls(BOOL enable) {
 	}
 	UpdateData(FALSE);
 }
+
 void COClassDlg::OnBnClickedGenmodel()
 {
 	genModelDlg dlg;
 	dlg.DoModal();
 }
-
-		
 
 void COClassDlg::OnBnClickedClaoutput()
 {
@@ -557,64 +504,15 @@ void COClassDlg::OnBnClickedBrowsecla()
 	if(dlg.DoModal() == IDOK) 
 		m_claFileName = dlg.GetPathName();
 	
-	
+	UpdateData(FALSE);
+}
+
+void COClassDlg::OnBnClickedBrowseImage() {
+	CFileDialog dlg(TRUE, NULL, "*.bsq", OFN_READONLY, "Image Files (*.bsq)|*.bsq||", NULL, 0);
+	if(dlg.DoModal() == IDOK)
+		m_imageFileName = dlg.GetPathName();
 
 	UpdateData(FALSE);
 }
 
-void COClassDlg::setListHExtent() {
-	int numEntries = m_fileList.GetCount();
-	int max = 0;
-	int curLen = 0;
-	CString currentString;
-	
-	//get the length of the longest string in the list box
-	for(int i  = 0; i < numEntries; i++) {
-		m_fileList.GetText(i, currentString);
-		curLen = currentString.GetLength();
-		if(curLen > max)
-			max = curLen;
-	}
 
-	m_fileList.SetHorizontalExtent(max*5 + max/2);
-}
-
-
-
-void COClassDlg::OnBnClickedAddfiles()
-{
-	//UpdateData();
-	const long buffSize = 100000;
-	char fileBuffer[buffSize] = {'\0'};
-	CFileDialog dlg(TRUE, NULL, NULL, OFN_ALLOWMULTISELECT);
-	dlg.m_ofn.lpstrFile = fileBuffer;
-	dlg.m_ofn.nMaxFile = buffSize;
-	POSITION pos;
-	CString curString;
-	if(dlg.DoModal() == IDOK) {
-		pos = dlg.GetStartPosition();
-		while(pos) {
-			curString = dlg.GetNextPathName(pos);
-			m_fileList.AddString((LPCSTR)curString);
-		}
-		setListHExtent();
-	}
-}
-
-void COClassDlg::OnBnClickedRemovefile()
-{
-	const int numSelected = m_fileList.GetSelCount();
-	int* selIndices = new int[numSelected];
-	m_fileList.GetSelItems(numSelected, selIndices);
-	for(int i = 0; i < numSelected; i++) {
-		m_fileList.DeleteString(selIndices[0]);
-		setListHExtent();
-		//get updated selected item list because
-		//deleteString shifts the items each time 
-		//one is deleted.
-		m_fileList.GetSelItems(numSelected, selIndices);
-	}
-
-
-	delete[] selIndices;
-}

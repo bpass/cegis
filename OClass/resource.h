@@ -5,7 +5,6 @@
 #define IDM_ABOUTBOX                    0x0010
 #define IDD_ABOUTBOX                    100
 #define IDS_ABOUTBOX                    101
-#define IDD_CLASSY_DIALOG               102
 #define IDD_OCLASS_DIALOG               102
 #define IDR_MAINFRAME                   128
 #define IDI_USGS                        130
@@ -13,7 +12,6 @@
 #define IDC_FILE                        1001
 #define IDC_ADDFILES                    1002
 #define IDC_DATATYPE                    1003
-#define IDC_REMOVEFILE                  1004
 #define IDC_NUMCLASSES                  1005
 #define IDRUN                           1006
 #define IDQUIT                          1007
@@ -34,9 +32,14 @@
 #define IDC_GENMODEL_BROWSEMODELOUTPUT  1023
 #define ID_GENMODEL_GENERATE            1025
 #define IDC_CLA_STATIC_TEXT             1028
-#define IDC_INPUTFILELIST               1029
 #define IDC_PROGRESS1                   1030
 #define IDC_PROGRESSTEXT                1031
+#define IDC_IMAGE_FILE                  1032
+#define IDC_BROWSE_IMAGE                1033
+#define IDC_NUM_LAYERS                  1034
+#define IDC_IMAGE_WIDTH                 1035
+#define IDC_NUM_LAYERS3                 1036
+#define IDC_IMAGE_HEIGHT                1036
 
 // Next default values for new objects
 // 
@@ -44,7 +47,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        133
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1032
+#define _APS_NEXT_CONTROL_VALUE         1037
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

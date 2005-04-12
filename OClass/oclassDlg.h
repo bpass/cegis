@@ -14,7 +14,7 @@ public:
 	COClassDlg(CWnd* pParent = NULL);	// standard constructor
 
 // Dialog Data
-	enum { IDD = IDD_CLASSY_DIALOG };
+	enum { IDD = IDD_OCLASS_DIALOG };
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
@@ -30,45 +30,54 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	void enableControls(BOOL enable);
-	void setListHExtent();
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnBnClickedQuit();
-	afx_msg void OnBnClickedRun();
-	int m_curDataType;
 	
+	//data members
+	int m_curDataType;
+	size_t m_numLayers;
+	size_t m_numClasses;
+	size_t m_imageWidth;
+	size_t m_imageHeight;
+
+	BOOL m_CLAOutput;
+	BOOL m_htmlOutput;
+	BOOL m_textOutput;
+	CString m_claFileName;
+	CString m_imageFileName;
+
+	//controls
 	CComboBox m_dataType;
 	
-	BOOL m_CLAOutput;
-	int m_numClasses;
-	BOOL m_htmlOutput;
-	CEdit m_FileEdit;
-	CEdit m_numClassesEdit;
 	CButton m_htmlCheckBox;
 	CButton m_claCheckBox;
 	CButton m_browseButton;
 	CButton m_quitButton;
 	CButton m_runButton;
-	BOOL m_textOutput;
 	CButton m_textCheckBox;
-	afx_msg void OnBnClickedGenmodel();
 	CProgressCtrl m_progress;
-
-	
 	CEdit m_claFile;
+	CEdit m_imageFileEdit;
+	CEdit m_numLayersEdit;
+	CEdit m_numClassesEdit;
+	CEdit m_imageWidthEdit;
+	CEdit m_imageHeightEdit;
 	CButton m_claButton;
-	afx_msg void OnBnClickedClaoutput();
+	CButton m_imageFileButton;
 	CStatic m_claEditStaticText;
-	afx_msg void OnBnClickedBrowsecla();
-	CString m_claFileName;
 	CButton m_genModelButton;
 	CListBox m_fileList;
-	afx_msg void OnBnClickedAddfiles();
-	afx_msg void OnBnClickedRemovefile();
-	CProgressCtrl m_progressBar;
 	CStatic m_progText;
 	CButton m_addFiles;
 	CButton m_removeFiles;
+
+	//control functions
+	afx_msg void OnBnClickedQuit();
+	afx_msg void OnBnClickedRun();
+	afx_msg void OnBnClickedGenmodel();
+	afx_msg void OnBnClickedBrowsecla();
+	afx_msg void OnBnClickedBrowseImage();
+	afx_msg void OnBnClickedClaoutput();
 };
 
 

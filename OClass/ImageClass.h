@@ -60,7 +60,7 @@ public:
 		\param index the zero-based index of the value to be removed.
 		\throw GeneralException 
 	*/
-	void removeValue(int index);
+	void removeValue(size_t index);
 
 	//! Remove a value from the class
 
@@ -87,7 +87,7 @@ public:
 		the actual algorithm is executed.
 		\param newSize The initial number of values to be stored in this class.
 	*/
-	void setInitialCapacity(int newSize);
+	void setInitialCapacity(size_t newSize);
 
 	//! Set the color value for the class.
 	
@@ -144,18 +144,49 @@ public:
 		If the user passes true to this function, the
 		error will be recalculated, otherwise the stored value
 		will be returned.
-		\param recalc Tells the function whether or not to recalculate the mean.
+		\param recalc Tells the function whether or not to recalculate the error.
 	*/
 	double getError(bool recalc = false);
 
+	//! Get the current coefficient of deviation for the class.
+
+	/*! Returns the coefficient of deviation value of the class.
+		If the user passes true to this function, the
+		coefficient of deviation will be recalculated, otherwise the stored value
+		will be returned.
+		Note that if the user passes "true" to either getStdDev() or getCoefDef(), the standard deviation, 
+		the coefficient of deviation, and the mean will all be recalculated and their new values
+		stored in the appropriate member variables, so in order to preserve runtime care should
+		be taken in choosing when to recalculate vs when to use the current value.
+
+		\param recalc Tells the function whether or not to recalculate the coefficient of deviation.
+	*/
+	double getCoefDev(bool recalc = false);
+
+	//! Get the current standard deviation for the class.
+
+	/*! Returns the standard deviation value of the class.
+		If the user passes true to this function, the
+		standard deviation will be recalculated, otherwise the stored value
+		will be returned. 
+		Note that if the user passes "true" to either getStdDev() or getCoefDef(), the standard deviation, 
+		the coefficient of deviation, and the mean will all be recalculated and their new values
+		stored in the appropriate member variables, so in order to preserve runtime care should
+		be taken in choosing when to recalculate vs when to use the current value.
+
+		\param recalc Tells the function whether or not to recalculate the standard deviation
+	*/
+	double getStdDev(bool recalc = false);
+
+
 	//! Get the number of values in the class.
-	int getNumValues() const;
+	size_t getNumValues() const;
 
 	//! Get the name of the class, NULL if not set.
 	char* getName() const;
 
 	//!Get the initial capacity of the class.
-	int getInitialCapacity() const;
+	size_t getInitialCapacity() const;
 
 	//! Print class values to stdout.
 	void printValues() const;
@@ -173,7 +204,7 @@ public:
 		\param index The zero-based index of the value.
 		\throw GeneralException
 	*/
-	T operator[](unsigned int index);
+	T operator[](size_t index);
     
 	//! Assignment operator.
 
@@ -199,7 +230,7 @@ private:
 	ClassColor m_color;
 
 	//! Initial Class Capacity
-	int m_initialCapacity;
+	size_t m_initialCapacity;
 
 	//! Name of the class.
 	char* m_name;
@@ -213,11 +244,23 @@ private:
 	//! Holds the current error value for the class.
 	double m_error;
 	
+	//! Holds the current coefficient of deviation
+	double m_coefDev;
+
+	//! Holds the standard deviation of the class
+	double m_stdDev;
+
 	//! Calculates the mean of the class.
 	void calcMean();
 
 	//! Calculates the error of the class.
 	void calcError();
+
+	//! Calculate the coefficient of deviation for this class
+	void calcCoefDev();
+
+	//! Calculate the standard deviation for this class
+	void calcStdDev();
 };
 
 //Default constructor
@@ -336,13 +379,13 @@ void ImageClass<T>::operator++(int) {
 
 //Set initial class capacity
 template <class T>
-void ImageClass<T>::setInitialCapacity(int newSize) {
+void ImageClass<T>::setInitialCapacity(size_t newSize) {
 	m_initialCapacity = newSize;
 }
 
 //Get initial class capacity
 template <class T>
-int ImageClass<T>::getInitialCapacity() const {
+size_t ImageClass<T>::getInitialCapacity() const {
 	return(m_initialCapacity);
 }
 
@@ -368,7 +411,7 @@ void ImageClass<T>::clear() {
 
 //Remove value from class at numeric index.
 template <class T>
-void ImageClass<T>::removeValue(int index) {
+void ImageClass<T>::removeValue(size_t index) {
 	if(index < 0)
 		throw(GeneralException("Error on ImageClass::removeValue(): index out of bounds "));
 				
@@ -467,9 +510,9 @@ double ImageClass<T>::getMean(bool recalc) {
 
 template <class T>
 void ImageClass<T>::calcMean() {
-	int numVals = m_values.size();
+	size_t numVals = m_values.size();
 	double sum = 0;
-	for(int i = 0; i < numVals; i++) 
+	for(size_t i = 0; i < numVals; i++) 
 		sum += m_values[i];
 		
 	m_mean = (double)(sum / numVals);
@@ -477,7 +520,7 @@ void ImageClass<T>::calcMean() {
 
 //Get the number of class values.
 template <class T>
-int ImageClass<T>::getNumValues() const{
+size_t ImageClass<T>::getNumValues() const{
 	return(m_values.size());
 }
 
@@ -506,16 +549,52 @@ template <class T>
 void ImageClass<T>::calcError() {
 	double mean = m_mean;
 	double error = 0;
-	int numValues = m_values.size();
+	size_t numValues = m_values.size();
 	
 	//error is a sum of the aboslute deviation from the mean
 	//for each value
-	for(int i = 0; i < numValues; i++) 
+	for(size_t i = 0; i < numValues; i++) 
 		error += fabs(m_values[i] - mean);
 	
 	m_error = error;
 }
 
+template <class T>
+double ImageClass<T>::getStdDev(bool recalc = false) {
+	if(recalc)
+		calcStdDev();
+	
+	return(m_stdDev);
+}
+
+template <class T>
+void ImageClass<T>::calcStdDev() {
+	double mean = getMean(true);
+	double sum = 0;
+	double n = m_values.size();
+	T curVal = 0;
+	for(size_t i = 0; i <n; i++) {
+		curVal = m_values[i];
+		sum += pow((double)(curVal - mean), 2);
+	}
+
+	m_stdDev = sqrt(sum / (n-1));
+}
+
+template <class T>
+double ImageClass<T>::getCoefDev(bool recalc = false) {
+	if(recalc)
+		calcCoefDev();
+
+	return(m_coefDev);
+}
+
+template <class T>
+void ImageClass<T>::calcCoefDev() {
+	getStdDev(true);
+	
+	m_coefDev = (m_stdDev/m_mean)*100;
+}
 
 //calculate the range for the class.
 template <class T>

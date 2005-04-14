@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.20 2005/03/25 23:31:41 rbuehler Exp $
+// $Id: mapimg.h,v 1.21 2005/04/14 21:55:59 rbuehler Exp $
 
 
 #ifndef MAPIMG_H
@@ -74,8 +74,8 @@ find the section of the list that should be ignored, if it exists.
 */
 namespace mapimg
 {
-   bool readytoFrameIt( const RasterInfo &input, QWidget *parent = 0 );
-   bool readytoReproject( const RasterInfo &input, QWidget *parent = 0 );
+   bool readytoFrameIt( const RasterInfo &input, QWidget *parent = 0, bool checkProjection = true );
+   bool readytoReproject( const RasterInfo &input, QWidget *parent = 0, bool checkProjection = true );
    QString projectionErrors( const RasterInfo &input );
 
    void frameIt( RasterInfo &input);

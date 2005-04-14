@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.21 2005/04/08 21:51:30 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.22 2005/04/14 21:55:59 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -41,7 +41,7 @@ projection parameters are incorrect then it will tell the user, but also give
 them the option to proceed anyway. This can result in crashes or infinite,
 but I decided to let the user have that power if they want.
 */
-bool mapimg::readytoFrameIt( const RasterInfo &input, QWidget * parent )
+bool mapimg::readytoFrameIt( const RasterInfo &input, QWidget * parent, bool checkProjection )
 {
    QString msg = QString::null;
 
@@ -66,7 +66,7 @@ bool mapimg::readytoFrameIt( const RasterInfo &input, QWidget * parent )
    else
    {
       msg = projectionErrors( input );
-      if( !msg.isEmpty() )
+      if( !msg.isEmpty() && checkProjection )
       {
          if( QMessageBox::warning( parent, "Bad projection parameters", msg,
             QMessageBox::Ok, QMessageBox::Ignore ) == QMessageBox::Ok )
@@ -82,7 +82,7 @@ bool mapimg::readytoFrameIt( const RasterInfo &input, QWidget * parent )
 /*
 Pretty much the same as readytoFrameIt except it also checks datatype and size
 */
-bool mapimg::readytoReproject( const RasterInfo &input, QWidget *parent )
+bool mapimg::readytoReproject( const RasterInfo &input, QWidget *parent, bool checkProjection )
 {
    QString msg = QString::null;
 
@@ -115,7 +115,7 @@ bool mapimg::readytoReproject( const RasterInfo &input, QWidget *parent )
    else
    {
       msg = mapimg::projectionErrors( input );
-      if( !msg.isEmpty() )
+      if( !msg.isEmpty() && checkProjection )
       {
          if( QMessageBox::warning( parent, "Projection Warning", msg,
             QMessageBox::Ok, QMessageBox::Ignore ) == QMessageBox::Ok )

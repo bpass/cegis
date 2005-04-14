@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.4 2005/04/14 17:28:22 rbuehler Exp $
+// $Id: qgctpbox.cpp,v 1.5 2005/04/14 21:55:59 rbuehler Exp $
 
 
 #include <qtooltip.h>
@@ -476,6 +476,6 @@ void QGctpBox::initializeHoldValues()
    holdValues->insert("STDPR2",     0);
    holdValues->insert("TrueScale",  1);
    holdValues->insert("NoWay",      0);
-   holdValues->insert("one",         1);
+   holdValues->insert("one",        1);
    holdValues->insert("zero",       0);
 }

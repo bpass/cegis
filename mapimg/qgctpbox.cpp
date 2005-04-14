@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.3 2005/04/08 21:51:30 rbuehler Exp $
+// $Id: qgctpbox.cpp,v 1.4 2005/04/14 17:28:22 rbuehler Exp $
 
 
 #include <qtooltip.h>
@@ -8,6 +8,8 @@
 #include "qdmsedit.h"
 
 const uint INFO_PRECISION = 6;
+
+QMap<QString,double> *QGctpBox::holdValues=0;
 
 QGctpBox::QGctpBox( QWidget* parent, const char* name )
    : QVBox( parent, name )
@@ -23,6 +25,8 @@ QGctpBox::QGctpBox( QWidget* parent, const char* name )
    dmsEdit->setValue( 0 );
 
    activeEdit = NULL;
+   name = QString::null;
+
    hide();
    initializeHoldValues();
 }
@@ -101,9 +105,11 @@ QString QGctpBox::output()
 
 void QGctpBox::setGctpName( const QString & gctpName )
 {
+   if( name != QString::null )
+      holdValues->replace( name, value() );
+
    activeEdit = NULL;
    QToolTip::remove( label );
-   //hide();
 
    if( gctpName == "" )
    {
@@ -421,51 +427,55 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->hide();
       if(activeEdit != NULL)
          activeEdit->show();
+
+      name = gctpName;
+      setValue( holdValues->find(name).data() );
       show();
    }
 }
 
 void QGctpBox::initializeHoldValues()
 {
-   /*if( holdValues.size() > 0 )
+   if( holdValues != NULL )
       return;
 
-   holdValues["Angle"] = 0;
-   holdValues["AscLong"] = 0;
-   holdValues["AziAng"] = 0;
-   holdValues["AzmthPt"] = 0;
-   holdValues["CenterLat"] = 0;
-   holdValues["CentLon"] = 0;
-   holdValues["CentMer"] = 0;
-   holdValues["FactorH"] = 0;
-   holdValues["FactorM"] = 0;
-   holdValues["FE"] = 0;
-   holdValues["FN"] = 0;
-   holdValues["Height"] = 0;
-   holdValues["IncAng"] = 0;
-   holdValues["Lat/Z"] = 0;
-   holdValues["Lat1"] = 0;
-   holdValues["Lat2"] = 0;
-   holdValues["Lon/Z"] = 0;
-   holdValues["Long1"] = 0;
-   holdValues["Long2"] = 0;
-   holdValues["LongPol"] = 0;
-   holdValues["LRat"] = 0;
-   holdValues["OriginLat"] = 0;
-   holdValues["Path"] = 0;
-   holdValues["PFlag"] = 0;
-   holdValues["PSRev"] = 0;
-   holdValues["Satnum"] = 0;
-   holdValues["Shapem"] = 0;
-   holdValues["Shapen"] = 0;
-   holdValues["SMajor"] = 0;
-   holdValues["SMinor"] = 0;
-   holdValues["Sphere"] = 0;
-   holdValues["STDPAR"] = 0;
-   holdValues["STDPR1"] = 0;
-   holdValues["STDPR2"] = 0;
-   holdValues["TrueScale"] = 0;
-   holdValues["NoWay"] = 0;
-   holdValues["one"] = 0;
-   holdValues["zero"] = 0;*/
+   holdValues = new QMap<QString,double>();
+   holdValues->insert("Angle",      0);
+   holdValues->insert("AscLong",    0);
+   holdValues->insert("AziAng",     0);
+   holdValues->insert("AzmthPt",    0);
+   holdValues->insert("CenterLat",  0);
+   holdValues->insert("CentLon",    0);
+   holdValues->insert("CentMer",    0);
+   holdValues->insert("FactorH",    1);
+   holdValues->insert("FactorM",    0);
+   holdValues->insert("FE",         0);
+   holdValues->insert("FN",         0);
+   holdValues->insert("Height",     0);
+   holdValues->insert("IncAng",     0);
+   holdValues->insert("Lat/Z",      0);
+   holdValues->insert("Lat1",       0);
+   holdValues->insert("Lat2",       0);
+   holdValues->insert("Lon/Z",      0);
+   holdValues->insert("Long1",      0);
+   holdValues->insert("Long2",      0);
+   holdValues->insert("LongPol",    0);
+   holdValues->insert("LRat",       0.5201613);
+   holdValues->insert("OriginLat",  0);
+   holdValues->insert("Path",       1);
+   holdValues->insert("PFlag",      0);
+   holdValues->insert("PSRev",      1);
+   holdValues->insert("Satnum",     1);
+   holdValues->insert("Shapem",     0);
+   holdValues->insert("Shapen",     2);
+   holdValues->insert("SMajor",     0);
+   holdValues->insert("SMinor",     0);
+   holdValues->insert("Sphere",     6370997);
+   holdValues->insert("STDPAR",     0);
+   holdValues->insert("STDPR1",     0);
+   holdValues->insert("STDPR2",     0);
+   holdValues->insert("TrueScale",  1);
+   holdValues->insert("NoWay",      0);
+   holdValues->insert("one",         1);
+   holdValues->insert("zero",       0);
 }

@@ -1,4 +1,4 @@
-// $Id: qgctpbox.h,v 1.5 2005/04/08 21:51:30 rbuehler Exp $
+// $Id: qgctpbox.h,v 1.6 2005/04/14 17:28:22 rbuehler Exp $
 
 
 #ifndef QGCTPBOX_H
@@ -41,8 +41,9 @@ private:
    QDmsEdit    *dmsEdit;
 
    QWidget     *activeEdit;
+   QString     name;
 
-   static QMap<QString,double> holdValues;        
+   static QMap<QString,double> *holdValues;        
 };
 
 #endif

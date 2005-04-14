@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.16 2005/04/14 14:00:33 jtrent Exp $
+// $Id: resampleform.cpp,v 1.17 2005/04/14 15:06:20 jtrent Exp $
 
 
 /****************************************************************************
@@ -90,6 +90,11 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
    ignoreLayout = new QVBoxLayout( 0, 0, 6, "ignoreLayout");
 
+   ignoreLabel = new QLabel( "Ignore values cannot be used if an output \"No Data \nValue\" is not provided.", ignoreBox, "ignoreLabel" );
+   ignoreLabel->hide();
+   ignoreBoxLayout->addWidget( ignoreLabel );
+
+
    ignoreEdit = new QLineEdit( ignoreBox, "ignoreEdit" );
    ignoreEdit->setMinimumSize( QSize( 125, 0 ) );
    ignoreEdit->setValidator( new MapimgValidator( ((mapimgForm*)parent)->dataType(), ignoreEdit ) );
@@ -111,8 +116,17 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    ignoreListBox->installEventFilter( this );
    ignoreBoxLayout->addWidget( ignoreListBox );
    inputLayout->addWidget( ignoreBox );
+   
    if( !((mapimgForm*)parent)->allowIgnoreValues() )
-       ignoreBox->setHidden( true );
+   {
+       ignoreLabel->show();
+
+       ignoreEdit->hide();
+       newButton->hide();
+       delButton->hide();
+       ignoreListBox->hide();
+   }
+
    ResampleFormLayout->addLayout( inputLayout );
 
    memoryBox = new QGroupBox( this, "memoryBox" );
@@ -126,7 +140,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
    memoryLabel = new QLabel( memoryBox, "memoryLabel" );
    memoryLabel->setAlignment( Qt::AlignCenter );
-   
+
    memoryResetButton = new QPushButton( "Default", memoryBox, "memoryResetButton" );
    QFontMetrics metrics( memoryResetButton->font() );
    memoryResetButton->setMaximumWidth( metrics.width(memoryResetButton->text()) + (metrics.maxWidth()) );
@@ -264,20 +278,20 @@ void ResampleForm::rcodeChanged( const QString &rcode )
    }
    else if( rcode == "Sum" )
    {
-      catconLabel->setText( "Sum only works with Continuous data." );
+      catconLabel->setText( "Sum only valid for Continuous data." );
       showLabel = true;
       conRadio->setChecked(true);
    }
    else if( rcode == "Mean" )
    {
-      catconLabel->setText( "Mean only works with Continuous data." );
+      catconLabel->setText( "Mean only defined for Continuous data." );
       showLabel = true;
    }
    else if( rcode == "Median" )
    {
-      catconLabel->setText( "Categorical and Continuous use differet algorithms." );
-      showLabel = false;
-      resampleBox->setFixedHeight( resampleBox->height() );
+      catconLabel->setText( "Median only defined for Continuous data." );
+      showLabel = true;
+      conRadio->setChecked(true);
    }
    else if( rcode == "Mode" )
    {

@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.9 2005/04/14 14:00:33 jtrent Exp $
+// $Id: resampleform.h,v 1.10 2005/04/14 15:06:20 jtrent Exp $
 
 
 /****************************************************************************
@@ -61,6 +61,7 @@ protected:
    QListBox* ignoreListBox;
    QPushButton* okButton;
    QPushButton* cancelButton;
+   QLabel* ignoreLabel;
 
    QVBoxLayout* ResampleFormLayout;
    QHBoxLayout* categoricalLayout;
@@ -96,7 +97,7 @@ private:
    IgnoreList ilist;
    bool canceled;
    int defaultMemory;
-   
+
    float bytesPerRow;
 };
 

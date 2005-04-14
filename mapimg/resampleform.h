@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.8 2005/04/11 14:29:47 jtrent Exp $
+// $Id: resampleform.h,v 1.9 2005/04/14 14:00:33 jtrent Exp $
 
 
 /****************************************************************************
@@ -96,7 +96,6 @@ private:
    IgnoreList ilist;
    bool canceled;
    int defaultMemory;
-   int minimumMemory;
    
    float bytesPerRow;
 };

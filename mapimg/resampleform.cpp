@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.15 2005/04/11 14:29:47 jtrent Exp $
+// $Id: resampleform.cpp,v 1.16 2005/04/14 14:00:33 jtrent Exp $
 
 
 /****************************************************************************
@@ -136,8 +136,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
    //DEFAULT_Max_Data_Element_Count is defined in imgio.h
    //minimum computed as the ratio of output to input plus 2% of the input
-   minimumMemory = (int)((output.pixelSize()/input.pixelSize()) + 0.02*(float)input.rows());
-   memoryAllocation = new QSlider( minimumMemory,                          //min
+   memoryAllocation = new QSlider( (int)((output.pixelSize()/input.pixelSize()) + 0.02*(float)input.rows()), //min
                                    input.rows(),                           //max
                                    10,                                     //step size
                                    DEFAULT_Max_Data_Element_Count,         //default

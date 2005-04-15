@@ -5,6 +5,47 @@
 #include "afxwin.h"
 #include "afxcmn.h"
 #include "afxmt.h"
+#include <string>
+#include <vector>
+
+class BatchJobDlg;
+
+struct classificationParams {
+	classificationParams():
+		 dataType(0),
+		 numClasses(0),
+		 numLayers(0),
+		 imageWidth(0),
+		 imageHeight(0),
+		 claOutput(false),
+		 htmlOutput(false),
+		 textOutput(false) { }
+
+    classificationParams(int _dataType, size_t _numClasses, size_t _numLayers, size_t _imageWidth,
+						 size_t _imageHeight, bool _claOutput, bool _htmlOutput, bool _textOutput,
+						 std::string _imageFileName, std::string _claFileName):
+						 dataType(_dataType),
+						 numClasses(_numClasses),
+						 numLayers(_numLayers),
+						 imageWidth(_imageWidth),
+						 imageHeight(_imageHeight),
+						 claOutput(_claOutput),
+						 htmlOutput(_htmlOutput),
+						 textOutput(_textOutput),
+						 imageFileName(_imageFileName),
+						 claFileName(_claFileName) { }
+						 
+	int dataType;
+	size_t numClasses;
+	size_t numLayers;
+	size_t imageWidth;
+	size_t imageHeight;
+	bool claOutput;
+	bool htmlOutput;
+	bool textOutput;
+	std::string imageFileName;
+	std::string claFileName;
+};
 
 // COClassDlg dialog
 class COClassDlg : public CDialog
@@ -12,7 +53,7 @@ class COClassDlg : public CDialog
 // Construction
 public:
 	COClassDlg(CWnd* pParent = NULL);	// standard constructor
-
+	~COClassDlg();
 // Dialog Data
 	enum { IDD = IDD_OCLASS_DIALOG };
 
@@ -39,16 +80,15 @@ public:
 	size_t m_numClasses;
 	size_t m_imageWidth;
 	size_t m_imageHeight;
-
 	BOOL m_CLAOutput;
 	BOOL m_htmlOutput;
 	BOOL m_textOutput;
 	CString m_claFileName;
 	CString m_imageFileName;
+	std::vector<classificationParams*> m_batchParams;
 
 	//controls
 	CComboBox m_dataType;
-	
 	CButton m_htmlCheckBox;
 	CButton m_claCheckBox;
 	CButton m_browseButton;
@@ -71,6 +111,9 @@ public:
 	CButton m_addFiles;
 	CButton m_removeFiles;
 
+	//Dialogs
+	BatchJobDlg* m_batchDlg;
+
 	//control functions
 	afx_msg void OnBnClickedQuit();
 	afx_msg void OnBnClickedRun();
@@ -78,6 +121,17 @@ public:
 	afx_msg void OnBnClickedBrowsecla();
 	afx_msg void OnBnClickedBrowseImage();
 	afx_msg void OnBnClickedClaoutput();
+	afx_msg void OnBnClickedBatch();
+
+	//helper functions
+	void updateParams();
+	std::vector<classificationParams*> getJobList() {return m_batchParams;}
+	void deleteJob(size_t index);
+	bool updateAndCheckInput();
+	void runBatchJob(size_t index);
+	void runClassification(classificationParams* params);
+	void clearJobList();
+	
 };
 
 

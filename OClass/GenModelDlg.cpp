@@ -28,8 +28,6 @@ genModelDlg::genModelDlg(CWnd* pParent /*=NULL*/)
 	, m_modelName(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_USGS);
-	
-
 }
 
 void genModelDlg::DoDataExchange(CDataExchange* pDX)
@@ -60,7 +58,7 @@ BEGIN_MESSAGE_MAP(genModelDlg, CDialog)
 END_MESSAGE_MAP()
 
 
-// CclassyDlg message handlers
+// genModelDlg message handlers
 
 BOOL genModelDlg::OnInitDialog()
 {
@@ -74,10 +72,8 @@ BOOL genModelDlg::OnInitDialog()
 }
 
 void genModelDlg::OnSysCommand(UINT nID, LPARAM lParam)
-{
-	
+{	
 		CDialog::OnSysCommand(nID, lParam);
-	
 }
 
 // If you add a minimize button to your dialog, you will need the code below
@@ -110,12 +106,11 @@ void genModelDlg::OnPaint()
 }
 
 // The system calls this function to obtain the cursor to display while the user drags
-//  the minimized window.
+// the minimized window.
 HCURSOR genModelDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
-
 
 void genModelDlg::onBnClickedBrowseInput() {
 	UpdateData();
@@ -153,7 +148,6 @@ void genModelDlg::onBnClickedGenerate() {
 		AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
 	}
 }
-
 
 void genModelDlg::OnBnClickedGenmodelBrowseclafile()
 {

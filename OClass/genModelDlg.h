@@ -1,4 +1,4 @@
-// classyDlg.h : header file
+// GenModelDlg.h : header file
 //
 
 #pragma once

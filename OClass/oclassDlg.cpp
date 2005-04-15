@@ -8,6 +8,8 @@
 #include "ImageClassifier.h"
 #include "ModelMaker.h"
 #include "genModelDlg.h"
+#include "BatchJobDlg.h"
+#include ".\oclassdlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -60,8 +62,22 @@ COClassDlg::COClassDlg(CWnd* pParent /*=NULL*/)
 	, m_claFileName(_T(""))
 	, m_imageWidth(0)
 	, m_imageHeight(0)
+	, m_batchDlg(NULL)
+	
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDI_USGS);
+}
+
+COClassDlg::~COClassDlg() {
+	if(m_batchDlg) {
+		m_batchDlg->DestroyWindow();
+		delete m_batchDlg;
+	}
+
+	for(int i = 0; i < m_batchParams.size(); i++) {
+		if(m_batchParams[i])
+			delete m_batchParams[i];
+	}
 }
 
 void COClassDlg::DoDataExchange(CDataExchange* pDX)
@@ -107,6 +123,7 @@ BEGIN_MESSAGE_MAP(COClassDlg, CDialog)
 	ON_BN_CLICKED(IDC_CLAOUTPUT, OnBnClickedClaoutput)
 	ON_BN_CLICKED(IDC_BROWSECLA, OnBnClickedBrowsecla)
 	ON_BN_CLICKED(IDC_BROWSE_IMAGE, OnBnClickedBrowseImage)
+	ON_BN_CLICKED(IDBATCH, OnBnClickedBatch)
 END_MESSAGE_MAP()
 
 
@@ -201,255 +218,29 @@ void COClassDlg::OnBnClickedQuit()
 
 void COClassDlg::OnBnClickedRun()
 {
-	UpdateData();
-	if(m_imageFileName.GetLength() == 0) {
-		AfxMessageBox("Please specify an image file.", MB_ICONWARNING | MB_OK);
-		return;
-	}
 	
-	if(m_CLAOutput && (m_claFileName.GetLength() == 0)) {
-		AfxMessageBox("Please specify a CLA output file.", MB_ICONWARNING | MB_OK);
+	classificationParams* params = NULL;
+	if(!updateAndCheckInput()) 
 		return;
-	}
-
-	if(m_numClasses < 2) {
-		AfxMessageBox("Please enter a positive integer >= 2 for the number of classes.", MB_ICONWARNING | MB_OK);
-		return;
-	}
-
-	if(!m_htmlOutput && !m_textOutput && !m_CLAOutput) {
-		AfxMessageBox("Please choose at least one output format.", MB_ICONWARNING | MB_OK);
-		return;
-	}
 	
 	
-	CString cstringHtmlFilename;
-	CString cstringTextFilename;
-	CString curFile;
-	const char* filename = NULL;
-	
-	m_curDataType = m_dataType.GetCurSel();
-	int numFiles = m_fileList.GetCount();
-	//disable all controls
+	classificationParams* newParams = new classificationParams(m_curDataType,
+															m_numClasses,
+															m_numLayers,
+															m_imageWidth,
+															m_imageHeight,
+															(bool)m_CLAOutput,
+															(bool)m_htmlOutput,
+															(bool)m_textOutput,
+															(LPCTSTR)m_imageFileName,
+															(LPCTSTR)m_claFileName);
 	enableControls(FALSE);
-	
-	switch(m_curDataType) {
-		case 0: {
-			try {
-						
-				cstringHtmlFilename = m_imageFileName + ".html";
-				cstringTextFilename = m_imageFileName + ".txt";
-				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
-				
-
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
-				
-
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
-			}
-			catch(GeneralException e) {
-				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
-				enableControls(TRUE);
-				m_runButton.SetWindowText("Run");
-				return;
-			}
-		}
-			break;
-		case 1: {
-			try {
-				
-				cstringHtmlFilename = m_imageFileName + ".html";
-				cstringTextFilename = m_imageFileName + ".txt";
-				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
-				
-
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
-				
-
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
-					
-			}
-			catch(GeneralException e) {
-				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
-				enableControls(TRUE);
-				m_runButton.SetWindowText("Run");
-				return;
-			}
-		}
-			break;
-		case 2: {
-			try {
-				
-				cstringHtmlFilename = m_imageFileName + ".html";
-				cstringTextFilename = m_imageFileName + ".txt";
-				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
-				
-
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
-				
-
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
-			}
-			catch(GeneralException e) {
-				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
-				enableControls(TRUE);
-				m_runButton.SetWindowText("Run");
-				return;
-			}
-		}
-			break;
-		case 3: {
-			try {
-				
-				cstringHtmlFilename = m_imageFileName + ".html";
-				cstringTextFilename = m_imageFileName + ".txt";
-				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
-				
-
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
-				
-
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
-			}
-			catch(GeneralException e) {
-				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
-				enableControls(TRUE);
-				m_runButton.SetWindowText("Run");
-				return;
-			}
-		}
-			break;
-		case 4: {
-			try {
-				
-				cstringHtmlFilename = m_imageFileName + ".html";
-				cstringTextFilename = m_imageFileName + ".txt";
-				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
-				
-
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
-				
-
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
-			}
-			catch(GeneralException e) {
-				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
-				enableControls(TRUE);
-				m_runButton.SetWindowText("Run");
-				return;
-			}
-		}
-			break;
-		case 5: {
-			try {
-				
-		
-				cstringHtmlFilename = m_imageFileName + ".html";
-				cstringTextFilename = m_imageFileName + ".txt";
-				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
-				
-
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
-				
-
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
-			}
-			catch(GeneralException e) {
-				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
-				enableControls(TRUE);
-				m_runButton.SetWindowText("Run");
-				return;
-			}
-		}
-			break;
-		case 6: {
-			try {
-				
-				
-				cstringHtmlFilename = m_imageFileName + ".html";
-				cstringTextFilename = m_imageFileName + ".txt";
-				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
-				
-
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
-				
-
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
-			}
-
-			catch(GeneralException e) {
-				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
-				enableControls(TRUE);
-				m_runButton.SetWindowText("Run");
-				return;
-			}
-		}
-			break;
-		case 7: {
-			try {
-							
-				cstringHtmlFilename = m_imageFileName + ".html";
-				cstringTextFilename = m_imageFileName + ".txt";
-				ImageClassifier<float> classifier((LPCSTR)m_imageFileName, m_imageWidth, m_imageHeight, m_numLayers, m_numClasses);
-				classifier.classify();
-				if(m_CLAOutput) 
-					classifier.saveReportXML((LPCTSTR)m_claFileName, (DataType)m_curDataType);
-				
-
-				if(m_htmlOutput) 
-					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
-				
-
-				if(m_textOutput) 
-					classifier.saveReport((LPCTSTR)cstringTextFilename);
-			}
-			catch(GeneralException e) {
-				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
-				enableControls(TRUE);
-				m_runButton.SetWindowText("Run");
-				return;
-			}
-		}	
-	}
+	runClassification(newParams);
 
 	enableControls(TRUE);
 	m_runButton.SetWindowText("Run Classification");
 	AfxMessageBox("Classification Complete",MB_ICONINFORMATION | MB_OK);
+	delete newParams;
 
 }
 
@@ -508,6 +299,7 @@ void COClassDlg::OnBnClickedBrowsecla()
 }
 
 void COClassDlg::OnBnClickedBrowseImage() {
+	UpdateData();
 	CFileDialog dlg(TRUE, NULL, "*.bsq", OFN_READONLY, "Image Files (*.bsq)|*.bsq||", NULL, 0);
 	if(dlg.DoModal() == IDOK)
 		m_imageFileName = dlg.GetPathName();
@@ -516,3 +308,351 @@ void COClassDlg::OnBnClickedBrowseImage() {
 }
 
 
+
+void COClassDlg::OnBnClickedBatch()
+{
+	if(!m_batchDlg) {
+		m_batchDlg = new BatchJobDlg(this);
+		m_batchDlg->Create(BatchJobDlg::IDD, this);
+		m_batchDlg->ShowWindow(SW_SHOW);
+	}
+
+	else {
+		m_batchDlg->ShowWindow(SW_SHOW);
+		m_batchDlg->SetForegroundWindow();
+	}
+}
+
+void COClassDlg::updateParams() {
+	if(!updateAndCheckInput())
+		return;
+
+	else {
+		classificationParams* newParams = new classificationParams(m_curDataType,
+																   m_numClasses,
+																   m_numLayers,
+																   m_imageWidth,
+																   m_imageHeight,
+																   (bool)m_CLAOutput,
+																   (bool)m_htmlOutput,
+																   (bool)m_textOutput,
+																   (LPCTSTR)m_imageFileName,
+																   (LPCTSTR)m_claFileName);
+		m_batchParams.push_back(newParams);
+	}
+}
+
+bool COClassDlg::updateAndCheckInput() {
+	SetForegroundWindow();
+	UpdateData();
+	
+	m_curDataType = m_dataType.GetCurSel();
+
+	if(m_imageFileName.GetLength() == 0) {
+		AfxMessageBox("Please specify an image file.", MB_ICONWARNING | MB_OK);
+		return false;
+	}
+	
+	if(m_CLAOutput && (m_claFileName.GetLength() == 0)) {
+		AfxMessageBox("Please specify a CLA output file.", MB_ICONWARNING | MB_OK);
+		return false;
+	}
+
+	if(m_numClasses < 2) {
+		AfxMessageBox("Please enter a positive integer >= 2 for the number of classes.", MB_ICONWARNING | MB_OK);
+		return false;
+	}
+	
+	if(m_numLayers < 1) {
+		AfxMessageBox("The number of layers in the image must be > 1.", MB_ICONWARNING | MB_OK);
+		return false;
+	}
+
+	if(m_imageWidth == 0 || m_imageHeight == 0) {
+		AfxMessageBox("The width and height of the image must be > 0.", MB_ICONWARNING | MB_OK);
+		return false;
+	}
+
+	if(!m_htmlOutput && !m_textOutput && !m_CLAOutput) {
+		AfxMessageBox("Please choose at least one output format.", MB_ICONWARNING | MB_OK);
+		return false;
+	}
+
+	return true;
+}
+
+void COClassDlg::deleteJob(size_t index) {
+	classificationParams* temp = NULL;
+	std::vector<classificationParams*> tempVec;
+	size_t size = m_batchParams.size();
+	if(index >= size)
+		return;
+
+	for(size_t i = 0; i < m_batchParams.size(); i++) {
+		if(i != index)
+			tempVec.push_back(m_batchParams[i]);
+	}
+	delete m_batchParams[index];
+	m_batchParams = tempVec;
+}
+
+void COClassDlg::runBatchJob(size_t index) {
+	if(index >= m_batchParams.size())
+		return;
+
+}
+
+void COClassDlg::runClassification(classificationParams* params) {
+
+	
+	CString cstringHtmlFilename;
+	CString cstringTextFilename;
+	CString curFile;
+	const char* filename = NULL;
+	if(!params) {
+	    AfxMessageBox("Classification Parameters NULL.", MB_ICONWARNING | MB_OK);
+		return;
+	}
+	
+	switch(params->dataType) {
+		case 0: {
+			try {
+						
+				cstringHtmlFilename = params->imageFileName.c_str(); 
+				cstringHtmlFilename += ".html";
+				cstringTextFilename = params->imageFileName.c_str();
+				cstringTextFilename += ".txt";
+				ImageClassifier<unsigned char> classifier(params->imageFileName.c_str(), params->imageWidth
+												  ,params->imageHeight, params->numLayers, params->numClasses);
+				classifier.classify();
+				if(params->claOutput) 
+					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
+				
+
+				if(params->htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				
+
+				if(params->textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
+			}
+			catch(GeneralException e) {
+				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
+				enableControls(TRUE);
+				m_runButton.SetWindowText("Run Classification");
+				return;
+			}
+		}
+			break;
+		case 1: {
+			try {
+				
+				cstringHtmlFilename = params->imageFileName.c_str(); 
+				cstringHtmlFilename += ".html";
+				cstringTextFilename = params->imageFileName.c_str();
+				cstringTextFilename += ".txt";
+				ImageClassifier<char> classifier(params->imageFileName.c_str(), params->imageWidth
+												  ,params->imageHeight, params->numLayers, params->numClasses);
+				classifier.classify();
+				if(params->claOutput) 
+					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
+
+				if(params->htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				
+
+				if(params->textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
+			}
+			catch(GeneralException e) {
+				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
+				enableControls(TRUE);
+				m_runButton.SetWindowText("Run Classification");
+				return;
+			}
+		}
+			break;
+		case 2: {
+			try {
+				
+				cstringHtmlFilename = params->imageFileName.c_str(); 
+				cstringHtmlFilename += ".html";
+				cstringTextFilename = params->imageFileName.c_str();
+				cstringTextFilename += ".txt";
+				ImageClassifier<unsigned short> classifier(params->imageFileName.c_str(), params->imageWidth
+												  ,params->imageHeight, params->numLayers, params->numClasses);
+				classifier.classify();
+				if(params->claOutput) 
+					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
+				
+
+				if(params->htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				
+
+				if(params->textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
+			}
+			catch(GeneralException e) {
+				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
+				enableControls(TRUE);
+				m_runButton.SetWindowText("Run Classification");
+				return;
+			}
+		}
+			break;
+		case 3: {
+			try {
+				
+				cstringHtmlFilename = params->imageFileName.c_str(); 
+				cstringHtmlFilename += ".html";
+				cstringTextFilename = params->imageFileName.c_str();
+				cstringTextFilename += ".txt";
+				ImageClassifier<short> classifier(params->imageFileName.c_str(), params->imageWidth
+												  ,params->imageHeight, params->numLayers, params->numClasses);
+				classifier.classify();
+				if(params->claOutput) 
+					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
+				
+
+				if(params->htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				
+
+				if(params->textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
+			}
+			catch(GeneralException e) {
+				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
+				enableControls(TRUE);
+				m_runButton.SetWindowText("Run Classification");
+				return;
+			}
+		}
+			break;
+		case 4: {
+			try {
+				
+				cstringHtmlFilename = params->imageFileName.c_str(); 
+				cstringHtmlFilename += ".html";
+				cstringTextFilename = params->imageFileName.c_str();
+				cstringTextFilename += ".txt";
+				ImageClassifier<unsigned long> classifier(params->imageFileName.c_str(), params->imageWidth
+												  ,params->imageHeight, params->numLayers, params->numClasses);
+				classifier.classify();
+				if(params->claOutput) 
+					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
+				
+
+				if(params->htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				
+
+				if(params->textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
+			}
+			catch(GeneralException e) {
+				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
+				enableControls(TRUE);
+				m_runButton.SetWindowText("Run Classification");
+				return;
+			}
+		}
+			break;
+		case 5: {
+			try {
+				
+				cstringHtmlFilename = params->imageFileName.c_str(); 
+				cstringHtmlFilename += ".html";
+				cstringTextFilename = params->imageFileName.c_str();
+				cstringTextFilename += ".txt";
+				ImageClassifier<long> classifier(params->imageFileName.c_str(), params->imageWidth
+												  ,params->imageHeight, params->numLayers, params->numClasses);
+				classifier.classify();
+				if(params->claOutput) 
+					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
+				
+
+				if(params->htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				
+
+				if(params->textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
+			}
+			catch(GeneralException e) {
+				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
+				enableControls(TRUE);
+				m_runButton.SetWindowText("Run Classification");
+				return;
+			}
+		}
+			break;
+		case 6: {
+			try {
+				
+				cstringHtmlFilename = params->imageFileName.c_str(); 
+				cstringHtmlFilename += ".html";
+				cstringTextFilename = params->imageFileName.c_str();
+				cstringTextFilename += ".txt";
+				ImageClassifier<float> classifier(params->imageFileName.c_str(), params->imageWidth
+												  ,params->imageHeight, params->numLayers, params->numClasses);
+				classifier.classify();
+				if(params->claOutput) 
+					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
+				
+
+				if(params->htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				
+
+				if(params->textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
+			}
+			catch(GeneralException e) {
+				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
+				enableControls(TRUE);
+				m_runButton.SetWindowText("Run Classification");
+				return;
+			}
+		}
+			break;
+		case 7: {
+			try {
+							
+				cstringHtmlFilename = params->imageFileName.c_str(); 
+				cstringHtmlFilename += ".html";
+				cstringTextFilename = params->imageFileName.c_str();
+				cstringTextFilename += ".txt";
+				ImageClassifier<double> classifier(params->imageFileName.c_str(), params->imageWidth
+												  ,params->imageHeight, params->numLayers, params->numClasses);
+				classifier.classify();
+				if(params->claOutput) 
+					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
+				
+
+				if(params->htmlOutput) 
+					classifier.saveReportHTML((LPCTSTR)cstringHtmlFilename);
+				
+
+				if(params->textOutput) 
+					classifier.saveReport((LPCTSTR)cstringTextFilename);
+			}
+			catch(GeneralException e) {
+				AfxMessageBox(e.getMessage(), MB_ICONWARNING | MB_OK);
+				enableControls(TRUE);
+				m_runButton.SetWindowText("Run Classification");
+				return;
+			}
+		}	
+	}
+}
+
+void COClassDlg::clearJobList() {
+	for(size_t i = 0; i < m_batchParams.size(); i++) {
+		if(m_batchParams[i])
+			delete m_batchParams[i];
+	}
+
+	m_batchParams.clear();
+}

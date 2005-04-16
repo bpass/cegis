@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.34 2005/04/14 21:55:59 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.35 2005/04/16 04:01:35 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -570,6 +570,7 @@ void mapimgForm::inSaveClicked()
    }
 
    RasterInfo i( inInfoFrame->info() );
+   i.setAuthor( authName, authCompany, authEmail );
 
    if( !mapimg::readytoReproject(i, this) )
    {
@@ -579,16 +580,18 @@ void mapimgForm::inSaveClicked()
 
    if( !newInfo && QFile::exists( i.xmlFileName() ) )
    {
-      int arg = QMessageBox::warning( this, "Save Input Parameters",
-         QString("%1 already exists.\nDo you want to replace it?").arg(i.xmlFileName()),
-         QMessageBox::Yes, QMessageBox::No);
+      RasterInfo j( i.xmlFileName() );
+      j.load();
 
-      if( arg == QMessageBox::No )
+      if( QMessageBox::warning( this, "Save Input Parameters",
+         QString("%1 already exists.\nDo you want to replace it?").arg(i.xmlFileName()),
+         QMessageBox::Yes, QMessageBox::No) == QMessageBox::No )
       {
-         i.load();
-         inInfoFrame->setInfo( i );
+         inInfoFrame->setInfo( j );
          return;
       }
+
+      i.setAuthor( j.author(), j.company(), j.email() );
    }
 
    i.save();

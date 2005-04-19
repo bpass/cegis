@@ -1,3 +1,9 @@
+/**
+ * @file Polynomial.h
+ * @author Austin Hartman
+ * $Id: Polynomial.h,v 1.2 2005/04/19 21:51:22 ahartman Exp $
+ */
+
 #ifndef AUSTIN_POLYNOMIAL_H
 #define AUSTIN_POLYNOMIAL_H
 

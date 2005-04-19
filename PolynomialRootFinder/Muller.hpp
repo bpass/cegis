@@ -1,3 +1,9 @@
+/**
+ * @file Muller.hpp
+ * @author Austin Hartman
+ * $Id: Muller.hpp,v 1.2 2005/04/19 21:51:22 ahartman Exp $
+ */
+
 template<class T>
 T
 Muller<T>::operator()(const Polynomial<T>& p, const T& rootGuess, const T& h, 

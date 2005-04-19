@@ -1,6 +1,7 @@
 /**
  * @file PolynomialRootFinder.h
- * $Id: PolynomialRootFinder.h,v 1.1 2005/04/19 21:53:27 ahartman Exp $
+ * @author Austin Hartman
+ * $Id: PolynomialRootFinder.h,v 1.2 2005/04/19 22:01:24 ahartman Exp $
  */
 
 #ifndef AUSTIN_POLYNOMIALROOTFINDER_H

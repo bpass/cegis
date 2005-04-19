@@ -1,23 +1,36 @@
+/**
+ * @file driver.cpp
+ * @author Austin Hartman
+ * $Id: driver.cpp,v 1.2 2005/04/19 21:52:21 ahartman Exp $
+ */
+
 #include <iostream>
 #include <fstream>
+#include <iterator>
 
 #include "Polynomial.h"
 #include "Muller.h"
 #include "QuadraticFormula.h"
+#include "PolynomialRootFinder.h"
 
 using std::cout;
 using std::cerr;
 using std::ifstream;
 
+typedef double type;
+
 void deflationTest();
+void deflationTest2();
 void mullerTest();
 void mullerTest2();
 void quadraticFormulaTest();
+void polynomialRootFinderTest(const Polynomial<type>& p);
 
 int main(int argc, char* argv[])
 {
-    typedef double type;
-
+//    quadraticFormulaTest();
+//    return 0;
+//
 //    mullerTest2();
 //    return 0;
 //    
@@ -25,6 +38,9 @@ int main(int argc, char* argv[])
 //    return 0;
 //    
 //    deflationTest();
+//    return 0;
+//
+//    deflationTest2();
 //    return 0;
 
     if(argc < 2)
@@ -36,29 +52,29 @@ int main(int argc, char* argv[])
     ifstream file(argv[1]);
     Polynomial<type> p;
     file >> p;
-    cout << "Polynomial: " << p << '\n';
+    cout << "Polynomial: " << p << "\n\n";
 
-    Polynomial<type> firstDeriv = p.derivative();
-    cout << "First Derivative: " << firstDeriv << '\n';
+    polynomialRootFinderTest( ((p.derivative()).derivative()).derivative() );
 
-    Polynomial<type> secondDeriv = firstDeriv.derivative();
-    cout << "Second Derivative: " << secondDeriv << '\n';
-
-    Polynomial<type> thirdDeriv = secondDeriv.derivative();
-    cout << "Third Derivative: " << thirdDeriv << '\n';
-//    cout << "Third Derivative(7.16098) = " << thirdDeriv(7.16098) << '\n';
-//    cout << "Third Derivative(2.85193) = " << thirdDeriv(2.85193) << '\n';
-
-    cout << "Polynomial degree: " << p.degree() << '\n';
-    cout << "First Derivative degree: " << firstDeriv.degree() << '\n';
-    cout << "Second Derivative degree: " << secondDeriv.degree() << '\n';
-    cout << "Third Derivative degree: " << thirdDeriv.degree() << '\n';
+//    Polynomial<type> firstDeriv = p.derivative();
+//    cout << "First Derivative: " << firstDeriv << '\n';
+//
+//    Polynomial<type> secondDeriv = firstDeriv.derivative();
+//    cout << "Second Derivative: " << secondDeriv << '\n';
+//
+//    Polynomial<type> thirdDeriv = secondDeriv.derivative();
+//    cout << "Third Derivative: " << thirdDeriv << '\n';
+////    cout << "Third Derivative(7.16098) = " << thirdDeriv(7.16098) << '\n';
+////    cout << "Third Derivative(2.85193) = " << thirdDeriv(2.85193) << '\n';
+//
+//    cout << "Polynomial degree: " << p.degree() << '\n';
+//    cout << "First Derivative degree: " << firstDeriv.degree() << '\n';
+//    cout << "Second Derivative degree: " << secondDeriv.degree() << '\n';
+//    cout << "Third Derivative degree: " << thirdDeriv.degree() << '\n';
 }
 
 void deflationTest()
 {
-    typedef double type;
-
     Polynomial<type> p(1.0, 3);
     p += Polynomial<type>(-7.0, 1);
     p += Polynomial<type>(-6.0, 0);
@@ -73,10 +89,22 @@ void deflationTest()
     cout << "deflatedP(-1) = " << deflatedP(-1) << '\n';
 }
 
+void deflationTest2()
+{
+    Polynomial<type> p(-120.0, 0);
+    p += Polynomial<type>(-46.0, 1);
+    p += Polynomial<type>(79, 2);
+    p += Polynomial<type>(-3, 3);
+    p += Polynomial<type>(-7, 4);
+    p += Polynomial<type>(1, 5);
+
+    cout << "p = " << p << '\n';
+    cout.flush();
+    cout << "p.deflate(-3) = " << p.deflate(-3) << '\n';
+}
+
 void mullerTest()
 {
-    typedef double type;
-
     Polynomial<type> p(1.0, 3);
     p += Polynomial<type>(-13.0, 1);
     p += Polynomial<type>(-12.0, 0);
@@ -99,7 +127,6 @@ void mullerTest()
 
 void mullerTest2()
 {
-    typedef double type;
     const type epsilon = .0001;
     const size_t iterations = 20;
 
@@ -111,7 +138,7 @@ void mullerTest2()
     p += Polynomial<type>(-2.2722, 1);
     p += Polynomial<type>(10.122, 0);
 
-    p = p.derivative();
+//    p = p.derivative();
 
     Muller<type> muller;
 
@@ -135,10 +162,44 @@ void mullerTest2()
 
 void quadraticFormulaTest()
 {
-    typedef double type;
-
     Polynomial<type> p(1.0, 2);
-    p += Polynomial<type> p(-7.0, 1);
-    p += Polynomial<type> p(10.0, 0);
+    p += Polynomial<type>(2.0, 1);
+    p += Polynomial<type>(-35.0, 0);
+
+    QuadraticFormula<type> quad;
+    QuadraticFormula<type>::Roots roots = quad(p);
+
+    cout << "Roots = ";
+    if(!roots.empty())
+    {
+        for(QuadraticFormula<type>::Roots::iterator i = roots.begin();
+            i != roots.end(); ++i)
+        {
+            cout << *i << ' ';
+        }
+    }
+    else
+    {
+        cout << "(none)";
+    }
+    cout << '\n';
+}
+
+void polynomialRootFinderTest(const Polynomial<type>& p)
+{
+    PolynomialRootFinder<type> finder;
+    PolynomialRootFinder<type>::Roots roots = finder(p, 5, 1, .0001, 20);
+
+    cout << "Roots = ";
+    std::copy(roots.begin(), roots.end(), 
+              std::ostream_iterator<type>(cout, " "));
+    cout << '\n';
+
+    cout << "Values at roots = ";
+    for(PolynomialRootFinder<type>::Roots::iterator i = roots.begin();
+        i != roots.end(); ++i)
+    {
+        cout << p(*i) << ' ';
+    }
 }
 

@@ -86,7 +86,7 @@ public:
 	CString m_claFileName;
 	CString m_imageFileName;
 	std::vector<classificationParams*> m_batchParams;
-
+	classificationParams m_curConfig;
 	//controls
 	CComboBox m_dataType;
 	CButton m_htmlCheckBox;
@@ -125,12 +125,17 @@ public:
 
 	//helper functions
 	void updateParams();
+	void loadParams(classificationParams* params);
+	classificationParams getCurrentConfig();
 	std::vector<classificationParams*> getJobList() {return m_batchParams;}
 	void deleteJob(size_t index);
+	void addJob(classificationParams* params);
+	void clearJobList();
 	bool updateAndCheckInput();
+	void editJob(size_t index, classificationParams* newParams);
 	void runBatchJob(size_t index);
 	void runClassification(classificationParams* params);
-	void clearJobList();
+	
 	
 };
 

@@ -611,6 +611,21 @@ void ImageClassifier<T>::saveReportXML(const char* filename, DataType type ) {
 	}
 	doc.InsertEndChild(*rootE);
 	doc.SaveFile(filename);
+
+	if(rootE)
+		delete rootE;
+	if(classE)
+		delete classE;
+	if(classNameE)
+		delete classNameE;
+	if(classRangeE)
+		delete classRangeE;
+	if(classColorE)
+		delete classColorE;
+	if(classCommentsE)
+		delete classCommentsE;
+	if(dataE)
+		delete dataE;
 }
 
 template <class T>

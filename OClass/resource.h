@@ -8,7 +8,6 @@
 #define IDLOAD                          9
 #define IDBATCHRUN                      10
 #define IDBATCHCLOSE                    11
-#define IDREMOVE2                       12
 #define IDCLEAR                         12
 #define IDM_ABOUTBOX                    0x0010
 #define IDD_ABOUTBOX                    100
@@ -53,6 +52,8 @@
 #define IDC_NUM_LAYERS3                 1036
 #define IDC_IMAGE_HEIGHT                1036
 #define IDC_JOBLIST                     1037
+#define IDC_CHECK1                      1038
+#define IDC_EDIT_JOB                    1038
 
 // Next default values for new objects
 // 
@@ -60,7 +61,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1038
+#define _APS_NEXT_CONTROL_VALUE         1039
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

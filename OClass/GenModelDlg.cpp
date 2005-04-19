@@ -152,7 +152,7 @@ void genModelDlg::onBnClickedGenerate() {
 void genModelDlg::OnBnClickedGenmodelBrowseclafile()
 {
 	UpdateData();
-	CFileDialog dlg(TRUE, "*.img", NULL, OFN_EXPLORER | OFN_FILEMUSTEXIST, 
+	CFileDialog dlg(TRUE, "*.cla", NULL, OFN_EXPLORER | OFN_FILEMUSTEXIST, 
 					"Classification Files (*.cla)|*.cla||");
 	if(dlg.DoModal() == IDOK) 
 		m_claFile = dlg.GetPathName();
@@ -163,7 +163,7 @@ void genModelDlg::OnBnClickedGenmodelBrowseclafile()
 void genModelDlg::OnBnClickedGenmodelBrowsemodeloutput()
 {
 	UpdateData();
-	CFileDialog dlg(FALSE, "*.img", NULL, OFN_EXPLORER | OFN_OVERWRITEPROMPT, 
+	CFileDialog dlg(FALSE, "*.mdl", NULL, OFN_EXPLORER | OFN_OVERWRITEPROMPT, 
 					"Imagine Spatial Modeler File (*.mdl)|*.mdl||");
 	if(dlg.DoModal() == IDOK) 
 		m_modelName = dlg.GetPathName();

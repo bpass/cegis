@@ -281,6 +281,7 @@ void COClassDlg::OnBnClickedClaoutput()
 	}
 
 	else {
+		m_claFileName = "";
 		m_claFile.EnableWindow(FALSE);
 		m_claButton.EnableWindow(FALSE);
 		m_claEditStaticText.EnableWindow(FALSE);
@@ -339,6 +340,7 @@ void COClassDlg::updateParams() {
 																   (LPCTSTR)m_imageFileName,
 																   (LPCTSTR)m_claFileName);
 		m_batchParams.push_back(newParams);
+		
 	}
 }
 
@@ -347,7 +349,7 @@ bool COClassDlg::updateAndCheckInput() {
 	UpdateData();
 	
 	m_curDataType = m_dataType.GetCurSel();
-
+	
 	if(m_imageFileName.GetLength() == 0) {
 		AfxMessageBox("Please specify an image file.", MB_ICONWARNING | MB_OK);
 		return false;
@@ -377,8 +379,18 @@ bool COClassDlg::updateAndCheckInput() {
 		AfxMessageBox("Please choose at least one output format.", MB_ICONWARNING | MB_OK);
 		return false;
 	}
-
-	return true;
+	
+	m_curConfig.dataType      = m_curDataType;
+	m_curConfig.numClasses    = m_numClasses;
+	m_curConfig.numLayers     = m_numLayers;
+	m_curConfig.imageWidth    = m_imageWidth;
+	m_curConfig.imageHeight   = m_imageHeight;
+	m_curConfig.claOutput     = (bool)m_CLAOutput;
+	m_curConfig.htmlOutput    = (bool)m_htmlOutput;
+	m_curConfig.textOutput    = (bool)m_textOutput;
+	m_curConfig.imageFileName = (LPCTSTR)m_imageFileName;
+	m_curConfig.claFileName   = (LPCTSTR)m_claFileName;
+	
 }
 
 void COClassDlg::deleteJob(size_t index) {
@@ -399,7 +411,6 @@ void COClassDlg::deleteJob(size_t index) {
 void COClassDlg::runBatchJob(size_t index) {
 	if(index >= m_batchParams.size())
 		return;
-
 }
 
 void COClassDlg::runClassification(classificationParams* params) {
@@ -655,4 +666,61 @@ void COClassDlg::clearJobList() {
 	}
 
 	m_batchParams.clear();
+}
+
+void COClassDlg::addJob(classificationParams* params) {
+	m_batchParams.push_back(params);
+}
+
+void COClassDlg::loadParams(classificationParams* params) {
+	if(!params)
+		return;
+
+	m_imageHeight = params->imageHeight;
+	m_imageWidth = params->imageWidth;
+	m_numLayers = params->numLayers;
+	m_numClasses = params->numClasses;
+	m_imageFileName = params->imageFileName.c_str();
+	if(params->claOutput) {
+		m_claFileName = params->claFileName.c_str();
+		m_CLAOutput = params->claOutput;
+		m_claFile.EnableWindow(TRUE);
+		m_claButton.EnableWindow(TRUE);
+		m_claEditStaticText.EnableWindow(TRUE);
+	}	
+
+	else {
+		m_claFileName = "";
+		m_claFile.EnableWindow(FALSE);
+		m_claButton.EnableWindow(FALSE);
+		m_claEditStaticText.EnableWindow(FALSE);
+	}
+
+	m_htmlOutput = params->htmlOutput;
+	m_textOutput = params->textOutput;
+	m_curDataType = params->dataType;
+	m_dataType.SetCurSel(m_curDataType);
+	UpdateData(FALSE);
+}
+
+classificationParams COClassDlg::getCurrentConfig() {
+	updateAndCheckInput();
+	return(m_curConfig);
+	
+}
+
+void COClassDlg::editJob(size_t index, classificationParams* newParams) {
+	if(!newParams) {
+		AfxMessageBox("Assigning null job params", MB_ICONWARNING | MB_OK);
+		return;
+	}
+	if(index > m_batchParams.size()) {
+		AfxMessageBox("Job param index out of bounds", MB_ICONWARNING | MB_OK);
+		return;
+	}
+
+	if(m_batchParams[index]) 
+		delete m_batchParams[index];
+
+	m_batchParams[index] = newParams;
 }

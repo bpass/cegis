@@ -1,3 +1,9 @@
+/**
+ * @file Polynomial.hpp
+ * @author Austin Hartman
+ * $Id: Polynomial.hpp,v 1.2 2005/04/19 21:48:18 ahartman Exp $
+ */
+
 /**************************************
  ******** Polynomial functions ********
  **************************************/
@@ -38,7 +44,7 @@ Polynomial<T>::operator+=(const Polynomial<T>& rhs)
         // out
         if(i->power() == j->power())
         {
-            T sum = i->coefficient() + j->coefficient();
+            const T sum = i->coefficient() + j->coefficient();
             if(sum != 0)
             {
                 newTerms.push_back(Term(sum, i->power()));
@@ -69,6 +75,7 @@ Polynomial<T>::operator+=(const Polynomial<T>& rhs)
     while(j != rhs.terms.end())
     {
         newTerms.push_back(*j);
+        ++j;
     }
 
     terms.swap(newTerms);
@@ -121,7 +128,8 @@ Polynomial<T>::getCoefficient(const size_t& power) const
 {
     std::pair<typename std::vector<Polynomial<T>::Term>::const_iterator,
               typename std::vector<Polynomial<T>::Term>::const_iterator>
-        range = std::equal_range(terms.begin(), terms.end(), power,
+        range = std::equal_range(terms.begin(), terms.end(), 
+                                 typename Polynomial<T>::Term(0, power),
                                  typename Polynomial<T>::LowerPower());
 
     if(range.first != terms.end())

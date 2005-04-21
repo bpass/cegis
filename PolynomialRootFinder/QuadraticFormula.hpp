@@ -1,18 +1,13 @@
 /**
  * @file QuadraticFormula.hpp
  * @author Austin Hartman
- * $Id: QuadraticFormula.hpp,v 1.2 2005/04/19 21:50:27 ahartman Exp $
+ * $Id: QuadraticFormula.hpp,v 1.3 2005/04/21 23:46:20 ahartman Exp $
  */
 
 template<class T>
 typename QuadraticFormula<T>::Roots
 QuadraticFormula<T>::operator()(const Polynomial<T>& p) const
 {
-//    if(p.degree() != 2)
-//    {
-//        throw QuadraticFormula<T>::InvalidPolynomial;
-//    }
-//
     typename QuadraticFormula<T>::Roots roots;
 
     const T& a = p.getCoefficient(2);
@@ -21,17 +16,27 @@ QuadraticFormula<T>::operator()(const Polynomial<T>& p) const
 
     const T discriminant = b*b - 4*a*c;
 
-    if(discriminant > 0)
+    if(discriminant > static_cast<T>(0))
     {
         // calculate the two roots or the single root (if a == 0)
         const T sqrtDiscriminant = std::sqrt(discriminant);
-        if(a != 0)
+
+        const T denom1 = -b + sqrtDiscriminant;
+        const T denom2 = -b - sqrtDiscriminant;
+
+        cerr << __FILE__ << ':' << __LINE__ << ": denom1 == " << denom1 << '\n';
+        cerr << __FILE__ << ':' << __LINE__ << ": denom2 == " << denom2 << '\n';
+        
+        if(denom1 != static_cast<T>(0))
         {
-            roots.push_back( T(2*c / (-b + sqrtDiscriminant)) );
+            roots.push_back( T(2*c / denom1) );
         }
-        roots.push_back( T(2*c / (-b - sqrtDiscriminant)) );
+        if(denom2 != static_cast<T>(0))
+        {
+            roots.push_back( T(2*c / denom2) );
+        }
     }
-    else if(discriminant == 0)
+    else if(discriminant == static_cast<T>(0))
     {
         // calculate the single, repeated root
         roots.push_back( T(2*c / -b) );

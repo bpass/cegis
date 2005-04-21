@@ -1,7 +1,7 @@
 /**
  * @file Muller.hpp
  * @author Austin Hartman
- * $Id: Muller.hpp,v 1.2 2005/04/19 21:51:22 ahartman Exp $
+ * $Id: Muller.hpp,v 1.3 2005/04/21 23:49:09 ahartman Exp $
  */
 
 template<class T>
@@ -34,7 +34,7 @@ Muller<T>::operator()(const Polynomial<T>& p, const T& rootGuess, const T& h,
         T rad = std::sqrt(b*b - 4*a*c);
 
         T den;
-        if(b >= 0)
+        if(b >= static_cast<T>(0))
         {
             den = b + rad;
         }

@@ -1,7 +1,7 @@
 /**
  * @file Polynomial.hpp
  * @author Austin Hartman
- * $Id: Polynomial.hpp,v 1.2 2005/04/19 21:48:18 ahartman Exp $
+ * $Id: Polynomial.hpp,v 1.3 2005/04/21 23:49:09 ahartman Exp $
  */
 
 /**************************************
@@ -45,7 +45,7 @@ Polynomial<T>::operator+=(const Polynomial<T>& rhs)
         if(i->power() == j->power())
         {
             const T sum = i->coefficient() + j->coefficient();
-            if(sum != 0)
+            if(sum != static_cast<T>(0))
             {
                 newTerms.push_back(Term(sum, i->power()));
             }
@@ -192,6 +192,10 @@ Polynomial<T>::deflate(const T& root) const
         r = s + r * root;
     }
 
+    cerr << __FILE__ << ':' << __LINE__ 
+         << ": rv.terms.size == " << rv.terms.size() << '\n';
+    cerr << __FILE__ << ':' << __LINE__ << ": " << rv << '\n';
+
     // remove the terms with coefficients equal to 0
     rv.terms.erase(
             std::remove_if(rv.terms.begin(), rv.terms.end(), 
@@ -300,7 +304,7 @@ operator<<(ostream& os, const Polynomial<T>& p)
         while(i != p.terms.rend())
         {
             os << ' ';
-            if(i->coefficient() >= 0)
+            if(i->coefficient() >= static_cast<T>(0))
             {
                 os << "+ " << i->coefficient();
             }
@@ -367,25 +371,11 @@ operator>>(istream& is, Polynomial<T>& p)
 /**************************************
  ********* Term functions *************
  **************************************/
-//template<class T>
-//inline
-//Polynomial<T>::Term::Term()
-//    : power_(0), coefficient_(0)
-//{}
-
 template<class T>
 inline
 Polynomial<T>::Term::Term(const T& coeff, const size_t& pow)
     : power_(pow), coefficient_(coeff)
 {}
-
-//template<class T>
-//inline
-//size_t&
-//Polynomial<T>::Term::power()
-//{
-//    return power_;
-//}
 
 template<class T>
 inline
@@ -422,7 +412,7 @@ bool
 Polynomial<T>::ZeroCoefficient::
 operator()(const typename Polynomial<T>::Term& t) const
 {
-    return t.coefficient() == 0;
+    return t.coefficient() == static_cast<T>(0);
 }
 
 

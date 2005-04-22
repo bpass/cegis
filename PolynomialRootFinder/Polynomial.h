@@ -1,7 +1,7 @@
 /**
  * @file Polynomial.h
  * @author Austin Hartman
- * $Id: Polynomial.h,v 1.2 2005/04/19 21:51:22 ahartman Exp $
+ * $Id: Polynomial.h,v 1.3 2005/04/22 15:43:06 ahartman Exp $
  */
 
 #ifndef AUSTIN_POLYNOMIAL_H
@@ -49,10 +49,8 @@ public:
     class Term
     {
     public:
-//        Term();
         Term(const T& coeff, const size_t& pow);
 
-//        size_t& power();
         const size_t& power() const;
 
         T& coefficient();
@@ -65,10 +63,11 @@ public:
 
 private:
     static const char letter;
-//    static T zeroCoefficient;
     static const T constZeroCoefficient;
     
     std::vector<Term> terms;
+
+    void removeZeroCoefficients();
 
     class ZeroCoefficient : public std::unary_function<Term, bool>
     {

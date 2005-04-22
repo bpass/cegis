@@ -1,7 +1,7 @@
 /**
  * @file Polynomial.hpp
  * @author Austin Hartman
- * $Id: Polynomial.hpp,v 1.3 2005/04/21 23:49:09 ahartman Exp $
+ * $Id: Polynomial.hpp,v 1.4 2005/04/22 15:43:06 ahartman Exp $
  */
 
 /**************************************
@@ -9,9 +9,6 @@
  **************************************/
 template<class T>
 const char Polynomial<T>::letter = 'x';
-
-//template<class T>
-//T Polynomial<T>::zeroCoefficient = 0;
 
 template<class T>
 const T Polynomial<T>::constZeroCoefficient = 0;
@@ -22,8 +19,12 @@ Polynomial<T>::Polynomial()
 
 template<class T>
 Polynomial<T>::Polynomial(const T& coefficient, const size_t& power)
-    : terms(1, typename Polynomial<T>::Term(coefficient, power))
-{}
+{
+    if(coefficient != static_cast<T>(0))
+    {
+        terms.push_back(typename Polynomial<T>::Term(coefficient, power));
+    }
+}
 
 template<class T>
 Polynomial<T>&
@@ -192,15 +193,8 @@ Polynomial<T>::deflate(const T& root) const
         r = s + r * root;
     }
 
-    cerr << __FILE__ << ':' << __LINE__ 
-         << ": rv.terms.size == " << rv.terms.size() << '\n';
-    cerr << __FILE__ << ':' << __LINE__ << ": " << rv << '\n';
-
     // remove the terms with coefficients equal to 0
-    rv.terms.erase(
-            std::remove_if(rv.terms.begin(), rv.terms.end(), 
-                           typename Polynomial<T>::ZeroCoefficient()), 
-            rv.terms.end());
+    rv.removeZeroCoefficients();
 
     return rv;
 }
@@ -269,25 +263,15 @@ Polynomial<T>::operator()(const T& x) const
     return rv;
 }
 
-//template<class T>
-//const typename Polynomial<T>::Term&
-//Polynomial<T>::operator[](const size_t& power)
-//{
-//    // XXX make this a lg n search instead of linear
-//
-//    for(typename std::vector<Polynomial<T>::Term>::iterator i = terms.begin();
-//        i != terms.end(); ++i)
-//    {
-//        if(power == i->power())
-//        {
-//            return *i;
-//        }
-//        else if(power < i->power())
-//        {
-//            // return a term with a 0 coefficient
-//        }
-//    }
-//}
+template<class T>
+void
+Polynomial<T>::removeZeroCoefficients()
+{
+    terms.erase(
+         std::remove_if(terms.begin(), terms.end(), 
+                        typename Polynomial<T>::ZeroCoefficient()), 
+         terms.end());
+}
 
 
 
@@ -358,6 +342,9 @@ operator>>(istream& is, Polynomial<T>& p)
         is >> coeff >> pow;
         p.terms.push_back(typename Polynomial<T>::Term(coeff, pow));
     }
+
+    // Remove the zero coefficients
+    p.removeZeroCoefficients();
 
     // sort the polynomial so it's in the proper format
     std::sort(p.terms.begin(), p.terms.end(), 

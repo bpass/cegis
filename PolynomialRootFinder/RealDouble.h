@@ -1,7 +1,7 @@
 /**
  * @file RealDouble.h
  * @author Austin Hartman
- * $Id: RealDouble.h,v 1.1 2005/04/21 23:45:14 ahartman Exp $
+ * $Id: RealDouble.h,v 1.2 2005/04/22 16:44:31 ahartman Exp $
  */
 
 #ifndef AUSTIN_REALDOUBLE_H
@@ -14,7 +14,9 @@ class RealDouble
 public:
     RealDouble();
     RealDouble(const double& d);
+    RealDouble(const float& f);
     RealDouble(const int& i);
+    RealDouble(const unsigned& u);
 
     operator double&();
     operator const double&() const;
@@ -45,8 +47,18 @@ RealDouble::RealDouble(const double& d)
 {}
 
 inline
+RealDouble::RealDouble(const float& f)
+    : value_(f)
+{}
+
+inline
 RealDouble::RealDouble(const int& i)
     : value_(i)
+{}
+
+inline
+RealDouble::RealDouble(const unsigned& u)
+    : value_(u)
 {}
 
 inline

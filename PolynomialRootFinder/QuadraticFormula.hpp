@@ -1,7 +1,7 @@
 /**
  * @file QuadraticFormula.hpp
  * @author Austin Hartman
- * $Id: QuadraticFormula.hpp,v 1.3 2005/04/21 23:46:20 ahartman Exp $
+ * $Id: QuadraticFormula.hpp,v 1.4 2005/04/22 15:46:31 ahartman Exp $
  */
 
 template<class T>
@@ -24,9 +24,6 @@ QuadraticFormula<T>::operator()(const Polynomial<T>& p) const
         const T denom1 = -b + sqrtDiscriminant;
         const T denom2 = -b - sqrtDiscriminant;
 
-        cerr << __FILE__ << ':' << __LINE__ << ": denom1 == " << denom1 << '\n';
-        cerr << __FILE__ << ':' << __LINE__ << ": denom2 == " << denom2 << '\n';
-        
         if(denom1 != static_cast<T>(0))
         {
             roots.push_back( T(2*c / denom1) );

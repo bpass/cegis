@@ -1,7 +1,7 @@
 /**
  * @file QuadraticFormula.hpp
  * @author Austin Hartman
- * $Id: QuadraticFormula.hpp,v 1.4 2005/04/22 15:46:31 ahartman Exp $
+ * $Id: QuadraticFormula.hpp,v 1.5 2005/04/22 16:54:36 ahartman Exp $
  */
 
 template<class T>
@@ -14,7 +14,7 @@ QuadraticFormula<T>::operator()(const Polynomial<T>& p) const
     const T& b = p.getCoefficient(1);
     const T& c = p.getCoefficient(0);
 
-    const T discriminant = b*b - 4*a*c;
+    const T discriminant = b*b - static_cast<T>(4)*a*c;
 
     if(discriminant > static_cast<T>(0))
     {
@@ -26,17 +26,17 @@ QuadraticFormula<T>::operator()(const Polynomial<T>& p) const
 
         if(denom1 != static_cast<T>(0))
         {
-            roots.push_back( T(2*c / denom1) );
+            roots.push_back( T(static_cast<T>(2)*c / denom1) );
         }
         if(denom2 != static_cast<T>(0))
         {
-            roots.push_back( T(2*c / denom2) );
+            roots.push_back( T(static_cast<T>(2)*c / denom2) );
         }
     }
     else if(discriminant == static_cast<T>(0))
     {
         // calculate the single, repeated root
-        roots.push_back( T(2*c / -b) );
+        roots.push_back( T(static_cast<T>(2)*c / -b) );
     }
     // if the discriminant is less than 0, return a blank vector because
     // there are no real roots

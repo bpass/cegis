@@ -1,7 +1,7 @@
 /**
  * @file Muller.hpp
  * @author Austin Hartman
- * $Id: Muller.hpp,v 1.4 2005/04/22 15:45:21 ahartman Exp $
+ * $Id: Muller.hpp,v 1.5 2005/04/22 16:54:36 ahartman Exp $
  */
 
 template<class T>
@@ -37,7 +37,7 @@ Muller<T>::operator()(const Polynomial<T>& p, const T& rootGuess, const T& h,
         const T b = a * h1 + d1;
         const T c = p(x2);
 
-        const T radInside = b*b - 4*a*c;
+        const T radInside = b*b - static_cast<T>(4)*a*c;
         const T rad = std::sqrt(radInside);
 
 //        cerr << __FILE__ << ':' << __LINE__ << '\n';
@@ -64,7 +64,7 @@ Muller<T>::operator()(const Polynomial<T>& p, const T& rootGuess, const T& h,
             den = b - rad;
         }
 
-        dxr = -2*c / den;
+        dxr = static_cast<T>(-2)*c / den;
         xr = x2 + dxr;
 
         x0 = x1;

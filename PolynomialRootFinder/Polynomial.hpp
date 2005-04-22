@@ -1,7 +1,7 @@
 /**
  * @file Polynomial.hpp
  * @author Austin Hartman
- * $Id: Polynomial.hpp,v 1.4 2005/04/22 15:43:06 ahartman Exp $
+ * $Id: Polynomial.hpp,v 1.5 2005/04/22 16:54:36 ahartman Exp $
  */
 
 /**************************************
@@ -218,8 +218,9 @@ Polynomial<T>::derivative() const
         if(i->power() != 0)
         {
             rv.terms.push_back(
-                    typename Polynomial<T>::Term(i->coefficient() * i->power(), 
-                                                 i->power() - 1));
+                typename Polynomial<T>::Term(i->coefficient() * 
+                                                 static_cast<T>(i->power()), 
+                                             i->power() - 1));
         }
         ++i;
     }
@@ -227,7 +228,7 @@ Polynomial<T>::derivative() const
     // now continue with the rest of the terms
     for(; i != terms.end(); ++i)
     {
-        rv.terms.push_back(Term(i->coefficient() * i->power(), 
+        rv.terms.push_back(Term(i->coefficient() * static_cast<T>(i->power()), 
                                 i->power() - 1));
     }
 

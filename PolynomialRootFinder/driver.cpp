@@ -1,7 +1,7 @@
 /**
  * @file driver.cpp
  * @author Austin Hartman
- * $Id: driver.cpp,v 1.2 2005/04/19 21:52:21 ahartman Exp $
+ * $Id: driver.cpp,v 1.3 2005/04/22 15:50:38 ahartman Exp $
  */
 
 #include <iostream>
@@ -12,12 +12,13 @@
 #include "Muller.h"
 #include "QuadraticFormula.h"
 #include "PolynomialRootFinder.h"
+#include "RealDouble.h"
 
 using std::cout;
 using std::cerr;
 using std::ifstream;
 
-typedef double type;
+typedef RealDouble type;
 
 void deflationTest();
 void deflationTest2();
@@ -28,6 +29,7 @@ void polynomialRootFinderTest(const Polynomial<type>& p);
 
 int main(int argc, char* argv[])
 {
+    RealDouble::setEpsilon(.0000001);
 //    quadraticFormulaTest();
 //    return 0;
 //
@@ -52,9 +54,12 @@ int main(int argc, char* argv[])
     ifstream file(argv[1]);
     Polynomial<type> p;
     file >> p;
-    cout << "Polynomial: " << p << "\n\n";
 
-    polynomialRootFinderTest( ((p.derivative()).derivative()).derivative() );
+    polynomialRootFinderTest( p );
+    polynomialRootFinderTest( p.derivative() );
+    polynomialRootFinderTest( p.derivative().derivative() );
+    polynomialRootFinderTest( p.derivative().derivative().derivative() );
+
 
 //    Polynomial<type> firstDeriv = p.derivative();
 //    cout << "First Derivative: " << firstDeriv << '\n';
@@ -138,7 +143,7 @@ void mullerTest2()
     p += Polynomial<type>(-2.2722, 1);
     p += Polynomial<type>(10.122, 0);
 
-//    p = p.derivative();
+    p = p.derivative();
 
     Muller<type> muller;
 
@@ -187,8 +192,9 @@ void quadraticFormulaTest()
 
 void polynomialRootFinderTest(const Polynomial<type>& p)
 {
+    cout << "p = " << p << '\n';
     PolynomialRootFinder<type> finder;
-    PolynomialRootFinder<type>::Roots roots = finder(p, 5, 1, .0001, 20);
+    PolynomialRootFinder<type>::Roots roots = finder(p, 5, 1, .000001, 100);
 
     cout << "Roots = ";
     std::copy(roots.begin(), roots.end(), 
@@ -201,5 +207,6 @@ void polynomialRootFinderTest(const Polynomial<type>& p)
     {
         cout << p(*i) << ' ';
     }
+    cout << "\n\n";
 }
 

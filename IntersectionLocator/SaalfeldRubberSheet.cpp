@@ -15,7 +15,7 @@
 
 
 // Majic numbers for CVS
-// $Id: SaalfeldRubberSheet.cpp,v 1.4 2004/11/23 20:50:30 rstelzleni Exp $
+// $Id: SaalfeldRubberSheet.cpp,v 1.5 2005/04/25 14:13:31 ahartman Exp $
 
 
 #include "SaalfeldRubberSheet.h"
@@ -79,7 +79,7 @@ void SaalfeldRubberSheet::doTransformation( OGRDataSource *pOutDS,
          if( triIndex == numTriangles )
          {
             Error_Print( "This point isn't contained in the"
-                         " triangulation,\n" );
+                         " triangulation.\n" );
             continue;
          }
 

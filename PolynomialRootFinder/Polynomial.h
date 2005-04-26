@@ -1,7 +1,7 @@
 /**
  * @file Polynomial.h
  * @author Austin Hartman
- * $Id: Polynomial.h,v 1.3 2005/04/22 15:43:06 ahartman Exp $
+ * $Id: Polynomial.h,v 1.4 2005/04/26 20:53:47 ahartman Exp $
  */
 
 #ifndef AUSTIN_POLYNOMIAL_H
@@ -33,6 +33,12 @@ public:
     Polynomial<T>& operator-=(const Polynomial<T>& rhs);
     friend Polynomial<T> operator- <>(const Polynomial<T>& lhs, 
                                       const Polynomial<T>& rhs);
+
+    Polynomial<T>& operator*=(const T& scalar);
+    friend Polynomial<T> operator* <>(const Polynomial<T>& p,
+                                      const T& scalar);
+    friend Polynomial<T> operator* <>(const T& scalar,
+                                      const Polynomial<T>& p);
 
     const T& getCoefficient(const size_t& power) const;
     

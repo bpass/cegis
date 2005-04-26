@@ -1,7 +1,7 @@
 /**
  * @file Polynomial.hpp
  * @author Austin Hartman
- * $Id: Polynomial.hpp,v 1.5 2005/04/22 16:54:36 ahartman Exp $
+ * $Id: Polynomial.hpp,v 1.6 2005/04/26 20:53:47 ahartman Exp $
  */
 
 /**************************************
@@ -121,6 +121,36 @@ operator-(const Polynomial<T>& lhs, const Polynomial<T>& rhs)
     Polynomial<T> rv(lhs);
     rv += -rhs;
     return rv;
+}
+
+template<class T>
+Polynomial<T>&
+Polynomial<T>::operator*=(const T& scalar)
+{
+    for(typename std::vector<Polynomial<T>::Term>::iterator i = terms.begin();
+        i != terms.end(); ++i)
+    {
+        i->coefficient() *= scalar;
+    }
+    removeZeroCoefficients();
+    return *this;
+}
+
+template<class T>
+Polynomial<T>
+operator*(const Polynomial<T>& p, const T& scalar)
+{
+    Polynomial<T> rv(p);
+    rv *= scalar;
+    return rv;
+}
+
+template<class T>
+inline
+Polynomial<T>
+operator*(const T& scalar, const Polynomial<T>& p)
+{
+    return p * scalar;
 }
 
 template<class T>

@@ -1,7 +1,7 @@
 /**
  * @file QuadraticFormula.hpp
  * @author Austin Hartman
- * $Id: QuadraticFormula.hpp,v 1.5 2005/04/22 16:54:36 ahartman Exp $
+ * $Id: QuadraticFormula.hpp,v 1.6 2005/04/27 15:37:29 ahartman Exp $
  */
 
 template<class T>
@@ -23,14 +23,15 @@ QuadraticFormula<T>::operator()(const Polynomial<T>& p) const
 
         const T denom1 = -b + sqrtDiscriminant;
         const T denom2 = -b - sqrtDiscriminant;
+        const T twoC = static_cast<T>(2)*c;
 
         if(denom1 != static_cast<T>(0))
         {
-            roots.push_back( T(static_cast<T>(2)*c / denom1) );
+            roots.push_back( static_cast<T>(twoC / denom1) );
         }
         if(denom2 != static_cast<T>(0))
         {
-            roots.push_back( T(static_cast<T>(2)*c / denom2) );
+            roots.push_back( static_cast<T>(twoC / denom2) );
         }
     }
     else if(discriminant == static_cast<T>(0))
@@ -42,12 +43,5 @@ QuadraticFormula<T>::operator()(const Polynomial<T>& p) const
     // there are no real roots
 
     return roots;
-}
-
-template<class T>
-const char*
-QuadraticFormula<T>::InvalidPolynomial::what() const
-{
-    return "Invalid polynomial for quadratic formula";
 }
 

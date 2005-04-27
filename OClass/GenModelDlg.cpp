@@ -42,6 +42,17 @@ void genModelDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Text(pDX, IDC_GENMODEL_CLAFILEEDIT, m_claFile);
 	DDX_Text(pDX, IDC_GENMODEL_OUTPUT2, m_modelName);
+
+	DDX_Control(pDX, ID_GENMODEL_GENERATE, m_generateButton);
+	DDX_Control(pDX, IDC_GENMODEL_BROWSECLAFILE, m_browseClaButton);
+	DDX_Control(pDX, IDC_GENMODEL_BROWSEINPUT, m_browseOrigButton);
+	DDX_Control(pDX, IDC_GENMODEL_BROWSEMODELOUTPUT, m_browseMdlButton);
+	DDX_Control(pDX, IDC_GENMODEL_BROWSEOUTPUT, m_browseImgButton);
+	DDX_Control(pDX, IDC_GENMODEL_ORIGINPUT, m_origEdit);
+	DDX_Control(pDX, IDC_GENMODEL_OUTPUT, m_imgEdit);
+	DDX_Control(pDX, IDC_GENMODEL_CLAFILEEDIT, m_claEdit);
+	DDX_Control(pDX, IDC_GENMODEL_OUTPUT2, m_mdlEdit);
+	DDX_Control(pDX, IDCANCEL, m_cancelButton);
 }
 
 BEGIN_MESSAGE_MAP(genModelDlg, CDialog)
@@ -59,7 +70,18 @@ END_MESSAGE_MAP()
 
 
 // genModelDlg message handlers
+BOOL genModelDlg::PreTranslateMessage(MSG* pMsg) {
+	 
+	switch(pMsg->message) {
+		case WM_LBUTTONDOWN: 
+		case WM_LBUTTONUP: 
+		case WM_MOUSEMOVE:
 
+		m_toolTips.RelayEvent(pMsg);
+	}
+
+return CDialog::PreTranslateMessage(pMsg);
+}
 BOOL genModelDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
@@ -68,8 +90,22 @@ BOOL genModelDlg::OnInitDialog()
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
+
+	m_toolTips.Create(this);
+	m_toolTips.AddTool(&m_browseClaButton, "Browse for the CLA input file.");
+	m_toolTips.AddTool(&m_browseOrigButton, "Browse for the original Imagine image file.");
+	m_toolTips.AddTool(&m_browseMdlButton, "Browse for the desired model output file.");
+	m_toolTips.AddTool(&m_browseImgButton, "Browse for the desired image output file.");
+	m_toolTips.AddTool(&m_generateButton, "Generate the model script.");
+	m_toolTips.AddTool(&m_cancelButton, "Close this dialog.");
+	m_toolTips.AddTool(&m_claEdit, "The CLA input file.");
+	m_toolTips.AddTool(&m_origEdit, "The original Imagine image file.");
+	m_toolTips.AddTool(&m_imgEdit, "The desired image output file.");
+	m_toolTips.AddTool(&m_mdlEdit, "The desired model output file.");
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
+
 
 void genModelDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {	

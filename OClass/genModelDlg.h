@@ -26,6 +26,7 @@ protected:
 	
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
+	virtual BOOL PreTranslateMessage(MSG* pMsg); 
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
@@ -41,4 +42,18 @@ public:
 	afx_msg void OnBnClickedGenmodelBrowseclafile();
 	CString m_modelName;
 	afx_msg void OnBnClickedGenmodelBrowsemodeloutput();
+
+	CButton m_browseClaButton;
+	CButton m_browseOrigButton;
+	CButton m_browseMdlButton;
+	CButton m_browseImgButton;
+	CButton m_generateButton;
+	CButton m_cancelButton;
+
+	CEdit m_claEdit;
+	CEdit m_origEdit;
+	CEdit m_imgEdit;
+	CEdit m_mdlEdit;
+
+	CToolTipCtrl m_toolTips;
 };

@@ -67,10 +67,10 @@ protected:
 	
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
+	virtual BOOL PreTranslateMessage(MSG* pMsg); 
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
-	void enableControls(BOOL enable);
 	DECLARE_MESSAGE_MAP()
 public:
 	
@@ -87,6 +87,7 @@ public:
 	CString m_imageFileName;
 	std::vector<classificationParams*> m_batchParams;
 	classificationParams m_curConfig;
+
 	//controls
 	CComboBox m_dataType;
 	CButton m_htmlCheckBox;
@@ -95,22 +96,25 @@ public:
 	CButton m_quitButton;
 	CButton m_runButton;
 	CButton m_textCheckBox;
-	CProgressCtrl m_progress;
+	CButton m_claButton;
+	CButton m_imageFileButton;
+	CButton m_genModelButton;
+	CButton m_addFiles;
+	CButton m_removeFiles;
+	CButton m_batchButton;
+	
 	CEdit m_claFile;
 	CEdit m_imageFileEdit;
 	CEdit m_numLayersEdit;
 	CEdit m_numClassesEdit;
 	CEdit m_imageWidthEdit;
 	CEdit m_imageHeightEdit;
-	CButton m_claButton;
-	CButton m_imageFileButton;
 	CStatic m_claEditStaticText;
-	CButton m_genModelButton;
 	CListBox m_fileList;
 	CStatic m_progText;
-	CButton m_addFiles;
-	CButton m_removeFiles;
+	CToolTipCtrl m_toolTips;
 
+	CProgressCtrl m_progress;
 	//Dialogs
 	BatchJobDlg* m_batchDlg;
 
@@ -135,6 +139,7 @@ public:
 	void editJob(size_t index, classificationParams* newParams);
 	void runBatchJob(size_t index);
 	void runClassification(classificationParams* params);
+	void enableControls(BOOL enable);
 	
 	
 };

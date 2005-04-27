@@ -110,6 +110,7 @@ void COClassDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_IMAGE_FILE, m_imageFileEdit);
 	DDX_Control(pDX, IDC_NUM_LAYERS, m_numLayersEdit);
 	DDX_Control(pDX, IDC_BROWSE_IMAGE, m_imageFileButton);
+	DDX_Control(pDX, IDBATCH, m_batchButton);
 }
 
 BEGIN_MESSAGE_MAP(COClassDlg, CDialog)
@@ -158,8 +159,40 @@ BOOL COClassDlg::OnInitDialog()
 
 	m_dataType.SetCurSel(0);
 	m_numClasses = 2;
+
+	m_toolTips.Create(this);
+	m_toolTips.AddTool(&m_htmlCheckBox, "Output report to an HTML file.");
+	m_toolTips.AddTool(&m_claCheckBox, "Output report to a CLA file.");
+	m_toolTips.AddTool(&m_textCheckBox, "Output report to a plain text file.");
+	m_toolTips.AddTool(&m_imageFileButton, "Browse for an image file.");
+	m_toolTips.AddTool(&m_quitButton, "Close the program.");
+	m_toolTips.AddTool(&m_runButton, "Run classification with current parameters.");
+	m_toolTips.AddTool(&m_claButton, "Browse for CLA output file.");
+	m_toolTips.AddTool(&m_genModelButton, "Open model generator.");
+	m_toolTips.AddTool(&m_dataType, "Image data type.");
+	m_toolTips.AddTool(&m_claFile, "CLA output file.");
+	m_toolTips.AddTool(&m_imageFileEdit, "Image file to classify.");
+	m_toolTips.AddTool(&m_numLayersEdit, "Number of layers in the image.");
+	m_toolTips.AddTool(&m_numClassesEdit, "Number of classes you want to generate.");
+	m_toolTips.AddTool(&m_imageWidthEdit, "Width of the image (in pixels).");
+	m_toolTips.AddTool(&m_imageHeightEdit, "Height of the image (in pixels).");
+	m_toolTips.AddTool(&m_batchButton, "Open the batch queue dialog.");
+
 	UpdateData(FALSE);
 	return TRUE;  // return TRUE  unless you set the focus to a control
+}
+
+BOOL COClassDlg::PreTranslateMessage(MSG* pMsg) {
+	 
+	switch(pMsg->message) {
+		case WM_LBUTTONDOWN: 
+		case WM_LBUTTONUP: 
+		case WM_MOUSEMOVE:
+
+		m_toolTips.RelayEvent(pMsg);
+	}
+
+return CDialog::PreTranslateMessage(pMsg);
 }
 
 void COClassDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -256,6 +289,11 @@ void COClassDlg::enableControls(BOOL enable) {
 	m_runButton.EnableWindow(enable);
 	m_textCheckBox.EnableWindow(enable);
 	m_genModelButton.EnableWindow(enable);
+	m_batchButton.EnableWindow(enable);
+	m_numLayersEdit.EnableWindow(enable);
+	m_imageWidthEdit.EnableWindow(enable);
+	m_imageHeightEdit.EnableWindow(enable);
+	m_imageFileButton.EnableWindow(enable);
 
 	if(m_CLAOutput) {
 		m_claFile.EnableWindow(enable);
@@ -263,6 +301,7 @@ void COClassDlg::enableControls(BOOL enable) {
 		m_claEditStaticText.EnableWindow(enable);
 	}
 	UpdateData(FALSE);
+	UpdateWindow();
 }
 
 void COClassDlg::OnBnClickedGenmodel()
@@ -391,6 +430,7 @@ bool COClassDlg::updateAndCheckInput() {
 	m_curConfig.imageFileName = (LPCTSTR)m_imageFileName;
 	m_curConfig.claFileName   = (LPCTSTR)m_claFileName;
 	
+	return true;
 }
 
 void COClassDlg::deleteJob(size_t index) {

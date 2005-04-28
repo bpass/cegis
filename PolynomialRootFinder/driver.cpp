@@ -1,12 +1,15 @@
 /**
  * @file driver.cpp
  * @author Austin Hartman
- * $Id: driver.cpp,v 1.3 2005/04/22 15:50:38 ahartman Exp $
+ * $Id: driver.cpp,v 1.4 2005/04/28 21:31:55 ahartman Exp $
  */
 
 #include <iostream>
 #include <fstream>
 #include <iterator>
+#include <algorithm>
+#include <functional>
+#include <complex>
 
 #include "Polynomial.h"
 #include "Muller.h"
@@ -19,6 +22,7 @@ using std::cerr;
 using std::ifstream;
 
 typedef RealDouble type;
+//typedef std::complex<double> type;
 
 void deflationTest();
 void deflationTest2();
@@ -29,7 +33,6 @@ void polynomialRootFinderTest(const Polynomial<type>& p);
 
 int main(int argc, char* argv[])
 {
-    RealDouble::setEpsilon(.0000001);
 //    quadraticFormulaTest();
 //    return 0;
 //
@@ -51,14 +54,32 @@ int main(int argc, char* argv[])
         return 1;
     }
     
+//    RealDouble::setEpsilon(0);
+//    ifstream file(argv[1]);
+//    Polynomial<type> origP;
+//    file >> origP;
+//
+//    RealDouble::setEpsilon(.00000001);
+//    const type scalar = 1000000000;
+//    cout << "Read in Polynomial:\n" << origP << '\n';
+//    cout << "p = " << scalar << " * origP.\n\n";
+//    Polynomial<type> p(scalar * origP);
+
+    RealDouble::setEpsilon(.00000001);
     ifstream file(argv[1]);
     Polynomial<type> p;
     file >> p;
 
+    cout << "Original Polynomial:\n";
     polynomialRootFinderTest( p );
+    cout << "First Derivative:\n";
     polynomialRootFinderTest( p.derivative() );
+    cout << "Second Derivative:\n";
     polynomialRootFinderTest( p.derivative().derivative() );
+    cout << "Third Derivative:\n";
     polynomialRootFinderTest( p.derivative().derivative().derivative() );
+    cout << "Fourth Derivative:\n";
+    polynomialRootFinderTest( p.derivative().derivative().derivative().derivative() );
 
 
 //    Polynomial<type> firstDeriv = p.derivative();
@@ -194,7 +215,8 @@ void polynomialRootFinderTest(const Polynomial<type>& p)
 {
     cout << "p = " << p << '\n';
     PolynomialRootFinder<type> finder;
-    PolynomialRootFinder<type>::Roots roots = finder(p, 5, 1, .000001, 100);
+    PolynomialRootFinder<type>::Roots roots = finder(p, 1000, 100, .000001, 100);
+    std::sort(roots.begin(), roots.end(), std::greater<type>());
 
     cout << "Roots = ";
     std::copy(roots.begin(), roots.end(), 

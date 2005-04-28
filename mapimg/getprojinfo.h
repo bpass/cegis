@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.32 2005/03/25 21:32:10 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.33 2005/04/28 14:18:34 jtrent Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -251,7 +251,7 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
                            (*( (type*)inputCoverage + offset)) = coordValue;
 
                            if( resample.noDoubleCounting() )
-                              (*(((type*)mapimginbuf + (int)coord[0]))) = 0;
+                              (*(((type*)mapimginbuf + (int)coord[0]))) = (type)resample.noDataValue();
 
                         }//if inBox
                         else
@@ -286,7 +286,7 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
                      }
 
                      if( resample.noDoubleCounting() )
-                        (*(((type*)mapimginbuf + (int)(inbox[4][0])))) = 0;
+                        (*(((type*)mapimginbuf + (int)(inbox[4][0])))) = (type)resample.noDataValue();
                   }
                   else   //!boxError
                   {

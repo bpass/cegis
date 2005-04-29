@@ -1,0 +1,142 @@
+
+Unexpected Signal : EXCEPTION_ACCESS_VIOLATION (0xc0000005) occurred at PC=0x8078DDC
+Function=[Unknown.]
+Library=C:\PROGRA~1\Java\J2RE14~2.2_0\bin\client\jvm.dll
+
+NOTE: We are unable to locate the function name symbol for the error
+      just occurred. Please refer to release documentation for possible
+      reason and solutions.
+
+
+Current Java thread:
+	at sun.java2d.pipe.SpanClipRenderer.eraseTile(Native Method)
+	at sun.java2d.pipe.SpanClipRenderer.renderPathTile(Unknown Source)
+	at sun.java2d.pipe.DuctusShapeRenderer.renderPath(Unknown Source)
+	at sun.java2d.pipe.DuctusShapeRenderer.draw(Unknown Source)
+	at sun.java2d.SunGraphics2D.draw(Unknown Source)
+	at Graph.HighLightPath(Graph.java:475)
+	at txtnodemain.paint(txtnodemain.java:164)
+	at txtnodemain.update(txtnodemain.java:196)
+	- locked <0x108adc30> (a txtnodemain)
+	at sun.awt.RepaintArea.paint(Unknown Source)
+	at sun.awt.windows.WComponentPeer.handleEvent(Unknown Source)
+	at java.awt.Component.dispatchEventImpl(Unknown Source)
+	at java.awt.Container.dispatchEventImpl(Unknown Source)
+	at java.awt.Component.dispatchEvent(Unknown Source)
+	at java.awt.EventQueue.dispatchEvent(Unknown Source)
+	at java.awt.EventDispatchThread.pumpOneEventForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.pumpEvents(Unknown Source)
+	at java.awt.EventDispatchThread.run(Unknown Source)
+
+Dynamic libraries:
+0x00400000 - 0x00A61000 	D:\FIREFOX\FIREFOX.EXE
+0x77F80000 - 0x77FFD000 	C:\WINNT\system32\ntdll.dll
+0x60070000 - 0x600C4000 	D:\FIREFOX\js3250.dll
+0x60130000 - 0x60156000 	D:\FIREFOX\nspr4.dll
+0x7C2D0000 - 0x7C332000 	C:\WINNT\system32\ADVAPI32.dll
+0x7C570000 - 0x7C623000 	C:\WINNT\system32\KERNEL32.DLL
+0x77D30000 - 0x77DA1000 	C:\WINNT\system32\RPCRT4.DLL
+0x75050000 - 0x75058000 	C:\WINNT\system32\WSOCK32.dll
+0x75030000 - 0x75044000 	C:\WINNT\system32\WS2_32.DLL
+0x78000000 - 0x78045000 	C:\WINNT\system32\MSVCRT.DLL
+0x75020000 - 0x75028000 	C:\WINNT\system32\WS2HELP.DLL
+0x602C0000 - 0x60320000 	D:\FIREFOX\xpcom.dll
+0x601F0000 - 0x601F7000 	D:\FIREFOX\plc4.dll
+0x60200000 - 0x60206000 	D:\FIREFOX\plds4.dll
+0x782F0000 - 0x78535000 	C:\WINNT\system32\SHELL32.dll
+0x77F40000 - 0x77F7B000 	C:\WINNT\system32\GDI32.dll
+0x77E10000 - 0x77E75000 	C:\WINNT\system32\USER32.dll
+0x63180000 - 0x631E9000 	C:\WINNT\system32\SHLWAPI.dll
+0x71710000 - 0x71794000 	C:\WINNT\system32\COMCTL32.dll
+0x77A50000 - 0x77B3F000 	C:\WINNT\system32\ole32.dll
+0x60220000 - 0x6023A000 	D:\FIREFOX\smime3.dll
+0x60160000 - 0x601B4000 	D:\FIREFOX\nss3.dll
+0x60240000 - 0x6029A000 	D:\FIREFOX\softokn3.dll
+0x602A0000 - 0x602BB000 	D:\FIREFOX\ssl3.dll
+0x60320000 - 0x60334000 	D:\FIREFOX\xpcom_compat.dll
+0x76B30000 - 0x76B6E000 	C:\WINNT\system32\comdlg32.dll
+0x779B0000 - 0x77A4B000 	C:\WINNT\system32\OLEAUT32.dll
+0x77820000 - 0x77827000 	C:\WINNT\system32\VERSION.dll
+0x759B0000 - 0x759B6000 	C:\WINNT\system32\LZ32.DLL
+0x77800000 - 0x7781E000 	C:\WINNT\system32\WINSPOOL.DRV
+0x76620000 - 0x76630000 	C:\WINNT\system32\MPR.DLL
+0x775A0000 - 0x77630000 	C:\WINNT\system32\CLBCATQ.DLL
+0x77840000 - 0x7787E000 	C:\WINNT\system32\cscui.dll
+0x770C0000 - 0x770E3000 	C:\WINNT\system32\CSCDLL.DLL
+0x10000000 - 0x100D0000 	C:\Program Files\TortoiseCVS\TrtseShl.dll
+0x7C3A0000 - 0x7C41B000 	C:\WINNT\system32\MSVCP71.dll
+0x7C340000 - 0x7C396000 	C:\WINNT\system32\MSVCR71.dll
+0x01640000 - 0x01646000 	D:\FIREFOX\components\qfaservices.dll
+0x01650000 - 0x01675000 	D:\FIREFOX\components\FULLSOFT.DLL
+0x74FD0000 - 0x74FEE000 	C:\WINNT\system32\msafd.dll
+0x75010000 - 0x75017000 	C:\WINNT\System32\wshtcpip.dll
+0x6D450000 - 0x6D460000 	C:\Program Files\Java\j2re1.4.2_03\bin\NPOJI610.dll
+0x695E0000 - 0x69609000 	C:\WINNT\system32\OLEPRO32.DLL
+0x6D350000 - 0x6D35B000 	C:\Program Files\Java\j2re1.4.2_03\bin\jpins7.dll
+0x6D360000 - 0x6D376000 	C:\Program Files\Java\j2re1.4.2_03\bin\jpinsp.dll
+0x6D380000 - 0x6D398000 	C:\Program Files\Java\j2re1.4.2_03\bin\jpishare.dll
+0x60020000 - 0x6002D000 	D:\FIREFOX\components\jar50.dll
+0x6B2C0000 - 0x6B2C5000 	C:\WINNT\system32\msimg32.dll
+0x08000000 - 0x08138000 	C:\PROGRA~1\Java\J2RE14~2.2_0\bin\client\jvm.dll
+0x77570000 - 0x775A0000 	C:\WINNT\system32\WINMM.dll
+0x02960000 - 0x02967000 	C:\PROGRA~1\Java\J2RE14~2.2_0\bin\hpi.dll
+0x02980000 - 0x0298E000 	C:\PROGRA~1\Java\J2RE14~2.2_0\bin\verify.dll
+0x02990000 - 0x029A9000 	C:\PROGRA~1\Java\J2RE14~2.2_0\bin\java.dll
+0x029B0000 - 0x029BD000 	C:\PROGRA~1\Java\J2RE14~2.2_0\bin\zip.dll
+0x1A890000 - 0x1A99F000 	C:\Program Files\Java\j2re1.4.2_03\bin\awt.dll
+0x75E60000 - 0x75E7A000 	C:\WINNT\system32\IMM32.dll
+0x1A9A0000 - 0x1A9F0000 	C:\Program Files\Java\j2re1.4.2_03\bin\fontmanager.dll
+0x51000000 - 0x5104D000 	C:\WINNT\system32\ddraw.dll
+0x728A0000 - 0x728A6000 	C:\WINNT\system32\DCIMAN32.dll
+0x5C000000 - 0x5C0C8000 	C:\WINNT\system32\D3DIM700.DLL
+0x24000000 - 0x2400F000 	C:\Program Files\Java\j2re1.4.2_03\bin\net.dll
+0x782C0000 - 0x782CC000 	C:\WINNT\System32\rnr20.dll
+0x77980000 - 0x779A4000 	C:\WINNT\system32\DNSAPI.DLL
+0x77340000 - 0x77353000 	C:\WINNT\system32\iphlpapi.dll
+0x77520000 - 0x77525000 	C:\WINNT\system32\ICMP.DLL
+0x77320000 - 0x77337000 	C:\WINNT\system32\MPRAPI.DLL
+0x75150000 - 0x7515F000 	C:\WINNT\system32\SAMLIB.DLL
+0x75170000 - 0x751BF000 	C:\WINNT\system32\NETAPI32.DLL
+0x24110000 - 0x2411F000 	C:\WINNT\system32\Secur32.dll
+0x77BF0000 - 0x77C01000 	C:\WINNT\system32\NTDSAPI.dll
+0x77950000 - 0x7797A000 	C:\WINNT\system32\WLDAP32.DLL
+0x751C0000 - 0x751C6000 	C:\WINNT\system32\NETRAP.dll
+0x773B0000 - 0x773DF000 	C:\WINNT\system32\ACTIVEDS.DLL
+0x77380000 - 0x773A3000 	C:\WINNT\system32\ADSLDPC.DLL
+0x77830000 - 0x7783E000 	C:\WINNT\system32\RTUTILS.DLL
+0x77880000 - 0x7790E000 	C:\WINNT\system32\SETUPAPI.DLL
+0x7C0F0000 - 0x7C151000 	C:\WINNT\system32\USERENV.DLL
+0x774E0000 - 0x77513000 	C:\WINNT\system32\RASAPI32.DLL
+0x774C0000 - 0x774D1000 	C:\WINNT\system32\RASMAN.DLL
+0x77530000 - 0x77552000 	C:\WINNT\system32\TAPI32.DLL
+0x77360000 - 0x77379000 	C:\WINNT\system32\DHCPCSVC.DLL
+0x777E0000 - 0x777E8000 	C:\WINNT\System32\winrnr.dll
+0x777F0000 - 0x777F5000 	C:\WINNT\system32\rasadhlp.dll
+0x24440000 - 0x24462000 	C:\Program Files\Java\j2re1.4.2_03\bin\dcpr.dll
+0x77920000 - 0x77943000 	C:\WINNT\system32\imagehlp.dll
+0x72A00000 - 0x72A2D000 	C:\WINNT\system32\DBGHELP.dll
+0x690A0000 - 0x690AB000 	C:\WINNT\system32\PSAPI.DLL
+
+Heap at VM Abort:
+Heap
+ def new generation   total 576K, used 281K [0x100d0000, 0x10170000, 0x10830000)
+  eden space 512K,  49% used [0x100d0000, 0x1010f300, 0x10150000)
+  from space 64K,  44% used [0x10150000, 0x10157208, 0x10160000)
+  to   space 64K,   0% used [0x10160000, 0x10160000, 0x10170000)
+ tenured generation   total 3144K, used 2551K [0x10830000, 0x10b42000, 0x160d0000)
+   the space 3144K,  81% used [0x10830000, 0x10aade48, 0x10aae000, 0x10b42000)
+ compacting perm gen  total 6656K, used 6409K [0x160d0000, 0x16750000, 0x1a0d0000)
+   the space 6656K,  96% used [0x160d0000, 0x16712548, 0x16712600, 0x16750000)
+
+Local Time = Wed Nov 17 16:59:45 2004
+Elapsed Time = 10
+#
+# HotSpot Virtual Machine Error : EXCEPTION_ACCESS_VIOLATION
+# Error ID : 4F530E43505002EF
+# Please report this error at
+# http://java.sun.com/cgi-bin/bugreport.cgi
+#
+# Java VM: Java HotSpot(TM) Client VM (1.4.2_03-b02 mixed mode)
+#

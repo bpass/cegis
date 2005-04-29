@@ -20,7 +20,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionMap.cpp,v 1.6 2004/11/23 20:50:30 rstelzleni Exp $
+// $Id: IntersectionMap.cpp,v 1.7 2005/04/29 16:27:36 ahartman Exp $
 
 
 #include "IntersectionMap.h"
@@ -75,6 +75,7 @@ IntersectionMap::IntersectionMap( OGRDataSource *pInDS, GDALDataset *pRasterIn )
    {
       pFeature = pLayer->GetNextFeature();
       pLine = static_cast<OGRLineString *>(pFeature->GetGeometryRef());
+      // XXX shouldn't this be a dynamic cast?
       numPoints = pLine->getNumPoints();
 
       for(int j=0; j < numPoints; ++j)
@@ -834,3 +835,88 @@ void IntersectionMap::templateTest( int i, const char *szFilename )
 
    return;
 } // End function templateTest
+
+class LessControlPointX
+{
+public:
+    bool operator()(const ControlPoint& p1, const ControlPoint& p2) const;
+};
+
+class LessControlPointY
+{
+public:
+    bool operator()(const ControlPoint& p1, const ControlPoint& p2) const;
+};
+
+bool
+LessControlPointX::operator()(const ControlPoint& p1, 
+                              const ControlPoint& p2) const
+{
+    return p1.point.getX() < p2.point.getX();
+}
+
+bool
+LessControlPointY::operator()(const ControlPoint& p1, 
+                              const ControlPoint& p2) const
+{
+    return p1.point.getY() < p2.point.getY();
+}
+
+void
+IntersectionMap::addBoundingControlPoints()
+{
+    // get some iterators that point to the elements in vControl that have
+    // the minimum and maximum x- and y-coordinates
+    const std::vector<ControlPoint>::iterator maxXPoint = 
+        std::max_element( vControl.begin(), vControl.end(), 
+                          LessControlPointX() );
+    const std::vector<ControlPoint>::iterator maxYPoint = 
+        std::max_element( vControl.begin(), vControl.end(), 
+                          LessControlPointY() );
+    const std::vector<ControlPoint>::iterator minXPoint = 
+        std::min_element( vControl.begin(), vControl.end(), 
+                          LessControlPointX() );
+    const std::vector<ControlPoint>::iterator minYPoint = 
+        std::min_element( vControl.begin(), vControl.end(), 
+                          LessControlPointY() );
+
+    // get those max and min x and y values
+    const double maxX = maxXPoint->point.getX();
+    const double maxY = maxYPoint->point.getY();
+    const double minX = minXPoint->point.getX();
+    const double minY = minYPoint->point.getY();
+
+    const double dX = maxX - minX;
+    const double dY = maxY - minY;
+
+    // find x and y coordinates that will bound all of those points
+    const double maxBoundingX = minX + dX * 4;
+    const double maxBoundingY = minY + dY * 4;
+    const double minBoundingX = minX - dX;
+    const double minBoundingY = minY - dY;
+
+    // create the new control points and add them to the vector
+    const double correlationValue = 1.0; // XXX not sure what should go here
+    
+    ControlPoint cp1;
+    cp1.point.setX( minBoundingX ); 
+    cp1.point.setY( minBoundingY );
+    cp1.origPoint = cp1.point;
+    cp1.correlation = correlationValue;
+    vControl.push_back( cp1 );
+
+    ControlPoint cp2;
+    cp2.point.setX( maxBoundingX ); 
+    cp2.point.setY( minBoundingY );
+    cp2.origPoint = cp2.point;
+    cp2.correlation = correlationValue;
+    vControl.push_back( cp2 );
+
+    ControlPoint cp3;
+    cp3.point.setX( minBoundingX ); 
+    cp3.point.setY( maxBoundingY );
+    cp3.origPoint = cp3.point;
+    cp3.correlation = correlationValue;
+    vControl.push_back( cp3 );
+}
+

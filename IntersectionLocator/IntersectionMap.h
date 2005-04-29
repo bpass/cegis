@@ -14,7 +14,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionMap.h,v 1.6 2004/12/03 17:27:26 ahartman Exp $
+// $Id: IntersectionMap.h,v 1.7 2005/04/29 16:27:36 ahartman Exp $
 
 
 #ifndef INTERSECTION_MAP_H
@@ -162,6 +162,8 @@ public:
     */
    void iterativelyFindControlPoints( InMemRaster &rasta, 
                            std::vector<Indexes> &size );
+
+   void addBoundingControlPoints();
 
    /**
     * This function will perform the rubber sheeting process on the

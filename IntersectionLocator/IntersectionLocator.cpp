@@ -10,7 +10,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionLocator.cpp,v 1.14 2005/04/25 14:10:43 ahartman Exp $
+// $Id: IntersectionLocator.cpp,v 1.15 2005/04/29 16:34:14 ahartman Exp $
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1300
@@ -864,7 +864,7 @@ void triangleOutputTest()
    std::string szRasterDir = "L:\\cartoresearch\\data-integration\\gjaromack\\STL\\orthoimages\\15SYC";
    std::string szVectorDir = "L:\\sdir_snap\\rstelzleni\\Mo2Quads\\OriginalRoads\\";
    //std::string szOutputDir = "L:\\sdir_snap\\rstelzleni\\Mo2Quads\\CorrectedRoads_10-90\\";
-   std::string szOutputDir = "D:\\Data\\Output\\triangleOutputTest\\"; 
+   std::string szOutputDir = "D:\\Data\\Output\\triangleOutputTest3\\"; 
 
    double templateSize = 50, areaSize = 65;
 
@@ -1097,6 +1097,10 @@ void triangleOutputTest()
       // Get the original control points
       printf( "\n10-90\n" );
       Intersections.findControlPoints( Rasta, templateSize, areaSize );
+
+      // add the bounding control points
+      Intersections.addBoundingControlPoints();
+      
       printf( "Saving control points\n" );
       std::vector<ControlPoint> originalPoints = 
                                         Intersections.getControlPoints();
@@ -1104,7 +1108,7 @@ void triangleOutputTest()
       // Got the control points, now start manipulating the data
 
       // First dump the unfiltered data and lines
-      szOutput = szOutputDir /*+ "Unfiltered\\"*/;
+      szOutput = szOutputDir + "Unfiltered\\";
       szPoints = szOutput /*+ "Points\\"*/ + aszNames[i] + "_Points.shp";
       szLines = szOutput /*+ "Lines\\"*/ + aszNames[i] + "_Lines.shp";
       szTriangles = szOutput + aszNames[i] + "_Triangles.shp";
@@ -1149,10 +1153,94 @@ void triangleOutputTest()
       delete pLinesDS;
       delete pTrianglesDS;
 
-//      // Now filter the points using all filters and combinations
-//      for( int r = 10; r <= 90; r = r + 10 )
-//      {
-//      } // end for r (ratio)
+      // Now filter the points using all filters and combinations
+      for( int r = 50; r <= 50; r += 10 )
+      {
+         char temp[10];
+         sprintf( temp, "_%02dVMF", r );
+         szAbbrev = temp;
+
+         szOutput = szOutputDir + "Filter" ;
+         szOutput += szAbbrev + "\\";
+         szPoints = szOutput /*+ "Points\\"*/ + aszNames[i] + "_Points.shp";
+         szLines = szOutput /*+ "Lines\\"*/ + aszNames[i] + "_Lines.shp";
+         szTriangles = szOutput + aszNames[i] + "_Triangles.shp";
+
+         pOutputDS = createOGRFile( szPoints.c_str(), "ESRI Shapefile" );
+         if( pOutputDS == NULL )
+         {
+            fprintf( stderr, "pOutputDS is NULL\n" );
+            exit( -1 );
+         }
+
+         pLinesDS = createOGRFile( szLines.c_str(), "ESRI Shapefile" );
+         if( pLinesDS == NULL )
+         {
+            fprintf( stderr, "pLinesDS is NULL\n" );
+            exit( -1 );
+         }
+
+         // Open the file to output the triangles
+         pTrianglesDS = createOGRFile( szTriangles.c_str(), "ESRI Shapefile" );
+         if( pTrianglesDS == NULL )
+         {
+            fprintf( stderr, "pTrianglesDS is NULL\n" );
+            exit( -1 );
+         }
+
+
+         printf( "VMF Filtering and outputting control points\n\n" );
+         Filter *filter = new VMFilter;
+         Intersections.setControlPoints( originalPoints );
+         Intersections.filter( filter, static_cast<double>(r)/100 );
+         Intersections.outputControlPoints( pOutputDS );
+
+         // Output the triangles
+         printf( "Outputting the triangles\n" );
+         Intersections.triangulateAndOutput( Triangulator, pTrianglesDS );
+      
+         Intersections.triangulateAndAdjust( Triangulator, Transformer,
+                                             pLinesDS );
+
+         delete filter;
+         delete pOutputDS;
+         delete pLinesDS;
+
+//         sprintf( temp, "_%02dDF", r );
+//         szAbbrev = temp;
+//
+//         szOutput = szOutputDir + "Filter";
+//         szOutput += szAbbrev + "\\";
+//         szPoints = szOutput + "Points\\" + aszNames[i] + "_Points.shp";
+//         szLines = szOutput + "Lines\\" + aszNames[i] + "_Lines.shp";
+//
+//         pOutputDS = createOGRFile( szPoints.c_str(), "ESRI Shapefile" );
+//         if( pOutputDS == NULL )
+//         {
+//            fprintf( stderr, "pOutputDS is NULL\n" );
+//            exit( -1 );
+//         }
+//
+//         pLinesDS = createOGRFile( szLines.c_str(), "ESRI Shapefile" );
+//         if( pLinesDS == NULL )
+//         {
+//            fprintf( stderr, "pLinesDS is NULL\n" );
+//            exit( -1 );
+//         }
+//
+//
+//         printf( "DF Filtering and outputting control points\n\n" );
+//         filter = new DistanceFilter;
+//         Intersections.setControlPoints( originalPoints );
+//         Intersections.filter( filter, static_cast<double>(r)/100 );
+//         Intersections.outputControlPoints( pOutputDS );
+//         Intersections.triangulateAndAdjust( Triangulator, Transformer,
+//                                             pLinesDS );
+//
+//         delete filter;
+//         delete pOutputDS;
+//         delete pLinesDS;
+      } // end for r (ratio)
       
       delete pRaster;
       delete pVectorDS;

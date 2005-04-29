@@ -1,4 +1,5 @@
 /*
+ * $Id: DSSApplet.java,v 1.2 2005/04/29 21:00:11 jenelson Exp $
  * DSSApplet.java
  *
  * Modified for relative addresing 6/2004

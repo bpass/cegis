@@ -1,5 +1,5 @@
 /*
- * $Id: DSSApplet.java,v 1.2 2005/04/29 21:00:11 jenelson Exp $
+ * $Id: DSSApplet.java,v 1.3 2005/04/29 21:02:20 jenelson Exp $
  * DSSApplet.java
  *
  * Modified for relative addresing 6/2004
@@ -41,7 +41,7 @@ public class DSSApplet extends javax.swing.JApplet implements Runnable {
         //Disable all unusable gui items
         preserveWhat.setEnabled(false);
         dataType.setEnabled(false);
-        rasterDataType.setEnabled(false);
+        rasterDataType.setEnabled(false)
         submitButton.setEnabled(false);
         
         

@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.5 2005/04/14 21:55:59 rbuehler Exp $
+// $Id: qgctpbox.cpp,v 1.6 2005/05/03 17:20:08 rbuehler Exp $
 
 
 #include <qtooltip.h>
@@ -114,6 +114,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
    if( gctpName == "" )
    {
       hide();
+      name = "";
       return;
    }
    else if( gctpName == "Angle" )	
@@ -135,7 +136,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
          "For Landsat-4,5 orbits this parameter should be:\n"
          "129° 18' 00\" + (360/233 * path number)");
    }
-   else if( gctpName == "AziAng" )	
+   else if( gctpName == "AziAng" )
    {
       label->setText( "Azimuth Angle East of North:" );
       activeEdit = dmsEdit;
@@ -473,7 +474,7 @@ void QGctpBox::initializeHoldValues()
    holdValues->insert("Sphere",     6370997);
    holdValues->insert("STDPAR",     0);
    holdValues->insert("STDPR1",     0);
-   holdValues->insert("STDPR2",     0);
+   holdValues->insert("STDPR2",     20000000);
    holdValues->insert("TrueScale",  1);
    holdValues->insert("NoWay",      0);
    holdValues->insert("one",        1);

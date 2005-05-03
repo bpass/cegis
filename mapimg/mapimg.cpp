@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.23 2005/05/03 16:05:27 jtrent Exp $
+// $Id: mapimg.cpp,v 1.24 2005/05/03 17:20:08 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -163,13 +163,25 @@ QString mapimg::projectionErrors( const RasterInfo &input )
          msg += "Lambert Conformal Conic is an unsupported projection at this time.\n"
             "\t-The framing generates zeros for rows and cols.\n";
       case 3:  // Alber's Equal Area
-      case 8:  // Equidistant Conic B
-         if( input.projectionNumber() == 8 && input.gctpParam( 8 ) == 1.0 )
-            break;
          if( fabs(input.gctpParam(2) + input.gctpParam(3)) < EPSILON )
             msg += "Standard parallel values may produce invalid data.\n"
             "\t-Make sure they don't add up to zero\n";
          break;
+      case 8:  // Equidistant Conic
+         if( input.gctpParam( 8 ) == 0.0 )
+         {  // Version A
+            if( fabs(input.gctpParam(2)) < EPSILON )
+               msg += "Standard parallel value may produce invalid data.\n"
+               "\t-Make sure it isn't equal to zero\n";
+            break;
+         }
+         else
+         {  // Version B
+            if( fabs(input.gctpParam(2) + input.gctpParam(3)) < EPSILON )
+               msg += "Standard parallel values may produce invalid data.\n"
+               "\t-Make sure they don't add up to zero\n";
+            break;
+         }
       case 9:  // Transverse Mercator
          if( input.gctpParam(2) < 0 || input.gctpParam(2) > 2 )
             msg += "Unexpected Scale Factor value.\n"

@@ -1,4 +1,4 @@
-// $Id: gctpnames.h,v 1.9 2005/04/08 21:51:30 rbuehler Exp $
+// $Id: gctpnames.h,v 1.10 2005/05/03 16:05:27 jtrent Exp $
 
 
 #ifndef GCTPNAMES_H
@@ -74,11 +74,11 @@ namespace
 
       case 8:  //Equid. Conic
          if( variation == 'a' )
-            retList << "SMajor" << "SMinor" << "STDPAR" << "" << "CentMer" 
-            << "OriginLat" << "FE" << "FN" << "one";
-         else
-            retList << "SMajor" << "SMinor" << "STDPR1" << "STDPR2" << "CentMer" 
+            retList << "SMajor" << "SMinor" << "STDPAR" << "" << "CentMer"
             << "OriginLat" << "FE" << "FN" << "zero";
+         else
+            retList << "SMajor" << "SMinor" << "STDPR1" << "STDPR2" << "CentMer"
+            << "OriginLat" << "FE" << "FN" << "one";
          break;
 
       case 9: //Transverse Mercator
@@ -270,7 +270,7 @@ namespace
       "Orthographic,General Vertical Near-Side Perspective,Sinusoidal,"
       "Equirectangular,Miller Cylindrical,Van der Grinten,"
       "Hotine Oblique Mercator,Robinson,Space Oblique Mercator,"
-      "Modified Stereohraphic Conformal--Alaska,Interrupted Goode Homolsine,"
+      "Modified Stereographic Conformal--Alaska,Interrupted Goode Homolsine,"
       "Mollweide,Interrupted Mollweide,Hammer,Wagner IV,Wagner VII,"
       "Oblated Equal Area" ));
 

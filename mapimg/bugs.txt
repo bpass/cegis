@@ -1,4 +1,4 @@
-// $Id: bugs.txt,v 1.1 2005/05/03 14:50:49 jtrent Exp $
+// $Id: bugs.txt,v 1.2 2005/05/03 16:05:27 jtrent Exp $
 
 Current Bugs:
 1) Concept: Some projections have many parameters. These projections push the "Bad Projection"
@@ -18,45 +18,47 @@ Current Bugs:
    Solution:
 
 
-3) Method: Any input, going to the following projections, then clicking preview
+3) Method: Any input, going to "equidistant conic b"
+   Issue: Does not warn about constraint failure on the std. parallels
+   Suggestion: Warn user, as is done in Lambert Conformal Conic and many others
+   Solution:
+
+
+4) Method: Any input, going to "General Vertical Near-Side Perspective"
+   Issue: Height of perspective needs a new tooltip and suggested values, it doesn't
+          produce out put until > 286 and even then it is meaningless. Also, calculator
+          does not properly calculate columns? However, when previewing columns is set
+          properly.
+    Suggestion: Check the Synder book for proper bounds and enforce
+    Solution:
+
+
+
+Fixed In This Version:
+
+1) Concept: Modified Stereographic Conformal--Alaska is spelled wrong
+   Suggestion: Fix it. :-)
+   Solution: Added the "g" in stereographic (jtrent)
+
+
+2) Method: Any input, going to the following projections, then clicking preview
            Geographic, Lambert Confromal Conic, Gnomonic, and Modified Stereographic
            Conformal--Alaska
    Issue: Crashes with Null pointer, or produces bad rows/columns without warning in advance.
           All other "Bad Projections" warn before previewing that it may crash except this one.
    Suggestion: Make sure it warns that the projection is bad for these projections. It works
                fine in with the calculate button.
-   Solution:
-
-4) Concept: Modified Stereographic Conformal--Alaska is spelled wrong
-   Suggestion: Fix it. :-)
-   Solution:
+   Solution: Changed previewProjection() in mapimgform to check for parameter bounds during
+             readyToFrameIt. (jtrent)
 
 
-5) Method: Any input, going to "equidistant conic b"
-   Issue: Does not warn about constraint failure on teh std. parallels
-   Suggestion: Warn user, as is done in Lambert Conformal Conic and many others
-   Solution:
-
-
-6) Method: Any input, going to  "equidistant conic b"
+3) Method: Any input, going to  "equidistant conic b"
    Issue: After previewing the Projection has changed to "equidistant conic a".
           It looks like this is what is being projected for both A and B.
    Suggestion: Check that the GCTP parameter that distinguishes between A and B
                is being properly set.
-   Solution:
-
-
-7) Method: Any input, going to "General Vertical Near-Side Perspective"
-   Issue: Height of perspective needs a new tooltip and suggested values, it doesn't
-          produce out put until > 286 and even then it is meaningless. Also, calculator
-          does not properly calculate columns? However, when previewing columns is set 
-          properly.
-    Suggestion: Check the Synder book for proper bounds and enforce
-    Solution:
-    
-    
-
-Fixed In This Version:
+   Solution: Not correct in gcptNames, but correct in other places, so both were
+             set to A. (jtrent)
 
 
 Fixed Previously:

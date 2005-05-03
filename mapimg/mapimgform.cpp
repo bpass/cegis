@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.35 2005/04/16 04:01:35 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.36 2005/05/03 16:05:27 jtrent Exp $
 
 
 #include "mapimgform.h"
@@ -700,7 +700,7 @@ bool mapimgForm::previewProjection()
    RasterInfo output( outInfoFrame->info() );
    output.setDataType( input.isSigned(), input.bitCount(), input.type() );
 
-   if( !mapimg::readytoFrameIt( output, this, false ) )
+   if( !mapimg::readytoFrameIt( output, this ) )
       return false;
    mapimg::frameIt( output );
    outInfoFrame->setInfo( output );

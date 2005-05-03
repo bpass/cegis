@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.21 2005/04/07 17:22:05 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.22 2005/05/03 16:05:27 jtrent Exp $
 
 
 #include "qinfoframe.h"
@@ -436,6 +436,7 @@ void QGctpTab::projChange()
    QStringList projNames = gctpNames( projNum, variation );
    for( int i = 0; i < 15; ++i )
       gctpBoxes[i]->setGctpName( projNames[i] );
+
    zoneBox->setShown( projNum == 1 );
 }
 
@@ -941,7 +942,7 @@ void QInfoFrame::setInfo( RasterInfo &input )
       gctpTab->projCombo->setCurrentText( 
       projNames[input.projectionNumber()] + " " + variation );
    else
-      gctpTab->projCombo->setCurrentText( 
+      gctpTab->projCombo->setCurrentText(
       projNames[input.projectionNumber()] );
    gctpTab->projChange();
 
@@ -988,7 +989,7 @@ RasterInfo QInfoFrame::info()
 
    for( int i = 0; i < 15; ++i )
       ret.setGctpParam( i, gctpTab->gctpBoxes[i]->value() );
-
+ 
    return ret;
 }
 

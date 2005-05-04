@@ -1,4 +1,4 @@
-// $Id: bugs.txt,v 1.2 2005/05/03 16:05:27 jtrent Exp $
+// $Id: bugs.txt,v 1.3 2005/05/04 00:00:54 rbuehler Exp $
 
 Current Bugs:
 1) Concept: Some projections have many parameters. These projections push the "Bad Projection"
@@ -7,24 +7,13 @@ Current Bugs:
    Solution:
 
 
-2) Method: Using Life Zones, 30 minute Equirectangular input, going to "equidistant conic a"
-           Also true with any other input data set or projection.
-   Issue: When preview reprojection is run "Columns of pixels" value gets changed to zero and
-          error message pops, also goes to zero when clicking the calculator. There is no
-          warning that this is a bad projection. This occurs even when following all tooltips.
-   Suggestion: Check that all the tooltips are right, and that all projection parameters are
-               being checked for bounds. Probably has something to do with the Semi-Major and
-               -Minor axes.
-   Solution:
-
-
-3) Method: Any input, going to "equidistant conic b"
+2) Method: Any input, going to "equidistant conic b"
    Issue: Does not warn about constraint failure on the std. parallels
    Suggestion: Warn user, as is done in Lambert Conformal Conic and many others
    Solution:
 
 
-4) Method: Any input, going to "General Vertical Near-Side Perspective"
+3) Method: Any input, going to "General Vertical Near-Side Perspective"
    Issue: Height of perspective needs a new tooltip and suggested values, it doesn't
           produce out put until > 286 and even then it is meaningless. Also, calculator
           does not properly calculate columns? However, when previewing columns is set
@@ -59,6 +48,18 @@ Fixed In This Version:
                is being properly set.
    Solution: Not correct in gcptNames, but correct in other places, so both were
              set to A. (jtrent)
+
+
+4) Method: Using Life Zones, 30 minute Equirectangular input, going to "equidistant conic a"
+           Also true with any other input data set or projection.
+   Issue: When preview reprojection is run "Columns of pixels" value gets changed to zero and
+          error message pops, also goes to zero when clicking the calculator. There is no
+          warning that this is a bad projection. This occurs even when following all tooltips.
+   Suggestion: Check that all the tooltips are right, and that all projection parameters are
+               being checked for bounds. Probably has something to do with the Semi-Major and
+               -Minor axes.
+   Solution: Equidistant Conic A doesn't work well with 0 degree standard parallel.
+             Error message has been created for this situation.
 
 
 Fixed Previously:

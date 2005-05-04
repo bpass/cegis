@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.36 2005/05/03 16:05:27 jtrent Exp $
+// $Id: mapimgform.cpp,v 1.37 2005/05/04 00:00:54 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -704,7 +704,7 @@ bool mapimgForm::previewProjection()
       return false;
    mapimg::frameIt( output );
    outInfoFrame->setInfo( output );
-   if( !mapimg::readytoReproject( output, this ) )
+   if( !mapimg::readytoReproject( output, this, false ) )
       return false;
 
    RasterInfo smallInput;

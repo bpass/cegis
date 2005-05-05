@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.22 2005/05/03 16:05:27 jtrent Exp $
+// $Id: qinfoframe.cpp,v 1.23 2005/05/05 22:48:04 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -356,9 +356,12 @@ QGctpTab::QGctpTab( QWidget* parent, const char* name)
    QLabel *gctpLabel = new QLabel( "Projection Info", titleBox, "gctpLabel" );
 
    //projBox - Contains the combo box for selecting which projection to use
+   //    Also contains the bad projection label
    projBox = new QVBox( contents );
    (void) new QLabel( "Projection", projBox);
    projCombo = new QComboBox( projBox, "projCombo" );
+   badProjBlank = new QWidget( contents );
+   badProjLabel = new QLabel( badProjBlank, "badProjLabel" );
 
    //zoneBox - Contains a spin box for selecting  which UTM zone to use
    zoneBox = new QVBox( contents );
@@ -402,6 +405,16 @@ QGctpTab::QGctpTab( QWidget* parent, const char* name)
    projCombo->insertItem( "Equidistant Conic a", c );
    QToolTip::add( projCombo, "Name of map projection" );
 
+   badProjBlank->setFixedHeight(10);
+   badProjLabel->setFixedHeight(10);
+   badProjLabel->hide();
+   badProjLabel->setText( "Bad Projection *" );
+   QToolTip::add( badProjLabel, 
+      "<b>Bad Projection</b>: This projection either generates "
+      "useless data or crashes. It is recommended that you "
+      "choose a different one. This issue may be addressed in "
+      "Future versions of mapimg." );
+
    //zoneBox
    zoneSpin->setValue( 0 );
    zoneBox->hide();
@@ -432,6 +445,16 @@ void QGctpTab::projChange()
 {
    int projNum = combo2proj( projCombo->currentItem() );
    char variation = projCombo->currentText().right(1)[0].latin1();
+
+   switch(projNum)
+   {
+   case 0: case 1: case 2: case 4: case 6: case 10: case 13: case 23:
+      badProjLabel->show();
+      break;
+   default:
+      badProjLabel->hide();
+      break;
+   }
 
    QStringList projNames = gctpNames( projNum, variation );
    for( int i = 0; i < 15; ++i )

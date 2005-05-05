@@ -1,4 +1,4 @@
-// $Id: qinfoframe.h,v 1.10 2005/04/07 17:22:05 rbuehler Exp $
+// $Id: qinfoframe.h,v 1.11 2005/05/05 22:48:04 rbuehler Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -119,6 +119,8 @@ public:
 
    QVBox       *projBox;
    QComboBox   *projCombo;
+   QWidget     *badProjBlank;
+   QLabel      *badProjLabel;
 
    QVBox       *zoneBox;
    QSpinBox    *zoneSpin;

@@ -1,25 +1,15 @@
-// $Id: bugs.txt,v 1.3 2005/05/04 00:00:54 rbuehler Exp $
+// $Id: bugs.txt,v 1.4 2005/05/05 22:48:04 rbuehler Exp $
 
 Current Bugs:
-1) Concept: Some projections have many parameters. These projections push the "Bad Projection"
-            tag out of viewing range without scrolling.
-   Suggestion: Move "Bad Projection" tag to directly beneath the projection drop-down
-   Solution:
-
-
-2) Method: Any input, going to "equidistant conic b"
-   Issue: Does not warn about constraint failure on the std. parallels
-   Suggestion: Warn user, as is done in Lambert Conformal Conic and many others
-   Solution:
-
-
-3) Method: Any input, going to "General Vertical Near-Side Perspective"
-   Issue: Height of perspective needs a new tooltip and suggested values, it doesn't
-          produce out put until > 286 and even then it is meaningless. Also, calculator
-          does not properly calculate columns? However, when previewing columns is set
-          properly.
+1) Method: Any input, going to "General Vertical Near-Side Perspective"
+   Issue: Height of perspective needs a new tooltip and suggested values.
+		  Also, calculator does not properly calculate columns? However, 
+		  when previewing columns is set properly.
     Suggestion: Check the Synder book for proper bounds and enforce
-    Solution:
+    Note (rbuehler): Technically, it should work with all values, negative and positive.
+                     Also, very low heights do produce meaningful data.
+                     ***I cannot reproduce the calculator bug.***
+    Solution: Tooltip updated to show range and clarify that the units are meters
 
 
 
@@ -60,6 +50,22 @@ Fixed In This Version:
                -Minor axes.
    Solution: Equidistant Conic A doesn't work well with 0 degree standard parallel.
              Error message has been created for this situation.
+             
+             
+5) Concept: Some projections have many parameters. These projections push the "Bad Projection"
+            tag out of viewing range without scrolling.
+   Suggestion: Move "Bad Projection" tag to directly beneath the projection drop-down
+   Solution: Added the badProjBlank and badProjLabel to the QGctpTab
+             Removed the "NoWay" functionality for the QGctpBox
+
+
+6) Method: Any input, going to "equidistant conic b"
+   Issue: Does not warn about constraint failure on the std. parallels
+   Suggestion: Warn user, as is done in Lambert Conformal Conic and many others
+   Solution: Fixed a typo in mapimg.cpp.
+             Line 180: - used to be +
+
+
 
 
 Fixed Previously:

@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.24 2005/05/03 17:20:08 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.25 2005/05/05 22:48:04 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -177,7 +177,7 @@ QString mapimg::projectionErrors( const RasterInfo &input )
          }
          else
          {  // Version B
-            if( fabs(input.gctpParam(2) + input.gctpParam(3)) < EPSILON )
+            if( fabs(input.gctpParam(2) - input.gctpParam(3)) < EPSILON )
                msg += "Standard parallel values may produce invalid data.\n"
                "\t-Make sure they don't add up to zero\n";
             break;
@@ -199,6 +199,8 @@ QString mapimg::projectionErrors( const RasterInfo &input )
          msg += "Gnomic is an unsupported projection at this time.\n"
             "\t-The framing generates zeros for rows and cols.\n";
          break;
+      case 15: // General Vertical Near-Side Perspective
+         if(
       case 20: // Hotine Oblique Mercators
          if( input.gctpParam(2) < 0 || input.gctpParam(2) > 2 )
             msg += "Unexpected Scale Factor value.\n"

@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.6 2005/05/03 17:20:08 rbuehler Exp $
+// $Id: qgctpbox.cpp,v 1.7 2005/05/05 22:48:04 rbuehler Exp $
 
 
 #include <qtooltip.h>
@@ -117,6 +117,19 @@ void QGctpBox::setGctpName( const QString & gctpName )
       name = "";
       return;
    }
+   else if( gctpName == "NoWay" )
+   {
+      hide();
+      name = "";
+      return;
+      /*label->setText( "Bad Projection *" );
+      QToolTip::add( label, 
+         "<b>Bad Projection</b>: This projection either generates "
+         "useless data or crashes. It is recommended that you "
+         "choose a different one. This issue may be addressed in "
+         "Future versions of mapimg." );
+      activeEdit = NULL;*/
+   }
    else if( gctpName == "Angle" )	
    {
       label->setText( "Oval Rotation Angle:" );
@@ -204,7 +217,8 @@ void QGctpBox::setGctpName( const QString & gctpName )
       label->setText( "Height of Perspective:" );
       activeEdit = lineEdit;
       lineEdit->setValidator( new QDoubleValidator( -1000000000.0, 1000000000.0, 6, lineEdit ) );
-      QToolTip::add( label, "Value must be between 0.0 and 1000000000." );
+      QToolTip::add( label, "Value must be between -1000000000.0 and 1000000000 meters.<br><br>"
+         "<b>Note:</b> Currently, values less than or equal to 0 create unexpected results");
    }
    else if( gctpName == "IncAng" )	
    {
@@ -397,16 +411,6 @@ void QGctpBox::setGctpName( const QString & gctpName )
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
-   }
-   else if( gctpName == "NoWay" )
-   {
-      label->setText( "Bad Projection *" );
-      QToolTip::add( label, 
-         "<b>Bad Projection</b>: This projection either generates "
-         "useless data or crashes. It is recommended that you "
-         "choose a different one. This issue may be addressed in "
-         "Future versions of mapimg." );
-      activeEdit = NULL;
    }
    else
       hide();

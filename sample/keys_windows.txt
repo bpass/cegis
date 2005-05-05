@@ -27,7 +27,9 @@ Windows Users:
   Adding to authorized_keys:
     1) Open putty and ssh to centaur and login as usual
 
-    2) Change directories to ~/.ssh using "cd ~/.ssh"
+    2) Change directories to ~/.ssh using "cd ~/.ssh". If you get a message that
+       .ssh does not exist created it. This is done using "cd ~" then "mkdir .ssh".
+       Next, change to that directory with "cd ~/.ssh".
 
     3) Use "ls" to list files and see if a file called "authorized_keys" exists
        If not we will create it

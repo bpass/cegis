@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.8 2005/05/06 14:06:44 jtrent Exp $
+// $Id: qgctpbox.cpp,v 1.9 2005/05/06 23:19:50 rbuehler Exp $
 
 
 #include <qtooltip.h>
@@ -221,11 +221,12 @@ void QGctpBox::setGctpName( const QString & gctpName )
    }
    else if( gctpName == "Height" )	
    {
-      label->setText( "Height of Perspective:" );
+      label->setText( "Height of Perspective: *" );
       activeEdit = lineEdit;
       lineEdit->setValidator( new QDoubleValidator( -1000000000.0, 1000000000.0, 6, lineEdit ) );
       QToolTip::add( label, "Value must be between -1000000000.0 and 1000000000 meters.<br><br>"
-         "<b>Note:</b> Currently, values less than or equal to 0 create unexpected results");
+         "<b>Note:</b> Currently, values less than or equal to 0 create unexpected results<br><br>"
+         "<b>Note:</b> It is also recommended that the value be greater than 1km (1000m)");
    }
    else if( gctpName == "IncAng" )	
    {

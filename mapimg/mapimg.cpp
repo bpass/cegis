@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.26 2005/05/06 14:06:44 jtrent Exp $
+// $Id: mapimg.cpp,v 1.27 2005/05/06 23:19:50 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -200,10 +200,13 @@ QString mapimg::projectionErrors( const RasterInfo &input )
             "\t-The framing generates zeros for rows and cols.\n";
          break;
       case 15: // General Vertical Near-Side Perspective
-//         if(     //is there supposed to be code here? It was checked in with part of an if????
-           break;
+         if( fabs(input.gctpParam(2)) < EPSILON )
+            msg += "Height of 0 may produce invalid data.\n"
+            "\t-Height is measured in meters above sea level.\n"
+            "\t  Common values are greater than 1km (1000m).\n";
+         break;
       case 20: // Hotine Oblique Mercators
-         if( input.gctpParam(2) < 0 || input.gctpParam(2) > 2 )
+         if( fabs(input.gctpParam(2)) < EPSILON || input.gctpParam(2) > 2 )
             msg += "Unexpected Scale Factor value.\n"
             "\t-Most usage of Scale Factor is closer to a value of 1\n";
          if( input.gctpParam( 12 ) == 0.0 )  // Version A
@@ -229,7 +232,11 @@ QString mapimg::projectionErrors( const RasterInfo &input )
          msg += "Modified Stereographic Conformal--Alaska is an unsupported projection at this time.\n"
             "\t-The framing generates zeros for rows and cols.\n";
          break;
-      case 30:
+      case 26: // Interrupted Mollweide
+         msg += "Interrupted Mollweide is an unoptimized projection at this time.\n"
+            "\t-It takes large amounts of time to calculate and re-project.\n";
+         break;
+      case 30: // Oblated Equal Area
          if( input.gctpParam(2) < 0 || input.gctpParam(2) > 2 )
             msg += "Oval Shape Parameter m may produce invalid data.\n"
             "\t-Value must be between 0 and 2.\n";

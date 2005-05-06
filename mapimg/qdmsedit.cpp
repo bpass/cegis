@@ -1,4 +1,4 @@
-// $Id: qdmsedit.cpp,v 1.3 2005/05/06 14:06:44 jtrent Exp $
+// $Id: qdmsedit.cpp,v 1.4 2005/05/06 23:19:50 rbuehler Exp $
 
 
 #include "qdmsedit.h"
@@ -31,6 +31,7 @@ QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction 
    sEdit->setAlignment( int( QLineEdit::AlignRight ) );
    sEdit->setFrameStyle( QFrame::NoFrame );
    sLabel = new QLabel( this, "sLabel" );
+   directionLabel = new QLabel( this, "directionLabel" );
 
    QFont labelFont = dmsLabel->font();
    labelFont.setPointSize( 15 );
@@ -45,8 +46,6 @@ QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction 
    mLabel->setText( "\'" );
    sEdit->setText( "0" );
    sLabel->setText( "\"" );
-
-   directionLabel = new QLabel( this, "directionLabel" );
 
    if( direction != Unspecified )
    {

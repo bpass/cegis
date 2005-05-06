@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.23 2005/05/05 22:48:04 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.24 2005/05/06 23:19:50 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -448,7 +448,7 @@ void QGctpTab::projChange()
 
    switch(projNum)
    {
-   case 0: case 1: case 2: case 4: case 6: case 10: case 13: case 23:
+   case 0: case 1: case 2: case 4: case 6: case 10: case 13: case 23: case 26:
       badProjLabel->show();
       break;
    default:

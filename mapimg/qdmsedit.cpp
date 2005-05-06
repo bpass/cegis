@@ -1,4 +1,4 @@
-// $Id: qdmsedit.cpp,v 1.2 2005/02/24 17:59:14 jtrent Exp $
+// $Id: qdmsedit.cpp,v 1.3 2005/05/06 14:06:44 jtrent Exp $
 
 
 #include "qdmsedit.h"
@@ -6,7 +6,7 @@
 #include <qregexp.h>
 #include <qtooltip.h>
 
-QDmsEdit::QDmsEdit( QWidget* parent, const char* name )
+QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction )
    : QHBox( parent, name)
 {
    setFrameStyle( QFrame::LineEditPanel | QFrame::Sunken );
@@ -31,13 +31,13 @@ QDmsEdit::QDmsEdit( QWidget* parent, const char* name )
    sEdit->setAlignment( int( QLineEdit::AlignRight ) );
    sEdit->setFrameStyle( QFrame::NoFrame );
    sLabel = new QLabel( this, "sLabel" );
-   
+
    QFont labelFont = dmsLabel->font();
    labelFont.setPointSize( 15 );
-   dLabel->setFont( labelFont ); 
-   mLabel->setFont( labelFont ); 
-   sLabel->setFont( labelFont ); 
-   
+   dLabel->setFont( labelFont );
+   mLabel->setFont( labelFont );
+   sLabel->setFont( labelFont );
+
    dmsLabel->setText( "(d° m\' s\")" );
    dEdit->setText( "0" );
    dLabel->setText( "°" );
@@ -45,7 +45,23 @@ QDmsEdit::QDmsEdit( QWidget* parent, const char* name )
    mLabel->setText( "\'" );
    sEdit->setText( "0" );
    sLabel->setText( "\"" );
-   
+
+   directionLabel = new QLabel( this, "directionLabel" );
+
+   if( direction != Unspecified )
+   {
+       if( direction == North )
+           directionLabel->setText( "N" );
+       else if( direction == East )
+           directionLabel->setText( "E" );
+       else if( direction == South )
+           directionLabel->setText( "S" );
+       else if( direction == West )
+           directionLabel->setText( "W" );
+       else
+           directionLabel->setText( "" );
+   }
+
    dEdit->setValidator( new QIntValidator(min, max, dEdit) );
    mEdit->setValidator( new QIntValidator(0, 60, mEdit) );
    QRegExp exp( QString::fromLatin1("^(60|[1-5]?\\d(\\.\\d*)?)$") );
@@ -130,6 +146,38 @@ void QDmsEdit::setValue( const int deg, const int min, const double sec )
    mEdit->setText( QString::number( min ) );
    sEdit->setText( QString::number( sec, 'f', 6 ) );
 }
+
+QDmsEdit::Directionality QDmsEdit::direction() const
+{
+   Directionality returnValue = Unspecified;
+
+   if( directionLabel->text().upper() == "N" )
+       returnValue = North;
+   else if( directionLabel->text().upper() == "E" )
+       returnValue = East;
+   else if( directionLabel->text().upper() == "S" )
+       returnValue = South;
+   else if( directionLabel->text().upper() == "W" )
+       returnValue = West;
+
+    return returnValue;
+}
+void QDmsEdit::setDirection( const Directionality direction )
+{
+   if( direction == North )
+       directionLabel->setText( "N" );
+   else if( direction == East )
+       directionLabel->setText( "E" );
+   else if( direction == South )
+       directionLabel->setText( "S" );
+   else if( direction == West )
+       directionLabel->setText( "W" );
+   else
+       directionLabel->setText( "" );
+   
+   return;
+}
+
 
 
 

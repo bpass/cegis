@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.7 2005/05/05 22:48:04 rbuehler Exp $
+// $Id: qgctpbox.cpp,v 1.8 2005/05/06 14:06:44 jtrent Exp $
 
 
 #include <qtooltip.h>
@@ -136,13 +136,15 @@ void QGctpBox::setGctpName( const QString & gctpName )
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( 0 );
       dmsEdit->setMaxVal( 360 );
+      dmsEdit->setDirection( QDmsEdit::Unspecified );
    }
-   else if( gctpName == "AscLong" )	
+   else if( gctpName == "AscLong" )
    {
       label->setText( "Longitude of Ascending Orbit: *" );
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -180 );
       dmsEdit->setMaxVal( 180 );
+      dmsEdit->setDirection( QDmsEdit::East );
       QToolTip::add( label,
          "For Landsat-1,2,3 orbits this parameter should be:\n"
          "128° 52' 12\" + (360/251 * path number)\n\n"
@@ -155,13 +157,15 @@ void QGctpBox::setGctpName( const QString & gctpName )
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( 0 );
       dmsEdit->setMaxVal( 360 );
+      dmsEdit->setDirection( QDmsEdit::Unspecified );
    }
-   else if( gctpName == "AzmthPt" )	
+   else if( gctpName == "AzmthPt" )
    {
       label->setText( "Longitude where Azimuth Occurs:" );
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -180 );
       dmsEdit->setMaxVal( 180 );
+      dmsEdit->setDirection( QDmsEdit::East );
    }
    else if( gctpName == "CenterLat" )	
    {
@@ -169,43 +173,46 @@ void QGctpBox::setGctpName( const QString & gctpName )
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
+      dmsEdit->setDirection( QDmsEdit::North );
    }
-   else if( gctpName == "CentLon" )	
+   else if( gctpName == "CentLon" )
    {
       label->setText( "Longitude of Projection Center:" );
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -180 );
       dmsEdit->setMaxVal( 180 );
+      dmsEdit->setDirection( QDmsEdit::East );
    }
-   else if( gctpName == "CentMer" )	
+   else if( gctpName == "CentMer" )
    {
       label->setText( "Longitude of Central Meridian:" );
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -180 );
       dmsEdit->setMaxVal( 180 );
+      dmsEdit->setDirection( QDmsEdit::East );
    }
-   else if( gctpName == "FactorH" )	
+   else if( gctpName == "FactorH" )
    {
       label->setText( "Scale Factor at Center of Projection: *" );
       activeEdit = lineEdit;
       lineEdit->setValidator( new QDoubleValidator( 0.0, 1000000.0, 6, lineEdit ) );
       QToolTip::add( label, "This will default to 1 if left as 0." );
    }
-   else if( gctpName == "FactorM" )	
+   else if( gctpName == "FactorM" )
    {
       label->setText( "Scale Factor at Central Meridian: *" );
       activeEdit = lineEdit;
       lineEdit->setValidator( new QDoubleValidator( 0.0, 1000000.0, 6, lineEdit ) );
       QToolTip::add( label, "This will default to 1 if left as 0." );
    }
-   else if( gctpName == "FE" )	
+   else if( gctpName == "FE" )
    {
       label->setText( "False Easting:" );
       activeEdit = lineEdit;
       lineEdit->setValidator( new QDoubleValidator( -10000000.0, 10000000.0, 6, lineEdit ) );
       QToolTip::add( label, "Value must be between -10000000 and 10000000." );
    }
-   else if( gctpName == "FN" )	
+   else if( gctpName == "FN" )
    {
       label->setText( "False Northing:" );
       activeEdit = lineEdit;
@@ -226,25 +233,28 @@ void QGctpBox::setGctpName( const QString & gctpName )
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( 0 );
       dmsEdit->setMaxVal( 360 );
+      dmsEdit->setDirection( QDmsEdit::Unspecified );
       QToolTip::add( label,
          "For Landsat-1,2,3 orbits this parameter should be:\n"
          "99° 05' 31.2\"\n\n"
          "For Landsat-4,5 orbits this parameter should be:\n"
          "98° 12' 00\"");
    }
-   else if( gctpName == "Lat/Z" )	
+   else if( gctpName == "Lat/Z" )
    {
       label->setText( "Latitude within Zone:" );
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
+      dmsEdit->setDirection( QDmsEdit::North );
    }
-   else if( gctpName == "Lat1" )	
+   else if( gctpName == "Lat1" )
    {
       label->setText( "Latitude of 1st Point on Center Line: *" );
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
+      dmsEdit->setDirection( QDmsEdit::North );
       QToolTip::add( label, "mapimg2 will not work if this is equal to "
          "2nd point." );
    }
@@ -254,6 +264,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
+      dmsEdit->setDirection( QDmsEdit::North );
       QToolTip::add( label, "mapimg2 will not work if this is equal to "
          "1st point." );
    }
@@ -263,34 +274,38 @@ void QGctpBox::setGctpName( const QString & gctpName )
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -180 );
       dmsEdit->setMaxVal( 180 );
+      dmsEdit->setDirection( QDmsEdit::East );
    }
-   else if( gctpName == "Long1" )	
+   else if( gctpName == "Long1" )
    {
       label->setText( "Longitude of 1st Point on Center Line: *" );
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -180 );
       dmsEdit->setMaxVal( 180 );
+      dmsEdit->setDirection( QDmsEdit::East );
       QToolTip::add( label, "mapimg2 will not work if this is equal to "
          "2nd point." );
    }
-   else if( gctpName == "Long2" )	
+   else if( gctpName == "Long2" )
    {
       label->setText( "Longitude of 2nd Point on Center Line: *" );
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -180 );
       dmsEdit->setMaxVal( 180 );
+      dmsEdit->setDirection( QDmsEdit::East );
       QToolTip::add( label, "mapimg2 will not work if this is equal to "
          "1st point." );
    }
-   else if( gctpName == "LongPol" )	
+   else if( gctpName == "LongPol" )
    {
       label->setText( "Longitude down below Pole of Map:" );
       activeEdit = dmsEdit;
       QToolTip::remove( this );
       dmsEdit->setMinVal( -360 );
       dmsEdit->setMaxVal( 360 );
+      dmsEdit->setDirection( QDmsEdit::East );
    }
-   else if( gctpName == "LRat" )	
+   else if( gctpName == "LRat" )
    {
       label->setText( "Landsat Ratio: *" );
       activeEdit = lineEdit;
@@ -308,6 +323,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
+      dmsEdit->setDirection( QDmsEdit::North );
    }
    else if( gctpName == "Path" )	
    {
@@ -386,6 +402,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
+      dmsEdit->setDirection( QDmsEdit::North );
    }
    else if( gctpName == "STDPR1" )	
    {
@@ -393,6 +410,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
+      dmsEdit->setDirection( QDmsEdit::North );
       QToolTip::add( label, "mapimg2 will not work if this is equal to "
          "2nd Standard Parallel." );
    }
@@ -402,15 +420,17 @@ void QGctpBox::setGctpName( const QString & gctpName )
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
+      dmsEdit->setDirection( QDmsEdit::North );
       QToolTip::add( label, "mapimg2 will not work if this is equal to "
          "1st Standard Parallel." );
    }
-   else if( gctpName == "TrueScale" )	
+   else if( gctpName == "TrueScale" )
    {
       label->setText( "Latitude of True Scale:" );
       activeEdit = dmsEdit;
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
+      dmsEdit->setDirection( QDmsEdit::North );
    }
    else
       hide();

@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.25 2005/05/05 22:48:04 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.26 2005/05/06 14:06:44 jtrent Exp $
 
 
 #include "mapimg.h"
@@ -200,12 +200,13 @@ QString mapimg::projectionErrors( const RasterInfo &input )
             "\t-The framing generates zeros for rows and cols.\n";
          break;
       case 15: // General Vertical Near-Side Perspective
-         if(
+//         if(     //is there supposed to be code here? It was checked in with part of an if????
+           break;
       case 20: // Hotine Oblique Mercators
          if( input.gctpParam(2) < 0 || input.gctpParam(2) > 2 )
             msg += "Unexpected Scale Factor value.\n"
             "\t-Most usage of Scale Factor is closer to a value of 1\n";
-         if( input.gctpParam( 13 ) == 0.0 )  // Version A
+         if( input.gctpParam( 12 ) == 0.0 )  // Version A
          {
             if( fabs(input.gctpParam(9) - input.gctpParam(11)) <= EPSILON )
                msg += "Specified latitudes of points 1 and 2 may produce invalid data.\n"

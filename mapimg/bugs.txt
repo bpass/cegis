@@ -1,16 +1,16 @@
-// $Id: bugs.txt,v 1.4 2005/05/05 22:48:04 rbuehler Exp $
+// $Id: bugs.txt,v 1.5 2005/05/06 14:06:44 jtrent Exp $
 
 Current Bugs:
 1) Method: Any input, going to "General Vertical Near-Side Perspective"
-   Issue: Height of perspective needs a new tooltip and suggested values.
-		  Also, calculator does not properly calculate columns? However, 
-		  when previewing columns is set properly.
+   Issue: Height of perspective needs a new tooltip and suggested values, it doesn't
+          produce out put until > 286 and even then it is meaningless. Also, calculator
+          does not properly calculate columns? However, when previewing columns is set
+          properly.
     Suggestion: Check the Synder book for proper bounds and enforce
     Note (rbuehler): Technically, it should work with all values, negative and positive.
                      Also, very low heights do produce meaningful data.
                      ***I cannot reproduce the calculator bug.***
     Solution: Tooltip updated to show range and clarify that the units are meters
-
 
 
 Fixed In This Version:
@@ -67,5 +67,19 @@ Fixed In This Version:
 
 
 
+5) Method: Any input, going to "equidistant conic b"
+   Issue: Does not warn about constraint failure on the std. parallels
+   Suggestion: Warn user, as is done in Lambert Conformal Conic and many others
+   Solution:
+
+6) Concept: Some projections have many parameters. These projections push the "Bad Projection"
+            tag out of viewing range without scrolling.
+   Suggestion: Move "Bad Projection" tag to directly beneath the projection drop-down
+   Solution: Done as suggested
+
+7)  Concept: None of the labels for false easting and parallels, etc...
+             say if they are in degrees North or South, or East or West
+    Sugestion: Add the appropriate labels
+    Solution: As suggested
 
 Fixed Previously:

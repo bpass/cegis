@@ -1,4 +1,4 @@
-// $Id: qdmsedit.h,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: qdmsedit.h,v 1.2 2005/05/06 14:06:44 jtrent Exp $
 
 
 #ifndef QDMSEDIT_H
@@ -14,9 +14,10 @@ class QDmsEdit : public QHBox
    Q_OBJECT
    Q_PROPERTY( int minVal READ minVal WRITE setMinVal )
    Q_PROPERTY( int maxVal READ maxVal WRITE setMaxVal )
-   
+
 public:
-   QDmsEdit( QWidget* parent = 0, const char* name = 0);
+   enum Directionality { North, East, South, West, Unspecified };
+   QDmsEdit( QWidget* parent = 0, const char* name = 0, Directionality direction = Unspecified );
    ~QDmsEdit(){};
    
    int minVal() const;
@@ -27,7 +28,10 @@ public:
    double value();
    void setValue( const double );
    void setValue( const int deg, const int min, const double sec );
-   
+
+   Directionality direction() const;
+   void setDirection( const Directionality direction );
+
 private:
    bool validate();
    
@@ -41,6 +45,7 @@ private:
    QLabel *mLabel;
    QLineEdit *sEdit;
    QLabel *sLabel;
+   QLabel *directionLabel;
 };
-         
+
 #endif

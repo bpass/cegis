@@ -10,7 +10,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionLocator.cpp,v 1.15 2005/04/29 16:34:14 ahartman Exp $
+// $Id: IntersectionLocator.cpp,v 1.16 2005/05/10 17:18:00 ahartman Exp $
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1300
@@ -864,7 +864,7 @@ void triangleOutputTest()
    std::string szRasterDir = "L:\\cartoresearch\\data-integration\\gjaromack\\STL\\orthoimages\\15SYC";
    std::string szVectorDir = "L:\\sdir_snap\\rstelzleni\\Mo2Quads\\OriginalRoads\\";
    //std::string szOutputDir = "L:\\sdir_snap\\rstelzleni\\Mo2Quads\\CorrectedRoads_10-90\\";
-   std::string szOutputDir = "D:\\Data\\Output\\triangleOutputTest3\\"; 
+   std::string szOutputDir = "D:\\Data\\Output\\boundingSmallSquare\\"; 
 
    double templateSize = 50, areaSize = 65;
 
@@ -1095,7 +1095,6 @@ void triangleOutputTest()
       printf( "Finding control points\n\n" );
 
       // Get the original control points
-      printf( "\n10-90\n" );
       Intersections.findControlPoints( Rasta, templateSize, areaSize );
 
       // add the bounding control points

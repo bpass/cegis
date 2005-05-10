@@ -20,7 +20,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionMap.cpp,v 1.7 2005/04/29 16:27:36 ahartman Exp $
+// $Id: IntersectionMap.cpp,v 1.8 2005/05/10 16:54:36 ahartman Exp $
 
 
 #include "IntersectionMap.h"
@@ -890,8 +890,8 @@ IntersectionMap::addBoundingControlPoints()
     const double dY = maxY - minY;
 
     // find x and y coordinates that will bound all of those points
-    const double maxBoundingX = minX + dX * 4;
-    const double maxBoundingY = minY + dY * 4;
+    const double maxBoundingX = maxX + dX;
+    const double maxBoundingY = maxY + dY;
     const double minBoundingX = minX - dX;
     const double minBoundingY = minY - dY;
 
@@ -913,10 +913,17 @@ IntersectionMap::addBoundingControlPoints()
     vControl.push_back( cp2 );
 
     ControlPoint cp3;
-    cp3.point.setX( minBoundingX ); 
+    cp3.point.setX( maxBoundingX ); 
     cp3.point.setY( maxBoundingY );
     cp3.origPoint = cp3.point;
     cp3.correlation = correlationValue;
     vControl.push_back( cp3 );
+
+    ControlPoint cp4;
+    cp4.point.setX( minBoundingX ); 
+    cp4.point.setY( maxBoundingY );
+    cp4.origPoint = cp4.point;
+    cp4.correlation = correlationValue;
+    vControl.push_back( cp4 );
 }
 

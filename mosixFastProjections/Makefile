@@ -84,7 +84,8 @@ default: projector master slave
 
 projector:  
 	cd include/Projector; \
-	${MAKE} "CXX=${CXX}" "CXXFLAGS=${CXXFLAGS}" "DEFS=${DEFS}"  " OBJDIR=${OBJDIR}" all \
+	${MAKE} "CXX=${CXX}" "CXXFLAGS=${CXXFLAGS}" "DEFS=${DEFS}" \
+	" OBJDIR=${OBJDIR}" all \
 	"INCPATHS=${INCPATHS}" 
 
 master: projector $(MOBJECTS)

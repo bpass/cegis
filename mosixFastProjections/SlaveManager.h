@@ -7,7 +7,7 @@
 // Original Programmer: Matt Zykan
 // 
 // Last Modified by   : Mark Schisler
-// Last Modified on   : 2/18/2005
+// Last Modified on   : Tue Mar 15 09:21:11 CST 2005
 //
 // File: SlaveManager.h
 // 
@@ -41,18 +41,27 @@ class SlaveManager
     SlaveManager(WorkManager * workMan);
     ~SlaveManager();
 
-    // go forth! huzzah!
-    // when this returns, work is complete
-    // finished product can be retrieved from the WorkManager assigned
-    // if the workmanager says work is NOT complete, then something went wrong
+    //  when this returns, work is complete
+    //  finished product can be retrieved from the WorkManager assigned
+    //  if the workmanager says work is NOT complete, then something went wrong
     //  that couldn't be coped with, like, something was all *grk ack* and
     //  nobody helped the poor thing, they just stepped over it because they
     //  were in a hurry to get their mocha or whatever
     void Work();
 
   private:
-    // fork off and execute the slave executable with proper arguments
+    // pre : none
+    // post: Fork off and execute the slave executable with proper arguments.
+    //       In the event of a fork failure, this function will throw a
+    //       USGSMosix::GeneralException. 
     void spawnSlaves();
+
+    // pre:  Allocation of child PIDs to std::vector childPIDs.  The children
+    //       are assumed to have been running at some point on call of this
+    //       function.
+    // post: Joins all the slave children (making sure they don't become
+    //       zombies).  If for some reason a join fails, a message is 
+    //       outputted to std::err to this effect.
     void joinSlaves(); 
 
     std::vector<int> childPIDs;

@@ -3,10 +3,14 @@
 #define STITCHERNODE_CPP
 
 #include "StitcherNode.h"
+#include <inttypes.h>
+#include <iostream>
 
 
 //********************************************************************
-StitcherNode::StitcherNode(const void * newscanline, size_t size, long newrow)
+StitcherNode::StitcherNode( const unsigned char * newscanline, 
+                            size_t size, 
+                            long newrow )
 {
   // here we account for the fact that we could 
   // be entering an "empty" node.  This is 
@@ -14,12 +18,12 @@ StitcherNode::StitcherNode(const void * newscanline, size_t size, long newrow)
   if ( newscanline != NULL ) 
   {
       row = newrow;
-      data = new char[size];
+      data = new unsigned char[size];
       memcpy(data, newscanline, size);
   } else
-  {   row = -1;  // set this to something impossible 
-                 // so we know it's NOT a row.
-      newscanline = NULL;
+  {   row = INT_MAX;  // set this to something impossible 
+                      // so we know it's NOT a row.
+      data = NULL;
   }
   
 }

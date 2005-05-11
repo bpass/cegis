@@ -4,7 +4,7 @@
 // Original Programmer: Matt Zykan
 // 
 // Last Modified by   : Mark Schisler
-// Last Modified on   : Fri Mar 11 21:40:19 CST 2005
+// Last Modified on   : Tue Mar 15 09:21:20 CST 2005
 //
 // File: SlaveManager.cpp
 // 
@@ -83,6 +83,7 @@ void SlaveManager::Work()
     // Service requests at the socket until all work is done
     while(m_workManager->getBigResult() == NULL) 
     {
+      
       // Assume results haven't come yet
       gotresults = false;
       
@@ -125,9 +126,9 @@ void SlaveManager::Work()
 	      // gets work to be done from the work manager
      	  outwork = m_workManager->getWorkUnit();
           
-	  // If there is Remaining work
-	  if(outwork != NULL)
-      {
+    	  // If there is Remaining work
+	      if(outwork != NULL)
+          {
             printf("out:"); fflush(stdout);
             gobout.contents = GOB_WORKUNIT;
             send(sock, &gobout, sizeof(gobout), 0);
@@ -150,7 +151,6 @@ void SlaveManager::Work()
           gobout.contents = GOB_ERROR;
           send(sock, &gobout, sizeof(gobout), 0);
       }
-      
       close(sock);
       
       if(gotresults)
@@ -159,9 +159,10 @@ void SlaveManager::Work()
         // to the work manager
         m_workManager->putWorkResult(inwork);
       }
-      
     }
 
+    joinSlaves();  // joins the slaves spawned off
+    
     
   } catch( USGSMosix::Exception& e)
   {
@@ -175,24 +176,23 @@ void SlaveManager::Work()
   }
   if(serversock != -1)
     close(serversock);
-
-
-  
 }
 
 void SlaveManager::joinSlaves() 
 {
     int status = 0; 
+    
+    // for each slave process
     for( unsigned int i = 0; i < childPIDs.size(); ++i )
     {
-        if ( waitpid(childPIDs[i], &status,WNOHANG|WUNTRACED) == -1 )
+        // Make a blocking call to wait, so as to wait
+        // for all children to return.
+        if ( waitpid(childPIDs[i], &status,0) <= 0 )
             std::cerr << "Error joining slave" << i << std::endl;
     }
 
     return;
 }
-
-
 
 
 void SlaveManager::spawnSlaves()
@@ -201,8 +201,9 @@ void SlaveManager::spawnSlaves()
   std::string path, arg1, arg2, arg3;
   int slaveStatus(0); 
  
-  childPIDs.reserve(m_workManager->getTotalUnits());
+  childPIDs.resize(m_workManager->getTotalUnits());
   
+  // for each slave
   for( unsigned int i = 0; i < m_workManager->getTotalUnits(); ++i )
   {
     if( (childPIDs[i] = fork()) == 0 ) // child's context
@@ -211,17 +212,21 @@ void SlaveManager::spawnSlaves()
         arg1 = "slave";
         arg2 = "localhost";
 
+        // give the slave the address of master
         strStream << ntohs(serveraddr.sin_port);
         arg3 = strStream.str();
-        
+    
+        // execute slave
         slaveStatus = execl(path.c_str(),
                             arg1.c_str(), 
                             arg2.c_str(), 
                             arg3.c_str(), 
                             (char*)NULL);
+
+        // after slave code is done.
         exit(slaveStatus);
         
-    } else if ( childPIDs[i] == -1 ) // parent' context failure
+    } else if ( childPIDs[i] == -1 ) // parent's context, failure
     {
         strStream << "Fork Failure in Slave Spawning; i = " << i;
         std::string failMsg = strStream.str();

@@ -20,9 +20,6 @@ public:
   bool write_parm_file(const std::string& outfilename);
 
   bool read_parm_file(const std::string& infilename);
-
-
-	
   int numofslaves;
   bool samescale;
   bool timefile;

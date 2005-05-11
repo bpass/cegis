@@ -32,7 +32,7 @@ Pulsar::~Pulsar()
     delete[] buffer;
 }
 
-bool Pulsar::feed(void * inbuffer, size_t size)
+bool Pulsar::feed(const void * inbuffer, size_t size)
 {
   if(size <= bufsize - bufindex) // if there's room for the whole thing
   {
@@ -42,7 +42,8 @@ bool Pulsar::feed(void * inbuffer, size_t size)
   }
   else // some or none will fit, so, uh, do neat stuff
   {
-    char * bogobuffer = (char *)inbuffer; // make indexing into input easier
+    const char * bogobuffer = 
+        (const char *)inbuffer; // make indexing into input easier
     size_t bogoindex = 0;
     while(size - bogoindex > bufsize - bufindex) // still won't fit
     {

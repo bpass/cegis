@@ -31,30 +31,31 @@ void BigJob::insertscanline(unsigned char * scanline, long row)
   /*FILE * dump = fopen("scanlines", "a");
   fprintf(dump, "%4ld:", row);
   for(long i = 0; i < newwidth*spp; ++i)
-    fprintf(dump, "%02x", ((char*)scanline)[i]);
+  fprintf(dump, "%02x", ((char*)scanline)[i]);
   fprintf(dump, "\n");
   fclose(dump);*/
   if(m_useThreads)
   {
-    StitcherNode * temp = new StitcherNode(static_cast<void*>(scanline),
-                                           sizeof(scanline), 
-                                           row);
-    m_workStitcher.add(temp);
-    
-   /* TODO feed temp node to stitcher, which should destroy it at its leisure */
-   
+    if ( out == NULL ) 
+        setupOutput(outfile);
+      
+    //    StitcherNode * temp = new StitcherNode(scanline,
+    //                                           sizeof(scanline), 
+    //                                           row);
+    //    m_workStitcher.add(temp);
   }
   else
   {
-    if(out == NULL)
-      setupOutput(outfile);
-    out->putRawScanline(row, scanline);
+     if(out == NULL)
+       setupOutput(outfile);
+     out->putRawScanline(row, scanline);
+     std::cout << "outputing scanline w/o stitcher: " << row << std::endl;
   }
 }
 
 //////////////////////////////////////////////////
 
-workunitid_t BigJob::getnumworkunits()
+workunitid_t BigJob::getNumWorkUnits()
 {
   return numworkunits;
 }

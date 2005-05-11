@@ -130,15 +130,20 @@ void WorkUnit::Execute()
   long int xcounter, ycounter;
   int sppcounter;
 
+
+  int outBoundsCount(0), inBoundsCount(0);
+  
   try
   {
+
+    outBoundsCount = 0;
+    inBoundsCount = 0;
+      
     pmesh = setupReversePmesh();
-    //printf("{%ld", basescanline); fflush(stdout);
     for(ycounter = basescanline;
         ycounter < basescanline + scanlinecount;
         ++ycounter)
     {
-      //printf("."); fflush(stdout);
       scanline = scanlines[ycounter - basescanline];
       for(xcounter = 0; xcounter < newwidth; ++xcounter)
       {
@@ -155,17 +160,28 @@ void WorkUnit::Execute()
         _x = static_cast<long int>((x - inRect.left) * (xscaleinv) + 0.5);
         _y = static_cast<long int>((inRect.top - y) * (yscaleinv) + 0.5);
         if((_x >= oldwidth) || (_x < 0) || (_y >= oldheight) || (_y < 0))
+        {
           for(sppcounter = 0; sppcounter < spp; ++sppcounter)
             scanline[xcounter * spp + sppcounter] = 0;
-        else
+
+          outBoundsCount++;
+
+          
+        } else
         {
           inscanline = cache->getRawScanline(_y);
           for(sppcounter = 0; sppcounter < spp; ++sppcounter)
             scanline[xcounter * spp + sppcounter] = 
               inscanline[_x * spp + sppcounter];
+          
+          inBoundsCount++;
+          
         }
       }
     }
+    std::cout << "for all lines in job starting at " << basescanline 
+              << ", pixels out bounds:" << outBoundsCount  
+              << " in: " << inBoundsCount << std::endl;
   }
   catch(ProjectorException & pe)
   {
@@ -221,11 +237,11 @@ bool WorkUnit::exportToSocket(int sock)
 
   unsigned int len = infilename.length();
   outbox.feed(&len, sizeof(len));
-  char * filenametemp = new char[len + 1];
-  strncpy(filenametemp, infilename.c_str(), len);
-  filenametemp[len] = '\0';
-  outbox.feed(filenametemp, len);
-
+             //   char * filenametemp = new char[len + 1];
+             //   strncpy(filenametemp, infilename.c_str(), len);
+             //   filenametemp[len] = '\0';
+             //   outbox.feed(filenametemp, len);
+  outbox.feed(infilename.c_str(), infilename.length());
   outbox.feed(&newheight, sizeof(newheight));
   outbox.feed(&newwidth, sizeof(newwidth));
   outbox.feed(&spp, sizeof(spp));
@@ -248,14 +264,16 @@ bool WorkUnit::exportToSocket(int sock)
     unsigned char * blankscanline = new unsigned char[newwidth * spp];
     for(long int i = 0; i < scanlinecount; ++i)
       if(scanlines[i] != NULL)
+      {
         outbox.feed(scanlines[i], newwidth * spp);
-      else
+      } else
+      {
+        std::cout << "sending a blank scanline" << std::endl;
         outbox.feed(blankscanline, newwidth * spp);
+      }
     delete[] blankscanline;
   }
 
-  // ha ha check out this next part
-  // what the hell is going on around here WHO ARE YOU PEOPLE
   if(!outbox.flush())
     return false;
   return true;
@@ -265,6 +283,7 @@ bool WorkUnit::exportToSocket(int sock)
 
 bool WorkUnit::importFromSocket(int sock)
 {
+  std::cout << "recieving from socket" << std::endl;
   Pulsar inbox(sock, 0);
 
   inbox.get(&id, sizeof(id));
@@ -300,10 +319,13 @@ bool WorkUnit::importFromSocket(int sock)
   {
     reallocatescanlines();
     for(long int i = 0; i < scanlinecount; ++i)
+    {
       inbox.get(scanlines[i], newwidth * spp);
-    //printf("{got %ld}", scanlinecount); fflush(stdout);
+    }
+    
+    printf("{got %ld}", scanlinecount); fflush(stdout);
   }
-
+  std::cout << "done recieving from socket" << std::endl;
   return true;
 }
 
@@ -317,7 +339,6 @@ void WorkUnit::clearscanlines()
       if(scanlines[i] != NULL)
       {
         delete[] scanlines[i];
-        // scanlines[i] = NULL; extraneous
       }
     delete[] scanlines;
     scanlines = NULL;
@@ -336,9 +357,10 @@ void WorkUnit::reallocatescanlines()
     long int i;
     try
     {
-      scanlines = new unsigned char * [scanlinecount];
+      scanlines = new unsigned char * [scanlinecount ];
+
       for(i = 0; i < scanlinecount; ++i)
-        scanlines[i] = new unsigned char[newwidth * spp];
+        scanlines[i] = new unsigned char[newwidth * spp ];
     }
     catch(...)
     {

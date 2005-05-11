@@ -1,3 +1,19 @@
+//////////////////////////////////////////////////////////////////////
+//
+// Original Programmer: Matt Zykan
+// 
+// Last Modified by   : Mark Schisler
+// Last Modified on   : Tue Mar 15 09:10:01 CST 2005
+//
+// File               : slavemain.cpp
+// 
+//////////////////////////////////////////////////////////////////////
+// 
+// Purpose: This is the slave process that is spawned off by master 
+//   to do a portion of the projection work.  See SlaveManager.cpp
+//   for the fork() call and the execl() call.
+//
+///////////////////////////////////////////////////////////////////////
 
 #include <cstdio>
 #include <cstdlib>
@@ -9,8 +25,9 @@
 #include <netdb.h>
 #include "WorkUnit.h"
 #include "GobHeader.h"
+
 #ifdef _MOSIX
-#include <mos.h>
+    #include <mos.h>
 #endif
 
 #define talky // if defined, all sorts of printfs come to life, telling you
@@ -18,6 +35,7 @@
 
 #define CONNECT_RETRIES 5
 #define CONNECT_RETRYDELAY 500 // time in ms before trying again
+
 // attempts to open a SOCK_STREAM socket to masteraddr
 // waits and retries according to constants:
 //  CONNECT_RETRIES
@@ -25,15 +43,22 @@
 // returns negative on failure
 int PatchMe(sockaddr_in * masteraddr);
 
-// you heard the man
-// also attempts to connect to master and report the demise of this whatever
+// should attempt to connect to master and report the demise of this whatever
 // ... if it's given an addr, otherwise, it dies quietly... alone... and afraid
-void GoHomeAndDie(int exitcode, sockaddr_in * masteraddr);
+void CleanExit(int exitcode);
 
 ////////////////////////////////////////////////////////////////
 
 int main(int argc, char ** argv)
 {
+
+  char serveripbuf[16];
+  WorkUnit work; 
+  int sock = -1;
+  GobHeader gobin, gobout;
+  sockaddr_in masteraddr;
+  hostent * serverhost = gethostbyname(argv[1]);
+
 #ifdef _MOSIX
   msx_lock();
 #endif
@@ -42,27 +67,21 @@ int main(int argc, char ** argv)
     printf("usage: %s [master hostname or ip] [master port]\n", argv[0]);
     exit(1);
   }
-  sockaddr_in masteraddr;
-  hostent * serverhost = gethostbyname(argv[1]);
+  
   if(serverhost == NULL)
   {
     printf("failed to resolve hostname %s\n", argv[1]);
     exit(1);
   }
   
-  // TODO: Why new?
-  
-  char * serveripbuf = new char[16];
-  
   strncpy(serveripbuf, inet_ntoa(*((in_addr*)serverhost->h_addr_list[0])), 16);
-  serveripbuf[15] = '\0'; // paranoia?
+  serveripbuf[15] = '\0'; 
+  
   if(inet_aton(serveripbuf, &masteraddr.sin_addr) == 0)
   {
     printf("error: invalid ip\n");
     exit(1);
   }
-  delete[] serveripbuf;
-  serveripbuf = NULL;
   
   masteraddr.sin_port = htons(atoi(argv[2]));
   masteraddr.sin_family = AF_INET;
@@ -70,12 +89,9 @@ int main(int argc, char ** argv)
       inet_ntoa(masteraddr.sin_addr),
       ntohs(masteraddr.sin_port));
   
-  WorkUnit work; // this is important. don't lose this.     D-:|
-  int sock = -1;
-  GobHeader gobin, gobout;
   gobout.sender = getpid();
   
-  while(true) // that means forever
+  while(true) 
   {
 #ifdef talky
     printf("connecting to master..."); fflush(stdout);
@@ -88,7 +104,7 @@ int main(int argc, char ** argv)
 #ifdef talky
       printf("failed to contact master, dying\n");
 #endif
-      GoHomeAndDie(1, NULL);
+      CleanExit(1);
     }
 #ifdef talky
     printf("connected\n"); fflush(stdout);
@@ -109,7 +125,7 @@ int main(int argc, char ** argv)
           printf("something went wrong, dying\n");
 #endif
           close(sock);
-          GoHomeAndDie(1, &masteraddr);
+          CleanExit(1);
       }
     }
 #ifdef talky
@@ -127,17 +143,24 @@ int main(int argc, char ** argv)
 #ifdef talky
         printf("no work!\n");
 #endif
-        close(sock);
-        GoHomeAndDie(0, &masteraddr);
+        if ( close(sock) == 0 ) 
+            printf("socket close success\n");
+        else
+           printf("socket close failure\n");
+        CleanExit(0);
         break;
       default:
 #ifdef talky
         printf("some kind of problem, dying\n");
 #endif
         close(sock);
-        GoHomeAndDie(1, &masteraddr);
+        CleanExit(1);
     }
-    close(sock);
+    if ( close(sock) == 0 ) 
+        printf("socket close success\n");
+    else
+        printf("socket close failure\n");
+
 #ifdef _MOSIX
     msx_unlock();
 #endif
@@ -149,10 +172,10 @@ int main(int argc, char ** argv)
     if(!work.done())
     {
       printf("workunit execution failed, exiting\n");
-      GoHomeAndDie(1, NULL);
+      CleanExit(1);
     }
   }
-  printf("donuts\n"); // this statement truly is on the edge of forever
+  
   return 0;
 }
 
@@ -163,6 +186,7 @@ int PatchMe(sockaddr_in * masteraddr)
   int sock = socket(AF_INET, SOCK_STREAM, 0);
   if(sock < 0)
     return sock;
+  
   int retriesleft = CONNECT_RETRIES;
   while(retriesleft > 0)
   {
@@ -172,16 +196,18 @@ int PatchMe(sockaddr_in * masteraddr)
     if(retriesleft > 0)
       usleep(CONNECT_RETRYDELAY * 1000);
   }
+  
   close(sock);
   return -1;
 }
 
 ////////////////////////////////////////////////////////////////
 
-void GoHomeAndDie(int exitcode, sockaddr_in * masteraddr)
+void CleanExit(int exitcode)
 {
-  // on second thought, there's no point to this
-  /*if(masteraddr != NULL)
+  /* To tell master of exit......
+  
+  if(masteraddr != NULL)
   {
     int sock = PatchMe(masteraddr);
     if(sock >= 0)
@@ -193,7 +219,7 @@ void GoHomeAndDie(int exitcode, sockaddr_in * masteraddr)
       close(sock);
     }
   }*/
-  (void)masteraddr;
+
 #ifdef _MOSIX
   msx_unlock(); // is this needed?
   msx_go_back_home();

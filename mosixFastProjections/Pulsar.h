@@ -34,7 +34,7 @@ class Pulsar
     // may block, if buffer fills and send() can't handle it immediately
     // returns true on success
     // on failure, buffer is not damaged
-    bool feed(void * inbuffer, size_t size);
+    bool feed(const void * inbuffer, size_t size);
 
     // send whatever's in the buffer immediately
     // may block, due to send()

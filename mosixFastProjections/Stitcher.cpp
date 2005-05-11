@@ -3,67 +3,74 @@
 #define STITCHER_CPP
 
 #include "Stitcher.h"
+#include <iostream>
 
 
 //*************************************************************
-Stitcher::Stitcher(USGSImageLib::ImageOFile * inout)
+Stitcher::Stitcher( USGSImageLib::ImageOFile * inout, unsigned long lines )
 {
-  
   //copy the output file
   out = inout;
-  
+  m_currentRow = 0;
   done = false;
-  //start the thread
+  
+  // assign the total number of lines to the job
+  m_totalLines = lines;
+  std::cout << "STITCHER: m_totalLines is " << m_totalLines << std::endl;
+  
+  // MUST BE LAST: start the thread
   thread_start_func threadthing(this);
   boost::thread threadhead(threadthing);
-  threadhead.join();
 }
   
 //*************************************************************
 Stitcher::~Stitcher()
 {
   //This is really just for premature termination by the calling thread
-  StitcherNode * tempnode(0);
-  
-  //lock the que
-  boost::mutex::scoped_lock workmutexlock(workmutex);
+  // StitcherNode * tempnode(0);
   
   //check the queue
-  while(workqueue.size())
+  /*  while(workqueue.size())
   {
-    tempnode = workqueue.front();
+    tempnode = workqueue.top();
     workqueue.pop();
     delete tempnode;
-  }
+  } */
   
   //create the termination node
-  if (!(tempnode = new (std::nothrow) StitcherNode(NULL,0, 0)))
-    throw std::bad_alloc();
+  //boost::mutex::scoped_lock workmutexlock(workmutex);
+  //if (!(tempnode = new (std::nothrow) StitcherNode(NULL,0, 0)))
+  //  throw std::bad_alloc();
 
   //put it in the queue
-  workqueue.push(tempnode);
+  // workqueue.push(tempnode);
 
   //signal the thread
-  workcond.notify_one();
-  workmutexlock.unlock();
+  //workcond.notify_one();
 
-  //lock the done mutex and wait
+  // workmutexlock.unlock();
+
+  // lock the done mutex and wait
   boost::mutex::scoped_lock donemutexlock(donemutex);
-  while(!done)
-    waitcond.wait(donemutexlock);
+  if ( !done )
+      waitcond.wait(donemutexlock);
   donemutexlock.unlock();
 }
   
 //***********************************************************
 void Stitcher::add(StitcherNode * temp) throw()
 {
-  //aquire the workmutex
-  boost::mutex::scoped_lock workmutexlock(workmutex);
+  // notify the run() execution, there's more in the queue now  
+  std::cout << "ADD: signal end wait" << std::endl;
+   
   //put the work in the queue
+  boost::mutex::scoped_lock workmutexlock(workmutex);
+  std::cout << "ADD: acquired lock, adding " << std::endl;
   workqueue.push(temp);
-  //signal the thread
-  workcond.notify_one();
   workmutexlock.unlock();
+  std::cout << "ADD: unlock, adding " << std::endl;
+  
+  workcond.notify_one();
 }
 
 //**********************************************************
@@ -79,8 +86,6 @@ void Stitcher::wait() throw()
 //**************************************************************
 void Stitcher::run() throw()
 {
-  long int counter(0), newheight(0), newwidth(0);
-  int spp(0), bps(0);
   StitcherNode * temp(0);
   long row(0);
   void * data(0);
@@ -88,58 +93,90 @@ void Stitcher::run() throw()
   //check the output image
   if (!out)
   {
+    std::cout << "STITCHER: out is NULL !" << std::endl;
+    waitcond.notify_one();
     boost::mutex::scoped_lock donemutexlock(donemutex);
     done = true;
-    waitcond.notify_one();
     donemutexlock.unlock();
     return; //exit
   }
 
-  //get the image info
-  out->getHeight(newheight);
-  out->getWidth(newwidth);
-  out->getSamplesPerPixel(spp);
-  out->getBitsPerSample(bps);
-  //loop
+  std::cout << "STITCHER: m_totalLines is " << m_totalLines << std::endl;
+  
   while(!ldone)
-  {
+  { 
     //check the queue
     boost::mutex::scoped_lock workmutexlock(workmutex);
-    if (!workqueue.size()) // if the size is 0
+    if ( m_currentRow >= m_totalLines )
+    {
+          std::cout << "STITCHER: reached last line. " << std::endl;
+          std::cout << "STITCHER: m_currentRow is " << m_currentRow <<std::endl;
+          std::cout << "STITCHER: m_totalLines is " << m_totalLines <<std::endl;
+          workmutexlock.unlock();
+          ldone = true;
+          
+    } else if (workqueue.size() == 0 ) 
     {
       // wait for work to be put in the queue
+      std::cout << "STITCHER: waiting on empty" << std::endl;
       workcond.wait(workmutexlock);
       workmutexlock.unlock();
+      std::cout << "STITCHER: signaled to continue" << std::endl;
     }
-    else // get to work!
+    else 
     {
-      temp = workqueue.front();
-      workqueue.pop();
-      workmutexlock.unlock();
-      row = temp->getrow();
-      data = temp->getdata();
-      
-      //check early termination
-      if (row < 0)
+      temp = workqueue.top();
+      if ( static_cast<unsigned int>(temp->getrow()) == m_currentRow )
       {
-        ldone = true;
-        delete temp;
+           m_currentRow++;
+           workqueue.pop();
+           workmutexlock.unlock();
+           row = temp->getrow();
+           data = temp->getdata();
+          
+           //check early termination
+           //if (row == INT_MAX )
+           //{
+           //  std::cout << "STITCHER: int_max encountered " << std::endl;
+           //  ldone = true;
+           //  delete temp;
+           //}
+           //else
+           //{
+           
+           std::cout << "STITCHER: waiting for lock on 'out'. " << std::endl;
+           boost::mutex::scoped_lock scanlineLock(scanlineMutex);
+           std::cout << "STITCHER: writing row " << m_currentRow << std::endl;
+            
+           try { 
+            
+                out->putRawScanline(row, data);
+                
+            } catch ( USGSImageLib::ImageException & e ) 
+            {
+                std::string s;
+                e.getString(s); 
+                std::cout << "STITCHER: exception caught: " << s << std::endl;    
+            }
+             
+            scanlineLock.unlock();
+            
+            delete temp;
+            
+            //}
+      } else       { 
+        // std::cout << "STITCHER: top is " << temp->getrow() 
+        //           << "waiting for " << m_currentRow << std::endl;
+          
+        workmutexlock.unlock();
       }
-      else
-      {
-        out->putRawScanline(row, data);
-        delete temp;
-        // LEGACY?: check termination
-        //   if (stop == newheight-1)
-        //       ldone = true;
-      }      
     }
   }
 
   //termination
+  waitcond.notify_one();
   boost::mutex::scoped_lock donemutexlock(donemutex);
   done = true;
-  waitcond.notify_one();
   donemutexlock.unlock();
 }
 

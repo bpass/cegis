@@ -87,6 +87,10 @@ class WorkManager
     //  is complete and normal and healthy before trying to integrate it
     bool verifyworkunit(WorkUnit * workunit);
 
+    long int m_totalLines; 
+    
+    Stitcher* m_workStitcher;  ///<  Stitches the image back together
+    
     BigJob* m_externJob;  ///< TODO: Should be a reference
     
     WorkUnit * m_baseWorkUnit; ///< This is where the workUnits come from 

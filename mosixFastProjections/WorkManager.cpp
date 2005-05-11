@@ -20,15 +20,16 @@
 
 // TODO: use std::cerr instead of printf()
 
-WorkManager::WorkManager(BigJob* job)
+WorkManager::WorkManager(BigJob* job) 
 {
   workunitdeque.clear(); 
   resultset.clear(); 
-
+  m_workStitcher = NULL; 
+  
   // TODO: variables need to be declared at the top of the
   // function
   m_externJob = job;
-  workunitcount = job->getnumworkunits();
+  workunitcount = job->getNumWorkUnits();
       
   // TODO:  You need to have a static integer count here
   // not randomness
@@ -38,12 +39,13 @@ WorkManager::WorkManager(BigJob* job)
   // figure out how to split up the work
   m_externJob->dogetExtents();
   blueprints = new WorkUnitBlueprint_t[workunitcount];
-  long int lines = m_externJob->getnewheight();
 
+  m_totalLines = m_externJob->getnewheight();
+  
   printf("setup for %d workunits spanning %ld lines\n",
-                      (unsigned int)workunitcount, lines);
+                      (unsigned int)workunitcount, m_totalLines);
 
-  if ( lines > 0 ) 
+  if ( m_totalLines > 0 ) 
   { 
       // Enqueue the IDs to be worked on
       for(workunitid_t i = 0; i < workunitcount; ++i)
@@ -52,14 +54,14 @@ WorkManager::WorkManager(BigJob* job)
 
       // spread the love evenly among the workunits
       // this is where different work distribution methods may be applied
-      long int linesleft = lines;
+      long int linesleft = m_totalLines;
       for(workunitid_t i = 0; i < workunitcount; ++i)
       {
-        blueprints[i].basescanline = lines - linesleft;
+        blueprints[i].basescanline = m_totalLines - linesleft;
         blueprints[i].scanlinecount = linesleft / (workunitcount - i);
         linesleft -= blueprints[i].scanlinecount;
       }
-      printf("workunits average %ld lines each\n", lines / workunitcount);
+      printf("workunits average %ld lines each\n", m_totalLines / workunitcount);
       
       // create the BigResult
       goal = new BigResult;
@@ -80,6 +82,7 @@ WorkManager::WorkManager(BigJob* job)
       m_baseWorkUnit->setPmeshSize(m_externJob->getPmeshSize());
       m_baseWorkUnit->setPmeshName(m_externJob->getPmeshName());
       m_baseWorkUnit->setOutputProjection(m_externJob->getOutputProjection());
+
   } 
 
   return; 
@@ -95,6 +98,8 @@ WorkManager::~WorkManager()
     delete m_baseWorkUnit;
   if(goal != NULL)
     delete goal;
+  if( m_workStitcher != NULL ) 
+    delete m_workStitcher;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -123,20 +128,42 @@ WorkUnit *WorkManager::getWorkUnit()
 
 void WorkManager::putWorkResult(WorkUnit* workunit)
 {
+  static bool runOnce = false;
+
   if(verifyworkunit(workunit) && resultset.count(workunit->getid()) == 0)
   {
     // integrate the result
-    unsigned char ** wad = workunit->getscanlines();
+    unsigned char ** scanLines = workunit->getscanlines();
     long int base = workunit->getbasescanline();
     long int count = workunit->getscanlinecount();
-   
-    for(long int i = 0; i < count; ++i)
-      m_externJob->insertscanline(wad[i], i + base);
-    /// TODO: pass these results onto the stitcher instead of back
-    /// to the job itself.
+    long int width = workunit->getnewwidth();
     
-    resultset.insert(workunit->getid()); // *rrrring* we got one!
-    //workunit->clearscanlines(); this is dumb, probably
+    if ( !runOnce ) 
+    {
+        std::cout << "WORKMANAGER to STITCHER: m_totalLines is " 
+                  << static_cast<unsigned long>(m_totalLines) << std::endl;
+        
+        runOnce = true;
+        m_externJob->setupOut();
+        m_workStitcher = new Stitcher(m_externJob->getOutputFile(),
+                                    static_cast<unsigned long>(m_totalLines ));
+    }
+   
+    std::cout << "has this many scanlines: " << count << std::endl;
+    std::cerr << "sending them to stitcher." << std::endl;
+
+    for(long int i = 0; i < count; ++i)
+    {
+      // give results back to job  
+      // m_externJob->insertscanline(scanLines[i], i + base );
+        
+       StitcherNode * temp = new StitcherNode(scanLines[i], 
+                                              (width*sizeof(unsigned char)),
+                                              (i + base) );
+       m_workStitcher->add(temp); 
+ 
+    }
+    resultset.insert(workunit->getid()); 
   }
   else
   {
@@ -179,8 +206,7 @@ BigResult *WorkManager::getBigResult()
 
 bool WorkManager::idvalid(workunitid_t id)
 {
-  return id < baseid + workunitcount &&
-    id >= baseid;
+  return ( (id < (baseid + workunitcount)) && (id >= baseid) );
 }
 
 //////////////////////////////////////////////////
@@ -230,6 +256,6 @@ bool WorkManager::verifyworkunit(WorkUnit * workunit)
     return false;
   }
   std::cout << "WorkUnit returning true" << std::endl;
-  return true; // now you are a man
+  return true; 
 }
 

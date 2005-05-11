@@ -24,16 +24,25 @@
 class BigJob : public Projector
 {
   public:
-    BigJob(bool useThread) : m_useThreads(useThread), m_workStitcher(out) {}
+    BigJob(bool useThread) : m_useThreads(useThread)/*, m_workStitcher(out)*/ {}
     virtual ~BigJob();
-
+   
+    USGSImageLib::ImageOFile*  getOutputFile() { return out; } 
+    
+    void setupOut()  
+    { 
+        std::string s;
+        if ( out == NULL ) 
+            Projector::setupOutput(s); 
+    }
+    
     void setnumworkunits(workunitid_t newnumworkunits);
     void insertscanline(unsigned char * scanline, long row);
-    workunitid_t getnumworkunits();
+    workunitid_t getNumWorkUnits();
 
   protected:
     bool m_useThreads;
-    Stitcher m_workStitcher;
+    /// DEPRECATED : MS Stitcher m_workStitcher;
     workunitid_t numworkunits;
 };
 

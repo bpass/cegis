@@ -1,8 +1,26 @@
 #ifndef STITCHER_H_
 #define STITCHER_H_
 
-#include "ImageLib/ImageOFile.h"
+//////////////////////////////////////////////////////////////////////
+//
+// Original Programmer: Unknown
+// 
+// Last Modified by   : Mark Schisler
+// Last Modified on   : Thu Mar 17 08:31:32 CST 2005
+//
+// File               : Stitcher.h 
+// 
+//////////////////////////////////////////////////////////////////////
+// 
+// Purpose: The stitcher's goal is to be a hack, essentially.  It  
+// steals the ImageOFile pointer from the projector class after it 
+// has been initialized, from there it uses it to write out scanlines
+// on a seperate thread.  The idea is that this process will speed up
+// execution time.
+//
+///////////////////////////////////////////////////////////////////////
 
+#include "ImageLib/ImageOFile.h"
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
@@ -24,8 +42,7 @@ class Stitcher
    * THE THREAD UNTIL THE THREAD IS TERMINATED
    * (IMAGELIB is NOT thead safe)
    **/
-  Stitcher(USGSImageLib::ImageOFile * inout);
-
+  Stitcher( USGSImageLib::ImageOFile * inout, unsigned long lines );
   
   /**
    * Destructor: It is up to the user to close the output file
@@ -53,9 +70,10 @@ class Stitcher
   void run() throw();
   
  private:
-
+  unsigned long m_totalLines;
+  unsigned long m_currentRow;
   USGSImageLib::ImageOFile * out;
-  
+  boost::mutex scanlineMutex;
   boost::mutex donemutex;
   boost::mutex workmutex;
   boost::condition workcond;
@@ -63,7 +81,9 @@ class Stitcher
 
   bool done;                               //the done tag tells the stitcher
                                            //that it is done
-  std::queue<StitcherNode *> workqueue;    //the working que
+  std::priority_queue< StitcherNode *,
+                       std::vector<StitcherNode *>, 
+                       StitcherCompare > workqueue;    
 };
 
 

@@ -2,27 +2,28 @@
 #define SINUSOIDAL_H
 
 #include "projection.h"
-#include "cproj.h"
+
 
 class Sinusoidal : public Projection
 {
   // Associations
   // Attributes
   protected:
-    double centerLongitude;
-    double earthRadius;
-    double falseEasting;
-    double falseNorthing;
+    double m_centerLongitude;
+    double m_earthRadius;
+
   // Operations
   
   public:
-   Sinusoidal( double gctpParameters[15] );
+   Sinusoidal();
+   Sinusoidal( double gctpParameters[15], int units, int datum, int spheroid );
    long forward( double lon, double lat, double* x = NULL, double* y = NULL );
    long inverse( double x, double y, double* lon = NULL, double* lat = NULL );
-
-  public:
    long forward_init();
    long inverse_init();
+
+   void setCenterLon(double centerLon); 
+   void setEarthRadius(double earthRadius) {m_earthRadius = earthRadius;}
 };
 
 #endif

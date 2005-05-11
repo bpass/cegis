@@ -1,13 +1,17 @@
 #include "sinusoidal.h"
+#include "projexception.h"
 
 #include <stdio.h>
 #include <math.h>
 
 
 
-Sinusoidal::Sinusoidal( double gctpParameters[15] ) : Projection( gctpParameters )
+Sinusoidal::Sinusoidal( double gctpParameters[15], int units, int datum, int spheroid) 
+: Projection( gctpParameters, units, datum, spheroid )
 {
-
+  setName("Sinusoidal");
+  setNumber(SNSOID);
+  setCenterLon(m_gctpParams[4]);
   return;
 }
 
@@ -15,23 +19,21 @@ long Sinusoidal::forward ( double lon, double lat, double* x, double* y )
 {
   double deltaLon;	/* Delta longitude (Given longitude - center */
 
-  longitude = lon;
-  latitude = lat;
 
   /* Forward equations */
-  deltaLon = adjust_lon(longitude - centerLongitude);
+  deltaLon = Util::adjust_lon(lon - m_centerLongitude);
 
-  x_coord = earthRadius * deltaLon * cos( latitude ) + falseEasting;
-  y_coord = earthRadius * latitude + falseNorthing;
+  m_x_coord = m_radius * deltaLon * cos( lat ) + m_falseEasting;
+  m_y_coord = m_radius * lat + m_falseNorthing;
 
   if( x != NULL )
   {
-     *x = x_coord;
+     *x = m_x_coord;
   }
 
   if( y != NULL )
   {
-     *y = y_coord;
+     *y = m_y_coord;
   }
 
   return 0;
@@ -43,39 +45,38 @@ long Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
 
   /* Inverse equations */
 
-  x_coord = x;
-  y_coord = y;
+  prepCoords(x, y);
+  
+  x -= m_falseEasting;
+  y -= m_falseNorthing;
 
-  x_coord -= falseEasting;
-  y_coord -= falseNorthing;
+  m_latitude = y / m_radius;
 
-  latitude = y_coord / earthRadius;
-
-  if( fabs( latitude ) > HALF_PI)
+  if( fabs( m_latitude ) > HALF_PI)
   {
      fprintf( stderr, "Input data error in sinusoidal-inverse\n" );
      return(164);
   }
 
-  temp = fabs( latitude ) - HALF_PI;
+  temp = fabs( m_latitude ) - HALF_PI;
   if( fabs( temp ) > EPSLN )
   {
-     temp = centerLongitude + x_coord / (earthRadius * cos( latitude ));
-     longitude = adjust_lon( temp );
+     temp = m_centerLongitude + x / (m_radius * cos( m_latitude ));
+	 m_longitude = Util::adjust_lon( temp );
   }
   else
   {
-     longitude = centerLongitude;
+     m_longitude = m_centerLongitude;
   }
 
   if( lon != NULL )
   {
-     *lon = longitude;
+     *lon = m_longitude;
   }
 
   if( lat != NULL )
   {
-     *lat = latitude;
+     *lat = m_latitude;
   }
 
   return 0;
@@ -83,34 +84,43 @@ long Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
 
 long Sinusoidal::forward_init (  )
 {
-  earthRadius = gctpParams[0];
-  centerLongitude = gctpParams[4];
-  falseEasting = gctpParams[6];
-  falseNorthing = gctpParams[7];
-
+  
   printf( "SINUSOIDAL\n" );
-  printf( "Radius = %f\n", earthRadius );
-  printf( "Center Longitude = %f\n", centerLongitude );
-  printf( "False Easting = %f\n", falseEasting );
-  printf( "False Northing = %f\n", falseNorthing );
+  printf( "Radius = %f\n", m_radius );
+  printf( "Center Longitude = %f\n", m_centerLongitude );
+  printf( "False Easting = %f\n", m_falseEasting );
+  printf( "False Northing = %f\n", m_falseNorthing );
 
   return 0;
 }
 
 long Sinusoidal::inverse_init (  )
 {
-  earthRadius = gctpParams[0];
-  centerLongitude = gctpParams[4];
-  falseEasting = gctpParams[6];
-  falseNorthing = gctpParams[7];
+	long tempErr = 0;
+
+  m_radius = m_gctpParams[0];
+  //from inv_init.c
+  m_centerLongitude = Util::paksz(m_gctpParams[4], &tempErr) * 3600 * S2R;
+  if(tempErr != 0)
+	  return(tempErr);
+
+  m_falseEasting = m_gctpParams[6];
+  m_falseNorthing = m_gctpParams[7];
 
   printf( "SINUSOIDAL\n" );
-  printf( "Radius = %f\n", earthRadius );
-  printf( "Center Longitude = %f\n", centerLongitude );
-  printf( "False Easting = %f\n", falseEasting );
-  printf( "False Northing = %f\n", falseNorthing );
-
+  printf( "Radius = %f\n", m_radius );
+  printf( "Center Longitude = %f\n", m_centerLongitude );
+  printf( "False Easting = %f\n", m_falseEasting );
+  printf( "False Northing = %f\n", m_falseNorthing );
+  
   return 0;
+}
+
+void Sinusoidal::setCenterLon(double centerLon) {
+	long err = 0;
+	m_centerLongitude = Util::paksz(centerLon, &err) * 3600 * S2R;
+	if(err != 0)
+		throw(ProjException(err, "Sinusoidal::setCenterLon()"));
 }
 
 

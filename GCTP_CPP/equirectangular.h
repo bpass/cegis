@@ -2,26 +2,26 @@
 #define EQUIRECTANGULAR_H
 
 #include "projection.h"
-#include "cproj.h"
+
 
 class Equirectangular : public Projection
 {
   // Associations
   // Attributes
   protected:
-    double majorAxis;
-    double centerLongitude;
-    double centerLatitude;
-    double falseEasting;
-    double falseNorthing;
-    
-    double earthRadius;
+    double m_majorAxis;
+    double m_centerLongitude;
+    double m_centerLatitude;
+
   // Operations
   public:
-   Equirectangular( double gctpParameters[15] );
+   Equirectangular();
+   Equirectangular(double gctpParameters[15], int units, long datum, long spheroid);
    long forward( double lon, double lat, double* x = NULL, double* y = NULL );
    long inverse( double x, double y, double* lon = NULL, double* lat = NULL );
-
+   
+   void setCenterLat(double lat);
+   void setCenterLon(double lon);
   public:
    long forward_init (  );
    long inverse_init (  );

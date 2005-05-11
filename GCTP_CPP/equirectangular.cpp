@@ -17,6 +17,11 @@ Equirectangular::Equirectangular( double gctpParameters[15], int units, long dat
 long Equirectangular::forward( double lon, double lat, double* x, double* y )
 {
   double deltaLon;		/* delta longitude value			*/
+	
+  if(m_forInitNeeded)
+	  forward_init();
+  //convert lat/lon from dec degrees to radians
+  Util::convertCoords(DEGREE, RADIAN, lat, lon);
 
   /* Forward equations */
   deltaLon = Util::adjust_lon( lon - m_centerLongitude );
@@ -38,9 +43,11 @@ long Equirectangular::forward( double lon, double lat, double* x, double* y )
 
 long Equirectangular::inverse ( double x, double y, double* lon, double* lat )
 {
-  
-  //do unit conversion for input cooridnates.
-  prepCoords(x, y); 
+  if(m_invInitNeeded)
+	  inverse_init();
+  //convert lat/lon from dec degrees to radians
+  Util::convertCoords(m_unitCode, METER, x, y);
+
 
   /* Inverse equations */
   x -= m_falseEasting;
@@ -79,7 +86,7 @@ long Equirectangular::forward_init()
   printf( "Latitude of True Scale = %f\n", m_centerLatitude );
   printf( "False Easting = %f\n", m_falseEasting );
   printf( "False Northing = %f\n", m_falseNorthing );
-
+  m_forInitNeeded = false;
   return 0;
 }
 
@@ -93,7 +100,7 @@ long Equirectangular::inverse_init()
   printf( "Latitude of True Scale = %f\n", m_centerLatitude );
   printf( "False Easting = %f\n", m_falseEasting );
   printf( "False Northing = %f\n", m_falseNorthing );
-
+  m_invInitNeeded = false;
   return 0;
 }
 
@@ -104,6 +111,9 @@ void Equirectangular::setCenterLat(double lat) {
 		throw(ProjException(tempErr, "Equirectangular::setCenterLat()"));
 
 	m_centerLatitude = tempNum;
+	m_forInitNeeded = true;
+	m_invInitNeeded = true;
+
 }
 
 void Equirectangular::setCenterLon(double lon) {
@@ -113,6 +123,9 @@ void Equirectangular::setCenterLon(double lon) {
 		throw(ProjException(tempErr, "Equirectangular::setCenterLat()"));
 
 	m_centerLongitude = tempNum;
+	m_forInitNeeded = true;
+	m_invInitNeeded = true;
+
 }
 
 

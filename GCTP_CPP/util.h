@@ -80,6 +80,7 @@ public:
 
 	static void sphdz(long isph, double* parm, double* r_major, double* r_minor, double* radius);
 
+	static void convertCoords(int fromUnit, int toUnit, double& x, double& y);
 };
 
 #endif

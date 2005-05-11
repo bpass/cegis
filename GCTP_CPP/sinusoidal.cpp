@@ -18,7 +18,11 @@ Sinusoidal::Sinusoidal( double gctpParameters[15], int units, int datum, int sph
 long Sinusoidal::forward ( double lon, double lat, double* x, double* y )
 {
   double deltaLon;	/* Delta longitude (Given longitude - center */
-
+  
+  if(m_forInitNeeded)
+	  forward_init();
+  //convert lat/lon from dec degrees to radians
+  Util::convertCoords(DEGREE, RADIAN, lat, lon);
 
   /* Forward equations */
   deltaLon = Util::adjust_lon(lon - m_centerLongitude);
@@ -42,11 +46,12 @@ long Sinusoidal::forward ( double lon, double lat, double* x, double* y )
 long Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
 {
   double temp;		/* Re-used temporary variable */
-
-  /* Inverse equations */
-
-  prepCoords(x, y);
   
+  if(m_invInitNeeded)
+	  inverse_init();
+  //convert lat/lon from dec degrees to radians
+  Util::convertCoords(m_unitCode, METER, x, y);
+
   x -= m_falseEasting;
   y -= m_falseNorthing;
 
@@ -90,29 +95,19 @@ long Sinusoidal::forward_init (  )
   printf( "Center Longitude = %f\n", m_centerLongitude );
   printf( "False Easting = %f\n", m_falseEasting );
   printf( "False Northing = %f\n", m_falseNorthing );
-
+  m_forInitNeeded = false;
   return 0;
 }
 
 long Sinusoidal::inverse_init (  )
 {
-	long tempErr = 0;
-
-  m_radius = m_gctpParams[0];
-  //from inv_init.c
-  m_centerLongitude = Util::paksz(m_gctpParams[4], &tempErr) * 3600 * S2R;
-  if(tempErr != 0)
-	  return(tempErr);
-
-  m_falseEasting = m_gctpParams[6];
-  m_falseNorthing = m_gctpParams[7];
 
   printf( "SINUSOIDAL\n" );
   printf( "Radius = %f\n", m_radius );
   printf( "Center Longitude = %f\n", m_centerLongitude );
   printf( "False Easting = %f\n", m_falseEasting );
   printf( "False Northing = %f\n", m_falseNorthing );
-  
+  m_invInitNeeded = false;
   return 0;
 }
 
@@ -121,6 +116,8 @@ void Sinusoidal::setCenterLon(double centerLon) {
 	m_centerLongitude = Util::paksz(centerLon, &err) * 3600 * S2R;
 	if(err != 0)
 		throw(ProjException(err, "Sinusoidal::setCenterLon()"));
+	m_forInitNeeded = true;
+	m_invInitNeeded = true;
 }
 
 

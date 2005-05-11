@@ -441,6 +441,13 @@ else		/* isph >= 0 */
 return;
 }
 
+void Util::convertCoords(int fromUnit, int toUnit, double& x, double& y) {
+	double factor = 0.0;
+	Util::untfz(fromUnit, toUnit, &factor);
+	
+	x *= factor;
+	y *= factor;
+}
 
 
 

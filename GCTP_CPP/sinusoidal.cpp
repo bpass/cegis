@@ -5,6 +5,11 @@
 #include <math.h>
 
 
+Sinusoidal::Sinusoidal(): Projection(), m_centerLongitude(0.0)
+{
+	setName("Sinusoidal");
+	setNumber(SNSOID);
+}
 
 Sinusoidal::Sinusoidal( double gctpParameters[15], int units, int datum, int spheroid) 
 : Projection( gctpParameters, units, datum, spheroid )
@@ -15,7 +20,7 @@ Sinusoidal::Sinusoidal( double gctpParameters[15], int units, int datum, int sph
   return;
 }
 
-long Sinusoidal::forward ( double lon, double lat, double* x, double* y )
+void Sinusoidal::forward ( double lon, double lat, double* x, double* y )
 {
   double deltaLon;	/* Delta longitude (Given longitude - center */
   
@@ -40,10 +45,9 @@ long Sinusoidal::forward ( double lon, double lat, double* x, double* y )
      *y = m_y_coord;
   }
 
-  return 0;
 }
 
-long Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
+void Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
 {
   double temp;		/* Re-used temporary variable */
   
@@ -58,10 +62,8 @@ long Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
   m_latitude = y / m_radius;
 
   if( fabs( m_latitude ) > HALF_PI)
-  {
-     fprintf( stderr, "Input data error in sinusoidal-inverse\n" );
-     return(164);
-  }
+	  throw(ProjException(164, "Sinusoidal::inverse()"));
+
 
   temp = fabs( m_latitude ) - HALF_PI;
   if( fabs( temp ) > EPSLN )
@@ -84,10 +86,9 @@ long Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
      *lat = m_latitude;
   }
 
-  return 0;
 }
 
-long Sinusoidal::forward_init (  )
+void Sinusoidal::forward_init (  )
 {
   
   printf( "SINUSOIDAL\n" );
@@ -96,10 +97,9 @@ long Sinusoidal::forward_init (  )
   printf( "False Easting = %f\n", m_falseEasting );
   printf( "False Northing = %f\n", m_falseNorthing );
   m_forInitNeeded = false;
-  return 0;
 }
 
-long Sinusoidal::inverse_init (  )
+void Sinusoidal::inverse_init (  )
 {
 
   printf( "SINUSOIDAL\n" );
@@ -108,7 +108,6 @@ long Sinusoidal::inverse_init (  )
   printf( "False Easting = %f\n", m_falseEasting );
   printf( "False Northing = %f\n", m_falseNorthing );
   m_invInitNeeded = false;
-  return 0;
 }
 
 void Sinusoidal::setCenterLon(double centerLon) {

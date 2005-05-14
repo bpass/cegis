@@ -23,10 +23,9 @@ AlbersConEqArea::AlbersConEqArea(double gctpParameters[15], int units, int datum
 	setCenterLat(m_gctpParams[5]);
 	setStdParallel1(m_gctpParams[2]);
 	setStdParallel2(m_gctpParams[3]);
-	return;
 }
 
-long AlbersConEqArea::inverse_init() {
+void AlbersConEqArea::inverse_init() {
 	double sin_po,cos_po;		/* sine and cos values			*/
 	double con;					/* temporary variable			*/
 	double temp;				/* temporary variable			*/
@@ -39,10 +38,8 @@ long AlbersConEqArea::inverse_init() {
 	long tempErr = 0;
 
 	if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN)
-	{
-	printf("Equal latitudes for Standard Parallels on opposite sides of equator in alber-invinit");
-	return(31);
-   }
+		throw(ProjException(31, "AlbersConEqArea::inverse()"));
+
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - (temp*temp);
 	m_e3 = sqrt(m_es);
@@ -64,8 +61,10 @@ long AlbersConEqArea::inverse_init() {
 
 	if (fabs(m_stdParallelLat1 - m_stdParallelLat2) > EPSLN)
 		m_ns0 = (ms1 * ms1 - ms2 *ms2)/ (qs2 - qs1);
+
 	else
 		m_ns0 = con;
+
 	m_c = ms1 * ms1 + m_ns0 * qs1;
 	m_rh = m_rMajor * sqrt(m_c - m_ns0 * qs0)/m_ns0;
 
@@ -79,10 +78,9 @@ long AlbersConEqArea::inverse_init() {
 	printf( "False Easting = %f\n", m_falseEasting );
 	printf( "False Northing = %f\n", m_falseNorthing );
 	m_invInitNeeded = false;
-	return(OK);
 }
 
-long AlbersConEqArea::forward_init() {
+void AlbersConEqArea::forward_init() {
 	double sin_po,cos_po;		/* sin and cos values			*/
 	double con;					/* temporary variable			*/
 	double temp;				/* eccentricity squared and temp var	*/
@@ -94,11 +92,8 @@ long AlbersConEqArea::forward_init() {
 	long tempErr = 0;
 
 	if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN)
-	{
-	  printf("Equal latitudes for St. Parallels on opposite sides of equator in albers forward_init\n");
-	  return(31);
-   }
-
+		throw(ProjException(31, "AlbersConEqArea::inverse()"));
+    
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - (temp*temp);
 	m_e3 = sqrt(m_es);
@@ -120,8 +115,10 @@ long AlbersConEqArea::forward_init() {
 
 	if (fabs(m_stdParallelLat1 - m_stdParallelLat2) > EPSLN)
 		m_ns0 = (ms1 * ms1 - ms2 *ms2)/ (qs2 - qs1);
+
 	else
 		m_ns0 = con;
+
 	m_c = ms1 * ms1 + m_ns0 * qs1;
 	m_rh = m_rMajor * sqrt(m_c - m_ns0 * qs0)/m_ns0;
 
@@ -135,10 +132,9 @@ long AlbersConEqArea::forward_init() {
 	printf( "False Easting = %f\n", m_falseEasting );
 	printf( "False Northing = %f\n", m_falseNorthing );
 	m_forInitNeeded = false;
-	return(OK);
 }
 
-long AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
+void AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
 	double rh1;			/* height above ellipsoid	*/
 	double qs;			/* function q			*/
 	double con;			/* temporary sign value		*/
@@ -147,22 +143,26 @@ long AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
 
 	if(m_invInitNeeded)
 		inverse_init();
+	
 	//convert coordinates to meters
 	Util::convertCoords(m_unitCode, METER, x, y);
 
 	flag = 0;
 	x -= m_falseEasting;
 	y = m_rh - y + m_falseNorthing;;
+	
 	if (m_ns0 >= 0)
 	{
 		rh1 = sqrt(x * x + y * y);
 		con = 1.0;
-   }
+    }
+	
 	else
 	{
 		rh1 = -sqrt(x * x + y * y);
 		con = -1.0;
 	}
+
 	theta = 0.0;
 	if (rh1 != 0.0)
 		theta = atan2(con * x, con * y);
@@ -177,21 +177,24 @@ long AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
 		{
 			m_latitude = Util::phi1z(m_e3,qs,&flag);
 			if (flag != 0)
-				return(flag);
+				throw(ProjException(flag, "AlbersConEqArea::inverse()"));
 		}
+
 		else
-		 {
+	
+		{
 		 if (qs >= 0)
 			m_latitude = .5 * PI;
 		 else
 			m_latitude = -.5 * PI;
 		}
 	}
+	
 	else
 	{
 		m_latitude = Util::phi1z(m_e3,qs,&flag);
 		if (flag != 0)
-			return(flag);
+			throw(ProjException(flag, "AlbersConEqArea::inverse()"));
     }
 
 	m_longitude = Util::adjust_lon(theta/m_ns0 + m_lon_center);
@@ -201,10 +204,10 @@ long AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
 	if(lon)
 		*lon = m_longitude;
 
-	return(OK);
 }
 
-long AlbersConEqArea::forward(double lon, double lat, double* x, double* y) {
+void AlbersConEqArea::forward(double lon, double lat, double* x, double* y) {
+
 	double sin_phi,cos_phi;		/* sine and cos values		*/
 	double qs;			/* small q			*/
 	double theta;			/* angle			*/ 
@@ -227,11 +230,10 @@ long AlbersConEqArea::forward(double lon, double lat, double* x, double* y) {
 		*x = m_x_coord;
 	if(y)
 		*y = m_y_coord;
-
-return(OK);
 }
 
 void AlbersConEqArea::setCenterLat(double lat) {
+	
 	long tempErr = 0;
 	double tempNum = Util::paksz(lat, &tempErr) * 3600 * S2R;
 	if(tempErr !=0)
@@ -244,8 +246,10 @@ void AlbersConEqArea::setCenterLat(double lat) {
 }
 
 void AlbersConEqArea::setCenterLon(double lon) {
+
 	long tempErr = 0;
 	double tempNum = Util::paksz(lon, &tempErr) * 3600 * S2R;
+
 	if(tempErr !=0)
 		throw(ProjException(tempErr, "AlbersConEqArea::setCenterLon()"));
 
@@ -256,8 +260,10 @@ void AlbersConEqArea::setCenterLon(double lon) {
 }
 
 void AlbersConEqArea::setStdParallel1(double lat1) {
+
 	long tempErr = 0;
 	double tempNum = Util::paksz(lat1, &tempErr) * 3600 * S2R;
+
 	if(tempErr !=0)
 		throw(ProjException(tempErr, "AlbersConEqArea::setStdParallel1()"));
 
@@ -268,8 +274,11 @@ void AlbersConEqArea::setStdParallel1(double lat1) {
 }
 
 void AlbersConEqArea::setStdParallel2(double lat2) {
+
 	long tempErr = 0;
+
 	double tempNum = Util::paksz(lat2, &tempErr) * 3600 * S2R;
+
 	if(tempErr !=0)
 		throw(ProjException(tempErr, "AlbersConEqArea::setStdParallel2()"));
 

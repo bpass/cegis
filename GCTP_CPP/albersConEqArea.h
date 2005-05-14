@@ -5,14 +5,12 @@
 class AlbersConEqArea: public Projection {
 public:
 	AlbersConEqArea();
-	AlbersConEqArea(double gctpParams[15], int units, int datum, int spheroid);
+	AlbersConEqArea(double gctpParameters[], int units = 0, int datum = 0, int spheroid = 0);
 
 	
 	//transformation functions
-	long forward(double lon, double lat, double* x = NULL, double*y = NULL);
-	long inverse(double x, double y, double* lat = NULL, double* lon = NULL);
-	long forward_init();
-	long inverse_init();
+	void forward(double lon, double lat, double* x = NULL, double*y = NULL);
+	void inverse(double x, double y, double* lat = NULL, double* lon = NULL);
 
 	//get / set functions
 	void setCenterLon(double lon);
@@ -21,6 +19,9 @@ public:
 	void setStdParallel2(double lat2);
 
 protected:
+  void forward_init();
+  void inverse_init();
+
   double m_c;              /* constant c                           */
   double m_e3;             /* eccentricity                         */
   double m_es;			   /* eccentricity squared			       */

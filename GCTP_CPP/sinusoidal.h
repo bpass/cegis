@@ -10,20 +10,18 @@ class Sinusoidal : public Projection
   // Attributes
   protected:
     double m_centerLongitude;
-    double m_earthRadius;
+    void forward_init();
+    void inverse_init();
 
   // Operations
   
   public:
    Sinusoidal();
-   Sinusoidal( double gctpParameters[15], int units, int datum, int spheroid );
-   long forward( double lon, double lat, double* x = NULL, double* y = NULL );
-   long inverse( double x, double y, double* lon = NULL, double* lat = NULL );
-   long forward_init();
-   long inverse_init();
+   Sinusoidal(double gctpParameters[], int units = 0, int datum = 0, int spheroid = 0);
+   void forward( double lon, double lat, double* x = NULL, double* y = NULL );
+   void inverse( double x, double y, double* lon = NULL, double* lat = NULL );
 
    void setCenterLon(double centerLon); 
-   void setEarthRadius(double earthRadius) {m_earthRadius = earthRadius;}
 };
 
 #endif

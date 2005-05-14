@@ -29,9 +29,9 @@ class Projection
   // Operations
   public:
     Projection();
-	Projection (double gctpParameters[], int units = -1, int datum = -1, int spheroid = -1);
-    virtual long forward ( double lon, double lat, double* x = NULL, double* y = NULL ) = 0;
-    virtual long inverse ( double x, double y, double* lon = NULL, double* lat = NULL ) = 0;
+	Projection (double gctpParameters[], int units = 0, int datum = 0, int spheroid = 0);
+    virtual void forward ( double lon, double lat, double* x = NULL, double* y = NULL ) = 0;
+    virtual void inverse ( double x, double y, double* lon = NULL, double* lat = NULL ) = 0;
 
 	//get functions
 	double x () {return m_x_coord;}
@@ -51,43 +51,55 @@ class Projection
 	void setLon(double lon) {m_longitude = lon;}
 	void setX(double x) {m_x_coord = x;}
 	void setY(double y) {m_y_coord = y;}
-*/	void setUnits(int units) {m_unitCode = units;
+*/	
+	
+	void setUnits(int units) {m_unitCode = units;
 							  m_forInitNeeded = true; 
 							  m_invInitNeeded = true;}
+	
 	void setDatum(long datum) {m_datum = datum;
-							    m_forInitNeeded = true; 
-							  m_invInitNeeded = true;}
+							   m_forInitNeeded = true; 
+							   m_invInitNeeded = true;}
+	
 	void setSpheroid(long spheroid) {m_spheroid = spheroid;
-									  m_forInitNeeded = true; 
+									 m_forInitNeeded = true; 
 									 m_invInitNeeded = true;}
+	
 	void setName(std::string name) {m_name = name;}
+	
 	void setName(const char* name) {m_name = name;}
+	
 	void setFE(double fe) {m_falseEasting = fe;
-							m_forInitNeeded = true; 
-							m_invInitNeeded = true;}
+						   m_forInitNeeded = true; 
+					       m_invInitNeeded = true;}
+	
 	void setFN(double fn) {m_falseNorthing = fn;
-							m_forInitNeeded = true; 
-							m_invInitNeeded = true;}
+						   m_forInitNeeded = true; 
+						   m_invInitNeeded = true;}
+	
 	//set sphere radii according to spheroid and parameter array
 	void setRadii() {Util::sphdz(m_spheroid, m_gctpParams, &m_rMajor, &m_rMinor, &m_radius);
 					 m_forInitNeeded = true; 
 					 m_invInitNeeded = true;}
+	
 	void setRMajor(double rMajor) {m_rMajor = rMajor;
 								   m_forInitNeeded = true; 
-									 m_invInitNeeded = true;}
+								   m_invInitNeeded = true;}
+	
 	void setRMinor(double rMinor) {m_rMinor = rMinor;
 								   m_forInitNeeded = true; 
-									 m_invInitNeeded = true;}
+								   m_invInitNeeded = true;}
+
 	void setRadius(double radius) {m_radius = radius;
 								   m_forInitNeeded = true; 
-									 m_invInitNeeded = true;}
+								   m_invInitNeeded = true;}
 
 protected:
 	
 	bool m_forInitNeeded;
 	bool m_invInitNeeded;
-	virtual long forward_init () = 0;
-    virtual long inverse_init () = 0;
+	virtual void forward_init () = 0;
+    virtual void inverse_init () = 0;
 	void setNumber(int number) {m_number = number;}
     
 };

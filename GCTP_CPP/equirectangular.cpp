@@ -11,10 +11,9 @@ Equirectangular::Equirectangular( double gctpParameters[15], int units, long dat
 	setCenterLon(m_gctpParams[4]);
 	setCenterLat(m_gctpParams[5]);
 
-  return;
 }
 
-long Equirectangular::forward( double lon, double lat, double* x, double* y )
+void Equirectangular::forward( double lon, double lat, double* x, double* y )
 {
   double deltaLon;		/* delta longitude value			*/
 	
@@ -38,10 +37,9 @@ long Equirectangular::forward( double lon, double lat, double* x, double* y )
      *y = m_y_coord;
   }
 
-  return 0;
 }
 
-long Equirectangular::inverse ( double x, double y, double* lon, double* lat )
+void Equirectangular::inverse ( double x, double y, double* lon, double* lat )
 {
   if(m_invInitNeeded)
 	  inverse_init();
@@ -56,10 +54,7 @@ long Equirectangular::inverse ( double x, double y, double* lon, double* lat )
   m_latitude = y / m_radius;
 
   if( fabs( m_latitude ) > HALF_PI )
-  {
-     fprintf( stderr, "Input data error in equi-inv\n" );
-     return(174);
-  }
+	  throw(ProjException(174, "Equirectangular::inverse()"));
 
   m_longitude = Util::adjust_lon( m_centerLongitude + x / ( m_radius * cos( m_centerLongitude )));
   
@@ -74,10 +69,9 @@ long Equirectangular::inverse ( double x, double y, double* lon, double* lat )
      *lat = m_latitude;
   }
 
-  return 0;
 }
 
-long Equirectangular::forward_init()
+void Equirectangular::forward_init()
 {
   /* Report parameters to the user */
   printf( "EQUIRECTANGULAR\n" );
@@ -87,10 +81,9 @@ long Equirectangular::forward_init()
   printf( "False Easting = %f\n", m_falseEasting );
   printf( "False Northing = %f\n", m_falseNorthing );
   m_forInitNeeded = false;
-  return 0;
 }
 
-long Equirectangular::inverse_init()
+void Equirectangular::inverse_init()
 {
 
   /* Report parameters to the user */
@@ -101,7 +94,6 @@ long Equirectangular::inverse_init()
   printf( "False Easting = %f\n", m_falseEasting );
   printf( "False Northing = %f\n", m_falseNorthing );
   m_invInitNeeded = false;
-  return 0;
 }
 
 void Equirectangular::setCenterLat(double lat) {

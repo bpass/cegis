@@ -17,14 +17,14 @@ class Equirectangular : public Projection
   public:
    Equirectangular();
    Equirectangular(double gctpParameters[15], int units, long datum, long spheroid);
-   long forward( double lon, double lat, double* x = NULL, double* y = NULL );
-   long inverse( double x, double y, double* lon = NULL, double* lat = NULL );
+   void forward( double lon, double lat, double* x = NULL, double* y = NULL );
+   void inverse( double x, double y, double* lon = NULL, double* lat = NULL );
    
    void setCenterLat(double lat);
    void setCenterLon(double lon);
   public:
-   long forward_init (  );
-   long inverse_init (  );
+   void forward_init (  );
+   void inverse_init (  );
 };
 
 #endif

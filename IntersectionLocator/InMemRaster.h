@@ -15,7 +15,7 @@
 
 
 // Majic numbers for CVS
-// $Id: InMemRaster.h,v 1.4 2004/11/02 01:20:46 rstelzleni Exp $
+// $Id: InMemRaster.h,v 1.5 2005/05/17 01:30:04 ahartman Exp $
 
 
 #ifndef IN_MEM_RASTER
@@ -313,6 +313,18 @@ private:
    
 };
 
+
+inline
+int InMemRaster::getXSize() const
+{
+   return mnXSize;
+}
+
+inline
+int InMemRaster::getYSize() const
+{
+   return mnYSize;
+}
 
 
 #endif // IN_MEM_RASTER

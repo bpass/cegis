@@ -12,7 +12,7 @@
 
 
 // Majic numbers for CVS
-// $Id: InMemRaster.cpp,v 1.3 2004/11/23 20:50:30 rstelzleni Exp $
+// $Id: InMemRaster.cpp,v 1.4 2005/05/17 01:30:04 ahartman Exp $
 
 
 #include "InMemRaster.h"
@@ -376,16 +376,6 @@ int InMemRaster::getVal( double x, double y ) const
    return mpadVal[ static_cast<int>(x + y*mnXSize) ];
 }
 
-
-int InMemRaster::getXSize() const
-{
-   return mnXSize;
-}
-
-int InMemRaster::getYSize() const
-{
-   return mnYSize;
-}
 
 bool InMemRaster::isRoad( int x, int y ) const
 {

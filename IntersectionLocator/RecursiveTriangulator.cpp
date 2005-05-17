@@ -29,7 +29,7 @@
 
 
 // Majic numbers for CVS
-// $Id: RecursiveTriangulator.cpp,v 1.5 2004/11/23 20:50:30 rstelzleni Exp $
+// $Id: RecursiveTriangulator.cpp,v 1.6 2005/05/17 02:05:02 ahartman Exp $
 
 
 #include "RecursiveTriangulator.h"
@@ -86,8 +86,8 @@ void RecursiveTriangulator::insert( const ControlPoint &point,
 
    // First create triangle a-c-index
    Tri newTri;
-   Point newPoint( const_cast<OGRPoint&>(points[index].point).getX(), 
-                   const_cast<OGRPoint&>(points[index].point).getY() );
+   Point newPoint( points[index].point.getX(), 
+                   points[index].point.getY() );
    Triangle newTriangle( pT->triangle.pointA(), 
                          pT->triangle.pointC(), 
                          newPoint );
@@ -144,17 +144,17 @@ bool RecursiveTriangulator::circleTest( int p, int a, int b, int n,
                                       const std::vector<ControlPoint> &points,
                                       Triangulation &edges )
 {
-   Point A( const_cast<OGRPoint&>(points[p].point).getX(), 
-            const_cast<OGRPoint&>(points[p].point).getY() );
-   Point B( const_cast<OGRPoint&>(points[a].point).getX(), 
-            const_cast<OGRPoint&>(points[a].point).getY() );
-   Point C( const_cast<OGRPoint&>(points[b].point).getX(), 
-            const_cast<OGRPoint&>(points[b].point).getY() );
+   Point A( points[p].point.getX(), 
+            points[p].point.getY() );
+   Point B( points[a].point.getX(), 
+            points[a].point.getY() );
+   Point C( points[b].point.getX(), 
+            points[b].point.getY() );
    Point D;
    if( n != -1 && n != -2 && n != -3 )
    {
-      D.setX( const_cast<OGRPoint&>(points[n].point).getX() );
-      D.setY( const_cast<OGRPoint&>(points[n].point).getY() );
+      D.setX( points[n].point.getX() );
+      D.setY( points[n].point.getY() );
    }
    else
    {
@@ -217,8 +217,8 @@ Triangulation::iterator RecursiveTriangulator::inTriangle(
       // Two points are on the same side of the line if and only if
       // A*x + B*y + C has the same sign for each point
       if( ( A*dPointC.x() + B*dPointC.y() + C /
-            A*const_cast<OGRPoint&>(point.point).getX() + 
-              B*const_cast<OGRPoint&>(point.point).getY() + C )
+            A*point.point.getX() + 
+              B*point.point.getY() + C )
             > 0 )
       {
          A = (dPointB.x() - dPointC.x()) / 2;
@@ -227,8 +227,8 @@ Triangulation::iterator RecursiveTriangulator::inTriangle(
               dPointC.y() * dPointB.x()) / 2;
 
          if( ( A*dPointA.x() + B*dPointA.y() + C /
-               A*const_cast<OGRPoint&>(point.point).getX() + 
-                 B*const_cast<OGRPoint&>(point.point).getY() + C )
+               A*point.point.getX() + 
+                 B*point.point.getY() + C )
                > 0 )
          {
             A = (dPointA.x() - dPointC.x()) / 2;
@@ -237,8 +237,8 @@ Triangulation::iterator RecursiveTriangulator::inTriangle(
                  dPointC.y() * dPointA.x()) / 2;
 
             if( ( A*dPointB.x() + B*dPointB.y() + C /
-                  A*const_cast<OGRPoint&>(point.point).getX() + 
-                    B*const_cast<OGRPoint&>(point.point).getY() + C )
+                  A*point.point.getX() + 
+                    B*point.point.getY() + C )
                   > 0 )
             {
                return iter;
@@ -340,7 +340,7 @@ void RecursiveTriangulator::createInfiniteTri(
 
    if( points.size() >= 1 )
    {
-      minX = minY = maxY = maxX = const_cast<OGRPoint&>(points[0].point).getX();
+      minX = minY = maxY = maxX = points[0].point.getX();
    }
    else
    {
@@ -349,8 +349,8 @@ void RecursiveTriangulator::createInfiniteTri(
 
    for( unsigned int i=1; i<points.size(); ++i )
    {
-      x = const_cast<OGRPoint&>(points[i].point).getX();
-      y = const_cast<OGRPoint&>(points[i].point).getY();
+      x = points[i].point.getX();
+      y = points[i].point.getY();
 
       if( minX > x ) minX = x;
       if( maxX < x ) maxX = x;

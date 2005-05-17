@@ -20,7 +20,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionMap.cpp,v 1.8 2005/05/10 16:54:36 ahartman Exp $
+// $Id: IntersectionMap.cpp,v 1.9 2005/05/17 02:05:02 ahartman Exp $
 
 
 #include "IntersectionMap.h"
@@ -186,8 +186,8 @@ void IntersectionMap::iterativelyFindControlPoints( InMemRaster &rasta,
          // Get the starting point and iterate over the area, comparing
          // the template at each location and keeping track of the greatest
          // correlation factor.
-         startX = const_cast<OGRPoint&>(i->first).getX();
-         startY = const_cast<OGRPoint&>(i->first).getY();
+         startX = i->first.getX();
+         startY = i->first.getY();
          rasta.vector2Raster( startX, startY );
 
          // Reset these variables for this iteration.
@@ -337,8 +337,8 @@ void IntersectionMap::findControlPoints( InMemRaster &rasta,
       // Get the starting point and iterate over the area, comparing
       // the template at each location and keeping track of the greatest
       // correlation factor.
-      startX = const_cast<OGRPoint&>(i->first).getX();
-      startY = const_cast<OGRPoint&>(i->first).getY();
+      startX = i->first.getX();
+      startY = i->first.getY();
       rasta.vector2Raster( startX, startY );
 
       // Reset these variables for this iteration.
@@ -778,8 +778,8 @@ void IntersectionMap::templateTest( int i, const char *szFilename )
       if( iter->second.size() > INTERSECT_ROAD_LIMIT )
       {
          printf( "%f, %f are the point's coordinates\n", 
-                 const_cast<OGRPoint&>(iter->first).getX(), 
-                 const_cast<OGRPoint&>(iter->first).getY() );
+                 iter->first.getX(), 
+                 iter->first.getY() );
          printf( "%i lines in this intersection\n", iter->second.size() );
          Template T( 20, 20, iter->first );
 

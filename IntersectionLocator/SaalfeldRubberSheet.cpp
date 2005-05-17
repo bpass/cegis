@@ -15,7 +15,7 @@
 
 
 // Majic numbers for CVS
-// $Id: SaalfeldRubberSheet.cpp,v 1.5 2005/04/25 14:13:31 ahartman Exp $
+// $Id: SaalfeldRubberSheet.cpp,v 1.6 2005/05/17 02:05:02 ahartman Exp $
 
 
 #include "SaalfeldRubberSheet.h"
@@ -86,12 +86,12 @@ void SaalfeldRubberSheet::doTransformation( OGRDataSource *pOutDS,
          // Now we know what triangle to look in, we can transform
          s3 = 1.0 - s1 - s2;
 
-         thePoint.setX( s1*const_cast<OGRPoint&>(points[ triangles[triIndex].a ].point).getX() +
-                        s2*const_cast<OGRPoint&>(points[ triangles[triIndex].b ].point).getX() +
-                        s3*const_cast<OGRPoint&>(points[ triangles[triIndex].c ].point).getX() );
-         thePoint.setY( s1*const_cast<OGRPoint&>(points[ triangles[triIndex].a ].point).getY() +
-                        s2*const_cast<OGRPoint&>(points[ triangles[triIndex].b ].point).getY() +
-                        s3*const_cast<OGRPoint&>(points[ triangles[triIndex].c ].point).getY() );
+         thePoint.setX( s1*points[ triangles[triIndex].a ].point.getX() +
+                        s2*points[ triangles[triIndex].b ].point.getX() +
+                        s3*points[ triangles[triIndex].c ].point.getX() );
+         thePoint.setY( s1*points[ triangles[triIndex].a ].point.getY() +
+                        s2*points[ triangles[triIndex].b ].point.getY() +
+                        s3*points[ triangles[triIndex].c ].point.getY() );
 
          // Place the transformed point back in the linestring
          pLine->setPoint( j, &thePoint );
@@ -130,12 +130,12 @@ void SaalfeldRubberSheet::initVals( const Triangulation &triangles,
       // I called the array val because I wasn't sure exactly what to call
       // these numbers.  They are related to some calculations with
       // simplicial coordinates.
-      Point pOne( const_cast<OGRPoint&>(points[ triangles[i].a ].origPoint).getX(), 
-                  const_cast<OGRPoint&>(points[ triangles[i].a ].origPoint).getY() );
-      Point pTwo( const_cast<OGRPoint&>(points[ triangles[i].b ].origPoint).getX(),
-                  const_cast<OGRPoint&>(points[ triangles[i].b ].origPoint).getY() );
-      Point pThr( const_cast<OGRPoint&>(points[ triangles[i].c ].origPoint).getX(),
-                  const_cast<OGRPoint&>(points[ triangles[i].c ].origPoint).getY() );
+      Point pOne( points[ triangles[i].a ].origPoint.getX(), 
+                  points[ triangles[i].a ].origPoint.getY() );
+      Point pTwo( points[ triangles[i].b ].origPoint.getX(),
+                  points[ triangles[i].b ].origPoint.getY() );
+      Point pThr( points[ triangles[i].c ].origPoint.getX(),
+                  points[ triangles[i].c ].origPoint.getY() );
 
       T = pOne.x()*pTwo.y() + pTwo.x()*pThr.y() + pThr.x()*pOne.y() -
           pThr.x()*pTwo.y() - pTwo.x()*pOne.y() - pOne.x()*pThr.y();

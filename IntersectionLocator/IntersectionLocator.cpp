@@ -10,7 +10,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionLocator.cpp,v 1.16 2005/05/10 17:18:00 ahartman Exp $
+// $Id: IntersectionLocator.cpp,v 1.17 2005/05/17 18:48:25 ahartman Exp $
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1300
@@ -37,6 +37,7 @@ void batch( double percent, Filter *filter, const char *filterType );
 void filterTests();
 void recursiveTriangulatorTest();
 void triangleOutputTest();
+void profilerTest();
 
 
 /**
@@ -77,6 +78,10 @@ OGRDataSource *createOGRFile(const char *pszFName, char *pszDName)
  * */
 int main( /*int argc, char *argv[]*/ )
 {
+//   // Run the function to profile this project
+//   profilerTest();
+//   return 0;
+
    // Test the triangle output
    triangleOutputTest();
    return 0;
@@ -861,15 +866,20 @@ void triangleOutputTest()
    std::string szRaster, szVector, szOutput, szPoints, szLines, szAbbrev,
                szTriangles;
 
-   std::string szRasterDir = "L:\\cartoresearch\\data-integration\\gjaromack\\STL\\orthoimages\\15SYC";
-   std::string szVectorDir = "L:\\sdir_snap\\rstelzleni\\Mo2Quads\\OriginalRoads\\";
-   //std::string szOutputDir = "L:\\sdir_snap\\rstelzleni\\Mo2Quads\\CorrectedRoads_10-90\\";
-   std::string szOutputDir = "D:\\Data\\Output\\boundingSmallSquare\\"; 
+//   std::string szRasterDir = "L:\\cartoresearch\\data-integration\\gjaromack\\STL\\orthoimages\\15SYC";
+//   std::string szVectorDir = "L:\\sdir_snap\\rstelzleni\\Mo2Quads\\OriginalRoads\\";
+//   //std::string szOutputDir = "L:\\sdir_snap\\rstelzleni\\Mo2Quads\\CorrectedRoads_10-90\\";
+//   std::string szOutputDir = "D:\\Data\\Output\\boundingSmallSquare\\"; 
 
-   double templateSize = 50, areaSize = 65;
+   const std::string szRasterDir = "/snap/ahartman/Data/STL/orthoimages/15SYC";
+   const std::string szVectorDir = "/snap/rstelzleni/Mo2Quads/OriginalRoads/";
+   const std::string szOutputDir = "/snap/ahartman/Data/Output/boundingLargeSquare/";
+   const std::string szTiffExtension = ".tif";
+
+   const double templateSize = 50, areaSize = 65;
 
 
-   char *aszNames[] = {
+   const char * const aszNames[] = {
         //"065630",
         //"065645",
         //"065660",
@@ -1037,7 +1047,7 @@ void triangleOutputTest()
         //"275780"
     };
 
-   int n = 9; // number of names
+   const int n = 9; // number of names
 
 
 
@@ -1046,7 +1056,8 @@ void triangleOutputTest()
 
    Classifier C;
    printf( "Loading classifier training\n\n" );
-   C.inputText("L:\\sdir_snap\\rstelzleni\\Mo2Quads\\classifiertraining\\training.dat");
+   //C.inputText("L:\\sdir_snap\\rstelzleni\\Mo2Quads\\classifiertraining\\training.dat");
+   C.inputText("/snap/rstelzleni/Mo2Quads/classifiertraining/training.dat");
 
    DelauneyTriangulator *Triangulator = new QuarticTriangulator;
    RubberSheetTransform *Transformer = new SaalfeldRubberSheet;
@@ -1056,7 +1067,7 @@ void triangleOutputTest()
       // Figure out the names of the raster and vector files to open
       printf( "\n\nBeginning area %s\n\n", aszNames[i] );
       szRaster = szRasterDir + aszNames[i];
-      szRaster += ".TIF";
+      szRaster += szTiffExtension;
       szVector = szVectorDir + aszNames[i];
 
       // Open the raster file and check for errors
@@ -1107,7 +1118,7 @@ void triangleOutputTest()
       // Got the control points, now start manipulating the data
 
       // First dump the unfiltered data and lines
-      szOutput = szOutputDir + "Unfiltered\\";
+      szOutput = szOutputDir + "Unfiltered/";
       szPoints = szOutput /*+ "Points\\"*/ + aszNames[i] + "_Points.shp";
       szLines = szOutput /*+ "Lines\\"*/ + aszNames[i] + "_Lines.shp";
       szTriangles = szOutput + aszNames[i] + "_Triangles.shp";
@@ -1160,7 +1171,7 @@ void triangleOutputTest()
          szAbbrev = temp;
 
          szOutput = szOutputDir + "Filter" ;
-         szOutput += szAbbrev + "\\";
+         szOutput += szAbbrev + "/";
          szPoints = szOutput /*+ "Points\\"*/ + aszNames[i] + "_Points.shp";
          szLines = szOutput /*+ "Lines\\"*/ + aszNames[i] + "_Lines.shp";
          szTriangles = szOutput + aszNames[i] + "_Triangles.shp";
@@ -1253,3 +1264,212 @@ void triangleOutputTest()
    return;
 }
 
+void profilerTest()
+{
+   OGRDataSource *pVectorDS, *pOutputDS, *pLinesDS, *pTrianglesDS;
+   GDALDataset *pRaster;
+
+   std::string szRaster, szVector, szOutput, szPoints, szLines, szAbbrev,
+               szTriangles;
+
+   const std::string szRasterDir = "/snap/ahartman/Data/STL/orthoimages/15SYC";
+   const std::string szVectorDir = "/snap/rstelzleni/Mo2Quads/OriginalRoads/";
+   const std::string szOutputDir = "/work/Data/Output/profilerTest/";
+   const std::string szTiffExtension = ".tif";
+
+   double templateSize = 50, areaSize = 65;
+
+
+   const char * const aszNames[] = {
+//        "230720",
+//        "230735",
+//        "230750",
+//        "245720",
+//        "245735",
+//        "245750",
+        "260720"//,
+//        "260735",
+//        "260750"
+    };
+
+   const int n = 1; // number of names
+
+
+
+   OGRRegisterAll();
+   GDALAllRegister();
+
+   Classifier C;
+   printf( "Loading classifier training\n\n" );
+   C.inputText("/snap/rstelzleni/Mo2Quads/classifiertraining/training.dat");
+
+   DelauneyTriangulator *Triangulator = new QuarticTriangulator;
+   RubberSheetTransform *Transformer = new SaalfeldRubberSheet;
+
+   for( int i=0; i<n; ++i )
+   {
+      // Figure out the names of the raster and vector files to open
+      printf( "\n\nBeginning area %s\n\n", aszNames[i] );
+      szRaster = szRasterDir + aszNames[i];
+      szRaster += szTiffExtension;
+      szVector = szVectorDir + aszNames[i];
+
+      // Open the raster file and check for errors
+      pRaster = static_cast<GDALDataset *>
+                                    ( GDALOpen( szRaster.c_str(), GA_ReadOnly ) );
+      if( pRaster == NULL )
+      {
+         fprintf( stderr, "Failed to open raster file\n" );
+         exit( -1 );
+      }
+
+      // Open the vector file and check for errors
+      pVectorDS = OGRSFDriverRegistrar::Open( szVector.c_str(), FALSE, NULL);
+      if( pVectorDS == NULL )
+      {
+         printf("Failed opening vector file\n");
+         printf("%d\n", CPLGetLastErrorNo());
+         printf(CPLGetLastErrorMsg());
+         exit( -1 );
+      }
+
+
+      printf( "Input files opened successfully\n\n" );
+
+      // Run the classifier on the raster file
+      printf( "Loading raster image\n" );
+      InMemRaster Rasta( pRaster );
+      printf( "Converting to HSV\n" );
+      Rasta.convertToHSV();
+      printf( "Classifying road pixels\n\n" );
+      Rasta.classify( C );
+
+      // Create the IntersectionMap
+      printf( "Loading intersection data\n" );
+      IntersectionMap Intersections( pVectorDS, pRaster );
+      printf( "Finding control points\n\n" );
+
+      // Get the original control points
+      Intersections.findControlPoints( Rasta, templateSize, areaSize );
+
+      // add the bounding control points
+      Intersections.addBoundingControlPoints();
+      
+      printf( "Saving control points\n" );
+      const std::vector<ControlPoint> originalPoints = 
+                                        Intersections.getControlPoints();
+
+      // Got the control points, now start manipulating the data
+
+      // First dump the unfiltered data and lines
+      szOutput = szOutputDir + "Unfiltered/";
+      szPoints = szOutput /*+ "Points\\"*/ + aszNames[i] + "_Points.shp";
+      szLines = szOutput /*+ "Lines\\"*/ + aszNames[i] + "_Lines.shp";
+      szTriangles = szOutput + aszNames[i] + "_Triangles.shp";
+
+      // Open the file to output the original points
+      pOutputDS = createOGRFile( szPoints.c_str(), "ESRI Shapefile" );
+      if( pOutputDS == NULL )
+      {
+         fprintf( stderr, "pOutputDS is NULL\n" );
+         exit( -1 );
+      }
+
+      // Open the file to output the original lines
+      pLinesDS = createOGRFile( szLines.c_str(), "ESRI Shapefile" );
+      if( pLinesDS == NULL )
+      {
+         fprintf( stderr, "pLinesDS is NULL\n" );
+         exit( -1 );
+      }
+
+      // Open the file to output the triangles
+      pTrianglesDS = createOGRFile( szTriangles.c_str(), "ESRI Shapefile" );
+      if( pTrianglesDS == NULL )
+      {
+         fprintf( stderr, "pTrianglesDS is NULL\n" );
+         exit( -1 );
+      }
+
+      // Output the original points
+      printf( "Outputting base control point set and lines\n" );
+      Intersections.outputControlPoints( pOutputDS );
+
+      // Output the triangles
+      printf( "Outputting the triangles\n" );
+      Intersections.triangulateAndOutput( Triangulator, pTrianglesDS );
+      
+      // Do the triangulation and transform
+      Intersections.triangulateAndAdjust( Triangulator, Transformer,  
+                                          pLinesDS ); 
+
+      delete pOutputDS;
+      delete pLinesDS;
+      delete pTrianglesDS;
+
+      // Now filter the points using all filters and combinations
+      for( int r = 50; r <= 50; r += 10 )
+      {
+         char temp[10];
+         sprintf( temp, "_%02dVMF", r );
+         szAbbrev = temp;
+
+         szOutput = szOutputDir + "Filter" ;
+         szOutput += szAbbrev + "/";
+         szPoints = szOutput /*+ "Points\\"*/ + aszNames[i] + "_Points.shp";
+         szLines = szOutput /*+ "Lines\\"*/ + aszNames[i] + "_Lines.shp";
+         szTriangles = szOutput + aszNames[i] + "_Triangles.shp";
+
+         pOutputDS = createOGRFile( szPoints.c_str(), "ESRI Shapefile" );
+         if( pOutputDS == NULL )
+         {
+            fprintf( stderr, "pOutputDS is NULL\n" );
+            exit( -1 );
+         }
+
+         pLinesDS = createOGRFile( szLines.c_str(), "ESRI Shapefile" );
+         if( pLinesDS == NULL )
+         {
+            fprintf( stderr, "pLinesDS is NULL\n" );
+            exit( -1 );
+         }
+
+         // Open the file to output the triangles
+         pTrianglesDS = createOGRFile( szTriangles.c_str(), "ESRI Shapefile" );
+         if( pTrianglesDS == NULL )
+         {
+            fprintf( stderr, "pTrianglesDS is NULL\n" );
+            exit( -1 );
+         }
+
+
+         printf( "VMF Filtering and outputting control points\n\n" );
+         Filter *filter = new VMFilter;
+         Intersections.setControlPoints( originalPoints );
+         Intersections.filter( filter, static_cast<double>(r)/100 );
+         Intersections.outputControlPoints( pOutputDS );
+
+         // Output the triangles
+         printf( "Outputting the triangles\n" );
+         Intersections.triangulateAndOutput( Triangulator, pTrianglesDS );
+      
+         Intersections.triangulateAndAdjust( Triangulator, Transformer,
+                                             pLinesDS );
+
+         delete filter;
+         delete pOutputDS;
+         delete pLinesDS;
+
+      } // end for r (ratio)
+      
+      delete pRaster;
+      delete pVectorDS;
+
+      printf( "Finished Area %s\n", aszNames[i] );
+   } // end for i
+
+   delete Triangulator;
+   delete Transformer;
+
+   return;
+}

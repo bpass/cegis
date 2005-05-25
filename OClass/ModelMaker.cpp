@@ -82,18 +82,37 @@ void ModelMaker::generate(const char* filename) {
 		fprintf(modelFile, "#define mem%d %s( CONDITIONAL {(r1_in(%d) == 0.000)0,", i+1, imageVarDataType, i+1);
 		
 		for(unsigned int j = 0; j < m_classInfo[i].size(); j++) {
-			
-			//print condition for each class range
-			fprintf(modelFile, "(r1_in(%d) > ", i+1);
-			fprintf(modelFile, "%.3f", (double)m_classInfo[i][j].low);
-			fprintf(modelFile, " AND r1_in(%d) <= ", i+1);
-			fprintf(modelFile, "%.3f)", (double)m_classInfo[i][j].high);
-			fprintf(modelFile, "%d", m_classInfo[i][j].outputPixelVal);
-			
-			//if this is not the last line of the conditional, print
-			//a comma.
-			if((j+1) < m_classInfo[i].size()) 
-				fprintf(modelFile, ",");
+			//if our high and low values are equal generate
+			//== conditional for the value.
+			if(m_classInfo[i][j].low == m_classInfo[i][j].high) {
+				//if the value is not 0, generate condition
+				if(m_classInfo[i][j].low != 0) {
+					fprintf(modelFile, "(r1_in(%d) >= %.3f)%d"
+						,i+1
+						,m_classInfo[i][j].low
+						,m_classInfo[i][j].outputPixelVal);
+					//if this is not the last line of the conditional, print
+					//a comma.
+					if((j+1) < m_classInfo[i].size()) 
+						fprintf(modelFile, ",");
+				}
+			}
+			else {
+				//print condition for each class range
+				if(m_classInfo[i][j].low != 0)
+					fprintf(modelFile, "(r1_in(%d) >= ", i+1);
+				else
+					fprintf(modelFile, "(r1_in(%d) > ", i+1);
+
+				fprintf(modelFile, "%.3f", (double)m_classInfo[i][j].low);
+				fprintf(modelFile, " AND r1_in(%d) <= ", i+1);
+				fprintf(modelFile, "%.3f)", (double)m_classInfo[i][j].high);
+				fprintf(modelFile, "%d", m_classInfo[i][j].outputPixelVal);
+				//if this is not the last line of the conditional, print
+				//a comma.
+				if((j+1) < m_classInfo[i].size()) 
+					fprintf(modelFile, ",");
+			}
 		}
 		fprintf(modelFile, "} )\n");
 	}
@@ -159,6 +178,9 @@ void ModelMaker::buildClassInfo(const char* claFile) {
 
 	//read all <classificationData> tags and each <class> tag under them
 	for(int i = 0; i < numLayers; i++) {
+		//get number of classes for this layer.
+		curClassInfoE->Attribute("numClasses", &curNumClasses);
+
 		curLayerData.clear();
 		if(!curClassInfoE)
 			throw(GeneralException("Error in ModelMaker::buildClassInfo(): "
@@ -181,8 +203,13 @@ void ModelMaker::buildClassInfo(const char* claFile) {
 			//Get high value
 			curClassRangeE->Attribute("high", &curClassInfo.high);
 
-			//Assign new pixel value.
-			curClassInfo.outputPixelVal = j+1;
+			if((curClassInfo.low == 0) && (curClassInfo.high == 0))
+				curClassInfo.outputPixelVal = 0;
+
+			else {
+				//Assign new pixel value.
+				curClassInfo.outputPixelVal = j+1;
+			}
 
 			//add this class info to the current layer vector
 			curLayerData.push_back(curClassInfo);
@@ -194,6 +221,7 @@ void ModelMaker::buildClassInfo(const char* claFile) {
 
 		//move to next <classificationData> tag
 		curClassInfoE = curClassInfoE->NextSibling()->ToElement();
+		
 		
 		
 	}

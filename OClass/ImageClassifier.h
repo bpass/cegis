@@ -37,14 +37,10 @@ public:
 	//! Perform the classification
 
 	/*! This function runs the classification algorithm on
-		the current data values.  If the user passes in a
-		value for numClasses other than 0, he/she will override
-		the number of generated classes that was specified in the
-		constructor.
-		\param numClasses Number of classes to generate, overrides current value if not 0.
+		the current data values.
 		\throw GeneralException.
 	*/
-	void classify(int numClasses=0);
+	void classify();
 
 	//! Save results to an XML file.
 
@@ -86,6 +82,13 @@ public:
 		\throw GeneralException
 	*/
 	ImageClass<T> getClass(size_t index, size_t layer);
+
+	//! Check whether or not the number of classes had to be adjusted.
+	/*! This function checks to see if the classifier had to adjust
+		the number of classes being generated because of a lack of
+		enough unique values.
+	*/
+	bool numClassesAdjusted(size_t layer) {return m_numClassesAdjusted[layer];}
 
 	//! Set the class color value for class number "index".
 
@@ -158,7 +161,7 @@ private:
 	std::vector< std::vector<T> > m_values;
 
 	//! Number of classes.
-	size_t m_numClasses;
+	std::vector<size_t> m_numClasses;
 
 	//! Number of layers in the image file.
 	size_t m_numLayers;
@@ -175,11 +178,14 @@ private:
 	//! Image file being used.
 	std::string m_filename;
 
+	//! If the number of classes had to be adjusted to make up for a lack of enough unique values.
+	std::vector<bool> m_numClassesAdjusted;
+
 };
 
 template <class T>
 ImageClassifier<T>::ImageClassifier(const char* filename, size_t imageWidth, size_t imageHeight, size_t numLayers, size_t numClasses):
-	m_numClasses(numClasses), m_numLayers(numLayers), m_imageWidth(imageWidth), m_imageHeight(imageHeight) {
+	m_numLayers(numLayers), m_imageWidth(imageWidth), m_imageHeight(imageHeight) {
 	
 		
 	unsigned long curByte = 0;
@@ -199,21 +205,26 @@ ImageClassifier<T>::ImageClassifier(const char* filename, size_t imageWidth, siz
 	if((m_imageWidth == 0) || (m_imageHeight == 0)) 
 		throw(GeneralException("Error in ImageClassifier constructor: image width and height must be > 0"));
 
-	
+	for(size_t i = 0; i < numLayers; i++) {
+		m_numClasses.push_back(numClasses);
+		m_numClassesAdjusted.push_back(false);
+	}
+
 	m_layerSize =(unsigned long)( m_imageWidth * m_imageHeight * sizeof(T));
 
 	imageFile = fopen(filename, "rb");
 	if(imageFile) {
 		
 		m_filename.append(filename);
-
+	//	int tempInt = 0;
 		//read in all unique values of each layer
 		while(!feof(imageFile)) {
 
 			//if we are at the end of a layer
-			if(curByte == (m_layerSize - sizeof(T))) {
+			if(curByte == m_layerSize) {
 				std::sort(temp.begin(), temp.end());
 				m_values.push_back(temp);
+				
 				temp.clear();
 				curByte = 0;
 			}
@@ -222,9 +233,9 @@ ImageClassifier<T>::ImageClassifier(const char* filename, size_t imageWidth, siz
 			//read the next value from the file and 
 			//check to see if we allready have it.
 			fread((void*)&curVal, sizeof(T), 1, imageFile);	
-			if(!valueExists(curVal, temp))
+			if(!valueExists(curVal, temp)) {
 				temp.push_back(curVal);
-
+			}
 			curByte += sizeof(T);
 		}
 	}
@@ -308,38 +319,44 @@ void ImageClassifier<T>::setClassInfo(size_t index, size_t layer, const char* in
 }
 
 template <class T>
-void ImageClassifier<T>::classify(int numClasses) {
+void ImageClassifier<T>::classify() {
 	
 	//how many bytes per layer?
 	unsigned long layerSize = (unsigned long)(m_imageWidth * m_imageHeight * sizeof(T));
 
 	size_t numRemainingValues = 0; //values left to distribute
-	size_t k = 0; //counter
-	//if numClasses != 0, the user 
-	//wants to override the number of classes
-	//to be generated as specified in the constructor.
-	if(numClasses > 0) 
-		m_numClasses = numClasses;
+//	size_t k = 0; //counter
 
-	if(m_numClasses <= 0)
-		throw(GeneralException("Error in classify(): number of classes must be greater than zero"));
 
 	for(size_t l = 0; l < m_numLayers; l++) {
+		if(m_numClasses[l] <= 0)
+			throw(GeneralException("Error in classify(): number of classes must be greater than zero"));
+		
+		int numIterations = 0;
+		
+		size_t k = 0; //counter
 		std::vector< ImageClass<T> > curClasses;
 		std::vector< ImageClass<T> > classesTemp;	//temp storage for classes	
 		std::vector<double> errorDiffVec; //Store the error changes for each iteration
 		std::vector<double>::const_iterator errorDiffIter; //iterate through error diffs.
 		size_t numValues = m_values[l].size(); //number of unique values.
-		size_t classSize = (size_t)(numValues / m_numClasses);//how big each class should be
+		size_t classSize = (size_t)(numValues / m_numClasses[l]);//how big each class should be
+
+		//if there we are trying to generate more classes
+		//than we have unique values
+		if((classSize <= 0) && (numValues > 0)) {
+			m_numClasses[l] = numValues;
+			classSize = 1;
+			m_numClassesAdjusted[l] = true;
+		}
 
 		//if the number of values does not distribute out evenly among the classes,
 		//calculate the number of extra values that we need to place.
-		numRemainingValues = numValues - (classSize*m_numClasses);
+		numRemainingValues = numValues - (classSize*m_numClasses[l]);
 	
-		if(classSize <= 0) 
-			throw(GeneralException("Error in classify(): number of classes exceeds number of unique values."));
 	
 		size_t curIndex = 0; //current value index.
+		bool firstIteration = true;
 		double curMeanClass1 = 0;//mean of current class
 		double curMeanClass2 = 0;//mean of next class in list
 		double diff1 = 0; //distance from mean of second class to boundary value of first class.
@@ -350,7 +367,7 @@ void ImageClassifier<T>::classify(int numClasses) {
 		ImageClass<T> curClass; //current class being built
 
 		//build initial classes of size classSize
-		for(size_t i = 0; i < m_numClasses; i++) {
+		for(size_t i = 0; i < m_numClasses[l]; i++) {
 			char* number = new char[7];
 
 			for(int j = 0; j < 7; j++) 
@@ -368,8 +385,10 @@ void ImageClassifier<T>::classify(int numClasses) {
 			curClass.setInitialCapacity(classSize);
 
 			//if we still need to distribute some values across the classes
-			if(k < numRemainingValues) 
+			if(k < numRemainingValues) {
 				curClass++; //increase class capacity by 1;
+				k++;
+			}
 		
 			//fill current class with next chunk of values.
 			for(size_t j = 0; ((j < curClass.getInitialCapacity()) && (curIndex < numValues)); j++) {
@@ -381,17 +400,25 @@ void ImageClassifier<T>::classify(int numClasses) {
 			curClass.getMean(true);
 			curClass.getError(true);
 			classesTemp.push_back(curClass);
-			k++;
+			
 		
 		}
-		
+
 		curIndex = 0;
 		curClasses = classesTemp;
 		while(1) {
 			double errorDiff = 0;
 			double percentError = 0.0;
-			oldError = calcTotalError(classesTemp);
-			for(curIndex = 0; curIndex < (m_numClasses-1); curIndex++) {
+			
+			if(firstIteration) {
+				oldError = calcTotalError(classesTemp);
+				firstIteration = false;
+			}
+
+			else
+				oldError = newError;
+			
+			for(curIndex = 0; curIndex < (m_numClasses[l]-1); curIndex++) {
 				curMeanClass1 = classesTemp[curIndex].getMean(true);
 				curMeanClass2 = classesTemp[curIndex+1].getMean(true);
 				size_t class1EndpointIndex = classesTemp[curIndex].getNumValues()-1;
@@ -420,26 +447,27 @@ void ImageClassifier<T>::classify(int numClasses) {
 			//calc change in error
 			errorDiff = newError - oldError;
 			percentError = fabs((newError - oldError))/oldError; //per
-			
-		//	errorDiffIter = std::find(errorDiffVec.begin(), errorDiffVec.end(), errorDiff)
-			
+						
 			//if error has increased since last iteration, break and
 			//discard changes
 			if(errorDiff > 0)
 				break;
 			
-	//		//else save our changes
-	//		else if((errorDiff == 0) || (percentError <= 0.01) ) {
-	//			curClasses = classesTemp;
-	//			break;
-	//		}
-		
-			else 
+			
+			else if((errorDiff == 0)) {
 				curClasses = classesTemp;
+				break;
+			}
+		
+			//else save our changes
+			else {
+				curClasses = classesTemp;
+				numIterations++;
+			}
 			
 		}
 		
-	for(size_t j = 0; j < m_numClasses; j++)
+	for(size_t j = 0; j < m_numClasses[l]; j++)
 		curClasses[j].sort();	
 
 	 m_classes.push_back(curClasses);
@@ -540,7 +568,7 @@ void ImageClassifier<T>::saveReportXML(const char* filename, DataType type ) {
 			
 	for(size_t j = 0; j < m_numLayers; j++) {
 		dataE = new TiXmlElement("classificationData");
-		dataE->SetAttribute("numClasses", (int)m_numClasses);
+		dataE->SetAttribute("numClasses", (int)m_numClasses[j]);
 		
 		if(!m_filename.empty())
 				dataE->SetAttribute("imageFile", m_filename.c_str());
@@ -548,7 +576,7 @@ void ImageClassifier<T>::saveReportXML(const char* filename, DataType type ) {
 				dataE->SetAttribute("imageFile", "Not Set");
 		
 		dataE->SetAttribute("layerNumber", (int)j+1);
-		for(size_t i = 0; i < m_numClasses; i++) {
+		for(size_t i = 0; i < m_numClasses[j]; i++) {
 			size_t numValues = m_classes[j][i].getNumValues();
 			ClassColor curColor = m_classes[j][i].getColor();
 			for(size_t p = 0; p < 30; p++) {
@@ -655,11 +683,11 @@ void ImageClassifier<T>::saveReportHTML(const char* filename) {
 
 	for(size_t l = 0; l < m_numLayers; l++) {
 		//print out classification data tables, 5 classes at a time.
-		while(j < m_numClasses) {
+		while(j < m_numClasses[l]) {
 			fprintf(htmlFile, "<table border=\"1\" width=\"150\">\n");
 			fprintf(htmlFile, "<tr><td>&nbsp;</td>");
 			k = j;
-			for(int i = 0; (i < 5 && k < m_numClasses); i++) {
+			for(int i = 0; (i < 5 && k < m_numClasses[l]); i++) {
 				fprintf(htmlFile, "<th>Class %d</th>", k+1);
 				k++;
 			}
@@ -667,7 +695,7 @@ void ImageClassifier<T>::saveReportHTML(const char* filename) {
 			//prepare for printing low values
 			fprintf(htmlFile, "</tr><tr><td><b>Low</b></td>\n");
 			k = j;
-			for(int i = 0; (i < 5 && k < m_numClasses); i++) {
+			for(int i = 0; (i < 5 && k < m_numClasses[l]); i++) {
 				fprintf(htmlFile, "<td>%.3f</td>", (float)m_classes[l][k][0]);
 				k++;
 			}
@@ -675,7 +703,7 @@ void ImageClassifier<T>::saveReportHTML(const char* filename) {
 			//prepare for printing high values
 			fprintf(htmlFile, "</tr><tr><td><b>High</b></td>\n");
 			k = j;
-			for(int i = 0; (i < 5 && k < m_numClasses); i++) {
+			for(int i = 0; (i < 5 && k < m_numClasses[l]); i++) {
 				size_t numValues = m_classes[l][k].getNumValues();
 				fprintf(htmlFile, "<td>%.3f</td>", (float)m_classes[l][k][numValues-1]);
 				k++;
@@ -710,7 +738,7 @@ void ImageClassifier<T>::saveReport(const char* filename) {
 			fprintf(outputFile, "Classification Report:\n\n");
 		for(size_t j = 0; j < m_numLayers; j++) {
 			fprintf(outputFile, "Layer: %d\n", j+1);
-			for(size_t i = 0; i < m_numClasses; i++) {
+			for(size_t i = 0; i < m_numClasses[j]; i++) {
 				fprintf(outputFile, "Class %d:\n", i+1);
 				fprintf(outputFile, "Low: %.3f\n", (float)m_classes[j][i][0]);
 				fprintf(outputFile, "High: %.3f\n\n", (float)m_classes[j][i][m_classes[j][i].getNumValues()-1]);

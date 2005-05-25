@@ -459,6 +459,14 @@ void COClassDlg::runClassification(classificationParams* params) {
 	CString cstringHtmlFilename;
 	CString cstringTextFilename;
 	CString curFile;
+	//check if the number of classes had to be adjusted for
+	//any layers and report it to the user.
+	std::string classAdjustments("The following layers did not contain enough\n"
+								 " unique values for the number of classes you\n"
+								 " requested to generate. The number of generated\n"
+								 " classes has been adjusted accordingly\n\n");
+	char tempBuff[10]; //temp buffer;
+	bool adjusted = false; // did a class number adjustment occur?
 	const char* filename = NULL;
 	if(!params) {
 	    AfxMessageBox("Classification Parameters NULL.", MB_ICONWARNING | MB_OK);
@@ -476,6 +484,17 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<unsigned char> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
+				for(size_t i = 0; i < params->numLayers; i++) {
+					if(classifier.numClassesAdjusted(i)) {
+						adjusted = true;
+						classAdjustments.append(itoa(i, tempBuff, 10));
+						classAdjustments.append(" ");
+					}
+				}
+				if(adjusted)
+					AfxMessageBox(classAdjustments.c_str(), MB_ICONINFORMATION | MB_OK);
+
+
 				if(params->claOutput) 
 					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
 				
@@ -505,6 +524,16 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<char> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
+				for(size_t i = 0; i < params->numLayers; i++) {
+					if(classifier.numClassesAdjusted(i)) {
+						adjusted = true;
+						classAdjustments.append(itoa(i, tempBuff, 10));
+						classAdjustments.append(" ");
+					}
+				}
+				if(adjusted)
+					AfxMessageBox(classAdjustments.c_str(), MB_ICONINFORMATION | MB_OK);
+
 				if(params->claOutput) 
 					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
 
@@ -533,6 +562,17 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<unsigned short> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
+				for(size_t i = 0; i < params->numLayers; i++) {
+					if(classifier.numClassesAdjusted(i)) {
+						adjusted = true;
+						classAdjustments.append(itoa(i, tempBuff, 10));
+						classAdjustments.append(" ");
+					}
+				}
+				if(adjusted)
+					AfxMessageBox(classAdjustments.c_str(), MB_ICONINFORMATION | MB_OK);
+
+
 				if(params->claOutput) 
 					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
 				
@@ -562,6 +602,17 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<short> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
+				for(size_t i = 0; i < params->numLayers; i++) {
+					if(classifier.numClassesAdjusted(i)) {
+						adjusted = true;
+						classAdjustments.append(itoa(i, tempBuff, 10));
+						classAdjustments.append(" ");
+					}
+				}
+				if(adjusted)
+					AfxMessageBox(classAdjustments.c_str(), MB_ICONINFORMATION | MB_OK);
+
+
 				if(params->claOutput) 
 					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
 				
@@ -591,6 +642,17 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<unsigned long> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
+				for(size_t i = 0; i < params->numLayers; i++) {
+					if(classifier.numClassesAdjusted(i)) {
+						adjusted = true;
+						classAdjustments.append(itoa(i, tempBuff, 10));
+						classAdjustments.append(" ");
+					}
+				}
+				if(adjusted)
+					AfxMessageBox(classAdjustments.c_str(), MB_ICONINFORMATION | MB_OK);
+
+
 				if(params->claOutput) 
 					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
 				
@@ -620,6 +682,17 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<long> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
+				for(size_t i = 0; i < params->numLayers; i++) {
+					if(classifier.numClassesAdjusted(i)) {
+						adjusted = true;
+						classAdjustments.append(itoa(i, tempBuff, 10));
+						classAdjustments.append(" ");
+					}
+				}
+
+				if(adjusted)
+					AfxMessageBox(classAdjustments.c_str(), MB_ICONINFORMATION | MB_OK);
+
 				if(params->claOutput) 
 					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
 				
@@ -649,6 +722,18 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<float> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
+
+				for(size_t i = 0; i < params->numLayers; i++) {
+					if(classifier.numClassesAdjusted(i)) {
+						adjusted = true;
+						classAdjustments.append(itoa(i, tempBuff, 10));
+						classAdjustments.append(" ");
+					}
+				}
+				
+				if(adjusted)
+					AfxMessageBox(classAdjustments.c_str(), MB_ICONINFORMATION | MB_OK);
+						
 				if(params->claOutput) 
 					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
 				
@@ -678,6 +763,16 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<double> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
+				for(size_t i = 0; i < params->numLayers; i++) {
+					if(classifier.numClassesAdjusted(i)) {
+						adjusted = true;
+						classAdjustments.append(itoa(i, tempBuff, 10));
+						classAdjustments.append(" ");
+					}
+				}
+				if(adjusted)
+					AfxMessageBox(classAdjustments.c_str(), MB_ICONINFORMATION | MB_OK);
+
 				if(params->claOutput) 
 					classifier.saveReportXML(params->claFileName.c_str(), (DataType)params->dataType);
 				

@@ -26,6 +26,7 @@ void Mercator::inverse_init() {
 	m_es = 1.0 - SQUARE(temp);
 	m_e = sqrt(m_es);
 	m_m1 = cos(m_centerLat)/(sqrt(1.0 - m_es * sin(m_centerLat) * sin(m_centerLat)));
+	m_invInitNeeded = false;
 
 }
 void Mercator::inverse(double x, double y, double* lon, double* lat) 
@@ -33,6 +34,11 @@ void Mercator::inverse(double x, double y, double* lon, double* lat)
 	double ts;		/* small t value				*/
 	double sin_phii;	/* sin value					*/
 	long flag;		/* error flag 					*/
+	
+	if(m_invInitNeeded)
+		inverse_init();
+	
+	Util::convertCoords(m_unitCode, METER, x, y);
 
 	/* Inverse equations
 	-----------------*/
@@ -61,11 +67,17 @@ void Mercator::forward_init() {
 	m_es = 1.0 - SQUARE(temp);
 	m_e = sqrt(m_es);
 	m_m1 = cos(m_centerLat)/(sqrt(1.0 - m_es * sin(m_centerLat) * sin(m_centerLat)));
+	m_forInitNeeded = false;
 }
 
 void Mercator::forward(double lon, double lat, double* x, double* y) {
 	double ts;		/* small t value				*/
 	double sinphi;		/* sin value					*/
+
+	if(m_forInitNeeded)
+		forward_init();
+
+	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 
 	/* Forward equations
 	 -----------------*/
@@ -85,6 +97,7 @@ void Mercator::forward(double lon, double lat, double* x, double* y) {
 	 if(y)
 		 *y = m_y_coord;
 }
+
 void Mercator::setCenterLat(double lat) {
 	long err = 0;
 	double temp = 0;	
@@ -93,6 +106,7 @@ void Mercator::setCenterLat(double lat) {
 		throw(ProjException(err, "Mercator::setCenterLat()"));
 
 	m_centerLat = temp;
+	setInit();
 }
 
 void Mercator::setCenterLon(double lon) {
@@ -103,6 +117,7 @@ void Mercator::setCenterLon(double lon) {
 		throw(ProjException(err, "Mercator::setCenterLon()"));
 
 	m_centerLon = temp;
+	setInit();
 }
 
 

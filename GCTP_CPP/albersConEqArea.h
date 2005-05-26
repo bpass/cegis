@@ -1,36 +1,30 @@
 #ifndef ALBER_CON_EQ_AREA_H
 #define ALBER_CON_EQ_AREA_H
-#include "projection.h"
+#include "conic.h"
 
-class AlbersConEqArea: public Projection {
+//! Albers Conical Equal Area projection object.
+class AlbersConEqArea: public Conic {
 public:
+	//! Default constructor
 	AlbersConEqArea();
-	AlbersConEqArea(double gctpParameters[], int units = 0, int datum = 0, int spheroid = 0);
 
-	
-	//transformation functions
+	//! Initialize all fields neccessary to perform our forward and inverse transformations.
+	AlbersConEqArea(double gctpParameters[], int units = 0, long datum = 0, long spheroid = 0);
+
+	//! See documentation for Projection.
 	void forward(double lon, double lat, double* x = NULL, double*y = NULL);
+
+	//! See documentation for Projection.
 	void inverse(double x, double y, double* lat = NULL, double* lon = NULL);
 
-	//get / set functions
-	void setCenterLon(double lon);
-	void setCenterLat(double lat);
-	void setStdParallel1(double lat1);
-	void setStdParallel2(double lat2);
-
 protected:
+
+  //! See documentation for Projection.
   void forward_init();
+
+  //! See documentation for Projection.
   void inverse_init();
 
-  double m_c;              /* constant c                           */
-  double m_e3;             /* eccentricity                         */
-  double m_es;			   /* eccentricity squared			       */
-  double m_rh;             /* heigth above elipsoid                */
-  double m_ns0;            /* ratio between meridians              */
-  double m_lon_center;     /* center longitude                     */
-  double m_lat_center;
-  double m_stdParallelLat1; /* Latitude of standard parallel 1     */
-  double m_stdParallelLat2; /* Latitude of standard parallel 2     */
 };
 
 #endif

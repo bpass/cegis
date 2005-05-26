@@ -103,9 +103,7 @@ void Equirectangular::setCenterLat(double lat) {
 		throw(ProjException(tempErr, "Equirectangular::setCenterLat()"));
 
 	m_centerLatitude = tempNum;
-	m_forInitNeeded = true;
-	m_invInitNeeded = true;
-
+setInit();
 }
 
 void Equirectangular::setCenterLon(double lon) {
@@ -115,8 +113,7 @@ void Equirectangular::setCenterLon(double lon) {
 		throw(ProjException(tempErr, "Equirectangular::setCenterLat()"));
 
 	m_centerLongitude = tempNum;
-	m_forInitNeeded = true;
-	m_invInitNeeded = true;
+	setInit();
 
 }
 

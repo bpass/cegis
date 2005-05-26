@@ -11,7 +11,7 @@ Sinusoidal::Sinusoidal(): Projection(), m_centerLongitude(0.0)
 	setNumber(SNSOID);
 }
 
-Sinusoidal::Sinusoidal( double gctpParameters[15], int units, int datum, int spheroid) 
+Sinusoidal::Sinusoidal( double gctpParameters[15], int units, long datum, long spheroid) 
 : Projection( gctpParameters, units, datum, spheroid )
 {
   setName("Sinusoidal");
@@ -90,7 +90,6 @@ void Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
 
 void Sinusoidal::forward_init (  )
 {
-  
   printf( "SINUSOIDAL\n" );
   printf( "Radius = %f\n", m_radius );
   printf( "Center Longitude = %f\n", m_centerLongitude );
@@ -115,8 +114,7 @@ void Sinusoidal::setCenterLon(double centerLon) {
 	m_centerLongitude = Util::paksz(centerLon, &err) * 3600 * S2R;
 	if(err != 0)
 		throw(ProjException(err, "Sinusoidal::setCenterLon()"));
-	m_forInitNeeded = true;
-	m_invInitNeeded = true;
+	setInit();
 }
 
 

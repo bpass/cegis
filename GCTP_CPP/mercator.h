@@ -5,7 +5,7 @@
 class Mercator: public Projection {
 public:
 	Mercator();
-	Mercator(double gctpParams[], int units, long datum, long spheroid);
+	Mercator(double gctpParams[],  int units = 0, long datum = 0, long spheroid = 0);
 
 	void forward(double lon, double lat, double* x = NULL, double* y = NULL);
 	void inverse(double x, double y, double* lon = NULL, double* lat = NULL);
@@ -22,6 +22,7 @@ protected:
 	double m_e;
 	double m_es;
 	double m_m1;
+
 };
 
 #endif

@@ -137,6 +137,9 @@
 				RelativePath=".\albersConEqArea.cpp">
 			</File>
 			<File
+				RelativePath=".\conic.cpp">
+			</File>
+			<File
 				RelativePath="equirectangular.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -153,6 +156,9 @@
 						Optimization="2"
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\lambertcc.cpp">
 			</File>
 			<File
 				RelativePath="main.cpp">
@@ -174,6 +180,9 @@
 			</File>
 			<File
 				RelativePath=".\mercator.cpp">
+			</File>
+			<File
+				RelativePath=".\Mollweide.cpp">
 			</File>
 			<File
 				RelativePath="projection.cpp">
@@ -228,13 +237,34 @@
 				RelativePath=".\albersConEqArea.h">
 			</File>
 			<File
+				RelativePath=".\conic.h">
+			</File>
+			<File
 				RelativePath=".\constants.h">
+			</File>
+			<File
+				RelativePath=".\cylindrical.h">
+			</File>
+			<File
+				RelativePath=".\equidistantc.h">
 			</File>
 			<File
 				RelativePath="equirectangular.h">
 			</File>
 			<File
+				RelativePath=".\lambertcc.h">
+			</File>
+			<File
 				RelativePath=".\mercator.h">
+			</File>
+			<File
+				RelativePath=".\mollweide.h">
+			</File>
+			<File
+				RelativePath=".\polarstereo.h">
+			</File>
+			<File
+				RelativePath=".\polyconic.h">
 			</File>
 			<File
 				RelativePath="projection.h">
@@ -243,18 +273,37 @@
 				RelativePath=".\projexception.h">
 			</File>
 			<File
+				RelativePath=".\pseudocylindrical.h">
+			</File>
+			<File
 				RelativePath="sinusoidal.h">
+			</File>
+			<File
+				RelativePath=".\stateplane.h">
 			</File>
 			<File
 				RelativePath=".\transformation.h">
 			</File>
 			<File
+				RelativePath=".\transversemercator.h">
+			</File>
+			<File
 				RelativePath=".\util.h">
+			</File>
+			<File
+				RelativePath=".\utm.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+		</Filter>
+		<Filter
+			Name="other"
+			Filter="">
+			<File
+				RelativePath=".\progress.txt">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

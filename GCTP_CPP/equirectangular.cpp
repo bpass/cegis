@@ -37,6 +37,8 @@ void Equirectangular::forward( double lon, double lat, double* x, double* y )
      *y = m_y_coord;
   }
 
+  Util::convertCoords(RADIAN, DEGREE, lat, lon);
+
 }
 
 void Equirectangular::inverse ( double x, double y, double* lon, double* lat )
@@ -68,6 +70,8 @@ void Equirectangular::inverse ( double x, double y, double* lon, double* lat )
   {
      *lat = m_latitude;
   }
+	 
+  Util::convertCoords(METER, m_unitCode, x, y);
 
 }
 

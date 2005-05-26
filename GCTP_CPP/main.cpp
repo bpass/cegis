@@ -27,8 +27,7 @@ int main( int argc, char **argv )
   double y = 0;
   
   try {
-	 Sinusoidal sinSd(sinusoidalParams, METER, 0, CLARKE_1866);
-	 sinSd.forward(lon, lat, &x, &y);
+	 Sinusoidal sinSd(sinusoidalParams, METER, 0, 0);
 
 	 Equirectangular eq(equirectParams, METER, 0, 0);
      AlbersConEqArea albers(alberParams, METER, 0, 0);

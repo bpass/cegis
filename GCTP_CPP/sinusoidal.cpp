@@ -26,6 +26,7 @@ void Sinusoidal::forward ( double lon, double lat, double* x, double* y )
   
   if(m_forInitNeeded)
 	  forward_init();
+
   //convert lat/lon from dec degrees to radians
   Util::convertCoords(DEGREE, RADIAN, lat, lon);
 
@@ -44,7 +45,7 @@ void Sinusoidal::forward ( double lon, double lat, double* x, double* y )
   {
      *y = m_y_coord;
   }
-
+  Util::convertCoords(RADIAN, DEGREE, lat, lon);
 }
 
 void Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
@@ -85,6 +86,7 @@ void Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
   {
      *lat = m_latitude;
   }
+  Util::convertCoords(METER, m_unitCode, x, y);
 
 }
 

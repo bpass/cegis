@@ -158,9 +158,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\lambertcc.cpp">
-			</File>
-			<File
 				RelativePath="main.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -250,9 +247,6 @@
 			</File>
 			<File
 				RelativePath="equirectangular.h">
-			</File>
-			<File
-				RelativePath=".\lambertcc.h">
 			</File>
 			<File
 				RelativePath=".\mercator.h">

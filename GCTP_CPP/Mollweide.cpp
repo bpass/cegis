@@ -67,6 +67,8 @@ void Mollweide::forward(double lon, double lat, double* x, double* y)
 	m_x_coord = 0.900316316158 * m_radius * delta_lon * cos(theta) + m_falseEasting;
 	m_y_coord = 1.4142135623731 * m_radius * sin(theta) + m_falseNorthing;
 
+	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
+
 	if(x)
 		*x = m_x_coord;
 	if(y)
@@ -103,6 +105,8 @@ void Mollweide::inverse(double x, double y, double* lon, double* lat)
   arg = (2.0 * theta + sin(2.0 * theta)) / PI;
   if(fabs(arg) > 1.0)arg=1.0;
   m_latitude = asin(arg);
+
+  Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
 
   if(lat)
 	  *lat = m_latitude;

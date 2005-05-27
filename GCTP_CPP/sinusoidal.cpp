@@ -36,6 +36,8 @@ void Sinusoidal::forward ( double lon, double lat, double* x, double* y )
   m_x_coord = m_radius * deltaLon * cos( lat ) + m_falseEasting;
   m_y_coord = m_radius * lat + m_falseNorthing;
 
+  Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
+
   if( x != NULL )
   {
      *x = m_x_coord;
@@ -76,6 +78,8 @@ void Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
      m_longitude = m_centerLongitude;
   }
 
+  Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
+
   if( lon != NULL )
   {
      *lon = m_longitude;
@@ -85,7 +89,6 @@ void Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
   {
      *lat = m_latitude;
   }
-  Util::convertCoords(RADIAN, DEGREE, *lon, *lat);
 
 }
 

@@ -27,6 +27,8 @@ void Equirectangular::forward( double lon, double lat, double* x, double* y )
   m_x_coord = m_falseEasting + m_radius * deltaLon * cos( m_centerLatitude );
   m_y_coord = m_falseNorthing + m_radius * lat;
 
+  Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
+
   if( x != NULL )
   {
      *x = m_x_coord;
@@ -58,7 +60,9 @@ void Equirectangular::inverse ( double x, double y, double* lon, double* lat )
 	  throw(ProjException(174, "Equirectangular::inverse()"));
 
   m_longitude = Util::adjust_lon( m_centerLongitude + x / ( m_radius * cos( m_centerLongitude )));
-  
+
+  Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
+
   
   if( lon != NULL )
   {
@@ -70,7 +74,6 @@ void Equirectangular::inverse ( double x, double y, double* lon, double* lat )
      *lat = m_latitude;
   }
 	 
-  Util::convertCoords(RADIAN, DEGREE, *lon, *lat);
 
 }
 

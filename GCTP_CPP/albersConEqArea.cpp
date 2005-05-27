@@ -196,10 +196,15 @@ void AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
 
 	m_longitude = Util::adjust_lon(theta/m_ns0 + m_centerLon);
 
+	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
+
 	if(lat)
 		*lat = m_latitude;
 	if(lon)
 		*lon = m_longitude;
+
+	
+
 
 }
 
@@ -223,10 +228,13 @@ void AlbersConEqArea::forward(double lon, double lat, double* x, double* y) {
 	m_x_coord = rh1 * sin(theta) + m_falseEasting;
 	m_y_coord = m_rh - rh1 * cos(theta) + m_falseNorthing;
 
+	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
+
 	if(x)
 		*x = m_x_coord;
 	if(y)
 		*y = m_y_coord;
+	
 
 }
 

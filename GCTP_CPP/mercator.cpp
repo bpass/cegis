@@ -92,6 +92,8 @@ void Mercator::forward(double lon, double lat, double* x, double* y) {
 		m_y_coord = m_falseNorthing - m_rMajor * m_m1 * log(ts);
 	 }
 
+	 Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
+
 	 if(x)
 		 *x = m_x_coord;
 	 if(y)

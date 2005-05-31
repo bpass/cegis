@@ -1,4 +1,4 @@
-// $Id: mapimgform.h,v 1.11 2005/04/11 14:29:47 jtrent Exp $
+// $Id: mapimgform.h,v 1.12 2005/05/31 22:21:44 rbuehler Exp $
 
 
 /****************************************************************************
@@ -58,7 +58,7 @@ protected slots:
    void aboutClicked();
    void showAboutQt(){QMessageBox::aboutQt( this );}
 
-//Tools
+   //Tools
    void launchWebTool( const QString& url );
    void webDSSClicked();
 
@@ -109,7 +109,7 @@ private:
 
    QString imgName;
    bool imgSet; //Has the user opened a .img file?
-      //Used to determine wether or not to save .info files when the user says to
+   //Used to determine wether or not to save .info files when the user says to
    bool newInfo; //Is the user generating a new .xml file for the .img?
 
    bool ignorePreviewSignals; //Are actions being automated on/off?

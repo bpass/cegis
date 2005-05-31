@@ -1,4 +1,4 @@
-// $Id: imgio.cpp,v 1.8 2005/03/25 04:16:57 rbuehler Exp $
+// $Id: imgio.cpp,v 1.9 2005/05/31 22:21:44 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -195,11 +195,6 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
       inbox[0][1] = in_line_temp;
       inbox[0][0] = in_samp_temp;
 
-      /// jtrent
-      //          printf( "get_coords  Upper Left ( %f, %f )\n", inbox[0][0], inbox[0][1] );
-      //          fflush( stdout );
-
-
 
       /*------------------------*/
       /* find lower left corner */
@@ -264,11 +259,6 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
       inbox[3][1] = in_line_temp;
       inbox[3][0] = in_samp_temp;
 
-      /// jtrent
-      //          printf( "get_coords  Lower Left ( %f, %f )\n", inbox[3][0], inbox[3][1] );
-      //          fflush( stdout );
-
-
    } //else(need to get ul&ll corners)
 
 
@@ -308,12 +298,6 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
    inbox[1][0] = in_samp_temp;
 
 
-   /// jtrent
-   //          printf( "get_coords  Upper Right ( %f, %f )\n", inbox[1][0], inbox[1][1] );
-   //          fflush( stdout );
-
-
-
 
    /*-------------------------*/
    /* find lower right corner */
@@ -351,10 +335,6 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
    inbox[2][1] = in_line_temp;
    inbox[2][0] = in_samp_temp;
 
-
-   /// jtrent
-   //          printf( "get_coords  Lower Right ( %f, %f )\n", inbox[2][0], inbox[2][1] );
-   //          fflush( stdout );
 
    //----- Success! Got all four corners, OK to reuse these next time
    find2corners = 1;

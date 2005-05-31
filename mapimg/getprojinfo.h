@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.33 2005/04/28 14:18:34 jtrent Exp $
+// $Id: getprojinfo.h,v 1.34 2005/05/31 22:21:44 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -294,7 +294,6 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
                      type dataValue = (type)0;
                      bool allIgnored = true;
                      StatisticMap coverageMap;
-                     //DBG
                      QString coverageString;
                      int bob;
 

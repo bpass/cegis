@@ -9,33 +9,33 @@
 
 class MapimgProgressDialog : public QProgressDialog
 {
- Q_OBJECT
+   Q_OBJECT
 
 public:
-       MapimgProgressDialog( const QColor* color1 = 0, const QColor* color2 = 0, QWidget* creator = 0, const char* name = 0, bool modal = FALSE, WFlags f = 0 );
-       MapimgProgressDialog( const QString& labelText, const QString& cancelButtonText, int totalSteps, const QColor* color1 = 0, const QColor* color2 = 0, QWidget* creator = 0, const char* name = 0, bool modal = FALSE, WFlags f = 0 );
-       ~MapimgProgressDialog();
+   MapimgProgressDialog( const QColor* color1 = 0, const QColor* color2 = 0, QWidget* creator = 0, const char* name = 0, bool modal = FALSE, WFlags f = 0 );
+   MapimgProgressDialog( const QString& labelText, const QString& cancelButtonText, int totalSteps, const QColor* color1 = 0, const QColor* color2 = 0, QWidget* creator = 0, const char* name = 0, bool modal = FALSE, WFlags f = 0 );
+   ~MapimgProgressDialog();
 
 public slots:
-       void setProgress( int progress );
-       void setTotalSteps( int totalSteps );
-       void setProgress( int progress, int totalSteps );
+   void setProgress( int progress );
+   void setTotalSteps( int totalSteps );
+   void setProgress( int progress, int totalSteps );
 
 private:
-        void defaults();
+   void defaults();
 
-        QColor* colorStart;
-        QColor* colorEnd;
+   QColor* colorStart;
+   QColor* colorEnd;
 
-        double  deltaRed;
-        double  deltaGreen;
-        double  deltaBlue;
+   double  deltaRed;
+   double  deltaGreen;
+   double  deltaBlue;
 
-        double  currentRed;
-        double  currentGreen;
-        double  currentBlue;
+   double  currentRed;
+   double  currentGreen;
+   double  currentBlue;
 
-        int     stepsPerUpdate;
+   int     stepsPerUpdate;
 };
 
 #endif //MAPIMGPROGRESSDIALOG_H

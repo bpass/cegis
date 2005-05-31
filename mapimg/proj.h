@@ -1,4 +1,4 @@
-// $Id: proj.h,v 1.4 2005/03/03 15:26:30 jtrent Exp $
+// $Id: proj.h,v 1.5 2005/05/31 22:21:45 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -12,38 +12,38 @@
 /* Projection codes
 
 
-   0 = Geographic
-   1 = Universal Transverse Mercator (UTM)
-   2 = State Plane Coordinates
-   3 = Albers Conical Equal Area
-   4 = Lambert Conformal Conic
-   5 = Mercator
-   6 = Polar Stereographic
-   7 = Polyconic
-   8 = Equidistant Conic
-   9 = Transverse Mercator
-  10 = Stereographic
-  11 = Lambert Azimuthal Equal Area
-  12 = Azimuthal Equidistant
-  13 = Gnomonic
-  14 = Orthographic
-  15 = General Vertical Near-Side Perspective
-  16 = Sinusiodal
-  17 = Equirectangular
-  18 = Miller Cylindrical
-  19 = Van der Grinten
-  20 = (Hotine) Oblique Mercator 
-  21 = Robinson
-  22 = Space Oblique Mercator (SOM)
-  23 = Alaska Conformal
-  24 = Interrupted Goode Homolosine 
-  25 = Mollweide
-  26 = Interrupted Mollweide
-  27 = Hammer
-  28 = Wagner IV
-  29 = Wagner VII
-  30 = Oblated Equal Area
-  99 = User defined
+0 = Geographic
+1 = Universal Transverse Mercator (UTM)
+2 = State Plane Coordinates
+3 = Albers Conical Equal Area
+4 = Lambert Conformal Conic
+5 = Mercator
+6 = Polar Stereographic
+7 = Polyconic
+8 = Equidistant Conic
+9 = Transverse Mercator
+10 = Stereographic
+11 = Lambert Azimuthal Equal Area
+12 = Azimuthal Equidistant
+13 = Gnomonic
+14 = Orthographic
+15 = General Vertical Near-Side Perspective
+16 = Sinusiodal
+17 = Equirectangular
+18 = Miller Cylindrical
+19 = Van der Grinten
+20 = (Hotine) Oblique Mercator 
+21 = Robinson
+22 = Space Oblique Mercator (SOM)
+23 = Alaska Conformal
+24 = Interrupted Goode Homolosine 
+25 = Mollweide
+26 = Interrupted Mollweide
+27 = Hammer
+28 = Wagner IV
+29 = Wagner VII
+30 = Oblated Equal Area
+99 = User defined
 */
 
 /* Define projection codes */
@@ -90,16 +90,16 @@
 #define INT_FEET 5		/* International Feet */
 
 /* The STPLN_TABLE unit value is specifically used for State Plane -- if units
-   equals STPLN_TABLE and Datum is NAD83--actual units are retrieved from
-   a table according to the zone.  If Datum is NAD27--actual units will be feet.
-   An error will occur with this unit if the projection is not State Plane.  */
+equals STPLN_TABLE and Datum is NAD83--actual units are retrieved from
+a table according to the zone.  If Datum is NAD27--actual units will be feet.
+An error will occur with this unit if the projection is not State Plane.  */
 
 #define STPLN_TABLE 6
 
 /* General code numbers */
 
 #define IN_BREAK -2		/*  Return status if the interupted projection
-				    point lies in the break area */
+point lies in the break area */
 #define COEFCT 15		/*  projection coefficient count */
 #define PROJCT 30		/*  projection count */
 #define SPHDCT 31		/*  spheroid count */
@@ -114,22 +114,22 @@
 /* GCTP Function prototypes */
 
 long alberforint(double r_maj, double r_min, double lat1, double lat2,
-	double lon0, double lat0, double false_east, double false_north);
+                 double lon0, double lat0, double false_east, double false_north);
 long alberfor(double lon, double lat, double *x, double *y);
 long alberinvint( double r_maj, double r_min, double lat1, double lat2,
-	double lon0, double lat0, double false_east, double false_north);
+                 double lon0, double lat0, double false_east, double false_north);
 long alberinv( double x, double y, double *lon, double *lat);
 long alconforint( double r_maj, double r_min, double false_east,
-	double false_north);
+                 double false_north);
 long alconfor(double lon, double lat, double *x, double *y);
 long alconinvint( double r_maj, double r_min, double false_east,
-	double false_north);
+                 double false_north);
 long alconinv( double x, double y, double *lon, double *lat);
 long azimforint( double r_maj, double center_lon, double center_lat,
-	double false_east, double false_north);
+                double false_east, double false_north);
 long azimfor( double lon, double lat, double *x, double *y);
 long aziminvint( double r_maj, double center_lon, double center_lat,
-	double false_east, double false_north);
+                double false_east, double false_north);
 long aziminv( double x, double y, double *lon, double *lat);
 
 /* Functions residing in cproj.c */
@@ -140,9 +140,9 @@ double qsfnz (double eccent, double sinphi );
 double phi1z (double eccent, double qs, long  *flag);
 double phi2z(double eccent, double ts, long *flag);
 double phi3z(double ml, double e0, double e1, double e2, double e3,
-	long *flag);
+             long *flag);
 double phi4z (double eccent, double e0, double e1, double e2, double e3,
-	double a, double b, double *c, double *phi);
+              double a, double b, double *c, double *phi);
 double pakcz(double pak);
 double pakr2dm(double pak);
 double tsfnz(double eccent, double phi, double sinphi);
@@ -158,119 +158,119 @@ long calc_utm_zone(double lon);
 /* End of functions residing in cproj.h */
 
 long eqconforint(double r_maj, double r_min, double lat1, double lat2,
-	double center_lon, double center_lat, double false_east,
-	double false_north,
-	long mode);
+                 double center_lon, double center_lat, double false_east,
+                 double false_north,
+                 long mode);
 long eqconfor(double lon, double lat, double *x, double *y);
 long eqconinvint(double r_maj, double r_min, double lat1, double lat2,
-	double center_lon, double center_lat, double false_east,
-	double false_north, long mode);
+                 double center_lon, double center_lat, double false_east,
+                 double false_north, long mode);
 long eqconinv(double x, double y, double *lon, double *lat);
 long equiforint(double r_maj, double center_lon, double lat1,
-	double false_east, double false_north);
+                double false_east, double false_north);
 long equifor(double lon, double lat, double *x, double *y);
 long equiinvint(double r_maj, double center_lon, double lat1,
-	double false_east, double false_north);
+                double false_east, double false_north);
 long equiinv(double x, double y, double *lon, double *lat);
 void for_init(long outsys, long outzone, double *outparm, long outspheroid,
-	char *fn27, char *fn83, long *iflg, long (*for_trans[])());
+              char *fn27, char *fn83, long *iflg, long (*for_trans[])());
 void gctp(double *incoor, long *insys, long *inzone, double *inparm,
-	long *inunit, long *inspheroid, long *ipr, char *efile, long *jpr,
-	char *pfile, FILE *pFile_p, double *outcoor, long *outsys, long *outzone,
-	double *outparm, long *outunit, long *outspheroid, char fn27[],
-	char fn83[], long *iflg);
+          long *inunit, long *inspheroid, long *ipr, char *efile, long *jpr,
+          char *pfile, FILE *pFile_p, double *outcoor, long *outsys, long *outzone,
+          double *outparm, long *outunit, long *outspheroid, char fn27[],
+          char fn83[], long *iflg);
 long gnomforint(double r, double center_long, double center_lat,
-	double false_east, double false_north);
+                double false_east, double false_north);
 long gnomfor(double lon, double lat, double *x, double *y);
 long gnominvint(double r, double center_long, double center_lat,
-	double false_east, double false_north);
+                double false_east, double false_north);
 long gnominv(double x, double y, double *lon, double *lat);
 long goodforint(double r);
 long goodfor(double lon, double lat, double *x, double *y);
 long goodinvint(double r);
 long goodinv(double x, double y, double *lon, double *lat);
 long gvnspforint(double r, double h, double center_long, double center_lat,
-	double false_east, double false_north);
+                 double false_east, double false_north);
 long gvnspfor(double lon, double lat, double *x, double *y);
 long gvnspinvint(double r, double h, double center_long, double center_lat,
-	double false_east, double false_north);
+                 double false_east, double false_north);
 long gvnspinv(double x, double y, double *lon, double *lat);
 long hamforint(double r, double center_long, double false_east,
-	double false_north);
+               double false_north);
 long hamfor(double lon, double lat, double *x, double *y);
 long haminvint(double r, double center_long, double false_east,
-	double false_north);
+               double false_north);
 long haminv(double x, double y, double *lon, double *lat);
 long imolwforint(double r);
 long imolwfor(double lon, double lat, double *x, double *y);
 long imolwinvint(double r);
 long imolwinv(double x, double y, double *lon, double *lat);
 void inv_init(long insys, long inzone, double *inparm, long inspheroid,
-	char *fn27, char *fn83, long *iflg, long (*inv_trans[])());
+              char *fn27, char *fn83, long *iflg, long (*inv_trans[])());
 long lamazforint(double r, double center_long, double center_lat,
-	double false_east, double false_north);
+                 double false_east, double false_north);
 long lamazfor(double lon, double lat, double *x, double *y);
 long lamazinvint(double r, double center_long, double center_lat,
-	double false_east, double false_north);
+                 double false_east, double false_north);
 long lamazinv(double x, double y, double *lon, double *lat);
 long lamccforint(double r_maj, double r_min, double lat1, double lat2,
-	double c_lon, double c_lat, double false_east, double false_north);
+                 double c_lon, double c_lat, double false_east, double false_north);
 long lamccfor(double lon, double lat, double *x, double *y);
 long lamccinvint(double r_maj, double r_min, double lat1, double lat2,
-	double c_lon, double c_lat, double false_east, double false_north);
+                 double c_lon, double c_lat, double false_east, double false_north);
 long lamccinv(double x, double y, double *lon, double *lat);
 long merforint(double r_maj, double r_min, double center_lon, double center_lat,
-	double false_east, double false_north);
+               double false_east, double false_north);
 long merfor(double lon, double lat, double *x, double *y);
 long merinvint(double r_maj, double r_min, double center_lon, double center_lat,
-	double false_east, double false_north);
+               double false_east, double false_north);
 long merinv(double x, double y, double *lon, double *lat);
 long millforint(double r, double center_long, double false_east,
-	double false_north);
+                double false_north);
 long millfor(double lon, double lat, double *x, double *y);
 long millinvint(double r, double center_long, double false_east,
-	double false_north);
+                double false_north);
 long millinv(double x, double y, double *lon, double *lat);
 long molwforint(double r, double center_long, double false_east,
-	double false_north);
+                double false_north);
 long molwfor(double lon, double lat, double *x, double *y);
 long molwinvint(double r, double center_long, double false_east,
-	double false_north);
+                double false_north);
 long molwinv(double x, double y, double *lon, double *lat);
 long obleqforint(double r, double center_long, double center_lat,
-	double shape_m, double shape_n, double angle, double false_east,
-	double false_north);
+                 double shape_m, double shape_n, double angle, double false_east,
+                 double false_north);
 long obleqfor(double lon, double lat, double *x, double *y);
 long obleqinvint(double r, double center_long, double center_lat,
-	double shape_m, double shape_n, double angle, double false_east,
-	double false_north);
+                 double shape_m, double shape_n, double angle, double false_east,
+                 double false_north);
 long omerforint(double r_maj, double r_min, double scale_fact,
-	double azimuth, double lon_orig, double lat_orig, double false_east,
-	double false_north, double lon1, double lat1, double lon2, double lat2,
-	long mode);
+                double azimuth, double lon_orig, double lat_orig, double false_east,
+                double false_north, double lon1, double lat1, double lon2, double lat2,
+                long mode);
 long omerfor(double lon, double lat, double *x, double *y);
 long omerinvint(double r_maj, double r_min, double scale_fact, double azimuth,
-	double lon_orig, double lat_orig, double false_east, double false_north,
-	double lon1, double lat1, double lon2, double lat2, long mode);
+                double lon_orig, double lat_orig, double false_east, double false_north,
+                double lon1, double lat1, double lon2, double lat2, long mode);
 long omerinv(double x, double y, double *lon, double *lat);
 long orthforint(double r_maj, double center_lon, double center_lat,
-	double false_east, double false_north);
+                double false_east, double false_north);
 long orthfor( double lon, double lat, double *x, double *y);
 long orthinvint(double r_maj, double center_lon, double center_lat,
-	double false_east, double false_north);
+                double false_east, double false_north);
 long orthinv(double x, double y, double *lon, double *lat);
 double paksz(double ang, long *iflg);
 long polyforint(double r_maj, double r_min, double center_lon,
-	double center_lat, double false_east, double false_north);
+                double center_lat, double false_east, double false_north);
 long polyfor(double lon, double lat, double *x, double *y);
 long polyinvint(double r_maj, double r_min, double center_lon,
-	double center_lat, double false_east, double false_north);
+                double center_lat, double false_east, double false_north);
 long polyinv(double x, double y, double *lon, double *lat);
 long psforint(double r_maj, double r_min, double c_lon, double c_lat,
-	double false_east, double false_north);
+              double false_east, double false_north);
 long psfor( double lon, double lat, double *x, double *y);
 long psinvint(double r_maj, double r_min, double c_lon, double c_lat,
-	double false_east, double false_north);
+              double false_east, double false_north);
 long psinv( double x, double y, double *lon, double *lat);
 
 /* functions in report.c */
@@ -293,68 +293,68 @@ void p_error(char *what, char *where);
 /* End of the report.c functions */
 
 long robforint(double r, double center_long, double false_east,
-	double false_north);
+               double false_north);
 long robfor( double lon, double lat, double *x, double *y);
 long robinvint(double r, double center_long, double false_east,
-	double false_north);
+               double false_north);
 long robinv(double x, double y, double *lon, double *lat);
 long sinforint(double r, double center_long, double false_east,
-	double false_north);
+               double false_north);
 long sinfor(double lon, double lat, double *x, double *y);
 long sininvint(double r, double center_long, double false_east,
-	double false_north);
+               double false_north);
 long sininv(double x, double y, double *lon, double *lat);
 long somforint(double r_major, double r_minor, long satnum, long path,
-	double alf_in, double lon, double false_east, double false_north,
-	double time, long start1, long flag);
+               double alf_in, double lon, double false_east, double false_north,
+               double time, long start1, long flag);
 long somfor(double lon, double lat, double *x, double *y);
 static void som_series(double *fb, double *fa2, double *fa4, double *fc1,
-	double *fc3,double *dlam);
+                       double *fc3,double *dlam);
 long sominvint(double  r_major, double  r_minor, long satnum, long path,
-	double alf_in, double lon, double false_east, double false_north,
-	double time, long start1, long flag);
+               double alf_in, double lon, double false_east, double false_north,
+               double time, long start1, long flag);
 long sominv(double x, double y, double *lon, double *lat);
 void sphdz(long isph, double *parm, double *r_major, double *r_minor,
-	double *radius);
+           double *radius);
 long sterforint(double r_maj, double center_lon, double center_lat,
-	double false_east, double false_north);
+                double false_east, double false_north);
 long sterfor(double lon, double lat, double *x, double *y);
 long sterinvint(double r_maj, double center_lon, double center_lat,
-	double false_east, double false_north);
+                double false_east, double false_north);
 long sterinv(double x, double y, double *lon, double *lat);
 long stplnforint(long zone, long sphere, char *fn27, char *fn83);
 long stplnfor(double lon, double lat, double *x, double *y);
 long stplninvint(long zone, long sphere, char *fn27, char *fn83);
 long stplninv(double x, double y, double *lon, double *lat);
 long tmforint(double r_maj, double r_min, double scale_fact,
-	double center_lon, double center_lat, double false_east,
-	double false_north);
+              double center_lon, double center_lat, double false_east,
+              double false_north);
 long tmfor(double lon, double lat, double *x, double *y);
 long tminvint(double r_maj, double r_min, double scale_fact,
-	double center_lon, double center_lat, double false_east,
-	double false_north);
+              double center_lon, double center_lat, double false_east,
+              double false_north);
 long tminv(double x, double y, double *lon, double *lat);
 long untfz(long inunit, long outunit, double *factor);
 long utmforint(double r_maj, double r_min, double scale_fact, long zone); 
 long utmfor(double lon, double lat, double *x, double *y);
 long utminvint(double r_maj, double r_min, double scale_fact, long zone);
 long vandgforint(double r, double center_long, double false_east,
-	double false_north);
+                 double false_north);
 long vandgfor( double lon, double lat, double *x, double *y);
 long vandginvint(double r, double center_long, double false_east,
-	double false_north);
+                 double false_north);
 long vandginv(double x, double y, double *lon, double *lat);
 long wivforint(double r, double center_long, double false_east,
-	double false_north);
+               double false_north);
 long wivfor(double lon, double lat, double *x, double *y);
 long wivinvint(double r, double center_long, double false_east,
-	double false_north);
+               double false_north);
 long wivinv(double x, double y, double *lon, double *lat);
 long wviiforint(double r, double center_long, double false_east,
-	double false_north);
+                double false_north);
 long wviifor(double lon, double lat, double *x, double *y);
 long wviiinvint( double r, double center_long, double false_east,
-	double false_north);
+                double false_north);
 long wviiinv(double x, double y, double *lon, double *lat);
 
 #endif

@@ -1,11 +1,11 @@
-// $Id: logform.h,v 1.2 2005/03/25 04:16:57 rbuehler Exp $
+// $Id: logform.h,v 1.3 2005/05/31 22:21:44 rbuehler Exp $
 
 
 /****************************************************************************
 ** Form interface generated from reading ui file 'logForm.ui'
 **
 ** Created: Fri Jan 14 15:41:20 2005
-**      by: The User Interface Compiler ($Id: logform.h,v 1.2 2005/03/25 04:16:57 rbuehler Exp $)
+**      by: The User Interface Compiler ($Id: logform.h,v 1.3 2005/05/31 22:21:44 rbuehler Exp $)
 ****************************************************************************/
 
 #ifndef LOGFORM_H
@@ -27,28 +27,28 @@ throughout the reprojection.
 */
 class logForm : public QDialog
 {
-    Q_OBJECT
+   Q_OBJECT
 
 public:
-    logForm( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
-    ~logForm();
+   logForm( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
+   ~logForm();
 
-    QPushButton* saveButton;
-    QPushButton* okButton;
-    QTextEdit* logViewer;
+   QPushButton* saveButton;
+   QPushButton* okButton;
+   QTextEdit* logViewer;
 
 public slots:
-    virtual void saveLog();
-    virtual void refreshLog();
-    virtual void loadLog();
+   virtual void saveLog();
+   virtual void refreshLog();
+   virtual void loadLog();
 
 protected:
-    QGridLayout* logFormLayout;
-    QHBoxLayout* layout3;
-    QSpacerItem* spacer1;
+   QGridLayout* logFormLayout;
+   QHBoxLayout* layout3;
+   QSpacerItem* spacer1;
 
 protected slots:
-    virtual void languageChange();
+   virtual void languageChange();
 
 };
 

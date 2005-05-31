@@ -1,4 +1,4 @@
-// $Id: resampleinfo.h,v 1.12 2005/03/30 00:54:20 rbuehler Exp $
+// $Id: resampleinfo.h,v 1.13 2005/05/31 22:21:45 rbuehler Exp $
 
 
 #ifndef RESAMPLEINFO_H
@@ -57,7 +57,7 @@ private:
    IgnoreList ilist;
    int lineCacheSize;
 
-   #define RN_MAXLENGTH 16
+#define RN_MAXLENGTH 16
    char rn[RN_MAXLENGTH];
 };
 

@@ -1,4 +1,4 @@
-// $Id: authorform.cpp,v 1.8 2005/03/31 02:14:48 rbuehler Exp $
+// $Id: authorform.cpp,v 1.9 2005/05/31 22:21:44 rbuehler Exp $
 
 
 /****************************************************************************
@@ -37,13 +37,8 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, 
    authorFormLayout = new QVBoxLayout( this, 5, 3, "authorFormLayout"); 
 
    descrLabel = new QLabel( this, "descrLabel" );
-   //descrLabel->setFrameShape( QLabel::WinPanel );
-   //descrLabel->setFrameShadow( QLabel::Sunken );
-   //descrLabel->setLineWidth( 2 );
    descrLabel->setAlignment( int( QLabel::WordBreak | QLabel::AlignVCenter ) );
    authorFormLayout->addWidget( descrLabel );
-   //spacer1 = new QSpacerItem( 20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding );
-   //authorFormLayout->addItem( spacer1 );
 
    inputBox = new QGroupBox( this, "inputBox" );
    layout1 = new QGridLayout( inputBox, 1, 1, 10, 3, "layout1"); 

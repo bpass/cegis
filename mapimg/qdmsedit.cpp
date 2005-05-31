@@ -1,4 +1,4 @@
-// $Id: qdmsedit.cpp,v 1.4 2005/05/06 23:19:50 rbuehler Exp $
+// $Id: qdmsedit.cpp,v 1.5 2005/05/31 22:21:45 rbuehler Exp $
 
 
 #include "qdmsedit.h"
@@ -7,7 +7,7 @@
 #include <qtooltip.h>
 
 QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction )
-   : QHBox( parent, name)
+: QHBox( parent, name)
 {
    setFrameStyle( QFrame::LineEditPanel | QFrame::Sunken );
    setLineWidth( 2 );
@@ -49,16 +49,16 @@ QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction 
 
    if( direction != Unspecified )
    {
-       if( direction == North )
-           directionLabel->setText( "N" );
-       else if( direction == East )
-           directionLabel->setText( "E" );
-       else if( direction == South )
-           directionLabel->setText( "S" );
-       else if( direction == West )
-           directionLabel->setText( "W" );
-       else
-           directionLabel->setText( "" );
+      if( direction == North )
+         directionLabel->setText( "N" );
+      else if( direction == East )
+         directionLabel->setText( "E" );
+      else if( direction == South )
+         directionLabel->setText( "S" );
+      else if( direction == West )
+         directionLabel->setText( "W" );
+      else
+         directionLabel->setText( "" );
    }
 
    dEdit->setValidator( new QIntValidator(min, max, dEdit) );
@@ -66,7 +66,7 @@ QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction 
    QRegExp exp( QString::fromLatin1("^(60|[1-5]?\\d(\\.\\d*)?)$") );
    sEdit->setValidator( new QRegExpValidator(exp, sEdit) );
    QToolTip::add( dEdit, QString("<b>degrees</b>: integer from %1 to %2" ).
-                  arg(min).arg(max));
+      arg(min).arg(max));
    QToolTip::add( mEdit, QString("<b>minutes</b>: integer from 0 to 60" ));
    QToolTip::add( sEdit, QString("<b>seconds</b>: real from 0 to 60" ));
 
@@ -93,7 +93,7 @@ void QDmsEdit::setMinVal( const int &newMin )
    dEdit->setValidator( new QIntValidator(min, max, dEdit) );
    QToolTip::remove( dEdit );
    QToolTip::add( dEdit, QString("<b>degrees</b>: integer from %1 to %2" ).
-                  arg(min).arg(max));
+      arg(min).arg(max));
 }
 
 
@@ -115,7 +115,7 @@ void QDmsEdit::setMaxVal( const int &newMax )
    dEdit->setValidator( new QIntValidator(min, max, dEdit) );
    QToolTip::remove( dEdit );
    QToolTip::add( dEdit, QString("<b>degrees</b>: integer from %1 to %2" ).
-                  arg(min).arg(max));
+      arg(min).arg(max));
 }
 
 
@@ -151,32 +151,28 @@ QDmsEdit::Directionality QDmsEdit::direction() const
    Directionality returnValue = Unspecified;
 
    if( directionLabel->text().upper() == "N" )
-       returnValue = North;
+      returnValue = North;
    else if( directionLabel->text().upper() == "E" )
-       returnValue = East;
+      returnValue = East;
    else if( directionLabel->text().upper() == "S" )
-       returnValue = South;
+      returnValue = South;
    else if( directionLabel->text().upper() == "W" )
-       returnValue = West;
+      returnValue = West;
 
-    return returnValue;
+   return returnValue;
 }
 void QDmsEdit::setDirection( const Directionality direction )
 {
    if( direction == North )
-       directionLabel->setText( "N" );
+      directionLabel->setText( "N" );
    else if( direction == East )
-       directionLabel->setText( "E" );
+      directionLabel->setText( "E" );
    else if( direction == South )
-       directionLabel->setText( "S" );
+      directionLabel->setText( "S" );
    else if( direction == West )
-       directionLabel->setText( "W" );
+      directionLabel->setText( "W" );
    else
-       directionLabel->setText( "" );
-   
+      directionLabel->setText( "" );
+
    return;
 }
-
-
-
-

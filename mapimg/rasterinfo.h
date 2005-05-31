@@ -1,4 +1,4 @@
-// $Id: rasterinfo.h,v 1.10 2005/03/25 18:06:41 rbuehler Exp $
+// $Id: rasterinfo.h,v 1.11 2005/05/31 22:21:45 rbuehler Exp $
 
 
 #ifndef RASTERINFO_H
@@ -28,6 +28,7 @@ public:
 
    //Area
    bool setArea( double ul_X, double ul_Y, int rows, int cols );
+   bool setUL( double ul_X, double ul_Y );
    double ul_X() const {return ulx;}
    double ul_Y() const {return uly;}
    int rows() const {return row;}
@@ -80,7 +81,7 @@ public:
    bool fakeIt();
    bool ready();
    bool notReady();
-   
+
    void copy( const RasterInfo &src );
 
 private:
@@ -106,7 +107,7 @@ private:
    double   pixsize;
    double   fillval;
    double   noval;
-   
+
    bool     hasFillVal;
    bool     hasNoDataVal;
 

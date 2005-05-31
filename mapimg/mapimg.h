@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.21 2005/04/14 21:55:59 rbuehler Exp $
+// $Id: mapimg.h,v 1.22 2005/05/31 22:21:44 rbuehler Exp $
 
 
 #ifndef MAPIMG_H
@@ -41,6 +41,8 @@ NOTE: Many "bad" reprojections could be fixed by including special cases with
 reduced Lat/Lon frames in this function. Examples are UTM and Polar
 Stereographic.
 
+geo2eqr() is the "frameIt()" for the Geographic projection
+
 downSizeProjection() will alter the rows, columns, upper left coordinate and
 pixel size so that neither rows nor columns are larger than maxDimension.
 
@@ -79,6 +81,7 @@ namespace mapimg
    QString projectionErrors( const RasterInfo &input );
 
    void frameIt( RasterInfo &input);
+   void geo2eqr( RasterInfo &input);
    bool downSampleImg( const RasterInfo &input, RasterInfo &output, int maxDimension, QWidget *parent );
    bool downSizeProjection( RasterInfo &input, int maxDimension );
    double calcFillValue( const RasterInfo &input );
@@ -88,71 +91,71 @@ namespace mapimg
 
    template <typename type>
       int quickSortAndSearch( void* values, type searchValue, int size, int left = 0, int right = -1 )
+   {
+      int returnValue = -1;
+
+      if( size <= 0 )
+         return returnValue;
+
+      if( right == -1 )
+         right = size -1;
+
+      type *castValues = (type*)values;
+      int left_hold_point = left;
+      int right_hold_point = right;
+      type pivot_value = castValues[left];
+
+      while( left < right )
       {
-         int returnValue = -1;
-      
-         if( size <= 0 )
-            return returnValue;
-      
-         if( right == -1 )
-            right = size -1;
-      
-         type *castValues = (type*)values;
-         int left_hold_point = left;
-         int right_hold_point = right;
-         type pivot_value = castValues[left];
-      
-         while( left < right )
+         while( (castValues[right] >= pivot_value) && (left < right) )
          {
-            while( (castValues[right] >= pivot_value) && (left < right) )
-            {
-      
-               right--;
-            }
-            if( left != right )
-            {
-               castValues[left] = castValues[right];
-               left++;
-            }
-      
-            while( (castValues[left] <= pivot_value) && (left < right) )
-            {
-               left++;
-            }
-            if( left != right )
-            {
-               castValues[right] = castValues[left];
-               right--;
-            }
+
+            right--;
          }
-      
-         castValues[left] = pivot_value;
-      
-         if( castValues[left] == searchValue )
-            returnValue = left;
-      
-         int pivot_point = left;
-         left = left_hold_point;
-         right = right_hold_point;
-      
-         if( left < pivot_point )
+         if( left != right )
          {
-            int leftReturn = mapimg::quickSortAndSearch<type>( values, searchValue, size, left, pivot_point-1 );
-      
-            if( leftReturn != -1 )
-               returnValue = leftReturn;
-         }
-      
-         if( right > pivot_point )
-         {
-            int rightReturn = mapimg::quickSortAndSearch<type>( values, searchValue, size, pivot_point+1, right );
-      
-            if( rightReturn != -1 )
-               returnValue = rightReturn;
+            castValues[left] = castValues[right];
+            left++;
          }
 
-         return returnValue;
+         while( (castValues[left] <= pivot_value) && (left < right) )
+         {
+            left++;
+         }
+         if( left != right )
+         {
+            castValues[right] = castValues[left];
+            right--;
+         }
       }
+
+      castValues[left] = pivot_value;
+
+      if( castValues[left] == searchValue )
+         returnValue = left;
+
+      int pivot_point = left;
+      left = left_hold_point;
+      right = right_hold_point;
+
+      if( left < pivot_point )
+      {
+         int leftReturn = mapimg::quickSortAndSearch<type>( values, searchValue, size, left, pivot_point-1 );
+
+         if( leftReturn != -1 )
+            returnValue = leftReturn;
+      }
+
+      if( right > pivot_point )
+      {
+         int rightReturn = mapimg::quickSortAndSearch<type>( values, searchValue, size, pivot_point+1, right );
+
+         if( rightReturn != -1 )
+            returnValue = rightReturn;
+      }
+
+      return returnValue;
+   }
 };
 
 

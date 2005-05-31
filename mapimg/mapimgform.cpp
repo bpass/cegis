@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.37 2005/05/04 00:00:54 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.38 2005/05/31 22:21:44 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -234,8 +234,6 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    prevOutput->setToggleAction( true );
    prevOutput->addTo( viewShowPopup );
 
-   //viewShowButton->setPopup( viewShowPopup );
-   //viewShowButton->setPopupDelay( 400 );
    viewShowButton->setToggleButton(true);
 
    connect( viewShowButton, SIGNAL( toggled(bool) ), this, SLOT( previewClicked(bool) ) );
@@ -747,8 +745,16 @@ void mapimgForm::outSaveClicked()
    }
 
    RasterInfo input( inInfoFrame->info() );
-   if( !mapimg::readytoReproject(input, this) )
-      return;
+
+   if( input.projectionNumber() == 0 )
+   {
+      mapimg::geo2eqr( input );
+   }
+   else
+   {
+      if( !mapimg::readytoReproject(input, this) )
+         return;
+   }
 
    // Check that all output settings are ready
    RasterInfo output( outInfoFrame->info() );
@@ -950,5 +956,5 @@ void mapimgForm::launchWebTool( const QString& url )
 
 bool mapimgForm::allowIgnoreValues() const
 {
-    return outInfoFrame->mapTab->hasNoDataCheck->isChecked();
+   return outInfoFrame->mapTab->hasNoDataCheck->isChecked();
 }

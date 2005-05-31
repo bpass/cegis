@@ -1,4 +1,4 @@
-// $Id: qinfoframe.h,v 1.11 2005/05/05 22:48:04 rbuehler Exp $
+// $Id: qinfoframe.h,v 1.12 2005/05/31 22:21:45 rbuehler Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -24,16 +24,16 @@ class RasterInfo;
 
 
 /*
-   QMapTab is the first of two tabs made for use in the QInfoFrame. It uses
+QMapTab is the first of two tabs made for use in the QInfoFrame. It uses
 QLineEdits, QSpinBoxes, and QComboBoxes to provide the user with methods to
 enter the values that would be found in a mapimg ".info" file. The QMapTab
 only contains those parameters that are descriptive of the map and not the
 projection. (ie. Size, Location, Resoultion, Scale)
 
-   The QMapTab also has three buttons which are connected to by the QInfoFrame.
+The QMapTab also has three buttons which are connected to by the QInfoFrame.
 See the QInfoFrame class for a description of their purpose.
 
-   By subclassing the QScrollView the user is able to have greater freedom in
+By subclassing the QScrollView the user is able to have greater freedom in
 resizing the application and it leaves unlimited room for adding parameters.
 */
 class QMapTab : public QScrollView
@@ -93,21 +93,21 @@ public slots:
 
 
 /*
-   QGctpTab is the second of two tabs made for use in the QInfoFrame. It uses
+QGctpTab is the second of two tabs made for use in the QInfoFrame. It uses
 QLineEdits, QSpinBoxes, and QComboBoxes to provide the user with methods to
 enter the values that would be found in a mapimg ".info" file. The QGctpTab
 only contains the projection parameters. (ie. Projection Name, 15 GCTP Params)
 
-   The QGctpTab also has two buttons which are connected to by the QInfoFrame.
+The QGctpTab also has two buttons which are connected to by the QInfoFrame.
 See the QInfoFrame class for a description of their purpose.
 
-   By subclassing the QScrollView the user is able to have greater freedom in
+By subclassing the QScrollView the user is able to have greater freedom in
 resizing the application and it leaves unlimited room for adding parameters.
 */
 class QGctpTab : public QScrollView
 {
    Q_OBJECT
-   
+
 public:
    QGctpTab( QWidget* parent = 0, const char* name = 0);
    ~QGctpTab();
@@ -133,12 +133,12 @@ public slots:
 
 
 /*
-   QInfoFrame is the main class here and it contains one QMapTab and one 
+QInfoFrame is the main class here and it contains one QMapTab and one 
 QGctpTab. It is a subclass of a QTabWidget for easy switching between the two
 forms. The data fields in the QInfoFrame relate to all data entries found in a
 ".info" file.
 
-   The QInfoFrame has two modes, Input and Output. When set as Input the 
+The QInfoFrame has two modes, Input and Output. When set as Input the 
 QInfoFrame takes on a green tint and displays a lock and a frame it button.
 The lock button is used to show that the user isn't expected to edit the input
 info. However, if the user knows what he/she is doing then they have the power
@@ -168,7 +168,6 @@ public:
 
    void setInfo( RasterInfo &input );
    RasterInfo info();
-//   static void cleanUp( QLineEdit *lEdit );
 
    QMapTab     *mapTab;
    QGctpTab    *gctpTab;

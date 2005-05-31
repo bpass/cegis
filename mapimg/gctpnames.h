@@ -1,4 +1,4 @@
-// $Id: gctpnames.h,v 1.10 2005/05/03 16:05:27 jtrent Exp $
+// $Id: gctpnames.h,v 1.11 2005/05/31 22:21:44 rbuehler Exp $
 
 
 #ifndef GCTPNAMES_H
@@ -98,7 +98,7 @@ namespace
             << "FE" << "FN";
          break;
 
-      case 13: //Gnomic
+      case 13: //Gnomonic
          retList << "Sphere" << "" << "" << "" << "CentLon" << "CenterLat" 
             << "FE" << "FN" << "NoWay"; //Otherwise same as case 10,11,12,14
          break;

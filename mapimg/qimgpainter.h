@@ -1,4 +1,4 @@
-// $Id: qimgpainter.h,v 1.2 2005/02/23 17:25:35 jtrent Exp $
+// $Id: qimgpainter.h,v 1.3 2005/05/31 22:21:45 rbuehler Exp $
 
 
 #ifndef QIMGPAINTER_H
@@ -31,31 +31,31 @@ public:
    //Loads the imgFile
    QImgPainter();
    ~QImgPainter();
-   
+
    void setFile(QString imgFile);
 
    //returns a pixmap of default size unless otherwise specified
    QPixmap getSample(QSize sampleSize);
-   
+
 private:
    void callClear();
    template <class Type>
-         void clearColorTable(Type data);
-   
+      void clearColorTable(Type data);
+
    //Create the color table and save it in the void * vColorTable
    void callConstruct(Q_ULLONG offset);
    template <class Type>
-         void constructColorTable(Type data, Q_ULLONG offset);
-   
+      void constructColorTable(Type data, Q_ULLONG offset);
+
    //Draw the pixmap to be returned by getPixmap
    void callPaint();
    template <class Type>
-         void paintPixmap(Type data);
-   
+      void paintPixmap(Type data);
+
    QString fileName;
    ulong rows, cols, size;
    QString dataType;
-   
+
    bool fileSet;
    QFile file;
    QDataStream dataStream;
@@ -93,10 +93,10 @@ void QImgPainter::setFile(QString imgFile)
    RasterInfo info;
    if(!info.load( imgFile ))
       return;
-   
+
    fileName = imgFile;
    file.setName( fileName ); 
-   
+
    rows = info.rows();
    cols = info.cols();
    dataType = info.isSigned()?"Signed ":"Unsigned ";
@@ -106,12 +106,12 @@ void QImgPainter::setFile(QString imgFile)
 
    size = rows * cols;
    pixmap.resize(cols, rows);
-   
+
    if(file.size() < 10000000)
       callConstruct(1);
    else
       callConstruct(0);
-   
+
    fileSet = true;
    return;
 }
@@ -121,7 +121,7 @@ QPixmap QImgPainter::getSample(QSize sampleSize)
 {
    if(!fileSet)
       return QPixmap(2,1);
-   
+
    pixmap.resize(sampleSize);
    callPaint();      
    return pixmap;
@@ -132,38 +132,38 @@ void QImgPainter::callClear()
 {
    if(!vColorTable)
       return;
-   
+
    if( dataType == "Signed 64 Bit IEEE Float" )
    {	double data = 0;
-      clearColorTable(data);	}
+   clearColorTable(data);	}
    else if( dataType == "Signed 32 Bit IEEE Float" )
    {	float data = 0;
-      clearColorTable(data);	}
+   clearColorTable(data);	}
    else if( dataType == "Signed 32 Bit Integer" )
    {	Q_INT32 data = 0;
-      clearColorTable(data);	}
+   clearColorTable(data);	}
    else if( dataType == "Unsigned 32 Bit Integer" )
    {	Q_UINT32 data = 0;
-      clearColorTable(data);	}
+   clearColorTable(data);	}
    else if( dataType == "Signed 16 Bit Integer" )
    {	Q_INT16 data = 0;
-      clearColorTable(data);	}
+   clearColorTable(data);	}
    else if( dataType == "Unsigned 16 Bit Integer" )
    {	Q_UINT16 data = 0;
-      clearColorTable(data);	}
+   clearColorTable(data);	}
    else if( dataType == "Signed 8 Bit Integer" )
    { 	Q_INT8 data = 0;
-      clearColorTable(data);	}
+   clearColorTable(data);	}
    else //(dataType == "Unsigned 8 Bit Integer")
    {  Q_UINT8 data = 0;
-      clearColorTable(data);	}
+   clearColorTable(data);	}
 }
 
 template <class Type>
-      void QImgPainter::clearColorTable( Type )
+void QImgPainter::clearColorTable( Type )
 {
    QMap<Type, QColor> *colorTable =
-         static_cast<QMap<Type, QColor> *>( vColorTable );
+      static_cast<QMap<Type, QColor> *>( vColorTable );
    delete colorTable;
    vColorTable = NULL;
 }
@@ -174,28 +174,28 @@ void QImgPainter::callConstruct(Q_ULLONG offset)
 {
    if( dataType == "Signed 64 Bit IEEE Float" )
    {	double data = 0;
-      constructColorTable(data, offset);	}
+   constructColorTable(data, offset);	}
    else if( dataType == "Signed 32 Bit IEEE Float" )
    {	float data = 0;
-      constructColorTable(data, offset);	}
+   constructColorTable(data, offset);	}
    else if( dataType == "Signed 32 Bit Integer" )
    {	Q_INT32 data = 0;
-      constructColorTable(data, offset);	}
+   constructColorTable(data, offset);	}
    else if( dataType == "Unsigned 32 Bit Integer" )
    {	Q_UINT32 data = 0;
-      constructColorTable(data, offset);	}
+   constructColorTable(data, offset);	}
    else if( dataType == "Signed 16 Bit Integer" )
    {	Q_INT16 data = 0;
-      constructColorTable(data, offset);	}
+   constructColorTable(data, offset);	}
    else if( dataType == "Unsigned 16 Bit Integer" )
    {	Q_UINT16 data = 0;
-      constructColorTable(data, offset);	}
+   constructColorTable(data, offset);	}
    else if( dataType == "Signed 8 Bit Integer" )
    { 	Q_INT8 data = 0;
-      constructColorTable(data, offset);	}
+   constructColorTable(data, offset);	}
    else //( dataType == "Unsigned 8 Bit Integer" )
    {  Q_UINT8 data = 0;
-      constructColorTable(data, offset);	}
+   constructColorTable(data, offset);	}
 }
 
 
@@ -205,7 +205,7 @@ void QImgPainter::callConstruct(Q_ULLONG offset)
 //Once all the values are read it applies a grayscale gradient
 //across all of the values with black being the lowest value
 template <class Type>
-      void QImgPainter::constructColorTable(Type data, Q_ULLONG offset)
+void QImgPainter::constructColorTable(Type data, Q_ULLONG offset)
 {
    tableAbort = false;
    if(vColorTable)
@@ -217,11 +217,11 @@ template <class Type>
       vColorTable = colorTable;
       return;
    }
-   
+
    ////////LOAD IN COLOR TABLE ENTRIES
    MapimgProgressDialog pd( "Reading data entries...",
-                      "Abort", pixmap.height(), NULL, NULL,
-                      0, "progress", TRUE);
+      "Abort", pixmap.height(), NULL, NULL,
+      0, "progress", TRUE);
    pd.setMinimumDuration(500);
    Q_ULLONG yOffSet, xOffSet;
    int dataBytes = sizeof(data);
@@ -247,7 +247,7 @@ template <class Type>
       }
    }
    file.close();
-   
+
    ////////APPLY GRADIENT ACCROSS COLORTABLE 
    double f = 0;
    double colorFactor = 0;
@@ -274,7 +274,7 @@ template <class Type>
       f += colorFactor;
    }
    vColorTable = colorTable;
-   
+
    pd.setProgress(pd.totalSteps()); //finish off the progress bar
 }
 
@@ -284,51 +284,51 @@ void QImgPainter::callPaint()
 {
    if( dataType == "Signed 64 Bit IEEE Float" )
    {	double data = 0;
-      paintPixmap(data);	}
+   paintPixmap(data);	}
    else if( dataType == "Signed 32 Bit IEEE Float" )
    {	float data = 0;
-      paintPixmap(data);	}
+   paintPixmap(data);	}
    else if( dataType == "Signed 32 Bit Integer" )
    {	Q_INT32 data = 0;
-      paintPixmap(data);	}
+   paintPixmap(data);	}
    else if( dataType == "Unsigned 32 Bit Integer" )
    {	Q_UINT32 data = 0;
-      paintPixmap(data);	}
+   paintPixmap(data);	}
    else if( dataType == "Signed 16 Bit Integer" )
    {	Q_INT16 data = 0;
-      paintPixmap(data);	}
+   paintPixmap(data);	}
    else if( dataType == "Unsigned 16 Bit Integer" )
    {	Q_UINT16 data = 0;
-      paintPixmap(data);	}
+   paintPixmap(data);	}
    else if( dataType == "Signed 8 Bit Integer" )
    { 	Q_INT8 data = 0;
-      paintPixmap(data);	}
+   paintPixmap(data);	}
    else //( dataType == "Unsigned 8 Bit Integer" )
    {	Q_UINT8 data = 0;
-      paintPixmap(data);	}
+   paintPixmap(data);	}
 }
 
 
 //The QFile is resampled using a nearest neighbor algorithm
 //		using the QFile::at() function to offset the QDataStream
 template <class Type>
-      void QImgPainter::paintPixmap(Type data)
+void QImgPainter::paintPixmap(Type data)
 { 
    ////////RESIZE PIXMAP
    //Resize pixmap to maintain aspect ratio and fit within requested dimensions
    double pixRatio = static_cast<double>( pixmap.height() ) /
-                    static_cast<double>( pixmap.width() );
+      static_cast<double>( pixmap.width() );
    double fileRatio = static_cast<double>( rows ) /
-                     static_cast<double>( cols );
+      static_cast<double>( cols );
    if( pixRatio > fileRatio )
       pixmap.resize(pixmap.width(), 
-                    static_cast<int>(pixmap.width() * fileRatio));
+      static_cast<int>(pixmap.width() * fileRatio));
    else if( pixRatio < fileRatio)
       pixmap.resize(static_cast<int>(pixmap.height() / fileRatio),
-                    pixmap.height());
+      pixmap.height());
    double file_pixRatio = static_cast<double>( rows ) / 
-                          static_cast<double>( pixmap.height() );
-   
+      static_cast<double>( pixmap.height() );
+
    //file_pixRatio < 1 means that the pixmap is bigger than the file.
    //resampling at less than 1 would result in wasteful pixel doubling
    if(file_pixRatio < 1)
@@ -340,18 +340,18 @@ template <class Type>
    //at the requested size so leave it alone
    if(file_pixRatio == lastRatio)
       return;
-   
+
    lastRatio = file_pixRatio;
    if(optimized)
       callConstruct(static_cast<Q_ULLONG>(file_pixRatio));
-   
+
    if(tableAbort)
    {
       pixmap.fill(Qt::black);
       lastRatio = 0;
       return;
    }
-   
+
    ////////PAINT THE PIXMAP
    //for each pixel in the pixmap
    //	 - read in the corresponding value from the file
@@ -359,9 +359,9 @@ template <class Type>
    //	 - paint the pixel
    //INPUT_COLOR and IMGCOLOR are defined in mapimgpalette.h
    QMap<Type, QColor> *colorTable =
-         static_cast<QMap<Type, QColor> *>( vColorTable );
+      static_cast<QMap<Type, QColor> *>( vColorTable );
    MapimgProgressDialog pd( "Generating preview...",
-                      "Abort", pixmap.height(), &INPUT_COLOR, &IMGCOLOR, 0, "progress", TRUE);
+      "Abort", pixmap.height(), &INPUT_COLOR, &IMGCOLOR, 0, "progress", TRUE);
    pd.setMinimumDuration(500);
    Q_ULLONG yOffSet, xOffSet;
    QPainter painter( &pixmap );
@@ -391,9 +391,9 @@ template <class Type>
       }
    }
    file.close();
-   
+
    pd.setProgress(pd.totalSteps());
-   
+
 }
 
 #endif

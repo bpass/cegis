@@ -1,4 +1,4 @@
-// $Id: qimgframe.h,v 1.3 2005/01/31 17:24:05 jtrent Exp $
+// $Id: qimgframe.h,v 1.4 2005/05/31 22:21:45 rbuehler Exp $
 
 
 #ifndef QIMGFRAME_H
@@ -11,24 +11,24 @@
 class QImgPainter;
 
 /*
-  The QImgFrame is a reimplimentation of the QFrame containing
-  \	a QLabel. It is useful for loading  images that you want to maintain
-  \   their aspect ratio.  The QImgFrame will resize to its layout while
-  \   stretching and centering the internal QLabel to fill as much of the
-  \   QImgFrame as possible.
-  
-  To use the QImgFrame in the Qt Designer create a new Custom Widget.
-  \	Name the class "QImgFrame", set the header file to the qimgframe.h
-  \	and, in the Properties tab, create a new property called "pixmap",
-  \   with type Pixmap.
+The QImgFrame is a reimplimentation of the QFrame containing
+\	a QLabel. It is useful for loading  images that you want to maintain
+\   their aspect ratio.  The QImgFrame will resize to its layout while
+\   stretching and centering the internal QLabel to fill as much of the
+\   QImgFrame as possible.
+
+To use the QImgFrame in the Qt Designer create a new Custom Widget.
+\	Name the class "QImgFrame", set the header file to the qimgframe.h
+\	and, in the Properties tab, create a new property called "pixmap",
+\   with type Pixmap.
 */
 
 
 class QImgFrame : public QFrame
 {
    Q_OBJECT
-   Q_PROPERTY( QPixmap pixmap READ pixmap WRITE setPixmap )
-   
+      Q_PROPERTY( QPixmap pixmap READ pixmap WRITE setPixmap )
+
 public:
    QImgFrame( QWidget* parent = 0, const char* name = 0);
    ~QImgFrame();
@@ -36,14 +36,14 @@ public:
    QPixmap *pixmap() const;
    void setPixmap( const QPixmap &);
    void loadImg( const QString &fileName, bool reload = false );
-   
+
 public slots:
    void resample();
 
 protected:
    void resizeEvent ( QResizeEvent *);
    void showEvent ( QShowEvent *);
-   
+
 private:
    QImgPainter *imgPainter;
    QLabel      *pixmapLabel;
@@ -51,7 +51,4 @@ private:
    bool        newFile;
 };
 
-
-
 #endif
-

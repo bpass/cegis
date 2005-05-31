@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.cpp,v 1.9 2005/03/18 17:39:32 jtrent Exp $
+// $Id: mapimgvalidator.cpp,v 1.10 2005/05/31 22:21:45 rbuehler Exp $
 
 #include <qvalidator.h>
 #include <qstring.h>
@@ -166,22 +166,22 @@ void MapimgValidator::setDecimals( int decimals )
 
 void MapimgValidator::setAllowUndefined( bool allow )
 {
-    m_allowUndefined = allow;
-    return;
+   m_allowUndefined = allow;
+   return;
 }
 
 QValidator::State MapimgValidator::validate( QString & input, int & ) const
 {
    if( input.upper() == "UNDEFINED" && m_allowUndefined )
    {
-       input = "Undefined";
-       return Acceptable;
+      input = "Undefined";
+      return Acceptable;
    }
 
    QRegExp empty( QString::fromLatin1(" *-?\\.? *") );
    if ( m_bottom >= 0 &&
       input.stripWhiteSpace().startsWith(QString::fromLatin1("-")) )
-        return Invalid;
+      return Invalid;
    if ( empty.exactMatch(input) )
       return Intermediate;
    bool ok = TRUE;
@@ -235,19 +235,19 @@ void MapimgValidator::fixup( QString& input ) const
 {
    if( input.upper() == "UNDEFINED" && m_allowUndefined )
    {
-       input = "Undefined";
-       return;
+      input = "Undefined";
+      return;
    }
 
    double entered = input.toDouble();
 
    if( entered > m_top )
    {
-   	entered = m_top;
+      entered = m_top;
    }
    else if( entered < m_bottom )
    {
-   	entered = m_bottom;
+      entered = m_bottom;
    }
 
    input = QString::number( entered, 'f', m_decimals );
@@ -259,7 +259,7 @@ void MapimgValidator::fixup( QString& input ) const
 
       if( decimalPlace != -1 )
       {
-   	input = input.left( decimalPlace );
+         input = input.left( decimalPlace );
       }
    }
 

@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.24 2005/05/06 23:19:50 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.25 2005/05/31 22:21:45 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -596,13 +596,6 @@ here as an additional step in initialization.
 */
 void QInfoFrame::setAsInput()
 {
-   /*int ph,ps,pv;
-   paletteBackgroundColor().getHsv(&ph,&ps,&pv);
-   int ih,is,iv;
-   INPUT_COLOR.getHsv(&ih,&is,&iv);*/
-   //QColor c(INPUT_COLOR);
-   //c.setHsv(ih,is,pv>100?pv:100);
-
    static_cast<QLabel*>(mapTab->child( "mapLabel" ))->setText( "Input Map Info" );
    mapTab->fileEdit->setDisabled( true );
    mapTab->copyButton->hide();
@@ -628,13 +621,6 @@ See comments on setAsInput().
 */
 void QInfoFrame::setAsOutput()
 {
-   /*int ph,ps,pv;
-   paletteBackgroundColor().getHsv(&ph,&ps,&pv);
-   int oh,os,ov;
-   OUTPUT_COLOR.getHsv(&oh,&os,&ov);*/
-   //QColor c(OUTPUT_COLOR);
-   //c.setHsv(oh,os,pv>100?pv:100);
-
    static_cast<QLabel*>(mapTab->child( "mapLabel" ))->setText( "Output Map Info" );
    mapTab->fileEdit->setDisabled( true );
    mapTab->fileEdit->setText( "Use Save button to reproject" );
@@ -825,9 +811,18 @@ bool QInfoFrame::frame()
 {
    RasterInfo inf( info() );
 
-   if( !mapimg::readytoFrameIt( inf, this ) )
-      return false;
-   mapimg::frameIt( inf );
+   if( inf.projectionNumber() == 0 )
+   {
+      mapimg::geo2eqr( inf );
+      gctpTab->projCombo->setCurrentText( 
+         projNames[inf.projectionNumber()]);
+   }
+   else
+   {
+      if( !mapimg::readytoFrameIt( inf, this ) )
+         return false;
+      mapimg::frameIt( inf );
+   }
 
    mapTab->rowSpin->setValue( inf.rows() );
    mapTab->colSpin->setValue( inf.cols() );
@@ -1012,7 +1007,7 @@ RasterInfo QInfoFrame::info()
 
    for( int i = 0; i < 15; ++i )
       ret.setGctpParam( i, gctpTab->gctpBoxes[i]->value() );
- 
+
    return ret;
 }
 

@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.17 2005/04/14 15:06:20 jtrent Exp $
+// $Id: resampleform.cpp,v 1.18 2005/05/31 22:21:45 rbuehler Exp $
 
 
 /****************************************************************************
@@ -48,7 +48,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
       setName( "ResampleForm" );
 
    setPalette( RESAMPLEFORM_COLOR );
-   
+
    bytesPerRow = (input.cols() * (input.bitCount() / 8));
 
    ResampleFormLayout = new QVBoxLayout( this, 11, 6, "ResampleFormLayout");
@@ -116,15 +116,15 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    ignoreListBox->installEventFilter( this );
    ignoreBoxLayout->addWidget( ignoreListBox );
    inputLayout->addWidget( ignoreBox );
-   
+
    if( !((mapimgForm*)parent)->allowIgnoreValues() )
    {
-       ignoreLabel->show();
+      ignoreLabel->show();
 
-       ignoreEdit->hide();
-       newButton->hide();
-       delButton->hide();
-       ignoreListBox->hide();
+      ignoreEdit->hide();
+      newButton->hide();
+      delButton->hide();
+      ignoreListBox->hide();
    }
 
    ResampleFormLayout->addLayout( inputLayout );
@@ -151,12 +151,12 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    //DEFAULT_Max_Data_Element_Count is defined in imgio.h
    //minimum computed as the ratio of output to input plus 2% of the input
    memoryAllocation = new QSlider( (int)((output.pixelSize()/input.pixelSize()) + 0.02*(float)input.rows()), //min
-                                   input.rows(),                           //max
-                                   10,                                     //step size
-                                   DEFAULT_Max_Data_Element_Count,         //default
-                                   Qt::Horizontal,                         //orientation
-                                   memoryBox,                              //parent
-                                   "memoryAllocationSlider" );             //name
+      input.rows(),                           //max
+      10,                                     //step size
+      DEFAULT_Max_Data_Element_Count,         //default
+      Qt::Horizontal,                         //orientation
+      memoryBox,                              //parent
+      "memoryAllocationSlider" );             //name
    defaultMemory = memoryAllocation->value();
 
    memoryLabelResetLayout->addWidget( memoryLabel );
@@ -231,8 +231,8 @@ void ResampleForm::languageChange()
    memoryBox->setTitle( tr( "Memory Allocation" ) );
    okButton->setText( tr( "Ok" ) );
    cancelButton->setText( tr( "Cancel" ) );
-   
-    updateMemoryAllocation();
+
+   updateMemoryAllocation();
 }
 
 bool ResampleForm::eventFilter( QObject* object, QEvent* event )
@@ -323,22 +323,22 @@ void ResampleForm::rcodeChanged( const QString &rcode )
 void ResampleForm::updateMemoryAllocation()
 {
    QString labelText = QString("%1 lines / ").arg( memoryAllocation->value() );
-   
+
    float bytes = memoryAllocation->value()*bytesPerRow;
 
 
    if( bytes >= 1000 && bytes < 1000000 )
-       labelText += QString( "%2 KB" ).arg( bytes/1000 );
+      labelText += QString( "%2 KB" ).arg( bytes/1000 );
    else if( bytes >= 1000000 && bytes < 1000000000 )
-       labelText += QString( "%2 MB" ).arg( bytes/1000000 );
+      labelText += QString( "%2 MB" ).arg( bytes/1000000 );
    else if( bytes >= 1000000000 )
-       labelText += QString( "%2 GB" ).arg( bytes/1000000000 );
+      labelText += QString( "%2 GB" ).arg( bytes/1000000000 );
    else
-       labelText += QString( "%2 B" ).arg( bytes );
+      labelText += QString( "%2 B" ).arg( bytes );
 
 
-    memoryLabel->setText( tr( labelText ) );
-    return;
+   memoryLabel->setText( tr( labelText ) );
+   return;
 }
 
 

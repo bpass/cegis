@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.18 2005/03/25 18:06:41 rbuehler Exp $
+// $Id: imgio.h,v 1.19 2005/05/31 22:21:44 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -10,14 +10,12 @@
 #ifndef IMGIO_H
 #define IMGIO_H
 
-#define OK         0
-#define NOT_OK               -1
-#define INFILE_NAME      1
-#define OUTFILE_NAME   2
+#define OK           0
+#define NOT_OK       -1
+#define INFILE_NAME  1
+#define OUTFILE_NAME 2
 
 
-//#define _LARGEFILE_SOURCE
-//#define _LARGEFILE64_SOURCE
 #define _FILE_OFFSET_BITS 64
 
 #include <sys/types.h>
@@ -86,13 +84,9 @@ public:
    IMGIO( int maxCount )
    {
       if( maxCount > 0 )
-      {
          Max_Data_Element_Count = maxCount;
-      }
       else
-      {
          Max_Data_Element_Count = DEFAULT_Max_Data_Element_Count;
-      }
 
       inputDataMap = NULL;
    }
@@ -100,10 +94,7 @@ public:
    ~IMGIO()
    {
       if( inputDataMap )
-      {
-         inputDataMap->clear();
          delete inputDataMap;
-      }
    }
 
    int getMaxLineCount() const
@@ -151,14 +142,10 @@ public:
    void send_imgio_par(long inout, QString name)
    {
       if(inout == INFILE_NAME)
-      {
          infile_name = name;      // Init infile name
-      }
 
       if(inout == OUTFILE_NAME)
-      {
          outfile_name = name;      // Init outfile name
-      }
 
       return;
    }
@@ -189,14 +176,10 @@ public:
    void early_error_cleanup()
    {
       if(inptr.isOpen())
-      {
          inptr.close();
-      }
 
       if(outptr.isOpen())
-      {
          outptr.close();
-      }
 
       remove(outfile_name);
       return;
@@ -243,8 +226,6 @@ public:
       raster2IMG( output, outimg );
 
       // Set input file size and try to allocate that amount of memory
-
-
       insize = inimg->nl * inimg->ns;
       insize = inimg->ns;
 
@@ -260,7 +241,6 @@ public:
       }
 
       // Set output file size
-
       outsize = outimg->ns;
 
       mapimginbuf = bufptr;
@@ -275,10 +255,7 @@ public:
       }
 
       for( int index = 0; index < outsize; index++ )
-      {
          *((type*)mapimgoutbuf + index) = (type)0;
-      }
-
 
       return 1;
    }
@@ -319,10 +296,8 @@ public:
       type max_value = (type)0.0;
 
       for( int index = 0; index < (inputSize-1)/2; index++ )
-      {
          if( *((type*)bufptrMax + index) > max_value )
             max_value = *((type*)bufptrMax + index);
-      }
 
       delete[] bufptrMax;
 

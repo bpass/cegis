@@ -1,4 +1,4 @@
-// $Id: logform.cpp,v 1.4 2005/02/23 17:47:39 jtrent Exp $
+// $Id: logform.cpp,v 1.5 2005/05/31 22:21:44 rbuehler Exp $
 
 
 /****************************************************************************
@@ -23,14 +23,14 @@
 #include <qmessagebox.h>
 
 /*
- *  Constructs a logForm as a child of 'parent', with the
- *  name 'name' and widget flags set to 'f'.
- *
- *  The dialog will by default be modeless, unless you set 'modal' to
- *  TRUE to construct a modal dialog.
- */
+*  Constructs a logForm as a child of 'parent', with the
+*  name 'name' and widget flags set to 'f'.
+*
+*  The dialog will by default be modeless, unless you set 'modal' to
+*  TRUE to construct a modal dialog.
+*/
 logForm::logForm( QWidget* parent, const char* name, bool modal, WFlags fl )
-    : QDialog( parent, name, modal, fl )
+: QDialog( parent, name, modal, fl )
 {
    if ( !name )
       setName( "logForm" );
@@ -74,17 +74,17 @@ logForm::logForm( QWidget* parent, const char* name, bool modal, WFlags fl )
 }
 
 /*
- *  Destroys the object and frees any allocated resources
- */
+*  Destroys the object and frees any allocated resources
+*/
 logForm::~logForm()
 {
-    // no need to delete child widgets, Qt does it all for us
+   // no need to delete child widgets, Qt does it all for us
 }
 
 /*
- *  Sets the strings of the subwidgets using the current
- *  language.
- */
+*  Sets the strings of the subwidgets using the current
+*  language.
+*/
 void logForm::languageChange()
 {
    setCaption( tr( "MapImage Log..." ) );
@@ -120,7 +120,7 @@ void logForm::saveLog()
 
    // if yes, remove generic binary and .info files to prepare for overwrite
    if(answer == 0)
-	   remove(s);
+      remove(s);
 
    // if no overwrite needed
    else if(answer == -1)
@@ -137,11 +137,11 @@ void logForm::saveLog()
       QFile logFileOutput( s );
       if ( !logFileOutput.open( IO_WriteOnly ) )
       {
-            //error opening the file
-	      QMessageBox::critical( 0, "mapimg",
-	      QString("An internal error occurred while trying to open the designated output file\n\nLog could not be saved."));
+         //error opening the file
+         QMessageBox::critical( 0, "mapimg",
+            QString("An internal error occurred while trying to open the designated output file\n\nLog could not be saved."));
 
-	      return;
+         return;
       }
 
       QTextStream ts( &logFileOutput );

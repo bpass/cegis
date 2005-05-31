@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.9 2005/05/06 23:19:50 rbuehler Exp $
+// $Id: qgctpbox.cpp,v 1.10 2005/05/31 22:21:45 rbuehler Exp $
 
 
 #include <qtooltip.h>
@@ -12,7 +12,7 @@ const uint INFO_PRECISION = 6;
 QMap<QString,double> *QGctpBox::holdValues=0;
 
 QGctpBox::QGctpBox( QWidget* parent, const char* name )
-   : QVBox( parent, name )
+: QVBox( parent, name )
 {
    QFrame *line = new QFrame( this );
    line->setMinimumHeight( 5 );
@@ -47,7 +47,7 @@ double QGctpBox::value()
    else if( label->text().startsWith( "Landsat Satellite" ) && 
       spinBox->value() == 6 )
       spinBox->setValue( 1 );
-   
+
 
    if( activeEdit == lineEdit )
       return lineEdit->text().toDouble();
@@ -65,7 +65,7 @@ void QGctpBox::setValue( const double val )
       spinBox->setValue( static_cast<int>( val ) );
    else if( activeEdit == dmsEdit )
       dmsEdit->setValue( val );
-   else //( activeEdit == lineEdit )
+   else if( activeEdit == lineEdit )
       lineEdit->setText( QString::number( val, 'f', 12 ) );
 }
 
@@ -122,13 +122,6 @@ void QGctpBox::setGctpName( const QString & gctpName )
       hide();
       name = "";
       return;
-      /*label->setText( "Bad Projection *" );
-      QToolTip::add( label, 
-         "<b>Bad Projection</b>: This projection either generates "
-         "useless data or crashes. It is recommended that you "
-         "choose a different one. This issue may be addressed in "
-         "Future versions of mapimg." );
-      activeEdit = NULL;*/
    }
    else if( gctpName == "Angle" )	
    {

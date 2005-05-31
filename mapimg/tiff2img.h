@@ -1,4 +1,4 @@
-// $Id: tiff2img.h,v 1.1 2005/01/14 16:18:50 rbuehler Exp $
+// $Id: tiff2img.h,v 1.2 2005/05/31 22:21:45 rbuehler Exp $
 
 
 #ifndef TIFF2IMG_H
@@ -60,7 +60,7 @@ bool tiff2img( QString tiffFile, QString imgFile )
                {
                   for( x = 0; x < w; x++ )
               	   {
-          	         value = raster[y*w+x];
+                     value = raster[y*w+x];
                      if( value != 1 )
                      {
                         it = qConvertMap.find( value );
@@ -71,7 +71,7 @@ bool tiff2img( QString tiffFile, QString imgFile )
                            outMap[x][y] = qConvertMap[value];
                         }
                         else
-                              outMap[x][y] = qConvertMap[value];
+                           outMap[x][y] = qConvertMap[value];
                      }
                   }
                }
@@ -81,9 +81,9 @@ bool tiff2img( QString tiffFile, QString imgFile )
                newImg.open( IO_WriteOnly );
 
                for( y = 0; y < h; y++ )
-          	   {
-          	      for( unsigned int x = 0; x < w; x++ )
-          	      {
+               {
+                  for( unsigned int x = 0; x < w; x++ )
+                  {
                      newImg.putch( outMap[x][y] );
                   }
                }

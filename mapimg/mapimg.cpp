@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.27 2005/05/06 23:19:50 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.28 2005/05/31 22:21:44 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -159,9 +159,6 @@ QString mapimg::projectionErrors( const RasterInfo &input )
          msg += "State Plane Coordinates is an unsupported projection at this time.\n"
             "\t-mapimg will crash if you choose to use this projection.\n";
          break;
-      case 4:  // Lambert Conformal Conic
-         msg += "Lambert Conformal Conic is an unsupported projection at this time.\n"
-            "\t-The framing generates zeros for rows and cols.\n";
       case 3:  // Alber's Equal Area
          if( fabs(input.gctpParam(2) + input.gctpParam(3)) < EPSILON )
             msg += "Standard parallel values may produce invalid data.\n"
@@ -195,8 +192,8 @@ QString mapimg::projectionErrors( const RasterInfo &input )
          msg += "Stereographic is an unsupported projection at this time.\n"
             "\t-The framing generates huge values for rows and cols.\n";
          break;
-      case 13: // Gnomic
-         msg += "Gnomic is an unsupported projection at this time.\n"
+      case 13: // Gnomonic
+         msg += "Gnomonic is an unsupported projection at this time.\n"
             "\t-The framing generates zeros for rows and cols.\n";
          break;
       case 15: // General Vertical Near-Side Perspective
@@ -365,6 +362,114 @@ void mapimg::frameIt( RasterInfo &input )
       pymax - (pixsize/2),
       (int)(mapimg::round( ((pymax - pymin) / pixsize) )),
       (int)(mapimg::round( ((pxmax - pxmin) / pixsize) )) );
+}
+
+void mapimg::geo2eqr( RasterInfo &input )
+{
+   double pixsiz;				// Pixel Size in output image
+   double pixX, pixY;
+   double pxmin;				// Projection minimum in X
+   double pxmax;				// Projection maximum in X
+   double pymin;				// Projection minimum in Y
+   double pymax;				// Projection maximum in Y
+
+   long status;
+   long i;
+
+   long outProj = 17;
+   long outUnit = 2;
+   long outZone = 62;
+   long outDatum = 0;
+   double outParms[15];
+
+   long inProj = 0;
+   long inUnit = 4;
+   long inZone = 62;
+   long inDatum = 0;
+   double R = 6370997.0;
+   double inParms[15];
+
+   double inCoords[2];
+   double outCoords[2];
+
+   for(i = 0; i < 15; inParms[i++] = 0.0);
+   for(i = 0; i < 15; outParms[i++] = 0.0);
+
+   pxmin = 1000000000.0;
+   pymin = 1000000000.0;
+   pxmax = -1000000000.0;
+   pymax = -1000000000.0;
+
+   FILE *paramfile = fopen( logFile, "wa");
+
+   // Parse Parameters
+   // ----------------
+   outParms[0] = R;
+
+   // Calc projection coordinates for the four corners.  OK, OK, for an Equirectangular
+   // space & square pixels this really isn't necessary 'cuz it's easy to figure out with 2PiR
+   // etc., but it's here for a check.  It should check EXACTLY...
+   // ---------------------------------------------------------------------------------------
+   inCoords[0] = -180.0;
+   inCoords[1] = 90.0;
+
+   gctp(inCoords, &inProj, &inZone, inParms, &inUnit, &inDatum, &errorMode,logFile,&paramMode,logFile,
+      paramfile, outCoords, &outProj, &outZone, outParms, &outUnit, &outDatum, "", "", &status);
+
+   if(outCoords[0] < pxmin) pxmin = outCoords[0];
+   if(outCoords[0] > pxmax) pxmax = outCoords[0];
+   if(outCoords[1] < pymin) pymin = outCoords[1];
+   if(outCoords[1] > pymax) pymax = outCoords[1];
+
+
+   inCoords[0] = 180.0;
+   inCoords[1] = -90.0;
+
+   gctp(inCoords, &inProj, &inZone, inParms, &inUnit, &inDatum, &errorMode,logFile,&paramMode,logFile,
+      paramfile,outCoords, &outProj, &outZone, outParms, &outUnit, &outDatum, "", "", &status);
+
+   if(outCoords[0] < pxmin) pxmin = outCoords[0];
+   if(outCoords[0] > pxmax) pxmax = outCoords[0];
+   if(outCoords[1] < pymin) pymin = outCoords[1];
+   if(outCoords[1] > pymax) pymax = outCoords[1];
+
+
+   inCoords[0] = -180.0;
+   inCoords[1] = -90.0;
+
+   gctp(inCoords, &inProj, &inZone, inParms, &inUnit, &inDatum, &errorMode,logFile,&paramMode,logFile,
+      paramfile,outCoords, &outProj, &outZone, outParms, &outUnit, &outDatum, "", "", &status);
+
+   if(outCoords[0] < pxmin) pxmin = outCoords[0];
+   if(outCoords[0] > pxmax) pxmax = outCoords[0];
+   if(outCoords[1] < pymin) pymin = outCoords[1];
+   if(outCoords[1] > pymax) pymax = outCoords[1];
+
+
+   inCoords[0] = 180.0;
+   inCoords[1] = 90.0;
+
+   gctp(inCoords, &inProj, &inZone, inParms, &inUnit, &inDatum, &errorMode,logFile,&paramMode,logFile,
+      paramfile,outCoords, &outProj, &outZone, outParms, &outUnit, &outDatum, "", "", &status);
+
+   if(outCoords[0] < pxmin) pxmin = outCoords[0];
+   if(outCoords[0] > pxmax) pxmax = outCoords[0];
+   if(outCoords[1] < pymin) pymin = outCoords[1];
+   if(outCoords[1] > pymax) pymax = outCoords[1];
+
+
+   // Calc output imagee pixel size
+   // -----------------------------
+   pixsiz = (2.0 * 3.141593653589793238 * R) / (double)input.cols();
+   pixX = pxmin + (pixsiz / 2);
+   pixY = pymax + (pixsiz / 2);
+
+   //Save results to input
+   input.setProjection( outProj, outZone, outDatum, outUnit );
+   input.setPixelSize( pixsiz );
+   input.setUL( pixX, pixY );
+   for( i = 0; i < 15; ++i )
+      input.setGctpParam(i++, outParms[i]);
 }
 
 bool mapimg::downSampleImg( const RasterInfo &input, RasterInfo &output, int maxDimension, QWidget *parent )

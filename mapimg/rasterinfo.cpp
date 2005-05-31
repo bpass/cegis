@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.15 2005/03/30 00:54:20 rbuehler Exp $
+// $Id: rasterinfo.cpp,v 1.16 2005/05/31 22:21:45 rbuehler Exp $
 
 
 #include "rasterinfo.h"
@@ -70,6 +70,14 @@ bool RasterInfo::setArea( double ul_X, double ul_Y, int rows, int cols )
    col = cols;
 
    return (row > 0 && col > 0);
+}
+
+bool RasterInfo::setUL( double ul_X, double ul_Y )
+{
+   ulx = ul_X;
+   uly = ul_Y;
+
+   return true;
 }
 
 bool RasterInfo::setPixelDescription( const QString &dataType, double pixelSize, double fillValue, double noDataValue )
@@ -163,16 +171,16 @@ bool RasterInfo::setNoDataValue( double noDataValue )
 
 bool RasterInfo::setHasFillValue( const bool& hasFill )
 {
-    hasFillVal = hasFill;
+   hasFillVal = hasFill;
 
-    return hasFillVal == hasFill;
+   return hasFillVal == hasFill;
 }
 
 bool RasterInfo::setHasNoDataValue( const bool& hasNoData )
 {
-    hasNoDataVal = hasNoData;
-    
-    return hasNoDataVal == hasNoData;
+   hasNoDataVal = hasNoData;
+
+   return hasNoDataVal == hasNoData;
 }
 
 bool RasterInfo::setProjection( int projNumber, int zoneNumber, int datumNumber, int unitNumber )
@@ -184,7 +192,7 @@ bool RasterInfo::setProjection( int projNumber, int zoneNumber, int datumNumber,
 bool RasterInfo::setProjectionNumber( int projNumber )
 {
    if( projNumber >= 0 && projNumber < 31 )
-       projcode = projNumber;
+      projcode = projNumber;
 
    return projcode == projNumber;
 }
@@ -204,7 +212,7 @@ bool RasterInfo::setZoneNumber( int zoneNumber )
 bool RasterInfo::setUnitNumber( int unitNumber )
 {
    unitcode = unitNumber;
-   
+
 
 
    return unitcode == unitNumber;
@@ -267,49 +275,49 @@ bool RasterInfo::save( QString imgFileName )
 
    try
    {
-     RasterXML r;
+      RasterXML r;
 
-     r.setAuthorName( aName );
-     r.setAuthorCompany( aCompany );
-     r.setAuthorEmail( aEmail );
+      r.setAuthorName( aName );
+      r.setAuthorCompany( aCompany );
+      r.setAuthorEmail( aEmail );
 
-     r.setUlCorner( ulx, uly );
-     r.setRows( row );
-     r.setCols( col );
+      r.setUlCorner( ulx, uly );
+      r.setRows( row );
+      r.setCols( col );
 
-     r.setSigned( signd );
-     r.setBits( bits );
-     r.setDataType( datatype.ascii() );
-     r.setPixelSize( pixsize );
-     r.setFillValue( fillval );
-     r.setNoDataValue( noval );
+      r.setSigned( signd );
+      r.setBits( bits );
+      r.setDataType( datatype.ascii() );
+      r.setPixelSize( pixsize );
+      r.setFillValue( fillval );
+      r.setNoDataValue( noval );
 
-     r.setHasFillValue( hasFillVal );
-     r.setHasNoDataValue( hasNoDataVal );
+      r.setHasFillValue( hasFillVal );
+      r.setHasNoDataValue( hasNoDataVal );
 
-     r.setProjNumber( projcode );
-     r.setProjName( projNames[projcode] );
-     r.setZone( zonecode );
-     r.setDatumNumber( datumcode );
-     r.setDatumName( spheroidNames[datumcode] );
-     r.setUnitsNumber( unitcode );
-     r.setUnitsName( unitNames[unitcode] );
+      r.setProjNumber( projcode );
+      r.setProjName( projNames[projcode] );
+      r.setZone( zonecode );
+      r.setDatumNumber( datumcode );
+      r.setDatumName( spheroidNames[datumcode] );
+      r.setUnitsNumber( unitcode );
+      r.setUnitsName( unitNames[unitcode] );
 
-     char variation = 'a';
-     if( projcode == 8 && gctpParams[8] == 1 )
-        variation = 'b';
-     if( ( projcode == 20 || projcode == 22 ) && gctpParams[12] == 1 )
-        variation = 'b';
-     QStringList paramNames( gctpNames(projcode, variation) );
-     for( int i = 0; i < 15; ++i )
-        r.setParam( i, gctpParams[i], nameMeanings(paramNames[i]) );
+      char variation = 'a';
+      if( projcode == 8 && gctpParams[8] == 1 )
+         variation = 'b';
+      if( ( projcode == 20 || projcode == 22 ) && gctpParams[12] == 1 )
+         variation = 'b';
+      QStringList paramNames( gctpNames(projcode, variation) );
+      for( int i = 0; i < 15; ++i )
+         r.setParam( i, gctpParams[i], nameMeanings(paramNames[i]) );
 
-     returnValue =  r.save( QString( fileName + ".xml" ).ascii() );
+      returnValue =  r.save( QString( fileName + ".xml" ).ascii() );
    }
    catch( XMLException exception )
    {
-     QMessageBox::critical( NULL, "Error", exception.getMessage() );
-     returnValue = false;
+      QMessageBox::critical( NULL, "Error", exception.getMessage() );
+      returnValue = false;
    }
 
    return returnValue;
@@ -336,12 +344,12 @@ void RasterInfo::loadInfo()
    QStringList inFile( QStringList::split( '\n', QString(file->readAll()) ) );
    file->close();
    delete file;
-   
+
    ////////Rows and Columns
    int breakPoint = inFile[0].find( ' ', 0, false );
    row = inFile[0].left( breakPoint ).toInt();
    col = inFile[0].right( inFile[0].length() - breakPoint - 1 ).toInt();
-   
+
    projcode = inFile[1].toInt(); //Projection Number/Name
    zonecode = inFile[2].toInt(); //Zone Code
    unitcode = 2; //Unit Type  NOTE: mapimg currently only supports meters
@@ -367,41 +375,41 @@ bool RasterInfo::loadXml()
 
    try
    {
-     RasterXML xml( QString( fileName + ".xml" ).ascii() );
+      RasterXML xml( QString( fileName + ".xml" ).ascii() );
 
-     aName = xml.getAuthorName();
-     aCompany = xml.getAuthorCompany();
-     aEmail = xml.getAuthorEmail();
+      aName = xml.getAuthorName();
+      aCompany = xml.getAuthorCompany();
+      aEmail = xml.getAuthorEmail();
 
-     ulx = xml.getUlx();
-     uly = xml.getUly();
-     row = xml.getRows();
-     col = xml.getCols();
+      ulx = xml.getUlx();
+      uly = xml.getUly();
+      row = xml.getRows();
+      col = xml.getCols();
 
-     signd = xml.isSigned();
-     bits = xml.getBits();
-     datatype = xml.getDataType();
-     pixsize = xml.getPixelSize();
+      signd = xml.isSigned();
+      bits = xml.getBits();
+      datatype = xml.getDataType();
+      pixsize = xml.getPixelSize();
 
-     hasFillVal = xml.hasFillValue();
-     fillval = xml.getFillValue();
-     hasNoDataVal = xml.hasNoDataValue();
-     noval = xml.getNoDataValue();
+      hasFillVal = xml.hasFillValue();
+      fillval = xml.getFillValue();
+      hasNoDataVal = xml.hasNoDataValue();
+      noval = xml.getNoDataValue();
 
-     projcode = xml.getProjNumber();
-     zonecode = xml.getZone();
-     datumcode = xml.getDatumNumber();
-     unitcode = xml.getUnitsNumber();
+      projcode = xml.getProjNumber();
+      zonecode = xml.getZone();
+      datumcode = xml.getDatumNumber();
+      unitcode = xml.getUnitsNumber();
 
-     for( int i = 0; i < 15; ++i )
-        gctpParams[i] = xml.getGCTPParam( i );
+      for( int i = 0; i < 15; ++i )
+         gctpParams[i] = xml.getGCTPParam( i );
 
-     returnValue = true;
+      returnValue = true;
    }
    catch( XMLException exception )
    {
-     QMessageBox::critical( NULL, "XML File Error", exception.getMessage() );
-     returnValue = false;
+      QMessageBox::critical( NULL, "XML File Error", exception.getMessage() );
+      returnValue = false;
    }
 
    return returnValue;
@@ -423,7 +431,7 @@ bool RasterInfo::ready()
 
    if( bits == 0 )
       return false;
-   
+
    if( datatype.isNull() )
       return false;
 

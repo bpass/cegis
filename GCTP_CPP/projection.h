@@ -37,6 +37,9 @@ class Projection
 		\param x Optional storage for output x coordinate
 		\param y Optional storage for output y coordinate
 	*/
+
+	Projection(const Projection& c);
+
 	virtual void forward ( double lon, double lat, double* x = NULL, double* y = NULL ) = 0;
     
 	//! Perform an inverse transformation.
@@ -69,6 +72,9 @@ class Projection
 	//! Get both the lat and lon from the most recent inverse() call.
     void latLon ( double* lat, double* lon );
 
+	double* params() {return m_gctpParams;}
+
+	double param(size_t index);
 	//! Get the name of the projection.
 	std::string name() {return m_name;}
 
@@ -115,6 +121,7 @@ class Projection
 	void setParams(double gctpParams[]);
 
 	void setParam(size_t index, double value);
+
 protected:
 		//! The name of the projection.
 	std::string m_name;
@@ -159,7 +166,7 @@ protected:
 	double m_radius;
 
 	//! Array of 15 projection parameters (as used in the original GCTP).
-    double m_gctpParams[COEFCT];
+    double m_gctpParams[15];
 
 	//! Flag to indicate if a forward init needs to be done.
 	bool m_forInitNeeded;

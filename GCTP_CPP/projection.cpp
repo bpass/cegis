@@ -68,6 +68,11 @@ void Projection::setParam(size_t index, double value) {
 		m_gctpParams[index] = value;
 }
 
+double Projection::param(size_t index) {
+	if(index < 15)
+		return m_gctpParams[index];
+}
+
 
 
 

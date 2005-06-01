@@ -58,6 +58,16 @@ void Projection::latLon ( double* lat, double* lon )
  
 }
 
+void Projection::setParams(double gctpParams[]) {
+	for(int i = 0; i < 15; i++)
+		m_gctpParams[i] = gctpParams[i];
+}
+
+void Projection::setParam(size_t index, double value) {
+	if(index < 15)
+		m_gctpParams[index] = value;
+}
+
 
 
 

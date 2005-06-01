@@ -32,7 +32,7 @@ void Mercator::inverse_init() {
 void Mercator::inverse(double x, double y, double* lon, double* lat) 
 {
 	double ts;		/* small t value				*/
-	double sin_phii;	/* sin value					*/
+//	double sin_phii;	/* sin value					*/
 	long flag;		/* error flag 					*/
 	
 	if(m_invInitNeeded)
@@ -52,6 +52,8 @@ void Mercator::inverse(double x, double y, double* lon, double* lat)
 		throw(ProjException(flag, "Mercator::inverse()"));
 
 	m_longitude = Util::adjust_lon(m_centerLon + x/(m_rMajor * m_m1));
+
+	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
 
 	if(lon)
 		*lon = m_longitude;
@@ -92,7 +94,7 @@ void Mercator::forward(double lon, double lat, double* x, double* y) {
 		m_y_coord = m_falseNorthing - m_rMajor * m_m1 * log(ts);
 	 }
 
-	 Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
+	 Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
 
 	 if(x)
 		 *x = m_x_coord;

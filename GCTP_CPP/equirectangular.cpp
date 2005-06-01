@@ -39,7 +39,6 @@ void Equirectangular::forward( double lon, double lat, double* x, double* y )
      *y = m_y_coord;
   }
 
-
 }
 
 void Equirectangular::inverse ( double x, double y, double* lon, double* lat )
@@ -48,7 +47,6 @@ void Equirectangular::inverse ( double x, double y, double* lon, double* lat )
 	  inverse_init();
   //convert lat/lon from dec degrees to radians
   Util::convertCoords(m_unitCode, METER, x, y);
-
 
   /* Inverse equations */
   x -= m_falseEasting;
@@ -63,7 +61,6 @@ void Equirectangular::inverse ( double x, double y, double* lon, double* lat )
 
   Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
 
-  
   if( lon != NULL )
   {
      *lon = m_longitude;
@@ -74,7 +71,6 @@ void Equirectangular::inverse ( double x, double y, double* lon, double* lat )
      *lat = m_latitude;
   }
 	 
-
 }
 
 void Equirectangular::forward_init()

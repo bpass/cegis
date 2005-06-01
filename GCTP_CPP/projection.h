@@ -112,6 +112,9 @@ class Projection
 	//! Set the radius of the sphere.
 	void setRadius(double radius) {m_radius = radius; setInit();}
 
+	void setParams(double gctpParams[]);
+
+	void setParam(size_t index, double value);
 protected:
 		//! The name of the projection.
 	std::string m_name;

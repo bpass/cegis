@@ -1,3 +1,0 @@
-The logistic function
-    10/(1+150*e(x-10))
-closely approximates the synthetic data.

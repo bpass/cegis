@@ -8,12 +8,23 @@ m_centerLon(0.0), m_centerLat(0.0), m_stdParallelLat1(0.0), m_stdParallelLat2(0.
 }
 
 Conic::Conic(double gctpParams[], int units, long datum, long spheroid) :
-Projection(gctpParams, units, datum, spheroid), m_c(0.0), m_e(0.0), m_es(0.0), m_rh(0.0), m_ns0(0.0),
-m_centerLon(0.0), m_centerLat(0.0), m_stdParallelLat1(0.0), m_stdParallelLat2(0.0)
+Projection(gctpParams, units, datum, spheroid), m_c(0.0), m_e(0.0), m_es(0.0), m_rh(0.0), 
+m_ns0(0.0)
 {
+	loadFromParams();
 }
 
-void Conic::setCenterLat(double lat) {
+void Conic::loadFromParams() 
+{
+	Projection::loadFromParams();
+	setCenterLon(m_gctpParams[4]);
+	setCenterLat(m_gctpParams[5]);
+	setStdParallel1(m_gctpParams[2]);
+	setStdParallel2(m_gctpParams[3]);
+}
+
+void Conic::setCenterLat(double lat) 
+{
 	long err = 0;
 	double temp = 0;
 
@@ -22,9 +33,11 @@ void Conic::setCenterLat(double lat) {
 		throw(ProjException(err, "Conic::setCenterLat()"));
 
 	m_centerLat = temp;
+	setInit();
 }
 
-void Conic::setCenterLon(double lon) {
+void Conic::setCenterLon(double lon) 
+{
 		long err = 0;
 	double temp = 0;
 
@@ -33,9 +46,11 @@ void Conic::setCenterLon(double lon) {
 		throw(ProjException(err, "Conic::setCenterLon()"));
 
 	m_centerLon = temp;
+	setInit();
 }
 
-void Conic::setStdParallel1(double lat) {
+void Conic::setStdParallel1(double lat) 
+{
 	long err = 0;
 	double temp = 0;
 
@@ -44,9 +59,11 @@ void Conic::setStdParallel1(double lat) {
 		throw(ProjException(err, "Conic::setStdParallel1()"));
 
 	m_stdParallelLat1 = temp;
+	setInit();
 }
 
-void Conic::setStdParallel2(double lat) {
+void Conic::setStdParallel2(double lat) 
+{
 	long err = 0;
 	double temp = 0;
 
@@ -55,4 +72,5 @@ void Conic::setStdParallel2(double lat) {
 		throw(ProjException(err, "Conic::setStdParallel2()"));
 
 	m_stdParallelLat2 = temp;
+	setInit();
 }

@@ -97,7 +97,7 @@ class Projection
 	void setDatum(long datum) {m_datum = datum; setInit();}
 	
 	//! Set the spheroid being used.
-	void setSpheroid(long spheroid) {m_spheroid = spheroid; setInit();}
+	void setSpheroid(long spheroid) {m_spheroid = spheroid; setInit(); setRadii();}
 		
 	//! Set the false easting.
 	void setFE(double fe) {m_falseEasting = fe; setInit();}
@@ -166,7 +166,7 @@ protected:
 	double m_radius;
 
 	//! Array of 15 projection parameters (as used in the original GCTP).
-    double m_gctpParams[15];
+    double m_gctpParams[COEFCT];
 
 	//! Flag to indicate if a forward init needs to be done.
 	bool m_forInitNeeded;
@@ -188,6 +188,8 @@ protected:
 
 	//! Toggle forward and inverse initialization flags.
 	void setInit() {m_forInitNeeded = true; m_invInitNeeded = true;}
+
+	virtual void loadFromParams();
 
 
 };

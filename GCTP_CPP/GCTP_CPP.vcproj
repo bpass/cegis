@@ -140,6 +140,9 @@
 				RelativePath=".\conic.cpp">
 			</File>
 			<File
+				RelativePath=".\cylindrical.cpp">
+			</File>
+			<File
 				RelativePath="equirectangular.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -201,6 +204,9 @@
 			</File>
 			<File
 				RelativePath=".\projexception.cpp">
+			</File>
+			<File
+				RelativePath=".\pseudocylindrical.cpp">
 			</File>
 			<File
 				RelativePath="sinusoidal.cpp">

@@ -9,6 +9,7 @@ AlbersConEqArea::AlbersConEqArea()
 {
 	setName("Albers Conical Equal-Area");
 	setNumber(ALBERS);
+
 }
 
 AlbersConEqArea::AlbersConEqArea(double gctpParameters[15], int units, long datum, long spheroid)
@@ -16,11 +17,9 @@ AlbersConEqArea::AlbersConEqArea(double gctpParameters[15], int units, long datu
 {
 	setName("Albers Conical Equal-Area");
 	setNumber(ALBERS);
-	setCenterLon(m_gctpParams[4]);
-	setCenterLat(m_gctpParams[5]);
-	setStdParallel1(m_gctpParams[2]);
-	setStdParallel2(m_gctpParams[3]);
 }
+
+
 
 void AlbersConEqArea::inverse_init() {
 	double sin_po,cos_po;		/* sine and cos values			*/

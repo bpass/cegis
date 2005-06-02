@@ -2,7 +2,7 @@
 #include "mercator.h"
 #include "projexception.h"
 
-Mercator::Mercator(): Projection(), m_centerLat(0.0), m_centerLon(0.0), m_e(0.0),
+Mercator::Mercator(): Cylindrical(), m_e(0.0),
 m_es(0.0), m_m1(0.0)
 {
 	setName("Mercator");
@@ -10,13 +10,11 @@ m_es(0.0), m_m1(0.0)
 }
 
 Mercator::Mercator(double gctpParams[], int units, long datum, long spheroid):
-	Projection(gctpParams, units, datum, spheroid), m_centerLat(0.0), m_centerLon(0.0), m_e(0.0),
+Cylindrical(gctpParams, units, datum, spheroid), m_e(0.0),
 m_es(0.0), m_m1(0.0)
 {
 		setName("Mercator");
 		setNumber(MERCAT);
-		setCenterLon(m_gctpParams[4]);
-		setCenterLat(m_gctpParams[5]);
 }
 
 void Mercator::inverse_init() {
@@ -32,7 +30,6 @@ void Mercator::inverse_init() {
 void Mercator::inverse(double x, double y, double* lon, double* lat) 
 {
 	double ts;		/* small t value				*/
-//	double sin_phii;	/* sin value					*/
 	long flag;		/* error flag 					*/
 	
 	if(m_invInitNeeded)
@@ -102,27 +99,7 @@ void Mercator::forward(double lon, double lat, double* x, double* y) {
 		 *y = m_y_coord;
 }
 
-void Mercator::setCenterLat(double lat) {
-	long err = 0;
-	double temp = 0;	
-	temp = Util::paksz(lat,&err) * 3600 * S2R;
-	if(err != 0)
-		throw(ProjException(err, "Mercator::setCenterLat()"));
 
-	m_centerLat = temp;
-	setInit();
-}
-
-void Mercator::setCenterLon(double lon) {
-	long err = 0;
-	double temp = 0;	
-	temp = Util::paksz(lon,&err) * 3600 * S2R;
-	if(err != 0)
-		throw(ProjException(err, "Mercator::setCenterLon()"));
-
-	m_centerLon = temp;
-	setInit();
-}
 
 
 

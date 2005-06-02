@@ -56,6 +56,7 @@ public:
 
 	//! Get the latitude of the second standard parallel.
 	double stdParallel2() {return m_stdParallelLat2;}
+
 protected:
 
 	//! See documentation for Projection.
@@ -63,6 +64,8 @@ protected:
 
 	//! See documentation for Projection
 	virtual void forward_init() = 0;
+
+	virtual void loadFromParams();
 
 	//! Constant C.
 	double m_c;

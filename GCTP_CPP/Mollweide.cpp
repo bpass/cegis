@@ -1,28 +1,27 @@
 #include "mollweide.h"
 #include "projexception.h"
 
-Mollweide::Mollweide(): Projection(), m_centerLon(0.0) 
+Mollweide::Mollweide(): Pseudocylindrical() 
 {
 	setName("Mollweide");
 	setNumber(MOLL);
 }
 
 Mollweide::Mollweide(double gctpParams[], int units, long datum, long spheroid):
-Projection(gctpParams, units, datum, spheroid), m_centerLon(0.0) 
+Pseudocylindrical(gctpParams, units, datum, spheroid) 
 {
 	setName("Mollweide");
 	setNumber(MOLL);
-	setCenterLon(m_gctpParams[4]);
 }
 
 void Mollweide::forward_init() 
 {
-	return;
+	m_forInitNeeded = false;
 }
 
 void Mollweide::inverse_init() 
 {
-	return;
+	m_invInitNeeded = false;
 }
 
 void Mollweide::forward(double lon, double lat, double* x, double* y) 
@@ -115,15 +114,3 @@ void Mollweide::inverse(double x, double y, double* lon, double* lat)
 
 }
 
-void Mollweide::setCenterLon(double lon) 
-{
-	long err = 0;
-	double temp = 0;
-	temp = Util::paksz(lon, &err) * 3600 * S2R;
-	if(err != 0)
-		throw(ProjException(err, "Mollweide::setCenterLon()"));
-
-	m_centerLon = temp;
-	
-	setInit();
-}

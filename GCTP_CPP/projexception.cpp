@@ -67,6 +67,7 @@ void ProjException::initErrorTable() {
 	m_errorMap.insert(errorPair(252, "Input data error"));
 	m_errorMap.insert(errorPair(1101, "Incompatible unit codes"));
 	m_errorMap.insert(errorPair(1116, "Illegal DMS field"));
+	m_errorMap.insert(errorPair(0, "Parameter index out of bounds"));
 
 	m_initError = true;
 }

@@ -1,0 +1,25 @@
+These are the results of comparing two approximating polynomials made from
+a given set of points for some values both inside and outside the bounds of
+the original points.  These are also compared to the actual function that
+generated the points, and the absolute and relative errors are calculated
+using it.  
+
+                           | Input values
+                           | ----------------------------------------------
+                           | -2.0        -0.9         -0.7        0.1
+---------------------------|-----------------------------------------------
+Actual Function            | 
+  1/(1+10x^2)              | .024390     .109890      .169492     .909091
+                           |
+Approximating Polynomials  |
+  10th Degree Polynomial   | -39937.9    .585156      .079607     .915644
+  Cubic Splines            |   ---       .110516      .169520     .907188
+                           |
+Absolute Error             |
+  10th Degree Polynomial   | 39937.88    .475266      .089884     .006553
+  Cubic Splines            |   ---       .000626      2.85E-5     .001903
+                           |
+Relative Error             |
+  10th Degree Polynomial   | 1.63E8%     432.49%      53.03%      0.72%
+  Cubic Splines            |   ---       0.57%        0.02%       0.21%
+

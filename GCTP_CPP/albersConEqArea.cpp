@@ -174,6 +174,7 @@ void AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
 			m_latitude = Util::phi1z(m_e,qs,&flag);
 			if (flag != 0)
 				throw(ProjException(flag, "AlbersConEqArea::inverse()"));
+         // rbuehler: This exception happens at -180,90
 		}
 
 		else

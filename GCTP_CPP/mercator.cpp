@@ -80,16 +80,16 @@ void Mercator::forward(double lon, double lat, double* x, double* y) {
 
 	/* Forward equations
 	 -----------------*/
-	if (fabs(fabs(lat) - HALF_PI)  <= EPSLN)
-		throw(ProjException(52, "Mercator::forward()"));
-    
-	else
-	 {
+	//if (fabs(fabs(lat) - HALF_PI)  <= EPSLN)
+	//	throw(ProjException(52, "Mercator::forward()"));
+   // rbuehler: this exception happens if I try to reproject the poles.
+	//else
+	// {
 		sinphi = sin(lat);
 		ts = Util::tsfnz(m_e,lat,sinphi);
 		m_x_coord = m_falseEasting + m_rMajor * m_m1 * Util::adjust_lon(lon - m_centerLon);
 		m_y_coord = m_falseNorthing - m_rMajor * m_m1 * log(ts);
-	 }
+	// }
 
 	 Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
 

@@ -64,14 +64,16 @@ void Projection::latLon ( double* lat, double* lon )
 void Projection::setParams(double gctpParams[]) {
 	for(int i = 0; i < COEFCT; i++) {
 		m_gctpParams[i] = gctpParams[i];
-		loadFromParams();
 	}
+	loadFromParams();
+   setRadii();
 }
 
 void Projection::setParam(size_t index, double value) {
 	if(index < COEFCT) {
 		m_gctpParams[index] = value;
 		loadFromParams();
+      setRadii();
 	}
 
 	else

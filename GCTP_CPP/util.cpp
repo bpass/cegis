@@ -312,7 +312,7 @@ double Util::paksz(double ang, long* iflg) {
 	-------------*/
 	sec = fabs(ang);
 	tmp = 1000000.0;
-	i = (long) sec/tmp;
+	i = (long) (sec/tmp);
 	if (i > 360)
 	{
 		printf("Illegal DMS field -- paksz-deg");
@@ -326,7 +326,7 @@ double Util::paksz(double ang, long* iflg) {
 	-------------*/
 	sec = sec - deg * tmp;
 	tmp = 1000;
-	i = (long) sec / tmp;
+	i = (long) (sec/tmp);
 	if (i > 60)
 	{
 		printf("Illegal DMS field -- paksz-min");

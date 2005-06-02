@@ -79,4 +79,5 @@ bool ProjException::addError(long errorCode, std::string error) {
 
 	std::pair<long, std::string> newError(errorCode, error);
 	m_errorMap.insert(newError);
+   return true;
 }

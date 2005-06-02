@@ -94,7 +94,7 @@ class Projection
 	void setUnits(int units) {m_unitCode = units; setInit();}
 	
 	//! Set the datum being used.
-	void setDatum(long datum) {m_datum = datum; setInit();}
+	void setDatum(long datum) {m_datum = datum; setRadii();}
 	
 	//! Set the spheroid being used.
 	void setSpheroid(long spheroid) {m_spheroid = spheroid; setInit(); setRadii();}

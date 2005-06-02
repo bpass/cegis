@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.16 2005/05/31 22:21:45 rbuehler Exp $
+// $Id: rasterinfo.cpp,v 1.17 2005/06/02 20:11:44 rbuehler Exp $
 
 
 #include "rasterinfo.h"
@@ -22,7 +22,7 @@ RasterInfo::RasterInfo()
 //Load constructor
 // Loads the values found in the file whose name and path are
 // given in imgFileName.
-RasterInfo::RasterInfo( QString &imgFileName )
+RasterInfo::RasterInfo( const QString &imgFileName )
 {
    gctpParams = new double[15];
 
@@ -53,7 +53,7 @@ bool RasterInfo::setFileName( QString &imgFileName )
    return parseFileName();
 }
 
-bool RasterInfo::setAuthor( QString &name, QString &company, QString &email )
+bool RasterInfo::setAuthor( const QString &name, const QString &company, const QString &email )
 {
    aName = name.length()?name:"Unknown";
    aCompany = company.length()?company:"Unknown";

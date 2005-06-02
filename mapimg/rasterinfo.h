@@ -1,4 +1,4 @@
-// $Id: rasterinfo.h,v 1.11 2005/05/31 22:21:45 rbuehler Exp $
+// $Id: rasterinfo.h,v 1.12 2005/06/02 20:11:44 rbuehler Exp $
 
 
 #ifndef RASTERINFO_H
@@ -11,7 +11,7 @@ class RasterInfo
 public:
    //Constuctors and Destructor
    RasterInfo();
-   RasterInfo( QString &imgFileName );
+   RasterInfo( const QString &imgFileName );
    RasterInfo( const RasterInfo &src );
    ~RasterInfo();
 
@@ -21,7 +21,7 @@ public:
    QString xmlFileName() const {return fileName + ".xml";}
 
    //Author
-   bool setAuthor( QString &name, QString &company, QString &email );
+   bool setAuthor( const QString &name, const QString &company, const QString &email );
    QString author() const {return aName;}
    QString company() const {return aCompany;}
    QString email() const {return aEmail;}

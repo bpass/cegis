@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.28 2005/05/31 22:21:44 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.29 2005/06/02 20:11:44 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -275,7 +275,7 @@ void mapimg::frameIt( RasterInfo &input )
    FILE *paramfile = fopen( logFile, "wa");
 
    double inCoords[2];
-   double outCoords[2];
+   double outCoords[2] = {0,0};
    double ul_lon = -180.0, ul_lat = 90.0, lr_lon = 180.0, lr_lat = -90;
 
    // Calc projection coordinates (initially) for the four corners

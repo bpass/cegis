@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.18 2005/05/31 22:21:45 rbuehler Exp $
+// $Id: resampleform.cpp,v 1.19 2005/06/02 20:11:44 rbuehler Exp $
 
 
 /****************************************************************************
@@ -144,7 +144,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    memoryResetButton = new QPushButton( "Default", memoryBox, "memoryResetButton" );
    QFontMetrics metrics( memoryResetButton->font() );
    memoryResetButton->setMaximumWidth( metrics.width(memoryResetButton->text()) + (metrics.maxWidth()) );
-   memoryResetButton->setMaximumHeight( 1.5*metrics.height() );
+   memoryResetButton->setMaximumHeight( (int)(1.5*metrics.height()) );
 
    memoryResetButton->setSizePolicy( QSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum ) );
 

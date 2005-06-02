@@ -1,4 +1,4 @@
-// $Id: gctpnames.h,v 1.11 2005/05/31 22:21:44 rbuehler Exp $
+// $Id: gctpnames.h,v 1.12 2005/06/02 20:11:44 rbuehler Exp $
 
 
 #ifndef GCTPNAMES_H
@@ -15,9 +15,9 @@ class SmartQStringList : public QStringList
 public:
    SmartQStringList(const QStringList & I):QStringList(I){}
 
-   const QString &operator[](QStringList::size_type i) const
+   const QString &operator[](long i) const
    {
-      if( i < 0 || i > (size()-1) ) 
+      if( i < 0 || i > (long)(size()-1) ) 
          return QString::null;
       else
          return (*at(i));

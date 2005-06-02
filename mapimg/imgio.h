@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.19 2005/05/31 22:21:44 rbuehler Exp $
+// $Id: imgio.h,v 1.20 2005/06/02 20:11:44 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -33,7 +33,7 @@
 
 #define DEFAULT_Max_Data_Element_Count 100
 
-
+static int find2corners=0;   // true if previous pixel's corners can be reused
 
 struct IMGINFO
 {
@@ -435,8 +435,6 @@ void* get_raster_value(void * buf, long offset, long sample, int lineLength, typ
 // use output pixel coordinate to find the coordinates of
 // the corners of the corresponding input pixel
 //--------------------------------------------------------
-static int find2corners=0;   // true if previous pixel's corners can be reused
-
 #define DELTA_LS 0.00005
 #define DELTA_METERS outimg.pixsize/2
 

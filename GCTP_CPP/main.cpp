@@ -4,22 +4,26 @@
 #include "equirectangular.h"
 #include "albersConEqArea.h"
 #include "projexception.h"
-#include ".\gctpc\source\proj.h"
+#include "mercator.h"
 int main( int argc, char **argv )
 {
+ double params[15] = { 0, 0.000000, 0.000000, 0.000000, 0.000000, 
+				   			          0.000000,	0.000000, 0.000000, 0.000000, 0.000000, 
+								      0.000000,	0.000000, 0.000000, 0.000000, 0.000000};
+
   double equirectParams[15] = { 6370997.000000, 0.000000, 0.000000, 0.000000, 0.000000, 
 				   			          0.000000,	0.000000, 0.000000, 0.000000, 0.000000, 
-								      0.000000,	0.000000, 0.000000, 0.000000, 0.000000  };
+								      0.000000,	0.000000, 0.000000, 0.000000, 0.000000};
 
   double sinusoidalParams[15] = { 6370997.000000, 0.000000, 0.000000, 0.000000, 0.000000, 
 				    		            0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 
-								        0.000000, 0.000000, 0.000000, 0.000000, 0.000000  };
+								        0.000000, 0.000000, 0.000000, 0.000000, 0.000000};
 
   double alberParams[15] = { 6370997.000000, 0, 40000000.000000, 50000000.000000, 0.000000, 
 				    		            0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 
-								        0.000000, 0.000000, 0.000000, 0.000000, 0.000000  };
+								        0.000000, 0.000000, 0.000000, 0.000000, 0.000000};
 
-  double lat = 110.4;
+  double lat = 55.00;
   double lon = -55.234;
   double latOut = 0;
   double lonOut = 0;
@@ -27,10 +31,14 @@ int main( int argc, char **argv )
   double y = 0;
   
   try {
-	 Sinusoidal sinSd(sinusoidalParams, METER, 0, 0);
+	 Mercator merc(params, METER, (Datum)19);
+	 merc.forward(lon, lat, &x, &y);
+	 merc.inverse(x, y, &lon, &lat);
 
-	 Equirectangular eq(equirectParams, METER, 0, 0);
-     AlbersConEqArea albers(alberParams, METER, 0, 0);
+	 Sinusoidal sinSd(sinusoidalParams, METER, (Datum)0);
+
+	 Equirectangular eq(equirectParams, METER, (Datum)0);
+     AlbersConEqArea albers(alberParams, METER, (Datum)0);
 
 	 printf("GCTP-CPP Output\n\n");
 
@@ -48,13 +56,12 @@ int main( int argc, char **argv )
 	 printf("Albers lon: %f lat: %f x: %f y %f\n", lon, lat, x, y);
      albers.inverse(x, y, &lonOut, &latOut);
      printf("Albers inverse x: %f y: %f lon: %f lat: %f\n", x, y, lonOut, latOut);
+ 
   }
 
   catch (ProjException e) {
 	  printf(e.error().c_str());
   }
-
-
 
   return 0;
 }

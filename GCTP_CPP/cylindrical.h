@@ -7,7 +7,7 @@ class Cylindrical : public Projection {
 public:
 	Cylindrical();
 
-	Cylindrical(double gctpParams[], int units = 0, long speroid = 0, long datum = 0);
+	Cylindrical(double gctpParams[], ProjUnit units, Datum dat);
 
 	virtual void forward(double lon, double lat, double* x, double* y) = 0;
 

@@ -10,7 +10,7 @@ public:
 	Conic();
 
 	//! See documentation for Projection
-	Conic(double gctpParams[], int units = 0, long datum = 0, long spheroid = 0);
+	Conic(double gctpParams[], ProjUnit units, Datum dat);
 	
 	//! See documentation for Projection
 	virtual void forward(double lon, double lat, double*x = NULL, double*y = NULL) = 0;

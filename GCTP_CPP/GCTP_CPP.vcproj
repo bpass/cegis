@@ -185,6 +185,9 @@
 				RelativePath=".\Mollweide.cpp">
 			</File>
 			<File
+				RelativePath=".\polyconic.cpp">
+			</File>
+			<File
 				RelativePath="projection.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">

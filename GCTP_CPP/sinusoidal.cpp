@@ -11,8 +11,8 @@ Sinusoidal::Sinusoidal(): Pseudocylindrical()
 	setNumber(SNSOID);
 }
 
-Sinusoidal::Sinusoidal( double gctpParameters[15], int units, long datum, long spheroid) 
-: Pseudocylindrical( gctpParameters, units, datum, spheroid )
+Sinusoidal::Sinusoidal( double gctpParameters[15], ProjUnit units, Datum dat) 
+: Pseudocylindrical( gctpParameters, units, dat )
 {
   setName("Sinusoidal");
   setNumber(SNSOID);

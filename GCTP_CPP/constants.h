@@ -87,8 +87,9 @@
 */
 
 /* Define projection codes */
-enum 
+enum ProjCode 
 {
+NONE=-1,
 GEO=0, 
 UTM, 
 SPCS, 
@@ -124,7 +125,8 @@ USDEF=99
 };
 
 /* Define unit code numbers to their names */
-enum {
+enum ProjUnit {
+	  UNDEF=-1,
 	  RADIAN=0, //Radians
 	  FEET, //Feet
 	  METER, //Meters
@@ -134,7 +136,8 @@ enum {
 };
 
 //Spheroid codes
-enum {
+enum Datum {
+	NOT_SET=-1,
 	CLARKE_1866 = 0,
 	CLARKE_1880,
 	BESSEL,

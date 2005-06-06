@@ -6,8 +6,8 @@ Cylindrical::Cylindrical() : Projection(), m_centerLon(0.0), m_centerLat(0.0)
 {
 }
 
-Cylindrical::Cylindrical(double gctpParams[], int units, long spheroid, long datum):
-Projection(gctpParams, units, spheroid, datum), m_centerLon(0.0), m_centerLat(0.0) 
+Cylindrical::Cylindrical(double gctpParams[], ProjUnit units, Datum dat):
+Projection(gctpParams, units, dat), m_centerLon(0.0), m_centerLat(0.0) 
 {
 	loadFromParams();
 }

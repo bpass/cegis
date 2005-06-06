@@ -1,7 +1,7 @@
 #include "projection.h"
 #include "projexception.h"
 
-Projection::Projection(): m_number(-1), m_unitCode(-1), m_datum(-1), m_spheroid(-1),
+Projection::Projection(): 
 m_longitude(0.0), m_latitude(0.0), m_x_coord(0.0), m_y_coord(0.0), m_falseEasting(0.0),
 m_falseNorthing(0.0), m_rMajor(0.0), m_rMinor(0.0), m_radius(0.0),
 m_forInitNeeded(true), m_invInitNeeded(true)
@@ -12,8 +12,8 @@ m_forInitNeeded(true), m_invInitNeeded(true)
 		m_gctpParams[i] = 0.0;
 }
 
-Projection::Projection ( double gctpParameters[], int units, long datum, long spheroid ): 
-m_number(-1), m_unitCode(units), m_datum(datum), m_spheroid(spheroid),
+Projection::Projection ( double gctpParameters[], ProjUnit units, Datum dat): 
+m_unitCode(units), m_datum(dat),
 m_longitude(0.0), m_latitude(0.0), m_x_coord(0.0), m_y_coord(0.0), m_falseEasting(0.0),
 m_falseNorthing(0.0), m_rMajor(0.0), m_rMinor(0.0), m_radius(0.0),
 m_forInitNeeded(true), m_invInitNeeded(true)

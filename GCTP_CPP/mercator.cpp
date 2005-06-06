@@ -9,8 +9,8 @@ m_es(0.0), m_m1(0.0)
 	setNumber(MERCAT);
 }
 
-Mercator::Mercator(double gctpParams[], int units, long datum, long spheroid):
-Cylindrical(gctpParams, units, datum, spheroid), m_e(0.0),
+Mercator::Mercator(double gctpParams[], ProjUnit units, Datum dat):
+Cylindrical(gctpParams, units, dat), m_e(0.0),
 m_es(0.0), m_m1(0.0)
 {
 		setName("Mercator");

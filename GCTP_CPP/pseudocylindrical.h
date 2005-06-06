@@ -8,7 +8,7 @@ class Pseudocylindrical : public Projection
 public:
 	Pseudocylindrical();
 
-	Pseudocylindrical(double gctpParams[], int units, long datum = 0, long spheroid = 0);
+	Pseudocylindrical(double gctpParams[], ProjUnit units, Datum dat);
 
 	virtual void forward(double lon, double lat, double* x = NULL, double* y = NULL) = 0;
 

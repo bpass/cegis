@@ -7,8 +7,8 @@ Mollweide::Mollweide(): Pseudocylindrical()
 	setNumber(MOLL);
 }
 
-Mollweide::Mollweide(double gctpParams[], int units, long datum, long spheroid):
-Pseudocylindrical(gctpParams, units, datum, spheroid) 
+Mollweide::Mollweide(double gctpParams[], ProjUnit units, Datum dat):
+Pseudocylindrical(gctpParams, units, dat) 
 {
 	setName("Mollweide");
 	setNumber(MOLL);

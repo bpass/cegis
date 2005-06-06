@@ -24,7 +24,7 @@ class Projection
 		\param datum The datum that this projection uses
 		\param spheroid The spheroid that this projection uses
 		*/
-	Projection (double gctpParameters[], int units = 0, long datum = 0, long spheroid = 0);
+	Projection (double gctpParameters[], ProjUnit units, Datum dat);
     
 	//! Perform a forward transformation.
 
@@ -37,9 +37,6 @@ class Projection
 		\param x Optional storage for output x coordinate
 		\param y Optional storage for output y coordinate
 	*/
-
-	Projection(const Projection& c);
-
 	virtual void forward ( double lon, double lat, double* x = NULL, double* y = NULL ) = 0;
     
 	//! Perform an inverse transformation.
@@ -79,25 +76,19 @@ class Projection
 	std::string name() {return m_name;}
 
 	//! Get the projection number.
-	int number() { return m_number;}
+	ProjCode number() { return m_number;}
 
 	//! Get the units being used.
-	int units() {return m_unitCode;}
-
-	//! Get the datum being used.
-	long datum() {return m_datum;}
+	ProjUnit units() {return m_unitCode;}
 
 	//! Get the spheroid being used.
-	long spheroid() {return m_spheroid;}
+	Datum datum() {return m_datum;}
 
 	//! Set the units being used.
-	void setUnits(int units) {m_unitCode = units; setInit();}
-	
-	//! Set the datum being used.
-	void setDatum(long datum) {m_datum = datum; setRadii();}
+	void setUnits(ProjUnit units) {m_unitCode = units; setInit();}
 	
 	//! Set the spheroid being used.
-	void setSpheroid(long spheroid) {m_spheroid = spheroid; setInit(); setRadii();}
+	void setDatum(Datum dat) {m_datum = dat; setInit(); setRadii();}
 		
 	//! Set the false easting.
 	void setFE(double fe) {m_falseEasting = fe; setInit();}
@@ -106,7 +97,7 @@ class Projection
 	void setFN(double fn) {m_falseNorthing = fn; setInit();}
 	
 	//! Set sphere radii according to spheroid and parameter array
-	void setRadii() {Util::sphdz(m_spheroid, m_gctpParams, &m_rMajor, &m_rMinor, &m_radius);
+	void setRadii() {Util::sphdz(m_datum, m_gctpParams, &m_rMajor, &m_rMinor, &m_radius);
 					setInit();}
 	
 	//! Set the major sphere radius
@@ -127,16 +118,13 @@ protected:
 	std::string m_name;
 
 	//! The numeric identifier of the projection.
-    int m_number;
+    ProjCode m_number;
     
 	//! The numeric identifier for the units of this projection.
-	int m_unitCode;
-
-	//! The numeric identifier for the datum of this projection.
-    long m_datum;
+	ProjUnit m_unitCode;
 
 	//! The numeric identifier for the spheroid of this projection.
-    long m_spheroid;
+    Datum m_datum;
 
 	//! The longitdue value produced from an inverse transformation.
     double m_longitude;
@@ -181,13 +169,14 @@ protected:
 	virtual void inverse_init () = 0;
 
 	//! Set the number of the projection.
-	void setNumber(int number) {m_number = number;}
+	void setNumber(ProjCode number) {m_number = number;}
 
 	//! Set the name of the projection.
 	void setName(std::string name) {m_name = name;}
 
 	//! Toggle forward and inverse initialization flags.
 	void setInit() {m_forInitNeeded = true; m_invInitNeeded = true;}
+
 
 	virtual void loadFromParams();
 

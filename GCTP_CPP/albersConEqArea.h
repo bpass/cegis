@@ -9,7 +9,7 @@ public:
 	AlbersConEqArea();
 
 	//! Initialize all fields neccessary to perform our forward and inverse transformations.
-	AlbersConEqArea(double gctpParameters[], int units = 0, long datum = 0, long spheroid = 0);
+	AlbersConEqArea(double gctpParameters[], ProjUnit units, Datum dat);
 
 	//! See documentation for Projection.
 	void forward(double lon, double lat, double* x = NULL, double*y = NULL);

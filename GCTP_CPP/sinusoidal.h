@@ -9,7 +9,7 @@ class Sinusoidal : public Pseudocylindrical
 public:
    Sinusoidal();
    
-   Sinusoidal(double gctpParameters[],int units = 0, long datum = 0, long spheroid = 0);
+   Sinusoidal(double gctpParameters[], ProjUnit units, Datum dat);
    
    void forward( double lon, double lat, double* x = NULL, double* y = NULL );
    

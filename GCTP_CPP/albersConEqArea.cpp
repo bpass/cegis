@@ -12,8 +12,8 @@ AlbersConEqArea::AlbersConEqArea()
 
 }
 
-AlbersConEqArea::AlbersConEqArea(double gctpParameters[15], int units, long datum, long spheroid)
-: Conic(gctpParameters, units, datum, spheroid)
+AlbersConEqArea::AlbersConEqArea(double gctpParameters[15], ProjUnit units, Datum dat)
+: Conic(gctpParameters, units, dat)
 {
 	setName("Albers Conical Equal-Area");
 	setNumber(ALBERS);
@@ -64,15 +64,6 @@ void AlbersConEqArea::inverse_init() {
 	m_c = ms1 * ms1 + m_ns0 * qs1;
 	m_rh = m_rMajor * sqrt(m_c - m_ns0 * qs0)/m_ns0;
 
-	/* Report parameters to the user
-	-----------------------------*/
-	printf("ALBERS CONICAL EQUAL-AREA\n");
-	printf("Sphere SMajor: %f   SMinor: %f\n", m_rMajor, m_rMinor);
-	printf("Standard Parallel -- Lat1: %f    Lat2:   %f\n", m_stdParallelLat1, m_stdParallelLat2);
-	printf("Central Meridian Longitude: %f\n", m_centerLon);
-	printf("Origin Latitude: %f\n", m_centerLat);
-	printf( "False Easting = %f\n", m_falseEasting );
-	printf( "False Northing = %f\n", m_falseNorthing );
 	m_invInitNeeded = false;
 }
 
@@ -118,15 +109,6 @@ void AlbersConEqArea::forward_init() {
 	m_c = ms1 * ms1 + m_ns0 * qs1;
 	m_rh = m_rMajor * sqrt(m_c - m_ns0 * qs0)/m_ns0;
 
-	/* Report parameters to the user
-	-----------------------------*/
-	printf("ALBERS CONICAL EQUAL-AREA\n");
-	printf("Sphere SMajor: %f   SMinor: %f\n", m_rMajor, m_rMinor);
-	printf("Standard Parallel -- Lat1: %f    Lat2:   %f\n", m_stdParallelLat1,m_stdParallelLat2);
-	printf("Central Meridian Longitude: %f\n", m_centerLon);
-	printf("Origin Latitude: %f\n", m_centerLat);
-	printf( "False Easting = %f\n", m_falseEasting );
-	printf( "False Northing = %f\n", m_falseNorthing );
 	m_forInitNeeded = false;
 }
 
@@ -202,9 +184,6 @@ void AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
 		*lat = m_latitude;
 	if(lon)
 		*lon = m_longitude;
-
-	
-
 
 }
 

@@ -2,29 +2,30 @@
 #include "equidistantc.h"
 #include "projexception.h"
 
-EquidistantCA::EquidistantCA(): Conic(), m_e(0.0), m_es(0.0), m_esp(0.0),
+EquidistantC::EquidistantC(): Conic(), m_e(0.0), m_es(0.0), m_esp(0.0),
 m_e0(0.0), m_e1(0.0), m_e2(0.0), m_e3(0.0), m_ml0(0.0), m_ns(0.0),
 m_g(0.0), m_rh(0.0)
 {
-	setNumber(EQUIDCA);
+	setNumber(EQUIDC);
 	setName("Equidistant Conic");
 }
 
-EquidistantCA::EquidistantCA(double gctpParams[], ProjUnit units, ProjDatum dat): 
+EquidistantC::EquidistantC(double gctpParams[], ProjUnit units, ProjDatum dat): 
 Conic(gctpParams, units, dat), m_e(0.0), m_es(0.0), m_esp(0.0),
 m_e0(0.0), m_e1(0.0), m_e2(0.0), m_e3(0.0), m_ml0(0.0), m_ns(0.0),
 m_g(0.0), m_rh(0.0)
 {
-	setNumber(EQUIDCA);
+	setNumber(EQUIDC);
 	setName("Equidistant Conic");
+	loadFromParams();
 }
 
-void EquidistantCA::forward_init() 
+void EquidistantC::forward_init() 
 {
 	double temp;			/* temporary variable		*/
 	double sinphi,cosphi;		/* sin and cos values		*/
 	double ms1,ms2;
-	double ml1;
+	double ml1,ml2;
 
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - SQUARE(temp);
@@ -38,19 +39,34 @@ void EquidistantCA::forward_init()
 	ms1 = Util::msfnz(m_e,sinphi,cosphi);
 	ml1 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_stdParallelLat1);
 	
-	m_ns = sinphi;
+	if (m_mode != 0)
+	{
+		if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN)
+			throw(ProjException(81, "EquidistantC::inverse_init()"));
+		
+		Util::gctp_sincos(m_stdParallelLat2,&sinphi,&cosphi);
+		ms2 = Util::msfnz(m_e,sinphi,cosphi);
+		ml2 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_stdParallelLat2);
+		if (fabs(m_stdParallelLat1 - m_stdParallelLat2) >= EPSLN)
+			m_ns = (ms1 - ms2) / (ml2 - ml1);
+		else
+			m_ns = sinphi;
+	}
+	else
+		m_ns = sinphi;	
+
 	m_g = ml1 + ms1/m_ns;
 	m_ml0 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_centerLat);
 	m_rh = m_rMajor * (m_g - m_ml0);
 
 }
 
-void EquidistantCA::inverse_init()
+void EquidistantC::inverse_init()
 {
 	double temp;			/* temporary variable		*/
 	double sinphi,cosphi;		/* sin and cos values		*/
-	double ms1;
-	double ml1;
+	double ms1,ms2;
+	double ml1,ml2;
 
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - SQUARE(temp);
@@ -63,19 +79,35 @@ void EquidistantCA::inverse_init()
 	Util::gctp_sincos(m_stdParallelLat1,&sinphi,&cosphi);
 	ms1 = Util::msfnz(m_e,sinphi,cosphi);
 	ml1 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_stdParallelLat1);
+	if (m_mode != 0)
+	{
+		if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN)
+			throw(ProjException(81, "EquidistantC::inverse_init()"));
+		
+		Util::gctp_sincos(m_stdParallelLat2,&sinphi,&cosphi);
+		ms2 = Util::msfnz(m_e,sinphi,cosphi);
+		ml2 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_stdParallelLat2);
+		if (fabs(m_stdParallelLat1 - m_stdParallelLat2) >= EPSLN)
+			m_ns = (ms1 - ms2) / (ml2 - ml1);
+		else
+			m_ns = sinphi;
+	}
+	else
+		m_ns = sinphi;	
 
-	m_ns = sinphi;
 	m_g = ml1 + ms1/m_ns;
 	m_ml0 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_centerLat);
 	m_rh = m_rMajor * (m_g - m_ml0);
 }
 
-void EquidistantCA::forward(double lon, double lat, double* x, double* y)
+void EquidistantC::forward(double lon, double lat, double* x, double* y)
 {
 	double ml;
 	double theta;
 	double rh1;
-	
+	if(m_forInitNeeded)
+		forward_init();
+
 	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 
 	/* Forward equations
@@ -94,7 +126,7 @@ void EquidistantCA::forward(double lon, double lat, double* x, double* y)
 		*y = m_y_coord;
 }
 
-void EquidistantCA::inverse(double x, double y, double* lon, double* lat) 
+void EquidistantC::inverse(double x, double y, double* lon, double* lat) 
 {
 	double rh1;
 	double ml;
@@ -102,6 +134,9 @@ void EquidistantCA::inverse(double x, double y, double* lon, double* lat)
 	double theta;
 	long   flag;
 	
+	if(m_invInitNeeded)
+		inverse_init();
+
 	Util::convertCoords(m_unitCode, METER, x, y);
 
 	flag = 0;
@@ -137,4 +172,10 @@ void EquidistantCA::inverse(double x, double y, double* lon, double* lat)
 		*lat = m_latitude;
 
 }
+
+void EquidistantC::loadFromParams() {
+	Conic::loadFromParams();
+	setMode((int)m_gctpParams[8]);
+}
+	
 

@@ -2,18 +2,21 @@
 #ifndef EQUID_C_H
 #define EQUID_C_H
 #include "conic.h"
-class EquidistantCA : public Conic
+class EquidistantC : public Conic
 {
 public:
-	EquidistantCA();
+	EquidistantC();
 
-	EquidistantCA(double gctpParams[], ProjUnit units, ProjDatum dat);
+	EquidistantC(double gctpParams[], ProjUnit units, ProjDatum dat);
 
 	void forward(double lon, double lat, double* x = NULL, double* y = NULL);
 
 	void inverse(double x, double y, double* lon = NULL, double* lat = NULL);
 
-private:
+	void setMode(int mode) {m_mode = mode; setInit();}
+
+	int mode() {return m_mode;}
+protected:
 	
 	double m_e;
 	
@@ -37,9 +40,13 @@ private:
 	
 	double m_rh;
 
+	int m_mode;
+
 	void forward_init();
 
 	void inverse_init();
+
+	void loadFromParams();
 };
 
 #endif

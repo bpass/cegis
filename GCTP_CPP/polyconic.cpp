@@ -49,6 +49,9 @@ void Polyconic::forward(double lon, double lat, double* x, double* y)
 	double con, ml;		/* cone constant, small m			*/
 	double ms;		/* small m					*/
 
+	if(m_forInitNeeded)
+		forward_init();
+
 	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 	/* Forward equations
 	-----------------*/
@@ -83,6 +86,9 @@ void Polyconic::inverse(double x, double y, double* lon, double* lat)
 	double b;		/* temporary values				*/
 	double c;		/* temporary values				*/
 	long iflg;		/* error flag					*/
+
+	if(m_invInitNeeded)
+		inverse_init();
 
 	Util::convertCoords(m_unitCode, METER, x, y);
 

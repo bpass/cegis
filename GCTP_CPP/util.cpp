@@ -169,7 +169,7 @@ printf("Latitude failed to converge after 15 iterations -- PHI3Z-CONV");
 return(3);
 }
 
-double Util::phi4z(double eccent, double e0, double e1, double e2, double e3, double a, double b, double* c, double* phi) {
+long Util::phi4z(double eccent, double e0, double e1, double e2, double e3, double a, double b, double* c, double* phi) {
 
 double sinphi;
 double sin2ph;

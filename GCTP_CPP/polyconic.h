@@ -14,7 +14,7 @@ public:
 
 	void inverse(double x, double y, double* lon = NULL, double* lat = NULL);
 
-private:
+protected:
 
 	/* eccentricity constansts */
 	double m_e;

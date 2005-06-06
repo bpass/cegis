@@ -53,7 +53,7 @@ public:
 	static double phi1z(double eccent, double qs, long* flag);
 	static double phi2z(double eccent, double ts, long* flag);
 	static double phi3z(double ml, double e0, double e1, double e2, double e3, long* flag);
-	static double phi4z(double eccent, double e0, double e1, double e2, double e3, double a, double b, double* c, double* phi);
+	static long phi4z(double eccent, double e0, double e1, double e2, double e3, double a, double b, double* c, double* phi);
 	static double pakcz(double pak);
 	static double paksz(double ang, long* iflg);
 	static double pakr2dm(double pak);

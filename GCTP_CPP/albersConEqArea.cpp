@@ -5,15 +5,15 @@
 #include <stdio.h>
 
 AlbersConEqArea::AlbersConEqArea()
-: Conic()
+: Conic(), m_c(0.0), m_e(0.0), m_es(0.0), m_rh(0.0), m_ns0(0.0)
 {
 	setName("Albers Conical Equal-Area");
 	setNumber(ALBERS);
 
 }
 
-AlbersConEqArea::AlbersConEqArea(double gctpParameters[15], ProjUnit units, Datum dat)
-: Conic(gctpParameters, units, dat)
+AlbersConEqArea::AlbersConEqArea(double gctpParameters[15], ProjUnit units, ProjDatum dat)
+: Conic(gctpParameters, units, dat), m_c(0.0), m_e(0.0), m_es(0.0), m_rh(0.0), m_ns0(0.0)
 {
 	setName("Albers Conical Equal-Area");
 	setNumber(ALBERS);

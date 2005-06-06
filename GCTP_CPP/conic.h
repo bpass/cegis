@@ -10,7 +10,7 @@ public:
 	Conic();
 
 	//! See documentation for Projection
-	Conic(double gctpParams[], ProjUnit units, Datum dat);
+	Conic(double gctpParams[], ProjUnit units, ProjDatum dat);
 	
 	//! See documentation for Projection
 	virtual void forward(double lon, double lat, double*x = NULL, double*y = NULL) = 0;
@@ -29,21 +29,6 @@ public:
 
 	//! Set the latitude for the second standard parallel.
 	void setStdParallel2(double lat);
-
-	//! Get the c constanst.
-	double c() {return m_c;}
-
-	//! Get the eccentricity.
-	double e() {return m_e;}
-
-	//! Get the eccentricity squared.
-	double es() {return m_es;}
-
-	//! Get the height above the elipsoid
-	double rh() {return m_rh;}
-
-	//! Get the ratio between the meridians
-	double ns0() {return m_ns0;}
 
 	//! Get the center longitude for the projection.
 	double centerLon() {return m_centerLon;}
@@ -66,21 +51,6 @@ protected:
 	virtual void forward_init() = 0;
 
 	virtual void loadFromParams();
-
-	//! Constant C.
-	double m_c;
-
-	//! eccentricity.
-	double m_e;
-
-	//! eccentricity squared.
-	double m_es;
-
-	//! height above elipsoid.
-	double m_rh;
-
-	//! Ratio between meridians.
-	double m_ns0;
 
 	//! Center longitude of projection.
 	double m_centerLon;

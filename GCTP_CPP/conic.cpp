@@ -2,14 +2,13 @@
 #include "conic.h"
 #include "projexception.h"
 
-Conic::Conic(): Projection(), m_c(0.0), m_e(0.0), m_es(0.0), m_rh(0.0), m_ns0(0.0),
+Conic::Conic(): Projection(),
 m_centerLon(0.0), m_centerLat(0.0), m_stdParallelLat1(0.0), m_stdParallelLat2(0.0)
 {
 }
 
-Conic::Conic(double gctpParams[], ProjUnit units, Datum dat) :
-Projection(gctpParams, units, dat), m_c(0.0), m_e(0.0), m_es(0.0), m_rh(0.0), 
-m_ns0(0.0)
+Conic::Conic(double gctpParams[], ProjUnit units, ProjDatum dat) :
+Projection(gctpParams, units, dat)
 {
 	loadFromParams();
 }

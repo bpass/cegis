@@ -7,7 +7,7 @@ class Mollweide: public Pseudocylindrical {
 public:
 	Mollweide();
 	
-	Mollweide(double gctpParams[],  ProjUnit units, Datum dat);
+	Mollweide(double gctpParams[],  ProjUnit units, ProjDatum dat);
 	
 	void forward(double lon, double lat, double* x=NULL, double* y=NULL);
 	

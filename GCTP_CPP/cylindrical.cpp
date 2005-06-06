@@ -6,7 +6,7 @@ Cylindrical::Cylindrical() : Projection(), m_centerLon(0.0), m_centerLat(0.0)
 {
 }
 
-Cylindrical::Cylindrical(double gctpParams[], ProjUnit units, Datum dat):
+Cylindrical::Cylindrical(double gctpParams[], ProjUnit units, ProjDatum dat):
 Projection(gctpParams, units, dat), m_centerLon(0.0), m_centerLat(0.0) 
 {
 	loadFromParams();

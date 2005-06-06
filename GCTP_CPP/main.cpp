@@ -31,14 +31,14 @@ int main( int argc, char **argv )
   double y = 0;
   
   try {
-	 Mercator merc(params, METER, (Datum)19);
+	 Mercator merc(params, METER, (ProjDatum)19);
 	 merc.forward(lon, lat, &x, &y);
 	 merc.inverse(x, y, &lon, &lat);
 
-	 Sinusoidal sinSd(sinusoidalParams, METER, (Datum)0);
+	 Sinusoidal sinSd(sinusoidalParams, METER, (ProjDatum)0);
 
-	 Equirectangular eq(equirectParams, METER, (Datum)0);
-     AlbersConEqArea albers(alberParams, METER, (Datum)0);
+	 Equirectangular eq(equirectParams, METER, (ProjDatum)0);
+     AlbersConEqArea albers(alberParams, METER, (ProjDatum)0);
 
 	 printf("GCTP-CPP Output\n\n");
 

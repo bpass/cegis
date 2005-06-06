@@ -8,7 +8,7 @@ public:
 
 	Polyconic();
 	
-	Polyconic(double gctpParams[], ProjUnit units, Datum dat);
+	Polyconic(double gctpParams[], ProjUnit units, ProjDatum dat);
 
 	void forward(double lon, double lat, double* x = NULL, double* y = NULL);
 
@@ -17,6 +17,8 @@ public:
 private:
 
 	/* eccentricity constansts */
+	double m_e;
+	double m_es;
 	double m_e0;
 	double m_e1;
 	double m_e2;

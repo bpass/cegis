@@ -6,7 +6,7 @@ class Mercator: public Cylindrical {
 public:
 	Mercator();
 
-	Mercator(double gctpParams[],  ProjUnit units, Datum dat);
+	Mercator(double gctpParams[],  ProjUnit units, ProjDatum dat);
 
 	void forward(double lon, double lat, double* x = NULL, double* y = NULL);
 

@@ -11,7 +11,7 @@ class Equirectangular : public Cylindrical
   public:
    Equirectangular();
    
-   Equirectangular(double gctpParameters[15], ProjUnit units, Datum dat);
+   Equirectangular(double gctpParameters[15], ProjUnit units, ProjDatum dat);
    
    void forward( double lon, double lat, double* x = NULL, double* y = NULL );
    

@@ -24,7 +24,7 @@ class Projection
 		\param datum The datum that this projection uses
 		\param spheroid The spheroid that this projection uses
 		*/
-	Projection (double gctpParameters[], ProjUnit units, Datum dat);
+	Projection (double gctpParameters[], ProjUnit units, ProjDatum dat);
     
 	//! Perform a forward transformation.
 
@@ -82,13 +82,13 @@ class Projection
 	ProjUnit units() {return m_unitCode;}
 
 	//! Get the spheroid being used.
-	Datum datum() {return m_datum;}
+	ProjDatum datum() {return m_datum;}
 
 	//! Set the units being used.
 	void setUnits(ProjUnit units) {m_unitCode = units; setInit();}
 	
 	//! Set the spheroid being used.
-	void setDatum(Datum dat) {m_datum = dat; setInit(); setRadii();}
+	void setDatum(ProjDatum dat) {m_datum = dat; setInit(); setRadii();}
 		
 	//! Set the false easting.
 	void setFE(double fe) {m_falseEasting = fe; setInit();}
@@ -124,7 +124,7 @@ protected:
 	ProjUnit m_unitCode;
 
 	//! The numeric identifier for the spheroid of this projection.
-    Datum m_datum;
+    ProjDatum m_datum;
 
 	//! The longitdue value produced from an inverse transformation.
     double m_longitude;

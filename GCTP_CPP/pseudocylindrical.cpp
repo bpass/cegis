@@ -6,7 +6,7 @@ Pseudocylindrical::Pseudocylindrical() : Projection(), m_centerLat(0.0), m_cente
 {
 }
 
-Pseudocylindrical::Pseudocylindrical(double gctpParams[], ProjUnit units, Datum dat) 
+Pseudocylindrical::Pseudocylindrical(double gctpParams[], ProjUnit units, ProjDatum dat) 
 : Projection(gctpParams, units, dat)
 {
 	loadFromParams();

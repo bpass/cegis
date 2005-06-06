@@ -9,7 +9,7 @@ Equirectangular::Equirectangular() : Cylindrical()
 	setNumber(EQRECT);
 }
 
-Equirectangular::Equirectangular( double gctpParameters[15], ProjUnit units, Datum dat) 
+Equirectangular::Equirectangular( double gctpParameters[15], ProjUnit units, ProjDatum dat) 
 : Cylindrical(gctpParameters, units, dat)
 {
 	setName("Equirectangular");

@@ -136,7 +136,7 @@ enum ProjUnit {
 };
 
 //Spheroid codes
-enum Datum {
+enum ProjDatum {
 	NOT_SET=-1,
 	CLARKE_1866 = 0,
 	CLARKE_1880,

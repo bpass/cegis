@@ -12,7 +12,7 @@ m_forInitNeeded(true), m_invInitNeeded(true)
 		m_gctpParams[i] = 0.0;
 }
 
-Projection::Projection ( double gctpParameters[], ProjUnit units, Datum dat): 
+Projection::Projection ( double gctpParameters[], ProjUnit units, ProjDatum dat): 
 m_unitCode(units), m_datum(dat),
 m_longitude(0.0), m_latitude(0.0), m_x_coord(0.0), m_y_coord(0.0), m_falseEasting(0.0),
 m_falseNorthing(0.0), m_rMajor(0.0), m_rMinor(0.0), m_radius(0.0),

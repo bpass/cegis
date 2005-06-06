@@ -143,6 +143,9 @@
 				RelativePath=".\cylindrical.cpp">
 			</File>
 			<File
+				RelativePath=".\equidistantc.cpp">
+			</File>
+			<File
 				RelativePath="equirectangular.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -230,9 +233,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\transformation.cpp">
-			</File>
-			<File
 				RelativePath=".\util.cpp">
 			</File>
 		</Filter>
@@ -283,9 +283,6 @@
 			</File>
 			<File
 				RelativePath=".\stateplane.h">
-			</File>
-			<File
-				RelativePath=".\transformation.h">
 			</File>
 			<File
 				RelativePath=".\transversemercator.h">

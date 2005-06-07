@@ -9,9 +9,6 @@
 #include "TridiagonalMatrix.h"
 #include "ThomasAlgorithm.h"
 
-using std::ostream;
-using std::ostringstream;
-
 /**
  * This is a class to represent a cubic spline.  Its a, b, c, and d
  * functions return the coefficients for the cubic polynomial.
@@ -70,8 +67,7 @@ public:
  * 
  */
 template<class T>
-ostream& operator<<(ostream& os, 
-                    const CubicSpline<T>& spline);
+std::ostream& operator<<(std::ostream& os, const CubicSpline<T>& spline);
 
 #include "CubicSplineSolver.hpp"
 

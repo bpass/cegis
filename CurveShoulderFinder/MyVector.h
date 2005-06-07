@@ -4,10 +4,6 @@
 #include <iostream>
 #include <string>
 
-using std::istream;
-using std::ostream;
-using std::string;
-
 
 
 template<class T>
@@ -26,12 +22,12 @@ T
 operator*(const MyVector<T>& lhs, const MyVector<T>& rhs);
 
 template<class T>
-ostream& 
-operator<<(ostream& os, const MyVector<T>& v);
+std::ostream& 
+operator<<(std::ostream& os, const MyVector<T>& v);
 
 template<class T>
-istream& 
-operator>>(istream& is, MyVector<T>& v);
+std::istream& 
+operator>>(std::istream& is, MyVector<T>& v);
 
 
 
@@ -205,14 +201,14 @@ public:
 	 * Pre: None
 	 * Post: v has been outputted to os in the format described above
 	 */
-	friend ostream& operator<< <>(ostream& os, const MyVector<T>& v);
+	friend std::ostream& operator<< <>(std::ostream& os, const MyVector<T>& v);
 
 	/**
 	 * Reads in the terms for v from is.
 	 * Pre: v's size is equal to the number of terms to read in.
 	 * Post: v has been set to the terms read in from is.
 	 */
-	friend istream& operator>> <>(istream& is, MyVector<T>& v);
+	friend std::istream& operator>> <>(std::istream& is, MyVector<T>& v);
 
 	/**
 	 * An exception class to be used when the user tries to perform an
@@ -227,7 +223,7 @@ public:
 		 * message
 		 */
 		IncompatibleVectorSizes(size_t size1, size_t size2,
-		                        string message = "");
+		                        std::string message = "");
 
 		/**
 		 * Get the size of the first vector that was incompatible with
@@ -244,7 +240,7 @@ public:
 		/**
 		 * Get the optional message that was said about the exception.
 		 */
-		const string& getMessage() const;
+		const std::string& getMessage() const;
 	private:
 		/**
 		 * Holds the different sizes of the incompatible vectors
@@ -254,7 +250,7 @@ public:
 		/**
 		 * Holds the optional message
 		 */
-		string msg;
+        std::string msg;
 	};
 
 	/**

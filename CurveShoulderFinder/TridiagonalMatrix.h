@@ -140,7 +140,7 @@ protected:
 	 * Uses the os.width() that is first passed in for every element 
 	 * in the matrix
 	 */
-	virtual void printOn(ostream& os) const;
+	virtual void printOn(std::ostream& os) const;
 
 	/**
 	 * Outputs the matrix in the form
@@ -154,14 +154,14 @@ protected:
 	 * one.  I.e., this only outputs the elements of the matrix that could
 	 * possibly be nonzero.
 	 */
-	virtual void printOnFile(ofstream& ofs) const;
+	virtual void printOnFile(std::ofstream& ofs) const;
 
 	/**
 	 * Reads in the matrix in the same format that printOnFile output it
 	 * in.  The size of the matrix must be set correctly before attempting
 	 * to use this function.
 	 */
-	virtual void readIn(istream& is);
+	virtual void readIn(std::istream& is);
 
 private:
 	size_t size;

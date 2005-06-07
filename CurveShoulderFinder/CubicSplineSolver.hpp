@@ -71,7 +71,7 @@ CubicSplineSolver<T>::operator()(const MyVector<T>& xCoords,
 			(3*h[k]);
 	}
 
-        // find the b's
+	// find the b's
 	// again, use the c's from the taSolution because they contain an
 	// extra member not present in the solution for this function
 	// also, use the yCoords vector for the same reason
@@ -179,7 +179,7 @@ CubicSpline<T>::operator()(const T& term) const
 	T returnValue = a_ +  
 	                b_ * eval  +  
 	                c_ * eval * eval +
-	                d_* eval * eval * eval;
+	                d_ * eval * eval * eval;
 	return returnValue;
 }
 
@@ -189,12 +189,12 @@ CubicSpline<T>::operator()(const T& term) const
 ******* Global stream operators *********
 *****************************************/
 template<class T>
-ostream&
-operator<<(ostream& os, const CubicSpline<T>& spline)
+std::ostream&
+operator<<(std::ostream& os, const CubicSpline<T>& spline)
 {
-	ostringstream oss;
+    std::ostringstream oss;
 	oss << "(x " << (spline.x() >= 0 ? '-' : '+') 
-	    << ' ' << abs(spline.x()) << ')';
+	    << ' ' << std::abs(spline.x()) << ')';
 	os << spline.a();
     os << ' ' << (spline.b() >= 0 ? '+' : '-') << ' ' << std::abs(spline.b()) 
        << '*' << oss.str();

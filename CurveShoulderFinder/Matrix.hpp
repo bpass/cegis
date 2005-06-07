@@ -153,8 +153,8 @@ Matrix<T>::IncompatibleMatrixSizes::getRhsColumns() const
 *****************************************/
 template<class T>
 inline
-ostream& 
-operator<<(ostream& os, const Matrix<T>& m)
+std::ostream& 
+operator<<(std::ostream& os, const Matrix<T>& m)
 {
 	m.printOn(os);
 	return os;
@@ -162,8 +162,8 @@ operator<<(ostream& os, const Matrix<T>& m)
 
 template<class T>
 inline
-ofstream& 
-operator<<(ofstream& ofs, const Matrix<T>& m)
+std::ofstream& 
+operator<<(std::ofstream& ofs, const Matrix<T>& m)
 {
 	m.printOnFile(ofs);
 	return ofs;
@@ -171,8 +171,8 @@ operator<<(ofstream& ofs, const Matrix<T>& m)
 
 template<class T>
 inline
-istream& 
-operator>>(istream& is, Matrix<T>& m)
+std::istream& 
+operator>>(std::istream& is, Matrix<T>& m)
 {
 	m.readIn(is);
 	return is;

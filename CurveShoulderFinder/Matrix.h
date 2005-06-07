@@ -6,26 +6,22 @@
 
 #include "MyVector.h"
 
-using std::ostream;
-using std::ofstream;
-using std::istream;
-
 
 
 template<class T>
 class Matrix;
 
 template<class T>
-ostream& 
-operator<<(ostream& os, const Matrix<T>& m);
+std::ostream& 
+operator<<(std::ostream& os, const Matrix<T>& m);
 
 template<class T>
-ofstream& 
-operator<<(ofstream& ofs, const Matrix<T>& m);
+std::ofstream& 
+operator<<(std::ofstream& ofs, const Matrix<T>& m);
 
 template<class T>
-istream& 
-operator>>(istream& is, Matrix<T>& m);
+std::istream& 
+operator>>(std::istream& is, Matrix<T>& m);
 
 
 
@@ -234,8 +230,8 @@ protected:
 	 * It should output the matrix in a form suited for viewing on
 	 * the screen.
 	 */
-	virtual void printOn(ostream& os) const = 0;
-	friend ostream& operator<< <>(ostream& os, const Matrix<T>& m);
+	virtual void printOn(std::ostream& os) const = 0;
+	friend std::ostream& operator<< <>(std::ostream& os, const Matrix<T>& m);
 
 	/**
 	 * The printOnFile function is called by operator<< for ofstreams,
@@ -243,8 +239,8 @@ protected:
 	 * virtual.  It should output the matrix in a form suited for storing
 	 * in a file.  
 	 */
-	virtual void printOnFile(ofstream& ofs) const = 0;
-	friend ofstream& operator<< <>(ofstream& ofs, const Matrix<T>& m);
+	virtual void printOnFile(std::ofstream& ofs) const = 0;
+	friend std::ofstream& operator<< <>(std::ofstream& ofs, const Matrix<T>& m);
 
 	/**
 	 * The readIn function is called by operator>>, because operator>>
@@ -252,8 +248,8 @@ protected:
 	 * read in the matrix in the same format that printOnFile outputted
 	 * it in.
 	 */
-	virtual void readIn(istream& is) = 0;
-	friend istream& operator>> <>(istream& is, Matrix<T>& m);
+	virtual void readIn(std::istream& is) = 0;
+	friend std::istream& operator>> <>(std::istream& is, Matrix<T>& m);
 };
 
 #include "Matrix.hpp"

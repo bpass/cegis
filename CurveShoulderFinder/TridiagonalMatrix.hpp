@@ -255,7 +255,7 @@ TridiagonalMatrix<T>::getElement(const size_t& row, const size_t& col) const
 
 template<class T>
 void
-TridiagonalMatrix<T>::printOn(ostream& os) const
+TridiagonalMatrix<T>::printOn(std::ostream& os) const
 {
 	const std::streamsize width = os.width();
 	os.width(0);
@@ -273,7 +273,7 @@ TridiagonalMatrix<T>::printOn(ostream& os) const
 
 template<class T>
 void 
-TridiagonalMatrix<T>::printOnFile(ofstream& ofs) const
+TridiagonalMatrix<T>::printOnFile(std::ofstream& ofs) const
 {
 	if(size == 1)
 	{
@@ -304,7 +304,7 @@ TridiagonalMatrix<T>::printOnFile(ofstream& ofs) const
 
 template<class T>
 void 
-TridiagonalMatrix<T>::readIn(istream& is)
+TridiagonalMatrix<T>::readIn(std::istream& is)
 {
 	if(size == 1)
 	{

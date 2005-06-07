@@ -86,7 +86,7 @@ MyVector<T>::operator+=(const MyVector<T>& rhs)
 	// user from where it was thrown
 	if(size != rhs.size)
 	{
-		string message = __FILE__;
+		std::string message = __FILE__;
 		message += ':';
 		message += __LINE__;
 		message += ':';
@@ -150,7 +150,7 @@ operator*(const MyVector<T>& lhs, const MyVector<T>& rhs)
 	// user from where it was thrown
 	if(lhs.size != rhs.size)
 	{
-		string message = __FILE__;
+		std::string message = __FILE__;
 		message += ':';
 		message += __LINE__;
 		message += ':';
@@ -281,8 +281,8 @@ MyVector<T>::getMagnitude() const
 }
 
 template<class T>
-ostream&
-operator<<(ostream& os, const MyVector<T>& v)
+std::ostream&
+operator<<(std::ostream& os, const MyVector<T>& v)
 {
 	os << '<';
 
@@ -304,8 +304,8 @@ operator<<(ostream& os, const MyVector<T>& v)
 }
 
 template<class T>
-istream&
-operator>>(istream& is, MyVector<T>& v)
+std::istream&
+operator>>(std::istream& is, MyVector<T>& v)
 {
 	for(size_t i = 0; i < v.size; ++i)
 	{
@@ -320,7 +320,7 @@ operator>>(istream& is, MyVector<T>& v)
 template<class T>
 inline
 MyVector<T>::IncompatibleVectorSizes::
-IncompatibleVectorSizes(size_t size1, size_t size2, string message)
+IncompatibleVectorSizes(size_t size1, size_t size2, std::string message)
 	: s1(size1), s2(size2), msg(message)
 {}
 
@@ -342,7 +342,7 @@ MyVector<T>::IncompatibleVectorSizes::getSize2() const
 
 template<class T>
 inline
-const string&
+const std::string&
 MyVector<T>::IncompatibleVectorSizes::getMessage() const
 {
 	return msg;

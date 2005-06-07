@@ -1,0 +1,97 @@
+#include <algorithm> // for swap
+
+template<class T>
+PartialPivotingGaussianSolver<T>::~PartialPivotingGaussianSolver()
+{}
+
+template<class T>
+typename GaussianSolver<T>::Solution
+PartialPivotingGaussianSolver<T>::operator()(const Matrix<T>& m, 
+                                             const MyVector<T>& v) const
+{
+	if(m.getNumRows() != v.getSize())
+	{
+		throw typename GaussianSolver<T>::
+			IncompatibleMatrixAndVector(m.getNumRows(), 
+			                            v.getSize());
+	}
+
+	typename GaussianSolver<T>::Solution solution(m, v);
+
+	// get some easier names to read
+	DenseMatrix<T>& mat = solution.matrix();
+	MyVector<T>& vec = solution.vector();
+
+	// do the forward elimination
+	for(size_t i = 0; i < mat.getNumRows() - 1; ++i)
+	{
+		partialPivot(mat, vec, i, i);
+		for(size_t j = i + 1; j < mat.getNumRows(); ++j)
+		{
+			T factor = -mat[j][i] / mat[i][i];
+			mat.rowReplace(j, i, factor);
+			vec[j] += vec[i] * factor;
+		}
+	}
+
+//    using std::cout;
+//    cout << __FILE__ << ':' << __LINE__ << ':' << __func__
+//         << ": After forward elimination:\n" 
+//         << "Matrix =\n" << mat << "Vector =\n" << DenseMatrix<T>(vec);
+
+	// do the back substitution
+	for(size_t i = mat.getNumRows() - 1; i >= 1; --i)
+	{
+		// make the pivot in this row a 1
+		vec[i] *= 1/mat[i][i];
+		mat.rowScale(i, 1/mat[i][i]);
+
+                for(size_t j = 0; j < i; ++j)
+		{
+			T factor = -mat[j][i];
+			// mat[i][i] should be 1
+			mat.rowReplace(j, i, factor);
+			vec[j] += vec[i] * factor;
+		}
+	}
+
+	// make the pivot in the first row a 1
+	vec[0] *= 1/mat[0][0];
+	mat.rowScale(0, 1/mat[0][0]);
+
+	return solution;
+}
+
+template<class T>
+void 
+PartialPivotingGaussianSolver<T>::
+partialPivot(DenseMatrix<T>& mat, MyVector<T>& vec,
+             const size_t& row, const size_t& column) const
+{
+	size_t maxIndex = indexLargestElementRow(mat, row, column);
+	if(maxIndex != row)
+	{
+		mat.rowInterchange(maxIndex, row);
+		std::swap(vec[maxIndex], vec[row]);
+	}
+}
+
+template<class T>
+inline
+size_t
+PartialPivotingGaussianSolver<T>::
+indexLargestElementRow(const Matrix<T>& mat,
+                       const size_t& rowToStart,
+                       const size_t& column) const
+{
+	size_t maxIndex = rowToStart;
+	for(size_t i = rowToStart + 1; i < mat.getNumRows(); ++i)
+	{
+		if(std::abs(mat[i][column]) > std::abs(mat[maxIndex][column]))
+		{
+			maxIndex = i;
+		}
+	}
+	return maxIndex;
+}
+

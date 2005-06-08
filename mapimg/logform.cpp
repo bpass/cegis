@@ -1,4 +1,4 @@
-// $Id: logform.cpp,v 1.6 2005/06/08 18:00:54 rbuehler Exp $
+// $Id: logform.cpp,v 1.7 2005/06/08 21:14:42 rbuehler Exp $
 
 
 /****************************************************************************
@@ -87,7 +87,7 @@ logForm::~logForm()
 */
 void logForm::languageChange()
 {
-   setCaption( tr( "MapImage Log..." ) );
+   setCaption( tr( "MapIMG Log..." ) );
    setIconText( QString::null );
    saveButton->setText( tr( "&Save..." ) );
    okButton->setText( tr( "&OK" ) );

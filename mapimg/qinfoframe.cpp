@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.25 2005/05/31 22:21:45 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.26 2005/06/08 21:14:42 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -835,15 +835,15 @@ void QInfoFrame::getFill()
 {
    RasterInfo inf;
    if( static_cast<QLabel*>(mapTab->child( "mapLabel" ))->text().contains( "Output", false ) )
-   {
       inf.copy( partner->info() );
-   }
    else
-   {
       inf.copy( info() );
-   }
 
    double maxValue = mapimg::calcFillValue(inf);
+
+   if( maxValue == inf.fillValue() )
+      return;
+
    QString fillString = "0.000000";
 
    if( maxValue != 0 )

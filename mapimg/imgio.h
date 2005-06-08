@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.21 2005/06/08 18:00:54 rbuehler Exp $
+// $Id: imgio.h,v 1.22 2005/06/08 21:14:42 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -295,9 +295,11 @@ public:
 
       type max_value = (type)0.0;
 
-      for( int index = 0; index < (inputSize-1)/2; index++ )
+      for( int index = 0; index < (inputSize-1); index++ )
+      {
          if( *((type*)bufptrMax + index) > max_value )
             max_value = *((type*)bufptrMax + index);
+      }
 
       delete[] bufptrMax;
 

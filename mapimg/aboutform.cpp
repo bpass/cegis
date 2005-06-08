@@ -1,4 +1,4 @@
-// $Id: aboutform.cpp,v 1.8 2005/06/08 18:00:54 rbuehler Exp $
+// $Id: aboutform.cpp,v 1.9 2005/06/08 21:14:42 rbuehler Exp $
 
 
 /****************************************************************************
@@ -111,7 +111,7 @@ void aboutForm::languageChange()
 {
    setCaption( tr( "About MapIMG" ) );
    titleLabel->setText( QString("MapIMG v%1.%2.%3").arg(MAJOR_VERSION).arg(MINOR_VERSION).arg(REVISION_NUM) );
-   descLabel1->setText( tr( "MapImage is a research-oriented project. Its source and binaries"
+   descLabel1->setText( tr( "MapIMG is a research-oriented project. Its source and binaries"
       " are provided with no warranty or support. <b>Use at your own risk.</b>"
       " We will, however, provide minimal technical support as time allows."
       " We are also very interested in feedback as well as bug reports. All"

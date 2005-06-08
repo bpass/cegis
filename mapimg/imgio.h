@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.20 2005/06/02 20:11:44 rbuehler Exp $
+// $Id: imgio.h,v 1.21 2005/06/08 18:00:54 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -202,7 +202,7 @@ public:
       if( !inptr.isOpen() || !inptr.isReadable() )
       {
          early_error_cleanup();
-         QMessageBox::critical( 0, "mapimg",
+         QMessageBox::critical( 0, "MapIMG",
             QString("An internal error occurred while trying to open the designated input file\n\nmapimg will not execute."));
          return 0;
       }
@@ -235,7 +235,7 @@ public:
       if(!bufptr)
       {
          early_error_cleanup();
-         QMessageBox::critical(0, "mapimg",
+         QMessageBox::critical(0, "MapIMG",
             QString("An internal error occurred while trying to allocate the input image buffer!  Image is too large!\n\nmapimg will not execute."));
          return 0;
       }

@@ -1,4 +1,4 @@
-// $Id: aboutform.cpp,v 1.7 2005/03/25 04:16:56 rbuehler Exp $
+// $Id: aboutform.cpp,v 1.8 2005/06/08 18:00:54 rbuehler Exp $
 
 
 /****************************************************************************
@@ -109,8 +109,8 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
 */
 void aboutForm::languageChange()
 {
-   setCaption( tr( "About mapimg2" ) );
-   titleLabel->setText( QString("mapimg v%1.%2.%3").arg(MAJOR_VERSION).arg(MINOR_VERSION).arg(REVISION_NUM) );
+   setCaption( tr( "About MapIMG" ) );
+   titleLabel->setText( QString("MapIMG v%1.%2.%3").arg(MAJOR_VERSION).arg(MINOR_VERSION).arg(REVISION_NUM) );
    descLabel1->setText( tr( "MapImage is a research-oriented project. Its source and binaries"
       " are provided with no warranty or support. <b>Use at your own risk.</b>"
       " We will, however, provide minimal technical support as time allows."

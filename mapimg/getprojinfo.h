@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.34 2005/05/31 22:21:44 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.35 2005/06/08 18:00:54 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -540,7 +540,7 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
 
    if(progress.wasCancelled())
    {
-      QMessageBox::information (mapimgdial, "Aborted!","mapimg has been aborted",
+      QMessageBox::information (mapimgdial, "Aborted!","MapIMG has been aborted",
          QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton);
       cancelled = true;
    }
@@ -548,7 +548,7 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
    // if process Completed output completion message
    else
    {
-      QString out = "mapimg has completed\n\nOutput Rows: " ;
+      QString out = "MapIMG has completed\n\nOutput Rows: " ;
       QString str = QString::number(outputRows, 10);
       out += str;
       out += "\n\nOutput Columns: ";

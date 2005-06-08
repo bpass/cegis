@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.10 2005/05/31 22:21:45 rbuehler Exp $
+// $Id: qgctpbox.cpp,v 1.11 2005/06/08 18:00:54 rbuehler Exp $
 
 
 #include <qtooltip.h>
@@ -249,7 +249,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
       dmsEdit->setDirection( QDmsEdit::North );
-      QToolTip::add( label, "mapimg2 will not work if this is equal to "
+      QToolTip::add( label, "MapIMG will not work if this is equal to "
          "2nd point." );
    }
    else if( gctpName == "Lat2" )	
@@ -259,7 +259,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
       dmsEdit->setDirection( QDmsEdit::North );
-      QToolTip::add( label, "mapimg2 will not work if this is equal to "
+      QToolTip::add( label, "MapIMG will not work if this is equal to "
          "1st point." );
    }
    else if( gctpName == "Lon/Z" )	
@@ -277,7 +277,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( -180 );
       dmsEdit->setMaxVal( 180 );
       dmsEdit->setDirection( QDmsEdit::East );
-      QToolTip::add( label, "mapimg2 will not work if this is equal to "
+      QToolTip::add( label, "MapIMG will not work if this is equal to "
          "2nd point." );
    }
    else if( gctpName == "Long2" )
@@ -287,7 +287,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( -180 );
       dmsEdit->setMaxVal( 180 );
       dmsEdit->setDirection( QDmsEdit::East );
-      QToolTip::add( label, "mapimg2 will not work if this is equal to "
+      QToolTip::add( label, "MapIMG will not work if this is equal to "
          "1st point." );
    }
    else if( gctpName == "LongPol" )
@@ -405,7 +405,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
       dmsEdit->setDirection( QDmsEdit::North );
-      QToolTip::add( label, "mapimg2 will not work if this is equal to "
+      QToolTip::add( label, "MapIMG will not work if this is equal to "
          "2nd Standard Parallel." );
    }
    else if( gctpName == "STDPR2" )	
@@ -415,7 +415,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
       dmsEdit->setDirection( QDmsEdit::North );
-      QToolTip::add( label, "mapimg2 will not work if this is equal to "
+      QToolTip::add( label, "MapIMG will not work if this is equal to "
          "1st Standard Parallel." );
    }
    else if( gctpName == "TrueScale" )

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.38 2005/05/31 22:21:44 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.39 2005/06/08 18:00:54 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -65,7 +65,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
 : QMainWindow( parent, name, fl )
 {
    setIcon( mapimgImage( "USGS Swirl Sphere" ) );
-   setCaption( QString("mapimg%1").arg(MAJOR_VERSION) );
+   setCaption( QString("MapIMG v%1").arg(MAJOR_VERSION) );
 
    setCentralWidget( new QWidget( this, "qt_central_widget" ) );
    formLayout = new QHBoxLayout( centralWidget(), 1, 2, "formLayout");
@@ -198,7 +198,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    ////////
 
    //actions
-   aboutAction = new QAction( "About mapimg2", QKeySequence(""), this, "aboutAction" );
+   aboutAction = new QAction( "About MapIMG", QKeySequence(""), this, "aboutAction" );
    aboutQtAction = new QAction( "About Qt", QKeySequence(""), this, "aboutQtAction" );
 
    //signals and slots
@@ -287,23 +287,23 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    ////////
 
    QSettings *settings = new QSettings( QSettings::Ini );
-   settings->setPath( "USGS.gov", "mapimg2" );
+   settings->setPath( "USGS.gov", "MapIMG" );
 
-   inPath = settings->readEntry( "/USGS/mapimg2/DefaultInputPath" );
-   outPath = settings->readEntry( "/USGS/mapimg2/DefaultOutputPath" );
-   authName = settings->readEntry( "/USGS/mapimg2/AuthorName" );
-   authCompany = settings->readEntry( "/USGS/mapimg2/AuthorCompany" );
-   authEmail = settings->readEntry( "/USGS/mapimg2/AuthorEmail" );
+   inPath = settings->readEntry( "/USGS/MapIMG/DefaultInputPath" );
+   outPath = settings->readEntry( "/USGS/MapIMG/DefaultOutputPath" );
+   authName = settings->readEntry( "/USGS/MapIMG/AuthorName" );
+   authCompany = settings->readEntry( "/USGS/MapIMG/AuthorCompany" );
+   authEmail = settings->readEntry( "/USGS/MapIMG/AuthorEmail" );
 
    if( inPath.isNull() || !QFile::exists(inPath) )
-      settings->writeEntry( "/USGS/mapimg2/DefaultInputPath", QDir::currentDirPath() );
+      settings->writeEntry( "/USGS/MapIMG/DefaultInputPath", QDir::currentDirPath() );
    if( outPath.isNull() || !QFile::exists(outPath) )
-      settings->writeEntry( "/USGS/mapimg2/DefaultOutputPath", QDir::currentDirPath() );
+      settings->writeEntry( "/USGS/MapIMG/DefaultOutputPath", QDir::currentDirPath() );
    if( authName.isNull() )
    {
-      settings->writeEntry( "/USGS/mapimg2/AuthorName", QString("Unknown") );
-      settings->writeEntry( "/USGS/mapimg2/AuthorCompany", QString("Unknown") );
-      settings->writeEntry( "/USGS/mapimg2/AuthorEmail", QString("Unknown") );
+      settings->writeEntry( "/USGS/MapIMG/AuthorName", QString("Unknown") );
+      settings->writeEntry( "/USGS/MapIMG/AuthorCompany", QString("Unknown") );
+      settings->writeEntry( "/USGS/MapIMG/AuthorEmail", QString("Unknown") );
       delete settings;
 
       editAuthor();
@@ -438,14 +438,14 @@ messages the user and asks them to genererate one using the input frame.
 void mapimgForm::inOpenClicked()
 {
    QString temp = QFileDialog::getOpenFileName(
-      inPath, "mapimg Files (*.img);;Tiff Files (*.tif)", this, "", "Choose an image");
+      inPath, "MapIMG Files (*.img);;Tiff Files (*.tif)", this, "", "Choose an image");
 
    if( openFile(temp) )
    {   
       inPath = imgName.left( imgName.findRev( "/" ) );
       QSettings *settings = new QSettings( QSettings::Ini );
-      settings->setPath( "USGS.gov", "mapimg2" );
-      settings->writeEntry( "/USGS/mapimg2/DefaultInputPath", inPath );
+      settings->setPath( "USGS.gov", "MapIMG" );
+      settings->writeEntry( "/USGS/MapIMG/DefaultInputPath", inPath );
       delete settings;
    }
 }
@@ -494,7 +494,7 @@ bool mapimgForm::openFile( QString inFile )
    {
       QMessageBox::information( this, "Open", 
          QString( "%1\n"
-         "mapimg2 cannot read this file.\n"
+         "MapIMG cannot read this file.\n"
          "This is not a valid raster image, or its format is not currently supported." )
          .arg(inFile) );
       return false;
@@ -541,7 +541,7 @@ bool mapimgForm::openFile( QString inFile )
    int index = cap.findRev("/");
    index++;
    cap = cap.right(cap.length() - index);
-   setCaption(cap + " - mapimg2");
+   setCaption(cap + " - MapIMG");
 
    return true;
 }
@@ -769,7 +769,7 @@ void mapimgForm::outSaveClicked()
 
    // Prompt for destination of new projection
    QString temp = QFileDialog::getSaveFileName(
-      outPath, "mapimg Raster Files (*.img)", this, "", "Choose a destination for the reprojection");
+      outPath, "MapIMG Raster Files (*.img)", this, "", "Choose a destination for the reprojection");
    if( temp.isNull() )
       return;
 
@@ -827,24 +827,24 @@ void mapimgForm::outSaveClicked()
    // Save output path to settings
    outPath = temp.left( temp.findRev( "/" ) );
    QSettings *settings = new QSettings( QSettings::Ini );
-   settings->setPath( "USGS.gov", "mapimg2" );
-   settings->writeEntry( "/USGS/mapimg2/DefaultOutputPath", outPath );
+   settings->setPath( "USGS.gov", "MapIMG" );
+   settings->writeEntry( "/USGS/MapIMG/DefaultOutputPath", outPath );
    delete settings;
 }
 
 void mapimgForm::editAuthor()
 {
    QSettings *settings = new QSettings( QSettings::Ini );
-   settings->setPath( "USGS.gov", "mapimg2" );
+   settings->setPath( "USGS.gov", "MapIMG" );
 
    authorForm *form = new authorForm(settings, this, "about", false,
       WINDOW_FLAGS );
    form->exec();
    delete form;
 
-   authName = settings->readEntry( "/USGS/mapimg2/AuthorName" );
-   authCompany = settings->readEntry( "/USGS/mapimg2/AuthorCompany" );
-   authEmail = settings->readEntry( "/USGS/mapimg2/AuthorEmail" );
+   authName = settings->readEntry( "/USGS/MapIMG/AuthorName" );
+   authCompany = settings->readEntry( "/USGS/MapIMG/AuthorCompany" );
+   authEmail = settings->readEntry( "/USGS/MapIMG/AuthorEmail" );
 
    delete settings;
 }

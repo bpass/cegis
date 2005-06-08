@@ -1,4 +1,4 @@
-// $Id: authorform.cpp,v 1.9 2005/05/31 22:21:44 rbuehler Exp $
+// $Id: authorform.cpp,v 1.10 2005/06/08 18:00:54 rbuehler Exp $
 
 
 /****************************************************************************
@@ -101,24 +101,24 @@ authorForm::~authorForm()
 void authorForm::languageChange()
 {
    setCaption( tr( "Author Properties" ) );
-   descrLabel->setText( tr( "For your covenience mapimg%1 can attach your information to the re-projections that you create." ).arg(MAJOR_VERSION) );
+   descrLabel->setText( tr( "For your covenience MapIMG can attach your information to the re-projections that you create." ).arg(MAJOR_VERSION) );
    nameLabel->setText( tr( "Name:" ) );
    companyLabel->setText( tr( "Company:" ) );
    emailLabel->setText( tr( "Email address:" ) );
    infoLabel->setText( tr( "These fields can be changed at any time by clicking \"Edit Author\" under the Options menu." ) );
    okButton->setText( tr( "Ok" ) );
    cancelButton->setText( tr( "Cancel" ) );
-   nameEdit->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorName" ) ) );
-   companyEdit->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorCompany" ) ) );
-   emailEdit->setText( tr( set->readEntry( "/USGS/mapimg2/AuthorEmail" ) ) );
+   nameEdit->setText( tr( set->readEntry( "/USGS/MapIMG/AuthorName" ) ) );
+   companyEdit->setText( tr( set->readEntry( "/USGS/MapIMG/AuthorCompany" ) ) );
+   emailEdit->setText( tr( set->readEntry( "/USGS/MapIMG/AuthorEmail" ) ) );
 }
 
 // okClicked() saves the changes made by the user before exitting.
 void authorForm::okClicked()
 {
-   set->writeEntry( "/USGS/mapimg2/AuthorName", nameEdit->text() );
-   set->writeEntry( "/USGS/mapimg2/AuthorCompany", companyEdit->text() );
-   set->writeEntry( "/USGS/mapimg2/AuthorEmail", emailEdit->text() );
+   set->writeEntry( "/USGS/MapIMG/AuthorName", nameEdit->text() );
+   set->writeEntry( "/USGS/MapIMG/AuthorCompany", companyEdit->text() );
+   set->writeEntry( "/USGS/MapIMG/AuthorEmail", emailEdit->text() );
 
    close();
 }

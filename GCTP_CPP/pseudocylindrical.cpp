@@ -17,8 +17,10 @@ void Pseudocylindrical::setCenterLat(double lat) {
 	double temp = 0;
 
 	temp = Util::paksz(lat, &err) * 3600 * S2R;
-	if(err != 0)
-		throw(ProjException(err, "Conic::setCenterLat()"));
+	if(err != 0) {
+		setError(err);
+		return;
+	}
 
 	m_centerLat = temp;
 	setInit();
@@ -29,8 +31,10 @@ void Pseudocylindrical::setCenterLon(double lon) {
 	double temp = 0;
 
 	temp = Util::paksz(lon, &err) * 3600 * S2R;
-	if(err != 0)
-		throw(ProjException(err, "Conic::setCenterLon()"));
+	if(err != 0) {
+		setError(err);
+		return;
+	}
 
 	m_centerLon = temp;
 	setInit();

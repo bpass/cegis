@@ -28,8 +28,10 @@ void Conic::setCenterLat(double lat)
 	double temp = 0;
 
 	temp = Util::paksz(lat, &err) * 3600 * S2R;
-	if(err != 0)
-		throw(ProjException(err, "Conic::setCenterLat()"));
+	if(err != 0) {
+		setError(err);
+		return;
+	}
 
 	m_centerLat = temp;
 	setInit();
@@ -41,8 +43,10 @@ void Conic::setCenterLon(double lon)
 	double temp = 0;
 
 	temp = Util::paksz(lon, &err) * 3600 * S2R;
-	if(err != 0)
-		throw(ProjException(err, "Conic::setCenterLon()"));
+	if(err != 0) {
+		setError(err);
+		return;
+	}
 
 	m_centerLon = temp;
 	setInit();
@@ -54,8 +58,10 @@ void Conic::setStdParallel1(double lat)
 	double temp = 0;
 
 	temp = Util::paksz(lat, &err) * 3600 * S2R;
-	if(err != 0)
-		throw(ProjException(err, "Conic::setStdParallel1()"));
+	if(err != 0) {
+		setError(err);
+		return;
+	}
 
 	m_stdParallelLat1 = temp;
 	setInit();
@@ -67,8 +73,10 @@ void Conic::setStdParallel2(double lat)
 	double temp = 0;
 
 	temp = Util::paksz(lat, &err) * 3600 * S2R;
-	if(err != 0)
-		throw(ProjException(err, "Conic::setStdParallel2()"));
+	if(err != 0) {
+		setError(err);
+		return;
+	}
 
 	m_stdParallelLat2 = temp;
 	setInit();

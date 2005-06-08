@@ -2,8 +2,8 @@
 #include "projexception.h"
 
 Projection::Projection(): 
-m_longitude(0.0), m_latitude(0.0), m_x_coord(0.0), m_y_coord(0.0), m_falseEasting(0.0),
-m_falseNorthing(0.0), m_rMajor(0.0), m_rMinor(0.0), m_radius(0.0),
+m_errorCode(0),m_longitude(0.0), m_latitude(0.0), m_x_coord(0.0), m_y_coord(0.0), 
+m_falseEasting(0.0),m_falseNorthing(0.0), m_rMajor(0.0), m_rMinor(0.0), m_radius(0.0),
 m_forInitNeeded(true), m_invInitNeeded(true)
 
 
@@ -13,7 +13,7 @@ m_forInitNeeded(true), m_invInitNeeded(true)
 }
 
 Projection::Projection ( double gctpParameters[], ProjUnit units, ProjDatum dat): 
-m_unitCode(units), m_datum(dat),
+m_errorCode(0), m_unitCode(units), m_datum(dat),
 m_longitude(0.0), m_latitude(0.0), m_x_coord(0.0), m_y_coord(0.0), m_falseEasting(0.0),
 m_falseNorthing(0.0), m_rMajor(0.0), m_rMinor(0.0), m_radius(0.0),
 m_forInitNeeded(true), m_invInitNeeded(true)
@@ -73,19 +73,16 @@ void Projection::setParam(size_t index, double value) {
 	if(index < COEFCT) {
 		m_gctpParams[index] = value;
 		loadFromParams();
-      setRadii();
+	    setRadii();
 	}
-
-	else
-		throw(ProjException(0, "Projection::setParam()"));
 }
 
 double Projection::param(size_t index) {
 	if(index < COEFCT)
 		return m_gctpParams[index];
 	else
-		throw(ProjException(0, "Projection::setParam()"));
-
+		return(-1);
+	
 }
 
 

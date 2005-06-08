@@ -19,6 +19,7 @@ m_es(0.0), m_m1(0.0)
 
 void Mercator::inverse_init() {
 	double temp;			/* temporary variable		*/
+    clearError();
 
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - SQUARE(temp);
@@ -31,7 +32,9 @@ void Mercator::inverse(double x, double y, double* lon, double* lat)
 {
 	double ts;		/* small t value				*/
 	long flag;		/* error flag 					*/
-	
+
+    clearError();
+
 	if(m_invInitNeeded)
 		inverse_init();
 	
@@ -45,8 +48,10 @@ void Mercator::inverse(double x, double y, double* lon, double* lat)
 	ts = exp(-y/(m_rMajor * m_m1));
 	m_latitude = Util::phi2z(m_e,ts,&flag);
 	
-	if (flag != 0)
-		throw(ProjException(flag, "Mercator::inverse()"));
+	if (flag != 0) {
+		setError(flag);
+		return;
+	}
 
 	m_longitude = Util::adjust_lon(m_centerLon + x/(m_rMajor * m_m1));
 
@@ -62,6 +67,8 @@ void Mercator::inverse(double x, double y, double* lon, double* lat)
 void Mercator::forward_init() {
 	double temp;			/* temporary variable		*/
 
+	clearError();
+
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - SQUARE(temp);
 	m_e = sqrt(m_es);
@@ -73,6 +80,8 @@ void Mercator::forward(double lon, double lat, double* x, double* y) {
 	double ts;		/* small t value				*/
 	double sinphi;		/* sin value					*/
 
+	clearError();
+
 	if(m_forInitNeeded)
 		forward_init();
 
@@ -80,16 +89,18 @@ void Mercator::forward(double lon, double lat, double* x, double* y) {
 
 	/* Forward equations
 	 -----------------*/
-	//if (fabs(fabs(lat) - HALF_PI)  <= EPSLN)
-	//	throw(ProjException(52, "Mercator::forward()"));
-   // rbuehler: this exception happens if I try to reproject the poles.
-	//else
-	// {
+	if (fabs(fabs(lat) - HALF_PI)  <= EPSLN) {
+		setError(52);
+		return;
+	}
+
+	else
+	 {
 		sinphi = sin(lat);
 		ts = Util::tsfnz(m_e,lat,sinphi);
 		m_x_coord = m_falseEasting + m_rMajor * m_m1 * Util::adjust_lon(lon - m_centerLon);
 		m_y_coord = m_falseNorthing - m_rMajor * m_m1 * log(ts);
-	// }
+	 }
 
 	 Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
 

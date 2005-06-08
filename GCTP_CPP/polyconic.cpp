@@ -19,7 +19,9 @@ m_e3(0.0), m_ml0(0.0)
 
 void Polyconic::forward_init() 
 {
-	double temp;			
+	double temp;	
+
+	clearError();
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - SQUARE(temp);
 	m_e = sqrt(m_es);
@@ -32,7 +34,9 @@ void Polyconic::forward_init()
 
 void Polyconic::inverse_init() 
 {
-	double temp;			
+	double temp;		
+
+	clearError();
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - SQUARE(temp);
 	m_e = sqrt(m_es);
@@ -49,6 +53,7 @@ void Polyconic::forward(double lon, double lat, double* x, double* y)
 	double con, ml;		/* cone constant, small m			*/
 	double ms;		/* small m					*/
 
+	clearError();
 	if(m_forInitNeeded)
 		forward_init();
 
@@ -87,6 +92,8 @@ void Polyconic::inverse(double x, double y, double* lon, double* lat)
 	double c;		/* temporary values				*/
 	long iflg;		/* error flag					*/
 
+	clearError();
+
 	if(m_invInitNeeded)
 		inverse_init();
 
@@ -108,8 +115,10 @@ void Polyconic::inverse(double x, double y, double* lon, double* lat)
 		b = al * al + (x/m_rMajor) * (x/m_rMajor);
 		iflg = Util::phi4z(m_es,m_e0,m_e1,m_e2,m_e3,al,b,&c,&m_latitude);
 
-		if (iflg != OK)
-			throw(ProjException(iflg, "Polyconic::inverse()"));
+		if (iflg != OK) {
+			setError(iflg);
+			return;
+		}
 
 		m_longitude = Util::adjust_lon((Util::asinz(x * c / m_rMajor) / sin(m_latitude)) + m_centerLon);
 	}

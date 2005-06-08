@@ -16,11 +16,15 @@ Pseudocylindrical(gctpParams, units, dat)
 
 void Mollweide::forward_init() 
 {
+	clearError();
+
 	m_forInitNeeded = false;
 }
 
 void Mollweide::inverse_init() 
 {
+	clearError();
+
 	m_invInitNeeded = false;
 }
 
@@ -32,6 +36,8 @@ void Mollweide::forward(double lon, double lat, double* x, double* y)
   double delta_theta;
   double con;
   long i;
+
+  clearError();
 
   if(m_forInitNeeded)
 	  forward_init();
@@ -51,8 +57,10 @@ void Mollweide::forward(double lon, double lat, double* x, double* y)
 	delta_theta = -(theta + sin(theta) - con)/ (1.0 + cos(theta));
 	theta += delta_theta;
 	if (fabs(delta_theta) < EPSLN) break;
-	if (i >= 50) 
-		throw(ProjException(241, "Mollweide::forward()"));
+	if (i >= 50) {
+		setError(241);
+		return;
+	}
 	  
 	}
 	theta /= 2.0;
@@ -78,6 +86,8 @@ void Mollweide::inverse(double x, double y, double* lon, double* lat)
 {
   double theta;
   double arg;
+
+  clearError();
 
   if(m_invInitNeeded)
 	  inverse_init();

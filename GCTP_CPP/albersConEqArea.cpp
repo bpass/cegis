@@ -32,9 +32,13 @@ void AlbersConEqArea::inverse_init() {
 	double qs2;            		/* small q 2                            */
 
 	long tempErr = 0;
+	
+	clearError();
 
-	if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN)
-		throw(ProjException(31, "AlbersConEqArea::inverse()"));
+	if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN) {
+		setError(31);
+		return;
+	}
 
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - (temp*temp);
@@ -78,8 +82,12 @@ void AlbersConEqArea::forward_init() {
 	double qs2;					/* small q 2				*/
 	long tempErr = 0;
 
-	if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN)
-		throw(ProjException(31, "AlbersConEqArea::inverse()"));
+	clearError();
+
+	if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN) {
+		setError(31);
+		return;
+	}
     
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - (temp*temp);
@@ -119,6 +127,8 @@ void AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
 	double theta;			/* angle			*/
 	long   flag;			/* error flag;			*/
 
+	clearError();
+
 	if(m_invInitNeeded)
 		inverse_init();
 	
@@ -154,9 +164,10 @@ void AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
 		if (fabs(fabs(con) - fabs(qs)) > .0000000001 )
 		{
 			m_latitude = Util::phi1z(m_e,qs,&flag);
-			if (flag != 0)
-				throw(ProjException(flag, "AlbersConEqArea::inverse()"));
-         // rbuehler: This exception happens at -180,90
+			if (flag != 0) {
+				setError(flag);
+				return;
+			}
 		}
 
 		else
@@ -172,8 +183,10 @@ void AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
 	else
 	{
 		m_latitude = Util::phi1z(m_e,qs,&flag);
-		if (flag != 0)
-			throw(ProjException(flag, "AlbersConEqArea::inverse()"));
+		if (flag != 0) {
+			setError(flag);
+			return;
+		}
     }
 
 	m_longitude = Util::adjust_lon(theta/m_ns0 + m_centerLon);
@@ -193,6 +206,8 @@ void AlbersConEqArea::forward(double lon, double lat, double* x, double* y) {
 	double qs;			/* small q			*/
 	double theta;			/* angle			*/ 
 	double rh1;			/* height above ellipsoid	*/
+
+	clearError();
 
 	if(m_forInitNeeded)
 		forward_init();

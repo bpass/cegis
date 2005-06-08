@@ -20,6 +20,8 @@ void Equirectangular::forward( double lon, double lat, double* x, double* y )
 {
   double deltaLon;		/* delta longitude value			*/
 	
+  clearError();
+
   if(m_forInitNeeded)
 	  forward_init();
 
@@ -47,6 +49,9 @@ void Equirectangular::forward( double lon, double lat, double* x, double* y )
 
 void Equirectangular::inverse ( double x, double y, double* lon, double* lat )
 {
+  
+  clearError();
+
   if(m_invInitNeeded)
 	  inverse_init();
   //convert lat/lon from dec degrees to radians
@@ -58,8 +63,10 @@ void Equirectangular::inverse ( double x, double y, double* lon, double* lat )
 
   m_latitude = y / m_radius;
 
-  if( fabs( m_latitude ) > HALF_PI )
-	  throw(ProjException(174, "Equirectangular::inverse()"));
+  if( fabs( m_latitude ) > HALF_PI ) {
+	setError(174);
+	return;
+  }
 
   m_longitude = Util::adjust_lon( m_centerLon + x / ( m_radius * cos( m_centerLon )));
 
@@ -79,11 +86,15 @@ void Equirectangular::inverse ( double x, double y, double* lon, double* lat )
 
 void Equirectangular::forward_init()
 {
+  clearError();
+
   m_forInitNeeded = false;
 }
 
 void Equirectangular::inverse_init()
 {
+  clearError();
+
   m_invInitNeeded = false;
 }
 

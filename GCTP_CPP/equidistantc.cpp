@@ -27,6 +27,8 @@ void EquidistantC::forward_init()
 	double ms1,ms2;
 	double ml1,ml2;
 
+	clearError();
+
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - SQUARE(temp);
 	m_e = sqrt(m_es);
@@ -41,8 +43,10 @@ void EquidistantC::forward_init()
 	
 	if (m_mode != 0)
 	{
-		if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN)
-			throw(ProjException(81, "EquidistantC::inverse_init()"));
+		if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN) {
+			setError(81);
+			return;
+		}
 		
 		Util::gctp_sincos(m_stdParallelLat2,&sinphi,&cosphi);
 		ms2 = Util::msfnz(m_e,sinphi,cosphi);
@@ -68,6 +72,8 @@ void EquidistantC::inverse_init()
 	double ms1,ms2;
 	double ml1,ml2;
 
+	clearError();
+
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - SQUARE(temp);
 	m_e = sqrt(m_es);
@@ -81,8 +87,10 @@ void EquidistantC::inverse_init()
 	ml1 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_stdParallelLat1);
 	if (m_mode != 0)
 	{
-		if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN)
-			throw(ProjException(81, "EquidistantC::inverse_init()"));
+		if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN) {
+			setError(81);
+			return;
+		}
 		
 		Util::gctp_sincos(m_stdParallelLat2,&sinphi,&cosphi);
 		ms2 = Util::msfnz(m_e,sinphi,cosphi);
@@ -105,6 +113,9 @@ void EquidistantC::forward(double lon, double lat, double* x, double* y)
 	double ml;
 	double theta;
 	double rh1;
+	
+	clearError();
+
 	if(m_forInitNeeded)
 		forward_init();
 
@@ -133,7 +144,9 @@ void EquidistantC::inverse(double x, double y, double* lon, double* lat)
 	double con;
 	double theta;
 	long   flag;
-	
+
+	clearError();
+
 	if(m_invInitNeeded)
 		inverse_init();
 
@@ -163,8 +176,10 @@ void EquidistantC::inverse(double x, double y, double* lon, double* lat)
 
 	Util::convertCoords(RADIAN, DEGREE, m_latitude, m_longitude);
 
-	if (flag != 0)
-		throw(ProjException(flag, "EquidistantCA::inverse()"));
+	if (flag != 0) {
+		setError(flag);
+		return;
+	}
 
 	if(lon)
 		*lon = m_longitude;

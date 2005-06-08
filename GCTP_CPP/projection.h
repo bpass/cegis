@@ -26,6 +26,7 @@ class Projection
 		*/
 	Projection (double gctpParameters[], ProjUnit units, ProjDatum dat);
     
+	Projection (const Projection& proj);
 	//! Perform a forward transformation.
 
 	/*! This function transforms input lat/lon coordinates to the desired coordinate system.
@@ -72,6 +73,7 @@ class Projection
 	double* params() {return m_gctpParams;}
 
 	double param(size_t index);
+
 	//! Get the name of the projection.
 	std::string name() {return m_name;}
 
@@ -113,8 +115,22 @@ class Projection
 
 	void setParam(size_t index, double value);
 
+	void setError(long errorCode) {m_errorCode = errorCode;}
+
+	void clearError() {m_errorCode = 0;}
+
+	long error() {return m_errorCode;}
+
+	bool errorOccured() {return(m_errorCode == 0);}
+
+
 protected:
-		//! The name of the projection.
+	
+	
+	//! Numeric error code of latest error
+	long m_errorCode;
+
+	//! The name of the projection.
 	std::string m_name;
 
 	//! The numeric identifier of the projection.
@@ -177,7 +193,7 @@ protected:
 	//! Toggle forward and inverse initialization flags.
 	void setInit() {m_forInitNeeded = true; m_invInitNeeded = true;}
 
-
+	
 	virtual void loadFromParams();
 
 

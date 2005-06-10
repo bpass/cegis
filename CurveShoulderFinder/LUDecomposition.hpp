@@ -1,3 +1,10 @@
+/**
+ * @file LUDecomposition.hpp
+ * @author Austin Hartman
+ *
+ * $Id: LUDecomposition.hpp,v 1.2 2005/06/10 22:05:55 ahartman Exp $
+ */
+
 #include <cmath>
 
 template<class T>
@@ -55,9 +62,11 @@ LUDecomposition<T>::operator()(const Matrix<T>& matrixToDecompose,
     // that is what goes on its main diagonal
     typename LUDecomposition<T>::Solution 
         solution(LowerTriangularMatrix<T>(matrix.getNumRows(), 1),
-                 UpperTriangularMatrix<T>(matrix.getNumRows()));
+                 UpperTriangularMatrix<T>(matrix.getNumRows()),
+                 DenseMatrix<T>(order.size(), order.size(), 0));
     LowerTriangularMatrix<T>& L = solution.L();
     UpperTriangularMatrix<T>& U = solution.U();
+    DenseMatrix<T>& P = solution.P();
 
     // put the values from the single dense matrix into the two separate upper
     // and lower triangular matrices
@@ -65,15 +74,21 @@ LUDecomposition<T>::operator()(const Matrix<T>& matrixToDecompose,
     {
         for(size_t i = j+1; i < matrix.getNumRows(); ++i)
         {
-            L[i][j] = matrix[i][j];
+            L[i][j] = matrix[order[i]][j];
         }
     }
     for(size_t j = 0; j < matrix.getNumCols(); ++j)
     {
         for(size_t i = 0; i <= j; ++i)
         {
-            U[i][j] = matrix[i][j];
+            U[i][j] = matrix[order[i]][j];
         }
+    }
+
+    // create the permutation matrix
+    for(size_t i = 0; i < order.size(); ++i)
+    {
+        P[i][order[i]] = 1;
     }
 
     return solution;
@@ -130,8 +145,9 @@ LUDecomposition<T>::Solution::Solution()
 
 template<class T>
 LUDecomposition<T>::Solution::Solution(const LowerTriangularMatrix<T>& L,
-                                       const UpperTriangularMatrix<T>& U)
-    : m_L(L), m_U(U)
+                                       const UpperTriangularMatrix<T>& U,
+                                       const DenseMatrix<T>& P)
+    : m_L(L), m_U(U), m_P(P)
 {}
 
 template<class T>
@@ -164,5 +180,21 @@ const UpperTriangularMatrix<T>&
 LUDecomposition<T>::Solution::U() const
 {
     return m_U;
+}
+
+template<class T>
+inline
+DenseMatrix<T>&
+LUDecomposition<T>::Solution::P()
+{
+    return m_P;
+}
+
+template<class T>
+inline
+const DenseMatrix<T>&
+LUDecomposition<T>::Solution::P() const
+{
+    return m_P;
 }
 

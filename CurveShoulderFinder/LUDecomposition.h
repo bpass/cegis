@@ -1,8 +1,16 @@
+/**
+ * @file LUDecomposition.h
+ * @author Austin Hartman
+ *
+ * $Id: LUDecomposition.h,v 1.2 2005/06/10 22:05:55 ahartman Exp $
+ */
+
 #ifndef AUSTIN_LUDECOMPOSITION_H
 #define AUSTIN_LUDECOMPOSITION_H
 
 #include <vector>
 #include "Matrix.h"
+#include "DenseMatrix.h"
 #include "UpperTriangularMatrix.h"
 #include "LowerTriangularMatrix.h"
 
@@ -19,27 +27,24 @@ public:
     public:
         Solution();
         Solution(const LowerTriangularMatrix<T>& L, 
-                 const UpperTriangularMatrix<T>& U);
+                 const UpperTriangularMatrix<T>& U,
+                 const DenseMatrix<T>& P);
         LowerTriangularMatrix<T>& L();
         const LowerTriangularMatrix<T>& L() const;
         UpperTriangularMatrix<T>& U();
         const UpperTriangularMatrix<T>& U() const;
+        DenseMatrix<T>& P();
+        const DenseMatrix<T>& P() const;
     private:
         LowerTriangularMatrix<T> m_L;
         UpperTriangularMatrix<T> m_U;
+        DenseMatrix<T> m_P;
     };
 
     class MatrixIsSingular
     {};
 
 private:
-//    std::vector<size_t> order; 
-//    // holds the order of the rows for pivoting, so that they don't actually
-//    // need to be moved
-//
-//    std::vector<T> scales;
-//    // holds the value of the largest element in each row
-
     static const T m_tolerance;
     
     typedef std::vector<T> ScalesType;

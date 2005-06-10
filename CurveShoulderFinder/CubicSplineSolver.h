@@ -1,3 +1,10 @@
+/**
+ * @file CubicSplineSolver.h
+ * @author Austin Hartman
+ *
+ * $Id: CubicSplineSolver.h,v 1.3 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 #ifndef AUSTIN_CUBICSPLINESOLVER_H
 #define AUSTIN_CUBICSPLINESOLVER_H
 

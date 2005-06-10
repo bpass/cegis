@@ -1,3 +1,10 @@
+/**
+ * @file LowerTriangularMatrix.hpp
+ * @author Austin Hartman
+ *
+ * $Id: LowerTriangularMatrix.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 template<class T>
 T LowerTriangularMatrix<T>::nonConstZero = 0;
 

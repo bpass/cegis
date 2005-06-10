@@ -1,3 +1,10 @@
+/**
+ * @file Point2D.h
+ * @author Austin Hartman
+ *
+ * $Id: Point2D.h,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 #ifndef AUSTIN_POINT2D_H
 #define AUSTIN_POINT2D_H
 

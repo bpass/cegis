@@ -1,3 +1,10 @@
+/**
+ * @file GaussianSolver.hpp
+ * @author Austin Hartman
+ *
+ * $Id: GaussianSolver.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 /******************************************
 **** GaussianSolver functions *************
 *******************************************/

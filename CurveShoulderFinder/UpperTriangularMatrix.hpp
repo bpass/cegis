@@ -1,3 +1,10 @@
+/**
+ * @file UpperTriangularMatrix.hpp
+ * @author Austin Hartman
+ *
+ * $Id: UpperTriangularMatrix.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 template<class T>
 T UpperTriangularMatrix<T>::nonConstZero = 0;
 

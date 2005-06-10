@@ -1,3 +1,10 @@
+/**
+ * @file TridiagonalMatrix.h
+ * @author Austin Hartman
+ *
+ * $Id: TridiagonalMatrix.h,v 1.3 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 #ifndef AUSTIN_TRIDIAGONALMATRIX_H
 #define AUSTIN_TRIDIAGONALMATRIX_H
 

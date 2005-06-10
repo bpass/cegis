@@ -1,3 +1,10 @@
+/**
+ * @file LinearRegression.h
+ * @author Austin Hartman
+ *
+ * $Id: LinearRegression.h,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 #ifndef AUSTIN_LINEARREGRESSION_H
 #define AUSTIN_LINEARREGRESSION_H
 

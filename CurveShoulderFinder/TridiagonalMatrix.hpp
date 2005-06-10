@@ -1,3 +1,10 @@
+/**
+ * @file TridiagonalMatrix.hpp
+ * @author Austin Hartman
+ *
+ * $Id: TridiagonalMatrix.hpp,v 1.3 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 template<class T>
 T TridiagonalMatrix<T>::nonConstZero = 0;
 

@@ -1,3 +1,10 @@
+/**
+ * @file UpperTriangularMatrix.h
+ * @author Austin Hartman
+ *
+ * $Id: UpperTriangularMatrix.h,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 #ifndef AUSTIN_UPPERTRIANGULARMATRIX_H
 #define AUSTIN_UPPERTRIANGULARMATRIX_H
 

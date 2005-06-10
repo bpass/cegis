@@ -1,3 +1,10 @@
+/**
+ * @file DenseMatrix.hpp
+ * @author Austin Hartman
+ *
+ * $Id: DenseMatrix.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 /******************************************
 **** DenseMatrix functions ****************
 *******************************************/

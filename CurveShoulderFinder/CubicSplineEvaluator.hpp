@@ -1,3 +1,10 @@
+/**
+ * @file CubicSplineEvaluator.hpp
+ * @author Austin Hartman
+ *
+ * $Id: CubicSplineEvaluator.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 template<class T>
 T
 CubicSplineEvaluator<T>::operator()

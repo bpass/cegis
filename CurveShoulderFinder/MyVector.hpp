@@ -1,3 +1,10 @@
+/**
+ * @file MyVector.hpp
+ * @author Austin Hartman
+ *
+ * $Id: MyVector.hpp,v 1.3 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 #include <cmath> // for sqrt
 
 template<class T>

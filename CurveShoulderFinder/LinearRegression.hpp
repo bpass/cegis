@@ -1,3 +1,10 @@
+/**
+ * @file LinearRegression.hpp
+ * @author Austin Hartman
+ *
+ * $Id: LinearRegression.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 template<class T>
 typename LinearRegression<T>::Solution
 LinearRegression<T>::

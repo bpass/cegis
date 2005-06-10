@@ -1,3 +1,10 @@
+/**
+ * @file CubicSplineSolver.hpp
+ * @author Austin Hartman
+ *
+ * $Id: CubicSplineSolver.hpp,v 1.3 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 /********************************************
 ******* CubicSplineSolver functions *********
 *********************************************/

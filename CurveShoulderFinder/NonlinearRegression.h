@@ -1,3 +1,10 @@
+/**
+ * @file NonlinearRegression.h
+ * @author Austin Hartman
+ *
+ * $Id: NonlinearRegression.h,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ */
+
 #ifndef AUSTIN_NONLINEARREGRESSION_H
 #define AUSTIN_NONLINEARREGRESSION_H
 

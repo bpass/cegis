@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 #include "equirectangular.h"
-#include "projexception.h"
 
 Equirectangular::Equirectangular() : Cylindrical()
 {

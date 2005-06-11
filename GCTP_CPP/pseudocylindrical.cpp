@@ -1,6 +1,5 @@
 
 #include "pseudocylindrical.h"
-#include "projexception.h"
 
 Pseudocylindrical::Pseudocylindrical() : Projection(), m_centerLat(0.0), m_centerLon(0.0)
 {

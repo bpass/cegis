@@ -1,6 +1,5 @@
 
 #include "mercator.h"
-#include "projexception.h"
 
 Mercator::Mercator(): Cylindrical(), m_e(0.0),
 m_es(0.0), m_m1(0.0)

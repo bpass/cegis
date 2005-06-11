@@ -1,6 +1,5 @@
 
 #include "cylindrical.h"
-#include "projexception.h"
 
 Cylindrical::Cylindrical() : Projection(), m_centerLon(0.0), m_centerLat(0.0) 
 {

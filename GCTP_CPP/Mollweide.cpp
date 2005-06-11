@@ -1,5 +1,4 @@
 #include "mollweide.h"
-#include "projexception.h"
 
 Mollweide::Mollweide(): Pseudocylindrical() 
 {

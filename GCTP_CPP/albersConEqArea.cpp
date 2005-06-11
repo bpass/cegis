@@ -1,6 +1,5 @@
 
 #include "albersConEqArea.h"
-#include "projexception.h"
 #include <math.h>
 #include <stdio.h>
 

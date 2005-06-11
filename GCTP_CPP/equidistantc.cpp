@@ -1,6 +1,5 @@
 
 #include "equidistantc.h"
-#include "projexception.h"
 
 EquidistantC::EquidistantC(): Conic(), m_e(0.0), m_es(0.0), m_esp(0.0),
 m_e0(0.0), m_e1(0.0), m_e2(0.0), m_e3(0.0), m_ml0(0.0), m_ns(0.0),
@@ -123,7 +122,7 @@ void EquidistantC::forward(double lon, double lat, double* x, double* y)
 
 	/* Forward equations
 	-----------------*/
-	ml = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_stdParallelLat1);
+	ml = Util::mlfn(m_e0, m_e1, m_e2, m_e3, lat);
 	rh1 = m_rMajor * (m_g - ml);
 	theta = m_ns * Util::adjust_lon(lon - m_centerLon);
 	m_x_coord = m_falseEasting  + rh1 * sin(theta);

@@ -1,5 +1,4 @@
 #include "projection.h"
-#include "projexception.h"
 
 Projection::Projection(): 
 m_errorCode(0),m_longitude(0.0), m_latitude(0.0), m_x_coord(0.0), m_y_coord(0.0), 

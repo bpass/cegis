@@ -1,5 +1,4 @@
 #include "sinusoidal.h"
-#include "projexception.h"
 
 #include <stdio.h>
 #include <math.h>

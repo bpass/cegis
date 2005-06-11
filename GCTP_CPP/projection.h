@@ -121,7 +121,7 @@ class Projection
 
 	long error() {return m_errorCode;}
 
-	bool errorOccured() {return(m_errorCode == 0);}
+	bool errorOccured() {return(m_errorCode != 0);}
 
 
 protected:

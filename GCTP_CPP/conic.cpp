@@ -1,6 +1,5 @@
 
 #include "conic.h"
-#include "projexception.h"
 
 Conic::Conic(): Projection(),
 m_centerLon(0.0), m_centerLat(0.0), m_stdParallelLat1(0.0), m_stdParallelLat2(0.0)

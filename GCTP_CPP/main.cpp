@@ -3,7 +3,6 @@
 #include "sinusoidal.h"
 #include "equirectangular.h"
 #include "albersConEqArea.h"
-#include "projexception.h"
 #include "mercator.h"
 int main( int argc, char **argv )
 {
@@ -30,15 +29,15 @@ int main( int argc, char **argv )
   double x = 0;
   double y = 0;
   
-  try {
-	 Mercator merc(params, METER, (ProjDatum)19);
-	 merc.forward(lon, lat, &x, &y);
-	 merc.inverse(x, y, &lon, &lat);
 
-	 Sinusoidal sinSd(sinusoidalParams, METER, (ProjDatum)0);
+  Mercator merc(params, METER, (ProjDatum)19);
+  merc.forward(lon, lat, &x, &y);
+  merc.inverse(x, y, &lon, &lat);
 
-	 Equirectangular eq(equirectParams, METER, (ProjDatum)0);
-     AlbersConEqArea albers(alberParams, METER, (ProjDatum)0);
+  Sinusoidal sinSd(sinusoidalParams, METER, (ProjDatum)0);
+
+  Equirectangular eq(equirectParams, METER, (ProjDatum)0);
+  AlbersConEqArea albers(alberParams, METER, (ProjDatum)0);
 
 	 printf("GCTP-CPP Output\n\n");
 
@@ -57,11 +56,8 @@ int main( int argc, char **argv )
      albers.inverse(x, y, &lonOut, &latOut);
      printf("Albers inverse x: %f y: %f lon: %f lat: %f\n", x, y, lonOut, latOut);
  
-  }
 
-  catch (ProjException e) {
-	  printf(e.error().c_str());
-  }
+
 
   return 0;
 }

@@ -2,7 +2,7 @@
  * @file LUDecomposition_t.cpp
  * @author Austin Hartman
  *
- * $Id: LUDecomposition_t.cpp,v 1.1 2005/06/10 22:28:09 ahartman Exp $
+ * $Id: LUDecomposition_t.cpp,v 1.2 2005/06/11 00:54:00 ahartman Exp $
  */
 
 #include <cmath>
@@ -31,7 +31,7 @@ int main()
     const type tolerance = .0001;
 
     // test using example from _Numerical Methods for Engineers_ by Steven C.
-    // Chapra and Raymond P. Canale from p. 267-268
+    // Chapra and Raymond P. Canale on p. 267-268
     {
         DenseMatrix<type> A(3, 3);
         A[0][0] = 3;   A[0][1] = -0.1; A[0][2] = -0.2;

@@ -164,6 +164,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\lambertcc.cpp">
+			</File>
+			<File
 				RelativePath="main.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -183,6 +186,9 @@
 			</File>
 			<File
 				RelativePath=".\mercator.cpp">
+			</File>
+			<File
+				RelativePath=".\miller.cpp">
 			</File>
 			<File
 				RelativePath=".\Mollweide.cpp">
@@ -258,7 +264,13 @@
 				RelativePath="equirectangular.h">
 			</File>
 			<File
+				RelativePath=".\lambertcc.h">
+			</File>
+			<File
 				RelativePath=".\mercator.h">
+			</File>
+			<File
+				RelativePath=".\miller.h">
 			</File>
 			<File
 				RelativePath=".\mollweide.h">

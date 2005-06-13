@@ -46,6 +46,8 @@ void TransverseMercator::forward_init()
 		m_ind = 1;
 	else 
 		m_ind = 0;
+
+	m_forInitNeeded = false;
 }
 
 void TransverseMercator::inverse_init() 
@@ -68,6 +70,8 @@ void TransverseMercator::inverse_init()
 
 	if (m_es < .00001)
 		m_ind = 1;
+
+	m_invInitNeeded = false;
 }
 
 void TransverseMercator::forward(double lon, double lat, double* x, double* y)
@@ -81,9 +85,11 @@ void TransverseMercator::forward(double lon, double lat, double* x, double* y)
 	double con, n, ml;	/* cone constant, small m			*/
 
 	clearError();
+
 	if(m_forInitNeeded)
 		forward_init();
-
+	
+	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 	/* Forward equations
 	-----------------*/
 	delta_lon = Util::adjust_lon(lon - m_centerLon);
@@ -125,7 +131,8 @@ void TransverseMercator::forward(double lon, double lat, double* x, double* y)
 	m_y_coord  = m_scaleFactor * (ml - m_ml0 + n * tq * (als * (0.5 + als / 24.0 *
 		(5.0 - t + 9.0 * c + 4.0 * SQUARE(c) + als / 30.0 * (61.0 - 58.0 * t
 		+ SQUARE(t) + 600.0 * c - 330.0 * m_esp))))) + m_falseNorthing;
-
+	
+	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
 	if(x)
 		*x = m_x_coord;
 	if(y)
@@ -146,6 +153,7 @@ void TransverseMercator::inverse(double x, double y, double* lon, double* lat)
 	if(m_invInitNeeded)
 		inverse_init();
 
+	Util::convertCoords(m_unitCode, METER, x, y);
 	/* fortran code for spherical form 
 	--------------------------------*/
 	if (m_ind != 0)
@@ -216,6 +224,7 @@ void TransverseMercator::inverse(double x, double y, double* lon, double* lat)
 	m_longitude = m_centerLon;
 	}
 	
+	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
 	if(lat)
 		*lat = m_latitude;
 	if(lon)

@@ -31,8 +31,9 @@ Pseudocylindrical(gctpParams, units, dat)
 void IntMollweide::forward_init()
 {
 	clearError();
+	
 	/* Initialize false eastings for each of the 6 regions
-	---------------------------------------------------*/
+	   ---------------------------------------------------*/
 	m_falseEastings[0] = m_radius * -2.19988776387;
 	m_falseEastings[1] = m_radius * -0.15713484;
 	m_falseEastings[2] = m_radius * 2.04275292359;
@@ -46,8 +47,9 @@ void IntMollweide::forward_init()
 void IntMollweide::inverse_init()
 {
 	clearError();
+
 	/* Initialize false eastings for each of the 6 regions
-	---------------------------------------------------*/
+	   ---------------------------------------------------*/
 	m_falseEastings[0] = m_radius * -2.19988776387;
 	m_falseEastings[1] = m_radius * -0.15713484;
 	m_falseEastings[2] = m_radius * 2.04275292359;
@@ -81,25 +83,25 @@ void IntMollweide::forward(double lon, double lat, double* x, double* y)
 	----------------------------------------------------------------------*/
 	if (lat >= 0.0)
 	{
-	if (lon >= 0.34906585 && lon < 1.91986217719) 
-		region = 0; 
-	else if 
-		((lon >= 1.919862177 && lon <= (PI + 1.0E-14)) ||
-					(lon >= (-PI - 1.0E-14) && lon < -1.745329252))
+		if (lon >= 0.34906585 && lon < 1.91986217719) 
+			region = 0; 
+		else if 
+			((lon >= 1.919862177 && lon <= (PI + 1.0E-14)) ||
+						(lon >= (-PI - 1.0E-14) && lon < -1.745329252))
 			region=1; 
-	else 
-		region = 2;
+		else 
+			region = 2;
 	}
 	else
 	{
-	if (lon >= 0.34906585 && lon < 2.44346095279) 
-		region = 3; 
-	else if 
-		((lon >= 2.44346095279 && lon <= (PI +1.0E-14)) ||
-					(lon >= (-PI - 1.0E-14) && lon<-1.2217304764))
-			region=4; 
-	else 
-		region = 5;
+		if (lon >= 0.34906585 && lon < 2.44346095279) 
+			region = 3; 
+		else if 
+			((lon >= 2.44346095279 && lon <= (PI +1.0E-14)) ||
+						(lon >= (-PI - 1.0E-14) && lon<-1.2217304764))
+				region=4; 
+		else 
+			region = 5;
 	}
 
 	delta_lon = Util::adjust_lon(lon - m_centerLons[region]);
@@ -139,7 +141,8 @@ void IntMollweide::forward(double lon, double lat, double* x, double* y)
 
 void IntMollweide::inverse(double x, double y, double* lon, double* lat)
 {
-		double theta;
+	
+	double theta;
 	double temp;
 	long region;
 
@@ -204,6 +207,5 @@ void IntMollweide::inverse(double x, double y, double* lon, double* lat)
 
 	if (region == 5 && (m_longitude < -1.2217304764 || m_longitude> 0.34906585))
 		setError(IN_BREAK);
-
 
 }

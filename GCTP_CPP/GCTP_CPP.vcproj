@@ -282,9 +282,6 @@
 				RelativePath=".\mollweide.h">
 			</File>
 			<File
-				RelativePath=".\polarstereo.h">
-			</File>
-			<File
 				RelativePath=".\polyconic.h">
 			</File>
 			<File
@@ -309,13 +306,6 @@
 		<Filter
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
-		</Filter>
-		<Filter
-			Name="other"
-			Filter="">
-			<File
-				RelativePath=".\progress.txt">
-			</File>
 		</Filter>
 	</Files>
 	<Globals>

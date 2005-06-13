@@ -1,3 +1,10 @@
+/**
+ * @file PartialPivotingGaussianSolver.h
+ * @author Austin Hartman
+ *
+ * $Id: PartialPivotingGaussianSolver.h,v 1.2 2005/06/13 18:28:46 ahartman Exp $
+ */
+
 #ifndef AUSTIN_PARTIALPIVOTINGGAUSSIANSOLVER_H
 #define AUSTIN_PARTIALPIVOTINGGAUSSIANSOLVER_H
 
@@ -7,7 +14,7 @@ template<class T>
 class PartialPivotingGaussianSolver : public GaussianSolver<T>
 {
 public:
-        virtual ~PartialPivotingGaussianSolver();
+	virtual ~PartialPivotingGaussianSolver();
 
 	/**
 	 * Implements the GaussianSolver interface using Gaussian
@@ -20,6 +27,7 @@ public:
 	virtual typename GaussianSolver<T>::Solution 
 		operator()(const Matrix<T>& matrix, 
 		           const MyVector<T>& vector) const;
+
 protected:
 	/**
 	 * Pre: row and column are valid for mat.  T defines operator>.

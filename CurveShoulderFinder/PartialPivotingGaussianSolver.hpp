@@ -1,3 +1,10 @@
+/**
+ * @file PartialPivotingGaussianSolver.hpp
+ * @author Austin Hartman
+ *
+ * $Id: PartialPivotingGaussianSolver.hpp,v 1.2 2005/06/13 18:28:46 ahartman Exp $
+ */
+
 #include <algorithm> // for swap
 
 template<class T>
@@ -34,11 +41,6 @@ PartialPivotingGaussianSolver<T>::operator()(const Matrix<T>& m,
 		}
 	}
 
-//    using std::cout;
-//    cout << __FILE__ << ':' << __LINE__ << ':' << __func__
-//         << ": After forward elimination:\n" 
-//         << "Matrix =\n" << mat << "Vector =\n" << DenseMatrix<T>(vec);
-
 	// do the back substitution
 	for(size_t i = mat.getNumRows() - 1; i >= 1; --i)
 	{
@@ -46,7 +48,7 @@ PartialPivotingGaussianSolver<T>::operator()(const Matrix<T>& m,
 		vec[i] *= 1/mat[i][i];
 		mat.rowScale(i, 1/mat[i][i]);
 
-                for(size_t j = 0; j < i; ++j)
+		for(size_t j = 0; j < i; ++j)
 		{
 			T factor = -mat[j][i];
 			// mat[i][i] should be 1

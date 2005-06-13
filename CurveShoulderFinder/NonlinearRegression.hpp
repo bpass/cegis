@@ -1,3 +1,10 @@
+/**
+ * @file NonlinearRegression.hpp
+ * @author Austin Hartman
+ *
+ * $Id: NonlinearRegression.hpp,v 1.2 2005/06/13 17:34:34 ahartman Exp $
+ */
+
 #include <cmath>
 #include "GaussianSolver.h"
 #include "PartialPivotingGaussianSolver.h"
@@ -36,31 +43,31 @@ const
     while(iterations < maxIterations && !done)
     {
         const DenseMatrix<T> Z = createZMatrix(points, partials, parameters);
-        cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ": "
-             << "Z[" << iterations << "] =\n" << Z;
+//        cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ": "
+//             << "Z[" << iterations << "] =\n" << Z;
         
         const DenseMatrix<T> ZT = Z.transpose();
-        cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ": "
-             << "ZT[" << iterations << "] =\n" << ZT;
+//        cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ": "
+//             << "ZT[" << iterations << "] =\n" << ZT;
         
         const DenseMatrix<T> ZTZ = ZT*Z;
-        cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ": "
-             << "ZT*Z[" << iterations << "] =\n" << ZTZ;
+//        cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ": "
+//             << "ZT*Z[" << iterations << "] =\n" << ZTZ;
         
         const MyVector<T> D = createDVector(points, f, parameters);
-        cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ": "
-             << "D[" << iterations << "] =\n" << DenseMatrix<T>(D);
+//        cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ": "
+//             << "D[" << iterations << "] =\n" << DenseMatrix<T>(D);
         
         const MyVector<T> ZTD = ZT*D;
-        cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ": "
-             << "ZT*D[" << iterations << "] =\n" << DenseMatrix<T>(ZTD);
+//        cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ": "
+//             << "ZT*D[" << iterations << "] =\n" << DenseMatrix<T>(ZTD);
 
         const PartialPivotingGaussianSolver<T> gaussianSolver;
         const typename GaussianSolver<T>::Solution solution = 
             gaussianSolver(ZTZ, ZTD);
-        cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ": "
-             << "solution.matrix() =\n" << solution.matrix()
-             << "solution.vector() =\n" << DenseMatrix<T>(solution.vector());
+//        cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ": "
+//             << "solution.matrix() =\n" << solution.matrix()
+//             << "solution.vector() =\n" << DenseMatrix<T>(solution.vector());
 
         typename NonlinearRegression<T>::Parameters
             deltaA(solution.vector().getSize());

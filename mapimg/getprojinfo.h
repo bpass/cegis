@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.35 2005/06/08 18:00:54 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.36 2005/06/13 23:11:09 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -23,7 +23,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <math.h>
-
 
 #include "window_flags.h"
 #include "getprojinfo.h"

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.39 2005/06/08 18:00:54 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.40 2005/06/13 23:11:09 rbuehler Exp $
 
 
 #include "mapimgform.h"
@@ -65,7 +65,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
 : QMainWindow( parent, name, fl )
 {
    setIcon( mapimgImage( "USGS Swirl Sphere" ) );
-   setCaption( QString("MapIMG v%1").arg(MAJOR_VERSION) );
+   setCaption( QString("MapIMG %1").arg(MAJOR_VERSION) );
 
    setCentralWidget( new QWidget( this, "qt_central_widget" ) );
    formLayout = new QHBoxLayout( centralWidget(), 1, 2, "formLayout");

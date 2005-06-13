@@ -1,4 +1,4 @@
-// $Id: gctpnames.h,v 1.12 2005/06/02 20:11:44 rbuehler Exp $
+// $Id: gctpnames.h,v 1.13 2005/06/13 23:11:09 rbuehler Exp $
 
 
 #ifndef GCTPNAMES_H
@@ -54,7 +54,7 @@ namespace
 
       case 4:  //Lambert Conformal Conic
          retList << "SMajor" << "SMinor" << "STDPR1" << "STDPR2" << "CentMer" 
-            << "OriginLat" << "FE" << "FN" << "NoWay";
+            << "OriginLat" << "FE" << "FN";
          break;
 
       case 5:  //Mercator

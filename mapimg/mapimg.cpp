@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.29 2005/06/02 20:11:44 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.30 2005/06/13 23:11:09 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -47,7 +47,7 @@ bool mapimg::readytoFrameIt( const RasterInfo &input, QWidget * parent, bool che
 
    if( input.datumNumber() != 19 || input.unitNumber() != 2 )
    {
-      msg += "The current spheroid code and unit code are unsupported.\n"
+      msg += "The current spheroid code and/or unit code are unsupported.\n"
          "\t-Only Spheroid of Radius and Meters are supported at this time.\n";
    }
 

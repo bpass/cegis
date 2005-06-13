@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.22 2005/06/08 21:14:42 rbuehler Exp $
+// $Id: imgio.h,v 1.23 2005/06/13 23:11:09 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -266,42 +266,69 @@ public:
    // ---------------------------
    static type get_max_value( const RasterInfo &input, type )
    {
-      QString inputFilename = input.imgFileName().ascii();
+      const Q_ULLONG MAXSAMPLE = 15000;
+      const Q_ULLONG SUBSAMPLE = MAXSAMPLE / 3;
+      const Q_ULLONG INPUTSIZE = input.rows() * input.cols();
 
-      int inputSize = input.rows() * input.cols();
+      QFile inFile( input.imgFileName().ascii() );
+      inFile.open( IO_ReadOnly | IO_Raw );
 
-      QFile inputPtr( inputFilename );
-      inputPtr.open( IO_ReadOnly | IO_Raw );
-
-      if( !inputPtr.isOpen() || !inputPtr.isReadable() )
+      if( !inFile.isOpen() || !inFile.isReadable() )
       {
-         if( inputPtr.isOpen() )
-            inputPtr.close();
+         if( inFile.isOpen() )
+            inFile.close();
          return (type)0.0;
       }
 
-      if( inputSize > 10000 )
-         inputSize = 10000;
 
-      type *bufptrMax = new type[inputSize];
-
-      if( bufptrMax == NULL )
-         return (type)0.0;
-
-      long amountRead = inputPtr.readBlock( (char*&)bufptrMax, sizeof(type) * inputSize);
-      inputPtr.close();
-
-      inputSize = amountRead / sizeof( type );
-
-      type max_value = (type)0.0;
-
-      for( int index = 0; index < (inputSize-1); index++ )
+      int index;
+      type max_value;
+      if( INPUTSIZE > MAXSAMPLE )
       {
-         if( *((type*)bufptrMax + index) > max_value )
-            max_value = *((type*)bufptrMax + index);
+         type *valBuffer = new type[SUBSAMPLE];
+
+         inFile.at( 0 );
+         inFile.readBlock( (char*&)valBuffer, sizeof(type) * SUBSAMPLE );
+         max_value = valBuffer[0];
+         for( index = 0; index < SUBSAMPLE; index++ )
+         {
+            if( *((type*)valBuffer + index) > max_value )
+               max_value = *((type*)valBuffer + index);
+         }
+
+         inFile.at( ((INPUTSIZE/2) - SUBSAMPLE) * sizeof(type) );
+         inFile.readBlock( (char*&)valBuffer, SUBSAMPLE * sizeof(type) );
+         for( index = 0; index < SUBSAMPLE; index++ )
+         {
+            if( *((type*)valBuffer + index) > max_value )
+               max_value = *((type*)valBuffer + index);
+         }
+
+         inFile.at( (INPUTSIZE - SUBSAMPLE) * sizeof(type) );
+         inFile.readBlock( (char*&)valBuffer, SUBSAMPLE * sizeof(type) );
+         for( index = 0; index < SUBSAMPLE; index++ )
+         {
+            if( *((type*)valBuffer + index) > max_value )
+               max_value = *((type*)valBuffer + index);
+         }
+
+         delete [] valBuffer;
+      }
+      else
+      {
+         type *valBuffer = new type[SUBSAMPLE];
+
+         inFile.at( 0 );
+         inFile.readBlock( (char*&)valBuffer, sizeof(type) * INPUTSIZE );
+         max_value = valBuffer[0];
+         for( index = 0; index < INPUTSIZE; index++ )
+         {
+            if( *((type*)valBuffer + index) > max_value )
+               max_value = *((type*)valBuffer + index);
+         }
       }
 
-      delete[] bufptrMax;
+      inFile.close();
 
       return max_value;
    }

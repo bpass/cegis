@@ -1,3 +1,10 @@
+/**
+ * @file DiagonalMatrix.h
+ * @author Austin Hartman
+ *
+ * $Id: DiagonalMatrix.h,v 1.2 2005/06/13 20:15:28 ahartman Exp $
+ */
+
 #ifndef AUSTIN_DIAGONALMATRIX_H
 #define AUSTIN_DIAGONALMATRIX_H
 

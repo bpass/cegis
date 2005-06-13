@@ -2,7 +2,7 @@
  * @file LUDecomposition.hpp
  * @author Austin Hartman
  *
- * $Id: LUDecomposition.hpp,v 1.2 2005/06/10 22:05:55 ahartman Exp $
+ * $Id: LUDecomposition.hpp,v 1.3 2005/06/13 17:33:08 ahartman Exp $
  */
 
 #include <cmath>
@@ -63,10 +63,9 @@ LUDecomposition<T>::operator()(const Matrix<T>& matrixToDecompose,
     typename LUDecomposition<T>::Solution 
         solution(LowerTriangularMatrix<T>(matrix.getNumRows(), 1),
                  UpperTriangularMatrix<T>(matrix.getNumRows()),
-                 DenseMatrix<T>(order.size(), order.size(), 0));
+                 order);
     LowerTriangularMatrix<T>& L = solution.L();
     UpperTriangularMatrix<T>& U = solution.U();
-    DenseMatrix<T>& P = solution.P();
 
     // put the values from the single dense matrix into the two separate upper
     // and lower triangular matrices
@@ -83,12 +82,6 @@ LUDecomposition<T>::operator()(const Matrix<T>& matrixToDecompose,
         {
             U[i][j] = matrix[order[i]][j];
         }
-    }
-
-    // create the permutation matrix
-    for(size_t i = 0; i < order.size(); ++i)
-    {
-        P[i][order[i]] = 1;
     }
 
     return solution;
@@ -144,10 +137,11 @@ LUDecomposition<T>::Solution::Solution()
 {}
 
 template<class T>
-LUDecomposition<T>::Solution::Solution(const LowerTriangularMatrix<T>& L,
-                                       const UpperTriangularMatrix<T>& U,
-                                       const DenseMatrix<T>& P)
-    : m_L(L), m_U(U), m_P(P)
+LUDecomposition<T>::Solution::
+Solution(const LowerTriangularMatrix<T>& L,
+         const UpperTriangularMatrix<T>& U,
+         const typename LUDecomposition<T>::OrderType& order)
+    : m_L(L), m_U(U), m_order(order)
 {}
 
 template<class T>
@@ -184,17 +178,30 @@ LUDecomposition<T>::Solution::U() const
 
 template<class T>
 inline
-DenseMatrix<T>&
-LUDecomposition<T>::Solution::P()
+typename LUDecomposition<T>::OrderType&
+LUDecomposition<T>::Solution::orderVector()
 {
-    return m_P;
+    return m_order;
 }
 
 template<class T>
 inline
-const DenseMatrix<T>&
+const typename LUDecomposition<T>::OrderType&
+LUDecomposition<T>::Solution::orderVector() const
+{
+    return m_order;
+}
+
+template<class T>
+DenseMatrix<T>
 LUDecomposition<T>::Solution::P() const
 {
-    return m_P;
+    // create, fill in, and return the permutation matrix
+    DenseMatrix<T> P(m_order.size(), m_order.size(), 0);
+    for(size_t i = 0; i < m_order.size(); ++i)
+    {
+        P[i][m_order[i]] = 1;
+    }
+    return P;
 }
 

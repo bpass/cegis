@@ -2,7 +2,7 @@
  * @file LUDecomposition.h
  * @author Austin Hartman
  *
- * $Id: LUDecomposition.h,v 1.2 2005/06/10 22:05:55 ahartman Exp $
+ * $Id: LUDecomposition.h,v 1.3 2005/06/13 17:33:08 ahartman Exp $
  */
 
 #ifndef AUSTIN_LUDECOMPOSITION_H
@@ -28,18 +28,21 @@ public:
         Solution();
         Solution(const LowerTriangularMatrix<T>& L, 
                  const UpperTriangularMatrix<T>& U,
-                 const DenseMatrix<T>& P);
+                 const typename LUDecomposition<T>::OrderType& order);
         LowerTriangularMatrix<T>& L();
         const LowerTriangularMatrix<T>& L() const;
         UpperTriangularMatrix<T>& U();
         const UpperTriangularMatrix<T>& U() const;
-        DenseMatrix<T>& P();
-        const DenseMatrix<T>& P() const;
+        DenseMatrix<T> P() const;
+        typename LUDecomposition<T>::OrderType& orderVector();
+        const typename LUDecomposition<T>::OrderType& orderVector() const;
     private:
         LowerTriangularMatrix<T> m_L;
         UpperTriangularMatrix<T> m_U;
-        DenseMatrix<T> m_P;
+        typename LUDecomposition<T>::OrderType m_order;
     };
+
+    typedef std::vector<size_t> OrderType;
 
     class MatrixIsSingular
     {};
@@ -48,7 +51,6 @@ private:
     static const T m_tolerance;
     
     typedef std::vector<T> ScalesType;
-    typedef std::vector<size_t> OrderType;
 
     /**
      * @return a ScalesType where each element contains the element with the

@@ -164,6 +164,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\intmollweide.cpp">
+			</File>
+			<File
 				RelativePath=".\lambertcc.cpp">
 			</File>
 			<File
@@ -264,6 +267,9 @@
 				RelativePath="equirectangular.h">
 			</File>
 			<File
+				RelativePath=".\intmollweide.h">
+			</File>
+			<File
 				RelativePath=".\lambertcc.h">
 			</File>
 			<File
@@ -289,9 +295,6 @@
 			</File>
 			<File
 				RelativePath="sinusoidal.h">
-			</File>
-			<File
-				RelativePath=".\stateplane.h">
 			</File>
 			<File
 				RelativePath=".\transversemercator.h">

@@ -12,7 +12,7 @@ public:
 	void forward(double lon, double lat, double* x = NULL, double* y = NULL);
 	void inverse(double x, double y, double* lat = NULL, double* lon = NULL);
 
-private:
+protected:
 	void inverse_init();
 	void forward_init();
 	

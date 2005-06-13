@@ -2,11 +2,11 @@
  * @file LUDecompositionSolver_t.cpp
  * @author Austin Hartman
  *
- * $Id: InvertMatrix_t.cpp,v 1.1 2005/06/13 20:17:26 ahartman Exp $
+ * $Id: InvertMatrix_t.cpp,v 1.2 2005/06/13 20:30:33 ahartman Exp $
  */
 
 #include <cassert>
-#include <iostream>
+//#include <iostream>
 
 #include "DenseMatrix.h"
 #include "DiagonalMatrix.h"
@@ -19,12 +19,12 @@ int main()
     typedef double type;
     const type tolerance = .00001;
 
-    using std::cout;
-    using std::setw;
-    using std::fixed;
-    cout.precision(8);
-    cout << fixed;
-    const size_t width = cout.precision() + 3;
+//    using std::cout;
+//    using std::setw;
+//    using std::fixed;
+//    cout.precision(8);
+//    cout << fixed;
+//    const size_t width = cout.precision() + 3;
 
     // test using example from _Numerical Methods for Engineers_ by Steven C.
     // Chapra and Raymond P. Canale on p. 274-275
@@ -81,7 +81,7 @@ int main()
         assert(matricesEqual(AInverse*A, identity, tolerance));
         assert(matricesEqual(A*AInverse, identity, tolerance));
 
-        cout << "AInverse =\n" << setw(width) << AInverse;
+//        cout << "AInverse =\n" << setw(width) << AInverse;
     }
 }
 

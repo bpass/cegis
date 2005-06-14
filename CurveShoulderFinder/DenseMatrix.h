@@ -2,7 +2,7 @@
  * @file DenseMatrix.h
  * @author Austin Hartman
  *
- * $Id: DenseMatrix.h,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: DenseMatrix.h,v 1.3 2005/06/14 23:44:34 ahartman Exp $
  */
 
 #ifndef AUSTIN_DENSEMATRIX_H
@@ -22,6 +22,9 @@ class DenseMatrix;
 
 template<class T>
 DenseMatrix<T> operator+(const DenseMatrix<T>& lhs, const DenseMatrix<T>& rhs);
+
+template<class T>
+DenseMatrix<T> operator+(const Matrix<T>& lhs, const Matrix<T>& rhs);
 
 template<class T>
 DenseMatrix<T> operator-(const DenseMatrix<T>& lhs, const DenseMatrix<T>& rhs);

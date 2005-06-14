@@ -2,7 +2,7 @@
  * @file DenseMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: DenseMatrix.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: DenseMatrix.hpp,v 1.3 2005/06/14 23:44:34 ahartman Exp $
  */
 
 /******************************************
@@ -186,11 +186,17 @@ template<class T>
 DenseMatrix<T>
 operator+(const DenseMatrix<T>& lhs, const DenseMatrix<T>& rhs)
 {
-        DenseMatrix<T> returnValue(lhs);
+	DenseMatrix<T> returnValue(lhs);
 	returnValue += rhs;
 	return returnValue;
 }
 
+template<class T>
+DenseMatrix<T>
+operator+(const Matrix<T>& lhs, const Matrix<T>& rhs)
+{
+    return DenseMatrix<T>(lhs) + DenseMatrix<T>(rhs);
+}
 
 template<class T>
 DenseMatrix<T>

@@ -1,8 +1,8 @@
 /**
- * @file LUDecompositionSolver_t.cpp
+ * @file InvertMatrix_t.cpp
  * @author Austin Hartman
  *
- * $Id: InvertMatrix_t.cpp,v 1.2 2005/06/13 20:30:33 ahartman Exp $
+ * $Id: InvertMatrix_t.cpp,v 1.3 2005/06/14 22:25:29 ahartman Exp $
  */
 
 #include <cassert>

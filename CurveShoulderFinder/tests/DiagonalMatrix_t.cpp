@@ -1,8 +1,8 @@
 /**
- * @file LUDecompositionSolver_t.cpp
+ * @file DiagonalMatrix_t.cpp
  * @author Austin Hartman
  *
- * $Id: DiagonalMatrix_t.cpp,v 1.1 2005/06/13 20:17:25 ahartman Exp $
+ * $Id: DiagonalMatrix_t.cpp,v 1.2 2005/06/14 22:25:29 ahartman Exp $
  */
 
 #include <cassert>

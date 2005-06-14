@@ -1,3 +1,10 @@
+/**
+ * @file driver.cpp
+ * @author Austin Hartman
+ *
+ * $Id: driver.cpp,v 1.3 2005/06/14 23:47:54 ahartman Exp $
+ */
+
 #include <cmath>
 #include <iostream>
 #include <iomanip>

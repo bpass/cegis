@@ -2,7 +2,7 @@
  * @file LogisticCurve.h
  * @author Austin Hartman
  *
- * $Id: LogisticCurve.h,v 1.3 2005/06/13 23:09:25 ahartman Exp $
+ * $Id: LogisticCurve.h,v 1.4 2005/06/14 23:43:13 ahartman Exp $
  */
 
 #ifndef AUSTIN_LOGISTICCURVE_H
@@ -11,7 +11,7 @@
 #include "FittingCurve.h"
 #include "MyVector.h"
 #include "DenseMatrix.h"
-#include "NonlinearRegression.h"
+#include "MarquardtMethod.h"
 
 template<class T>
 class LogisticCurve : public FittingCurve<T>
@@ -34,64 +34,66 @@ private:
     typename FittingCurve<T>::Points m_points;
     void findSolution();
     static T logisticFunction(
-            const typename NonlinearRegression<T>::Parameters& p, 
+            const typename MarquardtMethod<T>::Parameters& p, 
             const T& x);
     static T firstPartialA(
-            const typename NonlinearRegression<T>::Parameters& p, 
+            const typename MarquardtMethod<T>::Parameters& p, 
             const T& x);
     static T firstPartialB(
-            const typename NonlinearRegression<T>::Parameters& p, 
+            const typename MarquardtMethod<T>::Parameters& p, 
             const T& x);
     static T firstPartialC(
-            const typename NonlinearRegression<T>::Parameters& p, 
+            const typename MarquardtMethod<T>::Parameters& p, 
             const T& x);
     static T commonPartialDivisor(
-            const typename NonlinearRegression<T>::Parameters& p, 
+            const typename MarquardtMethod<T>::Parameters& p, 
             const T& x);
-    static bool stoppingCondition(
-            const typename NonlinearRegression<T>::Parameters& deltaA);
 
     static T sumResiduals(
             const typename FittingCurve<T>::Points& points, 
-            const typename NonlinearRegression<T>::Parameters& p);
+            const typename MarquardtMethod<T>::Parameters& p);
 
     static T sumResidualsFirstPartialA(
             const typename FittingCurve<T>::Points& points,
-            const typename NonlinearRegression<T>::Parameters& p);
+            const typename MarquardtMethod<T>::Parameters& p);
     static T sumResidualsFirstPartialB(
             const typename FittingCurve<T>::Points& points, 
-            const typename NonlinearRegression<T>::Parameters& p);
+            const typename MarquardtMethod<T>::Parameters& p);
     static T sumResidualsFirstPartialC(
             const typename FittingCurve<T>::Points& points, 
-            const typename NonlinearRegression<T>::Parameters& p);
+            const typename MarquardtMethod<T>::Parameters& p);
 
     static T sumResidualsSecondPartialAA(
             const typename FittingCurve<T>::Points& points, 
-            const typename NonlinearRegression<T>::Parameters& p);
+            const typename MarquardtMethod<T>::Parameters& p);
     static T sumResidualsSecondPartialAB(
             const typename FittingCurve<T>::Points& points, 
-            const typename NonlinearRegression<T>::Parameters& p);
+            const typename MarquardtMethod<T>::Parameters& p);
     static T sumResidualsSecondPartialAC(
             const typename FittingCurve<T>::Points& points, 
-            const typename NonlinearRegression<T>::Parameters& p);
+            const typename MarquardtMethod<T>::Parameters& p);
     static T sumResidualsSecondPartialBA(
             const typename FittingCurve<T>::Points& points, 
-            const typename NonlinearRegression<T>::Parameters& p);
+            const typename MarquardtMethod<T>::Parameters& p);
     static T sumResidualsSecondPartialBB(
             const typename FittingCurve<T>::Points& points, 
-            const typename NonlinearRegression<T>::Parameters& p);
+            const typename MarquardtMethod<T>::Parameters& p);
     static T sumResidualsSecondPartialBC(
             const typename FittingCurve<T>::Points& points, 
-            const typename NonlinearRegression<T>::Parameters& p);
+            const typename MarquardtMethod<T>::Parameters& p);
     static T sumResidualsSecondPartialCA(
             const typename FittingCurve<T>::Points& points, 
-            const typename NonlinearRegression<T>::Parameters& p);
+            const typename MarquardtMethod<T>::Parameters& p);
     static T sumResidualsSecondPartialCB(
             const typename FittingCurve<T>::Points& points, 
-            const typename NonlinearRegression<T>::Parameters& p);
+            const typename MarquardtMethod<T>::Parameters& p);
     static T sumResidualsSecondPartialCC(
             const typename FittingCurve<T>::Points& points, 
-            const typename NonlinearRegression<T>::Parameters& p);
+            const typename MarquardtMethod<T>::Parameters& p);
+
+    static bool stoppingCondition(
+            const typename FittingCurve<T>::Points& points,
+            const typename MarquardtMethod<T>::Parameters& currentParameters);
 };
 
 #include "LogisticCurve.hpp"

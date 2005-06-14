@@ -2,7 +2,7 @@
  * @file LogisticCurve.hpp
  * @author Austin Hartman
  *
- * $Id: LogisticCurve.hpp,v 1.3 2005/06/13 23:09:25 ahartman Exp $
+ * $Id: LogisticCurve.hpp,v 1.4 2005/06/14 23:43:13 ahartman Exp $
  */
 
 #include <cmath>
@@ -47,7 +47,7 @@ template<class T>
 T
 LogisticCurve<T>::operator()(const T& x) const
 {
-    typename NonlinearRegression<T>::Parameters p;
+    typename MarquardtMethod<T>::Parameters p;
     p.reserve(numParameters);
     p.push_back(m_a);
     p.push_back(m_b);
@@ -62,22 +62,41 @@ LogisticCurve<T>::findSolution()
 {
     using std::cout;
 
-    typename NonlinearRegression<T>::Parameters initialGuesses;
+    typename MarquardtMethod<T>::Parameters initialGuesses;
     initialGuesses.reserve(numParameters);
     initialGuesses.push_back(m_a);
     initialGuesses.push_back(m_b);
     initialGuesses.push_back(m_c);
 
-    typename NonlinearRegression<T>::FirstPartials partials;
-    partials.reserve(numParameters);
-    partials.push_back(firstPartialA);
-    partials.push_back(firstPartialB);
-    partials.push_back(firstPartialC);
+    typename MarquardtMethod<T>::FirstPartials firstPartials;
+    firstPartials.reserve(numParameters);
+    firstPartials.push_back(sumResidualsFirstPartialA);
+    firstPartials.push_back(sumResidualsFirstPartialB);
+    firstPartials.push_back(sumResidualsFirstPartialC);
 
-    NonlinearRegression<T> nlr;
-    typename NonlinearRegression<T>::Parameters parameters =
-        nlr(m_points, initialGuesses, 
-            logisticFunction, partials, stoppingCondition);
+    typename MarquardtMethod<T>::SecondPartials secondPartials;
+    secondPartials.reserve(numParameters * numParameters); 
+    secondPartials.push_back(sumResidualsSecondPartialAA);
+    secondPartials.push_back(sumResidualsSecondPartialAB);
+    secondPartials.push_back(sumResidualsSecondPartialAC);
+    secondPartials.push_back(sumResidualsSecondPartialBA);
+    secondPartials.push_back(sumResidualsSecondPartialBB);
+    secondPartials.push_back(sumResidualsSecondPartialBC);
+    secondPartials.push_back(sumResidualsSecondPartialCA);
+    secondPartials.push_back(sumResidualsSecondPartialCB);
+    secondPartials.push_back(sumResidualsSecondPartialCC);
+
+//    MarquardtMethod<T> nlr;
+//    typename MarquardtMethod<T>::Parameters parameters =
+//        nlr(m_points, initialGuesses, 
+//            logisticFunction, partials, stoppingCondition);
+
+    MarquardtMethod<T> mm;
+    typename MarquardtMethod<T>::Parameters parameters = 
+        mm(m_points, initialGuesses, 
+           sumResiduals, firstPartials, secondPartials, 
+           stoppingCondition);
+    
     m_a = parameters[0];
     m_b = parameters[1];
     m_c = parameters[2];
@@ -90,7 +109,7 @@ LogisticCurve<T>::findSolution()
 
 template<class T>
 T
-LogisticCurve<T>::logisticFunction(const typename NonlinearRegression<T>::
+LogisticCurve<T>::logisticFunction(const typename MarquardtMethod<T>::
                                                   Parameters& p,
                                    const T& x)
 {
@@ -99,7 +118,7 @@ LogisticCurve<T>::logisticFunction(const typename NonlinearRegression<T>::
 
 template<class T>
 T
-LogisticCurve<T>::firstPartialA(const typename NonlinearRegression<T>::
+LogisticCurve<T>::firstPartialA(const typename MarquardtMethod<T>::
                                                Parameters& p,
                                 const T& x)
 {
@@ -108,7 +127,7 @@ LogisticCurve<T>::firstPartialA(const typename NonlinearRegression<T>::
 
 template<class T>
 T
-LogisticCurve<T>::firstPartialB(const typename NonlinearRegression<T>::
+LogisticCurve<T>::firstPartialB(const typename MarquardtMethod<T>::
                                                Parameters& p,
                                 const T& x)
 {
@@ -118,7 +137,7 @@ LogisticCurve<T>::firstPartialB(const typename NonlinearRegression<T>::
 
 template<class T>
 T
-LogisticCurve<T>::firstPartialC(const typename NonlinearRegression<T>::
+LogisticCurve<T>::firstPartialC(const typename MarquardtMethod<T>::
                                                Parameters& p,
                                 const T& x)
 {
@@ -128,7 +147,7 @@ LogisticCurve<T>::firstPartialC(const typename NonlinearRegression<T>::
 
 template<class T>
 T
-LogisticCurve<T>::commonPartialDivisor(const typename NonlinearRegression<T>::
+LogisticCurve<T>::commonPartialDivisor(const typename MarquardtMethod<T>::
                                                       Parameters& p,
                                        const T& x)
 {
@@ -136,32 +155,16 @@ LogisticCurve<T>::commonPartialDivisor(const typename NonlinearRegression<T>::
 }
 
 template<class T>
-bool
-LogisticCurve<T>::stoppingCondition(const typename NonlinearRegression<T>::
-                                                   Parameters& deltaA)
-{
-    const T epsilon = .0001;
-    for(size_t i = 0; i < deltaA.size(); ++i)
-    {
-        if(std::abs(deltaA[i]) > epsilon)
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-template<class T>
 T 
-LogisticCurve<T>::sumResiduals(const typename FittingCurve<T>::
-                                              Points& points,
-                               const typename NonlinearRegression<T>::
-                                              Parameters& p)
+LogisticCurve<T>::
+sumResiduals(const typename FittingCurve<T>::Points& points,
+             const typename MarquardtMethod<T>::Parameters& p)
 {
     T sum = 0;
     for(size_t i = 0; i < points.size(); ++i)
     {
-        sum += points[i].y() - logisticFunction(p, points[i].x());
+        const T factor = points[i].y() - logisticFunction(p, points[i].x());
+        sum += factor * factor;
     }
     return sum;
 }
@@ -170,12 +173,14 @@ template<class T>
 T
 LogisticCurve<T>::
 sumResidualsFirstPartialA(const typename FittingCurve<T>::Points& points,
-                          const typename NonlinearRegression<T>::Parameters& p)
+                          const typename MarquardtMethod<T>::Parameters& p)
 {
     T sum = 0;
     for(size_t i = 0; i < points.size(); ++i)
     {
-        sum += -1 / (1+p[1]*std::exp(-p[2]*points[i].x()));
+        const T expFactor = std::exp(-p[2]*points[i].x());
+        const T term = 1 + p[1]*expFactor;
+        sum += -2 * (points[i].y() - p[0] / term) / term;
     }
     return sum;
 }
@@ -184,15 +189,15 @@ template<class T>
 T
 LogisticCurve<T>::
 sumResidualsFirstPartialB(const typename FittingCurve<T>::Points& points,
-                          const typename NonlinearRegression<T>::Parameters& p)
+                          const typename MarquardtMethod<T>::Parameters& p)
 {
     T sum = 0;
     for(size_t i = 0; i < points.size(); ++i)
     {
         const T expFactor = std::exp(-p[2]*points[i].x());
-        const T denomFactor = 1+p[1]*expFactor;
-        sum += (p[0]*expFactor) / (denomFactor*denomFactor);
-               
+        const T term = 1 + p[1]*expFactor;
+        sum += 2 * (points[i].y() - p[0] / term) * 
+               (p[0] / (term * term)) * expFactor;
     }
     return sum;
 }
@@ -201,14 +206,16 @@ template<class T>
 T
 LogisticCurve<T>::
 sumResidualsFirstPartialC(const typename FittingCurve<T>::Points& points,
-                          const typename NonlinearRegression<T>::Parameters& p)
+                          const typename MarquardtMethod<T>::Parameters& p)
 {
     T sum = 0;
     for(size_t i = 0; i < points.size(); ++i)
     {
         const T expFactor = std::exp(-p[2]*points[i].x());
-        const T denomFactor = 1+p[1]*expFactor;
-        sum += (-p[0]*p[1]*points[i].x()*expFactor) / (denomFactor*denomFactor);
+        const T term = 1 + p[1]*expFactor;
+        sum += -2 * (points[i].y() - p[0] / term) *
+               p[0] / (term * term) * p[1] * points[i].x() *
+               expFactor;
     }
     return sum;
 }
@@ -217,23 +224,31 @@ template<class T>
 T
 LogisticCurve<T>::
 sumResidualsSecondPartialAA(const typename FittingCurve<T>::Points& points,
-                            const typename NonlinearRegression<T>::Parameters& p)
+                            const typename MarquardtMethod<T>::Parameters& p)
 {
-    return 0;
+    T sum = 0;
+    for(size_t i = 0; i < points.size(); ++i)
+    {
+        const T expFactor = std::exp(-p[2]*points[i].x());
+        const T term = 1 + p[1]*expFactor;
+        sum += 2 / (term * term);
+    }
+    return sum;
 }
 
 template<class T>
 T
 LogisticCurve<T>::
 sumResidualsSecondPartialAB(const typename FittingCurve<T>::Points& points,
-                            const typename NonlinearRegression<T>::Parameters& p)
+                            const typename MarquardtMethod<T>::Parameters& p)
 {
     T sum = 0;
     for(size_t i = 0; i < points.size(); ++i)
     {
         const T expFactor = std::exp(-p[2]*points[i].x());
-        const T denomFactor = 1+p[1]*expFactor;
-        sum += expFactor / (denomFactor*denomFactor);
+        const T term = 1 + p[1]*expFactor;
+        sum += -2*p[0]*expFactor / (term * term * term);
+        sum += 2*(points[i].y() - p[0] / term) / (term * term) * expFactor;
     }
     return sum;
 }
@@ -242,14 +257,15 @@ template<class T>
 T
 LogisticCurve<T>::
 sumResidualsSecondPartialAC(const typename FittingCurve<T>::Points& points,
-                            const typename NonlinearRegression<T>::Parameters& p)
+                            const typename MarquardtMethod<T>::Parameters& p)
 {
     T sum = 0;
     for(size_t i = 0; i < points.size(); ++i)
     {
         const T expFactor = std::exp(-p[2]*points[i].x());
-        const T denomFactor = 1+p[1]*expFactor;
-        sum += -p[1]*points[i].x()*expFactor / (denomFactor*denomFactor);
+        const T term = 1 + p[1]*expFactor;
+        sum += 2 * p[0] * p[1] * points[i].x() * expFactor / 
+               (term * term * term);
     }
     return sum;
 }
@@ -258,7 +274,7 @@ template<class T>
 T
 LogisticCurve<T>::
 sumResidualsSecondPartialBA(const typename FittingCurve<T>::Points& points,
-                            const typename NonlinearRegression<T>::Parameters& p)
+                            const typename MarquardtMethod<T>::Parameters& p)
 {
     return sumResidualsSecondPartialAB(points, p);
 }
@@ -267,15 +283,18 @@ template<class T>
 T
 LogisticCurve<T>::
 sumResidualsSecondPartialBB(const typename FittingCurve<T>::Points& points,
-                            const typename NonlinearRegression<T>::Parameters& p)
+                            const typename MarquardtMethod<T>::Parameters& p)
 {
     T sum = 0;
     for(size_t i = 0; i < points.size(); ++i)
     {
         const T expFactor = std::exp(-p[2]*points[i].x());
-        const T denomFactor = 1+p[1]*expFactor;
-        sum += (-2*p[0]*expFactor*expFactor) / 
-               (denomFactor*denomFactor*denomFactor);
+        const T term = 1 + p[1]*expFactor;
+        sum += 2 * p[0] * p[0] * expFactor * expFactor /
+               (term * term * term * term);
+        sum += -4 * (points[i].y() - p[0] / term) * 
+               (p[0] / (term * term * term)) * 
+               expFactor * expFactor;
     }
     return sum;
 }
@@ -284,18 +303,21 @@ template<class T>
 T
 LogisticCurve<T>::
 sumResidualsSecondPartialBC(const typename FittingCurve<T>::Points& points,
-                            const typename NonlinearRegression<T>::Parameters& p)
+                            const typename MarquardtMethod<T>::Parameters& p)
 {
     T sum = 0;
     for(size_t i = 0; i < points.size(); ++i)
     {
         const T expFactor = std::exp(-p[2]*points[i].x());
-        const T denomFactor = 1+p[1]*expFactor;
-        const T firstTerm = (2*p[0]*expFactor*expFactor*p[1]*points[i].x()) /
-                            (denomFactor*denomFactor*denomFactor);
-        const T secondTerm = (-p[0]*points[i].x()*expFactor) /
-                             (denomFactor*denomFactor);
-        sum += firstTerm + secondTerm;
+        const T term = 1 + p[1]*expFactor;
+        sum += -2 * p[0] * p[0] * p[1] * points[i].x() * 
+               expFactor * expFactor /
+               (term * term * term * term);
+        sum += 4 * (points[i].y() - p[0] / term) *
+               p[0] / (term * term * term) * 
+               expFactor * expFactor * p[1] * points[i].x();
+        sum += -2 * (points[i].y() - p[0] / term) *
+               p[0] / (term * term) * points[i].x() * expFactor;
     }
     return sum;
 }
@@ -304,7 +326,7 @@ template<class T>
 T
 LogisticCurve<T>::
 sumResidualsSecondPartialCA(const typename FittingCurve<T>::Points& points,
-                            const typename NonlinearRegression<T>::Parameters& p)
+                            const typename MarquardtMethod<T>::Parameters& p)
 {
     return sumResidualsSecondPartialAC(points, p);
 }
@@ -313,7 +335,7 @@ template<class T>
 T
 LogisticCurve<T>::
 sumResidualsSecondPartialCB(const typename FittingCurve<T>::Points& points,
-                            const typename NonlinearRegression<T>::Parameters& p)
+                            const typename MarquardtMethod<T>::Parameters& p)
 {
     return sumResidualsSecondPartialBC(points, p);
 }
@@ -322,20 +344,36 @@ template<class T>
 T
 LogisticCurve<T>::
 sumResidualsSecondPartialCC(const typename FittingCurve<T>::Points& points,
-                            const typename NonlinearRegression<T>::Parameters& p)
+                            const typename MarquardtMethod<T>::Parameters& p)
 {
     T sum = 0;
     for(size_t i = 0; i < points.size(); ++i)
     {
         const T expFactor = std::exp(-p[2]*points[i].x());
-        const T denomFactor = 1+p[1]*expFactor;
-        const T firstTerm = (-2*p[0]*p[1]*p[1]*points[i].x()*points[i].x()*
-                             expFactor*expFactor) /
-                            (denomFactor*denomFactor*denomFactor);
-        const T secondTerm = (p[0]*p[1]*points[i].x()*points[i].x()*expFactor) / 
-                             (denomFactor*denomFactor);
-        sum += firstTerm + secondTerm;
+        const T term = 1 + p[1]*expFactor;
+        sum += 2 * p[0] * p[0] * p[1] * p[1] * points[i].x() * points[i].x() * 
+               expFactor * expFactor / (term * term * term * term);
+        sum += -4 * (points[i].y() - p[0] / term) * 
+               (p[0] / (term * term * term)) * p[1] * p[1] *
+               points[i].x() * points[i].x() * expFactor * expFactor;
+        sum += 2 * (points[i].y() - p[0] / term) *
+               (p[0] / (term * term)) * p[1] *
+               points[i].x() * points[i].x() * expFactor;
     }
     return sum;
+}
+
+template<class T>
+bool
+LogisticCurve<T>::
+stoppingCondition(const typename FittingCurve<T>::Points& points,
+                  const typename MarquardtMethod<T>::Parameters& p)
+{
+    const T tolerance = .0001;
+    if(sumResiduals(points, p) > tolerance)
+    {
+        return false;
+    }
+    return true;
 }
 

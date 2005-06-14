@@ -51,10 +51,7 @@ int main()
     const type expectedParameterValues[] = { .79186, 1.6751 };
     for(size_t i = 0; i < parameters.size(); ++i)
     {
-        if(std::abs(parameters[i] - expectedParameterValues[i]) > tolerance)
-        {
-            return EXIT_FAILURE;
-        }
+        assert(std::abs(parameters[i] - expectedParameterValues[i]) < tolerance);
     }
 }
 

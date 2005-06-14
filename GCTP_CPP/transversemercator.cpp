@@ -1,3 +1,4 @@
+//$Id: transversemercator.cpp,v 1.3 2005/06/14 21:38:34 rbuehler Exp $
 
 #include "transversemercator.h"
 
@@ -22,7 +23,7 @@ m_es(0.0), m_esp(0.0), m_ml0(0.0), m_ind(0.0)
 void TransverseMercator::loadFromParams() 
 {
 	Cylindrical::loadFromParams();
-	setScaleFactor(m_gctpParams[3]);
+	setScaleFactor(m_gctpParams[2]);
 }
 
 void TransverseMercator::forward_init() 
@@ -112,6 +113,10 @@ void TransverseMercator::forward(double lon, double lat, double* x, double* y)
 		if (lat < 0)
 			con = - con;
 		m_y_coord = m_rMajor * m_scaleFactor * (con - m_centerLat); 
+	   if(x)
+		   *x = m_x_coord;
+	   if(y)
+		   *y = m_y_coord;
 		return;
 		}
 	}
@@ -169,11 +174,21 @@ void TransverseMercator::inverse(double x, double y, double* lon, double* lat)
 	if ((g == 0) && (h == 0))
 		{
 		m_longitude = m_centerLon;
+	   Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
+      if(lat)
+         *lat = m_latitude;
+      if(lon)
+         *lon = m_longitude;
 		return;
 		}
 	else
 		{
 		m_longitude = Util::adjust_lon(atan2(g,h) + m_centerLon);
+	   Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
+      if(lat)
+         *lat = m_latitude;
+      if(lon)
+         *lon = m_longitude;
 		return;
 		}
 	}

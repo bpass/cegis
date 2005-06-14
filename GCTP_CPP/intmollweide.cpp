@@ -143,7 +143,6 @@ void IntMollweide::inverse(double x, double y, double* lon, double* lat)
 {
 	
 	double theta;
-	double temp;
 	long region;
 
 	if(m_invInitNeeded)

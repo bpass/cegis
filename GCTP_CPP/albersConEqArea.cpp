@@ -29,8 +29,6 @@ void AlbersConEqArea::inverse_init() {
 	double qs0;            		/* small q 0                            */
 	double qs1;            		/* small q 1                            */
 	double qs2;            		/* small q 2                            */
-
-	long tempErr = 0;
 	
 	clearError();
 
@@ -79,7 +77,6 @@ void AlbersConEqArea::forward_init() {
 	double qs0;					/* small q 0				*/
 	double qs1;					/* small q 1				*/
 	double qs2;					/* small q 2				*/
-	long tempErr = 0;
 
 	clearError();
 

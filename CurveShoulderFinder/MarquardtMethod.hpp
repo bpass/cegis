@@ -2,17 +2,18 @@
  * @file MarquardtMethod.hpp
  * @author Austin Hartman
  *
- * $Id: MarquardtMethod.hpp,v 1.1 2005/06/14 23:40:51 ahartman Exp $
+ * $Id: MarquardtMethod.hpp,v 1.2 2005/06/15 01:44:20 ahartman Exp $
  */
-
-#define DEBUG_PRINT
-
-#ifdef DEBUG_PRINT
-#include <iostream>
-#endif
 
 #include "DiagonalMatrix.h"
 #include "InvertMatrix.h"
+
+//#define DEBUG_PRINT
+#define PRINT_SUMRESIDUALS
+
+#if defined(DEBUG_PRINT) || defined(PRINT_SUMRESIDUALS)
+#include <iostream>
+#endif
 
 template<class T>
 const size_t MarquardtMethod<T>::m_maxIterations = 100;
@@ -28,7 +29,7 @@ MarquardtMethod<T>::operator()(
     const typename MarquardtMethod<T>::StoppingTest& stoppingTest,
     const size_t maxIterations) const
 {
-#ifdef DEBUG_PRINT
+#if defined(DEBUG_PRINT) || defined(PRINT_SUMRESIDUALS)
     using std::cout;
     using std::fixed;
     using std::setw;
@@ -51,9 +52,10 @@ MarquardtMethod<T>::operator()(
     bool done = false;
     size_t iterations = 0;
     typename MarquardtMethod<T>::Parameters parameters(initialGuesses);
-    T lambda = 1000;
+    T lambda = 100000;
     const T lambdaFactor = 10;
-    while(iterations < maxIterations && !done)
+    size_t timesNotImproved = 0;
+    while(iterations < maxIterations && !done && timesNotImproved < 5)
     {
         // create the Hessian matrix
         DenseMatrix<T> H(numParameters, numParameters);
@@ -96,11 +98,16 @@ MarquardtMethod<T>::operator()(
         const T oldSumResiduals = sumResiduals(points, parameters);
         const T newSumResiduals = sumResiduals(points, newParameters);
 
+#ifdef DEBUG_PRINT
+//        cout << "lambda[" << iterations << "] = " << lambda << '\n';
+#endif
+
         // if the parameter estimates have improved
         if(newSumResiduals < oldSumResiduals)
         {
             parameters = newParameters;
             lambda /= lambdaFactor;
+            timesNotImproved = 0;
             done = stoppingTest(points, parameters);
         }
         // if the parameter estimates are worse than before
@@ -108,6 +115,7 @@ MarquardtMethod<T>::operator()(
         {
             // don't use the new parameters
             lambda *= lambdaFactor;
+            ++timesNotImproved;
         }
 
         ++iterations;
@@ -118,6 +126,15 @@ MarquardtMethod<T>::operator()(
 #endif
     }
 
+    cout << "Sum Residuals = " << sumResiduals(points, parameters) << '\n';
+
     return parameters;
 }
 
+#ifdef DEBUG_PRINT
+#undef DEBUG_PRINT
+#endif
+
+#ifdef PRINT_SUMRESIDUALS
+#undef PRINT_SUMRESIDUALS
+#endif

@@ -31,8 +31,13 @@ void OblatedEqArea::loadFromParams()
 
 void OblatedEqArea::init()
 {
-	m_initNeeded = false;
 	clearError();
+	
+	/* Calculate the sine and cosine of the latitude of the center of the map
+	 and store in static storage for common use.
+	-------------------------------------------*/
+	Util::gctp_sincos(m_centerLat, &m_sinLatO, &m_cosLatO);
+	m_initNeeded = false;
 }
 
 void OblatedEqArea::setCenterLon(double lon)
@@ -63,6 +68,18 @@ void OblatedEqArea::setCenterLat(double lat)
 
 	m_centerLat = temp;
 	setInit();
+}
+
+void OblatedEqArea::setAngle(double theta)
+{
+	long iflg = 0;
+	double temp = Util::paksz(theta,&iflg)* 3600 * S2R;
+	if(iflg != 0) 
+	{
+		setError(iflg);
+		return;
+	}
+	m_theta = temp;
 }
 
 void OblatedEqArea::forward(double lon, double lat, double* x, double* y) 

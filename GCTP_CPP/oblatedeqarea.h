@@ -19,7 +19,7 @@ public:
 
 	void setShapeN(double n) {m_n = n; setInit();}
 
-	void setAngle(double theta) {m_theta = theta; setInit();}
+	void setAngle(double theta);
 
 	void setCenterLon(double lon);
 

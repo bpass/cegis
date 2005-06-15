@@ -44,11 +44,8 @@ public:
 
 protected:
 
-	//! See documentation for Projection.
-	virtual void inverse_init() = 0;
-
 	//! See documentation for Projection
-	virtual void forward_init() = 0;
+	virtual void init() = 0;
 
 	virtual void loadFromParams();
 

@@ -41,11 +41,10 @@ protected:
 	double m_rh;
 
 	int m_mode;
-
-	void forward_init();
-
-	void inverse_init();
-
+	
+	//! See documentation for Projection
+	void init();
+	
 	void loadFromParams();
 };
 

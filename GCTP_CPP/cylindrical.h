@@ -29,9 +29,7 @@ protected:
 
 	virtual void loadFromParams();
 
-	virtual void inverse_init() = 0;
-
-	virtual void forward_init() = 0;
+	virtual void init() = 0;
 };
 
 #endif

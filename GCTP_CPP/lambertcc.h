@@ -13,8 +13,8 @@ public:
 	void inverse(double x, double y, double* lat = NULL, double* lon = NULL);
 
 protected:
-	void inverse_init();
-	void forward_init();
+	//! See documentation for Projection
+	void init();
 	
 	double m_es;
 	double m_e;

@@ -14,24 +14,18 @@ Cylindrical(gctpParams, units, dat)
 	setName("Miller Cylindrical");
 }
 
-void Miller::forward_init() 
+void Miller::init() 
 {
 	clearError();
-	m_forInitNeeded = false;
-}
-
-void Miller::inverse_init()
-{
-	clearError();
-	m_invInitNeeded = false;
+	m_initNeeded = false;
 }
 
 void Miller::forward(double lon, double lat, double* x, double* y)
 {
 	double dlon;
 
-	if(m_forInitNeeded)
-		forward_init();
+	if(m_initNeeded)
+		init();
 	
 	clearError();
 
@@ -55,8 +49,8 @@ void Miller::inverse(double x, double y, double* lon, double* lat)
 
 	Util::convertCoords(m_unitCode, METER, x, y);
 
-	if(m_invInitNeeded)
-		inverse_init();
+	if(m_initNeeded)
+		init();
 
 	clearError();
 

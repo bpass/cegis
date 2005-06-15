@@ -19,8 +19,8 @@ protected:
 
 	double m_falseEastings[6];
 
-	void forward_init();
-	void inverse_init();
+	//! See documentation for Projection
+	void init();
 };
 
 #endif

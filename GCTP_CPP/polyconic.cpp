@@ -16,7 +16,7 @@ m_e3(0.0), m_ml0(0.0)
 	setName("Polyconic");
 }
 
-void Polyconic::forward_init() 
+void Polyconic::init() 
 {
 	double temp;	
 
@@ -29,22 +29,10 @@ void Polyconic::forward_init()
 	m_e2 = Util::e2fn(m_es);
 	m_e3 = Util::e3fn(m_es);
 	m_ml0 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_centerLat);
+	m_initNeeded = false;
 }
 
-void Polyconic::inverse_init() 
-{
-	double temp;		
 
-	clearError();
-	temp = m_rMinor / m_rMajor;
-	m_es = 1.0 - SQUARE(temp);
-	m_e = sqrt(m_es);
-	m_e0 = Util::e0fn(m_es);
-	m_e1 = Util::e1fn(m_es);
-	m_e2 = Util::e2fn(m_es);
-	m_e3 = Util::e3fn(m_es);
-	m_ml0 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_centerLat);
-}
 
 void Polyconic::forward(double lon, double lat, double* x, double* y) 
 {
@@ -53,8 +41,8 @@ void Polyconic::forward(double lon, double lat, double* x, double* y)
 	double ms;		/* small m					*/
 
 	clearError();
-	if(m_forInitNeeded)
-		forward_init();
+	if(m_initNeeded)
+		init();
 
 	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 	/* Forward equations
@@ -93,8 +81,8 @@ void Polyconic::inverse(double x, double y, double* lon, double* lat)
 
 	clearError();
 
-	if(m_invInitNeeded)
-		inverse_init();
+	if(m_initNeeded)
+		init();
 
 	Util::convertCoords(m_unitCode, METER, x, y);
 

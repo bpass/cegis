@@ -172,17 +172,11 @@ protected:
 	//! Array of 15 projection parameters (as used in the original GCTP).
     double m_gctpParams[COEFCT];
 
-	//! Flag to indicate if a forward init needs to be done.
-	bool m_forInitNeeded;
+	//do we need to do an initialization?
+	bool m_initNeeded;
 
-	//! Flag to indicate if an inverse init needs to be done.
-	bool m_invInitNeeded;
-
-	//! Perform all neccessary initializations to prepare for a forward transformation.
-	virtual void forward_init () = 0;
-
-	//! Perform all neccessary initializations to prepare for an inverse transformation.	
-	virtual void inverse_init () = 0;
+	//!Perform all intializations needed for forward and inverse transformations
+	virtual void init() = 0;
 
 	//! Set the number of the projection.
 	void setNumber(ProjCode number) {m_number = number;}
@@ -191,7 +185,7 @@ protected:
 	void setName(std::string name) {m_name = name;}
 
 	//! Toggle forward and inverse initialization flags.
-	void setInit() {m_forInitNeeded = true; m_invInitNeeded = true;}
+	void setInit() {m_initNeeded = true;}
 
 	
 	virtual void loadFromParams();

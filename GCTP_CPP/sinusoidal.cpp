@@ -22,8 +22,9 @@ void Sinusoidal::forward ( double lon, double lat, double* x, double* y )
   double deltaLon;	/* Delta longitude (Given longitude - center */
   
   clearError();
-  if(m_forInitNeeded)
-	  forward_init();
+
+  if(m_initNeeded)
+	init();
 
   //convert lat/lon from dec degrees to radians
   Util::convertCoords(DEGREE, RADIAN, lat, lon);
@@ -52,8 +53,9 @@ void Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
   double temp;		/* Re-used temporary variable */
   
   clearError();
-  if(m_invInitNeeded)
-	  inverse_init();
+  
+  if(m_initNeeded)
+	init();
   //convert lat/lon from dec degrees to radians
   Util::convertCoords(m_unitCode, METER, x, y);
 
@@ -93,17 +95,12 @@ void Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
 
 }
 
-void Sinusoidal::forward_init (  )
+void Sinusoidal::init(  )
 {
   clearError();
-  m_forInitNeeded = false;
+  m_initNeeded = false;
 }
 
-void Sinusoidal::inverse_init (  )
-{
-  clearError();
-  m_invInitNeeded = false;
-}
 
 
 

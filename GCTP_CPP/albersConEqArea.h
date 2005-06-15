@@ -34,12 +34,8 @@ protected:
   //! Ratio between meridians.
   double m_ns0;
 
-  //! See documentation for Projection.
-  void forward_init();
-
-  //! See documentation for Projection.
-  void inverse_init();
-
+  //! See documentation for Projection
+  void init();
 };
 
 #endif

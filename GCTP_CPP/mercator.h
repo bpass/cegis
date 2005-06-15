@@ -26,9 +26,8 @@ protected:
 
 	double m_m1;
 
-	void inverse_init();
-
-	void forward_init();
+	//! See documentation for Projection
+	void init();
 
 };
 

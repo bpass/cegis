@@ -13,18 +13,11 @@ Pseudocylindrical(gctpParams, units, dat)
 	setNumber(MOLL);
 }
 
-void Mollweide::forward_init() 
+void Mollweide::init() 
 {
 	clearError();
 
-	m_forInitNeeded = false;
-}
-
-void Mollweide::inverse_init() 
-{
-	clearError();
-
-	m_invInitNeeded = false;
+	m_initNeeded = false;
 }
 
 void Mollweide::forward(double lon, double lat, double* x, double* y) 
@@ -38,8 +31,8 @@ void Mollweide::forward(double lon, double lat, double* x, double* y)
 
   clearError();
 
-  if(m_forInitNeeded)
-	  forward_init();
+  if(m_initNeeded)
+	init();
 
   Util::convertCoords(DEGREE, RADIAN, lon, lat);
   
@@ -88,8 +81,8 @@ void Mollweide::inverse(double x, double y, double* lon, double* lat)
 
   clearError();
 
-  if(m_invInitNeeded)
-	  inverse_init();
+  if(m_initNeeded)
+	init();
 
   Util::convertCoords(m_unitCode, METER, x, y);
 

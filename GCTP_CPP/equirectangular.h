@@ -18,9 +18,9 @@ class Equirectangular : public Cylindrical
    void inverse( double x, double y, double* lon = NULL, double* lat = NULL );
    
   protected:
-   void forward_init ();
 
-   void inverse_init ();
+	//! See documentation for Projection
+	void init();
    
 };
 

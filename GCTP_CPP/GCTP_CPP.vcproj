@@ -137,6 +137,9 @@
 				RelativePath=".\albersConEqArea.cpp">
 			</File>
 			<File
+				RelativePath=".\azimuthal.cpp">
+			</File>
+			<File
 				RelativePath=".\conic.cpp">
 			</File>
 			<File
@@ -197,6 +200,9 @@
 				RelativePath=".\Mollweide.cpp">
 			</File>
 			<File
+				RelativePath=".\polarstereo.cpp">
+			</File>
+			<File
 				RelativePath=".\polyconic.cpp">
 			</File>
 			<File
@@ -252,6 +258,9 @@
 				RelativePath=".\albersConEqArea.h">
 			</File>
 			<File
+				RelativePath=".\azimuthal.h">
+			</File>
+			<File
 				RelativePath=".\conic.h">
 			</File>
 			<File
@@ -280,6 +289,9 @@
 			</File>
 			<File
 				RelativePath=".\mollweide.h">
+			</File>
+			<File
+				RelativePath=".\polarstereo.h">
 			</File>
 			<File
 				RelativePath=".\polyconic.h">

@@ -19,7 +19,7 @@ m_g(0.0), m_rh(0.0)
 	loadFromParams();
 }
 
-void EquidistantC::forward_init() 
+void EquidistantC::init() 
 {
 	double temp;			/* temporary variable		*/
 	double sinphi,cosphi;		/* sin and cos values		*/
@@ -62,49 +62,8 @@ void EquidistantC::forward_init()
 	m_ml0 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_centerLat);
 	m_rh = m_rMajor * (m_g - m_ml0);
 
-}
+	m_initNeeded = false;
 
-void EquidistantC::inverse_init()
-{
-	double temp;			/* temporary variable		*/
-	double sinphi,cosphi;		/* sin and cos values		*/
-	double ms1,ms2;
-	double ml1,ml2;
-
-	clearError();
-
-	temp = m_rMinor / m_rMajor;
-	m_es = 1.0 - SQUARE(temp);
-	m_e = sqrt(m_es);
-	m_e0 = Util::e0fn(m_es);
-	m_e1 = Util::e1fn(m_es);
-	m_e2 = Util::e2fn(m_es);
-	m_e3 = Util::e3fn(m_es);
-
-	Util::gctp_sincos(m_stdParallelLat1,&sinphi,&cosphi);
-	ms1 = Util::msfnz(m_e,sinphi,cosphi);
-	ml1 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_stdParallelLat1);
-	if (m_mode != 0)
-	{
-		if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN) {
-			setError(81);
-			return;
-		}
-		
-		Util::gctp_sincos(m_stdParallelLat2,&sinphi,&cosphi);
-		ms2 = Util::msfnz(m_e,sinphi,cosphi);
-		ml2 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_stdParallelLat2);
-		if (fabs(m_stdParallelLat1 - m_stdParallelLat2) >= EPSLN)
-			m_ns = (ms1 - ms2) / (ml2 - ml1);
-		else
-			m_ns = sinphi;
-	}
-	else
-		m_ns = sinphi;	
-
-	m_g = ml1 + ms1/m_ns;
-	m_ml0 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_centerLat);
-	m_rh = m_rMajor * (m_g - m_ml0);
 }
 
 void EquidistantC::forward(double lon, double lat, double* x, double* y)
@@ -115,8 +74,8 @@ void EquidistantC::forward(double lon, double lat, double* x, double* y)
 	
 	clearError();
 
-	if(m_forInitNeeded)
-		forward_init();
+	if(m_initNeeded)
+		init();
 
 	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 
@@ -146,8 +105,8 @@ void EquidistantC::inverse(double x, double y, double* lon, double* lat)
 
 	clearError();
 
-	if(m_invInitNeeded)
-		inverse_init();
+	if(m_initNeeded)
+		init();
 
 	Util::convertCoords(m_unitCode, METER, x, y);
 

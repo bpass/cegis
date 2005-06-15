@@ -1,4 +1,4 @@
-//$Id: transversemercator.cpp,v 1.3 2005/06/14 21:38:34 rbuehler Exp $
+//$Id: transversemercator.cpp,v 1.4 2005/06/15 18:45:01 mswilliams Exp $
 
 #include "transversemercator.h"
 
@@ -26,7 +26,7 @@ void TransverseMercator::loadFromParams()
 	setScaleFactor(m_gctpParams[2]);
 }
 
-void TransverseMercator::forward_init() 
+void TransverseMercator::init() 
 {
 
 	double temp;			/* temporary variable		*/
@@ -48,31 +48,7 @@ void TransverseMercator::forward_init()
 	else 
 		m_ind = 0;
 
-	m_forInitNeeded = false;
-}
-
-void TransverseMercator::inverse_init() 
-{
-	double temp;			/* temporary variable		*/
-
-	clearError();
-	temp = m_rMinor / m_rMajor;
-	m_es = 1.0 - SQUARE(temp);
-	m_e = sqrt(m_es);
-	m_e0 = Util::e0fn(m_es);
-	m_e1 = Util::e1fn(m_es);
-	m_e2 = Util::e2fn(m_es);
-	m_e3 = Util::e3fn(m_es);
-	m_ml0 = m_rMajor * Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_centerLat);
-	m_esp = m_es / (1.0 - m_es);
-
-	if (m_es < .00001)
-		m_ind = 1;
-
-	if (m_es < .00001)
-		m_ind = 1;
-
-	m_invInitNeeded = false;
+	m_initNeeded = false;
 }
 
 void TransverseMercator::forward(double lon, double lat, double* x, double* y)
@@ -87,8 +63,8 @@ void TransverseMercator::forward(double lon, double lat, double* x, double* y)
 
 	clearError();
 
-	if(m_forInitNeeded)
-		forward_init();
+	if(m_initNeeded)
+		init();
 	
 	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 	/* Forward equations
@@ -155,8 +131,8 @@ void TransverseMercator::inverse(double x, double y, double* lon, double* lat)
 	long max_iter = 6;			/* maximun number of iterations	*/
 
 	clearError();
-	if(m_invInitNeeded)
-		inverse_init();
+	if(m_initNeeded)
+		init();
 
 	Util::convertCoords(m_unitCode, METER, x, y);
 	/* fortran code for spherical form 
@@ -227,11 +203,11 @@ void TransverseMercator::inverse(double x, double y, double* lon, double* lat)
 		d    = x / (n * m_scaleFactor);
 		ds   = SQUARE(d);
 		m_latitude = phi - (n * tan_phi * ds / r) * (0.5 - ds / 24.0 * (5.0 + 3.0 * t + 
-				10.0 * c - 4.0 * cs - 9.0 * m_esp - ds / 30.0 * (61.0 + 90.0 * t +
-				298.0 * c + 45.0 * ts - 252.0 * m_esp - 3.0 * cs)));
+					10.0 * c - 4.0 * cs - 9.0 * m_esp - ds / 30.0 * (61.0 + 90.0 * t +
+					298.0 * c + 45.0 * ts - 252.0 * m_esp - 3.0 * cs)));
 		m_longitude = Util::adjust_lon(m_centerLon + (d * (1.0 - ds / 6.0 * (1.0 + 2.0 * t +
-				c - ds / 20.0 * (5.0 - 2.0 * c + 28.0 * t - 3.0 * cs + 8.0 * m_esp +
-				24.0 * ts))) / cos_phi));
+					c - ds / 20.0 * (5.0 - 2.0 * c + 28.0 * t - 3.0 * cs + 8.0 * m_esp +
+					24.0 * ts))) / cos_phi));
 	}
 	else
 	{

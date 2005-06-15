@@ -25,9 +25,8 @@ protected:
 	double m_e3;
 	double m_ml0; //small value m;
 
-	void forward_init();
-
-	void inverse_init();
+	//! See documentation for Projection
+	void init();
 
 };
 

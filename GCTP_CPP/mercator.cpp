@@ -16,7 +16,7 @@ m_es(0.0), m_m1(0.0)
 		setNumber(MERCAT);
 }
 
-void Mercator::inverse_init() {
+void Mercator::init() {
 	double temp;			/* temporary variable		*/
     clearError();
 
@@ -24,7 +24,7 @@ void Mercator::inverse_init() {
 	m_es = 1.0 - SQUARE(temp);
 	m_e = sqrt(m_es);
 	m_m1 = cos(m_centerLat)/(sqrt(1.0 - m_es * sin(m_centerLat) * sin(m_centerLat)));
-	m_invInitNeeded = false;
+	m_initNeeded = false;
 
 }
 void Mercator::inverse(double x, double y, double* lon, double* lat) 
@@ -34,8 +34,8 @@ void Mercator::inverse(double x, double y, double* lon, double* lat)
 
     clearError();
 
-	if(m_invInitNeeded)
-		inverse_init();
+	if(m_initNeeded)
+		init();
 	
 	Util::convertCoords(m_unitCode, METER, x, y);
 
@@ -63,26 +63,14 @@ void Mercator::inverse(double x, double y, double* lon, double* lat)
 		*lat = m_latitude;
 }
 
-void Mercator::forward_init() {
-	double temp;			/* temporary variable		*/
-
-	clearError();
-
-	temp = m_rMinor / m_rMajor;
-	m_es = 1.0 - SQUARE(temp);
-	m_e = sqrt(m_es);
-	m_m1 = cos(m_centerLat)/(sqrt(1.0 - m_es * sin(m_centerLat) * sin(m_centerLat)));
-	m_forInitNeeded = false;
-}
-
 void Mercator::forward(double lon, double lat, double* x, double* y) {
 	double ts;		/* small t value				*/
 	double sinphi;		/* sin value					*/
 
 	clearError();
 
-	if(m_forInitNeeded)
-		forward_init();
+	if(m_initNeeded)
+		init();
 
 	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 

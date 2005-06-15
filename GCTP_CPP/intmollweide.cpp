@@ -28,7 +28,7 @@ Pseudocylindrical(gctpParams, units, dat)
 
 }
 
-void IntMollweide::forward_init()
+void IntMollweide::init()
 {
 	clearError();
 	
@@ -41,24 +41,10 @@ void IntMollweide::forward_init()
 	m_falseEastings[4] = m_radius * 0.31426968;
 	m_falseEastings[5] = m_radius * 2.19988776387;
 
-	m_forInitNeeded = false;
+	m_initNeeded = false;
 }
 
-void IntMollweide::inverse_init()
-{
-	clearError();
 
-	/* Initialize false eastings for each of the 6 regions
-	   ---------------------------------------------------*/
-	m_falseEastings[0] = m_radius * -2.19988776387;
-	m_falseEastings[1] = m_radius * -0.15713484;
-	m_falseEastings[2] = m_radius * 2.04275292359;
-	m_falseEastings[3] = m_radius * -1.72848324304;
-	m_falseEastings[4] = m_radius * 0.31426968;
-	m_falseEastings[5] = m_radius * 2.19988776387;
-
-	m_invInitNeeded = false;
-}
 
 void IntMollweide::forward(double lon, double lat, double* x, double* y)
 {
@@ -69,8 +55,8 @@ void IntMollweide::forward(double lon, double lat, double* x, double* y)
 	long i;
 	long region;
 
-	if(m_forInitNeeded)
-		forward_init();
+	if(m_initNeeded)
+		init();
 	
 	clearError();
 	
@@ -145,8 +131,9 @@ void IntMollweide::inverse(double x, double y, double* lon, double* lat)
 	double theta;
 	long region;
 
-	if(m_invInitNeeded)
-		inverse_init();
+	if(m_initNeeded)
+		init();
+	
 	clearError();
 
 	Util::convertCoords(m_unitCode, METER, x, y);

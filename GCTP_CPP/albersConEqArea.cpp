@@ -18,6 +18,9 @@ AlbersConEqArea::AlbersConEqArea(double gctpParameters[15], ProjUnit units, Proj
 	setNumber(ALBERS);
 }
 
+<<<<<<< albersConEqArea.cpp
+void AlbersConEqArea::init() {
+=======
 
 
 void AlbersConEqArea::inverse_init() {
@@ -69,6 +72,7 @@ void AlbersConEqArea::inverse_init() {
 }
 
 void AlbersConEqArea::forward_init() {
+>>>>>>> 1.12
 	double sin_po,cos_po;		/* sin and cos values			*/
 	double con;					/* temporary variable			*/
 	double temp;				/* eccentricity squared and temp var	*/
@@ -113,7 +117,7 @@ void AlbersConEqArea::forward_init() {
 	m_c = ms1 * ms1 + m_ns0 * qs1;
 	m_rh = m_rMajor * sqrt(m_c - m_ns0 * qs0)/m_ns0;
 
-	m_forInitNeeded = false;
+	m_initNeeded = false;
 }
 
 void AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
@@ -125,8 +129,8 @@ void AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
 
 	clearError();
 
-	if(m_invInitNeeded)
-		inverse_init();
+	if(m_initNeeded)
+		init();
 	
 	//convert coordinates to meters
 	Util::convertCoords(m_unitCode, METER, x, y);
@@ -205,8 +209,8 @@ void AlbersConEqArea::forward(double lon, double lat, double* x, double* y) {
 
 	clearError();
 
-	if(m_forInitNeeded)
-		forward_init();
+	if(m_initNeeded)
+		init();
 
 	//convert lat/lon from dec degrees to radians
 	Util::convertCoords(DEGREE, RADIAN, lat, lon);

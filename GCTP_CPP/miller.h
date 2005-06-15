@@ -16,8 +16,8 @@ public:
 
 protected:
 
-	void inverse_init();
-	void forward_init();
+	//! See documentation for Projection
+	void init();
 };
 
 #endif

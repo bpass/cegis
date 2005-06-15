@@ -200,6 +200,9 @@
 				RelativePath=".\Mollweide.cpp">
 			</File>
 			<File
+				RelativePath=".\oblatedeqarea.cpp">
+			</File>
+			<File
 				RelativePath=".\polarstereo.cpp">
 			</File>
 			<File
@@ -289,6 +292,9 @@
 			</File>
 			<File
 				RelativePath=".\mollweide.h">
+			</File>
+			<File
+				RelativePath=".\oblatedeqarea.h">
 			</File>
 			<File
 				RelativePath=".\polarstereo.h">

@@ -2,7 +2,7 @@
  * @file InvertMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: InvertMatrix.hpp,v 1.1 2005/06/13 20:21:02 ahartman Exp $
+ * $Id: InvertMatrix.hpp,v 1.2 2005/06/15 19:51:46 ahartman Exp $
  */
 
 #include "LUDecomposition.h"
@@ -17,32 +17,39 @@ InvertMatrix<T>::operator()(const Matrix<T>& matrix) const
         throw typename InvertMatrix<T>::MatrixIsNotSquare();
     }
 
-    LUDecomposition<T> luDecomp;
-    const typename LUDecomposition<T>::Solution solution = luDecomp(matrix);
-
-    DenseMatrix<T> inverse(matrix.getNumRows(), matrix.getNumRows());
-    LUDecompositionSolver<T> luSolver;
-
-    for(size_t j = 0; j < inverse.getNumCols(); ++j)
+    try
     {
-        // create the b vector whose solution vector will become the
-        // column of this iteration
-        MyVector<T> b(solution.L().getNumRows());
-        // initialize the element corresponding to the current column to 1,
-        // since all other elements are initialized to 0 in the MyVector 
-        // constructor
-        b[j] = 1; 
+        LUDecomposition<T> luDecomp;
+        const typename LUDecomposition<T>::Solution solution = luDecomp(matrix);
 
-        // solve the system to get what the current column should be
-        const MyVector<T> currentColumn = luSolver(solution, b);
+        DenseMatrix<T> inverse(matrix.getNumRows(), matrix.getNumRows());
+        LUDecompositionSolver<T> luSolver;
 
-        // copy those entries to the matrix inverse
-        for(size_t i = 0; i < currentColumn.getSize(); ++i)
+        for(size_t j = 0; j < inverse.getNumCols(); ++j)
         {
-            inverse[i][j] = currentColumn[i];
-        }
-    }
+            // create the b vector whose solution vector will become the
+            // column of this iteration
+            MyVector<T> b(solution.L().getNumRows());
+            // initialize the element corresponding to the current column to 1,
+            // since all other elements are initialized to 0 in the MyVector 
+            // constructor
+            b[j] = 1; 
 
-    return inverse;
+            // solve the system to get what the current column should be
+            const MyVector<T> currentColumn = luSolver(solution, b);
+
+            // copy those entries to the matrix inverse
+            for(size_t i = 0; i < currentColumn.getSize(); ++i)
+            {
+                inverse[i][j] = currentColumn[i];
+            }
+        }
+
+        return inverse;
+    }
+    catch(typename LUDecomposition<T>::MatrixIsSingular)
+    {
+        throw typename InvertMatrix<T>::MatrixIsSingular();
+    }
 }
 

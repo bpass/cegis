@@ -1,8 +1,8 @@
-// $Id: qdmsedit.cpp,v 1.5 2005/05/31 22:21:45 rbuehler Exp $
+// $Id: qdmsedit.cpp,v 1.6 2005/06/15 21:31:06 rbuehler Exp $
 
 
 #include "qdmsedit.h"
-#include <qvalidator.h>
+#include "mapimgvalidator.h"
 #include <qregexp.h>
 #include <qtooltip.h>
 
@@ -61,7 +61,7 @@ QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction 
          directionLabel->setText( "" );
    }
 
-   dEdit->setValidator( new QIntValidator(min, max, dEdit) );
+   dEdit->setValidator( new MapimgValidator(min, max, 0, dEdit) );
    mEdit->setValidator( new QIntValidator(0, 60, mEdit) );
    QRegExp exp( QString::fromLatin1("^(60|[1-5]?\\d(\\.\\d*)?)$") );
    sEdit->setValidator( new QRegExpValidator(exp, sEdit) );
@@ -122,18 +122,35 @@ void QDmsEdit::setMaxVal( const int &newMax )
 double QDmsEdit::value()
 {
    double r;
-   r = dEdit->text().toInt() * 1000000
-      +mEdit->text().toInt() * 1000
-      +sEdit->text().toDouble();
+   r = dEdit->text().toInt() * 1000000;
+   if( r >= 0 )
+      r+=mEdit->text().toInt() * 1000
+         +sEdit->text().toDouble();
+   else
+      r-=mEdit->text().toInt() * 1000
+         +sEdit->text().toDouble();
+
    return r;
 }
 
 
 void QDmsEdit::setValue( const double val )
 {
-   int deg = static_cast<int>( val / 1000000 );
-   uint min = static_cast<uint>( (val - deg * 1000000) / 1000 );
-   double sec = val - deg * 1000000 - min * 1000 ;
+   double tmp = val;
+   int deg = 1;
+   uint min;
+   double sec;
+
+   if( val < 0 )
+      tmp = -val;
+
+   deg = static_cast<int>( tmp / 1000000 );
+   min = static_cast<uint>( (tmp - deg * 1000000) / 1000 );
+   sec = tmp - deg * 1000000 - min * 1000 ;
+
+   if( val < 0 )
+      deg = -deg;
+
    dEdit->setText( QString::number( deg ) );
    mEdit->setText( QString::number( min ) );
    sEdit->setText( QString::number( sec, 'f' ) );

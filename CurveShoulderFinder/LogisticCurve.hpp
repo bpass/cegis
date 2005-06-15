@@ -2,12 +2,19 @@
  * @file LogisticCurve.hpp
  * @author Austin Hartman
  *
- * $Id: LogisticCurve.hpp,v 1.4 2005/06/14 23:43:13 ahartman Exp $
+ * $Id: LogisticCurve.hpp,v 1.5 2005/06/15 01:47:44 ahartman Exp $
  */
 
 #include <cmath>
+
 #include "GaussianSolver.h"
 #include "PartialPivotingGaussianSolver.h"
+
+//#define DEBUG_PRINT
+
+#ifdef DEBUG_PRINT
+#include <iostream>
+#endif
 
 template<class T>
 const size_t LogisticCurve<T>::numParameters = 3; 
@@ -60,7 +67,9 @@ template<class T>
 void
 LogisticCurve<T>::findSolution()
 {
+#ifdef DEBUG_PRINT
     using std::cout;
+#endif
 
     typename MarquardtMethod<T>::Parameters initialGuesses;
     initialGuesses.reserve(numParameters);
@@ -86,25 +95,22 @@ LogisticCurve<T>::findSolution()
     secondPartials.push_back(sumResidualsSecondPartialCB);
     secondPartials.push_back(sumResidualsSecondPartialCC);
 
-//    MarquardtMethod<T> nlr;
-//    typename MarquardtMethod<T>::Parameters parameters =
-//        nlr(m_points, initialGuesses, 
-//            logisticFunction, partials, stoppingCondition);
-
     MarquardtMethod<T> mm;
     typename MarquardtMethod<T>::Parameters parameters = 
         mm(m_points, initialGuesses, 
            sumResiduals, firstPartials, secondPartials, 
-           stoppingCondition);
+           stoppingCondition, 1000);
     
     m_a = parameters[0];
     m_b = parameters[1];
     m_c = parameters[2];
 
+#ifdef DEBUG_PRINT
     cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ":\n"
          << "\ta = " << m_a << '\n'
          << "\tb = " << m_b << '\n'
          << "\tc = " << m_c << '\n';
+#endif
 }
 
 template<class T>

@@ -1,12 +1,12 @@
 #include "coordinate.h"
 
 Coordinate::Coordinate()
-: x(0.0), y(0.0), units(0)
+: x(0.0), y(0.0), units((ProjUnit)0)
 {
 }
 
-Coordinate::Coordinate( double sx, double yy, int uunits )
-: x(sx), y(yy), units(uunits)
+Coordinate::Coordinate( double xx, double yy, ProjUnit uunits )
+: x(xx), y(yy), units(uunits)
 {
 }
 

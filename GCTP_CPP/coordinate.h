@@ -2,6 +2,7 @@
 #define COORDINATE_H
 
 #include <math.h>
+#include <constants.h>
 
 /*! Coordinate struct
    This class provides a more readable way of storing and passing coordinate
@@ -17,7 +18,7 @@ struct Coordinate {
    /*! Full Constructor
       Set's all attributes in the Coordinate according to the parameters.
       */
-   Coordinate( double xs, double yy, int uunits );
+   Coordinate( double xx, double yy, ProjUnit uunits );
 
    /*! Copy Constructor
       Set's all attributes to equal those in Coordinate c.
@@ -29,7 +30,7 @@ struct Coordinate {
 
    double x;
    double y;
-   int units;
+   ProjUnit units;
 };
 
 /*! Checks if two Coordinates are "close" to each other.

@@ -2,7 +2,6 @@
 #define TRANSFORMER_H
 
 #include "projection.h"
-#include "projexception.h"
 #include "coordinate.h"
 
 //! Transformer class
@@ -30,7 +29,7 @@ public:
       Setting the finer details such as the units parameter can be done by
       calling transformer->input()->setUnits(...).
       */
-   bool setInput( int projectionCode );
+   bool setInput( ProjCode projectionCode );
 
    /*! Sets the input projection with all parameters set.
       The parameters can be later adjusted by calling transformer->input()->setUnits(...).
@@ -40,8 +39,7 @@ public:
       \param datum GCTP defined enumeration for datum
       \param spheroid GCTP defined enumeration for spheroid
       */
-   bool setInput( int projectionCode, double gctpParameters[15],
-      int units = 0, long datum = 0, long spheroid = 0 );
+   bool setInput( ProjCode projectionCode, double gctpParameters[15], ProjUnit units, ProjDatum datum );
 
    //! Sets the input projection by copying all values out of the argument
    bool setInput( Projection &in );
@@ -53,7 +51,7 @@ public:
       Setting the finer details such as the units parameter can be done by
       calling transformer->output()->setUnits(...).
       */
-   bool setOutput( int projectionCode );
+   bool setOutput( ProjCode projectionCode );
 
    /*! Sets the output projection with all parameters set.
       The parameters can be later adjusted by calling transformer->output()->setUnits(...).
@@ -63,8 +61,7 @@ public:
       \param datum GCTP defined enumeration for datum
       \param spheroid GCTP defined enumeration for spheroid
       */
-   bool setOutput( int projectionCode, double gctpParameters[15],
-      int units = 0, long datum = 0, long spheroid = 0 );
+   bool setOutput( ProjCode projectionCode, double gctpParameters[15], ProjUnit units, ProjDatum datum );
    
    //! Sets the output projection by copying all values out of the argument
    bool setOutput( Projection &out );
@@ -99,12 +96,15 @@ public:
       */
    void transformForward( Coordinate* io_coord );
 
+   //! Returns true if an error occured in the most recent transformation
+   bool errored();
+
    /*! A giant, simple, switch case that returns a dynamically allocated
       Projection* that points to a Projection subclass whose type is
       determined by the projectionCode passed.
       Note: It will need to be deleted in order to prevent memory leaks.
       */
-   static Projection* convertProjection( int projectionCode );
+   static Projection* convertProjection( ProjCode projectionCode );
 
 private:
    //! Points to the input projection using polymorphism
@@ -112,6 +112,9 @@ private:
 
    //! Points to the output projection using polymorphism
    Projection* m_outProj;
+
+   //! Tells whether the most recent transformation errored or not
+   bool m_errored;
 };
 
 #endif

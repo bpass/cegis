@@ -18,12 +18,9 @@ AlbersConEqArea::AlbersConEqArea(double gctpParameters[15], ProjUnit units, Proj
 	setNumber(ALBERS);
 }
 
-<<<<<<< albersConEqArea.cpp
+
 void AlbersConEqArea::init() {
-=======
 
-
-void AlbersConEqArea::inverse_init() {
 	double sin_po,cos_po;		/* sine and cos values			*/
 	double con;					/* temporary variable			*/
 	double temp;				/* temporary variable			*/
@@ -68,57 +65,9 @@ void AlbersConEqArea::inverse_init() {
 	m_c = ms1 * ms1 + m_ns0 * qs1;
 	m_rh = m_rMajor * sqrt(m_c - m_ns0 * qs0)/m_ns0;
 
-	m_invInitNeeded = false;
-}
-
-void AlbersConEqArea::forward_init() {
->>>>>>> 1.12
-	double sin_po,cos_po;		/* sin and cos values			*/
-	double con;					/* temporary variable			*/
-	double temp;				/* eccentricity squared and temp var	*/
-	double ms1;					/* small m 1				*/
-	double ms2;					/* small m 2				*/
-	double qs0;					/* small q 0				*/
-	double qs1;					/* small q 1				*/
-	double qs2;					/* small q 2				*/
-
-	clearError();
-
-	if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN) {
-		setError(31);
-		return;
-	}
-    
-	temp = m_rMinor / m_rMajor;
-	m_es = 1.0 - (temp*temp);
-	m_e = sqrt(m_es);
-
-	Util::gctp_sincos(m_stdParallelLat1, &sin_po, &cos_po);
-	con = sin_po;
-
-	ms1 = Util::msfnz(m_e,sin_po,cos_po);
-	qs1 = Util::qsfnz(m_e,sin_po);
-
-	Util::gctp_sincos(m_stdParallelLat2,&sin_po,&cos_po);
-
-	ms2 = Util::msfnz(m_e,sin_po,cos_po);
-	qs2 = Util::qsfnz(m_e,sin_po);
-
-	Util::gctp_sincos(m_centerLat, &sin_po,&cos_po);
-
-	qs0 = Util::qsfnz(m_e,sin_po);
-
-	if (fabs(m_stdParallelLat1 - m_stdParallelLat2) > EPSLN)
-		m_ns0 = (ms1 * ms1 - ms2 *ms2)/ (qs2 - qs1);
-
-	else
-		m_ns0 = con;
-
-	m_c = ms1 * ms1 + m_ns0 * qs1;
-	m_rh = m_rMajor * sqrt(m_c - m_ns0 * qs0)/m_ns0;
-
 	m_initNeeded = false;
 }
+
 
 void AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
 	double rh1;			/* height above ellipsoid	*/

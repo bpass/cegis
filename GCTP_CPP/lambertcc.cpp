@@ -106,7 +106,7 @@ void LambertCC::forward(double lon, double lat, double* x, double* y)
 		*y = m_y_coord;
 }
 
-void LambertCC::inverse(double x, double y, double* lat, double* lon)
+void LambertCC::inverse(double x, double y, double* lon, double* lat)
 {
 	double rh1;			/* height above ellipsoid	*/
 	double con;			/* sign variable		*/

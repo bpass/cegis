@@ -2,7 +2,7 @@
  * @file MarquardtMethod.h
  * @author Austin Hartman
  *
- * $Id: MarquardtMethod.h,v 1.1 2005/06/14 23:40:51 ahartman Exp $
+ * $Id: MarquardtMethod.h,v 1.2 2005/06/15 19:57:28 ahartman Exp $
  */
 
 #ifndef AUSTIN_MARQUARDTMETHOD_H
@@ -33,9 +33,19 @@ public:
                           const StoppingTest& stoppingTest,
                           const size_t maxIterations = m_maxIterations) const;
 
+    /**
+     * @exception InvalidFirstPartialsSize
+     * Exception class to be thrown whenever the size of the FirstPartials
+     * parameter is incorrect.
+     */
     class InvalidFirstPartialsSize
     {};
 
+    /**
+     * @exception InvalidSecondPartialsSize
+     * Exception class to be thrown whenever the size of the FirstPartials
+     * parameter is incorrect.
+     */
     class InvalidSecondPartialsSize
     {};
 

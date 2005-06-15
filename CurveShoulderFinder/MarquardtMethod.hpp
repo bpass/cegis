@@ -2,14 +2,14 @@
  * @file MarquardtMethod.hpp
  * @author Austin Hartman
  *
- * $Id: MarquardtMethod.hpp,v 1.2 2005/06/15 01:44:20 ahartman Exp $
+ * $Id: MarquardtMethod.hpp,v 1.3 2005/06/15 19:56:40 ahartman Exp $
  */
 
 #include "DiagonalMatrix.h"
 #include "InvertMatrix.h"
 
 //#define DEBUG_PRINT
-#define PRINT_SUMRESIDUALS
+//#define PRINT_SUMRESIDUALS
 
 #if defined(DEBUG_PRINT) || defined(PRINT_SUMRESIDUALS)
 #include <iostream>
@@ -57,65 +57,74 @@ MarquardtMethod<T>::operator()(
     size_t timesNotImproved = 0;
     while(iterations < maxIterations && !done && timesNotImproved < 5)
     {
-        // create the Hessian matrix
-        DenseMatrix<T> H(numParameters, numParameters);
-        for(size_t j = 0; j < numParameters; ++j)
+        try
         {
+            // create the Hessian matrix
+            DenseMatrix<T> H(numParameters, numParameters);
+            for(size_t j = 0; j < numParameters; ++j)
+            {
+                for(size_t i = 0; i < numParameters; ++i)
+                {
+                    H[i][j] = 
+                        secondPartials[numParameters*i+j](points, parameters);
+                }
+            }
+            
+            // take the diagonal of the Hessian and multiply it by lambda
+            DiagonalMatrix<T> diagH(numParameters);
             for(size_t i = 0; i < numParameters; ++i)
             {
-                H[i][j] = secondPartials[numParameters*i+j](points, parameters);
+                diagH[i][i] = lambda * H[i][i];
             }
-        }
-        
-        // take the diagonal of the Hessian and multiply it by lambda
-        DiagonalMatrix<T> diagH(numParameters);
-        for(size_t i = 0; i < numParameters; ++i)
-        {
-            diagH[i][i] = lambda * H[i][i];
-        }
 
-        // sum the Hessian and the diagonal matrix and take that matrix's
-        // inverse
-        DenseMatrix<T> sum = H + diagH;
-        InvertMatrix<T> inverter;
-        DenseMatrix<T> inverse = inverter(sum);
+            // sum the Hessian and the diagonal matrix and take that matrix's
+            // inverse
+            DenseMatrix<T> sum = H + diagH;
+            InvertMatrix<T> inverter;
+            DenseMatrix<T> inverse = inverter(sum);
 
-        // calculate the gradient of the function
-        MyVector<T> delF(numParameters);
-        for(size_t i = 0; i < numParameters; ++i)
-        {
-            delF[i] = firstPartials[i](points, parameters);
-        }
+            // calculate the gradient of the function
+            MyVector<T> delF(numParameters);
+            for(size_t i = 0; i < numParameters; ++i)
+            {
+                delF[i] = firstPartials[i](points, parameters);
+            }
 
-        // calculate the potential new parameters
-        MyVector<T> product = inverse * delF;
-        typename MarquardtMethod<T>::Parameters newParameters(numParameters);
-        for(size_t i = 0; i < numParameters; ++i)
-        {
-            newParameters[i] = parameters[i] - product[i];
-        }
+            // calculate the potential new parameters
+            MyVector<T> product = inverse * delF;
+            typename MarquardtMethod<T>::Parameters 
+                newParameters(numParameters);
+            for(size_t i = 0; i < numParameters; ++i)
+            {
+                newParameters[i] = parameters[i] - product[i];
+            }
 
-        const T oldSumResiduals = sumResiduals(points, parameters);
-        const T newSumResiduals = sumResiduals(points, newParameters);
+            const T oldSumResiduals = sumResiduals(points, parameters);
+            const T newSumResiduals = sumResiduals(points, newParameters);
 
 #ifdef DEBUG_PRINT
-//        cout << "lambda[" << iterations << "] = " << lambda << '\n';
+//            cout << "lambda[" << iterations << "] = " << lambda << '\n';
 #endif
 
-        // if the parameter estimates have improved
-        if(newSumResiduals < oldSumResiduals)
-        {
-            parameters = newParameters;
-            lambda /= lambdaFactor;
-            timesNotImproved = 0;
-            done = stoppingTest(points, parameters);
+            // if the parameter estimates have improved
+            if(newSumResiduals < oldSumResiduals)
+            {
+                parameters = newParameters;
+                lambda /= lambdaFactor;
+                timesNotImproved = 0;
+                done = stoppingTest(points, parameters);
+            }
+            // if the parameter estimates are worse than before
+            else
+            {
+                // don't use the new parameters
+                lambda *= lambdaFactor;
+                ++timesNotImproved;
+            }
         }
-        // if the parameter estimates are worse than before
-        else
+        catch(typename InvertMatrix<T>::MatrixIsSingular)
         {
-            // don't use the new parameters
-            lambda *= lambdaFactor;
-            ++timesNotImproved;
+            done = true;
         }
 
         ++iterations;
@@ -126,7 +135,9 @@ MarquardtMethod<T>::operator()(
 #endif
     }
 
+#ifdef PRINT_SUMRESIDUALS
     cout << "Sum Residuals = " << sumResiduals(points, parameters) << '\n';
+#endif
 
     return parameters;
 }

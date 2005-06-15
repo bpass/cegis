@@ -3,6 +3,7 @@
 
 Azimuthal::Azimuthal(): Projection(), m_centerLon(0.0), m_centerLat(0.0)
 {
+	
 }
 
 Azimuthal::Azimuthal(double gctpParams[], ProjUnit units, ProjDatum dat):

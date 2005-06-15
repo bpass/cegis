@@ -134,7 +134,13 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
+				RelativePath=".\alaskaconformal.cpp">
+			</File>
+			<File
 				RelativePath=".\albersConEqArea.cpp">
+			</File>
+			<File
+				RelativePath=".\azequidistant.cpp">
 			</File>
 			<File
 				RelativePath=".\azimuthal.cpp">
@@ -167,7 +173,25 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\genvertnsp.cpp">
+			</File>
+			<File
+				RelativePath=".\gnomonic.cpp">
+			</File>
+			<File
+				RelativePath=".\hammer.cpp">
+			</File>
+			<File
+				RelativePath=".\hotinobmerc.cpp">
+			</File>
+			<File
+				RelativePath=".\intgoode.cpp">
+			</File>
+			<File
 				RelativePath=".\intmollweide.cpp">
+			</File>
+			<File
+				RelativePath=".\lambertazimuth.cpp">
 			</File>
 			<File
 				RelativePath=".\lambertcc.cpp">
@@ -203,6 +227,9 @@
 				RelativePath=".\oblatedeqarea.cpp">
 			</File>
 			<File
+				RelativePath=".\orthographic.cpp">
+			</File>
+			<File
 				RelativePath=".\polarstereo.cpp">
 			</File>
 			<File
@@ -230,6 +257,9 @@
 				RelativePath=".\pseudocylindrical.cpp">
 			</File>
 			<File
+				RelativePath=".\robinson.cpp">
+			</File>
+			<File
 				RelativePath="sinusoidal.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -248,17 +278,35 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\spaceobmerc.cpp">
+			</File>
+			<File
 				RelativePath=".\transversemercator.cpp">
 			</File>
 			<File
 				RelativePath=".\util.cpp">
+			</File>
+			<File
+				RelativePath=".\vandergrinten.cpp">
+			</File>
+			<File
+				RelativePath=".\wagneriv.cpp">
+			</File>
+			<File
+				RelativePath=".\wagnervii.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
+				RelativePath=".\alaskaconformal.h">
+			</File>
+			<File
 				RelativePath=".\albersConEqArea.h">
+			</File>
+			<File
+				RelativePath=".\azequidistant.h">
 			</File>
 			<File
 				RelativePath=".\azimuthal.h">
@@ -279,7 +327,25 @@
 				RelativePath="equirectangular.h">
 			</File>
 			<File
+				RelativePath=".\genvertnsp.h">
+			</File>
+			<File
+				RelativePath=".\gnomonic.h">
+			</File>
+			<File
+				RelativePath=".\hammer.h">
+			</File>
+			<File
+				RelativePath=".\hotinobmerc.h">
+			</File>
+			<File
+				RelativePath=".\intgoode.h">
+			</File>
+			<File
 				RelativePath=".\intmollweide.h">
+			</File>
+			<File
+				RelativePath=".\lambertazimuth.h">
 			</File>
 			<File
 				RelativePath=".\lambertcc.h">
@@ -297,6 +363,9 @@
 				RelativePath=".\oblatedeqarea.h">
 			</File>
 			<File
+				RelativePath=".\orthographic.h">
+			</File>
+			<File
 				RelativePath=".\polarstereo.h">
 			</File>
 			<File
@@ -309,7 +378,13 @@
 				RelativePath=".\pseudocylindrical.h">
 			</File>
 			<File
+				RelativePath=".\robinson.h">
+			</File>
+			<File
 				RelativePath="sinusoidal.h">
+			</File>
+			<File
+				RelativePath=".\spaceobmerc.h">
 			</File>
 			<File
 				RelativePath=".\transversemercator.h">
@@ -319,6 +394,15 @@
 			</File>
 			<File
 				RelativePath=".\utm.h">
+			</File>
+			<File
+				RelativePath=".\vandergrinten.h">
+			</File>
+			<File
+				RelativePath=".\wagneriv.h">
+			</File>
+			<File
+				RelativePath=".\wagnervii.h">
 			</File>
 		</Filter>
 		<Filter

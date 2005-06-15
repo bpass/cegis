@@ -2,7 +2,7 @@
  * @file LogisticCurve.hpp
  * @author Austin Hartman
  *
- * $Id: LogisticCurve.hpp,v 1.5 2005/06/15 01:47:44 ahartman Exp $
+ * $Id: LogisticCurve.hpp,v 1.6 2005/06/15 19:53:11 ahartman Exp $
  */
 
 #include <cmath>
@@ -10,9 +10,9 @@
 #include "GaussianSolver.h"
 #include "PartialPivotingGaussianSolver.h"
 
-//#define DEBUG_PRINT
+//#define PRINT_PARAMETERS
 
-#ifdef DEBUG_PRINT
+#if defined(PRINT_PARAMETERS)
 #include <iostream>
 #endif
 
@@ -67,7 +67,7 @@ template<class T>
 void
 LogisticCurve<T>::findSolution()
 {
-#ifdef DEBUG_PRINT
+#if defined(PRINT_PARAMETERS)
     using std::cout;
 #endif
 
@@ -105,7 +105,7 @@ LogisticCurve<T>::findSolution()
     m_b = parameters[1];
     m_c = parameters[2];
 
-#ifdef DEBUG_PRINT
+#ifdef PRINT_PARAMETERS
     cout << __FILE__ << ':' << __LINE__ << ':' << __func__ << ":\n"
          << "\ta = " << m_a << '\n'
          << "\tb = " << m_b << '\n'

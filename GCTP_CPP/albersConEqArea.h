@@ -11,12 +11,6 @@ public:
 	//! Initialize all fields neccessary to perform our forward and inverse transformations.
 	AlbersConEqArea(double gctpParameters[], ProjUnit units, ProjDatum dat);
 
-	//! See documentation for Projection.
-	void forward(double lon, double lat, double* x = NULL, double*y = NULL);
-
-	//! See documentation for Projection.
-	void inverse(double x, double y, double* lat = NULL, double* lon = NULL);
-
 protected:
   
   //! Constant C.
@@ -36,6 +30,10 @@ protected:
 
   //! See documentation for Projection
   void init();
+
+  void _forward(double lon, double lat);
+  void _inverse(double x, double y);
+
 };
 
 #endif

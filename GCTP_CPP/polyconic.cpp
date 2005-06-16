@@ -34,17 +34,12 @@ void Polyconic::init()
 
 
 
-void Polyconic::forward(double lon, double lat, double* x, double* y) 
+void Polyconic::_forward(double lon, double lat)
 {
 	double sinphi, cosphi;	/* sin and cos value				*/
 	double con, ml;		/* cone constant, small m			*/
 	double ms;		/* small m					*/
 
-	clearError();
-	if(m_initNeeded)
-		init();
-
-	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 	/* Forward equations
 	-----------------*/
 	con = Util::adjust_lon(lon - m_centerLon);
@@ -63,28 +58,14 @@ void Polyconic::forward(double lon, double lat, double* x, double* y)
 		m_y_coord = m_falseNorthing + m_rMajor * (ml - m_ml0 + ms * (1.0 - cos(con))/sinphi);
 	}
 
-	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
-
-	if(x)
-		*x = m_x_coord;
-
-	if(y)
-		*y = m_y_coord;
 }
 
-void Polyconic::inverse(double x, double y, double* lon, double* lat)
+void Polyconic::_inverse(double x, double y)
 {
 	double al;		/* temporary values				*/
 	double b;		/* temporary values				*/
 	double c;		/* temporary values				*/
 	long iflg;		/* error flag					*/
-
-	clearError();
-
-	if(m_initNeeded)
-		init();
-
-	Util::convertCoords(m_unitCode, METER, x, y);
 
 	/* Inverse equations
 	-----------------*/
@@ -94,8 +75,8 @@ void Polyconic::inverse(double x, double y, double* lon, double* lat)
 	iflg = 0;
 	if (fabs(al) <= .0000001)
 	{
-		*lon = x/m_rMajor + m_centerLon;
-		*lat = 0.0;
+		m_longitude = x/m_rMajor + m_centerLon;
+		m_latitude = 0.0;
 	}
 	else
 	{
@@ -110,11 +91,4 @@ void Polyconic::inverse(double x, double y, double* lon, double* lat)
 		m_longitude = Util::adjust_lon((Util::asinz(x * c / m_rMajor) / sin(m_latitude)) + m_centerLon);
 	}
 
-	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-
-	if(lon)
-		*lon = m_longitude;
-
-	if(lat)
-		*lat = m_latitude;
 }

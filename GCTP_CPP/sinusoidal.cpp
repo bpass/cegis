@@ -17,48 +17,22 @@ Sinusoidal::Sinusoidal( double gctpParameters[15], ProjUnit units, ProjDatum dat
   setNumber(SNSOID);
 }
 
-void Sinusoidal::forward ( double lon, double lat, double* x, double* y )
+void Sinusoidal::_forward (double lon, double lat)
 {
   double deltaLon;	/* Delta longitude (Given longitude - center */
   
-  clearError();
-
-  if(m_initNeeded)
-	init();
-
-  //convert lat/lon from dec degrees to radians
-  Util::convertCoords(DEGREE, RADIAN, lat, lon);
-
   /* Forward equations */
   deltaLon = Util::adjust_lon(lon - m_centerLon);
 
   m_x_coord = m_radius * deltaLon * cos( lat ) + m_falseEasting;
   m_y_coord = m_radius * lat + m_falseNorthing;
 
-  Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
-
-  if( x != NULL )
-  {
-     *x = m_x_coord;
-  }
-
-  if( y != NULL )
-  {
-     *y = m_y_coord;
-  }
 }
 
-void Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
+void Sinusoidal::_inverse(double x, double y)
 {
   double temp;		/* Re-used temporary variable */
   
-  clearError();
-  
-  if(m_initNeeded)
-	init();
-  //convert lat/lon from dec degrees to radians
-  Util::convertCoords(m_unitCode, METER, x, y);
-
   x -= m_falseEasting;
   y -= m_falseNorthing;
 
@@ -69,7 +43,6 @@ void Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
 		return;
   }
 
-
   temp = fabs( m_latitude ) - HALF_PI;
   if( fabs( temp ) > EPSLN )
   {
@@ -79,18 +52,6 @@ void Sinusoidal::inverse ( double x, double y, double* lon, double* lat )
   else
   {
      m_longitude = m_centerLon;
-  }
-
-  Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-
-  if( lon != NULL )
-  {
-     *lon = m_longitude;
-  }
-
-  if( lat != NULL )
-  {
-     *lat = m_latitude;
   }
 
 }

@@ -82,7 +82,7 @@ void OblatedEqArea::setAngle(double theta)
 	m_theta = temp;
 }
 
-void OblatedEqArea::forward(double lon, double lat, double* x, double* y) 
+void OblatedEqArea::_forward(double lon, double lat) 
 {
 	double delta_lon;
 	double sin_delta_lon;
@@ -99,11 +99,7 @@ void OblatedEqArea::forward(double lon, double lat, double* x, double* y)
 	double M;
 	double N;
 
-	clearError();
-	if(m_initNeeded)
-		init();
 
-	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 	/* Forward equations
 	-----------------*/
 	delta_lon = lon - m_centerLon;
@@ -122,15 +118,9 @@ void OblatedEqArea::forward(double lon, double lat, double* x, double* y)
 	m_y_coord = m_n * m_radius * sin(2.0 * N / m_n) + m_falseEasting;
 	m_x_coord = m_m * m_radius * sin(2.0 * M / m_m) * cos(N) / cos(2.0 * N / m_n) + m_falseNorthing;
 
-	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
-
-	if(x)
-		*x = m_x_coord;
-	if(y)
-		*y = m_y_coord;
 }
 
-void OblatedEqArea::inverse(double x, double y, double* lon, double* lat)
+void OblatedEqArea::_inverse(double x, double y)
 {
 	double z;
 	double sin_z;
@@ -145,11 +135,7 @@ void OblatedEqArea::inverse(double x, double y, double* lon, double* lat)
 	double sin_diff_angle;
 	double cos_diff_angle;
 
-	clearError();
-	if(m_initNeeded)
-		init();
 
-	Util::convertCoords(m_unitCode, METER, x, y);
 	/* Inverse equations
 	-----------------*/
 	x -= m_falseEasting;
@@ -169,10 +155,4 @@ void OblatedEqArea::inverse(double x, double y, double* lon, double* lat)
 	m_longitude = Util::adjust_lon(m_centerLon + atan2((sin_z * sin_diff_angle), (m_cosLatO *
 								   cos_z - m_sinLatO * sin_z * cos_diff_angle)));
 
-	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-
-	if(lon)
-		*lon = m_longitude;
-	if(lat)
-		*lat = m_latitude;
 }

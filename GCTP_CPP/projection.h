@@ -38,7 +38,7 @@ class Projection
 		\param x Optional storage for output x coordinate
 		\param y Optional storage for output y coordinate
 	*/
-	virtual void forward ( double lon, double lat, double* x = NULL, double* y = NULL ) = 0;
+	void forward ( double lon, double lat, double* x = NULL, double* y = NULL );
     
 	//! Perform an inverse transformation.
 	/*! This function transforms input x/y coordinates to the geographic coordinate system.
@@ -50,7 +50,7 @@ class Projection
 		\param lat Optional storage for output latitude
 		\param lon Optional storage for output longitude
 	*/
-	virtual void inverse ( double x, double y, double* lon = NULL, double* lat = NULL ) = 0;
+	void inverse ( double x, double y, double* lon = NULL, double* lat = NULL );
 
 	//! Get the x coordinate from the most recent forward() call.
 	double x () {return m_x_coord;}
@@ -187,8 +187,11 @@ protected:
 	//! Toggle forward and inverse initialization flags.
 	void setInit() {m_initNeeded = true;}
 
-	
+	virtual void _forward(double lon, double lat);
+	virtual void _inverse(double x, double y);
+
 	virtual void loadFromParams();
+
 
 
 };

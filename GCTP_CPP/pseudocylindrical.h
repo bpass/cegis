@@ -10,10 +10,6 @@ public:
 
 	Pseudocylindrical(double gctpParams[], ProjUnit units, ProjDatum dat);
 
-	virtual void forward(double lon, double lat, double* x = NULL, double* y = NULL) = 0;
-
-	virtual void inverse(double x, double y, double* lon = NULL, double* lat = NULL) = 0;
-
 	void setCenterLon(double lon);
 
 	void setCenterLat(double lat);

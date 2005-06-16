@@ -66,19 +66,12 @@ void EquidistantC::init()
 
 }
 
-void EquidistantC::forward(double lon, double lat, double* x, double* y)
+void EquidistantC::_forward(double lon, double lat)
 {
 	double ml;
 	double theta;
 	double rh1;
 	
-	clearError();
-
-	if(m_initNeeded)
-		init();
-
-	Util::convertCoords(DEGREE, RADIAN, lon, lat);
-
 	/* Forward equations
 	-----------------*/
 	ml = Util::mlfn(m_e0, m_e1, m_e2, m_e3, lat);
@@ -87,28 +80,15 @@ void EquidistantC::forward(double lon, double lat, double* x, double* y)
 	m_x_coord = m_falseEasting  + rh1 * sin(theta);
 	m_y_coord = m_falseNorthing + m_rh - rh1 * cos(theta);
 
-	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
-
-	if(x)
-		*x = m_x_coord;
-	if(y)
-		*y = m_y_coord;
 }
 
-void EquidistantC::inverse(double x, double y, double* lon, double* lat) 
+void EquidistantC::_inverse(double x, double y)
 {
 	double rh1;
 	double ml;
 	double con;
 	double theta;
 	long   flag;
-
-	clearError();
-
-	if(m_initNeeded)
-		init();
-
-	Util::convertCoords(m_unitCode, METER, x, y);
 
 	flag = 0;
 	x -= m_falseEasting;
@@ -130,19 +110,13 @@ void EquidistantC::inverse(double x, double y, double* lon, double* lat)
 	
 	ml = m_g - rh1 / m_rMajor;
 	m_latitude = Util::phi3z(ml,m_e0,m_e1,m_e2,m_e3,&flag);
-	m_longitude = Util::adjust_lon(m_centerLon + theta / m_ns);
-
-	Util::convertCoords(RADIAN, DEGREE, m_latitude, m_longitude);
-
+	
 	if (flag != 0) {
 		setError(flag);
 		return;
 	}
 
-	if(lon)
-		*lon = m_longitude;
-	if(lat)
-		*lat = m_latitude;
+	m_longitude = Util::adjust_lon(m_centerLon + theta / m_ns);
 
 }
 

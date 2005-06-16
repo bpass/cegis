@@ -61,20 +61,13 @@ void LambertCC::init()
 	m_initNeeded = false;
 }
 
-void LambertCC::forward(double lon, double lat, double* x, double* y)
+void LambertCC::_forward(double lon, double lat)
 {
 	double con;                     /* temporary angle variable             */
 	double rh1;                     /* height above ellipsoid               */
 	double sinphi;                  /* sin value                            */
 	double theta;                   /* angle                                */
 	double ts;                      /* small value t                        */
-
-	Util::convertCoords(DEGREE, RADIAN, lon, lat);
-
-	if(m_initNeeded)
-		init();
-
-	clearError();
 	
 	con  = fabs( fabs(lat) - HALF_PI);
 	if (con > EPSLN)
@@ -98,28 +91,15 @@ void LambertCC::forward(double lon, double lat, double* x, double* y)
 	m_x_coord = rh1 * sin(theta) + m_falseEasting;
 	m_y_coord = m_rh - rh1 * cos(theta) + m_falseNorthing;	
 
-	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
-
-	if(x)
-		*x = m_x_coord;
-	if(y)
-		*y = m_y_coord;
 }
 
-void LambertCC::inverse(double x, double y, double* lon, double* lat)
+void LambertCC::_inverse(double x, double y)
 {
 	double rh1;			/* height above ellipsoid	*/
 	double con;			/* sign variable		*/
 	double ts;			/* small t			*/
 	double theta;			/* angle			*/
 	long   flag;			/* error flag			*/
-
-	Util::convertCoords(m_unitCode, METER, x, y);
-
-	if(m_initNeeded)
-		init();
-
-	clearError();
 
 	flag = 0;
 	x -= m_falseEasting;
@@ -153,12 +133,6 @@ void LambertCC::inverse(double x, double y, double* lon, double* lat)
 	
 	m_longitude = Util::adjust_lon(theta/m_ns + m_centerLon);
 
-	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-
-	if(lat)
-		*lat = m_latitude;
-	if(lon)
-		*lon = m_longitude;
 }
  
 

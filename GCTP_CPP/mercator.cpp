@@ -27,17 +27,10 @@ void Mercator::init() {
 	m_initNeeded = false;
 
 }
-void Mercator::inverse(double x, double y, double* lon, double* lat) 
+void Mercator::_inverse(double x, double y)
 {
 	double ts;		/* small t value				*/
 	long flag;		/* error flag 					*/
-
-    clearError();
-
-	if(m_initNeeded)
-		init();
-	
-	Util::convertCoords(m_unitCode, METER, x, y);
 
 	/* Inverse equations
 	-----------------*/
@@ -54,25 +47,13 @@ void Mercator::inverse(double x, double y, double* lon, double* lat)
 
 	m_longitude = Util::adjust_lon(m_centerLon + x/(m_rMajor * m_m1));
 
-	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-
-	if(lon)
-		*lon = m_longitude;
-
-	if(lat)
-		*lat = m_latitude;
 }
 
-void Mercator::forward(double lon, double lat, double* x, double* y) {
+void Mercator::_forward(double lon, double lat)
+{
 	double ts;		/* small t value				*/
 	double sinphi;		/* sin value					*/
 
-	clearError();
-
-	if(m_initNeeded)
-		init();
-
-	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 
 	/* Forward equations
 	 -----------------*/
@@ -89,12 +70,6 @@ void Mercator::forward(double lon, double lat, double* x, double* y) {
 		m_y_coord = m_falseNorthing - m_rMajor * m_m1 * log(ts);
 	 }
 
-	 Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
-
-	 if(x)
-		 *x = m_x_coord;
-	 if(y)
-		 *y = m_y_coord;
 }
 
 

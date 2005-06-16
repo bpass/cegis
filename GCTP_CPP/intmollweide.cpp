@@ -46,7 +46,7 @@ void IntMollweide::init()
 
 
 
-void IntMollweide::forward(double lon, double lat, double* x, double* y)
+void IntMollweide::_forward(double lon, double lat)
 {
 	double delta_lon;	/* Delta longitude (Given longitude - center */
 	double theta;
@@ -54,13 +54,6 @@ void IntMollweide::forward(double lon, double lat, double* x, double* y)
 	double con;
 	long i;
 	long region;
-
-	if(m_initNeeded)
-		init();
-	
-	clearError();
-	
-	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 
 	/* Forward equations
 	-----------------*/
@@ -102,8 +95,10 @@ void IntMollweide::forward(double lon, double lat, double* x, double* y)
 		theta += delta_theta;
 		if (fabs(delta_theta) < EPSLN) 
 			break;
-		if (i >= 50) 
+		if (i >= 50) {
 			setError(2);
+			return;
+		}
 	}
 	
 	theta /= 2.0;
@@ -117,26 +112,13 @@ void IntMollweide::forward(double lon, double lat, double* x, double* y)
 	m_x_coord = m_falseEastings[region] + 0.900316316158 * m_radius * delta_lon * cos(theta);
 	m_y_coord = m_radius * 1.4142135623731 * sin(theta);
 
-	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
-
-	if(x)
-		*x = m_x_coord;
-	if(y)
-		*y = m_y_coord;
 }
 
-void IntMollweide::inverse(double x, double y, double* lon, double* lat)
+void IntMollweide::_inverse(double x, double y)
 {
 	
 	double theta;
 	long region;
-
-	if(m_initNeeded)
-		init();
-	
-	clearError();
-
-	Util::convertCoords(m_unitCode, METER, x, y);
 
 	/* Inverse equations
 	-----------------*/
@@ -164,13 +146,6 @@ void IntMollweide::inverse(double x, double y, double* lon, double* lat)
 	theta = asin(y / (1.4142135623731 * m_radius));
 	m_longitude = Util::adjust_lon(m_centerLons[region] + (x / (0.900316316158*m_radius * cos(theta))));
 	m_latitude = asin((2.0 * theta + sin(2.0 * theta)) / PI);
-
-	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-
-	if(lat)
-		*lat = m_latitude;
-	if(lon)
-		*lon = m_longitude;
 
 	/* Are we in a interrupted area?  If so, return status code of IN_BREAK.
 	---------------------------------------------------------------------*/

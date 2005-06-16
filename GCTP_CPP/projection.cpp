@@ -83,6 +83,59 @@ double Projection::param(size_t index) {
 	
 }
 
+void Projection::forward(double lon, double lat, double* x, double* y)
+{
+	clearError();
+	if(m_initNeeded)
+		init();
+
+	if(errorOccured())
+		return;
+
+	Util::convertCoords(DEGREE, RADIAN, lon, lat);
+
+	_forward(lon, lat);
+
+	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
+	
+	if(x)
+		*x = m_x_coord;
+	if(y)
+		*y = m_y_coord;
+}
+
+void Projection::inverse(double x, double y, double* lon, double* lat)
+{
+	clearError();
+	if(m_initNeeded)
+		init();
+
+	if(errorOccured())
+		return;
+
+	Util::convertCoords(m_unitCode, METER, x, y);
+
+	_inverse(x, y);
+
+	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
+
+	if(lon)
+		*lon = m_longitude;
+	if(lat)
+		*lat = m_latitude;
+}
+
+void Projection::_forward(double lon, double lat)
+{
+	return;
+}
+
+void Projection::_inverse(double x, double y)
+{
+	return;
+}
+
+
 
 
 

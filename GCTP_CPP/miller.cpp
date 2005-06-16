@@ -20,39 +20,20 @@ void Miller::init()
 	m_initNeeded = false;
 }
 
-void Miller::forward(double lon, double lat, double* x, double* y)
+void Miller::_forward(double lon, double lat)
 {
 	double dlon;
 
-	if(m_initNeeded)
-		init();
-	
-	clearError();
-
-	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 	/* Forward equations
 	-----------------*/
 	dlon = Util::adjust_lon(lon - m_centerLon);
 	m_x_coord = m_falseEasting + m_radius * dlon;
 	m_y_coord = m_falseNorthing + m_radius * log(tan((PI / 4.0) + (lat / 2.5))) * 1.25;
 
-	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
-
-	if(x)
-		*x = m_x_coord;
-	if(y)
-		*y = m_y_coord;
 }
 
-void Miller::inverse(double x, double y, double* lon, double* lat)
+void Miller::_inverse(double x, double y)
 {
-
-	Util::convertCoords(m_unitCode, METER, x, y);
-
-	if(m_initNeeded)
-		init();
-
-	clearError();
 
 	/* Inverse  equations
 	------------------*/
@@ -62,12 +43,6 @@ void Miller::inverse(double x, double y, double* lon, double* lat)
 	m_longitude = Util::adjust_lon(m_centerLon + x / m_radius);
 	m_latitude = 2.5 * (atan(exp(y / m_radius / 1.25)) - PI / 4.0);
 
-	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
 
-	if(lon)
-		*lon = m_longitude;
-
-	if(lat)
-		*lat = m_latitude;
 }
 

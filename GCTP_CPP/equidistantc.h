@@ -9,10 +9,6 @@ public:
 
 	EquidistantC(double gctpParams[], ProjUnit units, ProjDatum dat);
 
-	void forward(double lon, double lat, double* x = NULL, double* y = NULL);
-
-	void inverse(double x, double y, double* lon = NULL, double* lat = NULL);
-
 	void setMode(int mode) {m_mode = mode; setInit();}
 
 	int mode() {return m_mode;}
@@ -46,6 +42,10 @@ protected:
 	void init();
 	
 	void loadFromParams();
+
+	void _forward(double lon, double lat);
+	void _inverse(double x, double y);
+
 };
 
 #endif

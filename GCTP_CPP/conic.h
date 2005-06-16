@@ -12,12 +12,6 @@ public:
 	//! See documentation for Projection
 	Conic(double gctpParams[], ProjUnit units, ProjDatum dat);
 	
-	//! See documentation for Projection
-	virtual void forward(double lon, double lat, double*x = NULL, double*y = NULL) = 0;
-		
-	//! See documentation for Projection
-	virtual void inverse(double x, double y, double* lon = NULL, double* lat = NULL) = 0;
-
 	//! Set the center longitude for this projection.
 	void setCenterLon(double lon);
 

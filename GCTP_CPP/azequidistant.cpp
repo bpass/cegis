@@ -21,7 +21,7 @@ void AzEquidistant::init()
    m_initNeeded = false;
 }
 
-void AzEquidistant::forward(double lon, double lat, double* x, double* y)
+void AzEquidistant::_forward(double lon, double lat)
 {
    double sinphi, cosphi;	/* sin and cos value				*/
    double dlon;		/* delta longitude value			*/
@@ -29,12 +29,6 @@ void AzEquidistant::forward(double lon, double lat, double* x, double* y)
    double ksp;		/* scale factor					*/
    double g;		
    double z;		/* angle					*/
-
-   clearError();
-   if(m_initNeeded)
-      init();
-
-   Util::convertCoords(DEGREE, RADIAN, lon, lat);
 
    dlon = Util::adjust_lon(lon - m_centerLon);
    Util::gctp_sincos(lat,&sinphi,&cosphi);
@@ -62,15 +56,9 @@ void AzEquidistant::forward(double lon, double lat, double* x, double* y)
    m_y_coord = m_falseNorthing + m_rMajor * ksp * (m_cosCenterLat * sinphi - m_sinCenterLat * 
       cosphi * coslon);
 
-   Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
-
-   if(x)
-      *x = m_x_coord;
-   if(y)
-      *y = m_y_coord;
 }
 
-void AzEquidistant::inverse(double x, double y, double* lon, double* lat)
+void AzEquidistant::_inverse(double x, double y)
 {
    double rh;		/* height above ellipsoid			*/
    double z;		/* angle					*/
@@ -78,11 +66,6 @@ void AzEquidistant::inverse(double x, double y, double* lon, double* lat)
    double temp;
    double con;
 
-   clearError();
-   if(m_initNeeded)
-      init();
-
-   Util::convertCoords(m_unitCode, METER, x, y);
 
    /* Inverse equations
    -----------------*/
@@ -101,11 +84,6 @@ void AzEquidistant::inverse(double x, double y, double* lon, double* lat)
    if (fabs(rh) <= EPSLN)
    {
       m_latitude = m_centerLat;
-      Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-      if(lon)
-         *lon = m_longitude;
-      if(lat)
-         *lat = m_latitude;
       return;
    }
 
@@ -116,21 +94,11 @@ void AzEquidistant::inverse(double x, double y, double* lon, double* lat)
       if (m_centerLat >= 0.0)
       {
          m_longitude = Util::adjust_lon(m_centerLon + atan2(x , -y));
-         Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-         if(lon)
-            *lon = m_longitude;
-         if(lat)
-            *lat = m_latitude;
          return;
       }
       else
       {
          m_longitude = Util::adjust_lon(m_centerLon - atan2(-x , y));
-         Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-         if(lon)
-            *lon = m_longitude;
-         if(lat)
-            *lat = m_latitude;
          return;
       }
    }
@@ -138,21 +106,10 @@ void AzEquidistant::inverse(double x, double y, double* lon, double* lat)
    con = cosz - m_sinCenterLat * sin(m_latitude);
    if ((fabs(con) < EPSLN) && (fabs(x) < EPSLN))
    {
-      Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-      if(lon)
-         *lon = m_longitude;
-      if(lat)
-         *lat = m_latitude;
       return;
    }
 
    temp = atan2((x * sinz * m_cosCenterLat), (con * rh));
    m_longitude = Util::adjust_lon(m_centerLon + atan2((x * sinz * m_cosCenterLat), (con * rh)));
 
-   Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-
-   if(lon)
-      *lon = m_longitude;
-   if(lat)
-      *lat = m_latitude;
 }

@@ -50,20 +50,13 @@ void PolarStereo::init()
 	m_initNeeded = false;
 }
 
-void PolarStereo::forward(double lon, double lat, double* x, double* y)
+void PolarStereo::_forward(double lon, double lat)
 {
 	double con1;			/* adjusted longitude		*/
 	double con2;			/* adjusted latitude		*/
 	double rh;			/* height above ellipsoid	*/
 	double sinphi;			/* sin value			*/
 	double ts;			/* value of small t		*/
-
-	clearError();
-	
-	if(m_initNeeded)
-		init();
-
-	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 
 	con1 = m_fac * Util::adjust_lon(lon - m_centerLon);
 	con2 = m_fac * lat;
@@ -77,26 +70,14 @@ void PolarStereo::forward(double lon, double lat, double* x, double* y)
 	m_x_coord = m_fac * rh * sin(con1) + m_falseEasting;
 	m_y_coord = -m_fac * rh * cos(con1) + m_falseEasting;
 
-	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
-
-	if(x)
-		*x = m_x_coord;
-	if(y)
-		*y = m_y_coord;
 }
 
-void PolarStereo::inverse(double x, double y, double* lon, double* lat)
+void PolarStereo::_inverse(double x, double y)
 {
 	double rh;			/* height above ellipsiod	*/
 	double ts;			/* small value t		*/
 	double temp;			/* temporary variable		*/
 	long   flag;			/* error flag			*/
-
-	clearError();
-	if(m_initNeeded)
-		init();
-
-	Util::convertCoords(m_unitCode, METER, x, y);
 
 	flag = 0;
 	x = (x - m_falseEasting) * m_fac;
@@ -122,11 +103,4 @@ void PolarStereo::inverse(double x, double y, double* lon, double* lat)
 		m_longitude = Util::adjust_lon(m_fac *temp + m_centerLon);
 	}
 
-	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-
-	if(lon)
-		*lon = m_longitude;
-
-	if(lat)
-		*lat = m_latitude;
 }

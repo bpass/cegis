@@ -9,10 +9,6 @@ public:
 
 	Cylindrical(double gctpParams[], ProjUnit units, ProjDatum dat);
 
-	virtual void forward(double lon, double lat, double* x, double* y) = 0;
-
-	virtual void inverse(double x, double y, double* lon, double* lat) = 0;
-
 	void setCenterLon(double lon);
 
 	void setCenterLat(double lat);

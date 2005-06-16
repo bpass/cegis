@@ -8,10 +8,6 @@ public:
 	TransverseMercator();
 	TransverseMercator(double gctpParams[], ProjUnit units, ProjDatum datum);
 
-	void forward(double lon, double lat, double* x = NULL, double* y = NULL);
-
-	void inverse(double x, double y, double* lon = NULL, double* lat = NULL);
-
 	void setScaleFactor(double scale) {m_scaleFactor = scale; setInit();}
 
 	double scaleFactor() {return m_scaleFactor;}
@@ -22,6 +18,9 @@ protected:
 	void init();
 
 	void loadFromParams();
+
+	void _forward(double lon, double lat);
+	void _inverse(double x, double y);
 
 	double m_scaleFactor;
 

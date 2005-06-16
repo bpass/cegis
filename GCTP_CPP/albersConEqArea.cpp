@@ -69,21 +69,14 @@ void AlbersConEqArea::init() {
 }
 
 
-void AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
+void AlbersConEqArea::_inverse(double x, double y)
+{
 	double rh1;			/* height above ellipsoid	*/
 	double qs;			/* function q			*/
 	double con;			/* temporary sign value		*/
 	double theta;			/* angle			*/
 	long   flag;			/* error flag;			*/
-
-	clearError();
-
-	if(m_initNeeded)
-		init();
 	
-	//convert coordinates to meters
-	Util::convertCoords(m_unitCode, METER, x, y);
-
 	flag = 0;
 	x -= m_falseEasting;
 	y = m_rh - y + m_falseNorthing;;
@@ -140,44 +133,22 @@ void AlbersConEqArea::inverse(double x, double y, double* lon, double* lat) {
 
 	m_longitude = Util::adjust_lon(theta/m_ns0 + m_centerLon);
 
-	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-
-	if(lat)
-		*lat = m_latitude;
-	if(lon)
-		*lon = m_longitude;
-
 }
 
-void AlbersConEqArea::forward(double lon, double lat, double* x, double* y) {
+void AlbersConEqArea::_forward(double lon, double lat)
+{
 
 	double sin_phi,cos_phi;		/* sine and cos values		*/
 	double qs;			/* small q			*/
 	double theta;			/* angle			*/ 
 	double rh1;			/* height above ellipsoid	*/
 
-	clearError();
-
-	if(m_initNeeded)
-		init();
-
-	//convert lat/lon from dec degrees to radians
-	Util::convertCoords(DEGREE, RADIAN, lat, lon);
-
 	Util::gctp_sincos(lat,&sin_phi,&cos_phi);
 	qs = Util::qsfnz(m_e,sin_phi);
 	rh1 = m_rMajor * sqrt(m_c - m_ns0 * qs)/m_ns0;
 	theta = m_ns0 * Util::adjust_lon(lon - m_centerLon); 
 	m_x_coord = rh1 * sin(theta) + m_falseEasting;
-	m_y_coord = m_rh - rh1 * cos(theta) + m_falseNorthing;
-
-	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
-
-	if(x)
-		*x = m_x_coord;
-	if(y)
-		*y = m_y_coord;
-	
+	m_y_coord = m_rh - rh1 * cos(theta) + m_falseNorthing;	
 
 }
 

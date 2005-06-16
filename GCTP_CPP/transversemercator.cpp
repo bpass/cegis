@@ -1,4 +1,4 @@
-//$Id: transversemercator.cpp,v 1.4 2005/06/15 18:45:01 mswilliams Exp $
+//$Id: transversemercator.cpp,v 1.5 2005/06/16 20:49:04 mswilliams Exp $
 
 #include "transversemercator.h"
 
@@ -51,7 +51,7 @@ void TransverseMercator::init()
 	m_initNeeded = false;
 }
 
-void TransverseMercator::forward(double lon, double lat, double* x, double* y)
+void TransverseMercator::_forward(double lon, double lat)
 {
 	
 	double delta_lon;	/* Delta longitude (Given longitude - center 	*/
@@ -61,12 +61,6 @@ void TransverseMercator::forward(double lon, double lat, double* x, double* y)
 	double c, t, tq;	/* temporary values				*/
 	double con, n, ml;	/* cone constant, small m			*/
 
-	clearError();
-
-	if(m_initNeeded)
-		init();
-	
-	Util::convertCoords(DEGREE, RADIAN, lon, lat);
 	/* Forward equations
 	-----------------*/
 	delta_lon = Util::adjust_lon(lon - m_centerLon);
@@ -89,10 +83,6 @@ void TransverseMercator::forward(double lon, double lat, double* x, double* y)
 		if (lat < 0)
 			con = - con;
 		m_y_coord = m_rMajor * m_scaleFactor * (con - m_centerLat); 
-	   if(x)
-		   *x = m_x_coord;
-	   if(y)
-		   *y = m_y_coord;
 		return;
 		}
 	}
@@ -113,14 +103,9 @@ void TransverseMercator::forward(double lon, double lat, double* x, double* y)
 		(5.0 - t + 9.0 * c + 4.0 * SQUARE(c) + als / 30.0 * (61.0 - 58.0 * t
 		+ SQUARE(t) + 600.0 * c - 330.0 * m_esp))))) + m_falseNorthing;
 	
-	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
-	if(x)
-		*x = m_x_coord;
-	if(y)
-		*y = m_y_coord;
 }
 
-void TransverseMercator::inverse(double x, double y, double* lon, double* lat)
+void TransverseMercator::_inverse(double x, double y)
 {
 	double con,phi;		/* temporary angles				*/
 	double delta_phi;	/* difference between longitudes		*/
@@ -130,42 +115,30 @@ void TransverseMercator::inverse(double x, double y, double* lon, double* lat)
 	double f, h, g, temp;			/* temporary variables		*/
 	long max_iter = 6;			/* maximun number of iterations	*/
 
-	clearError();
-	if(m_initNeeded)
-		init();
-
-	Util::convertCoords(m_unitCode, METER, x, y);
 	/* fortran code for spherical form 
 	--------------------------------*/
 	if (m_ind != 0)
 	{
-	f = exp(x/(m_rMajor * m_scaleFactor));
-	g = .5 * (f - 1/f);
-	temp = m_centerLat + y/(m_rMajor * m_scaleFactor);
-	h = cos(temp);
-	con = sqrt((1.0 - h * h)/(1.0 + g * g));
-	m_latitude = Util::asinz(con);
-	if (temp < 0)
-		m_latitude = -m_latitude;
-	if ((g == 0) && (h == 0))
+		f = exp(x/(m_rMajor * m_scaleFactor));
+		g = .5 * (f - 1/f);
+		temp = m_centerLat + y/(m_rMajor * m_scaleFactor);
+		h = cos(temp);
+		con = sqrt((1.0 - h * h)/(1.0 + g * g));
+		m_latitude = Util::asinz(con);
+		
+		if (temp < 0)
+			m_latitude = -m_latitude;
+
+		if ((g == 0) && (h == 0))
 		{
-		m_longitude = m_centerLon;
-	   Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-      if(lat)
-         *lat = m_latitude;
-      if(lon)
-         *lon = m_longitude;
-		return;
+			m_longitude = m_centerLon;
+			return;
 		}
-	else
+		
+		else
 		{
-		m_longitude = Util::adjust_lon(atan2(g,h) + m_centerLon);
-	   Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-      if(lat)
-         *lat = m_latitude;
-      if(lon)
-         *lon = m_longitude;
-		return;
+			m_longitude = Util::adjust_lon(atan2(g,h) + m_centerLon);
+			return;
 		}
 	}
 
@@ -178,15 +151,18 @@ void TransverseMercator::inverse(double x, double y, double* lon, double* lat)
 	phi = con;
 	for (i=0;;i++)
 	{
-	delta_phi = ((con + m_e1 * sin(2.0*phi) - m_e2 * sin(4.0*phi) + m_e3 * sin(6.0*phi))
-				/ m_e0) - phi;
+		delta_phi = ((con + m_e1 * sin(2.0*phi) - m_e2 * sin(4.0*phi) + m_e3 * sin(6.0*phi))
+					/ m_e0) - phi;
 
-	phi += delta_phi;
-	if (fabs(delta_phi) <= EPSLN) break;
-	if (i >= max_iter) 
+		phi += delta_phi;
+
+		if (fabs(delta_phi) <= EPSLN) 
+			break;
+
+		if (i >= max_iter) 
 		{ 
-		setError(95);
-		return;
+			setError(95);
+			return;
 		}
 	}
 	if (fabs(phi) < HALF_PI)
@@ -211,15 +187,10 @@ void TransverseMercator::inverse(double x, double y, double* lon, double* lat)
 	}
 	else
 	{
-	m_latitude = HALF_PI * Util::sign(y);
-	m_longitude = m_centerLon;
+		m_latitude = HALF_PI * Util::sign(y);
+		m_longitude = m_centerLon;
 	}
 	
-	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
-	if(lat)
-		*lat = m_latitude;
-	if(lon)
-		*lon = m_longitude;
 }
 
 

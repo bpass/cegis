@@ -185,9 +185,6 @@
 				RelativePath=".\hotinobmerc.cpp">
 			</File>
 			<File
-				RelativePath=".\intgoode.cpp">
-			</File>
-			<File
 				RelativePath=".\intmollweide.cpp">
 			</File>
 			<File
@@ -337,9 +334,6 @@
 			</File>
 			<File
 				RelativePath=".\hotinobmerc.h">
-			</File>
-			<File
-				RelativePath=".\intgoode.h">
 			</File>
 			<File
 				RelativePath=".\intmollweide.h">

@@ -2,18 +2,18 @@
 #ifndef GEN_VERT_H
 #define GEN_VERT_H
 
-#include "projection.h"
+#include "azimuthal.h"
 
-class GenVertNSP : public Projection
+class GenVertNSP : public Azimuthal
 {
 public:
 
 	GenVertNSP();
 	GenVertNSP(double gctpParams[], ProjUnit units, ProjDatum dat);
 
-	void setCenterLon(double lon);
-	void setCenterLat(double lat);
 	void setHeight(double height) {m_height = height; setInit();}
+
+	double height() {return m_height;}
 
 protected:
 

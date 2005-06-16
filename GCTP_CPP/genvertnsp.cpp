@@ -1,7 +1,7 @@
 
 #include "genvertnsp.h"
 
-GenVertNSP::GenVertNSP() : Projection(), m_centerLon(0.0), m_centerLat(0.0),
+GenVertNSP::GenVertNSP() : Azimuthal(), m_centerLon(0.0), m_centerLat(0.0),
 m_p(0.0), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 {
 	setNumber(GVNSP);
@@ -10,7 +10,7 @@ m_p(0.0), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 
 
 GenVertNSP::GenVertNSP(double gctpParams[], ProjUnit units, ProjDatum dat) :
-Projection(gctpParams, units, dat), m_centerLon(0.0), m_centerLat(0.0),
+Azimuthal(gctpParams, units, dat), m_centerLon(0.0), m_centerLat(0.0),
 m_p(0.0), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 {
 	setNumber(GVNSP);
@@ -26,42 +26,13 @@ void GenVertNSP::loadFromParams()
 	setHeight(m_gctpParams[2]);
 }
 
-void GenVertNSP::setCenterLat(double lat) 
-{
-	long err = 0;
-	double temp = 0;
-
-	temp = Util::paksz(lat, &err) * 3600 * S2R;
-	if(err != 0) {
-		setError(err);
-		return;
-	}
-
-	m_centerLat = temp;
-	setInit();
-}
-
-void GenVertNSP::setCenterLon(double lon) 
-{
-	long err = 0;
-	double temp = 0;
-
-	temp = Util::paksz(lon, &err) * 3600 * S2R;
-	if(err != 0) {
-		setError(err);
-		return;
-	}
-
-	m_centerLon = temp;
-	setInit();
-}
-
 void GenVertNSP::init() 
 {
 	/* Place parameters in static storage for common use
 	-------------------------------------------------*/
 	m_p = 1.0 + m_height / m_radius;
 	Util::gctp_sincos(m_centerLat, &m_sinCenterLat, &m_cosCenterLat);
+	m_initNeeded = false;
 }
 
 void GenVertNSP::_forward(double lon, double lat)

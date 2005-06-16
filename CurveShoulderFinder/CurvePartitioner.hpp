@@ -2,8 +2,12 @@
  * @file CurvePartitioner.hpp
  * @author Austin Hartman
  *
- * $Id: CurvePartitioner.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: CurvePartitioner.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_CURVEPARTITIONER_H
+#ifndef AUSTIN_CURVEPARTITIONER_HPP
+#define AUSTIN_CURVEPARTITIONER_HPP
 
 template<class T>
 typename CurvePartitioner<T>::CurveDifferences
@@ -26,4 +30,7 @@ CurvePartitioner<T>::getDifferences(const FittingCurve<T>& curve,
     
     return rv;
 }
+
+#endif
+#endif
 

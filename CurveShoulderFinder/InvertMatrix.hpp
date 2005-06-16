@@ -2,8 +2,12 @@
  * @file InvertMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: InvertMatrix.hpp,v 1.2 2005/06/15 19:51:46 ahartman Exp $
+ * $Id: InvertMatrix.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_INVERTMATRIX_H
+#ifndef AUSTIN_INVERTMATRIX_HPP
+#define AUSTIN_INVERTMATRIX_HPP
 
 #include "LUDecomposition.h"
 #include "LUDecompositionSolver.h"
@@ -52,4 +56,7 @@ InvertMatrix<T>::operator()(const Matrix<T>& matrix) const
         throw typename InvertMatrix<T>::MatrixIsSingular();
     }
 }
+
+#endif
+#endif
 

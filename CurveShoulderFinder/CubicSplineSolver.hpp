@@ -2,8 +2,12 @@
  * @file CubicSplineSolver.hpp
  * @author Austin Hartman
  *
- * $Id: CubicSplineSolver.hpp,v 1.3 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: CubicSplineSolver.hpp,v 1.4 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_CUBICSPLINESOLVER_H
+#ifndef AUSTIN_CUBICSPLINESOLVER_HPP
+#define AUSTIN_CUBICSPLINESOLVER_HPP
 
 /********************************************
 ******* CubicSplineSolver functions *********
@@ -212,4 +216,7 @@ operator<<(std::ostream& os, const CubicSpline<T>& spline)
 
 	return os;
 }
+
+#endif
+#endif
 

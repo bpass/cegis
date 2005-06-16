@@ -2,8 +2,12 @@
  * @file TridiagonalMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: TridiagonalMatrix.hpp,v 1.3 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: TridiagonalMatrix.hpp,v 1.4 2005/06/16 23:10:08 ahartman Exp $
  */
+
+#ifdef AUSTIN_TRIDIAGONALMATRIX_H
+#ifndef AUSTIN_TRIDIAGONALMATRIX_HPP
+#define AUSTIN_TRIDIAGONALMATRIX_HPP
 
 template<class T>
 T TridiagonalMatrix<T>::nonConstZero = 0;
@@ -363,4 +367,7 @@ TridiagonalMatrix<T>::getNonZeroElement(const size_t& row,
 {
 	return data[col + col + row];
 }
+
+#endif
+#endif
 

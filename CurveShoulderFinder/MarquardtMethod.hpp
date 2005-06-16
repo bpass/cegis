@@ -2,8 +2,12 @@
  * @file MarquardtMethod.hpp
  * @author Austin Hartman
  *
- * $Id: MarquardtMethod.hpp,v 1.3 2005/06/15 19:56:40 ahartman Exp $
+ * $Id: MarquardtMethod.hpp,v 1.4 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_MARQUARDTMETHOD_H
+#ifndef AUSTIN_MARQUARDTMETHOD_HPP
+#define AUSTIN_MARQUARDTMETHOD_HPP
 
 #include "DiagonalMatrix.h"
 #include "InvertMatrix.h"
@@ -149,3 +153,7 @@ MarquardtMethod<T>::operator()(
 #ifdef PRINT_SUMRESIDUALS
 #undef PRINT_SUMRESIDUALS
 #endif
+
+#endif
+#endif
+

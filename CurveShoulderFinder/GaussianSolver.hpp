@@ -2,8 +2,12 @@
  * @file GaussianSolver.hpp
  * @author Austin Hartman
  *
- * $Id: GaussianSolver.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: GaussianSolver.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_GAUSSIANSOLVER_H
+#ifndef AUSTIN_GAUSSIANSOLVER_HPP
+#define AUSTIN_GAUSSIANSOLVER_HPP
 
 /******************************************
 **** GaussianSolver functions *************
@@ -89,4 +93,7 @@ GaussianSolver<T>::IncompatibleMatrixAndVector::getVectorSize() const
 {
 	return vecSize;
 }
+
+#endif
+#endif
 

@@ -2,8 +2,12 @@
  * @file LUDecomposition.hpp
  * @author Austin Hartman
  *
- * $Id: LUDecomposition.hpp,v 1.3 2005/06/13 17:33:08 ahartman Exp $
+ * $Id: LUDecomposition.hpp,v 1.4 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_LUDECOMPOSITION_H
+#ifndef AUSTIN_LUDECOMPOSITION_HPP
+#define AUSTIN_LUDECOMPOSITION_HPP
 
 #include <cmath>
 
@@ -204,4 +208,7 @@ LUDecomposition<T>::Solution::P() const
     }
     return P;
 }
+
+#endif
+#endif
 

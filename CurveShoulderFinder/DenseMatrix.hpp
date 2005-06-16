@@ -2,8 +2,12 @@
  * @file DenseMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: DenseMatrix.hpp,v 1.3 2005/06/14 23:44:34 ahartman Exp $
+ * $Id: DenseMatrix.hpp,v 1.4 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_DENSEMATRIX_H
+#ifndef AUSTIN_DENSEMATRIX_HPP
+#define AUSTIN_DENSEMATRIX_HPP
 
 /******************************************
 **** DenseMatrix functions ****************
@@ -592,4 +596,7 @@ DenseMatrix<T>::validColumn(const size_t& col) const
 {
 	return col < numCols;
 }
+
+#endif
+#endif
 

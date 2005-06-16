@@ -2,8 +2,12 @@
  * @file UpperTriangularMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: UpperTriangularMatrix.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: UpperTriangularMatrix.hpp,v 1.3 2005/06/16 23:10:08 ahartman Exp $
  */
+
+#ifdef AUSTIN_UPPERTRIANGULARMATRIX_H
+#ifndef AUSTIN_UPPERTRIANGULARMATRIX_HPP
+#define AUSTIN_UPPERTRIANGULARMATRIX_HPP
 
 template<class T>
 T UpperTriangularMatrix<T>::nonConstZero = 0;
@@ -428,4 +432,7 @@ UpperTriangularMatrix<T>::destroy2DArray(T** array, const size_t& n) const
 	}
 	delete[] array;
 }
+
+#endif
+#endif
 

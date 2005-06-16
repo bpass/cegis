@@ -2,8 +2,12 @@
  * @file LUDecompositionSolver.hpp
  * @author Austin Hartman
  *
- * $Id: LUDecompositionSolver.hpp,v 1.1 2005/06/13 18:30:13 ahartman Exp $
+ * $Id: LUDecompositionSolver.hpp,v 1.2 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_LUDECOMPOSITIONSOLVER_H
+#ifndef AUSTIN_LUDECOMPOSITIONSOLVER_HPP
+#define AUSTIN_LUDECOMPOSITIONSOLVER_HPP
 
 template<class T>
 MyVector<T>
@@ -50,4 +54,7 @@ operator()(const typename LUDecomposition<T>::Solution& decomposition,
 
     return x;
 }
+
+#endif
+#endif
 

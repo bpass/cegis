@@ -2,8 +2,12 @@
  * @file LinearRegression.hpp
  * @author Austin Hartman
  *
- * $Id: LinearRegression.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: LinearRegression.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_LINEARREGRESSION_H
+#ifndef AUSTIN_LINEARREGRESSION_HPP
+#define AUSTIN_LINEARREGRESSION_HPP
 
 template<class T>
 typename LinearRegression<T>::Solution
@@ -75,4 +79,7 @@ LinearRegression<T>::Solution::a0() const
 {
     return m_a0;
 }
+
+#endif
+#endif
 

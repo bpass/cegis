@@ -2,8 +2,12 @@
  * @file MyVector.hpp
  * @author Austin Hartman
  *
- * $Id: MyVector.hpp,v 1.3 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: MyVector.hpp,v 1.4 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_MYVECTOR_H
+#ifndef AUSTIN_MYVECTOR_HPP
+#define AUSTIN_MYVECTOR_HPP
 
 #include <cmath> // for sqrt
 
@@ -370,4 +374,7 @@ MyVector<T>::RangeError::badSubscript() const
 {
 	return subscript;
 }
+
+#endif
+#endif
 

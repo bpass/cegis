@@ -2,8 +2,12 @@
  * @file CubicSplineCurve.hpp
  * @author Austin Hartman
  *
- * $Id: CubicSplineCurve.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: CubicSplineCurve.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_CUBICSPLINECURVE_H
+#ifndef AUSTIN_CUBICSPLINECURVE_HPP
+#define AUSTIN_CUBICSPLINECURVE_HPP
 
 template<class T>
 CubicSplineCurve<T>::CubicSplineCurve()
@@ -73,4 +77,7 @@ findSolution(const typename FittingCurve<T>::Points& points)
     CubicSplineSolver<T> solver;
     m_solution = solver(getXCoords(points), getYCoords(points));
 }
+
+#endif
+#endif
 

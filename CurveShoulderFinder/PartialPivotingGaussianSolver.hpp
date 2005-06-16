@@ -2,8 +2,12 @@
  * @file PartialPivotingGaussianSolver.hpp
  * @author Austin Hartman
  *
- * $Id: PartialPivotingGaussianSolver.hpp,v 1.2 2005/06/13 18:28:46 ahartman Exp $
+ * $Id: PartialPivotingGaussianSolver.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_PARTIALPIVOTINGGAUSSIANSOLVER_H
+#ifndef AUSTIN_PARTIALPIVOTINGGAUSSIANSOLVER_HPP
+#define AUSTIN_PARTIALPIVOTINGGAUSSIANSOLVER_HPP
 
 #include <algorithm> // for swap
 
@@ -96,4 +100,7 @@ indexLargestElementRow(const Matrix<T>& mat,
 	}
 	return maxIndex;
 }
+
+#endif
+#endif
 

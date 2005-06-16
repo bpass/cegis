@@ -2,8 +2,12 @@
  * @file NonlinearRegression.hpp
  * @author Austin Hartman
  *
- * $Id: NonlinearRegression.hpp,v 1.2 2005/06/13 17:34:34 ahartman Exp $
+ * $Id: NonlinearRegression.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_NONLINEARREGRESSION_H
+#ifndef AUSTIN_NONLINEARREGRESSION_HPP
+#define AUSTIN_NONLINEARREGRESSION_HPP
 
 #include <cmath>
 #include "GaussianSolver.h"
@@ -118,4 +122,7 @@ const
     }
     return D;
 }
+
+#endif
+#endif
 

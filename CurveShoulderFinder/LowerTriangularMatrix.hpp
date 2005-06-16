@@ -2,8 +2,12 @@
  * @file LowerTriangularMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: LowerTriangularMatrix.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: LowerTriangularMatrix.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_LOWERTRIANGULARMATRIX_H
+#ifndef AUSTIN_LOWERTRIANGULARMATRIX_HPP
+#define AUSTIN_LOWERTRIANGULARMATRIX_HPP
 
 template<class T>
 T LowerTriangularMatrix<T>::nonConstZero = 0;
@@ -375,4 +379,7 @@ LowerTriangularMatrix<T>::destroy2DArray(T** array, const size_t& n) const
 	}
 	delete[] array;
 }
+
+#endif
+#endif
 

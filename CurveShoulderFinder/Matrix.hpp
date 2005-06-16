@@ -2,8 +2,12 @@
  * @file Matrix.hpp
  * @author Austin Hartman
  *
- * $Id: Matrix.hpp,v 1.3 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: Matrix.hpp,v 1.4 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_MATRIX_H
+#ifndef AUSTIN_MATRIX_HPP
+#define AUSTIN_MATRIX_HPP
 
 /****************************************
 ********** Matrix functions *************
@@ -184,4 +188,7 @@ operator>>(std::istream& is, Matrix<T>& m)
 	m.readIn(is);
 	return is;
 }
+
+#endif
+#endif
 

@@ -2,8 +2,12 @@
  * @file LogisticCurve.hpp
  * @author Austin Hartman
  *
- * $Id: LogisticCurve.hpp,v 1.6 2005/06/15 19:53:11 ahartman Exp $
+ * $Id: LogisticCurve.hpp,v 1.7 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_LOGISTICCURVE_H
+#ifndef AUSTIN_LOGISTICCURVE_HPP
+#define AUSTIN_LOGISTICCURVE_HPP
 
 #include <cmath>
 
@@ -382,4 +386,7 @@ stoppingCondition(const typename FittingCurve<T>::Points& points,
     }
     return true;
 }
+
+#endif
+#endif
 

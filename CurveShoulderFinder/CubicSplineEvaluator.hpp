@@ -2,8 +2,12 @@
  * @file CubicSplineEvaluator.hpp
  * @author Austin Hartman
  *
- * $Id: CubicSplineEvaluator.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: CubicSplineEvaluator.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_CUBICSPLINEEVALUATOR_H
+#ifndef AUSTIN_CUBICSPLINEEVALUATOR_HPP
+#define AUSTIN_CUBICSPLINEEVALUATOR_HPP
 
 template<class T>
 T
@@ -30,4 +34,7 @@ CubicSplineEvaluator<T>::operator()
 	// otherwise, return the value using the last cubic spline
 	return splines[splines.size() - 1](term);
 }
+
+#endif
+#endif
 

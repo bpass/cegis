@@ -2,8 +2,12 @@
  * @file DiagonalMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: DiagonalMatrix.hpp,v 1.2 2005/06/13 20:15:28 ahartman Exp $
+ * $Id: DiagonalMatrix.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_DIAGONALMATRIX_H
+#ifndef AUSTIN_DIAGONALMATRIX_HPP
+#define AUSTIN_DIAGONALMATRIX_HPP
 
 template<class T>
 T DiagonalMatrix<T>::nonConstZero = 0;
@@ -305,3 +309,7 @@ DiagonalMatrix<T>::readIn(std::istream& is)
 		is >> *i;
 	}
 }
+
+#endif
+#endif
+

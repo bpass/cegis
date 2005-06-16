@@ -2,8 +2,12 @@
  * @file ThomasAlgorithm.hpp
  * @author Austin Hartman
  *
- * $Id: ThomasAlgorithm.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: ThomasAlgorithm.hpp,v 1.3 2005/06/16 23:10:08 ahartman Exp $
  */
+
+#ifdef AUSTIN_THOMASALGORITHM_H
+#ifndef AUSTIN_THOMASALGORITHM_HPP
+#define AUSTIN_THOMASALGORITHM_HPP
 
 /******************************************
 **** ThomasAlgorithm functions ************
@@ -124,4 +128,7 @@ ThomasAlgorithm<T>::IncompatibleMatrixAndVector::getVectorSize() const
 {
 	return vecSize;
 }
+
+#endif
+#endif
 

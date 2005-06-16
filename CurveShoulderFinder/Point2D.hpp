@@ -2,8 +2,12 @@
  * @file Point2D.hpp
  * @author Austin Hartman
  *
- * $Id: Point2D.hpp,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: Point2D.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
  */
+
+#ifdef AUSTIN_POINT2D_H
+#ifndef AUSTIN_POINT2D_HPP
+#define AUSTIN_POINT2D_HPP
 
 template<class T>
 inline
@@ -73,4 +77,7 @@ operator>>(std::istream& is, Point2D<T>& p)
     is >> p.x() >> p.y();
     return is;
 }
+
+#endif
+#endif
 

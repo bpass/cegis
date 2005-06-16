@@ -2,7 +2,7 @@
  * @file PolynomialCurve.hpp
  * @author Austin Hartman
  *
- * $Id: PolynomialCurve.hpp,v 1.1 2005/06/16 21:23:28 ahartman Exp $
+ * $Id: PolynomialCurve.hpp,v 1.2 2005/06/16 23:07:04 ahartman Exp $
  */
 
 #ifdef AUSTIN_POLYNOMIALCURVE_H
@@ -155,6 +155,10 @@ simplePow(const T& base, const size_t exponent)
     }
     return rv;
 }
+
+#ifdef DEBUG_PRINT
+#undef DEBUG_PRINT
+#endif
 
 #endif
 #endif

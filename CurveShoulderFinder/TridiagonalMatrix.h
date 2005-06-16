@@ -2,7 +2,7 @@
  * @file TridiagonalMatrix.h
  * @author Austin Hartman
  *
- * $Id: TridiagonalMatrix.h,v 1.3 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: TridiagonalMatrix.h,v 1.4 2005/06/16 21:21:14 ahartman Exp $
  */
 
 #ifndef AUSTIN_TRIDIAGONALMATRIX_H
@@ -139,10 +139,11 @@ protected:
 
 	/** 
 	 * Outputs the matrix in the form
-	 *   [ x00 x01 x02 ... x0n ]
-	 *   [ x10 x11 x12 ... x1n ]
-	 *   [   ...       ...     ]
-	 *   [ xn0 xn1 xn2 ... xnn ]
+     * @verbatim
+	     [ x00 x01 x02 ... x0n ]
+	     [ x10 x11 x12 ... x1n ]
+	     [   ...       ...     ]
+	     [ xn0 xn1 xn2 ... xnn ] @endverbatim
 	 * where n is both the number of rows and number of columns minus one 
 	 * Uses the os.width() that is first passed in for every element 
 	 * in the matrix
@@ -151,12 +152,13 @@ protected:
 
 	/**
 	 * Outputs the matrix in the form
-	 *   x00 x01
-	 *   x10 x11 x12
-	 *   x21 x22 x23
-	 *     ...
-	 *   x(n-1)(n-2) x(n-1)(n-1) x(n-1)n
-	 *   xn(n-1) xnn
+     * @verbatim
+	     x00 x01
+	     x10 x11 x12
+	     x21 x22 x23
+	       ...
+	     x(n-1)(n-2) x(n-1)(n-1) x(n-1)n
+	     xn(n-1) xnn @endverbatim
 	 * where n is the both the number of rows and number of columns minus
 	 * one.  I.e., this only outputs the elements of the matrix that could
 	 * possibly be nonzero.

@@ -2,7 +2,7 @@
  * @file PolynomialCurve_t.cpp
  * @author Austin Hartman
  *
- * $Id: PolynomialCurve_t.cpp,v 1.2 2005/06/16 22:29:23 ahartman Exp $
+ * $Id: PolynomialCurve_t.cpp,v 1.3 2005/06/16 23:13:09 ahartman Exp $
  */
 
 #include <cmath>
@@ -87,7 +87,7 @@ int main()
 
         // check the found coefficients against the expected values
         const type expectedCoefficients[] = 
-        { 10.122, -2.2722, 3.4774, -1.2662, .1552, -.0062, -2E-11 };
+            { 10.122, -2.2722, 3.4774, -1.2662, .1552, -.0062, -2E-11 };
 
 #ifdef PRINT_VALUES
         for(size_t i = 0; i < order + 1; ++i)

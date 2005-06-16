@@ -179,6 +179,9 @@
 				RelativePath=".\gnomonic.cpp">
 			</File>
 			<File
+				RelativePath=".\goodeh.cpp">
+			</File>
+			<File
 				RelativePath=".\hammer.cpp">
 			</File>
 			<File
@@ -328,6 +331,9 @@
 			</File>
 			<File
 				RelativePath=".\gnomonic.h">
+			</File>
+			<File
+				RelativePath=".\goodeh.h">
 			</File>
 			<File
 				RelativePath=".\hammer.h">

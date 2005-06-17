@@ -187,8 +187,8 @@ protected:
 	//! Toggle forward and inverse initialization flags.
 	void setInit() {m_initNeeded = true;}
 
-	virtual void _forward(double lon, double lat);
-	virtual void _inverse(double x, double y);
+	virtual void _forward(double lon, double lat) = 0;
+	virtual void _inverse(double x, double y) = 0;
 
 	virtual void loadFromParams();
 

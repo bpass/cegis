@@ -125,15 +125,6 @@ void Projection::inverse(double x, double y, double* lon, double* lat)
 		*lat = m_latitude;
 }
 
-void Projection::_forward(double lon, double lat)
-{
-	return;
-}
-
-void Projection::_inverse(double x, double y)
-{
-	return;
-}
 
 
 

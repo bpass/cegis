@@ -2,7 +2,7 @@
  * @file PolynomialCurve_t.cpp
  * @author Austin Hartman
  *
- * $Id: PolynomialRegression_t.cpp,v 1.1 2005/06/17 01:43:49 ahartman Exp $
+ * $Id: PolynomialRegression_t.cpp,v 1.2 2005/06/17 01:53:02 ahartman Exp $
  */
 
 #include <cmath>
@@ -28,6 +28,8 @@ int main()
 
     typedef double type;
 
+    // test using example from _Numerical Methods for Engineers_ by Steven C.
+    // Chapra and Raymond P. Canale on p. 457-459
     {
         const type tolerance = .0001;
 
@@ -65,6 +67,8 @@ int main()
         }
     }
 
+    // test using values Mike Finn made up and comparing results to those 
+    // acquired from a calculator
     {
         const type tolerance = .001;
 

@@ -2,7 +2,7 @@
  * @file PolynomialCurve.hpp
  * @author Austin Hartman
  *
- * $Id: PolynomialCurve.hpp,v 1.3 2005/06/17 01:30:18 ahartman Exp $
+ * $Id: PolynomialCurve.hpp,v 1.4 2005/06/17 01:42:57 ahartman Exp $
  */
 
 #ifdef AUSTIN_POLYNOMIALCURVE_H
@@ -26,7 +26,7 @@ template<class T>
 PolynomialCurve<T>::
 PolynomialCurve(const typename FittingCurve<T>::Points& points,
                 const size_t order)
-    : /*m_order(order),*/ m_coefficients(order + 1)
+    : m_coefficients(order + 1)
 {
     findSolution(points);
 }
@@ -45,7 +45,6 @@ PolynomialCurve<T>::
 setPointsAndOrder(const typename FittingCurve<T>::Points& points,
                   const size_t order)
 {
-//    m_order = order;
     m_coefficients.resize(order + 1);
     findSolution(points);
 }
@@ -84,76 +83,8 @@ void
 PolynomialCurve<T>::
 findSolution(const typename FittingCurve<T>::Points& points)
 {
-#ifdef DEBUG_PRINT
-    using std::cout;
-    using std::setw;
-    const size_t width = cout.precision() + 4;
-#endif
-
-    const size_t numCoefficients = m_coefficients.size();
-    if(points.size() < numCoefficients)
-    {
-        throw typename PolynomialCurve<T>::TooFewPoints();
-    }
-
-    // create the matrix that corresponds to the normal equations and the
-    // solution vector
-    DenseMatrix<T> A(numCoefficients, numCoefficients);
-    MyVector<T> b(numCoefficients);
-    for(size_t i = 0; i < numCoefficients; ++i)
-    {
-        // fill in the matrix
-        for(size_t j = 0; j <= i; ++j)
-        {
-            const size_t power = i + j;
-            T sum = 0;
-            for(size_t k = 0; k < points.size(); ++k)
-            {
-                sum += simplePow(points[k].x(), power);
-            }
-            A[i][j] = sum;
-            A[j][i] = sum;
-        }
-
-        // fill in the solution vector
-        T sum = 0;
-        for(size_t k = 0; k < points.size(); ++k)
-        {
-            sum += points[k].y() * simplePow(points[k].x(), i);
-        }
-        b[i] = sum;
-    }
-
-#ifdef DEBUG_PRINT
-    cout << __FILE__ << ':' << __LINE__ << ':' << ": "
-         << "A =\n" << setw(width) << A 
-         << "b =\n" << setw(width) << DenseMatrix<T>(b);
-#endif
-
-    // solve the linear system
-    PartialPivotingGaussianSolver<T> solver;
-    typename PartialPivotingGaussianSolver<T>::Solution solution = 
-        solver(A, b);
-
-    // copy the solution to the m_coefficients vector
-    MyVector<T>& x = solution.vector();
-    for(size_t i = 0; i < m_coefficients.size(); ++i)
-    {
-        m_coefficients[i] = x[i];
-    }
-}
-
-template<class T>
-T
-PolynomialCurve<T>::
-simplePow(const T& base, const size_t exponent) const
-{
-    T rv = 1;
-    for(size_t i = 1; i <= exponent; ++i)
-    {
-        rv *= base;
-    }
-    return rv;
+    PolynomialRegression<T> polyRegress;
+    m_coefficients = polyRegress(points, m_coefficients.size() - 1);
 }
 
 #ifdef DEBUG_PRINT

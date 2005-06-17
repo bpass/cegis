@@ -2,11 +2,10 @@
  * @file InvertMatrix_t.cpp
  * @author Austin Hartman
  *
- * $Id: InvertMatrix_t.cpp,v 1.3 2005/06/14 22:25:29 ahartman Exp $
+ * $Id: InvertMatrix_t.cpp,v 1.4 2005/06/17 01:53:51 ahartman Exp $
  */
 
 #include <cassert>
-//#include <iostream>
 
 #include "DenseMatrix.h"
 #include "DiagonalMatrix.h"
@@ -14,17 +13,25 @@
 
 #include "testsUtility.h"
 
+//#define PRINT_RESULTS
+
+#ifdef PRINT_RESULTS
+#include <iostream>
+#endif
+
 int main()
 {
     typedef double type;
     const type tolerance = .00001;
 
-//    using std::cout;
-//    using std::setw;
-//    using std::fixed;
-//    cout.precision(8);
-//    cout << fixed;
-//    const size_t width = cout.precision() + 3;
+#ifdef PRINT_RESULTS
+    using std::cout;
+    using std::setw;
+    using std::fixed;
+    cout.precision(8);
+    cout << fixed;
+    const size_t width = cout.precision() + 3;
+#endif
 
     // test using example from _Numerical Methods for Engineers_ by Steven C.
     // Chapra and Raymond P. Canale on p. 274-275
@@ -51,7 +58,9 @@ int main()
         assert(matricesEqual(AInverse*A, identity, tolerance));
         assert(matricesEqual(A*AInverse, identity, tolerance));
 
-//        cout << "AInverse =\n" << setw(width) << AInverse;
+#ifdef PRINT_RESULTS
+        cout << "AInverse =\n" << setw(width) << AInverse;
+#endif
     }
 
     // test on a 4x4 matrix from 
@@ -81,7 +90,9 @@ int main()
         assert(matricesEqual(AInverse*A, identity, tolerance));
         assert(matricesEqual(A*AInverse, identity, tolerance));
 
-//        cout << "AInverse =\n" << setw(width) << AInverse;
+#ifdef PRINT_RESULTS
+        cout << "AInverse =\n" << setw(width) << AInverse;
+#endif
     }
 }
 

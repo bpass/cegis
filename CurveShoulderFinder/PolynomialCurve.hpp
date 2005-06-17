@@ -2,7 +2,7 @@
  * @file PolynomialCurve.hpp
  * @author Austin Hartman
  *
- * $Id: PolynomialCurve.hpp,v 1.2 2005/06/16 23:07:04 ahartman Exp $
+ * $Id: PolynomialCurve.hpp,v 1.3 2005/06/17 01:30:18 ahartman Exp $
  */
 
 #ifdef AUSTIN_POLYNOMIALCURVE_H
@@ -146,7 +146,7 @@ findSolution(const typename FittingCurve<T>::Points& points)
 template<class T>
 T
 PolynomialCurve<T>::
-simplePow(const T& base, const size_t exponent)
+simplePow(const T& base, const size_t exponent) const
 {
     T rv = 1;
     for(size_t i = 1; i <= exponent; ++i)

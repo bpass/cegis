@@ -2,7 +2,7 @@
  * @file PolynomialCurve.h
  * @author Austin Hartman
  *
- * $Id: PolynomialCurve.h,v 1.1 2005/06/16 21:23:28 ahartman Exp $
+ * $Id: PolynomialCurve.h,v 1.2 2005/06/17 01:30:18 ahartman Exp $
  */
 
 #ifndef AUSTIN_POLYNOMIALCURVE_H
@@ -32,7 +32,7 @@ public:
 
 private:
     void findSolution(const typename FittingCurve<T>::Points& points);
-    T simplePow(const T& base, const size_t exponent);
+    T simplePow(const T& base, const size_t exponent) const;
 //    size_t m_order;
     std::vector<T> m_coefficients;
     static const size_t m_defaultOrder;

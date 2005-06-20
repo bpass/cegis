@@ -12,6 +12,17 @@
 #include "transversemercator.h"
 #include "miller.h"
 #include "polarstereo.h"
+#include "oblatedeqarea.h"
+#include "azequidistant.h"
+#include "genvertnsp.h"
+#include "gnomonic.h"
+#include "goodeh.h"
+#include "orthographic.h"
+#include "vandergrinten.h"
+#include "robinson.h"
+#include "hammer.h"
+#include "wagneriv.h"
+#include "wagnervii.h"
 
 Transformer::Transformer()
 : m_inProj(NULL), m_outProj(NULL), m_errored(false)
@@ -95,11 +106,11 @@ Projection* Transformer::output()
 
 void Transformer::transform( Coordinate* io_coord )
 {
-   if( m_inProj == NULL || m_outProj == NULL || io_coord->units != m_inProj->units() )
+   if( m_inProj==NULL || m_outProj==NULL || io_coord->units != m_inProj->units() )
    {
       io_coord->x = 0;
       io_coord->y = 0;
-      io_coord->units = (ProjUnit)0;
+      io_coord->units = UNDEF;
       m_errored = true;
       return;
    }
@@ -114,11 +125,11 @@ void Transformer::transform( Coordinate* io_coord )
 
 void Transformer::transformInverse( Coordinate* io_coord )
 {
-   if( m_inProj == NULL || io_coord->units != m_inProj->units() )
+   if( m_inProj==NULL || io_coord->units != m_inProj->units() )
    {
       io_coord->x = 0;
       io_coord->y = 0;
-      io_coord->units = (ProjUnit)0;
+      io_coord->units = UNDEF;
       m_errored = true;
       return;
    }
@@ -132,11 +143,11 @@ void Transformer::transformInverse( Coordinate* io_coord )
 
 void Transformer::transformForward( Coordinate* io_coord )
 {
-   if( m_outProj == NULL || io_coord->units != DEGREE )
+   if( m_outProj==NULL || io_coord->units != DEGREE )
    {
       io_coord->x = 0;
       io_coord->y = 0;
-      io_coord->units = (ProjUnit)0;
+      io_coord->units = UNDEF;
       m_errored = true;
       return;
    }
@@ -159,17 +170,23 @@ Projection* Transformer::convertProjection( ProjCode projectionCode )
 
    switch( projectionCode )
    {
+   case GEO:
+      break;
+   case UTM:
+      break;
+   case SPCS:
+      break;
    case ALBERS:
       proj = new AlbersConEqArea();
       break;
    case LAMCC:
       proj = new LambertCC();
       break;
-   case TM:
-      proj = new TransverseMercator();
-      break;
    case MERCAT:
       proj = new Mercator();
+      break;
+   case PS:
+      proj = new PolarStereo();
       break;
    case POLYC:
       proj = new Polyconic();
@@ -177,11 +194,48 @@ Projection* Transformer::convertProjection( ProjCode projectionCode )
    case EQUIDC:
       proj = new EquidistantC();
       break;
+   case TM:
+      proj = new TransverseMercator();
+      break;
+   case STEREO:
+      break;
+   case LAMAZ:
+      break;
+   case AZMEQD:
+      proj = new AzEquidistant();
+      break;
+   case GNOMON:
+      proj = new Gnomonic();
+      break;
+   case ORTHO:
+      proj = new Orthographic();
+      break;
+   case GVNSP:
+      proj = new GenVertNSP();
+      break;
    case SNSOID:
       proj = new Sinusoidal();
       break;
    case EQRECT:
       proj = new Equirectangular();
+      break;
+   case MILLER:
+      proj = new Miller();
+      break;
+   case VGRINT:
+      proj = new VanDerGrinten();
+      break;
+   case HOM:
+      break;
+   case ROBIN:
+      proj = new Robinson();
+      break;
+   case SOM:
+      break;
+   case ALASKA:
+      break;
+   case GOOD:
+      proj = new GoodeH();
       break;
    case MOLL:
       proj = new Mollweide();
@@ -189,11 +243,19 @@ Projection* Transformer::convertProjection( ProjCode projectionCode )
    case IMOLL:
       proj = new IntMollweide();
       break;
-   case MILLER:
-      proj = new Miller();
+   case HAMMER:
+      proj = new Hammer();
       break;
-   case PS:
-      proj = new PolarStereo();
+   case WAGIV:
+      proj = new WagnerIV();
+      break;
+   case WAGVII:
+      proj = new WagnerVII();
+      break;
+   case OBEQA:
+      proj = new OblatedEqArea();
+      break;
+   case USDEF: // What is this?
       break;
    }
 

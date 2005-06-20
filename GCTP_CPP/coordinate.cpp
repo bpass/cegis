@@ -1,7 +1,7 @@
 #include "coordinate.h"
 
 Coordinate::Coordinate()
-: x(0.0), y(0.0), units((ProjUnit)0)
+: x(0.0), y(0.0), units(UNDEF)
 {
 }
 

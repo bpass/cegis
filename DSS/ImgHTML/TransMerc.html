@@ -1,3 +1,7 @@
+<!--
+  Last modified by lwoodard May 19, 2005
+-->
+
 <HTML>
 
 <HEAD>
@@ -10,14 +14,97 @@
   
   <!--#include virtual="/research/include/header.html"-->
  
-  <H3>Decision Support System for Map Projections of Small Scale Data</H3><br>
+  <H3>Decision Support System for Map Projections of Small Scale Data</H3>
 
+  <li><a href="#USAGE">Usage</a></li>
+  
   <H3>Transverse Mercator</H3>
     
   <P><img alt = "Transverse Mercator Projection" 
           src="TransMerc.gif">
   
-  <!--#include virtual="/research/include/thankyou.html"-->
+  <H3>  
+  Usage:
+  *<a name="USAGE"></a>
+  </H3>
+  <P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;Since the regular 
+  <a href="./Mercator.html">Mercator</a> projection has little error close 
+  to the Equator, it has been found very useful in the transverse form, 
+  with the equator of the projection rotated 90º to coincide with the 
+  desired central meridian.  The central meridian can be made true to scale,
+  no matter how far north and south the map extends, and regions near it are 
+  mapped with low distortion.  The Transverse Mercator projection can be 
+  seen as a conformal adaption of the <a href= "./Sinusoidal.html">
+  Sinusoidal</a> projection.  Like the regular <a href="./Mercator.html">
+  Mercator</a>, the map is conformal.</P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;There has been little use of 
+  the Transverse Mercator projection for single maps of continental areas.  
+  Until recently, the projection was not precisely applied to the ellipsoid 
+  for the entire Earth.  Ellipsoidal formulas were limited to series for 
+  relatively narrow bands.  In 1945, E.H. Thompson, and in 1962, L.P. Lee, 
+  presented exact or closed formulas allowing calculations of coordinates 
+  for the full ellipsoid.  </P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;The meridians and parallels of the Transverse Mercator are not straight 
+  lines like they were on the regular <a href="./Mercator.html">Mercator</a>,
+   except for the Equator, the central meridian, and each meridian 90º 
+  away from the central meridian.  The other meridians and parallels are 
+  complex curves.</P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;The spherical form in conformal,
+  and its scale error is a function of the distance from the central 
+  meridian, similar the the <a href="./Mercator.html">Mercator</a> 
+  projection whose scale error is a function of the distance from the 
+  Equator.  The ellipsoidal form is also conformal, but its scale error 
+  is slightly affected by factors other than only distance from the central 
+  meridian.  With the scale along the central meridian remaining constant, 
+  this type of projection is an good projection for lands extending 
+  predominately north and south.</P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;The spherical form of the 
+  Transverse Mercator has been used by the USGS only recently.  In 1979, 
+  this projection was chosen for a base map of North America to replace the 
+  Bipolar Oblique Conic Conformal projection that had been used for tectonic 
+  and other geologic maps.</P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;In the United States the 
+  Transverse Mercator projection is used in the State Plane Coordinate 
+  System (SPCS) for States that are extended mostly north and south.  
+  Excluding narrow states like Delaware, New Hampshire, and New Jersey, the 
+  states using the Transverse Mercator projection are divided into two to 
+  eight zones, each with its own central meridian, along which the scale is 
+  slightly reduced to balance the scale throughout the map.  Each zone is 
+  designed to maintain scale distortion.  Since 1935, several states have 
+  passed legislation establishing the SPCS as a permissible system for 
+  recording boundary descriptions or point locations.
+  </P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;Starting in the late 1950's, 
+  the Transverse Mercator projection has been used by the USGS for nearly 
+  all new quadrangles covering the States using the TM Plane Coordinates, 
+  but the central meridian and scale factor are those of the SPCS zone.  
+  Thus, all quadrangles for a given zone may be mosaicked exactly.  
+  The Transverse Mercator projection is used in many other countries for 
+  official topographic mapping.  The Ordnance Survey of Great Britain began 
+  switching from a Transverse Equdistant Cylindrical to the Transverse 
+  Mercator in approximately 1920.
+  </P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;The Army Map Service used the 
+  Transverse Mercator for two major mapping 
+  operations: <P>     &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;(1) a series of 
+  1:250,000-scale quadrangle maps covering the entire country, and <P>     
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;(2) as the geometric basis for 
+  the Universal Transverse Mercator (UTM) grid. </P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;Transverse Mercator quadrangle 
+  maps fit continuously in a north-south direction, provided they are 
+  prepared at the same scale, with the same central meridian, and for the 
+  same ellipsoid.  They do not fit exactly from east to west, if they have 
+  their own central meridians.  Using the SPCS or UTM projection, 
+  quadrangles and other maps that are properly constructed at the same 
+  scale, fit in all directions within the same zone.</P><P>
+  
+  <P>&nbsp;* Usage information source: <P>
+  Snyder, John P. <u>Map Projections - A Working Manual Paper U.S. Geological 
+  Survey Professional Paper 1395.</u> Washington: United States Government 
+  Printing Office, 1987. </P>
+  
+  <!--#include virtual="/research/include/thankyou.h#include virtual=&quot;/research/include/UPGISfooter.html&quot;tml"-->
 
   <!--#include virtual="/research/include/UPGISfooter.html"-->
 

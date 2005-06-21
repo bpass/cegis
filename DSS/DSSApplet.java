@@ -1,5 +1,4 @@
 /*
- * $Id: DSSApplet.java,v 1.4 2005/04/29 21:08:51 jenelson Exp $
  * DSSApplet.java
  *
  * Modified for relative addresing 6/2004
@@ -13,6 +12,7 @@
  * Modified 4/19/2004 jtrent  add recommendation explainations
  */
 import java.awt.*;
+import java.awt.event.*;
 import java.net.*;
 import java.lang.*;
 import java.util.*;
@@ -20,7 +20,7 @@ import java.applet.AppletContext;
 
 import javax.swing.*;
 
-public class DSSApplet extends javax.swing.JApplet implements Runnable {
+public class DSSApplet extends javax.swing.JApplet implements Runnable{
 
   //Merger variables
   private int HighLight = 0;
@@ -43,13 +43,10 @@ public class DSSApplet extends javax.swing.JApplet implements Runnable {
         dataType.setEnabled(false);
         rasterDataType.setEnabled(false);
         submitButton.setEnabled(false);
-        
-        
+               
         //Set background of applet to white
         getContentPane().setBackground(Color.white);
-    
-       
-        
+            
         //set applet visible
         this.setVisible(true);
     }

@@ -6,43 +6,50 @@
  * Modified for relative addresing 6/2004
  * by James Nelson
  * Current version is 100% portable
+ * 
+ * Modified for added comments 5-20-2005
+ * by lwoodard
  */
 
 /**
  *
  * @author  sposch
  */
-import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
+import java.awt.font.FontRenderContext; //Allows advanced 2D graphics
+import java.awt.font.TextLayout;        //for complex graphical manipulations
 import java.awt.geom.Rectangle2D;
-import java.io.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.applet.Applet;
-import java.net.*;
-import java.applet.AppletContext;
+import java.io.*;                     //The input/output package
+import java.awt.*;                    //Required to create and manipulate GUIs
+import java.awt.event.*;              //Enable event handling 
+import java.awt.image.*;              
+import java.applet.Applet;            //Enables applet interaction
+import java.net.*;                    //allows communication via networks
+import java.applet.AppletContext;  //Enables applet/browser interaction and the 
+    //playing of audioclips. In Java 2, class javax.swing.JApplet is used to 
+    //define an applet that uses Swing GUI components
 
-import javax.swing.*;
+import javax.swing.*;//Allows for GUI components and and supports portable GUIs
 
-public class DSSContinent extends javax.swing.JApplet implements ItemListener, MouseListener, MouseMotionListener, Runnable {
+public class DSSContinent extends javax.swing.JApplet 
+      implements ItemListener, MouseListener, MouseMotionListener, Runnable {
 
   private int HighLight = 2;
   private int HighPath = 1;
   private int Gname = 2;
   private int setMax = 0;
-  boolean changed = false;
-  boolean nohold = true;
-  public String projType;
-  public String oldProj;
-  public int currentX, currentY;
-  public Font font;
-  Thread runner;
-  public int RID;
+    //Will allow the proj type to change if the applet hasn't been clicked yet
+  boolean changed = false;  
+  boolean nohold = true;  //Determines if any continent has been clicked
+  public String projType; //The projection type that will be shown
+  public String oldProj;  //Keeps hold of previous projection type
+  public int currentX, currentY; //Holds the value of the current mouse position
+  public Font font; 
+  Thread runner;          //allows for running a thread
+  public int RID;         //Keeps track of the type of projection (int value)
   public int oldcX = 0;
   public int oldcY = 0;
   public Rectangle2D.Double MYarea = new Rectangle2D.Double();
-  public Rectangle2D.Double textlink;
+  public Rectangle2D.Double textlink; //Where the projection type is placed
   public int[] fullPath;
   public int[] vis;
   public boolean EnteredUnChanged = false;
@@ -53,7 +60,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
         initComponents();
         
         Container container = getContentPane();
-        projType = "Not changing";
+        projType ="Not changing";
         
         //Load the Image
         String fileName = "PlateCarree.gif";  
@@ -167,7 +174,8 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
     /**
      * 
      */
-   public boolean isNASAAF(int X, int Y)//is the point within noth America south America or Africa
+          //is the point within North America South America or Africa
+   public boolean isNASAAF(int X, int Y)
     {
       boolean isIn =false;
       if((naRect1.contains(X, Y)) ||
@@ -181,7 +189,8 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
       return isIn;
     }
     
-    public boolean isNPANSP(int X, int Y)//is the point within noth pole south pole
+        //is the point within North Pole South Pole
+    public boolean isNPANSP(int X, int Y)
     {
       boolean isIn =false;
       if((npRect1.contains(X, Y)) ||
@@ -193,7 +202,8 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
       return isIn;
     }
     
-    public boolean isEUAUAS(int X, int Y)//is the point within noth pole south pole
+        //is the point within North Pole South Pole
+    public boolean isEUAUAS(int X, int Y)
     {
      boolean isIn =false;
      if((euRect.contains(X, Y))  ||
@@ -207,7 +217,8 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
     }
     
     public void justEnterUnChange(int X, int Y)
-    {
+    { //If it leaves the applet and reenters into a different area it allows
+      //for the projection type to change with position
       if(EnteredUnChanged && MYarea.contains(X,Y))
       {
         EnteredUnChanged = false;
@@ -215,9 +226,8 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
         changed = false;        
       }      
     }   
-    
-     //public void mouseReleased(MouseEvent e) {}
-     //public void mousePressed(MouseEvent e) {}
+         
+        //Allows for free changing projection type when mouse reenters applet
      public void mouseEntered(MouseEvent e) {
           //if entered at y less than? 360
           if(e.getY() < 360)
@@ -243,8 +253,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
      public void getPath(int contX, int contY)
      {
         if(isNASAAF(contX,contY))
-           {
-            //in north america, south america, africa
+           {  //in North America, South America, Africa
             if(preserve == "Area")//Area
             {
               HighPath = 7;//1; 
@@ -258,7 +267,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
             if(nohold) changed  = true;//only update if there has been no click
            }
         if(isNPANSP(contX,contY))
-           {
+           { //in North Pole or South Pole
             if(preserve == "Area")//Area
             {
               HighPath = 7;//1;  
@@ -272,7 +281,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
             if(nohold) changed  = true;
            }
         if(isEUAUAS(contX,contY))           
-           {
+           { //in Europe, Australia, or Asia
             if(preserve == "Area")//Area
             {
               HighPath = 7;//1; 
@@ -291,8 +300,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
      {
         
         if(isNASAAF(contX,contY))
-           {
-            //in north america, south america, africa
+           {  //in North America, South America, Africa
             if(preserve == "Area")//Area
             {
               HighLight = 11;//3;
@@ -304,7 +312,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
             if(nohold) changed  = true;//only update if there has been no click
            }
         if(isNPANSP(contX,contY))
-           {
+           {  //in North Pole or South Pole
             if(preserve == "Area")//Area
             {
               HighLight = 12;//4;                
@@ -316,7 +324,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
             if(nohold) changed  = true;
            }
          if(isEUAUAS(contX,contY))           
-           {
+           {  //in Europe, Australia, or Asia
             if(preserve == "Area")//Area
             {
               HighLight = 13;//5;
@@ -339,8 +347,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
         }
         else{
        if(isNASAAF(contX,contY))
-           {
-            //in north america, south america, africa
+           {  //in North America, South America, Africa
             if(preserve == "Area")//Area
             {              
               //fullPath[1] = HighPath = 1; 
@@ -363,7 +370,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
             if(nohold) changed  = true;//only update if there has been no click
            }
         if(isNPANSP(contX,contY))
-           {
+           { //in North Pole or South Pole
             if(preserve == "Area")//Area
             {
                
@@ -385,7 +392,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
             if(nohold) changed  = true;
            }
         if(isEUAUAS(contX,contY))           
-           {
+           { //in Europe, Austrailia, and Asia
             if(preserve == "Area")//Area
             {               
               //fullPath[1] = HighPath = 1; 
@@ -430,7 +437,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
       {
        /***/
         if(isNPANSP(currentXa,currentYb))
-        {
+        { //in North Pole or South Pole
           //If preserving shape, goto shape web page 
           if(preserve == "Shape")
           {
@@ -455,7 +462,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
           //nohold = false;
         }
         if(isNASAAF(currentXa, currentYb))
-        {
+        { //in North America, South America, or Africa
           //If preserving shape, goto shape web page
           if(preserve == "Shape")
           {
@@ -466,9 +473,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
             
             //Get location from html file
             location = getParameter("location3");
-            //repaint();
-         
-          
+            //repaint();   
           }
           else
           {
@@ -521,8 +526,9 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
       }
     }
     
+        //Changes cursor appearance if over the projection name
     if((textlink.contains(currentXa,currentYb) && !nohold)|| isContinent(currentXa, currentYb))
-    {
+    { 
       c.setCursor(Cursor.getPredefinedCursor(
                   Cursor.HAND_CURSOR));
     }
@@ -542,7 +548,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
     }
 
        
-        
+        //Detectes if the mouse was clicked
     public void mouseClicked(MouseEvent e)
     {
       oldcX = currentX;
@@ -568,7 +574,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
       //if(projType ==
 
       if(isNPANSP(currentX,currentY))
-      {
+      { //in North Pole or South Pole
           //If preserving shape, goto shape web page 
           if(preserve == "Shape")
           {
@@ -596,7 +602,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
           nohold = false;
       }
       if(isNASAAF(currentX,currentY))
-      {
+      { //in North America, South America, or Africa
           //If preserving shape, goto shape web page
           if(preserve == "Shape")
           {
@@ -663,9 +669,9 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
       }
       else
       {
-        if(textlink.contains(currentX,currentY))
+        if(textlink.contains(currentX,currentY)) //When cursor over projection name
         {
-          formAndCallURL(RID);
+          formAndCallURL(RID); //calls and displays the projection type browser
           
         }
         currentX = oldcX;
@@ -675,11 +681,10 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
     
       
     }
-    
+      
+      //Called when the user wants to see more about the suggested projection
     public void formAndCallURL(int URLid)
-    {
-      //Get current x and y of cursor
-
+    { 
       if(!nohold)
       {
                 //Check for click in Northern Polar Region or Antarctica
@@ -936,7 +941,6 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
       }
     }
     
-    
     public void mousePressed(MouseEvent e) {
       
     }
@@ -1083,6 +1087,7 @@ public class DSSContinent extends javax.swing.JApplet implements ItemListener, M
       
     }
     
+        //Displays the suggested projection type
     public void paint(Graphics g)
     {
         font = new Font("Times New Roman", Font.BOLD, 16);

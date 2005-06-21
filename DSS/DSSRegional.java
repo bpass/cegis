@@ -2,43 +2,64 @@
  * DSSRegional.java
  *
  * Created on June 20, 2002, 1:38 PM
+ * 
+ * Last modified by lwoodard on May 20, 2005
+ * 
+ * This java application provides the functions for the regional projection
+ * applet.  It imports the main image than allows the user to use a selection 
+ * box, that they can resize, to choose what region they are interested in.  
+ * Then, depending on the shape of the region that they selected, and where 
+ * that selected space is, it goes uses comparison statements to decide what 
+ * type of projection is recommended. The user can then click on the 
+ * recommended projection and it will start up another browser with details on
+ * what that projection looks like and its uses.
  */
 
 /**
  *
  * @author  sposch
  */
-import java.applet.AppletContext;
-import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
-import java.awt.geom.Rectangle2D;
-import java.io.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.applet.Applet;
-import java.net.*;
+import java.applet.AppletContext; //Enables applet/browser interaction and the 
+    //playing of audioclips. In Java 2, class javax.swing.JApplet is used to 
+    //define an applet that uses Swing GUI components
+import java.awt.font.FontRenderContext; //Allows advanced 2D graphics
+import java.awt.font.TextLayout;        //for complex graphical manipulations
+import java.awt.geom.Rectangle2D; 
+import java.io.*;                     //The input/output package
+import java.awt.*;                    //Required to create and manipulate GUIs
+import java.awt.event.*;              //Enable event handling
+import java.awt.image.*;              
+import java.applet.Applet;            //Enables applet interaction
+import java.net.*;                    //allows communication via networks
+
+    //Allows for GUI components and and supports portable GUIs
+import javax.swing.*; 
+import javax.swing.JOptionPane.*;
 
 
-import javax.swing.*;
+public class DSSRegional extends javax.swing.JApplet 
+                         implements Runnable,ItemListener {
 
-public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemListener {
-
-      public boolean changed = false;
-      Thread runner;
-      public String location;
-      public boolean textClick = false;
+          //detects when an the mouse or an item changes
+      public boolean changed = false; 
+      Thread runner;      
+      public int RID;    //Used to tell which URL to call due to the projection
+      public String location;//holds the URL address gotten from the DSS applet
+     // public boolean textClick = false;  
+      
+      
     /** Creates new form DSSRegional */
-    public DSSRegional() {
+    public DSSRegional() 
+    {
         initComponents();
         
         Container container = getContentPane();
         
         //Load the Image
-        String fileName = "PlateCarree.gif";  
+        String fileName = "PlateCarree.gif";  //The map that you want shown
         try
         {
-            URL url = getClass().getResource(fileName);
+            URL url = getClass().getResource(fileName); //tries to get the map
             image = createImage((ImageProducer)url.getContent());
         }
         catch(IOException e)
@@ -111,15 +132,15 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
         choicePanel.setVisible(true);
         container.add(choicePanel, BorderLayout.SOUTH);
        
-        
+          //Handles mouse events  like mouseMoved and mouseDragged
         addMouseMotionListener(new MouseMotionAdapter()
         {
             //Listen for mouse movement
-            public void mouseMoved(MouseEvent e)
+            public void mouseMoved(MouseEvent e) //Detectes when mouse moves
             {
                 Container c = getContentPane();
                 
-                currentX = e.getX();
+                currentX = e.getX();  //Gets current location
                 currentY = e.getY();
                 
                 //If at NW corner, set cursor to NW Resize
@@ -227,8 +248,9 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                     c.setCursor(Cursor.getPredefinedCursor(
                                         Cursor.DEFAULT_CURSOR));
                 }
-                if(textlink != null)
-                {
+                   //if the box displaying the projection has something in it
+                if(textlink != null) 
+                { //and the cursor is over the projection name(textlink area)
                   if(textlink.contains(currentX, currentY))
                   {
                     c.setCursor(Cursor.getPredefinedCursor(
@@ -243,13 +265,13 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 
             }
             
-            //Handle mouse Dragging Events
+            //Handles mouse Dragging Events
             public void mouseDragged(MouseEvent e)
             {
-                changed = true;
+                changed = true;   
                 Container c = getContentPane();
                 
-                currentX = e.getX();
+                currentX = e.getX();    //gets the new location
                 currentY = e.getY();
                 
                 //If past max value for x, reset to max x
@@ -384,27 +406,31 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                            lowerRightX = currentX;
                        }
                 }
-                
-                
-
                 width = lowerRightX - upperLeftX;
                 height = lowerRightY - upperLeftY;		    
                 repaint();
-            }	
-            
-          
-            
-             public void mouseClicked(MouseEvent e)
-             {
-               if(textlink != null)
-               {
-                 //form and call if within textlink
-               }
-             }
-	 }
-         );
-     }
-     
+            }	//end of mouseDragged function
+          }    //end of new mouseMotionAdapter
+         ); //end of addMouseListener call
+         
+            //Allows for detecting when the mouse is pressed
+         addMouseListener(new MouseAdapter()
+         {
+            public void mouseClicked(MouseEvent e)
+            {
+                //for checking if it is in the textlink box
+              int currentXa = e.getX();   
+              int currentYa = e.getY();
+                  //only if the cursor is over the projection name
+              if((textlink!=null)&&(textlink.contains(currentXa,currentYa)))
+              { 
+                    //Gets ands displays the projection type browser
+                formAndCallURL(RID);  
+              }   //end of if statement
+            } //end of mouseClicked function
+         } //end of MouseAdapter function
+        ); //end of addMouseListener call
+     }  //end of DSS constructor
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -416,12 +442,12 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
     }//GEN-END:initComponents
 
     public void itemStateChanged(java.awt.event.ItemEvent itemEvent) 
-    {
+    { //When a change is detected it udpates it variables
         changed = true;
         //Get current list values selected
         preserve = preserveList.getSelectedItem();
         dataType = dataTypeList.getSelectedItem();
-	rasterData = rasterDataList.getSelectedItem();
+        rasterData = rasterDataList.getSelectedItem();
         
         //if data type list is vector, set raster list/label disabled
 	if(itemEvent.getSource() == dataTypeList)
@@ -444,7 +470,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
     }
     
     public final synchronized void update(Graphics g)
-    {
+    {   //Updates the graphics
         Dimension d = getSize();
         if((offScreenImage == null) || (d.width != offScreenSize.width) ||
             (d.height != offScreenSize.height))
@@ -458,6 +484,8 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
 	g.drawImage(offScreenImage,0,0,null);
     }
 
+        //the paint function takes care of choosing which projection 
+          //and displaying the results
     public void paint(Graphics g)
     {
         //call super's paint method
@@ -466,6 +494,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
         Graphics2D tempg = (Graphics2D)g;
         FontRenderContext frc = tempg.getFontRenderContext();
         TextLayout tl; 
+    
         super.paint(g);
         
         //draw the image
@@ -482,7 +511,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
         }
         ////tohere
         //set color blue and draw box
-        g.setColor(Color.blue);
+        g.setColor(Color.BLUE);
         g.drawRect(upperLeftX, upperLeftY, width, height);
         ///againhere
         //If width >= height East West node 2
@@ -496,6 +525,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 {
                     //Shape Extreme North
                     projType = "Stereographic"; //0,3,10,20,32
+                    RID=0; //Stereographic category used in formAndCallURL
                     DSSUpdater.setHighPathAr(new int[]{0,3,10,20,32});
                     DSSUpdater.setHighLight(32);
                 }
@@ -504,6 +534,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 {
                     //Shape Mid North
                     projType = "Lambert Conformal Conic";//0,3,10,20,33
+                    RID=1; //LambConfCon category used in formAndCallURL
                     DSSUpdater.setHighPathAr(new int[]{0,3,10,20,33});
                     DSSUpdater.setHighLight(33);
                 }
@@ -512,6 +543,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 {
                     //Shape Mid
                     projType = "Mercator";//0,3,10,20,34
+                    RID=2; //Mercator category used in formAndCallURL
                     DSSUpdater.setHighPathAr(new int[]{0,3,10,20,34});
                     DSSUpdater.setHighLight(34);
                 }
@@ -520,6 +552,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 {
                     //Shape Mid South//0,3,10,20,35
                     projType = "Lambert Conformal Conic";
+                    RID=1; //LambConfCon category used in formAndCallURL
                     DSSUpdater.setHighPathAr(new int[]{0,3,10,20,35});
                     DSSUpdater.setHighLight(35);
                 }
@@ -528,6 +561,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 {
                     //Shape Extreme South
                     projType = "Stereographic";//0,3,10,20,36
+                    RID=0; //Stereographic category used in formAndCallURL
                     /*DSSUpdater.setHighPathAr(new int[]{0,2,6,22});
                     DSSUpdater.setHighLight(22);/**/
                     DSSUpdater.setHighPathAr(new int[]{0,3,10,20,36});
@@ -542,6 +576,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 {
                     //Area Extreme North
                     projType = "Lambert Azimuthal"; //0,3,10,19,27
+                    RID=3; //Stereographic category used in formAndCallURL
                     DSSUpdater.setHighPathAr(new int[]{0,3,10,19,27});
                     DSSUpdater.setHighLight(27);
                 }
@@ -550,6 +585,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 {
                     //Area Mid North
                     projType = "Albers";          //0,3,10,19,28
+                    RID=4; //Albers category used in formAndCallURL
                     DSSUpdater.setHighPathAr(new int[]{0,3,10,19,28});
                     DSSUpdater.setHighLight(28);
                 }
@@ -558,6 +594,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 {
                     //Area Mid                  //0,3,10,19,29
                     projType = "Any Equal Area or Cylindrical Equal Area";
+                    RID=5; //AnyEq category used in formAndCallURL
                     DSSUpdater.setHighPathAr(new int[]{0,3,10,19,29});
                     DSSUpdater.setHighLight(29);
                 }
@@ -566,6 +603,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 {
                     //Area Mid South
                     projType = "Albers";          //0,3,10,19,30
+                    RID=4; //Albers category used in formAndCallURL
                     DSSUpdater.setHighPathAr(new int[]{0,3,10,19,30});
                     DSSUpdater.setHighLight(30);
                 }
@@ -574,6 +612,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 {
                     //Area Extreme South
                     projType = "Lambert Azimuthal";   //0,3,10,19,31
+                    RID=3; //LambAz category used in formAndCallURL
                     /*DSSUpdater.setHighPathAr(new int[]{0,2,5,17});
                     DSSUpdater.setHighLight(17);/**/
                     DSSUpdater.setHighPathAr(new int[]{0,3,10,19,31});
@@ -593,6 +632,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 if((upperLeftY + height/2) < OUTER)
                 {
                     projType = "Stereographic"; //0,3,9,18,24
+                    RID=0; //Stereographic category used in formAndCallURL
                     DSSUpdater.setHighPathAr(new int[]{0,3,9,18,24});
                     DSSUpdater.setHighLight(24);
                 }
@@ -600,6 +640,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 else if((upperLeftY + height/2) < MIDDN)
                 {
                     projType = "Transverse Mercator";//0,3,9,18,24
+                    RID=6; //TransMerc category used in formAndCallURL
                     DSSUpdater.setHighPathAr(new int[]{0,3,9,18,25});
                     DSSUpdater.setHighLight(25);
                 }
@@ -607,6 +648,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 else
                 {
                     projType = "Stereographic";	//0,3,9,18,24
+                    RID=0; //Stereographic category used in formAndCallURL
                     DSSUpdater.setHighPathAr(new int[]{0,3,9,18,26});
                     DSSUpdater.setHighLight(26);
                 }
@@ -618,6 +660,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 if((upperLeftY + height/2) < OUTER)
                 {
                     projType = "Lambert Azimuthal";//0,3,9,17,21
+                    RID=3; //LambAz category used in formAndCallURL
                     DSSUpdater.setHighPathAr(new int[]{0,3,9,17,21});
                     DSSUpdater.setHighLight(21);
                 }
@@ -625,6 +668,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 else if((upperLeftY + height/2) < MIDDN)
                 {
                     projType = "Cylindrical Equal Area";//0,3,9,17,21
+                    RID=7; //CylEqArea category used in formAndCallURL
                     DSSUpdater.setHighPathAr(new int[]{0,3,9,17,22});
                     DSSUpdater.setHighLight(22);
                 }
@@ -632,6 +676,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
                 else
                 {
                     projType = "Lambert Azimuthal";	//0,3,9,17,21
+                    RID=3; //LambAz category used in formAndCallURL
                     //int[] a = new int[]{0,1,3,10};
                     /*DSSUpdater.setHighPathAr(new int[]{0,1,3,9});
                     DSSUpdater.setHighLight(9);*/
@@ -655,196 +700,78 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
     }	   
     
     /**
-     * Added for linking to actual page description
+     * Added for linking to actual page description.  Each projection type got 
+     * its own URLid (the RID).
      */
-         public void formAndCallURL(int URLid)//location
-    {               
-                //Check for click in Northern Polar Region or Antarctica
-                if(URLid == 0)
-                {
-                    //If preserving shape, goto shape web page 
-                    if(preserve == "Shape")
-                    {
+    public void formAndCallURL(int URLid)//location
+    {  
+      String location=null;
+      
+      if(URLid == 0) //Stereograhic projection
+        {
+            //Get location from html file
+            location = getParameter("location0");
+        }
         
-                        String location;
-            
-                        //Get location from html file
-                        location = getParameter("location5");
-            
-                        //Try to make connection to new web page
-                        try
-                        {
-                            URL url;
-                            url = new URL(getDocumentBase(), location);
-                            //url = new URL(url,location);
+        if(URLid == 1) //Lamber Conformal Conic
+        {          
+            //Get location from html file
+            location = getParameter("location1");
+        }
+        
+        if(URLid == 2) //Mercator
+        {
+            //Get location from html file
+            location = getParameter("location2");
+        }
+        
+        if(URLid == 3) //Lambert Azimuthal Equal Area
+        {                        
+            //Get location from html file
+            location = getParameter("location3");
+        }
+        
+        if(URLid == 4) //Albers Equal Area Conic
+        {                         
+            //Get location from html file
+            location = getParameter("location4");
+        }
+        
+        if(URLid == 5) //Any Equal Area or Cylindrical Equal Area
+        {                          
+            //Get location from html file
+            location = getParameter("location5");
+        }
+        
+        if(URLid == 6) //Transverse Mercator
+        {                          
+            //Get location from html file
+            location = getParameter("location6");
+        }
+        
+        if(URLid == 7) //Any Cylindircal Equal Area
+        {                          
+            //Get location from html file
+            location = getParameter("location7");
+        }
+        
+        try
+            {
+                URL url;
+                url = new URL(getDocumentBase(), location);
+                //url = new URL(url,location);
                                                       
-                            AppletContext browser = getAppletContext();
+                AppletContext browser = getAppletContext();
             
-                            //browser.showDocument(url);
-                            browser.showDocument(url,"_blank");
-                        }
+                //browser.showDocument(url);
+                browser.showDocument(url,"_blank");
+            }
             
-                        //Handle malformed url exception in connection attempt
-                        catch(MalformedURLException urlException)
-                        {
-                            urlException.printStackTrace();
-                        }
-                    }
-                    
-                    //Goto area web page to preserve area
-                    else
-                    {
-                        String location;
-            
-                        //Get location from html file
-                        location = getParameter("location4");
-            
-                        //Try to make connection to new web page
-                        try
-                        {
-                            URL url;
-                            url = new URL(getDocumentBase(), location);
-                            //url = new URL(getDocumentBase(), "../");
-                            //url = new URL(url,location);
-                           
-                            AppletContext browser = getAppletContext();
-            
-                            //browser.showDocument(url);
-                            browser.showDocument(url,"_blank");
-                          
-                        }
-            
-                        //Handle malformed url exception in connection attempt
-                        catch(MalformedURLException urlException)
-                        {
-                            urlException.printStackTrace();
-                        }
-                    }
-                }
-                
-                //Check for click in North America, South America, or Africa
-                if(URLid == 1)
-                {
-                    //If preserving shape, goto shape web page
-                    if(preserve == "Shape")
-                    {
-                        String location;
-            
-                        //Get location from html file
-                        location = getParameter("location3");
-
-            
-                        //Try to make connection to new web page
-                        try
-                        {
-                            URL url;
-                            url = new URL(getDocumentBase(), location);
-                            //url = new URL(getDocumentBase(), "../");
-                            //url = new URL(url,location);
-                           
-                            AppletContext browser = getAppletContext();
-            
-                            //browser.showDocument(url);
-                            browser.showDocument(url,"_blank");
-                        }
-            
-                        //Handle malformed url exception in connection attempt
-                        catch(MalformedURLException urlException)
-                        {
-                            urlException.printStackTrace();
-                        }
-                    }
-                    
-                    //Goto area web page to preserve area
-                    else
-                    {
-                        String location;
-            
-                        //Get location from html file
-                        location = getParameter("location2");
-            
-                        //Try to make connection to new web page
-                        try
-                        {
-                            URL url;
-                            url = new URL(getDocumentBase(), location);
-                            //url = new URL(getDocumentBase(), "../");
-                            //url = new URL(url,location);
-                           
-                            AppletContext browser = getAppletContext();
-            
-                            //browser.showDocument(url);
-                            browser.showDocument(url,"_blank");
-                        }
-            
-                        //Handle malformed url exception in connection attempt
-                        catch(MalformedURLException urlException)
-                        {
-                            urlException.printStackTrace();
-                        }
-                    }
-                }
-                
-                //Check for click in Asia, Europe, or Australia
-                if(URLid == 2)
-                {
-                    //If preserving shape, goto shape web page
-                    if(preserve == "Shape")
-                    {
-                        String location;
-            
-                        //Get location from html file
-                        location = getParameter("location1");
-                        //Try to make connection to new web page
-                        try
-                        {
-                            URL url;
-                            url = new URL(getDocumentBase(), location);
-                            //url = new URL(getDocumentBase(), "../");
-                            //url = new URL(url,location);
-                           
-                            AppletContext browser = getAppletContext();
-            
-                            //browser.showDocument(url);
-                            browser.showDocument(url,"_blank");
-                        }
-            
-                        //Handle malformed url exception in connection attempt
-                        catch(MalformedURLException urlException)
-                        {
-                            urlException.printStackTrace();
-                        }
-                    }
-                    
-                    //Goto area web page to preserve area
-                    else
-                    {
-                        String location;
-            
-                        //Get location from html file
-                        location = getParameter("location0");
-            
-                        //Try to make connection to new web page
-                        try
-                        {
-                            URL url;
-                            url = new URL(getDocumentBase(), location);
-                            //url = new URL(getDocumentBase(), "../");
-                            //url = new URL(url,location);
-                           
-                            AppletContext browser = getAppletContext();
-            
-                            //browser.showDocument(url);
-                            browser.showDocument(url,"_blank");
-                        }
-            
-                        //Handle malformed url exception in connection attempt
-                        catch(MalformedURLException urlException)
-                        {
-                            urlException.printStackTrace();
-                        }
-                    }
-         }     
+            //Handle malformed url exception in connection attempt
+            catch(MalformedURLException urlException)
+            {
+                urlException.printStackTrace();
+            }
     }
      
      /**
@@ -908,7 +835,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
     //selection = false;
   }**/
 
-  public void start()
+  public void start()   //starts a new Thread if there isn't one already
   {
     if (runner == null)
     {
@@ -917,7 +844,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
     }
   }
 
-  public void stop()
+  public void stop()  //stops a thread if there has been one started
   {
     if (runner != null)
     {
@@ -926,7 +853,7 @@ public class DSSRegional extends javax.swing.JApplet implements Runnable,ItemLis
     }
   }
 
-  public void run()
+  public void run()   
   {
     while (true)
     {

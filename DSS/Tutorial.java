@@ -1,7 +1,7 @@
 /**
- * This File is a testing platform for rendering the java2d verison of the 
- * DSS decision tree. Since the current verision of DSS requires the new JRE, 
- * this element of the DSS turorial has no additional requirements.
+ * This File is a testing platform for rendering the java2d version of the 
+ * DSS decision tree. Since the current version of DSS requires the new JRE, 
+ * this element of the DSS tutorial has no additional requirements.
  * @author: James Nelson 8-26-2004
  * version: 1.0 Tutorial Decision Map LM:9-10-2004
  * Additional Notes: Further improvments include, generating different graph
@@ -31,7 +31,7 @@ import java.lang.*;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
-public class Tutorial extends Applet implements MouseListener, MouseMotionListener,Runnable {
+public class Tutorial extends Applet implements MouseListener, MouseMotionListener,Runnable,MouseWheelListener {
 
     /**
      * Non-depriciated variables 
@@ -39,20 +39,29 @@ public class Tutorial extends Applet implements MouseListener, MouseMotionListen
  
     //very much in use
     private int oldGN = 0;
-    private int highlight = 0;    
+    private int highlight = 0;
+    /**offX and offY  are the ofset for the graph from 
+     * top left corner of window*/
     public double offX,offY;
+    /**
+     * used to detect change that requires rerendering of graph
+     */
     boolean drawSomething = false;   
+    /**
+     * this boolean variable controls limited rerendering of 
+     * popup graphics
+     */
     boolean popup = false;
     
       
-   /** holds the node titles for laoding into  the graph*/
+   /** holds the node titles for loading into  the graph*/
     public String[] megaGraph;
     
     int tempEd[][] = {{0,0,0},{0,0,0},{0,0,1,1,1,2,2,2},
                       {0,0,1,1,2,2,3,3,3,4,4,4,5,5,5,5,5,6,6,6,6,6}};
     int megaMap[] = {0,0,0,1,1,1,2,2,3,3,7,7,7,8,8,8,9,9,10,10,17,17,17,18,18,
                     18,19,19,19,19,19,20,20,20,20,20};
-    /**@parammegaX holds the X values for the graph, currently this is static as the 
+    /** holds the X values for the graph, currently this is static as the 
      * type data will not change and of display features weren't defined
      * now that display features have been defined, however a dynamic solution
      * maybe worth investigating (bad runtimes for something that can be static)**/
@@ -60,32 +69,32 @@ public class Tutorial extends Applet implements MouseListener, MouseMotionListen
                               280,378,475,591,694,764,1048,1413,1866,677,763,850
                               ,965,1044,1130,1244,1342,1414,1481,1586,1698,1796,
                               1868,1936,2041};
-    /**@param megaY holds the Y values for the graph, currently this is static
+    /** megaY holds the Y values for the graph, currently this is static
      * (see megaX for more details)**/
     public double megaY[] = {30,100,100,100,170,170,170,170,170,170,170,260,260,
                             260,260,260,260,260,260,260,260,350,350,350,350,350,
                             350,350,350,350,350,350,350,350,350,350,350};
   
-    /**@param compressX 
+    /** compressX 
      * and compressY are mainipulations of megaX/Y for the purpose of 
      * better display functionality**/
     public double compressX[] = {215,135,215,315,60,125,215,186,250,262,355,70,187,287,133,250,355,232,300,320,385,150,230,320,215,300,380,151,257,320,390,490,215,315,385,455,555};
     
-    /**@param compressY 
+    /** compressY 
      * and compressX are mainipulations of megaX/Y**/
     public double compressY[] = {35,100,100,100,150,150,150,150,150,150,150,220,220,220,220,220,220,200,200,200,200,260,260,260,260,260,260,260,260,260,260,260,260,260,260,260,260};
-    /**@param show 
+    /** show 
      * marks displayed nodes**/
                             //always     //glob  //cL1 //rL1  //cont L2           //rL2    rL2     //rL3        //rL3       //rL3           //rL3
    // public int show[][] = {{0,1,2,3},{4,5,6},{7,8},{9,10},{11,12,13,14,15,16},{17,18},{19,20},{21,22,23},{24,25,26},{27,28,29,30,31},{32,33,34,35,36}};
-    /**@param mygraph holds/points to the graph being redered 
+    /** mygraph holds/points to the graph being redered 
      * (possible depriciation)**/
     public Graph mygraph; //holds the current graph to be rendered in graph array
-   /**@param DSSmegagraph holds the graph being redered and is pointed to by
+   /** DSSmegagraph holds the graph being redered and is pointed to by
     * mygraph (see mygraph -possible depriciation)**/
     public Graph DSSmegagraph;
    /**
-    * @param poppers data list of linked pages -BAD
+    *  poppers data list of linked pages -BAD
     * should be and exterior data set like HTML params or .cvs
     * this variable is only to insure stable applet
     * **/
@@ -93,7 +102,9 @@ public class Tutorial extends Applet implements MouseListener, MouseMotionListen
     public String[] urls4pops;
     /////////////////////////
    
-    public DSSUpRead Rup;   
+   /**retreive the highlight path
+        specified outside the class via a abstact tracking class
+        DSSUpdater and place it into dsa for rendering*/  
     int dsa[] = {0};
     
    /**
@@ -134,8 +145,8 @@ public class Tutorial extends Applet implements MouseListener, MouseMotionListen
             "Extreme South","Extreme North","Mid North","Mid","Mid South","Extreme South"};
             
             urls4pops = new String[] {"http://www.colorado.edu/geography/gcraft/notes/mapproj/mapproj.html",
-            "http://www.mapthematics.com/Essentials/Essentials.html", "http://www.google.com",
-            "http://www.cse.ucsc.edu/research/avis/map.html"};
+            "http://www.mapthematics.com/Essentials/Essentials.html", "http://www.pathaway.com/mapproj.htm",
+            "http://erg.usgs.gov/isb/pubs/MapProjections/projections.html"};
     }
 
   /**
@@ -179,7 +190,7 @@ public class Tutorial extends Applet implements MouseListener, MouseMotionListen
     }
     
     /**
-     * variable used for duoble buffering
+     * variable used for double buffering
      */
     
     private Image offScreenImage;
@@ -313,6 +324,11 @@ public class Tutorial extends Applet implements MouseListener, MouseMotionListen
           mygraph.pop.mylink.exeLink(this.getAppletContext());
         }}
     }
+    
+    public void mouseWheelMoved(MouseWheelEvent e)
+    {
+    }
+    
   /**
    * mouseReleased
    * @param e

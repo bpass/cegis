@@ -1,3 +1,7 @@
+<!--
+  Last modified by lwoodard May 18, 2005
+-->
+
 <HTML>
 
 <HEAD>
@@ -10,14 +14,46 @@
  
   <!--#include virtual="/research/include/header.html"-->
   
-  <H3>Decision Support System for Map Projections of Small Scale Data</H3><br>
-
+  <H3>Decision Support System for Map Projections of Small Scale Data</H3>
+  
+  <li><a href="#USAGE">Usage</a></li>
+  
   <H3>Quartic Authalic</H3>
     
   <P><img alt = "Quartic Authalic Projection" 
-          src="Quartic.gif">
+          src="Quartic.gif"><P>
+          
+  <H3>Usage:
+    *<a name="USAGE"></a> 
+  </H3><P>
   
-  <!--#include virtual="/research/include/thankyou.html"-->
+  Central Meridian: Straight line 0.45 as long as the Equator.</P><P>
+  Other Meridians: Equally spaced quartic (fourth-order equation) curves 
+  that are concave toward the central meridian.</P><P>
+  Parallels: Unequally spaced straight parallel lines that are 
+    perpendicular to the central meridian. Their spacing changes 
+    gradually and is greatest near the Equator.</P><P>
+  Poles: Points. </P><P>
+  Symmetry: About the central meridian or the Equator.</P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;The Quartic Authalic projection 
+  is an equal-area projection. Its scale is true along the Equator, constant 
+  along any parallel, and between any pair of parallels equidistant from the 
+  Equator. Its distortion is severe near the outer meridians at high 
+  latitudes, but less so than on the Sinusoidal projection. It is free of 
+  distortion along the Equator. This projection is not conformal or 
+  equidistant.</P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;This projection has one 
+  standard parallel, which is by definition fixed at 0º.</P><P>
+  
+  *Usage information source:</P><P>"Quartic Authalic Projection." 2005. The 
+  MathWorks, Inc.. 18 May. 2005 <a href=
+  "http://www.mathworks.com/access/helpdesk/help/toolbox/map/quarticauthalicprojection.html">
+  http://www.mathworks.com/access/helpdesk/help/toolbox/map/quarticauthalicprojection.html</a>.<P>
+
+  
+  
+  
+  <!--#include virtual="/research/include/thankyou.h#include virtual=&quot;/research/include/UPGISfooter.html&quot;tml"-->
 
   <!--#include virtual="/research/include/UPGISfooter.html"-->
 

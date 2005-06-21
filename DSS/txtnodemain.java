@@ -1,7 +1,7 @@
 /**
- * This File is a testing platform for rendering the java2d verison of the 
- * DSS decision tree. Since the current verision of DSS requires the new JRE, 
- * this element of the DSS turorial has no additional requirements.
+ * This File is a testing platform for rendering the java2d version of the 
+ * DSS decision tree. Since the current version of DSS requires the new JRE, 
+ * this element of the DSS tutorial has no additional requirements.
  * @author: James Nelson 8-26-2004
  * version: 1.0 "yet to be named graph maker" LM:9-10-2004
  * Additional Notes: Further improvments include, generating different graph

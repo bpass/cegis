@@ -1,3 +1,7 @@
+<!--
+  Last modified by lwoodard May 18, 2005
+-->
+
 <HTML>
 
 <HEAD>
@@ -10,14 +14,57 @@
  
   <!--#include virtual="/research/include/header.html"-->
   
-  <H3>Decision Support System for Map Projections of Small Scale Data</H3><br>
+  <H3>Decision Support System for Map Projections of Small Scale Data</H3>
+
+  <li><a href="#USAGE">Usage</a></li>
 
   <H3>Sinusoidal Equal Area</H3>
     
   <P><img alt = "Sinusoidal Equal Area Projection" 
-          src="Sinusoidal.gif">
+          src="Sinusoidal.gif"><P>
+          
+  <H3>Usage:
+    *<a name = "USAGE"></a>
+  </H3>
+  <P>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;The Sinusodial projection is 
+  used for world maps as well as maps of continents and other regions, 
+  especially those bordering the Equator.  Among the first to show the 
+  Sinusoidal projection was Jean Cossin of Deippe, who used it for a world 
+  map of 1570.  In addition, it was used by Jodocus Hondius for maps of 
+  South America and Africa in some of his editions of Mercator's atlases of 
+  1606-1609.  Nicolas Sanson (1600-67) of France used it in about 1650 for 
+  maps of continents, while John Flamsteed (1646-1719) of England later 
+  used it for star maps.  While maps of North America are no longer drawn 
+  to the Sinusoidal, South America and Africa are still shown on this 
+  projection in recent Rand McNally atlases.</P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;The simplicity of construction, 
+  either graphically or mathematically, combined with the useful features 
+  obtained, make the Sinusoidal projection popular.  On the normal 
+  Sinusoidal projection, the parallels of latitude are equally spaced 
+  straight parallel lines, and the central meridian is a straight line 
+  crossing the parallels perpendicularly.  The Equator is marked off from 
+  the central meridian equidistantly for meridians at the same scale
+  as the latitude markings on the central meridian, so the Equator for a 
+  complete world map is twice as long as the central meridian.  The other 
+  parallels of latitude are also marked off for meridians in proportion to 
+  the true distances from the central meridian.  The meridians connect 
+  these markings from pole to pole.  Since the spacings on the parallels are 
+  proportional to the cosine of the latitude, and since the parallels are 
+  equally spaced, the meridians form curves which may be called cosine, 
+  sine, or sinusoidal curves.</P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;Areas are shown correctly.  
+  There is no distortion along the Equator and central meridian, but 
+  distortion becomes pronounced near the outer meridians, especially in the 
+  polar regions.  It is adequate for small scale usage.</P><P>
   
-  <!--#include virtual="/research/include/thankyou.html"-->
+  *Usage information source:  <P>
+  Snyder, John P. <u>Map Projections - A Working Manual Paper U.S. Geological 
+  Survey Professional Paper 1395.</u> Washington: United States Government 
+  Printing Office, 1987. </P>
+  
+  
+  
+  <!--#include virtual="/research/include/thankyou.h#include virtual=&quot;/research/include/UPGISfooter.html&quot;tml"-->
 
   <!--#include virtual="/research/include/UPGISfooter.html"-->
 

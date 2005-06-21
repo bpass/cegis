@@ -64,7 +64,7 @@ public class DSSUpWrite extends java.applet.Applet implements Runnable
                 g.setFont(font);
 
                 String s = "Node Number is Now " + ticket;
-                String s2 = "Path is Now" + ticket;
+                String s2 = "Path is Now " + ticket;
 
                 int x = (this.size().width - fm.stringWidth(s)) / 2;
                 int y = (this.size().height - fm.getHeight()) / 2;

@@ -1,3 +1,7 @@
+<!--
+  Last modified by lwoodard May 19, 2005
+-->
+
 <HTML>
 
 <HEAD>
@@ -10,14 +14,64 @@
 
   <!--#include virtual="/research/include/header.html"-->
  
-  <H3>Decision Support System for Map Projections of Small Scale Data</H3><br>
-
+  <H3>Decision Support System for Map Projections of Small Scale Data</H3>
+  
+  <li><a href="#USAGE">Usage</a></li>
+  
   <H3>Mollweide</H3>
     
   <P><img alt = "Mollweide Projection" 
           src="Mollweide.gif">
   
-  <!--#include virtual="/research/include/thankyou.html"-->
+  <H3>Usage:
+    *<a name="USAGE"></a> 
+  </H3>
+  <P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;The Mollweide projection is an 
+  equal-area projection of the Earth within an ellipse.  It was presented by 
+  Carl B. Mollweide in 1857 and has been called Babinet's Equal-Surface or 
+  the Elliptical projection, but it is most often called the Mollweide, 
+  Homalographic, or Homolographic.</P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;It has inspired the 
+  <a href="./GoodeHomolosine.html">Homolosine</a> projection, 
+  <a href="VanDerGrinten.html">Van der Grinten</a> projection, and the 
+  Boggs Eumporphic projection.  It did have a smaller influence with other 
+  projections, especially pseudocylindrical, some of which have lines for 
+  poles.</P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;The Mollweide projection only 
+  has two points on it that are completely distortion free, lattitudes 
+  40°44'12" N. and S. on the central meridian, thus, it is usually used as a 
+  world map, at a small scale, and occasionally for a very large region 
+  such as the Pacific Ocean.</P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;The Mollweide projection is 
+  shown in an ellipse with the Equator, its major axis, twice as long the 
+  central meridian, and its minor axis.  The meridians 90° east and west of 
+  the central meridian form a complete circle.  All other meridians are 
+  elliptical arcs which, with their opposite numbers on the other side of 
+  the central meridian, form complete ellipses which meet at the two poles.  
+  The central meridian is the major axis of meridian ellipses less than 90° 
+  from it, and a portion of the Equator is the minor axis.  Meridians 
+  greater than 90° have the reverse arrangement for their axes.  Meridians 
+  are equally spaced along the Equator and along all other parallels.  The 
+  90th meridians form a circle.</P><P>
+  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;The parallels of latitude are 
+  straight parallel lines, but they are not equally spaced.  Their spacing 
+  may be determined from the facts that the projection is equal-area and 
+  that the 90th meridians are circular.  As a result, the regions along the 
+  Equator are stretched 23 percent in a north-south direction relative to 
+  east-west dimensions.  This strectching decreases along the central 
+  meridian to zero at the 40°44' latitudes, and becomes compression nearer 
+  the poles.  The distortion near the outer meridians is considerable at 
+  high latitudes, but less than that of the <a href ="./Sinusoidal.html"> 
+  Sinusoidal projection</a>. </P><P>
+  
+  <P>&nbsp;* Usage information source: <P>
+  Snyder, John P. <u>Map Projections - A Working Manual Paper U.S. Geological 
+  Survey Professional Paper 1395.</u> Washington: United States Government 
+  Printing Office, 1987. </P>
+  
+    
+  <!--#include virtual="/research/include/thankyou.h#include virtual=&quot;/research/include/UPGISfooter.html&quot;tml"-->
 
   <!--#include virtual="/research/include/UPGISfooter.html"-->
 

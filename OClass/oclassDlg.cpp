@@ -74,7 +74,7 @@ COClassDlg::~COClassDlg() {
 		delete m_batchDlg;
 	}
 
-	for(int i = 0; i < m_batchParams.size(); i++) {
+	for(size_t i = 0; i < m_batchParams.size(); i++) {
 		if(m_batchParams[i])
 			delete m_batchParams[i];
 	}
@@ -92,6 +92,7 @@ void COClassDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_IMAGE_FILE, m_imageFileName);
 	DDX_Text(pDX, IDC_IMAGE_HEIGHT, m_imageHeight);
 	DDX_Text(pDX, IDC_IMAGE_WIDTH, m_imageWidth);
+
 	DDX_Control(pDX, IDC_IMAGE_HEIGHT, m_imageHeightEdit);
 	DDX_Control(pDX, IDC_IMAGE_WIDTH, m_imageWidthEdit);
 	DDX_Check(pDX, IDC_HTMLOUTPUT, m_htmlOutput);
@@ -257,7 +258,7 @@ void COClassDlg::OnBnClickedRun()
 		return;
 	
 	
-	classificationParams* newParams = new classificationParams(m_curDataType,
+	/*classificationParams* newParams = new classificationParams(m_curDataType,
 															m_numClasses,
 															m_numLayers,
 															m_imageWidth,
@@ -267,13 +268,14 @@ void COClassDlg::OnBnClickedRun()
 															(bool)m_textOutput,
 															(LPCTSTR)m_imageFileName,
 															(LPCTSTR)m_claFileName);
+	*/
 	enableControls(FALSE);
-	runClassification(newParams);
-
+//	runClassification(&newParams);
+	runClassification(&m_curConfig);
 	enableControls(TRUE);
 	m_runButton.SetWindowText("Run Classification");
 	AfxMessageBox("Classification Complete",MB_ICONINFORMATION | MB_OK);
-	delete newParams;
+//	delete newParams;
 
 }
 
@@ -331,7 +333,7 @@ void COClassDlg::OnBnClickedClaoutput()
 void COClassDlg::OnBnClickedBrowsecla()
 {
 	UpdateData();
-	CFileDialog dlg(TRUE, "*.cla", NULL, OFN_OVERWRITEPROMPT, "Classification Files (*.cla)|*.cla||", NULL, 0);
+	CFileDialog dlg(FALSE, "*.cla", NULL, OFN_EXPLORER | OFN_OVERWRITEPROMPT, "Classification Files (*.cla)|*.cla||", NULL, 0);
 	if(dlg.DoModal() == IDOK) 
 		m_claFileName = dlg.GetPathName();
 	
@@ -385,7 +387,8 @@ void COClassDlg::updateParams() {
 
 bool COClassDlg::updateAndCheckInput() {
 	SetForegroundWindow();
-	UpdateData();
+	if(!UpdateData())
+		return false;
 	
 	m_curDataType = m_dataType.GetCurSel();
 	
@@ -484,7 +487,7 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<unsigned char> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
-				for(size_t i = 0; i < params->numLayers; i++) {
+				for(int i = 0; i < params->numLayers; i++) {
 					if(classifier.numClassesAdjusted(i)) {
 						adjusted = true;
 						classAdjustments.append(itoa(i, tempBuff, 10));
@@ -524,7 +527,7 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<char> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
-				for(size_t i = 0; i < params->numLayers; i++) {
+				for(int i = 0; i < params->numLayers; i++) {
 					if(classifier.numClassesAdjusted(i)) {
 						adjusted = true;
 						classAdjustments.append(itoa(i, tempBuff, 10));
@@ -562,7 +565,7 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<unsigned short> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
-				for(size_t i = 0; i < params->numLayers; i++) {
+				for(int i = 0; i < params->numLayers; i++) {
 					if(classifier.numClassesAdjusted(i)) {
 						adjusted = true;
 						classAdjustments.append(itoa(i, tempBuff, 10));
@@ -602,7 +605,7 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<short> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
-				for(size_t i = 0; i < params->numLayers; i++) {
+				for(int i = 0; i < params->numLayers; i++) {
 					if(classifier.numClassesAdjusted(i)) {
 						adjusted = true;
 						classAdjustments.append(itoa(i, tempBuff, 10));
@@ -642,7 +645,7 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<unsigned long> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
-				for(size_t i = 0; i < params->numLayers; i++) {
+				for(int i = 0; i < params->numLayers; i++) {
 					if(classifier.numClassesAdjusted(i)) {
 						adjusted = true;
 						classAdjustments.append(itoa(i, tempBuff, 10));
@@ -682,7 +685,7 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<long> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
-				for(size_t i = 0; i < params->numLayers; i++) {
+				for(int i = 0; i < params->numLayers; i++) {
 					if(classifier.numClassesAdjusted(i)) {
 						adjusted = true;
 						classAdjustments.append(itoa(i, tempBuff, 10));
@@ -723,7 +726,7 @@ void COClassDlg::runClassification(classificationParams* params) {
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
 
-				for(size_t i = 0; i < params->numLayers; i++) {
+				for(int i = 0; i < params->numLayers; i++) {
 					if(classifier.numClassesAdjusted(i)) {
 						adjusted = true;
 						classAdjustments.append(itoa(i, tempBuff, 10));
@@ -763,7 +766,7 @@ void COClassDlg::runClassification(classificationParams* params) {
 				ImageClassifier<double> classifier(params->imageFileName.c_str(), params->imageWidth
 												  ,params->imageHeight, params->numLayers, params->numClasses);
 				classifier.classify();
-				for(size_t i = 0; i < params->numLayers; i++) {
+				for(int i = 0; i < params->numLayers; i++) {
 					if(classifier.numClassesAdjusted(i)) {
 						adjusted = true;
 						classAdjustments.append(itoa(i, tempBuff, 10));
@@ -858,4 +861,14 @@ void COClassDlg::editJob(size_t index, classificationParams* newParams) {
 		delete m_batchParams[index];
 
 	m_batchParams[index] = newParams;
+}
+
+bool COClassDlg::isNumeric(CString num)
+{
+	for(int i = 0; i < num.GetLength(); i++) 
+	{
+		if(!isdigit(num[i]))
+			return false;
+	}
+	return true;
 }

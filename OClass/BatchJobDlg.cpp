@@ -52,8 +52,11 @@ BOOL BatchJobDlg::OnInitDialog() {
 	CDialog::OnInitDialog();
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
+
+	//*******************************************************************
+	//* Create new tool tips object and add tips for each control
+	//*******************************************************************
 	m_toolTips.Create(this);
-	
 	m_toolTips.AddTool(&m_jobList, "The classification job queue.");
 	m_toolTips.AddTool(&m_addCurrentButton, "Add the current configuration to the queue, or commit changes to the current selection.");
 	m_toolTips.AddTool(&m_removeButton, "Remove the current selection from the queue.");
@@ -67,6 +70,7 @@ BOOL BatchJobDlg::OnInitDialog() {
 	return TRUE;
 }
 
+//overloaded to enable tool tips
 BOOL BatchJobDlg::PreTranslateMessage(MSG* pMsg) {
 	 
 	switch(pMsg->message) {
@@ -92,13 +96,25 @@ HCURSOR BatchJobDlg::OnQueryDragIcon() {
 }
 
 void BatchJobDlg::onAddCurrentButton() {
+
+	//get a pointer to the main OClass window
 	COClassDlg* parent = ((COClassDlg*)GetParent());
 	classificationParams* newConfig = NULL;
 	UpdateData();
+
+	//if we are not in edit mode 
+	//call parent's updateParams which
+	//grabs the current configuration in
+	//the main window and adds it to the parent's job queue.
+	//refreshJobList checks this queue each time it is called
+	//and populates the list box with its values.
 	if(!m_editChecked) 
 		parent->updateParams();
 	
 
+	//else if we are editing an allready existing job
+	//commit the current configuration to the currently
+	//selected job in the list.
 	else {
 		newConfig = new classificationParams;
 		*newConfig = parent->getCurrentConfig();
@@ -110,6 +126,10 @@ void BatchJobDlg::onAddCurrentButton() {
 
 void BatchJobDlg::onRemoveButton() {
 int selIndex = m_jobList.GetCurSel();
+
+//if there is something valid selected in the listbox
+//call the parent's deleteJob() function to remove
+//it from the queue
 if(selIndex != LB_ERR)
 	((COClassDlg*)GetParent())->deleteJob((size_t)selIndex);
 
@@ -152,12 +172,13 @@ void BatchJobDlg::saveJobList(const char* filename) {
 	TiXmlDeclaration decl("1.0", NULL, "yes");
 	TiXmlElement rootE("JobQueue");
 	rootE.SetAttribute("NumJobs", jobList.size());
-	TiXmlElement* jobE = NULL;
-	TiXmlElement* fileE = NULL;
-	TiXmlElement* imageParamsE = NULL;
-	TiXmlElement* outputParamsE = NULL;
-	TiXmlElement* claFileE = NULL;
+	TiXmlElement* jobE = NULL; //each <job> tag
+	TiXmlElement* fileE = NULL; //each <imageFile> tag 
+	TiXmlElement* imageParamsE = NULL; //each <imageParams> tag
+	TiXmlElement* outputParamsE = NULL; //each <outputParams> tag
+	TiXmlElement* claFileE = NULL; //each <claFile> tag
 
+	//for each job in the queue
 	for(size_t i = 0; i < jobList.size(); i++) {
 		
 		if(jobE)
@@ -171,6 +192,7 @@ void BatchJobDlg::saveJobList(const char* filename) {
 		if(claFileE)
 			delete claFileE;
 
+		//create all tags for current job and set all needed attributes.
 		jobE = new TiXmlElement("Job");
 		fileE = new TiXmlElement("ImageFile");
 		fileE->InsertEndChild(TiXmlText(jobList[i]->imageFileName.c_str()));
@@ -205,10 +227,13 @@ void BatchJobDlg::saveJobList(const char* filename) {
 		else
 			claFileE->InsertEndChild(TiXmlText("Not Specified"));
 
+		//add all of the tags under <job>
 		jobE->InsertEndChild(*fileE);
 		jobE->InsertEndChild(*imageParamsE);
 		jobE->InsertEndChild(*outputParamsE);
 		jobE->InsertEndChild(*claFileE);
+
+		//add current <job> tag to root <jobQueue> tag
 		rootE.InsertEndChild(*jobE);
 	}
 	
@@ -250,6 +275,8 @@ void BatchJobDlg::onLoadButton() {
 }
 
 void BatchJobDlg::loadJobList(const char* filename) {
+
+	//get pointer to the parent window.
 	COClassDlg* parent = ((COClassDlg*)GetParent());
 	int numJobs = 0;
 	int tempNum = 0;
@@ -264,13 +291,17 @@ void BatchJobDlg::loadJobList(const char* filename) {
 		AfxMessageBox("Error loading BQF file", MB_ICONWARNING | MB_OK);
 		return;
 	}
+
+	//clear the job queue
 	parent->clearJobList();
+
+	//<jobQueue> tag
 	TiXmlElement* rootE = doc.FirstChild("JobQueue")->ToElement();
-	TiXmlNode* jobN = NULL;
-	TiXmlElement* imageParamsE = NULL;
-	TiXmlElement* outputParamsE = NULL;
-	TiXmlElement* claFileE = NULL;
-	TiXmlElement* imageFileE = NULL;
+	TiXmlNode* jobN = NULL; //each <job> tag
+	TiXmlElement* imageParamsE = NULL; //each <imageParams> tag
+	TiXmlElement* outputParamsE = NULL; //each <outputParams> tag
+	TiXmlElement* claFileE = NULL; //each <claFile> tag
+	TiXmlElement* imageFileE = NULL; //each <imageFile> tag
 	TiXmlHandle handle(&doc);
 
 	if(!rootE) {
@@ -278,10 +309,17 @@ void BatchJobDlg::loadJobList(const char* filename) {
 		return;
 	}
 	
+	//get the number of jobs from <jobQueue>
 	rootE->Attribute("NumJobs", &numJobs);
 	jobN = rootE->FirstChild("Job");
+
+	//for each job in the list
 	for(size_t i = 0; i < numJobs; i++) {
 		curParams = new classificationParams;
+		
+		//****************************************************************
+		//* Attempt to acquire all tags for current job
+		//****************************************************************
 
 		if(!jobN) {
 			AfxMessageBox("Missing or malformed <Job> tag", MB_ICONWARNING | MB_OK);
@@ -312,6 +350,7 @@ void BatchJobDlg::loadJobList(const char* filename) {
 			return;
 		}
 
+		//pull needed parameters out of each element
 		curParams->imageFileName = imageFileE->FirstChild()->Value();
 		curParams->claFileName = claFileE->FirstChild()->Value();
 		imageParamsE->Attribute("NumLayers", (int*)&curParams->numLayers);
@@ -319,6 +358,8 @@ void BatchJobDlg::loadJobList(const char* filename) {
 		imageParamsE->Attribute("Height", (int*)&curParams->imageHeight);
 		imageParamsE->Attribute("DataType", (int*)&curParams->dataType);
 		
+		//check for the type of output this job is generating
+
 		if(!strcmp(outputParamsE->Attribute("cla"), "Y"))
 			curParams->claOutput = true;
 		else
@@ -344,24 +385,36 @@ void BatchJobDlg::loadJobList(const char* filename) {
 		
 }
 void BatchJobDlg::onRunButton() {
+
+	//get the job list vector from the parent.
 	std::vector<classificationParams*> jobList = ((COClassDlg*)GetParent())->getJobList();
 	if(jobList.size() == 0) {
 		AfxMessageBox("There are no jobs in the queue!", MB_ICONWARNING | MB_OK);
 		return;
 	}
+
+	//set up the progress bar
 	m_progBar.SetRange32(0, jobList.size());
 	m_progBar.SetStep(1);
 	m_progBar.ShowWindow(SW_SHOW);
 	m_progBarStatic.ShowWindow(SW_SHOW);
 	m_progBar.StepIt();
+	
 	UpdateWindow();
+	
+	//disable all controls
 	enableControls(FALSE);
 
+	//process each job in the list
 	for(size_t i = 0; i < jobList.size(); i++) {
+
+		//update progress bar
 		m_progBarText = "Processing ";
 		m_progBarText += jobList[i]->imageFileName.c_str();
 		UpdateData(FALSE);
 		UpdateWindow();
+
+		//run the next job
 		((COClassDlg*)GetParent())->runClassification(jobList[i]);
 		m_progBar.StepIt();
 		UpdateWindow();
@@ -380,21 +433,31 @@ void BatchJobDlg::onCloseButton() {
 }
 
 void BatchJobDlg::refreshJobList() {
+
+	//get the current job list and clear the listbox
 	std::vector<classificationParams*> jobList = ((COClassDlg*)GetParent())->getJobList();
 	m_jobList.ResetContent();
-	FILE* testFile = NULL;
+
+	FILE* testFile = NULL; //used to check if the image file listed exists or not.
 	
+	//for each job in the list
 	for(size_t i = 0; i < jobList.size(); i++) {
 		CString curJobString;
 		
 		if(jobList[i]) {
+
+			//build the string to appear in the listbox for this job
 			char number[10] = {'\0'};
 			curJobString += "File: ";
 			curJobString += jobList[i]->imageFileName.c_str();
 			curJobString += "    | # Classes: ";
 			sprintf(number, "%d", jobList[i]->numClasses);
 			curJobString += number;
+
+			//try to open the image file to see if it's there.
 			testFile = fopen(jobList[i]->imageFileName.c_str(), "r");
+
+			//if image file does not exists, add an indication to the job string.
 			if(!testFile) 
 				curJobString += "    *****BAD FILE*****";
 			
@@ -407,6 +470,8 @@ void BatchJobDlg::refreshJobList() {
 		}
 	}
 
+	//reset the proper horizontal extent for the list box 
+	//because we loaded a new list of strings.
 	setListBoxHExtent();
 }
 
@@ -415,11 +480,14 @@ void BatchJobDlg::OnBnClickedClear()
 {
 	int answer = 0;
 	bool asked = false;
+
+	//ask if they really want to clear the list.
 	if(m_jobList.GetCount() != 0) {
 		answer = AfxMessageBox("Are you sure you want to clear the job queue?", MB_YESNO | MB_ICONWARNING);
 		asked = true;
 	}
 	
+	//if yes, clear it.
 	if((asked && answer == IDYES) || !asked) {
 		((COClassDlg*)GetParent())->clearJobList();
 		refreshJobList();
@@ -428,7 +496,11 @@ void BatchJobDlg::OnBnClickedClear()
 }
 
 void BatchJobDlg::enableControls(BOOL enable) {
+
+	//get a pointer to the parent and enable or disable it's controls
 	((COClassDlg*)GetParent())->enableControls(enable);
+
+	//set the enable state for each control in the batch dialog
 	m_addCurrentButton.EnableWindow(enable);
 	m_removeButton.EnableWindow(enable);
 	m_clearButton.EnableWindow(enable);
@@ -443,6 +515,9 @@ void BatchJobDlg::enableControls(BOOL enable) {
 void BatchJobDlg::OnLbnSelchangeJoblist()
 {
 	UpdateData();
+
+	//if we are in edit mode, load the parameters for the currently
+	//selected job in the main OClass window.
 	if(m_editChecked) {
 		int curIndex = m_jobList.GetCurSel();
 		COClassDlg* parent = (COClassDlg*)GetParent();
@@ -453,10 +528,17 @@ void BatchJobDlg::OnLbnSelchangeJoblist()
 void BatchJobDlg::OnBnClickedEditJob()
 {
 	UpdateData();
+
+	//if we are checking "edit"
 	if(m_editChecked) {
 		int curSel = m_jobList.GetCurSel();
 
+		//change the "add current" button text to reflect 
+		//new functionality while in edit mode.
 		m_addCurrentButton.SetWindowText("Commit Changes");
+
+		//get a pointer to the parent window and 
+		//if there is a selection allready made load those parameters.
 		COClassDlg* parent = (COClassDlg*)GetParent();
 		if(curSel != LB_ERR)
 			parent->loadParams(parent->getJobList()[curSel]);
@@ -468,11 +550,15 @@ void BatchJobDlg::OnBnClickedEditJob()
 void BatchJobDlg::setListBoxHExtent() {
 	size_t longest = 0;
 	CString curString;
+
+	//calculate which string in the listbox is the longest.
 	for(size_t i = 0; i < m_jobList.GetCount(); i++) {
 		m_jobList.GetText(i, curString);
 		if(curString.GetLength() > longest)
 			longest = curString.GetLength();
 	}
 
+	//the formula here was arrived at by trial and error,
+	//it's not perfect but it works.
 	m_jobList.SetHorizontalExtent(longest*5 + longest/2);
 }

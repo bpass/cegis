@@ -32,18 +32,12 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-	CString m_origFile;
-	CString m_outputFile;
-	std::vector<CString> m_files;
-	afx_msg void onBnClickedBrowseInput();
-	afx_msg void onBnClickedBrowseOutput();
-	afx_msg void onBnClickedGenerate();
-	CString m_claFile;
-	afx_msg void OnBnClickedGenmodelBrowseclafile();
-	CString m_modelName;
-	afx_msg void OnBnClickedGenmodelBrowsemodeloutput();
+	CString m_origFile; //original Imagine image file
+	CString m_outputFile; //newly reclassified Imagine image file
+	CString m_claFile; //cla file that contains the classification information
+	CString m_modelName; //the model file to generate
 
-	CButton m_browseClaButton;
+	CButton m_browseClaButton; 
 	CButton m_browseOrigButton;
 	CButton m_browseMdlButton;
 	CButton m_browseImgButton;
@@ -56,4 +50,11 @@ public:
 	CEdit m_mdlEdit;
 
 	CToolTipCtrl m_toolTips;
+
+	afx_msg void onBnClickedBrowseInput();
+	afx_msg void onBnClickedBrowseOutput();
+	afx_msg void onBnClickedGenerate();
+	afx_msg void OnBnClickedGenmodelBrowseclafile();
+	afx_msg void OnBnClickedGenmodelBrowsemodeloutput();
+
 };

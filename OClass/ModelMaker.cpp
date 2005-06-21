@@ -84,6 +84,7 @@ void ModelMaker::generate(const char* filename) {
 		for(unsigned int j = 0; j < m_classInfo[i].size(); j++) {
 			//if our high and low values are equal generate
 			//== conditional for the value.
+
 			if(m_classInfo[i][j].low == m_classInfo[i][j].high) {
 				//if the value is not 0, generate condition
 				if(m_classInfo[i][j].low != 0) {

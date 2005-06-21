@@ -91,6 +91,7 @@ BOOL genModelDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
+	//create tool tips
 	m_toolTips.Create(this);
 	m_toolTips.AddTool(&m_browseClaButton, "Browse for the CLA input file.");
 	m_toolTips.AddTool(&m_browseOrigButton, "Browse for the original Imagine image file.");
@@ -170,12 +171,16 @@ void genModelDlg::onBnClickedBrowseOutput() {
 
 void genModelDlg::onBnClickedGenerate() {
 	UpdateData();
+
+	//check all required fields
 	if((m_origFile.GetLength() == 0) || (m_outputFile.GetLength() == 0) 
 		|| (m_claFile.GetLength() == 0) || (m_modelName.GetLength() == 0)) {
 		AfxMessageBox("All fields must be filled in to continue", MB_ICONWARNING | MB_OK);
 		return;
 	}
 	try {
+
+		//generate the model with the current parameters
 		ModelMaker mm((LPCTSTR)m_origFile, (LPCTSTR)m_outputFile, (LPCTSTR)m_claFile);
 		mm.generate((LPCTSTR)m_modelName);
 		AfxMessageBox("Model Generation Complete!",MB_ICONINFORMATION | MB_OK);

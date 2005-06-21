@@ -1,0 +1,24 @@
+/*
+ * DSSMain.java
+ *
+ * Created on June 18, 2002, 8:06 AM
+ */
+
+/**
+ *
+ * @author  sposch
+ * @version 
+ */
+
+public class DSSMain extends javax.swing.JApplet 
+{
+    public void init()
+    {
+        
+    
+    /** Creates new DSSMain */
+    public DSSMain() 
+    {
+    }
+
+}

@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.11 2005/06/08 18:00:54 rbuehler Exp $
+// $Id: qgctpbox.cpp,v 1.12 2005/06/21 20:53:29 rbuehler Exp $
 
 
 #include <qtooltip.h>
@@ -485,12 +485,12 @@ void QGctpBox::initializeHoldValues()
    holdValues->insert("PFlag",      0);
    holdValues->insert("PSRev",      1);
    holdValues->insert("Satnum",     1);
-   holdValues->insert("Shapem",     0);
-   holdValues->insert("Shapen",     2);
+   holdValues->insert("Shapem",     1.5);
+   holdValues->insert("Shapen",     2.5);
    holdValues->insert("SMajor",     0);
    holdValues->insert("SMinor",     0);
    holdValues->insert("Sphere",     6370997);
-   holdValues->insert("STDPAR",     0);
+   holdValues->insert("STDPAR",     10000000);
    holdValues->insert("STDPR1",     0);
    holdValues->insert("STDPR2",     20000000);
    holdValues->insert("TrueScale",  1);

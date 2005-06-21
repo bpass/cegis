@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.30 2005/06/13 23:11:09 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.31 2005/06/21 20:53:29 rbuehler Exp $
 
 
 #include "mapimg.h"
@@ -174,7 +174,7 @@ QString mapimg::projectionErrors( const RasterInfo &input )
          }
          else
          {  // Version B
-            if( fabs(input.gctpParam(2) - input.gctpParam(3)) < EPSILON )
+            if( fabs(input.gctpParam(2) + input.gctpParam(3)) < EPSILON )
                msg += "Standard parallel values may produce invalid data.\n"
                "\t-Make sure they don't add up to zero\n";
             break;

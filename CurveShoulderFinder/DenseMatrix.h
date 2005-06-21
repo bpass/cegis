@@ -2,7 +2,7 @@
  * @file DenseMatrix.h
  * @author Austin Hartman
  *
- * $Id: DenseMatrix.h,v 1.3 2005/06/14 23:44:34 ahartman Exp $
+ * $Id: DenseMatrix.h,v 1.4 2005/06/21 23:01:54 ahartman Exp $
  */
 
 #ifndef AUSTIN_DENSEMATRIX_H
@@ -35,8 +35,9 @@ DenseMatrix<T> operator*(const DenseMatrix<T>& lhs, const DenseMatrix<T>& rhs);
 
 
 /**
+ * Class to hold a matrix whose values can all be non-zero.
  * This class requires that T be default constructible, copy constructible, and
- * assignable
+ * assignable.
  */
 template<class T>
 class DenseMatrix : public Matrix<T>

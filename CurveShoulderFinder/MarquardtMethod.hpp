@@ -2,7 +2,7 @@
  * @file MarquardtMethod.hpp
  * @author Austin Hartman
  *
- * $Id: MarquardtMethod.hpp,v 1.4 2005/06/16 23:08:34 ahartman Exp $
+ * $Id: MarquardtMethod.hpp,v 1.5 2005/06/21 22:40:14 ahartman Exp $
  */
 
 #ifdef AUSTIN_MARQUARDTMETHOD_H
@@ -13,9 +13,9 @@
 #include "InvertMatrix.h"
 
 //#define DEBUG_PRINT
-//#define PRINT_SUMRESIDUALS
+//#define PRINT_SUMSQUARESRESIDUALS
 
-#if defined(DEBUG_PRINT) || defined(PRINT_SUMRESIDUALS)
+#if defined(DEBUG_PRINT) || defined(PRINT_SUMSQUARESRESIDUALS)
 #include <iostream>
 #endif
 
@@ -27,13 +27,13 @@ typename MarquardtMethod<T>::Parameters
 MarquardtMethod<T>::operator()(
     const typename MarquardtMethod<T>::Points& points,
     const typename MarquardtMethod<T>::Parameters& initialGuesses,
-    const typename MarquardtMethod<T>::SumResiduals& sumResiduals,
+    const typename MarquardtMethod<T>::SumSquaresResiduals& sumSquaresResiduals,
     const typename MarquardtMethod<T>::FirstPartials& firstPartials,
     const typename MarquardtMethod<T>::SecondPartials& secondPartials,
     const typename MarquardtMethod<T>::StoppingTest& stoppingTest,
     const size_t maxIterations) const
 {
-#if defined(DEBUG_PRINT) || defined(PRINT_SUMRESIDUALS)
+#if defined(DEBUG_PRINT) || defined(PRINT_SUMSQUARESRESIDUALS)
     using std::cout;
     using std::fixed;
     using std::setw;
@@ -103,15 +103,17 @@ MarquardtMethod<T>::operator()(
                 newParameters[i] = parameters[i] - product[i];
             }
 
-            const T oldSumResiduals = sumResiduals(points, parameters);
-            const T newSumResiduals = sumResiduals(points, newParameters);
+            const T oldSumSquaresResiduals = 
+                sumSquaresResiduals(points, parameters);
+            const T newSumSquaresResiduals = 
+                sumSquaresResiduals(points, newParameters);
 
 #ifdef DEBUG_PRINT
 //            cout << "lambda[" << iterations << "] = " << lambda << '\n';
 #endif
 
             // if the parameter estimates have improved
-            if(newSumResiduals < oldSumResiduals)
+            if(newSumSquaresResiduals < oldSumSquaresResiduals)
             {
                 parameters = newParameters;
                 lambda /= lambdaFactor;
@@ -134,13 +136,14 @@ MarquardtMethod<T>::operator()(
         ++iterations;
 
 #ifdef DEBUG_PRINT
-        cout << "Sum Residuals[" << iterations << "] = " 
-             << setw(width) << sumResiduals(points, parameters) << '\n';
+        cout << "Sum Squares Residuals[" << iterations << "] = " 
+             << setw(width) << sumSquaresResiduals(points, parameters) << '\n';
 #endif
     }
 
-#ifdef PRINT_SUMRESIDUALS
-    cout << "Sum Residuals = " << sumResiduals(points, parameters) << '\n';
+#ifdef PRINT_SUMSQUARESRESIDUALS
+    cout << "Sum Squares Residuals = " 
+         << sumSquaresResiduals(points, parameters) << '\n';
 #endif
 
     return parameters;
@@ -150,8 +153,8 @@ MarquardtMethod<T>::operator()(
 #undef DEBUG_PRINT
 #endif
 
-#ifdef PRINT_SUMRESIDUALS
-#undef PRINT_SUMRESIDUALS
+#ifdef PRINT_SUMSQUARESRESIDUALS
+#undef PRINT_SUMSQUARESRESIDUALS
 #endif
 
 #endif

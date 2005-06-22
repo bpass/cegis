@@ -2,7 +2,7 @@
  * @file Matrix.h
  * @author Austin Hartman
  *
- * $Id: Matrix.h,v 1.3 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: Matrix.h,v 1.4 2005/06/22 01:30:41 ahartman Exp $
  */
 
 #ifndef AUSTIN_MATRIX_H
@@ -32,6 +32,27 @@ operator>>(std::istream& is, Matrix<T>& m);
 
 
 
+/**
+ * A abstract base class for any type of matrix.  The operations in this apply 
+ * to any type of matrix.  A reference or pointer to this base class
+ * can be used so that the derived matrix type can use a memory allocation 
+ * scheme that is efficient for its type while still allowing the code that
+ * uses it to work with any type of matrix.
+ *
+ * This is definitely not the most efficient way to implement a matrix class.
+ * For it to be useful at all, operator[] has to be virtual, but that means it
+ * will almost certainly not be inlined, so it will be much slower than it
+ * could be.  However, this approach is flexible in that different functions 
+ * do not have to be written to take in different types of matrices.  A better
+ * way to achieve the same flexibility would be to use something with 
+ * templates (because you usually know at compile time what type of matrix
+ * you're working with) such as the Barton-Nackman trick.  That would have 
+ * been much more difficult to implement though.
+ *
+ * I mainly chose to implement it this way because it was required for my
+ * CS328 class at UMR, and I didn't want to rewrite the code when I started
+ * using it here at USGS.
+ */
 template<class T>
 class Matrix
 {
@@ -40,9 +61,9 @@ public:
 
 	/**
 	 * Multiplies a matrix by a vector.
-	 * Pre: The number of columns in the matrix must equal the number
+	 * @pre The number of columns in the matrix must equal the number
 	 * of elements in the vector
-	 * Post: returns a vector that is the result of multiplying this
+	 * @post returns a vector that is the result of multiplying this
 	 * matrix by the vector v
 	 */
 	virtual MyVector<T> operator*(const MyVector<T>& v) const = 0;
@@ -59,25 +80,28 @@ public:
 	class RowProxy;
 	class ConstRowProxy;
 
+	//@{
 	/**
-	 * operators used for the first bracket in the operation
-	 * matrix[row][column]
+	 * operator used for the first bracket in the operation
+	 * matrix[row][column].
 	 */
 	RowProxy operator[](const size_t& r);
 	ConstRowProxy operator[](const size_t& r) const;
+	//@}
 
 	/**
-	 * Pre: None
-	 * Post: returns the number of rows in the matrix.
+	 * @pre None
+	 * @post returns the number of rows in the matrix.
 	 */
-	virtual const size_t& getNumRows() const = 0;
+	virtual size_t getNumRows() const = 0;
 
 	/**
-	 * Pre: None
-	 * Post: returns the number of columns in the matrix.
+	 * @pre None
+	 * @post returns the number of columns in the matrix.
 	 */
-	virtual const size_t& getNumCols() const = 0;
+	virtual size_t getNumCols() const = 0;
 
+	//@{
 	/**
 	 * Proxy classes to implement access with matrix[row][column].  The
 	 * two different classes are used so that const-correctness 
@@ -90,7 +114,7 @@ public:
 
 		/**
 		 * Implements the second [] in matrix[row][column]
-		 * Pre: c is < the number of columns in matrix.
+		 * @pre c is < the number of columns in matrix.
 		 * Returns the element in the matrix in the row row
 		 * and the c column.  Throws ColumnRangeError if
 		 * c >= the number of columns in the matrix.
@@ -101,7 +125,6 @@ public:
 		size_t row;
 
 	};
-	friend class RowProxy;
 
 	class ConstRowProxy
 	{
@@ -110,7 +133,7 @@ public:
 
 		/**
 		 * Implements the second [] in matrix[row][column]
-		 * Pre: c is < the number of columns in matrix.
+		 * @pre c is < the number of columns in matrix.
 		 * Returns the element in the matrix in the row row
 		 * and the c column.  Throws ColumnRangeError if
 		 * c >= the number of columns in the matrix.
@@ -120,6 +143,8 @@ public:
 		const Matrix<T>& matrix;
 		size_t row;
 	};
+	//@}
+	friend class RowProxy;
 	friend class ConstRowProxy;
 
 	/**
@@ -186,29 +211,29 @@ public:
 		                        const size_t& rhsNumCols);
 
 		/**
-		 * Pre: None
-		 * Post: Returns the number of rows in the matrix that
+		 * @pre None
+		 * @post Returns the number of rows in the matrix that
 		 * was on the left-hand side of the operation.
 		 */
 		const size_t& getLhsRows() const;
 
 		/**
-		 * Pre: None
-		 * Post: Returns the number of columns in the matrix that
+		 * @pre None
+		 * @post Returns the number of columns in the matrix that
 		 * was on the left-hand side of the operation.
 		 */
 		const size_t& getLhsColumns() const;
 
 		/**
-		 * Pre: None
-		 * Post: Returns the number of rows in the matrix that
+		 * @pre None
+		 * @post Returns the number of rows in the matrix that
 		 * was on the right-hand side of the operation.
 		 */
 		const size_t& getRhsRows() const;
 
 		/**
-		 * Pre: None
-		 * Post: Returns the number of columns in the matrix that
+		 * @pre None
+		 * @post Returns the number of columns in the matrix that
 		 * was on the right-hand side of the operation.
 		 */
 		const size_t& getRhsColumns() const;
@@ -220,16 +245,18 @@ public:
 	};
 
 protected:
+	//@{
 	/**
 	 * These getElement functions are used to get the element at 
 	 * row, column in the matrix.  They should be overridden 
 	 * by derived classes.
 	 * They will be automatically called when the user does
-	 *   matrix[row][column]
+	 *   matrix[row][column].
 	 */
 	virtual T& getElement(const size_t& row, const size_t& col) = 0;
 	virtual const T& getElement(const size_t& row, 
 	                            const size_t& col) const = 0;
+	//@}
 
 	/**
 	 * The printOn function is called by operator<<, because

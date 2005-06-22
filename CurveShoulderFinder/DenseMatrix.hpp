@@ -2,7 +2,7 @@
  * @file DenseMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: DenseMatrix.hpp,v 1.4 2005/06/16 23:08:34 ahartman Exp $
+ * $Id: DenseMatrix.hpp,v 1.5 2005/06/22 01:35:02 ahartman Exp $
  */
 
 #ifdef AUSTIN_DENSEMATRIX_H
@@ -416,14 +416,14 @@ DenseMatrix<T>::readIn(std::istream& is)
 
 
 template<class T>
-const size_t&
+size_t
 DenseMatrix<T>::getNumRows() const
 {
 	return numRows;
 }
 
 template<class T>
-const size_t&
+size_t
 DenseMatrix<T>::getNumCols() const
 {
 	return numCols;

@@ -2,7 +2,7 @@
  * @file DenseMatrix.h
  * @author Austin Hartman
  *
- * $Id: DenseMatrix.h,v 1.4 2005/06/21 23:01:54 ahartman Exp $
+ * $Id: DenseMatrix.h,v 1.5 2005/06/22 01:35:02 ahartman Exp $
  */
 
 #ifndef AUSTIN_DENSEMATRIX_H
@@ -202,13 +202,13 @@ public:
 	 * Pre: None
 	 * Post: returns the number of rows in this matrix.
 	 */
-	virtual const size_t& getNumRows() const;
+	virtual size_t getNumRows() const;
 
 	/**
 	 * Pre: None
 	 * Post: returns the number of columns in this matrix.
 	 */
-	virtual const size_t& getNumCols() const;
+	virtual size_t getNumCols() const;
 
 	/**
 	 * Resets the matrix to have the passed-in number of rows and

@@ -2,7 +2,7 @@
  * @file UpperTriangularMatrix.h
  * @author Austin Hartman
  *
- * $Id: UpperTriangularMatrix.h,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: UpperTriangularMatrix.h,v 1.3 2005/06/22 01:35:02 ahartman Exp $
  */
 
 #ifndef AUSTIN_UPPERTRIANGULARMATRIX_H
@@ -89,15 +89,15 @@ public:
 
 	/**
 	 * Pre: None
-	 * Post: returns the number of columns in the matrix.
+	 * Post: returns the number of rows in the matrix.
 	 */
-	virtual const size_t& getNumCols() const;
+	virtual size_t getNumRows() const;
 
 	/**
 	 * Pre: None
-	 * Post: returns the number of rows in the matrix.
+	 * Post: returns the number of columns in the matrix.
 	 */
-	virtual const size_t& getNumRows() const;
+	virtual size_t getNumCols() const;
 
 protected:
 	/**

@@ -2,7 +2,7 @@
  * @file UpperTriangularMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: UpperTriangularMatrix.hpp,v 1.3 2005/06/16 23:10:08 ahartman Exp $
+ * $Id: UpperTriangularMatrix.hpp,v 1.4 2005/06/22 01:35:02 ahartman Exp $
  */
 
 #ifdef AUSTIN_UPPERTRIANGULARMATRIX_H
@@ -312,14 +312,14 @@ operator*(const Matrix<T>& lhs,
 }
 
 template<class T>
-const size_t&
+size_t
 UpperTriangularMatrix<T>::getNumRows() const
 {
 	return size;
 }
 
 template<class T>
-const size_t&
+size_t
 UpperTriangularMatrix<T>::getNumCols() const
 {
 	return size;

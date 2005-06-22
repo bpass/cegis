@@ -2,7 +2,7 @@
  * @file LowerTriangularMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: LowerTriangularMatrix.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
+ * $Id: LowerTriangularMatrix.hpp,v 1.4 2005/06/22 01:35:02 ahartman Exp $
  */
 
 #ifdef AUSTIN_LOWERTRIANGULARMATRIX_H
@@ -260,14 +260,14 @@ operator*(const LowerTriangularMatrix<T>& lhs,
 }
 
 template<class T>
-const size_t&
+size_t
 LowerTriangularMatrix<T>::getNumRows() const
 {
 	return size;
 }
 
 template<class T>
-const size_t&
+size_t
 LowerTriangularMatrix<T>::getNumCols() const
 {
 	return size;

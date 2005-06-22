@@ -2,7 +2,7 @@
  * @file TridiagonalMatrix.h
  * @author Austin Hartman
  *
- * $Id: TridiagonalMatrix.h,v 1.4 2005/06/16 21:21:14 ahartman Exp $
+ * $Id: TridiagonalMatrix.h,v 1.5 2005/06/22 01:35:02 ahartman Exp $
  */
 
 #ifndef AUSTIN_TRIDIAGONALMATRIX_H
@@ -117,14 +117,14 @@ public:
 	 * Post: returns the number of rows in the matrix, which must
 	 * be the same as the number of columns.
 	 */
-	virtual const size_t& getNumRows() const;
+	virtual size_t getNumRows() const;
 
 	/**
 	 * Pre: None
 	 * Post: returns the number of columns in the matrix, which must
 	 * be the same as the number of rows.
 	 */
-	virtual const size_t& getNumCols() const;
+	virtual size_t getNumCols() const;
 
 protected:
 	/**
@@ -139,7 +139,7 @@ protected:
 
 	/** 
 	 * Outputs the matrix in the form
-     * @verbatim
+	 * @verbatim
 	     [ x00 x01 x02 ... x0n ]
 	     [ x10 x11 x12 ... x1n ]
 	     [   ...       ...     ]

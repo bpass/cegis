@@ -2,7 +2,7 @@
  * @file TridiagonalMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: TridiagonalMatrix.hpp,v 1.4 2005/06/16 23:10:08 ahartman Exp $
+ * $Id: TridiagonalMatrix.hpp,v 1.5 2005/06/22 01:35:02 ahartman Exp $
  */
 
 #ifdef AUSTIN_TRIDIAGONALMATRIX_H
@@ -203,14 +203,14 @@ operator-(const TridiagonalMatrix<T>& lhs, const TridiagonalMatrix<T>& rhs)
 }
 
 template<class T>
-const size_t& 
+size_t 
 TridiagonalMatrix<T>::getNumRows() const
 {
 	return size;
 }
 
 template<class T>
-const size_t&
+size_t
 TridiagonalMatrix<T>::getNumCols() const
 {
 	return size;

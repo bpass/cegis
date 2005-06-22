@@ -2,7 +2,7 @@
  * @file DiagonalMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: DiagonalMatrix.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
+ * $Id: DiagonalMatrix.hpp,v 1.4 2005/06/22 01:37:57 ahartman Exp $
  */
 
 #ifdef AUSTIN_DIAGONALMATRIX_H
@@ -217,14 +217,14 @@ operator*(const DiagonalMatrix<T>& lhs, const DiagonalMatrix<T>& rhs)
 }
 
 template<class T>
-const size_t&
+size_t
 DiagonalMatrix<T>::getNumRows() const
 {
 	return size;
 }
 
 template<class T>
-const size_t&
+size_t
 DiagonalMatrix<T>::getNumCols() const
 {
 	return size;

@@ -14,16 +14,7 @@ Projection(gctpParams, units, dat), m_centerLon(0.0), m_centerLat(0.0)
 
 void Azimuthal::setCenterLat(double lat)
 {
-	long err = 0;
-	double temp = 0;
-
-	temp = Util::paksz(lat, &err) * 3600 * S2R;
-	if(err != 0) {
-		setError(err);
-		return;
-	}
-
-	m_centerLat = temp;
+	convertAndSetAngle(m_centerLat, lat);
 	setInit();
 }
 

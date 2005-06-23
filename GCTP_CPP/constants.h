@@ -20,6 +20,8 @@
 #define NULL 0
 #define RADVAL 19
 
+#define LANDSAT_RATIO 0.5201613
+
 /* The STPLN_TABLE unit value is specifically used for State Plane -- if units
    equals STPLN_TABLE and Datum is NAD83--actual units are retrieved from
    a table according to the zone.  If Datum is NAD27--actual units will be feet.

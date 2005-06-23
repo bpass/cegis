@@ -26,7 +26,6 @@ class Projection
 		*/
 	Projection (double gctpParameters[], ProjUnit units, ProjDatum dat);
     
-	Projection (const Projection& proj);
 	//! Perform a forward transformation.
 
 	/*! This function transforms input lat/lon coordinates to the desired coordinate system.
@@ -186,6 +185,13 @@ protected:
 
 	//! Toggle forward and inverse initialization flags.
 	void setInit() {m_initNeeded = true;}
+
+	//!Converts the packed DMS angle specified by "angle" to radians and assigns it to "member".
+	/*! This function was created to avoid excessive code repetition, as the majority
+		of projections need to convert specific parameters from the packed DMS angle 
+		format to radians and store that value in a particular member variable.
+	*/
+	void convertAndSetAngle(double& member, double angle);
 
 	virtual void _forward(double lon, double lat) = 0;
 	virtual void _inverse(double x, double y) = 0;

@@ -20,6 +20,7 @@ m_initNeeded(false)
   for( int index = 0; index < COEFCT; index++ )
      m_gctpParams[index] = gctpParameters[index];
   
+  loadFromParams();
   return; 
 }
 
@@ -83,6 +84,22 @@ double Projection::param(size_t index) {
 	
 }
 
+void Projection::convertAndSetAngle(double& member, double angle)
+{
+	double temp = angle;
+	long err = 0;
+	err = Util::DMSToRad(temp);
+	
+	if(err != 0) 
+	{
+		setError(err);
+		return;
+	}
+
+	member = temp;
+}
+	
+
 void Projection::forward(double lon, double lat, double* x, double* y)
 {
 	clearError();
@@ -124,6 +141,7 @@ void Projection::inverse(double x, double y, double* lon, double* lat)
 	if(lat)
 		*lat = m_latitude;
 }
+
 
 
 

@@ -259,7 +259,7 @@ void SpaceObMerc::_forward(double lon, double lat)
 	double d,sdsq,sd,tanlg,xtan,tphi,dp,dd,ds,rlm2;
 	double scl,tlamp,conv,delta_lat,radlt,radln;
 	double temp;
-
+	bool end = false;
 	/* Forward equations
 	-----------------*/
 	conv=1.e-7;
@@ -288,62 +288,68 @@ void SpaceObMerc::_forward(double lon, double lat)
 	{
 		sav=tlamp;
 		l=0;
+		end = false;
 		xlamp=radln+m_p21*tlamp;
 		ab1=cos(xlamp);
+		
 		if(fabs(ab1)<conv) 
 			xlamp=xlamp-1.e-7;
+		
 		if(ab1>=0.0) 
 			scl=1.0;
+		
 		if(ab1<0.0) 
 			scl= -1.0;
+
 		ab2=tlamp-(scl)*sin(tlamp)*HALF_PI;
 
-
-		xlamt=radln+m_p21*sav;
-		c=cos(xlamt);
-		if (fabs(c)<1.e-7) 
-			xlamt=xlamt-1.e-7;
-		xlam=(((1.0-m_es)*tan(radlt)*m_sa)+sin(xlamt)*m_ca)/c;
-		tlam=atan(xlam);
-		tlam=tlam+ab2;
-		tabs=fabs(sav)-fabs(tlam);
-
-		if(fabs(tabs)<conv) 
+		while(1)
 		{
-			rlm=PI*LANDSAT_RATIO;
-			rlm2=rlm+2.0*PI;
-			n++;
+			xlamt=radln+m_p21*sav;
+			c=cos(xlamt);
 
-			if(n >= 3)
+			if (fabs(c)<1.e-7) 
+				xlamt=xlamt-1.e-7;
+
+			xlam=(((1.0-m_es)*tan(radlt)*m_sa)+sin(xlamt)*m_ca)/c;
+			tlam=atan(xlam);
+			tlam=tlam+ab2;
+			tabs=fabs(sav)-fabs(tlam);
+
+			if(fabs(tabs)<conv) 
+			{
+				rlm=PI*LANDSAT_RATIO;
+				rlm2=rlm+2.0*PI;
+				n++;
+
+				if(n >= 3)
+					end = true;
+
+				if((tlam>rlm) && (tlam<rlm2)) 
+					end = true;
+
+				if(tlam<rlm)
+					tlamp=2.50*PI;
+				if(tlam>=rlm2) 
+					tlamp=HALF_PI;
+
 				break;
+			}
 
-			if(tlam>rlm&&tlam<rlm2) 
-				break;
-			
-			if(tlam<rlm)
-				tlamp=2.50*PI;
-			if(tlam>=rlm2) 
-				tlamp=HALF_PI;
+			l++;
 
-			continue;
+			if (l > 50) 
+			{
+				setError(216);
+				return;
+			}
+
+			sav=tlam;
 		}
 
-		l++;
-
-		if (l > 50) 
-		{
-			setError(216);
-			return;
-		}
-
-		sav=tlam;
+		if(end)
+			break;
 	}
-
-	/* Adjust for confusion at beginning and end of landsat orbits
-	-----------------------------------------------------------*/
-
-	/* tlam computed - now compute tphi
-	--------------------------------*/
 
 	
 	ds=sin(tlam);

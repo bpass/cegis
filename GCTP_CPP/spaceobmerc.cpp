@@ -263,7 +263,7 @@ void SpaceObMerc::_forward(double lon, double lat)
 	/* Forward equations
 	-----------------*/
 	conv=1.e-7;
-	delta_lat=m_latitude;
+	delta_lat = lat;
 	delta_lon= lon-m_centerLon;
 
 	/* Test for latitude and longitude approaching 90 degrees

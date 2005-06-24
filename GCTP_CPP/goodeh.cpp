@@ -217,7 +217,7 @@ void GoodeH::_inverse(double x, double y)
 			return;
 		}
 		theta = asin(arg);
-		m_longitude = m_centerLons[region]+(x/(0.900316316158 * m_radius * cos(theta)));
+		m_longitude = Util::adjust_lon(m_centerLons[region]+(x/(0.900316316158 * m_radius * cos(theta))));
 		if(m_longitude < -(PI + EPSLN)) {
 			setError(IN_BREAK);
 			return;

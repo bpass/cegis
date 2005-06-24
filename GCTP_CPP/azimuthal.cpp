@@ -35,7 +35,7 @@ void Azimuthal::setCenterLon(double lon)
 
 void Azimuthal::_loadFromParams()
 {
-	Projection::loadFromParams();
+	Projection::_loadFromParams();
 	setCenterLon(m_gctpParams[4]);
 	setCenterLat(m_gctpParams[5]);
 }

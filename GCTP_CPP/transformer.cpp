@@ -1,5 +1,6 @@
 #include "transformer.h"
 
+#include "geographic.h"
 #include "albersconeqarea.h"
 #include "lambertcc.h"
 #include "mercator.h"
@@ -23,6 +24,9 @@
 #include "hammer.h"
 #include "wagneriv.h"
 #include "wagnervii.h"
+#include "utm.h"
+#include "lambertazimuth.h"
+#include "spaceobmerc.h"
 
 Transformer::Transformer()
 : m_inProj(NULL), m_outProj(NULL), m_errored(false)
@@ -171,8 +175,10 @@ Projection* Transformer::convertProjection( ProjCode projectionCode )
    switch( projectionCode )
    {
    case GEO:
+      proj = new Geographic();
       break;
-   case UTM:
+   case _UTM:
+      proj = new UTM();
       break;
    case SPCS:
       break;
@@ -200,6 +206,7 @@ Projection* Transformer::convertProjection( ProjCode projectionCode )
    case STEREO:
       break;
    case LAMAZ:
+      proj = new LambertAzimuthal();
       break;
    case AZMEQD:
       proj = new AzEquidistant();
@@ -231,6 +238,7 @@ Projection* Transformer::convertProjection( ProjCode projectionCode )
       proj = new Robinson();
       break;
    case SOM:
+      proj = new SpaceObMerc();
       break;
    case ALASKA:
       break;

@@ -193,15 +193,14 @@ void SpaceObMerc::setCenterLon(double lon)
 void SpaceObMerc::_inverse(double x, double y)
 {
 	double tlon,conv,sav,sd,sdsq,blon,dif,st,defac,actan,tlat,dd,bigk,bigk2,xlamt;
-	double sl,scl,dlat,dlon,temp;
+	double sl,scl,dlat,dlon;
 	long inumb;
 
 	/* Inverse equations. Begin inverse computation with approximation for tlon. 
 	Solve for transformed long.
 	---------------------------*/
-	temp = y; 
-	y = x - m_falseEasting; 
-	x = temp - m_falseNorthing;
+	x -= m_falseEasting; 
+	y -= m_falseNorthing;
 
 	tlon= x/(m_a*m_b);
 	conv=1.e-9;
@@ -264,7 +263,6 @@ void SpaceObMerc::_forward(double lon, double lat)
 	double rlm,tabs,tlam,xlam,c,xlamt,ab2,ab1,xlamp,sav;
 	double d,sdsq,sd,tanlg,xtan,tphi,dp,dd,ds,rlm2;
 	double scl,tlamp,conv,delta_lat,radlt,radln;
-	double temp;
 	bool end = false;
 	/* Forward equations
 	-----------------*/
@@ -376,10 +374,9 @@ void SpaceObMerc::_forward(double lon, double lat)
 	m_y_coord = m_c1*sd+m_c3*sin(3.0*tlam)+tanlg*m_xj/d;
 	m_y_coord *= m_a;
 
-	/* Negate x & swap x,y
-	-------------------*/
-	temp =  m_x_coord;
-	m_x_coord= m_y_coord + m_falseEasting;
-	m_y_coord = temp + m_falseNorthing;
+	m_x_coord += m_falseEasting;
+	m_y_coord += m_falseNorthing;
+
+
 }
 

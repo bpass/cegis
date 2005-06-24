@@ -22,7 +22,7 @@ protected:
 	double m_centerLon;
 	double m_centerLat;
 
-	virtual void loadFromParams();
+	virtual void _loadFromParams();
 
 	virtual void init() = 0;
 };

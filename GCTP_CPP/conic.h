@@ -41,7 +41,7 @@ protected:
 	//! See documentation for Projection
 	virtual void init() = 0;
 
-	virtual void loadFromParams();
+	virtual void _loadFromParams();
 
 	//! Center longitude of projection.
 	double m_centerLon;

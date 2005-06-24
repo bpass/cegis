@@ -3,7 +3,7 @@
 Projection::Projection(): 
 m_errorCode(0),m_longitude(0.0), m_latitude(0.0), m_x_coord(0.0), m_y_coord(0.0), 
 m_falseEasting(0.0),m_falseNorthing(0.0), m_rMajor(0.0), m_rMinor(0.0), m_radius(0.0),
-m_initNeeded(false)
+m_initNeeded(false), m_paramLoadNeeded(false)
 
 {
 	for(int i = 0; i < COEFCT; i++)
@@ -14,24 +14,30 @@ Projection::Projection ( double gctpParameters[], ProjUnit units, ProjDatum dat)
 m_errorCode(0), m_unitCode(units), m_datum(dat),
 m_longitude(0.0), m_latitude(0.0), m_x_coord(0.0), m_y_coord(0.0), m_falseEasting(0.0),
 m_falseNorthing(0.0), m_rMajor(0.0), m_rMinor(0.0), m_radius(0.0),
-m_initNeeded(false)
+m_initNeeded(false), m_paramLoadNeeded(false)
 {
 
   for( int index = 0; index < COEFCT; index++ )
      m_gctpParams[index] = gctpParameters[index];
   
-  loadFromParams();
+  setParamLoad();
   return; 
 }
 
 void Projection::loadFromParams() {
+	_loadFromParams();
+	setParamLoad(false);
+}
+
+void Projection::_loadFromParams()
+{
 	setFE(m_gctpParams[6]);
 	setFN(m_gctpParams[7]);
 	setRadii();
 }
-
 void Projection::xy ( double* x, double* y )
 {
+
   if( x != NULL )
   {
      *x = m_x_coord;
@@ -41,7 +47,6 @@ void Projection::xy ( double* x, double* y )
   {
      *y = m_y_coord;
   }
-  
   
 }
 
@@ -57,21 +62,21 @@ void Projection::latLon ( double* lat, double* lon )
      *lon = m_longitude;
   }
   
- 
 }
 
 void Projection::setParams(double gctpParams[]) {
 	for(int i = 0; i < COEFCT; i++) {
 		m_gctpParams[i] = gctpParams[i];
 	}
-	loadFromParams();
-   setRadii();
+
+	setParamLoad();
+	setRadii();
 }
 
 void Projection::setParam(size_t index, double value) {
 	if(index < COEFCT) {
 		m_gctpParams[index] = value;
-		loadFromParams();
+		setParamLoad();
 	    setRadii();
 	}
 }
@@ -103,7 +108,14 @@ void Projection::convertAndSetAngle(double& member, double angle)
 void Projection::forward(double lon, double lat, double* x, double* y)
 {
 	clearError();
-	if(m_initNeeded)
+
+	if(paramLoadNeeded())
+		loadFromParams();
+
+	if(errorOccured())
+		return;
+
+	if(initNeeded())
 		init();
 
 	if(errorOccured())
@@ -124,7 +136,14 @@ void Projection::forward(double lon, double lat, double* x, double* y)
 void Projection::inverse(double x, double y, double* lon, double* lat)
 {
 	clearError();
-	if(m_initNeeded)
+
+	if(paramLoadNeeded())
+		loadFromParams();
+
+	if(errorOccured())
+		return;
+
+	if(initNeeded())
 		init();
 
 	if(errorOccured())

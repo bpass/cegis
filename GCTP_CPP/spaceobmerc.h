@@ -11,13 +11,13 @@ public:
 	SpaceObMerc();
 	SpaceObMerc(double gctpParams[], ProjUnit units, ProjDatum dat);
 
-	void setSatNum(long num) {m_satNum = num;}
-	void setPath(long path) {m_path = path;}
-	void setMode(long mode) {m_mode = mode;}
+	void setSatNum(long num) {m_satNum = num; setInit();}
+	void setPath(long path) {m_path = path; setInit();}
+	void setMode(long mode) {m_mode = mode; setInit();}
 	void setAlf(double val);
 	void setCenterLon(double lon);
-	void setTime(double time) {m_time = time;}
-	void setStart(double start) {m_start = start;}
+	void setTime(double time) {m_time = time; setInit();}
+	void setStart(double start) {m_start = start; setInit();}
 
 	long satNum() {return m_satNum;}
 	long path() {return m_path;}
@@ -58,7 +58,7 @@ protected:
 
 	void init();
 
-	void loadFromParams();
+	void _loadFromParams();
 
 	void _inverse(double x, double y);
 	void _forward(double lon, double lat);

@@ -30,7 +30,7 @@ m_centerLon(0.0)
 {
 	setNumber(SOM);
 	setName("Space Oblique Mercator");
-	loadFromParams();
+	setParamLoad();
 }
 
 void SpaceObMerc::init()
@@ -143,8 +143,9 @@ void SpaceObMerc::som_series(double* fb, double* fa2, double* fa4, double* fc1, 
 	*fc3=fc*cos(3.0* *dlam);
 }
 
-void SpaceObMerc::loadFromParams()
+void SpaceObMerc::_loadFromParams()
 {
+	Projection::_loadFromParams();
 	setPath((long)m_gctpParams[3]);
 	setSatNum((long)m_gctpParams[2]);
 	if(m_gctpParams[12] == 0) 
@@ -158,6 +159,7 @@ void SpaceObMerc::loadFromParams()
 
 	else
 		setMode(0);
+
 }
 
 void SpaceObMerc::setAlf(double val)
@@ -170,6 +172,8 @@ void SpaceObMerc::setAlf(double val)
 		return;
 	}
 	m_alf = val;
+
+	setInit();
 }
 
 void SpaceObMerc::setCenterLon(double lon)
@@ -182,6 +186,8 @@ void SpaceObMerc::setCenterLon(double lon)
 		return;
 	}
 	m_centerLon = lon;
+
+	setInit();
 }
 
 void SpaceObMerc::_inverse(double x, double y)
@@ -366,9 +372,9 @@ void SpaceObMerc::_forward(double lon, double lat)
 	m_s=m_p21*m_sa*cos(tlam)*sqrt((1.0+m_t*sdsq)/((1.0+m_w*sdsq)*(1.0+m_q*sdsq)));
 	d=sqrt(m_xj*m_xj+m_s*m_s);
 	m_x_coord = m_b * tlam + m_a2 * sin(2.0*tlam) + m_a4*sin(4.0*tlam)-tanlg*m_s/d;
-	m_x_coord = m_a * m_x_coord;
+	m_x_coord *= m_a;
 	m_y_coord = m_c1*sd+m_c3*sin(3.0*tlam)+tanlg*m_xj/d;
-	m_y_coord = m_a* m_y_coord;
+	m_y_coord *= m_a;
 
 	/* Negate x & swap x,y
 	-------------------*/

@@ -9,12 +9,12 @@ m_centerLon(0.0), m_centerLat(0.0), m_stdParallelLat1(0.0), m_stdParallelLat2(0.
 Conic::Conic(double gctpParams[], ProjUnit units, ProjDatum dat) :
 Projection(gctpParams, units, dat)
 {
-	loadFromParams();
+	setParamLoad();
 }
 
-void Conic::loadFromParams() 
+void Conic::_loadFromParams() 
 {
-	Projection::loadFromParams();
+	Projection::_loadFromParams();
 	setCenterLon(m_gctpParams[4]);
 	setCenterLat(m_gctpParams[5]);
 	setStdParallel1(m_gctpParams[2]);
@@ -79,4 +79,6 @@ void Conic::setStdParallel2(double lat)
 
 	m_stdParallelLat2 = temp;
 	setInit();
+	
+
 }

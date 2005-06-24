@@ -29,7 +29,7 @@ protected:
 
 	void init();
 
-	void loadFromParams();
+	void _loadFromParams();
 };
 
 #endif

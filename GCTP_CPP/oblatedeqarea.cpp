@@ -16,12 +16,12 @@ m_centerLon(0.0), m_centerLat(0.0)
 {
 	setNumber(OBEQA);
 	setName("Oblated Equal Area");
-	loadFromParams();
+	setParamLoad();
 }
 
-void OblatedEqArea::loadFromParams() 
+void OblatedEqArea::_loadFromParams() 
 {
-	Projection::loadFromParams();
+	Projection::_loadFromParams();
 	setShapeM(m_gctpParams[2]);
 	setShapeN(m_gctpParams[3]);
 	setCenterLon(m_gctpParams[4]);

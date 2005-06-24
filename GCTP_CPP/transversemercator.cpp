@@ -1,4 +1,4 @@
-//$Id: transversemercator.cpp,v 1.5 2005/06/16 20:49:04 mswilliams Exp $
+//$Id: transversemercator.cpp,v 1.6 2005/06/24 21:25:17 mswilliams Exp $
 
 #include "transversemercator.h"
 
@@ -17,12 +17,12 @@ m_es(0.0), m_esp(0.0), m_ml0(0.0), m_ind(0.0)
 {
 	setNumber(TM);
 	setName("Transverse Mercator");
-	loadFromParams();
+	setParamLoad();
 }
 
-void TransverseMercator::loadFromParams() 
+void TransverseMercator::_loadFromParams() 
 {
-	Cylindrical::loadFromParams();
+	Cylindrical::_loadFromParams();
 	setScaleFactor(m_gctpParams[2]);
 }
 

@@ -19,7 +19,7 @@ protected:
 
 	void init();
 
-	void loadFromParams();
+	void _loadFromParams();
 
 	void _inverse(double x, double y);
 	void _forward(double lon, double lat);

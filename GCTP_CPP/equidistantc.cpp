@@ -16,7 +16,7 @@ m_g(0.0), m_rh(0.0)
 {
 	setNumber(EQUIDC);
 	setName("Equidistant Conic");
-	loadFromParams();
+	setParamLoad();
 }
 
 void EquidistantC::init() 
@@ -120,8 +120,8 @@ void EquidistantC::_inverse(double x, double y)
 
 }
 
-void EquidistantC::loadFromParams() {
-	Conic::loadFromParams();
+void EquidistantC::_loadFromParams() {
+	Conic::_loadFromParams();
 	setMode((int)m_gctpParams[8]);
 }
 	

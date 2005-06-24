@@ -17,13 +17,14 @@ m_ml0(0.0), m_ind(0), m_zone(zone)
 {
 	setNumber(_UTM);
 	setName("UTM");
-	loadFromParams();
+	setParamLoad();
 	m_scaleFactor = 0.9996;
 }
 
 
-void UTM::loadFromParams()
+void UTM::_loadFromParams()
 {
+	Projection::_loadFromParams();
 	long err = 0;
 	double lon = m_gctpParams[0];
 	double lat = m_gctpParams[1];

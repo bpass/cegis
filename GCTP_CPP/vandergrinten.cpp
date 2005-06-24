@@ -11,12 +11,12 @@ Projection(gctpParams, units, dat), m_centerLon(0.0)
 {
 	setNumber(VGRINT);
 	setName("Van Der Grinten");
-	loadFromParams();
+	setParamLoad();
 }
 
-void VanDerGrinten::loadFromParams() 
+void VanDerGrinten::_loadFromParams() 
 {
-	Projection::loadFromParams();
+	Projection::_loadFromParams();
 	setCenterLon(m_gctpParams[4]);
 }
 

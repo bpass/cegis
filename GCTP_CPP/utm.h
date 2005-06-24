@@ -43,7 +43,7 @@ protected:
 	double m_ind;
 	int m_zone;
 
-	void loadFromParams();
+	void _loadFromParams();
 
 	void init();
 

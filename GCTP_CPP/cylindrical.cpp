@@ -8,7 +8,7 @@ Cylindrical::Cylindrical() : Projection(), m_centerLon(0.0), m_centerLat(0.0)
 Cylindrical::Cylindrical(double gctpParams[], ProjUnit units, ProjDatum dat):
 Projection(gctpParams, units, dat), m_centerLon(0.0), m_centerLat(0.0) 
 {
-	loadFromParams();
+	setParamLoad();
 }
 
 void Cylindrical::setCenterLat(double lat) 
@@ -41,8 +41,8 @@ void Cylindrical::setCenterLon(double lon)
 	setInit();
 }
 
-void Cylindrical::loadFromParams() {
-	Projection::loadFromParams();
+void Cylindrical::_loadFromParams() {
+	Projection::_loadFromParams();
 	setCenterLon(m_gctpParams[4]);
 	setCenterLat(m_gctpParams[5]);
 }

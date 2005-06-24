@@ -27,7 +27,7 @@ protected:
 	//! See documentation for Projection
 	virtual void init() = 0;
 
-	virtual void loadFromParams();
+	virtual void _loadFromParams();
 };
 
 #endif

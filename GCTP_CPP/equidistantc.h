@@ -41,7 +41,7 @@ protected:
 	//! See documentation for Projection
 	void init();
 	
-	void loadFromParams();
+	void _loadFromParams();
 
 	void _forward(double lon, double lat);
 	void _inverse(double x, double y);

@@ -9,7 +9,7 @@ Azimuthal::Azimuthal(): Projection(), m_centerLon(0.0), m_centerLat(0.0)
 Azimuthal::Azimuthal(double gctpParams[], ProjUnit units, ProjDatum dat):
 Projection(gctpParams, units, dat), m_centerLon(0.0), m_centerLat(0.0)
 {
-	loadFromParams();
+	setParamLoad();
 }
 
 void Azimuthal::setCenterLat(double lat)
@@ -33,7 +33,7 @@ void Azimuthal::setCenterLon(double lon)
 	setInit();
 }
 
-void Azimuthal::loadFromParams()
+void Azimuthal::_loadFromParams()
 {
 	Projection::loadFromParams();
 	setCenterLon(m_gctpParams[4]);

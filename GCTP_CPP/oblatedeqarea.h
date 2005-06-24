@@ -41,7 +41,7 @@ protected:
 	double m_centerLon;
 	double m_centerLat;
 
-	void loadFromParams();
+	void _loadFromParams();
 
 	void init();
 

@@ -8,7 +8,7 @@ Pseudocylindrical::Pseudocylindrical() : Projection(), m_centerLat(0.0), m_cente
 Pseudocylindrical::Pseudocylindrical(double gctpParams[], ProjUnit units, ProjDatum dat) 
 : Projection(gctpParams, units, dat)
 {
-	loadFromParams();
+	setParamLoad();
 }
 
 void Pseudocylindrical::setCenterLat(double lat) {
@@ -39,8 +39,8 @@ void Pseudocylindrical::setCenterLon(double lon) {
 	setInit();
 }
 
-void Pseudocylindrical::loadFromParams() {
-	Projection::loadFromParams();
+void Pseudocylindrical::_loadFromParams() {
+	Projection::_loadFromParams();
 	setCenterLon(m_gctpParams[4]);
 	setCenterLat(m_gctpParams[5]);
 }

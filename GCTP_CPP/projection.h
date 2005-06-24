@@ -171,8 +171,11 @@ protected:
 	//! Array of 15 projection parameters (as used in the original GCTP).
     double m_gctpParams[COEFCT];
 
-	//do we need to do an initialization?
+	//!do we need to do an initialization?
 	bool m_initNeeded;
+
+	//!do we need to reload the members from the parameter array?
+	bool m_paramLoadNeeded;
 
 	//!Perform all intializations needed for forward and inverse transformations
 	virtual void init() = 0;
@@ -186,6 +189,18 @@ protected:
 	//! Toggle forward and inverse initialization flags.
 	void setInit() {m_initNeeded = true;}
 
+	//! Do we need to reinitialize?
+	bool initNeeded() {return m_initNeeded;}
+	
+	//!Toggle reload from parameter array.
+	void setParamLoad(bool set = true) {m_paramLoadNeeded = set; setInit();}
+
+	//!Do we need to reload the members from the parameter array?
+	bool paramLoadNeeded() {return(m_paramLoadNeeded);}
+
+	//!Load member variables with their corresponding values in the parameter array.
+	virtual void _loadFromParams();
+
 	//!Converts the packed DMS angle specified by "angle" to radians and assigns it to "member".
 	/*! This function was created to avoid excessive code repetition, as the majority
 		of projections need to convert specific parameters from the packed DMS angle 
@@ -196,7 +211,7 @@ protected:
 	virtual void _forward(double lon, double lat) = 0;
 	virtual void _inverse(double x, double y) = 0;
 
-	virtual void loadFromParams();
+	void loadFromParams();
 
 
 

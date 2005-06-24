@@ -15,12 +15,12 @@ m_p(0.0), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 {
 	setNumber(GVNSP);
 	setName("General Vertical Near-Side Perspective");
-	loadFromParams();
+	setParamLoad();
 }
 
-void GenVertNSP::loadFromParams()
+void GenVertNSP::_loadFromParams()
 {
-	Projection::loadFromParams();
+	Projection::_loadFromParams();
 	setCenterLon(m_gctpParams[4]);
 	setCenterLat(m_gctpParams[5]);
 	setHeight(m_gctpParams[2]);

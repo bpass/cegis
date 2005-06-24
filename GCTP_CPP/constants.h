@@ -93,7 +93,7 @@ enum ProjCode
 {
 NONE=-1,
 GEO=0, 
-UTM, 
+_UTM, 
 SPCS, 
 ALBERS, 
 LAMCC, 

@@ -287,6 +287,9 @@
 				RelativePath=".\util.cpp">
 			</File>
 			<File
+				RelativePath=".\utm.cpp">
+			</File>
+			<File
 				RelativePath=".\vandergrinten.cpp">
 			</File>
 			<File

@@ -81,6 +81,9 @@ void UTM::init()
 		m_ind = 1;
 	else 
 	    m_ind = 0;
+
+	m_initNeeded = false;
+
 }
 
 void UTM::_forward(double lon, double lat)

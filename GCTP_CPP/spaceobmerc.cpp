@@ -121,6 +121,9 @@ void SpaceObMerc::init()
 	m_b = sumb/30.0;
 	m_c1 = sumc1/15.0;
 	m_c3 = sumc3/45.0;
+
+	m_initNeeded = false;
+
 }
 
 void SpaceObMerc::som_series(double* fb, double* fa2, double* fa4, double* fc1, double* fc3, double* dlam)

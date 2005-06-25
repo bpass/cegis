@@ -20,7 +20,6 @@ void Polyconic::init()
 {
 	double temp;	
 
-	clearError();
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - SQUARE(temp);
 	m_e = sqrt(m_es);

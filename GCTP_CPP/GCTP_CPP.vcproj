@@ -281,6 +281,9 @@
 				RelativePath=".\spaceobmerc.cpp">
 			</File>
 			<File
+				RelativePath=".\stereo.cpp">
+			</File>
+			<File
 				RelativePath=".\transversemercator.cpp">
 			</File>
 			<File
@@ -388,6 +391,9 @@
 			</File>
 			<File
 				RelativePath=".\spaceobmerc.h">
+			</File>
+			<File
+				RelativePath=".\stereo.h">
 			</File>
 			<File
 				RelativePath=".\transversemercator.h">

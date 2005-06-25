@@ -31,7 +31,6 @@ void OblatedEqArea::_loadFromParams()
 
 void OblatedEqArea::init()
 {
-	clearError();
 	
 	/* Calculate the sine and cosine of the latitude of the center of the map
 	 and store in static storage for common use.

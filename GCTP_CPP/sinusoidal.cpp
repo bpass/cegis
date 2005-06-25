@@ -58,7 +58,6 @@ void Sinusoidal::_inverse(double x, double y)
 
 void Sinusoidal::init(  )
 {
-  clearError();
   m_initNeeded = false;
 }
 

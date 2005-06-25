@@ -1,4 +1,4 @@
-//$Id: transversemercator.cpp,v 1.6 2005/06/24 21:25:17 mswilliams Exp $
+//$Id: transversemercator.cpp,v 1.7 2005/06/25 01:38:33 mswilliams Exp $
 
 #include "transversemercator.h"
 
@@ -31,7 +31,6 @@ void TransverseMercator::init()
 
 	double temp;			/* temporary variable		*/
 
-	clearError();
 
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - SQUARE(temp);

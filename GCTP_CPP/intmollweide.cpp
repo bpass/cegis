@@ -29,9 +29,7 @@ Pseudocylindrical(gctpParams, units, dat)
 }
 
 void IntMollweide::init()
-{
-	clearError();
-	
+{	
 	/* Initialize false eastings for each of the 6 regions
 	   ---------------------------------------------------*/
 	m_falseEastings[0] = m_radius * -2.19988776387;

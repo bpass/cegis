@@ -17,6 +17,7 @@ Azimuthal(gctpParams, units, dat), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 void LambertAzimuthal::init()
 {
 	Util::gctp_sincos(m_centerLat, &m_sinCenterLat, &m_cosCenterLat);
+	m_initNeeded = false;
 }
 
 void LambertAzimuthal::_forward(double lon, double lat)

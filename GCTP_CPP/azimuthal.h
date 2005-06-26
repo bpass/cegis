@@ -24,7 +24,6 @@ protected:
 
 	virtual void _loadFromParams();
 
-	virtual void init() = 0;
 };
 
 #endif

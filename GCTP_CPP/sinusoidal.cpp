@@ -56,9 +56,9 @@ void Sinusoidal::_inverse(double x, double y)
 
 }
 
-void Sinusoidal::init(  )
+void Sinusoidal::_init(  )
 {
-  m_initNeeded = false;
+	return;
 }
 
 

@@ -16,15 +16,13 @@ m_es(0.0), m_m1(0.0)
 		setNumber(MERCAT);
 }
 
-void Mercator::init() {
+void Mercator::_init() {
 	double temp;			/* temporary variable		*/
-    clearError();
 
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - SQUARE(temp);
 	m_e = sqrt(m_es);
 	m_m1 = cos(m_centerLat)/(sqrt(1.0 - m_es * sin(m_centerLat) * sin(m_centerLat)));
-	m_initNeeded = false;
 
 }
 void Mercator::_inverse(double x, double y)

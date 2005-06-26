@@ -14,10 +14,9 @@ Azimuthal(gctpParams, units, dat)
 	setName("Gnomonic");
 }
 
-void Gnomonic::init()
+void Gnomonic::_init()
 {
 	Util::gctp_sincos(m_centerLat, &m_sinCenterLat, &m_cosCenterLat);
-	m_initNeeded = false;
 }
 
 void Gnomonic::_forward(double lon, double lat)

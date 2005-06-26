@@ -19,7 +19,7 @@ m_g(0.0), m_rh(0.0)
 	setParamLoad();
 }
 
-void EquidistantC::init() 
+void EquidistantC::_init() 
 {
 	double temp;			/* temporary variable		*/
 	double sinphi,cosphi;		/* sin and cos values		*/
@@ -62,7 +62,6 @@ void EquidistantC::init()
 	m_ml0 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_centerLat);
 	m_rh = m_rMajor * (m_g - m_ml0);
 
-	m_initNeeded = false;
 
 }
 

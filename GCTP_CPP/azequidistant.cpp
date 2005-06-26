@@ -14,11 +14,9 @@ Azimuthal(gctpParams, units, dat), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
    setName("Azimuthal Equidistant");
 }
 
-void AzEquidistant::init()
+void AzEquidistant::_init()
 {
-   clearError();
    Util::gctp_sincos(m_centerLat,&m_sinCenterLat,&m_cosCenterLat);
-   m_initNeeded = false;
 }
 
 void AzEquidistant::_forward(double lon, double lat)

@@ -19,7 +19,7 @@ AlbersConEqArea::AlbersConEqArea(double gctpParameters[15], ProjUnit units, Proj
 }
 
 
-void AlbersConEqArea::init() {
+void AlbersConEqArea::_init() {
 
 	double sin_po,cos_po;		/* sine and cos values			*/
 	double con;					/* temporary variable			*/
@@ -65,7 +65,6 @@ void AlbersConEqArea::init() {
 	m_c = ms1 * ms1 + m_ns0 * qs1;
 	m_rh = m_rMajor * sqrt(m_c - m_ns0 * qs0)/m_ns0;
 
-	m_initNeeded = false;
 }
 
 

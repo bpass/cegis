@@ -76,9 +76,9 @@ m_cosCenterLat(0.0), m_e(0.0), m_n(6)
 
 }
 
-void AlaskaConformal::init()
+void AlaskaConformal::_init()
 {
-	m_initNeeded = false;
+	return;
 }
 
 void AlaskaConformal::_forward(double lon, double lat)

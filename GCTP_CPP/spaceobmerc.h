@@ -56,7 +56,7 @@ protected:
 
 	void som_series(double* fb, double* fa2, double* fa4, double* fc1, double* fc3, double* dlam);
 
-	void init();
+	void _init();
 
 	void _loadFromParams();
 

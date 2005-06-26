@@ -1,4 +1,4 @@
-//$Id: transversemercator.cpp,v 1.7 2005/06/25 01:38:33 mswilliams Exp $
+//$Id: transversemercator.cpp,v 1.8 2005/06/26 02:03:08 mswilliams Exp $
 
 #include "transversemercator.h"
 
@@ -26,7 +26,7 @@ void TransverseMercator::_loadFromParams()
 	setScaleFactor(m_gctpParams[2]);
 }
 
-void TransverseMercator::init() 
+void TransverseMercator::_init() 
 {
 
 	double temp;			/* temporary variable		*/
@@ -46,8 +46,6 @@ void TransverseMercator::init()
 		m_ind = 1;
 	else 
 		m_ind = 0;
-
-	m_initNeeded = false;
 }
 
 void TransverseMercator::_forward(double lon, double lat)

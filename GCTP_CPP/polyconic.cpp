@@ -16,7 +16,7 @@ m_e3(0.0), m_ml0(0.0)
 	setName("Polyconic");
 }
 
-void Polyconic::init() 
+void Polyconic::_init() 
 {
 	double temp;	
 
@@ -28,7 +28,6 @@ void Polyconic::init()
 	m_e2 = Util::e2fn(m_es);
 	m_e3 = Util::e3fn(m_es);
 	m_ml0 = Util::mlfn(m_e0, m_e1, m_e2, m_e3, m_centerLat);
-	m_initNeeded = false;
 }
 
 

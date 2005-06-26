@@ -40,7 +40,7 @@ Pseudocylindrical(gctpParams, units, dat)
 	m_centerLons[11] = 2.44346095279;		/*  140.0 degrees */
 }
 
-void GoodeH::init() 
+void GoodeH::_init() 
 {
 	m_falseEastings[0] = m_radius * -1.74532925199;
 	m_falseEastings[1] = m_radius * -1.74532925199;
@@ -54,7 +54,6 @@ void GoodeH::init()
 	m_falseEastings[9] = m_radius * 2.44346095279;
 	m_falseEastings[10] = m_radius * 0.349065850399;
 	m_falseEastings[11] = m_radius * 2.44346095279;
-	m_initNeeded = false;
 }
 
 void GoodeH::_forward(double lon, double lat)

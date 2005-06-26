@@ -23,7 +23,7 @@ m_mode(0)
 	setParamLoad();
 }
 
-void HotineObMerc::init()
+void HotineObMerc::_init()
 {
 	double temp;			/* temporary variable		*/
 	double con,com;
@@ -138,7 +138,6 @@ void HotineObMerc::init()
 				m_u = -(m_al/m_bl) * atan(sqrt(m_d * m_d - 1.0)/m_cosaz);
 	}
 
-	m_initNeeded = false;
 }
 
 void HotineObMerc::_forward(double lon, double lat)

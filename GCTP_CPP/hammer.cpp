@@ -14,9 +14,9 @@ Azimuthal(gctpParams, units, dat)
 	setName("Hammer");
 }
 
-void Hammer::init() 
+void Hammer::_init() 
 {
-	m_initNeeded = false;
+	return;
 }
 
 void Hammer::_inverse(double x, double y)

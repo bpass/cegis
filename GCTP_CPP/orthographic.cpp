@@ -14,10 +14,9 @@ Azimuthal(gctpParams, units, dat), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 	setName("Orthographic");
 }
 
-void Orthographic::init() 
+void Orthographic::_init() 
 {
 	Util::gctp_sincos(m_centerLat,&m_sinCenterLat,&m_cosCenterLat);
-	m_initNeeded = false;
 }
 
 void Orthographic::_forward(double lon, double lat)

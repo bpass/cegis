@@ -33,7 +33,7 @@ m_centerLon(0.0)
 	setParamLoad();
 }
 
-void SpaceObMerc::init()
+void SpaceObMerc::_init()
 {
 	long i;
 	double alf,e2c,e2s,one_es;
@@ -122,7 +122,6 @@ void SpaceObMerc::init()
 	m_c1 = sumc1/15.0;
 	m_c3 = sumc3/45.0;
 
-	m_initNeeded = false;
 
 }
 

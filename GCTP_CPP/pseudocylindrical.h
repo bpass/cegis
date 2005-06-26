@@ -24,9 +24,6 @@ protected:
 	
 	double m_centerLon;
 
-	//! See documentation for Projection
-	virtual void init() = 0;
-
 	virtual void _loadFromParams();
 };
 

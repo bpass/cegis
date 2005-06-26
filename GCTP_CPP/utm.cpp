@@ -52,7 +52,7 @@ void UTM::_loadFromParams()
 	}
 }
 
-void UTM::init() 
+void UTM::_init() 
 {
 	double temp;			/* temprorary variables			*/
 
@@ -81,8 +81,6 @@ void UTM::init()
 		m_ind = 1;
 	else 
 	    m_ind = 0;
-
-	m_initNeeded = false;
 
 }
 

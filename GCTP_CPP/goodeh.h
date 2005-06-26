@@ -15,7 +15,7 @@ private:
 	double m_centerLons[12];
 	double m_falseEastings[12];
 
-	void init();
+	void _init();
 
 	void _forward(double lon, double lat);
 	void _inverse(double x, double y);

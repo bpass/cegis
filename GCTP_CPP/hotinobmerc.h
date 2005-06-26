@@ -50,7 +50,7 @@ protected:
 	double m_lon2;
 	int m_mode;
 
-	void init();
+	void _init();
 	void _loadFromParams();
 
 	void _inverse(double x, double y);

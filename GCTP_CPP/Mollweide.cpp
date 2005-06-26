@@ -13,11 +13,9 @@ Pseudocylindrical(gctpParams, units, dat)
 	setNumber(MOLL);
 }
 
-void Mollweide::init() 
+void Mollweide::_init() 
 {
-	clearError();
-
-	m_initNeeded = false;
+	return;
 }
 
 void Mollweide::_forward(double lon, double lat) 

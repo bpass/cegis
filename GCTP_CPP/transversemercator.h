@@ -15,7 +15,7 @@ public:
 protected:
 
 	//! See documentation for Projection
-	void init();
+	void _init();
 
 	void _loadFromParams();
 

@@ -16,7 +16,7 @@ m_f0(0.0), m_rh(0.0)
 	setName("Lambert Conformal Conic");
 }
 
-void LambertCC::init() 
+void LambertCC::_init() 
 {
 	double sin_po;                  /* sin value                            */
 	double cos_po;                  /* cos value                            */
@@ -28,7 +28,6 @@ void LambertCC::init()
 	double ts1;                     /* small t 1                            */
 	double ts2;                     /* small t 2                            */
 
-	clearError();
 	/* Standard Parallels cannot be equal and on opposite sides of the equator
 	------------------------------------------------------------------------*/
 	if (fabs(m_stdParallelLat1+m_stdParallelLat2) < EPSLN)
@@ -58,7 +57,6 @@ void LambertCC::init()
 	m_f0 = ms1 / (m_ns * pow(ts1,m_ns));
 	m_rh = m_rMajor * m_f0 * pow(ts0,m_ns);
 
-	m_initNeeded = false;
 }
 
 void LambertCC::_forward(double lon, double lat)

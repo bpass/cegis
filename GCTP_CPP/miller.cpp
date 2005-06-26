@@ -14,10 +14,9 @@ Cylindrical(gctpParams, units, dat)
 	setName("Miller Cylindrical");
 }
 
-void Miller::init() 
+void Miller::_init() 
 {
-	clearError();
-	m_initNeeded = false;
+	return;
 }
 
 void Miller::_forward(double lon, double lat)

@@ -12,7 +12,7 @@ public:
 
 protected:
 
-	void init();
+	void _init();
 
 	void _inverse(double x, double y);
 	void _forward(double lon, double lat);

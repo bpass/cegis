@@ -20,9 +20,9 @@ void VanDerGrinten::_loadFromParams()
 	setCenterLon(m_gctpParams[4]);
 }
 
-void VanDerGrinten::init()
+void VanDerGrinten::_init()
 {
-	m_initNeeded = false;
+	return;
 }
 
 void VanDerGrinten::_forward(double lon, double lat)

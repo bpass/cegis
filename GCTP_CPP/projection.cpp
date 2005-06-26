@@ -161,6 +161,12 @@ void Projection::inverse(double x, double y, double* lon, double* lat)
 		*lat = m_latitude;
 }
 
+void Projection::init()
+{
+	_init();
+	m_initNeeded = false;
+}
+
 
 
 

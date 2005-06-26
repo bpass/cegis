@@ -219,7 +219,6 @@ void Robinson::_forward(double lon, double lat)
              (m_pr[ip1 + 3] - 2.0 * m_pr[ip1 + 2] + m_pr[ip1 + 1]) / 2.0) * PI / 2.0 + m_falseNorthing;
 }
 
-void Robinson::init()
+void Robinson::_init()
 {
-	m_initNeeded = false;
 }

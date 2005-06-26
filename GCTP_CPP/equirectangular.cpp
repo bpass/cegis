@@ -45,11 +45,9 @@ void Equirectangular::_inverse (double x, double y)
 	 
 }
 
-void Equirectangular::init()
+void Equirectangular::_init()
 {
-  clearError();
-
-  m_initNeeded = false;
+	return;
 }
 
 

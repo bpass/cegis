@@ -14,9 +14,9 @@ Azimuthal(gctpParams, units, dat)
 	setName("Wagner VII");
 }
 
-void WagnerVII::init()
+void WagnerVII::_init()
 {
-	m_initNeeded = false;
+	return;
 }
 
 void WagnerVII::_forward(double lon, double lat)

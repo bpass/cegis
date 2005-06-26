@@ -9,11 +9,12 @@
 //! Base projection class.
 /*! This class provides an interface that all inheriting projection objects
 	must adhere to.
-	*/
+*/
 class Projection
 {
    
   public:
+
     Projection();
 
 	//! Constructor 
@@ -64,13 +65,15 @@ class Projection
 	double lon () {return m_longitude;}
 
 	//! Get both the x and y coordinates from the most recent forward() call.
-    void xy ( double* x, double* y );
+    void xy (double* x, double* y);
 
 	//! Get both the lat and lon from the most recent inverse() call.
     void latLon ( double* lat, double* lon );
 
+	//! Get the gctp paremeter array.
 	double* params() {return m_gctpParams;}
 
+	//! Get a specific parameter in the gctp parameter array.
 	double param(size_t index);
 
 	//! Get the name of the projection.
@@ -99,7 +102,7 @@ class Projection
 	
 	//! Set sphere radii according to spheroid and parameter array
 	void setRadii() {Util::sphdz(m_datum, m_gctpParams, &m_rMajor, &m_rMinor, &m_radius);
-					setInit();}
+					 setInit();}
 	
 	//! Set the major sphere radius
 	void setRMajor(double rMajor) {m_rMajor = rMajor; setInit();}
@@ -110,21 +113,26 @@ class Projection
 	//! Set the radius of the sphere.
 	void setRadius(double radius) {m_radius = radius; setInit();}
 
+	//! Set the gctp parameter array.
 	void setParams(double gctpParams[]);
 
+	//! Set a particular parameter in the gctp parameter array.
 	void setParam(size_t index, double value);
 
-	void setError(long errorCode) {m_errorCode = errorCode;}
-
-	void clearError() {m_errorCode = 0;}
-
+	//! Get the current error code.
 	long error() {return m_errorCode;}
 
+	//! Check if an error has occured.
 	bool errorOccured() {return(m_errorCode != 0);}
 
 
 protected:
 	
+	//! Set the error flag to indicate that an error has occured.
+	void setError(long errorCode) {m_errorCode = errorCode;}
+
+	//! Clear the error flag.
+	void clearError() {m_errorCode = 0;}
 	
 	//! Numeric error code of latest error
 	long m_errorCode;
@@ -177,9 +185,14 @@ protected:
 	//!do we need to reload the members from the parameter array?
 	bool m_paramLoadNeeded;
 
-	//!Perform all intializations needed for forward and inverse transformations
-	virtual void init() = 0;
+	//!Perform all intializations needed for forward and inverse transformations.
+	/*! This function calls the virtual function _init() which is overriden
+		by each derived class and performs other setup as needed by every
+		projection.
+	*/
+	void init();
 
+	virtual void _init() = 0;
 	//! Set the number of the projection.
 	void setNumber(ProjCode number) {m_number = number;}
 
@@ -199,6 +212,10 @@ protected:
 	bool paramLoadNeeded() {return(m_paramLoadNeeded);}
 
 	//!Load member variables with their corresponding values in the parameter array.
+	/*! If any derived class needs to load parameters from the gctp parameter array
+		aside from false easting, false northing, and sphere radii this function 
+		must be overloaded.
+	*/
 	virtual void _loadFromParams();
 
 	//!Converts the packed DMS angle specified by "angle" to radians and assigns it to "member".
@@ -208,7 +225,25 @@ protected:
 	*/
 	void convertAndSetAngle(double& member, double angle);
 
+	//! Performs the forward transformation.
+	/*! This function is responsible for performing
+		the projection's forward transformation.
+		\param lon Input longitude in decimal degrees
+		\param lat Input latitude in decimal degrees
+	*/
 	virtual void _forward(double lon, double lat) = 0;
+
+	//! Performs the inverse transformation.
+	/*! This function is responsible for performing
+		the projection's inverse transformation.
+		Note that the units of the input coordinates
+		must be set either in the constructor or by
+		using the setUnits() function. For a list of 
+		unit codes please 
+		\param x Input x coordinate
+		\param y Input y coordinate
+	*/
+
 	virtual void _inverse(double x, double y) = 0;
 
 	void loadFromParams();

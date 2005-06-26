@@ -39,7 +39,7 @@ protected:
 	int m_mode;
 	
 	//! See documentation for Projection
-	void init();
+	void _init();
 	
 	void _loadFromParams();
 

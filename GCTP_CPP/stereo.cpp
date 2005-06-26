@@ -14,7 +14,7 @@ Azimuthal(gctpParams, units, dat), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 	setName("Stereographic");
 }
 
-void Stereo::init()
+void Stereo::_init()
 {
 	Util::gctp_sincos(m_centerLat,&m_sinCenterLat,&m_cosCenterLat);
 }

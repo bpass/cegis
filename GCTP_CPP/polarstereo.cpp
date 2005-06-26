@@ -18,14 +18,12 @@ m_mcs(0.0), m_tcs(0.0)
 	setName("Polar Stereo");
 }
 
-void PolarStereo::init()
+void PolarStereo::_init()
 {
 	double temp;				/* temporary variable		*/
 	double con1;				/* temporary angle		*/
 	double sinphi;				/* sin value			*/
 	double cosphi;				/* cos value			*/
-
-	clearError();
 
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - SQUARE(temp);
@@ -47,7 +45,6 @@ void PolarStereo::init()
 		m_tcs = Util::tsfnz(m_e,con1,sinphi);
 	}
 
-	m_initNeeded = false;
 }
 
 void PolarStereo::_forward(double lon, double lat)

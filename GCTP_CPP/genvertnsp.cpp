@@ -26,13 +26,12 @@ void GenVertNSP::_loadFromParams()
 	setHeight(m_gctpParams[2]);
 }
 
-void GenVertNSP::init() 
+void GenVertNSP::_init() 
 {
 	/* Place parameters in static storage for common use
 	-------------------------------------------------*/
 	m_p = 1.0 + m_height / m_radius;
 	Util::gctp_sincos(m_centerLat, &m_sinCenterLat, &m_cosCenterLat);
-	m_initNeeded = false;
 }
 
 void GenVertNSP::_forward(double lon, double lat)

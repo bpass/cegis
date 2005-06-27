@@ -1,14 +1,14 @@
 
 #include "stereo.h"
 
-Stereo::Stereo() : Azimuthal(), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
+Stereo::Stereo() : Projection(), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 {
 	setNumber(STEREO);
 	setName("Stereographic");
 }
 
 Stereo::Stereo(double gctpParams[], ProjUnit units, ProjDatum dat):
-Azimuthal(gctpParams, units, dat), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
+Projection(gctpParams, units, dat), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 {
 	setNumber(STEREO);
 	setName("Stereographic");

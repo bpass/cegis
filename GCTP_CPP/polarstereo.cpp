@@ -1,7 +1,7 @@
 
 #include "polarstereo.h"
 
-PolarStereo::PolarStereo() : Azimuthal(),
+PolarStereo::PolarStereo() : Projection(),
 m_es(0.0), m_e(0.0), m_e4(0.0), m_fac(0.0), m_ind(0.0),
 m_mcs(0.0), m_tcs(0.0)
 {
@@ -10,7 +10,7 @@ m_mcs(0.0), m_tcs(0.0)
 }
 
 PolarStereo::PolarStereo(double gctpParams[], ProjUnit units, ProjDatum dat):
-Azimuthal(gctpParams, units, dat),
+Projection(gctpParams, units, dat),
 m_es(0.0), m_e(0.0), m_e4(0.0), m_fac(0.0), m_ind(0.0),
 m_mcs(0.0), m_tcs(0.0)
 {

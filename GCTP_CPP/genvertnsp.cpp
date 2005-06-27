@@ -1,7 +1,7 @@
 
 #include "genvertnsp.h"
 
-GenVertNSP::GenVertNSP() : Azimuthal(), m_centerLon(0.0), m_centerLat(0.0),
+GenVertNSP::GenVertNSP() : Projection(),
 m_p(0.0), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 {
 	setNumber(GVNSP);
@@ -10,7 +10,7 @@ m_p(0.0), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 
 
 GenVertNSP::GenVertNSP(double gctpParams[], ProjUnit units, ProjDatum dat) :
-Azimuthal(gctpParams, units, dat), m_centerLon(0.0), m_centerLat(0.0),
+Projection(gctpParams, units, dat), 
 m_p(0.0), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 {
 	setNumber(GVNSP);

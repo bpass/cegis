@@ -1,7 +1,7 @@
 
 #include "lambertcc.h"
 
-LambertCC::LambertCC() : Conic(), m_es(0.0), m_e(0.0), m_ns(0.0),
+LambertCC::LambertCC() : Projection(), m_es(0.0), m_e(0.0), m_ns(0.0),
 m_f0(0.0), m_rh(0.0)
 {
 	setNumber(LAMCC);
@@ -9,7 +9,7 @@ m_f0(0.0), m_rh(0.0)
 }
 
 LambertCC::LambertCC(double gctpParams[], ProjUnit units, ProjDatum dat):
-Conic(gctpParams, units, dat), m_es(0.0), m_e(0.0), m_ns(0.0),
+Projection(gctpParams, units, dat), m_es(0.0), m_e(0.0), m_ns(0.0),
 m_f0(0.0), m_rh(0.0)
 {
 	setNumber(LAMCC);

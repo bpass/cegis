@@ -1,9 +1,11 @@
 #ifndef MOLLWEIDE_H
 #define MOLLWEIDE_H
 
-#include "pseudocylindrical.h"
+#include "projection.h"
 
-class Mollweide: public Pseudocylindrical {
+//!This is the object used for the Mollweide projection.
+class Mollweide: public Projection 
+{
 public:
 	Mollweide();
 	
@@ -14,7 +16,10 @@ protected:
 	//! See documentation for Projection
 	void _init();
 
+	//! See documentation for Projection
 	void _forward(double lon, double lat);
+
+	//! See documentation for Projection
 	void _inverse(double x, double y);
 
 };

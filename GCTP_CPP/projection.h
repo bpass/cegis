@@ -113,6 +113,40 @@ class Projection
 	//! Set the radius of the sphere.
 	void setRadius(double radius) {m_radius = radius; setInit();}
 
+	//!Set the center longtitude of the projection.
+	/*! This function sets the center longitude for
+		the projection.
+		\param lon The center longitude in decimal degrees.
+	*/
+	void setCenterLon(double lon);
+
+	//!Set the center latitude of the projection.
+	/*! This function sets the center latitude for
+		the projection.
+		\param lat The center latitude in decimal degrees.
+	*/
+	void setCenterLat(double lat);
+	
+	//!Set the latitude of the first standard parallel.
+	/*! This function sets the latitude of the first 
+		standard parallel.
+		\param lat The latitude of the first standard parallel in decimal degrees.
+	*/
+	void setStdParallelLat1(double lat);
+
+	//!Set the latitude of the second standard parallel.
+	/*! This function sets the latitude of the second 
+		standard parallel.
+		\param lat The latitude of the second standard parallel in decimal degrees.
+	*/
+	void setStdParallelLat2(double lat);
+
+	//! Get the latitude of the first standard parallel.
+	double stdParallelLat1() {return m_stdParallelLat1;}
+
+	//! Get the latitude of the second standard parallel.
+	double stdParallelLat2() {return m_stdParallelLat2;}
+
 	//! Set the gctp parameter array.
 	void setParams(double gctpParams[]);
 
@@ -175,6 +209,18 @@ protected:
 
 	//! Radius of sphere.
 	double m_radius;
+
+	//! Center longitude of projection.
+	double m_centerLon;
+
+	//! Center latitude of projection.
+	double m_centerLat;
+
+	//! Latitude of first standard parallel.
+	double m_stdParallelLat1;
+
+	//! Latitude of second standard parallel.
+	double m_stdParallelLat2;
 
 	//! Array of 15 projection parameters (as used in the original GCTP).
     double m_gctpParams[COEFCT];

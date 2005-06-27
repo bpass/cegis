@@ -1,14 +1,14 @@
 
 #include "wagnervii.h"
 
-WagnerVII::WagnerVII() : Azimuthal()
+WagnerVII::WagnerVII() : Projection()
 {
 	setNumber(WAGVII);
 	setName("Wagner VII");
 }
 
 WagnerVII::WagnerVII(double gctpParams[], ProjUnit units, ProjDatum dat) :
-Azimuthal(gctpParams, units, dat)
+Projection(gctpParams, units, dat)
 {
 	setNumber(WAGVII);
 	setName("Wagner VII");

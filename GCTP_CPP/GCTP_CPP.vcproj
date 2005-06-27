@@ -143,15 +143,6 @@
 				RelativePath=".\azequidistant.cpp">
 			</File>
 			<File
-				RelativePath=".\azimuthal.cpp">
-			</File>
-			<File
-				RelativePath=".\conic.cpp">
-			</File>
-			<File
-				RelativePath=".\cylindrical.cpp">
-			</File>
-			<File
 				RelativePath=".\equidistantc.cpp">
 			</File>
 			<File
@@ -254,9 +245,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\pseudocylindrical.cpp">
-			</File>
-			<File
 				RelativePath=".\robinson.cpp">
 			</File>
 			<File
@@ -318,16 +306,7 @@
 				RelativePath=".\azequidistant.h">
 			</File>
 			<File
-				RelativePath=".\azimuthal.h">
-			</File>
-			<File
-				RelativePath=".\conic.h">
-			</File>
-			<File
 				RelativePath=".\constants.h">
-			</File>
-			<File
-				RelativePath=".\cylindrical.h">
 			</File>
 			<File
 				RelativePath=".\equidistantc.h">
@@ -382,9 +361,6 @@
 			</File>
 			<File
 				RelativePath="projection.h">
-			</File>
-			<File
-				RelativePath=".\pseudocylindrical.h">
 			</File>
 			<File
 				RelativePath=".\robinson.h">

@@ -1,14 +1,14 @@
 
 #include "miller.h"
 
-Miller::Miller() : Cylindrical()
+Miller::Miller() : Projection()
 {
 	setNumber(MILLER);
 	setName("Miller Cylindrical");
 }
 
 Miller::Miller(double gctpParams[], ProjUnit units, ProjDatum dat):
-Cylindrical(gctpParams, units, dat)
+Projection(gctpParams, units, dat)
 {
 	setNumber(MILLER);
 	setName("Miller Cylindrical");

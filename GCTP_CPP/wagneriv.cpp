@@ -1,14 +1,14 @@
 #include "wagneriv.h"
 
 
-WagnerIV::WagnerIV() : Azimuthal()
+WagnerIV::WagnerIV() : Projection()
 {
 	setNumber(WAGIV);
 	setName("Wagner IV");
 }
 
 WagnerIV::WagnerIV(double gctpParams[], ProjUnit units, ProjDatum dat):
-Azimuthal(gctpParams, units, dat)
+Projection(gctpParams, units, dat)
 {
 	setNumber(WAGIV);
 	setName("Wagner IV");

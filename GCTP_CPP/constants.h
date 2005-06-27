@@ -91,39 +91,39 @@
 /* Define projection codes */
 enum ProjCode 
 {
-NONE=-1,
-GEO=0, 
-_UTM, 
-SPCS, 
-ALBERS, 
-LAMCC, 
-MERCAT, 
-PS, 
-POLYC, 
-EQUIDC,
-TM, 
-STEREO, 
-LAMAZ, 
-AZMEQD,
-GNOMON, 
-ORTHO, 
-GVNSP, 
-SNSOID, 
-EQRECT, 
-MILLER, 
-VGRINT, 
-HOM, 
-ROBIN, 
-SOM, 
-ALASKA, 
-GOOD,
-MOLL, 
-IMOLL, 
-HAMMER, 
-WAGIV, 
-WAGVII, 
-OBEQA, 
-USDEF=99
+	NONE=-1,
+	GEO=0, 
+	_UTM, 
+	SPCS, 
+	ALBERS, 
+	LAMCC, 
+	MERCAT, 
+	PS, 
+	POLYC, 
+	EQUIDC,
+	TM, 
+	STEREO, 
+	LAMAZ, 
+	AZMEQD,
+	GNOMON, 
+	ORTHO, 
+	GVNSP, 
+	SNSOID, 
+	EQRECT, 
+	MILLER, 
+	VGRINT, 
+	HOM, 
+	ROBIN, 
+	SOM, 
+	ALASKA, 
+	GOOD,
+	MOLL, 
+	IMOLL, 
+	HAMMER, 
+	WAGIV, 
+	WAGVII, 
+	OBEQA, 
+	USDEF=99
 };
 
 /* Define unit code numbers to their names */
@@ -188,6 +188,22 @@ static long NADUT[134] = {1, 5, 1, 1, 5, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 2, 2,
 			  1, 1, 5, 2, 1, 2, 5, 1, 2, 2, 2, 1, 1, 1, 5, 2, 1, 5,
 			  2, 2, 5, 2, 1, 1, 5, 2, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2
 };
+/* the Nad 27 State Plane Zones are set in this array
+  --------------------------------------------------*/
+static long NAD27[134] = {101,102,5010,5300,201,202,203,301,302,401,402,403,404,
+				405,406,407,501,502,503,600,700,901,902,903,1001,1002,5101,
+				5102,5103,5104,5105,1101,1102,1103,1201,1202,1301,1302,1401,
+				1402,1501,1502,1601,1602,1701,1702,1703,1801,1802,1900,2001,
+				2002,2101,2102,2103,2111,2112,2113,2201,2202,2203,2301,2302,
+				2401,2402,2403,2501,2502,2503,2601,2602,2701,2702,2703,2800,
+				2900,3001,3002,3003,3101,3102,3103,3104,3200,3301,3302,3401,
+				3402,3501,3502,3601,3602,3701,3702,3800,3901,3902,4001,4002, 
+				4100,4201,4202,4203,4204,4205,4301,4302,4303,4400,4501,4502,
+				4601,4602,4701,4702,4801,4802,4803,4901,4902,4903,4904,5001,
+				5002,5003,5004,5005,5006,5007,5008,5009,5201,5202,5400};
+
+/* the Nad 83 State Plane Zones are set in this array
+  --------------------------------------------------*/
 
 static long NAD83[134] = {101,102,5010,5300,201,202,203,301,302,401,402,403,
                 404,405,406,0000,501,502,503,600,700,901,902,903,1001,1002,
@@ -204,7 +220,7 @@ static long NAD83[134] = {101,102,5010,5300,201,202,203,301,302,401,402,403,
 
 	/* Semi-Major axis of supported Spheroids */
 static double major[SPHDCT] = {
-		6378206.4,		/* 0: Clarke 1866 (default) */
+		6378206.4,		/* 0: Clarke 1866  */
 		6378249.145,		/* 1: Clarke 1880 */
 		6377397.155,		/* 2: Bessel */
 		6378157.5,		/* 3: International 1967 */
@@ -239,7 +255,7 @@ static double major[SPHDCT] = {
 
 	/* Semi-Minor axis of supported Spheroids */
 static double minor[SPHDCT] = {
-		6356583.8,		/* 0: Clarke 1866 (default) */
+		6356583.8,		/* 0: Clarke 1866 */
 		6356514.86955,		/* 1: Clarke 1880 */
 		6356078.96284,		/* 2: Bessel */
 		6356772.2,		/* 3: International 1967 */

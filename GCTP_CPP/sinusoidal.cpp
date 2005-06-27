@@ -4,14 +4,14 @@
 #include <math.h>
 
 
-Sinusoidal::Sinusoidal(): Pseudocylindrical()
+Sinusoidal::Sinusoidal(): Projection()
 {
 	setName("Sinusoidal");
 	setNumber(SNSOID);
 }
 
 Sinusoidal::Sinusoidal( double gctpParameters[15], ProjUnit units, ProjDatum dat) 
-: Pseudocylindrical( gctpParameters, units, dat )
+: Projection( gctpParameters, units, dat )
 {
   setName("Sinusoidal");
   setNumber(SNSOID);

@@ -1,8 +1,8 @@
 
 #include "alaskaconformal.h"
 
-AlaskaConformal::AlaskaConformal() : Projection(),
-m_centerLon(-152.0 * D2R), m_centerLat(64.0 * D2R), m_sinCenterLat(0.0),
+AlaskaConformal::AlaskaConformal() : 
+Projection(), m_sinCenterLat(0.0),
 m_cosCenterLat(0.0), m_e(0.0), m_n(6)
 {
 	double es;
@@ -11,7 +11,8 @@ m_cosCenterLat(0.0), m_e(0.0), m_n(6)
 
 	setNumber(ALASKA);
 	setName("Alaska Conformal");
-
+	m_centerLon = -152.0 * D2R;
+	m_centerLat = 64.0 * D2R;
 	m_acoef[0] = 0;
 	m_acoef[1]= 0.9945303;  
 	m_acoef[2]= 0.0052083;   
@@ -39,7 +40,7 @@ m_cosCenterLat(0.0), m_e(0.0), m_n(6)
 }
 
 AlaskaConformal::AlaskaConformal(double gctpParams[], ProjUnit units, ProjDatum dat):
-Projection(), m_centerLon(-152.0 * D2R), m_centerLat(64.0 * D2R), m_sinCenterLat(0.0),
+Projection(gctpParams, units, dat), m_sinCenterLat(0.0),
 m_cosCenterLat(0.0), m_e(0.0), m_n(6)
 
 {
@@ -49,6 +50,8 @@ m_cosCenterLat(0.0), m_e(0.0), m_n(6)
 
 	setNumber(ALASKA);
 	setName("Alaska Conformal");
+	m_centerLon = -152.0 * D2R;
+	m_centerLat = 64.0 * D2R;
 
 	m_acoef[0] = 0;
 	m_acoef[1]= 0.9945303;  

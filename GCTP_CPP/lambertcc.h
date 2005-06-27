@@ -1,19 +1,24 @@
 
 #ifndef LAMBERT_CC_H
 #define LAMBERT_CC_H
-#include "conic.h"
+#include "projection.h"
 
-class LambertCC : public Conic 
+//!This is the object used for the Lambert Conformal Conic Projection.
+class LambertCC : public Projection 
 {
 public:
 	LambertCC();
 	LambertCC(double gctpParams[], ProjUnit units, ProjDatum dat);
 
 protected:
+
 	//! See documentation for Projection
 	void _init();
-	
+
+	//! See documentation for Projection
 	void _forward(double lon, double lat);
+
+	//! See documentation for Projection
 	void _inverse(double x, double y);
 
 	double m_es;

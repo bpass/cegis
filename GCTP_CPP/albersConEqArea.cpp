@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 AlbersConEqArea::AlbersConEqArea()
-: Conic(), m_c(0.0), m_e(0.0), m_es(0.0), m_rh(0.0), m_ns0(0.0)
+: Projection(), m_c(0.0), m_e(0.0), m_es(0.0), m_rh(0.0), m_ns0(0.0)
 {
 	setName("Albers Conical Equal-Area");
 	setNumber(ALBERS);
@@ -12,7 +12,7 @@ AlbersConEqArea::AlbersConEqArea()
 }
 
 AlbersConEqArea::AlbersConEqArea(double gctpParameters[15], ProjUnit units, ProjDatum dat)
-: Conic(gctpParameters, units, dat), m_c(0.0), m_e(0.0), m_es(0.0), m_rh(0.0), m_ns0(0.0)
+: Projection(gctpParameters, units, dat), m_c(0.0), m_e(0.0), m_es(0.0), m_rh(0.0), m_ns0(0.0)
 {
 	setName("Albers Conical Equal-Area");
 	setNumber(ALBERS);

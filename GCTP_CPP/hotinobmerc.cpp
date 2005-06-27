@@ -1,7 +1,7 @@
 
 #include "hotinobmerc.h"
 
-HotineObMerc::HotineObMerc(): Cylindrical(), m_azimuth(0.0), m_scaleFactor(1),
+HotineObMerc::HotineObMerc(): Projection(), m_azimuth(0.0), m_scaleFactor(1),
 m_e(0.0), m_es(0.0), m_sinCenterLat(0.0), m_cosCenterLat(0.0), m_bl(0.0),
 m_al(0.0), m_ts(0.0), m_d(0.0), m_el(0.0), m_u(0.0), m_singam(0.0), m_cosgam(0.0),
 m_sinaz(0.0), m_cosaz(0.0), m_lat1(0.0), m_lat2(0.0), m_lon1(0.0), m_lon2(0.0),
@@ -12,7 +12,7 @@ m_mode(0)
 }
 
 HotineObMerc::HotineObMerc(double gctpParams[], ProjUnit units, ProjDatum dat):
-Cylindrical(gctpParams, units, dat), m_azimuth(0.0), m_scaleFactor(1),
+Projection(gctpParams, units, dat), m_azimuth(0.0), m_scaleFactor(1),
 m_e(0.0), m_es(0.0), m_sinCenterLat(0.0), m_cosCenterLat(0.0), m_bl(0.0),
 m_al(0.0), m_ts(0.0), m_d(0.0), m_el(0.0), m_u(0.0), m_singam(0.0), m_cosgam(0.0),
 m_sinaz(0.0), m_cosaz(0.0), m_lat1(0.0), m_lat2(0.0), m_lon1(0.0), m_lon2(0.0),
@@ -245,6 +245,7 @@ void HotineObMerc::_inverse(double x, double y)
 
 void HotineObMerc::_loadFromParams()
 {
+	Projection::_loadFromParams();
 	setScaleFactor(m_gctpParams[2]);
 	setMode((int)m_gctpParams[12]);
 	if(mode() == 1)

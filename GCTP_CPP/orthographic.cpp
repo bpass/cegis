@@ -1,14 +1,14 @@
 
 #include "orthographic.h"
 
-Orthographic::Orthographic() : Azimuthal(), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
+Orthographic::Orthographic() : Projection(), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 {
 	setNumber(ORTHO);
 	setName("Orthographic");
 }
 
 Orthographic::Orthographic(double gctpParams[], ProjUnit units, ProjDatum dat):
-Azimuthal(gctpParams, units, dat), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
+Projection(gctpParams, units, dat), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 {
 	setNumber(ORTHO);
 	setName("Orthographic");

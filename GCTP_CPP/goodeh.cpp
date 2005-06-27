@@ -1,7 +1,7 @@
 
 #include "goodeh.h"
 
-GoodeH::GoodeH() : Pseudocylindrical()
+GoodeH::GoodeH() : Projection()
 {
 	setNumber(GOOD);
 	setName("Goode's Homolosine");
@@ -21,7 +21,7 @@ GoodeH::GoodeH() : Pseudocylindrical()
 }
 
 GoodeH::GoodeH(double gctpParams[], ProjUnit units, ProjDatum dat):
-Pseudocylindrical(gctpParams, units, dat)
+Projection(gctpParams, units, dat)
 {
 	setNumber(GOOD);
 	setName("Goode's Homolosine");

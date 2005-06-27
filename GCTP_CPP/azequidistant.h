@@ -2,10 +2,10 @@
 #ifndef AZ_EQ_H
 #define AZ_EQ_H
 
-#include "azimuthal.h"
+#include "projection.h"
 
-//! This is object used to perform the Azimuthal Equidistant projection.
-class AzEquidistant : public Azimuthal
+//! This is object used for the Azimuthal Equidistant projection.
+class AzEquidistant : public Projection
 {
 public:
 

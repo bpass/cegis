@@ -1,9 +1,10 @@
 
 #ifndef POLYCON_H
 #define POLYCON_H
-#include "conic.h"
+#include "projection.h"
 
-class Polyconic: public Conic {
+class Polyconic: public Projection 
+{
 public:
 
 	Polyconic();

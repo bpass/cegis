@@ -1,8 +1,8 @@
-//$Id: transversemercator.cpp,v 1.8 2005/06/26 02:03:08 mswilliams Exp $
+//$Id: transversemercator.cpp,v 1.9 2005/06/27 19:44:07 mswilliams Exp $
 
 #include "transversemercator.h"
 
-TransverseMercator::TransverseMercator() : Cylindrical(),
+TransverseMercator::TransverseMercator() : Projection(),
 m_scaleFactor(0.0),m_e0(0.0), m_e1(0.0), m_e2(0.0), m_e3(0.0), m_e(0.0), 
 m_es(0.0), m_esp(0.0), m_ml0(0.0), m_ind(0.0)
 {
@@ -11,7 +11,7 @@ m_es(0.0), m_esp(0.0), m_ml0(0.0), m_ind(0.0)
 }
 
 TransverseMercator::TransverseMercator(double gctpParams[], ProjUnit units, ProjDatum datum):
-Cylindrical(gctpParams, units, datum),
+Projection(gctpParams, units, datum),
 m_scaleFactor(0.0),m_e0(0.0), m_e1(0.0), m_e2(0.0), m_e3(0.0), m_e(0.0), 
 m_es(0.0), m_esp(0.0), m_ml0(0.0), m_ind(0.0)
 {
@@ -22,7 +22,7 @@ m_es(0.0), m_esp(0.0), m_ml0(0.0), m_ind(0.0)
 
 void TransverseMercator::_loadFromParams() 
 {
-	Cylindrical::_loadFromParams();
+	Projection::_loadFromParams();
 	setScaleFactor(m_gctpParams[2]);
 }
 

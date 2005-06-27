@@ -1,14 +1,14 @@
 
 #include "gnomonic.h"
 
-Gnomonic::Gnomonic() : Azimuthal()
+Gnomonic::Gnomonic() : Projection()
 {
 	setNumber(GNOMON);
 	setName("Gnomonic");
 }
 
 Gnomonic::Gnomonic(double gctpParams[], ProjUnit units, ProjDatum dat) :
-Azimuthal(gctpParams, units, dat)
+Projection(gctpParams, units, dat)
 {
 	setNumber(GNOMON);
 	setName("Gnomonic");

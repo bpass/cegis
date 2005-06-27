@@ -1,7 +1,7 @@
 
 #include "mercator.h"
 
-Mercator::Mercator(): Cylindrical(), m_e(0.0),
+Mercator::Mercator(): Projection(), m_e(0.0),
 m_es(0.0), m_m1(0.0)
 {
 	setName("Mercator");
@@ -9,7 +9,7 @@ m_es(0.0), m_m1(0.0)
 }
 
 Mercator::Mercator(double gctpParams[], ProjUnit units, ProjDatum dat):
-Cylindrical(gctpParams, units, dat), m_e(0.0),
+Projection(gctpParams, units, dat), m_e(0.0),
 m_es(0.0), m_m1(0.0)
 {
 		setName("Mercator");

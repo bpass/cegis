@@ -1,8 +1,8 @@
 #ifndef TRANS_MERC_H
 #define TRANS_MERC_H
-#include "cylindrical.h"
+#include "projection.h"
 
-class TransverseMercator : public Cylindrical 
+class TransverseMercator : public Projection 
 {
 public:
 	TransverseMercator();

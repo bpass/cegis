@@ -81,6 +81,30 @@ void Projection::setParam(size_t index, double value) {
 	}
 }
 
+void Projection::setCenterLat(double lat) 
+{
+	convertAndSetAngle(m_centerLat, lat);
+	setInit();
+}
+
+void Projection::setStdParallelLat1(double lat) 
+{
+	convertAndSetAngle(m_stdParallelLat1, lat);
+	setInit();
+}
+
+void Projection::setStdParallelLat2(double lat) 
+{
+	convertAndSetAngle(m_stdParallelLat2, lat);
+	setInit();
+}
+
+void Projection::setCenterLon(double lon) 
+{
+	convertAndSetAngle(m_centerLon, lon);
+	setInit();
+}
+
 double Projection::param(size_t index) {
 	if(index < COEFCT)
 		return m_gctpParams[index];

@@ -1,14 +1,14 @@
 
 #include "azequidistant.h"
 
-AzEquidistant::AzEquidistant() : Azimuthal(), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
+AzEquidistant::AzEquidistant() : Projection(), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 {
    setNumber(AZMEQD);
    setName("Azimuthal Equidistant");
 }
 
 AzEquidistant::AzEquidistant(double gctpParams[], ProjUnit units, ProjDatum dat) :
-Azimuthal(gctpParams, units, dat), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
+Projection(gctpParams, units, dat), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 {
    setNumber(AZMEQD);
    setName("Azimuthal Equidistant");

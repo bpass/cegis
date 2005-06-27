@@ -1,10 +1,10 @@
 #ifndef SINUSOIDAL_H
 #define SINUSOIDAL_H
 
-#include "pseudocylindrical.h"
+#include "projection.h"
 
 
-class Sinusoidal : public Pseudocylindrical
+class Sinusoidal : public Projection
 {
 public:
    Sinusoidal();

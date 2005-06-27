@@ -1,9 +1,9 @@
 #ifndef ALBER_CON_EQ_AREA_H
 #define ALBER_CON_EQ_AREA_H
-#include "conic.h"
+#include "projection.h"
 
-//! Albers Conical Equal Area projection object.
-class AlbersConEqArea: public Conic {
+//! This is the object used for the Albers Conical Equal-Area projection
+class AlbersConEqArea: public Projection {
 public:
 	//! Default constructor
 	AlbersConEqArea();
@@ -11,16 +11,6 @@ public:
 	//! Initialize all fields neccessary to perform our forward and inverse transformations.
 	AlbersConEqArea(double gctpParameters[], ProjUnit units, ProjDatum dat);
 	
-	double c() {return m_c;}
-
-	double e() {return m_e;}
-
-	double es() {return m_es;}
-
-	double rh() {return m_rh;}
-
-	double ns0() {return m_ns0;}
-
 protected:
   
   //! Constant C.

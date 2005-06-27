@@ -2,9 +2,9 @@
 #ifndef POLARS_H
 #define POLARS_H
 
-#include "azimuthal.h"
+#include "projection.h"
 
-class PolarStereo : public Azimuthal
+class PolarStereo : public Projection
 {
 public:
 

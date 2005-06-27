@@ -2,9 +2,9 @@
 #ifndef WAGNERVII_H
 #define WAGNERVII_H
 
-#include "azimuthal.h"
+#include "projection.h"
 
-class WagnerVII : public Azimuthal
+class WagnerVII : public Projection
 {
 public:
 	WagnerVII();

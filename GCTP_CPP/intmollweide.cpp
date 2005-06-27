@@ -1,7 +1,7 @@
 
 #include "intmollweide.h"
 
-IntMollweide::IntMollweide() : Pseudocylindrical()
+IntMollweide::IntMollweide() : Projection()
 {
 	setNumber(IMOLL);
 	setName("Interrupted Mollweide");
@@ -15,7 +15,7 @@ IntMollweide::IntMollweide() : Pseudocylindrical()
 }
 
 IntMollweide::IntMollweide(double gctpParams[], ProjUnit units, ProjDatum dat):
-Pseudocylindrical(gctpParams, units, dat)
+Projection(gctpParams, units, dat)
 {
 	setNumber(IMOLL);
 	setName("Interrupted Mollweide");

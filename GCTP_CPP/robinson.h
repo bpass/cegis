@@ -2,9 +2,9 @@
 #ifndef ROBINSON_H
 #define ROBINSON_H
 
-#include "pseudocylindrical.h"
+#include "projection.h"
 
-class Robinson : public Pseudocylindrical
+class Robinson : public Projection
 {
 public:
 

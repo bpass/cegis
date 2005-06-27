@@ -2,14 +2,14 @@
 
 #include "equirectangular.h"
 
-Equirectangular::Equirectangular() : Cylindrical()
+Equirectangular::Equirectangular() : Projection()
 {
 	setName("Equirectangular");
 	setNumber(EQRECT);
 }
 
 Equirectangular::Equirectangular( double gctpParameters[15], ProjUnit units, ProjDatum dat) 
-: Cylindrical(gctpParameters, units, dat)
+: Projection(gctpParameters, units, dat)
 {
 	setName("Equirectangular");
 	setNumber(EQRECT);

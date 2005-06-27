@@ -4,6 +4,7 @@
 
 #include "projection.h"
 
+//!This is the object used for the Oblated Equal Area Projection.
 class OblatedEqArea : public Projection
 {
 public:
@@ -11,11 +12,15 @@ public:
 	OblatedEqArea();
 	OblatedEqArea(double gctpParams[], ProjUnit units, ProjDatum dat);
 
+	//!Set oval shape m.
 	void setShapeM(double m) {m_m = m; setInit();}
 
+	//!Set obal shape n
 	void setShapeN(double n) {m_n = n; setInit();}
 
+	//!Set oval shape angle.
 	void setAngle(double theta);
+
 
 	void setCenterLon(double lon);
 

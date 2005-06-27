@@ -1,9 +1,9 @@
 #ifndef WAGNERIV_H
 #define WAGNERIV_H
 
-#include "azimuthal.h"
+#include "projection.h"
 
-class WagnerIV : public Azimuthal
+class WagnerIV : public Projection
 {
 public:
 

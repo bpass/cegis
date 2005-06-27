@@ -1,7 +1,7 @@
 
 #include "equidistantc.h"
 
-EquidistantC::EquidistantC(): Conic(), m_e(0.0), m_es(0.0), m_esp(0.0),
+EquidistantC::EquidistantC(): Projection(), m_e(0.0), m_es(0.0),
 m_e0(0.0), m_e1(0.0), m_e2(0.0), m_e3(0.0), m_ml0(0.0), m_ns(0.0),
 m_g(0.0), m_rh(0.0)
 {
@@ -10,7 +10,7 @@ m_g(0.0), m_rh(0.0)
 }
 
 EquidistantC::EquidistantC(double gctpParams[], ProjUnit units, ProjDatum dat): 
-Conic(gctpParams, units, dat), m_e(0.0), m_es(0.0), m_esp(0.0),
+Projection(gctpParams, units, dat), m_e(0.0), m_es(0.0), 
 m_e0(0.0), m_e1(0.0), m_e2(0.0), m_e3(0.0), m_ml0(0.0), m_ns(0.0),
 m_g(0.0), m_rh(0.0)
 {
@@ -120,7 +120,7 @@ void EquidistantC::_inverse(double x, double y)
 }
 
 void EquidistantC::_loadFromParams() {
-	Conic::_loadFromParams();
+	Projection::_loadFromParams();
 	setMode((int)m_gctpParams[8]);
 }
 	

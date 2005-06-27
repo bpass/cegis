@@ -1,13 +1,13 @@
 #include "mollweide.h"
 
-Mollweide::Mollweide(): Pseudocylindrical() 
+Mollweide::Mollweide(): Projection() 
 {
 	setName("Mollweide");
 	setNumber(MOLL);
 }
 
 Mollweide::Mollweide(double gctpParams[], ProjUnit units, ProjDatum dat):
-Pseudocylindrical(gctpParams, units, dat) 
+Projection(gctpParams, units, dat) 
 {
 	setName("Mollweide");
 	setNumber(MOLL);

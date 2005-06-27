@@ -1,14 +1,14 @@
 
 #include "lambertazimuth.h"
 
-LambertAzimuthal::LambertAzimuthal() : Azimuthal(), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
+LambertAzimuthal::LambertAzimuthal() : Projection(), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 {
 	setNumber(LAMAZ);
 	setName("Lambert Azimuthal");
 }
 
 LambertAzimuthal::LambertAzimuthal(double gctpParams[], ProjUnit units, ProjDatum dat):
-Azimuthal(gctpParams, units, dat), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
+Projection(gctpParams, units, dat), m_sinCenterLat(0.0), m_cosCenterLat(0.0)
 {
 	setNumber(LAMAZ);
 	setName("Lambert Azimuthal");

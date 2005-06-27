@@ -2,9 +2,10 @@
 #ifndef MILLER_H
 #define MILLER_H
 
-#include "cylindrical.h"
+#include "projection.h"
 
-class Miller : public Cylindrical
+//!This is the object used for the Miller projection.
+class Miller : public Projection
 {
 public:
 
@@ -16,7 +17,10 @@ protected:
 	//! See documentation for Projection
 	void _init();
 
+	//! See documentation for Projection
 	void _forward(double lon, double lat);
+
+	//! See documentation for Projection
 	void _inverse(double x, double y);
 
 };

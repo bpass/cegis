@@ -2,9 +2,9 @@
 #ifndef STEREO_H
 #define STEREO_H
 
-#include "azimuthal.h"
+#include "projection.h"
 
-class Stereo : public Azimuthal
+class Stereo : public Projection
 {
 public:
 

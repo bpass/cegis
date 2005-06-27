@@ -1,14 +1,14 @@
 
 #include "hammer.h"
 
-Hammer::Hammer() : Azimuthal() 
+Hammer::Hammer() : Projection() 
 {
 	setNumber(HAMMER);
 	setName("Hammer");
 }
 
 Hammer::Hammer(double gctpParams[], ProjUnit units, ProjDatum dat) :
-Azimuthal(gctpParams, units, dat) 
+Projection(gctpParams, units, dat) 
 {
 	setNumber(HAMMER);
 	setName("Hammer");

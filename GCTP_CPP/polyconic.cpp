@@ -2,14 +2,14 @@
 #include "polyconic.h"
 
 Polyconic::Polyconic() : 
-Conic(), m_e0(0.0), m_e1(0.0), m_e2(0.0), m_e3(0.0), m_ml0(0.0)
+Projection(), m_e0(0.0), m_e1(0.0), m_e2(0.0), m_e3(0.0), m_ml0(0.0)
 {
 	setNumber(POLYC);
 	setName("Polyconic");
 }
 
 Polyconic::Polyconic(double gctpParams[], ProjUnit units, ProjDatum dat):
-Conic(gctpParams, units, dat),  m_e0(0.0), m_e1(0.0), m_e2(0.0), 
+Projection(gctpParams, units, dat),  m_e0(0.0), m_e1(0.0), m_e2(0.0), 
 m_e3(0.0), m_ml0(0.0)
 {
 	setNumber(POLYC);

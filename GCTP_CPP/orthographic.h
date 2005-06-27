@@ -2,9 +2,9 @@
 #ifndef ORTHO_H
 #define ORTHO_H
 
-#include "azimuthal.h"
+#include "projection.h"
 
-class Orthographic : public Azimuthal
+class Orthographic : public Projection
 {
 public:
 	Orthographic();

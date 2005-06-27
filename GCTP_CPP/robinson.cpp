@@ -1,6 +1,6 @@
 #include "robinson.h"
 
-Robinson::Robinson() : Pseudocylindrical()
+Robinson::Robinson() : Projection()
 {        
 
 	setNumber(ROBIN);
@@ -52,7 +52,7 @@ Robinson::Robinson() : Pseudocylindrical()
 }
 
 Robinson::Robinson(double gctpParams[], ProjUnit units, ProjDatum dat):
-Pseudocylindrical(gctpParams, units, dat)
+Projection(gctpParams, units, dat)
 {
 	setNumber(ROBIN);
 	setName("Robinson");
@@ -221,4 +221,5 @@ void Robinson::_forward(double lon, double lat)
 
 void Robinson::_init()
 {
+	return;
 }

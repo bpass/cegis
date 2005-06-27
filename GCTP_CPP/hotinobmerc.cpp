@@ -66,7 +66,7 @@ void HotineObMerc::_init()
 	}
 
 
-	if (mode != 0)
+	if (m_mode != 0)
 	{
 		g = .5 * (f - 1.0/f);
 		gama = Util::asinz(sin(m_azimuth) / m_d);
@@ -248,7 +248,7 @@ void HotineObMerc::_loadFromParams()
 	Projection::_loadFromParams();
 	setScaleFactor(m_gctpParams[2]);
 	setMode((int)m_gctpParams[12]);
-	if(mode() == 1) 
+	if(m_mode == 1) 
 		setAzimuth(m_gctpParams[3]);
 	
 	else

@@ -1,6 +1,5 @@
 #include "transformer.h"
 
-#include "geographic.h"
 #include "albersconeqarea.h"
 #include "lambertcc.h"
 #include "mercator.h"

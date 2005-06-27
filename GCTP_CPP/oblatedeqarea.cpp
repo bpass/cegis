@@ -24,8 +24,6 @@ void OblatedEqArea::_loadFromParams()
 	Projection::_loadFromParams();
 	setShapeM(m_gctpParams[2]);
 	setShapeN(m_gctpParams[3]);
-	setCenterLon(m_gctpParams[4]);
-	setCenterLat(m_gctpParams[5]);
 	setAngle(m_gctpParams[8]);
 }
 

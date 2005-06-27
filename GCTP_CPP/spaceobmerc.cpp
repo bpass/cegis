@@ -154,7 +154,6 @@ void SpaceObMerc::_loadFromParams()
 	{
 		setMode(1);
 		setAlf(m_gctpParams[3]);
-		setCenterLon(m_gctpParams[4]);
 		setTime(m_gctpParams[8]);
 		setStart(m_gctpParams[10]);
 	}

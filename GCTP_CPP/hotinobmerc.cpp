@@ -248,7 +248,7 @@ void HotineObMerc::_loadFromParams()
 	Projection::_loadFromParams();
 	setScaleFactor(m_gctpParams[2]);
 	setMode((int)m_gctpParams[12]);
-	if(mode() == 1)
+	if(mode() == 1) 
 		setAzimuth(m_gctpParams[3]);
 	
 	else

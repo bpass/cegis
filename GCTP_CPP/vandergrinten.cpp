@@ -14,11 +14,6 @@ Projection(gctpParams, units, dat), m_centerLon(0.0)
 	setParamLoad();
 }
 
-void VanDerGrinten::_loadFromParams() 
-{
-	Projection::_loadFromParams();
-	setCenterLon(m_gctpParams[4]);
-}
 
 void VanDerGrinten::_init()
 {

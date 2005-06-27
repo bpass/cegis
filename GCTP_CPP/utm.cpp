@@ -8,6 +8,9 @@ m_ml0(0.0), m_ind(0), m_zone(1)
 	setNumber(_UTM);
 	setName("UTM");
 	m_scaleFactor = 0.9996;
+	m_falseEasting = 500000.0;
+	m_centerLat = 0.0;
+
 }
 
 UTM::UTM(double gctpParams[], ProjUnit units, ProjDatum dat, int zone) : 
@@ -20,6 +23,9 @@ m_ml0(0.0), m_ind(0), m_zone(zone)
 	setName("UTM");
 	setParamLoad();
 	m_scaleFactor = 0.9996;
+	m_falseEasting = 500000.0;
+	m_centerLat = 0.0;
+
 }
 
 
@@ -63,9 +69,7 @@ void UTM::_init()
 		return;
 	}
 
-	m_centerLat = 0.0;
 	m_centerLon = ((6 * abs(m_zone)) - 183) * D2R;
-	m_falseEasting = 500000.0;
 	m_falseNorthing = (m_zone < 0) ? 10000000.0 : 0.0;
 
 	temp = m_rMinor / m_rMajor;

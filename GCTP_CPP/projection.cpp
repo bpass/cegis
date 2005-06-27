@@ -3,6 +3,7 @@
 Projection::Projection(): 
 m_errorCode(0),m_longitude(0.0), m_latitude(0.0), m_x_coord(0.0), m_y_coord(0.0), 
 m_falseEasting(0.0),m_falseNorthing(0.0), m_rMajor(0.0), m_rMinor(0.0), m_radius(0.0),
+m_centerLon(0.0), m_centerLat(0.0), m_stdParallelLat1(0.0), m_stdParallelLat2(0.0),
 m_initNeeded(false), m_paramLoadNeeded(false)
 
 {
@@ -14,6 +15,7 @@ Projection::Projection ( double gctpParameters[], ProjUnit units, ProjDatum dat)
 m_errorCode(0), m_unitCode(units), m_datum(dat),
 m_longitude(0.0), m_latitude(0.0), m_x_coord(0.0), m_y_coord(0.0), m_falseEasting(0.0),
 m_falseNorthing(0.0), m_rMajor(0.0), m_rMinor(0.0), m_radius(0.0),
+m_centerLon(0.0), m_centerLat(0.0), m_stdParallelLat1(0.0), m_stdParallelLat2(0.0),
 m_initNeeded(false), m_paramLoadNeeded(false)
 {
 
@@ -33,6 +35,10 @@ void Projection::_loadFromParams()
 {
 	setFE(m_gctpParams[6]);
 	setFN(m_gctpParams[7]);
+	setCenterLon(m_gctpParams[4]);
+	setCenterLat(m_gctpParams[5]);
+	setStdParallelLat1(m_gctpParams[2]);
+	setStdParallelLat2(m_gctpParams[3]);
 	setRadii();
 }
 void Projection::xy ( double* x, double* y )

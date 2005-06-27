@@ -27,6 +27,9 @@
 #include "utm.h"
 #include "lambertazimuth.h"
 #include "spaceobmerc.h"
+#include "alaskaconformal.h"
+#include "hotinobmerc.h"
+#include "stereo.h"
 
 Transformer::Transformer()
 : m_inProj(NULL), m_outProj(NULL), m_errored(false)
@@ -175,7 +178,7 @@ Projection* Transformer::convertProjection( ProjCode projectionCode )
    switch( projectionCode )
    {
    case GEO:
-      proj = new Geographic();
+//      proj = new Geographic();
       break;
    case _UTM:
       proj = new UTM();
@@ -204,6 +207,7 @@ Projection* Transformer::convertProjection( ProjCode projectionCode )
       proj = new TransverseMercator();
       break;
    case STEREO:
+      proj = new Stereo();
       break;
    case LAMAZ:
       proj = new LambertAzimuthal();
@@ -233,6 +237,7 @@ Projection* Transformer::convertProjection( ProjCode projectionCode )
       proj = new VanDerGrinten();
       break;
    case HOM:
+      proj = new HotineObMerc();
       break;
    case ROBIN:
       proj = new Robinson();
@@ -241,6 +246,7 @@ Projection* Transformer::convertProjection( ProjCode projectionCode )
       proj = new SpaceObMerc();
       break;
    case ALASKA:
+      proj = new AlaskaConformal();
       break;
    case GOOD:
       proj = new GoodeH();

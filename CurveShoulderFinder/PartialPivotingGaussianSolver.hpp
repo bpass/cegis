@@ -2,7 +2,7 @@
  * @file PartialPivotingGaussianSolver.hpp
  * @author Austin Hartman
  *
- * $Id: PartialPivotingGaussianSolver.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
+ * $Id: PartialPivotingGaussianSolver.hpp,v 1.4 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifdef AUSTIN_PARTIALPIVOTINGGAUSSIANSOLVER_H
@@ -72,7 +72,7 @@ template<class T>
 void 
 PartialPivotingGaussianSolver<T>::
 partialPivot(DenseMatrix<T>& mat, MyVector<T>& vec,
-             const size_t& row, const size_t& column) const
+             size_t row, size_t column) const
 {
 	size_t maxIndex = indexLargestElementRow(mat, row, column);
 	if(maxIndex != row)
@@ -87,8 +87,8 @@ inline
 size_t
 PartialPivotingGaussianSolver<T>::
 indexLargestElementRow(const Matrix<T>& mat,
-                       const size_t& rowToStart,
-                       const size_t& column) const
+                       size_t rowToStart,
+                       size_t column) const
 {
 	size_t maxIndex = rowToStart;
 	for(size_t i = rowToStart + 1; i < mat.getNumRows(); ++i)

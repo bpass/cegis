@@ -2,7 +2,7 @@
  * @file TridiagonalMatrix.h
  * @author Austin Hartman
  *
- * $Id: TridiagonalMatrix.h,v 1.6 2005/07/01 21:03:55 ahartman Exp $
+ * $Id: TridiagonalMatrix.h,v 1.7 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifndef AUSTIN_TRIDIAGONALMATRIX_H
@@ -35,7 +35,7 @@ public:
 	 * are the same in a tridiagonal matrix) and an initial value
 	 * for all of the elements.
 	 */
-	TridiagonalMatrix(const size_t& numRowsAndCols = 0, 
+	TridiagonalMatrix(size_t numRowsAndCols = 0, 
 	                  const T& initialValue = 0);
 
 	/**
@@ -133,9 +133,9 @@ protected:
 	 * or ColumnRangeError if row or column are out of range,
 	 * respectively.
 	 */
-	virtual T& getElement(const size_t& row, const size_t& col);
-	virtual const T& getElement(const size_t& row, 
-	                            const size_t& col) const;
+	virtual T& getElement(size_t row, size_t col);
+	virtual const T& getElement(size_t row, 
+	                            size_t col) const;
 
 	/** 
 	 * Outputs the matrix in the form
@@ -181,14 +181,14 @@ private:
 	 * single array.  This function gets the size of that array from
 	 * the number of rows/columns in the matrix.
 	 */
-	size_t getArraySize(const size_t& size) const;
+	size_t getArraySize(size_t size) const;
 
 	/**
 	 * These functions return an element from the matrix that could
 	 * possibly be nonzero.
 	 */
-	T& getNonZeroElement(const size_t& row, const size_t& col);
-	const T& getNonZeroElement(const size_t& row, const size_t& col) const;
+	T& getNonZeroElement(size_t row, size_t col);
+	const T& getNonZeroElement(size_t row, size_t col) const;
 
 	/**
 	 * These variables are returned in place of an actual stored

@@ -2,7 +2,7 @@
  * @file DenseMatrix.h
  * @author Austin Hartman
  *
- * $Id: DenseMatrix.h,v 1.6 2005/07/01 21:03:55 ahartman Exp $
+ * $Id: DenseMatrix.h,v 1.7 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifndef AUSTIN_DENSEMATRIX_H
@@ -52,7 +52,7 @@ public:
 	 * columns with each element equal to initialValue.  If either
 	 * rows or cols is 0, creates an empty matrix.
 	 */
-	DenseMatrix(const size_t& rows = 0, const size_t& cols = 0, 
+	DenseMatrix(size_t rows = 0, size_t cols = 0, 
 	            const T& initialValue = 0);
 
 	/**
@@ -218,7 +218,7 @@ public:
 	 * The elements in the matrix are all set to be value.  If either
 	 * of newNumRows or newNumCols is 0, makes the matrix an empty matrix.
 	 */
-	void setSize(const size_t& newNumRows, const size_t& newNumCols,
+	void setSize(size_t newNumRows, size_t newNumCols,
 		     const T& value = 0);
 
 	/**
@@ -230,7 +230,7 @@ public:
 	 * of the matrix.  Throws ColumnRangeError if column >= the number
 	 * of columns.
 	 */
-	MyVector<T> getColumnAsVector(const size_t& column) const;
+	MyVector<T> getColumnAsVector(size_t column) const;
 
 	/**
 	 * Creates a vector from the specified row of the matrix
@@ -240,7 +240,7 @@ public:
 	 * are equal to the corresponding values in the specified row of
 	 * the matrix.  Throws RowRangeError if row >= the number of rows.
 	 */
-	MyVector<T> getRowAsVector(const size_t& row) const;
+	MyVector<T> getRowAsVector(size_t row) const;
 
 	/**
 	 * @pre None
@@ -256,7 +256,7 @@ public:
 	 * Throws RowRangeError if row1 or row2 >= the number of rows in the
 	 * matrix.
 	 */
-	void rowInterchange(const size_t& row1, const size_t& row2);
+	void rowInterchange(size_t row1, size_t row2);
 
 	/**
 	 * @pre row is < the number of rows in the matrix.  constant should
@@ -264,7 +264,7 @@ public:
 	 * @post multiplies the elements in row by constant. Throws 
 	 * RowRangeError if row >= the number of rows in the matrix.
 	 */
-	void rowScale(const size_t& row, const T& constant);
+	void rowScale(size_t row, const T& constant);
 
 	/**
 	 * @pre rowToReplace and otherRow are both < the number of rows
@@ -274,12 +274,12 @@ public:
 	 * multiple times otherRow.  Throws RowRangeError if rowToReplace or 
 	 * otherRow >= the number of rows in the matrix.
 	 */
-	void rowReplace(const size_t& rowToReplace, 
-		        const size_t& otherRow, const T& multiple);
+	void rowReplace(size_t rowToReplace, 
+		        size_t otherRow, const T& multiple);
 
 protected:
-	virtual T& getElement(const size_t& row, const size_t& col);
-	virtual const T& getElement(const size_t& row, const size_t& col) const;
+	virtual T& getElement(size_t row, size_t col);
+	virtual const T& getElement(size_t row, size_t col) const;
 
 	/**
 	 * Output function for the screen.
@@ -324,15 +324,15 @@ private:
 	 * These are used to quickly get the element that is at
 	 * row, column.  row and column are not checked for validity.
 	 */
-	T& a(const size_t& row, const size_t& column);
-	const T& a(const size_t& row, const size_t& column) const;
+	T& a(size_t row, size_t column);
+	const T& a(size_t row, size_t column) const;
 
 	/**
 	 * Checks whether the row or column is indeed a valid row
 	 * or column.
 	 */
-	bool validRow(const size_t& row) const;
-	bool validColumn(const size_t& col) const;
+	bool validRow(size_t row) const;
+	bool validColumn(size_t col) const;
 };
 
 

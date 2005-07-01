@@ -2,7 +2,7 @@
  * @file DiagonalMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: DiagonalMatrix.hpp,v 1.4 2005/06/22 01:37:57 ahartman Exp $
+ * $Id: DiagonalMatrix.hpp,v 1.5 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifdef AUSTIN_DIAGONALMATRIX_H
@@ -16,7 +16,7 @@ template<class T>
 const T DiagonalMatrix<T>::constZero = 0;
 
 template<class T>
-DiagonalMatrix<T>::DiagonalMatrix(const size_t& numRowsAndCols,
+DiagonalMatrix<T>::DiagonalMatrix(size_t numRowsAndCols,
                                   const T& initialValue)
 	: size(numRowsAndCols)
 {
@@ -232,7 +232,7 @@ DiagonalMatrix<T>::getNumCols() const
 
 template<class T>
 T&
-DiagonalMatrix<T>::getElement(const size_t& row, const size_t& col)
+DiagonalMatrix<T>::getElement(size_t row, size_t col)
 {
 	if(row >= size)
 	{
@@ -252,7 +252,7 @@ DiagonalMatrix<T>::getElement(const size_t& row, const size_t& col)
 
 template<class T>
 const T&
-DiagonalMatrix<T>::getElement(const size_t& row, const size_t& col) const
+DiagonalMatrix<T>::getElement(size_t row, size_t col) const
 {
 	if(row >= size)
 	{

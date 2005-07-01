@@ -2,7 +2,7 @@
  * @file GaussianSolver.hpp
  * @author Austin Hartman
  *
- * $Id: GaussianSolver.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
+ * $Id: GaussianSolver.hpp,v 1.4 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifdef AUSTIN_GAUSSIANSOLVER_H
@@ -73,14 +73,14 @@ GaussianSolver<T>::Solution::vector() const
 template<class T>
 inline
 GaussianSolver<T>::IncompatibleMatrixAndVector::
-IncompatibleMatrixAndVector(const size_t& matrixRows, 
-                            const size_t& vectorSize)
+IncompatibleMatrixAndVector(size_t matrixRows, 
+                            size_t vectorSize)
 	: matRows(matrixRows), vecSize(vectorSize)
 {}
 
 template<class T>
 inline
-const size_t&
+size_t
 GaussianSolver<T>::IncompatibleMatrixAndVector::getMatrixRows() const
 {
 	return matRows;
@@ -88,7 +88,7 @@ GaussianSolver<T>::IncompatibleMatrixAndVector::getMatrixRows() const
 
 template<class T>
 inline
-const size_t&
+size_t
 GaussianSolver<T>::IncompatibleMatrixAndVector::getVectorSize() const
 {
 	return vecSize;

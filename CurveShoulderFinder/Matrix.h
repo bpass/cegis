@@ -2,7 +2,7 @@
  * @file Matrix.h
  * @author Austin Hartman
  *
- * $Id: Matrix.h,v 1.4 2005/06/22 01:30:41 ahartman Exp $
+ * $Id: Matrix.h,v 1.5 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifndef AUSTIN_MATRIX_H
@@ -85,8 +85,8 @@ public:
 	 * operator used for the first bracket in the operation
 	 * matrix[row][column].
 	 */
-	RowProxy operator[](const size_t& r);
-	ConstRowProxy operator[](const size_t& r) const;
+	RowProxy operator[](size_t r);
+	ConstRowProxy operator[](size_t r) const;
 	//@}
 
 	/**
@@ -110,7 +110,7 @@ public:
 	class RowProxy
 	{
 	public:
-		RowProxy(Matrix<T>& mat, const size_t& r);
+		RowProxy(Matrix<T>& mat, size_t r);
 
 		/**
 		 * Implements the second [] in matrix[row][column]
@@ -119,7 +119,7 @@ public:
 		 * and the c column.  Throws ColumnRangeError if
 		 * c >= the number of columns in the matrix.
 		 */
-		T& operator[](const size_t& c) const;
+		T& operator[](size_t c) const;
 	private:
 		Matrix<T>& matrix;
 		size_t row;
@@ -129,7 +129,7 @@ public:
 	class ConstRowProxy
 	{
 	public:
-		ConstRowProxy(const Matrix<T>& mat, const size_t& r);
+		ConstRowProxy(const Matrix<T>& mat, size_t r);
 
 		/**
 		 * Implements the second [] in matrix[row][column]
@@ -138,7 +138,7 @@ public:
 		 * and the c column.  Throws ColumnRangeError if
 		 * c >= the number of columns in the matrix.
 		 */
-		const T& operator[](const size_t& c) const;
+		const T& operator[](size_t c) const;
 	private:
 		const Matrix<T>& matrix;
 		size_t row;
@@ -157,13 +157,13 @@ public:
 		 * Constructor that takes an argument to indicate the
 		 * invalid row that the user tried to access.
 		 */
-		RowRangeError(const size_t& r);
+		RowRangeError(size_t r);
 
 		/**
 		 * Returns the row that the user tried to access that was
 		 * invalid.
 		 */
-		const size_t& getRow() const;
+		size_t getRow() const;
 	private:
 		size_t row;
 	};
@@ -180,13 +180,13 @@ public:
 		 * Constructor that takes an argument to indicate the
 		 * invalid column that the user tried to access.
 		 */
-		ColumnRangeError(const size_t& c);
+		ColumnRangeError(size_t c);
 
 		/**
 		 * Returns the column that the user tried to access that was
 		 * invalid.
 		 */
-		const size_t& getColumn() const;
+		size_t getColumn() const;
 	private:
 		size_t column;
 	};
@@ -205,38 +205,38 @@ public:
 		 * in both of the matrices on the left- and right-hand of
 		 * the operation that was invalid.
 		 */
-		IncompatibleMatrixSizes(const size_t& lhsNumRows,
-		                        const size_t& lhsNumCols, 
-		                        const size_t& rhsNumRows,
-		                        const size_t& rhsNumCols);
+		IncompatibleMatrixSizes(size_t lhsNumRows,
+		                        size_t lhsNumCols, 
+		                        size_t rhsNumRows,
+		                        size_t rhsNumCols);
 
 		/**
 		 * @pre None
 		 * @post Returns the number of rows in the matrix that
 		 * was on the left-hand side of the operation.
 		 */
-		const size_t& getLhsRows() const;
+		size_t getLhsRows() const;
 
 		/**
 		 * @pre None
 		 * @post Returns the number of columns in the matrix that
 		 * was on the left-hand side of the operation.
 		 */
-		const size_t& getLhsColumns() const;
+		size_t getLhsColumns() const;
 
 		/**
 		 * @pre None
 		 * @post Returns the number of rows in the matrix that
 		 * was on the right-hand side of the operation.
 		 */
-		const size_t& getRhsRows() const;
+		size_t getRhsRows() const;
 
 		/**
 		 * @pre None
 		 * @post Returns the number of columns in the matrix that
 		 * was on the right-hand side of the operation.
 		 */
-		const size_t& getRhsColumns() const;
+		size_t getRhsColumns() const;
 	private:
 		size_t lhsRows;
 		size_t lhsCols;
@@ -253,9 +253,9 @@ protected:
 	 * They will be automatically called when the user does
 	 *   matrix[row][column].
 	 */
-	virtual T& getElement(const size_t& row, const size_t& col) = 0;
-	virtual const T& getElement(const size_t& row, 
-	                            const size_t& col) const = 0;
+	virtual T& getElement(size_t row, size_t col) = 0;
+	virtual const T& getElement(size_t row, 
+	                            size_t col) const = 0;
 	//@}
 
 	/**

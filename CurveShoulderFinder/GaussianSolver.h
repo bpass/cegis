@@ -2,7 +2,7 @@
  * @file GaussianSolver.h
  * @author Austin Hartman
  *
- * $Id: GaussianSolver.h,v 1.3 2005/07/01 21:03:55 ahartman Exp $
+ * $Id: GaussianSolver.h,v 1.4 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifndef AUSTIN_GAUSSIANSOLVER_H
@@ -103,22 +103,22 @@ public:
 		 * @post The object has been initialized with the data
 		 * passed into the constructor.
 		 */
-		IncompatibleMatrixAndVector(const size_t& matrixRows,
-		                            const size_t& vectorSize);
+		IncompatibleMatrixAndVector(size_t matrixRows,
+		                            size_t vectorSize);
 
 		/**
 		 * @pre None
 		 * @post returns the number of rows in the matrix whose
 		 * size led to the operation being undefined.
 		 */
-		const size_t& getMatrixRows() const;
+		size_t getMatrixRows() const;
 
 		/**
 		 * @pre None
 		 * @post returns the number of elements in the vector
 		 * whose size led to the operation being undefined.
 		 */
-		const size_t& getVectorSize() const;
+		size_t getVectorSize() const;
 	private:
 		size_t matRows;
 		size_t vecSize;

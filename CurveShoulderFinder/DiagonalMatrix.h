@@ -2,7 +2,7 @@
  * @file DiagonalMatrix.h
  * @author Austin Hartman
  *
- * $Id: DiagonalMatrix.h,v 1.3 2005/06/22 01:37:57 ahartman Exp $
+ * $Id: DiagonalMatrix.h,v 1.4 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifndef AUSTIN_DIAGONALMATRIX_H
@@ -59,7 +59,7 @@ template<class T>
 class DiagonalMatrix : public Matrix<T>
 {
 public:
-	DiagonalMatrix(const size_t& numRowsAndCols = 0,
+	DiagonalMatrix(size_t numRowsAndCols = 0,
 	               const T& initialValue = 0);
 
 	DiagonalMatrix(const DiagonalMatrix<T>& rhs);
@@ -91,8 +91,8 @@ public:
 	virtual size_t getNumCols() const;
 
 protected:
-	virtual T& getElement(const size_t& row, const size_t& col);
-	virtual const T& getElement(const size_t& row, const size_t& col) const;
+	virtual T& getElement(size_t row, size_t col);
+	virtual const T& getElement(size_t row, size_t col) const;
 
 	virtual void printOn(std::ostream& os) const;
 

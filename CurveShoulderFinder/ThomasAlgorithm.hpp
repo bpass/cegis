@@ -2,7 +2,7 @@
  * @file ThomasAlgorithm.hpp
  * @author Austin Hartman
  *
- * $Id: ThomasAlgorithm.hpp,v 1.3 2005/06/16 23:10:08 ahartman Exp $
+ * $Id: ThomasAlgorithm.hpp,v 1.4 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifdef AUSTIN_THOMASALGORITHM_H
@@ -108,14 +108,14 @@ ThomasAlgorithm<T>::Solution::vector() const
 template<class T>
 inline
 ThomasAlgorithm<T>::IncompatibleMatrixAndVector::
-IncompatibleMatrixAndVector(const size_t& matrixCols, 
-                            const size_t& vectorSize)
+IncompatibleMatrixAndVector(size_t matrixCols, 
+                            size_t vectorSize)
 	: matCols(matrixCols), vecSize(vectorSize)
 {}
 
 template<class T>
 inline
-const size_t&
+size_t
 ThomasAlgorithm<T>::IncompatibleMatrixAndVector::getMatrixCols() const
 {
 	return matCols;
@@ -123,7 +123,7 @@ ThomasAlgorithm<T>::IncompatibleMatrixAndVector::getMatrixCols() const
 
 template<class T>
 inline
-const size_t&
+size_t
 ThomasAlgorithm<T>::IncompatibleMatrixAndVector::getVectorSize() const
 {
 	return vecSize;

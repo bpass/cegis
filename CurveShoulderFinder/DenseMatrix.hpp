@@ -2,7 +2,7 @@
  * @file DenseMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: DenseMatrix.hpp,v 1.5 2005/06/22 01:35:02 ahartman Exp $
+ * $Id: DenseMatrix.hpp,v 1.6 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifdef AUSTIN_DENSEMATRIX_H
@@ -13,7 +13,7 @@
 **** DenseMatrix functions ****************
 *******************************************/
 template<class T>
-DenseMatrix<T>::DenseMatrix(const size_t& rows, const size_t& cols, 
+DenseMatrix<T>::DenseMatrix(size_t rows, size_t cols, 
                             const T& initialValue)
 	: numRows(rows), numCols(cols)
 {
@@ -316,7 +316,7 @@ operator*(const DenseMatrix<T>& lhs, const DenseMatrix<T>& rhs)
 
 template<class T>
 T&
-DenseMatrix<T>::getElement(const size_t& row, const size_t& col)
+DenseMatrix<T>::getElement(size_t row, size_t col)
 {
 	if(!validRow(row))
 	{
@@ -331,7 +331,7 @@ DenseMatrix<T>::getElement(const size_t& row, const size_t& col)
 
 template<class T>
 const T&
-DenseMatrix<T>::getElement(const size_t& row, const size_t& col) const
+DenseMatrix<T>::getElement(size_t row, size_t col) const
 {
 	if(!validRow(row))
 	{
@@ -431,7 +431,7 @@ DenseMatrix<T>::getNumCols() const
 
 template<class T>
 void
-DenseMatrix<T>::setSize(const size_t& newNumRows, const size_t& newNumCols,
+DenseMatrix<T>::setSize(size_t newNumRows, size_t newNumCols,
                         const T& value)
 {
 	delete[] data;
@@ -460,7 +460,7 @@ DenseMatrix<T>::setSize(const size_t& newNumRows, const size_t& newNumCols,
 
 template<class T>
 MyVector<T>
-DenseMatrix<T>::getColumnAsVector(const size_t& column) const
+DenseMatrix<T>::getColumnAsVector(size_t column) const
 {
 	if(!validColumn(column))
 	{
@@ -477,7 +477,7 @@ DenseMatrix<T>::getColumnAsVector(const size_t& column) const
 
 template<class T>
 MyVector<T>
-DenseMatrix<T>::getRowAsVector(const size_t& row) const
+DenseMatrix<T>::getRowAsVector(size_t row) const
 {
 	if(!validRow(row))
 	{
@@ -511,7 +511,7 @@ DenseMatrix<T>::transpose() const
 
 template<class T>
 void
-DenseMatrix<T>::rowInterchange(const size_t& row1, const size_t& row2)
+DenseMatrix<T>::rowInterchange(size_t row1, size_t row2)
 {
 	if(!validRow(row1))
 	{
@@ -530,7 +530,7 @@ DenseMatrix<T>::rowInterchange(const size_t& row1, const size_t& row2)
 
 template<class T>
 void
-DenseMatrix<T>::rowScale(const size_t& row, const T& constant)
+DenseMatrix<T>::rowScale(size_t row, const T& constant)
 {
 	if(!validRow(row))
 	{
@@ -545,8 +545,8 @@ DenseMatrix<T>::rowScale(const size_t& row, const T& constant)
 
 template<class T>
 void
-DenseMatrix<T>::rowReplace(const size_t& rowToReplace,
-			   const size_t& otherRow, const T& multiple)
+DenseMatrix<T>::rowReplace(size_t rowToReplace,
+			   size_t otherRow, const T& multiple)
 {
 	if(!validRow(rowToReplace))
 	{
@@ -567,7 +567,7 @@ DenseMatrix<T>::rowReplace(const size_t& rowToReplace,
 template<class T>
 inline
 T&
-DenseMatrix<T>::a(const size_t& row, const size_t& column)
+DenseMatrix<T>::a(size_t row, size_t column)
 {
 	return data[row + column * numRows];
 }
@@ -575,7 +575,7 @@ DenseMatrix<T>::a(const size_t& row, const size_t& column)
 template<class T>
 inline
 const T&
-DenseMatrix<T>::a(const size_t& row, const size_t& column) const
+DenseMatrix<T>::a(size_t row, size_t column) const
 {
 	return data[row + column * numRows];
 }
@@ -584,7 +584,7 @@ DenseMatrix<T>::a(const size_t& row, const size_t& column) const
 template<class T>
 inline
 bool
-DenseMatrix<T>::validRow(const size_t& row) const
+DenseMatrix<T>::validRow(size_t row) const
 {
 	return row < numRows;
 }
@@ -592,7 +592,7 @@ DenseMatrix<T>::validRow(const size_t& row) const
 template<class T>
 inline
 bool
-DenseMatrix<T>::validColumn(const size_t& col) const
+DenseMatrix<T>::validColumn(size_t col) const
 {
 	return col < numCols;
 }

@@ -2,7 +2,7 @@
  * @file PartialPivotingGaussianSolver.h
  * @author Austin Hartman
  *
- * $Id: PartialPivotingGaussianSolver.h,v 1.3 2005/07/01 21:03:55 ahartman Exp $
+ * $Id: PartialPivotingGaussianSolver.h,v 1.4 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifndef AUSTIN_PARTIALPIVOTINGGAUSSIANSOLVER_H
@@ -36,7 +36,7 @@ protected:
 	 * vec.
 	 */
 	void partialPivot(DenseMatrix<T>& mat, MyVector<T>& vec,
-	                  const size_t& row, const size_t& column) const;
+	                  size_t row, size_t column) const;
 
 	/**
 	 * @pre rowToStart and column are valid rows in mat.  T defines
@@ -46,8 +46,8 @@ protected:
 	 * the largest absolute value in column
 	 */
 	size_t indexLargestElementRow(const Matrix<T>& mat,
-	                              const size_t& rowToStart,
-	                              const size_t& column) const;
+	                              size_t rowToStart,
+	                              size_t column) const;
 };
 
 #include "PartialPivotingGaussianSolver.hpp"

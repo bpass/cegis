@@ -2,7 +2,7 @@
  * @file ThomasAlgorithm.h
  * @author Austin Hartman
  *
- * $Id: ThomasAlgorithm.h,v 1.3 2005/07/01 21:03:55 ahartman Exp $
+ * $Id: ThomasAlgorithm.h,v 1.4 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifndef AUSTIN_THOMASALGORITHM_H
@@ -69,22 +69,22 @@ public:
 		 * @post The object has been initialized with the data
 		 * passed into the constructor.
 		 */
-		IncompatibleMatrixAndVector(const size_t& matrixCols,
-		                            const size_t& vectorSize);
+		IncompatibleMatrixAndVector(size_t matrixCols,
+		                            size_t vectorSize);
 
 		/**
 		 * @pre None
 		 * @post returns the number of cols in the matrix whose
 		 * size led to the operation being undefined.
 		 */
-		const size_t& getMatrixCols() const;
+		size_t getMatrixCols() const;
 
 		/**
 		 * @pre None
 		 * @post returns the number of elements in the vector
 		 * whose size led to the operation being undefined.
 		 */
-		const size_t& getVectorSize() const;
+		size_t getVectorSize() const;
 	private:
 		size_t matCols;
 		size_t vecSize;

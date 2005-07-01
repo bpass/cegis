@@ -2,7 +2,7 @@
  * @file UpperTriangularMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: UpperTriangularMatrix.hpp,v 1.4 2005/06/22 01:35:02 ahartman Exp $
+ * $Id: UpperTriangularMatrix.hpp,v 1.5 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifdef AUSTIN_UPPERTRIANGULARMATRIX_H
@@ -16,7 +16,7 @@ template<class T>
 const T UpperTriangularMatrix<T>::constZero = 0;
 
 template<class T>
-UpperTriangularMatrix<T>::UpperTriangularMatrix(const size_t& numRowsAndCols,
+UpperTriangularMatrix<T>::UpperTriangularMatrix(size_t numRowsAndCols,
                                                 const T& initialValue)
 	: size(numRowsAndCols)
 {
@@ -327,7 +327,7 @@ UpperTriangularMatrix<T>::getNumCols() const
 
 template<class T>
 T&
-UpperTriangularMatrix<T>::getElement(const size_t& row, const size_t& col)
+UpperTriangularMatrix<T>::getElement(size_t row, size_t col)
 {
 	if(row >= size)
 	{
@@ -347,7 +347,7 @@ UpperTriangularMatrix<T>::getElement(const size_t& row, const size_t& col)
 
 template<class T>
 const T&
-UpperTriangularMatrix<T>::getElement(const size_t& row, const size_t& col) const
+UpperTriangularMatrix<T>::getElement(size_t row, size_t col) const
 {
 	if(row >= size)
 	{
@@ -411,7 +411,7 @@ UpperTriangularMatrix<T>::readIn(std::istream& is)
 
 template<class T>
 T**
-UpperTriangularMatrix<T>::create2DArray(const size_t& n) const
+UpperTriangularMatrix<T>::create2DArray(size_t n) const
 {
 	T** rv = new T*[n];
 	for(size_t i = 0; i < n; ++i)
@@ -423,7 +423,7 @@ UpperTriangularMatrix<T>::create2DArray(const size_t& n) const
 
 template<class T>
 void
-UpperTriangularMatrix<T>::destroy2DArray(T** array, const size_t& n) const
+UpperTriangularMatrix<T>::destroy2DArray(T** array, size_t n) const
 {
 	const T* const * const arrayEnd = array + n;
 	for(T** i = array; i < arrayEnd; ++i)

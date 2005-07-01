@@ -2,7 +2,7 @@
  * @file LowerTriangularMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: LowerTriangularMatrix.hpp,v 1.4 2005/06/22 01:35:02 ahartman Exp $
+ * $Id: LowerTriangularMatrix.hpp,v 1.5 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifdef AUSTIN_LOWERTRIANGULARMATRIX_H
@@ -16,7 +16,7 @@ template<class T>
 const T LowerTriangularMatrix<T>::constZero = 0;
 
 template<class T>
-LowerTriangularMatrix<T>::LowerTriangularMatrix(const size_t& numRowsAndCols,
+LowerTriangularMatrix<T>::LowerTriangularMatrix(size_t numRowsAndCols,
                                                 const T& initialValue)
 	: size(numRowsAndCols)
 {
@@ -275,7 +275,7 @@ LowerTriangularMatrix<T>::getNumCols() const
 
 template<class T>
 T&
-LowerTriangularMatrix<T>::getElement(const size_t& row, const size_t& col)
+LowerTriangularMatrix<T>::getElement(size_t row, size_t col)
 {
 	if(row >= size)
 	{
@@ -295,7 +295,7 @@ LowerTriangularMatrix<T>::getElement(const size_t& row, const size_t& col)
 
 template<class T>
 const T&
-LowerTriangularMatrix<T>::getElement(const size_t& row, const size_t& col) const
+LowerTriangularMatrix<T>::getElement(size_t row, size_t col) const
 {
 	if(row >= size)
 	{
@@ -358,7 +358,7 @@ LowerTriangularMatrix<T>::readIn(std::istream& is)
 
 template<class T>
 T**
-LowerTriangularMatrix<T>::create2DArray(const size_t& n) const
+LowerTriangularMatrix<T>::create2DArray(size_t n) const
 {
 	T** array = new T*[n];
 	for(size_t i = 0; i < n; ++i)
@@ -370,7 +370,7 @@ LowerTriangularMatrix<T>::create2DArray(const size_t& n) const
 
 template<class T>
 void
-LowerTriangularMatrix<T>::destroy2DArray(T** array, const size_t& n) const
+LowerTriangularMatrix<T>::destroy2DArray(T** array, size_t n) const
 {
 	const T* const * const arrayEnd = array + n;
 	for(T** i = array; i < arrayEnd; ++i)

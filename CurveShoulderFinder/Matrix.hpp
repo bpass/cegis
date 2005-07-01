@@ -2,7 +2,7 @@
  * @file Matrix.hpp
  * @author Austin Hartman
  *
- * $Id: Matrix.hpp,v 1.4 2005/06/16 23:08:34 ahartman Exp $
+ * $Id: Matrix.hpp,v 1.5 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifdef AUSTIN_MATRIX_H
@@ -20,7 +20,7 @@ Matrix<T>::~Matrix()
 template<class T>
 inline
 typename Matrix<T>::RowProxy
-Matrix<T>::operator[](const size_t& r)
+Matrix<T>::operator[](size_t r)
 {
 	return RowProxy(*this, r);
 }
@@ -28,7 +28,7 @@ Matrix<T>::operator[](const size_t& r)
 template<class T>
 inline
 typename Matrix<T>::ConstRowProxy
-Matrix<T>::operator[](const size_t& r) const
+Matrix<T>::operator[](size_t r) const
 {
 	return ConstRowProxy(*this, r);
 }
@@ -40,14 +40,14 @@ Matrix<T>::operator[](const size_t& r) const
 *****************************************/
 template<class T>
 inline
-Matrix<T>::RowProxy::RowProxy(Matrix<T>& mat, const size_t& r)
+Matrix<T>::RowProxy::RowProxy(Matrix<T>& mat, size_t r)
 	: matrix(mat), row(r)
 {}
 
 template<class T>
 inline
 T&
-Matrix<T>::RowProxy::operator[](const size_t& c) const
+Matrix<T>::RowProxy::operator[](size_t c) const
 {
 	return matrix.getElement(row, c);
 }
@@ -60,14 +60,14 @@ Matrix<T>::RowProxy::operator[](const size_t& c) const
 template<class T>
 inline
 Matrix<T>::ConstRowProxy::ConstRowProxy(const Matrix<T>& mat, 
-                                          const size_t& r)
+                                          size_t r)
 	: matrix(mat), row(r) 
 {}
 
 template<class T>
 inline
 const T&
-Matrix<T>::ConstRowProxy::operator[](const size_t& c) const
+Matrix<T>::ConstRowProxy::operator[](size_t c) const
 {
 	return matrix.getElement(row, c);
 }
@@ -79,13 +79,13 @@ Matrix<T>::ConstRowProxy::operator[](const size_t& c) const
 *******************************************/
 template<class T>
 inline
-Matrix<T>::RowRangeError::RowRangeError(const size_t& r)
+Matrix<T>::RowRangeError::RowRangeError(size_t r)
 	: row(r)
 {}
 
 template<class T>
 inline
-const size_t&
+size_t
 Matrix<T>::RowRangeError::getRow() const
 {
 	return row;
@@ -98,13 +98,13 @@ Matrix<T>::RowRangeError::getRow() const
 *******************************************/
 template<class T>
 inline 
-Matrix<T>::ColumnRangeError::ColumnRangeError(const size_t& c)
+Matrix<T>::ColumnRangeError::ColumnRangeError(size_t c)
 	: column(c)
 {}
 
 template<class T>
 inline
-const size_t&
+size_t
 Matrix<T>::ColumnRangeError::getColumn() const
 {
 	return column;
@@ -117,17 +117,17 @@ Matrix<T>::ColumnRangeError::getColumn() const
 *******************************************/
 template<class T>
 Matrix<T>::IncompatibleMatrixSizes::
-IncompatibleMatrixSizes(const size_t& lhsNumRows,
-                        const size_t& lhsNumCols, 
-                        const size_t& rhsNumRows,
-                        const size_t& rhsNumCols)
+IncompatibleMatrixSizes(size_t lhsNumRows,
+                        size_t lhsNumCols, 
+                        size_t rhsNumRows,
+                        size_t rhsNumCols)
 	: lhsRows(lhsNumRows), lhsCols(lhsNumCols),
 	  rhsRows(rhsNumRows), rhsCols(rhsNumCols)
 {}
 
 template<class T>
 inline
-const size_t&
+size_t
 Matrix<T>::IncompatibleMatrixSizes::getLhsRows() const
 {
 	return lhsRows;
@@ -135,7 +135,7 @@ Matrix<T>::IncompatibleMatrixSizes::getLhsRows() const
 
 template<class T>
 inline
-const size_t&
+size_t
 Matrix<T>::IncompatibleMatrixSizes::getLhsColumns() const
 {
 	return lhsCols;
@@ -143,7 +143,7 @@ Matrix<T>::IncompatibleMatrixSizes::getLhsColumns() const
 
 template<class T>
 inline
-const size_t&
+size_t
 Matrix<T>::IncompatibleMatrixSizes::getRhsRows() const
 {
 	return rhsRows;
@@ -151,7 +151,7 @@ Matrix<T>::IncompatibleMatrixSizes::getRhsRows() const
 
 template<class T>
 inline
-const size_t&
+size_t
 Matrix<T>::IncompatibleMatrixSizes::getRhsColumns() const
 {
 	return rhsCols;

@@ -2,7 +2,7 @@
  * @file TridiagonalMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: TridiagonalMatrix.hpp,v 1.5 2005/06/22 01:35:02 ahartman Exp $
+ * $Id: TridiagonalMatrix.hpp,v 1.6 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifdef AUSTIN_TRIDIAGONALMATRIX_H
@@ -16,7 +16,7 @@ template<class T>
 const T TridiagonalMatrix<T>::constZero = 0;
 
 template<class T>
-TridiagonalMatrix<T>::TridiagonalMatrix(const size_t& numRowsAndCols,
+TridiagonalMatrix<T>::TridiagonalMatrix(size_t numRowsAndCols,
 					const T& initialValue)
 	: size(numRowsAndCols)
 {
@@ -218,7 +218,7 @@ TridiagonalMatrix<T>::getNumCols() const
 
 template<class T>
 T&
-TridiagonalMatrix<T>::getElement(const size_t& row, const size_t& col)
+TridiagonalMatrix<T>::getElement(size_t row, size_t col)
 {
 	if(row >= size)
 	{
@@ -243,7 +243,7 @@ TridiagonalMatrix<T>::getElement(const size_t& row, const size_t& col)
 
 template<class T>
 const T&
-TridiagonalMatrix<T>::getElement(const size_t& row, const size_t& col) const
+TridiagonalMatrix<T>::getElement(size_t row, size_t col) const
 {
 	if(row >= size)
 	{
@@ -344,7 +344,7 @@ TridiagonalMatrix<T>::readIn(std::istream& is)
 template<class T>
 inline
 size_t
-TridiagonalMatrix<T>::getArraySize(const size_t& size) const
+TridiagonalMatrix<T>::getArraySize(size_t size) const
 {
 	// the size is cast to an int so that the formula works even if
 	// size == 1
@@ -354,7 +354,7 @@ TridiagonalMatrix<T>::getArraySize(const size_t& size) const
 template<class T>
 inline
 T&
-TridiagonalMatrix<T>::getNonZeroElement(const size_t& row, const size_t& col)
+TridiagonalMatrix<T>::getNonZeroElement(size_t row, size_t col)
 {
 	return data[col + col + row];
 }
@@ -362,8 +362,8 @@ TridiagonalMatrix<T>::getNonZeroElement(const size_t& row, const size_t& col)
 template<class T>
 inline
 const T&
-TridiagonalMatrix<T>::getNonZeroElement(const size_t& row, 
-                                        const size_t& col) const
+TridiagonalMatrix<T>::getNonZeroElement(size_t row, 
+                                        size_t col) const
 {
 	return data[col + col + row];
 }

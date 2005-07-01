@@ -2,7 +2,7 @@
  * @file UpperTriangularMatrix.h
  * @author Austin Hartman
  *
- * $Id: UpperTriangularMatrix.h,v 1.5 2005/07/01 22:52:53 ahartman Exp $
+ * $Id: UpperTriangularMatrix.h,v 1.6 2005/07/01 23:05:37 ahartman Exp $
  */
 
 #ifndef AUSTIN_UPPERTRIANGULARMATRIX_H
@@ -54,7 +54,7 @@ public:
 	 * @param initialValue The initial value for every element that can
 	 * possibly be non-zero.
 	 */
-	UpperTriangularMatrix(const size_t& numRowsAndCols = 0,
+	UpperTriangularMatrix(size_t numRowsAndCols = 0,
 	                      const T& initialValue = 0);
 
 	UpperTriangularMatrix(const UpperTriangularMatrix<T>& rhs);
@@ -122,8 +122,8 @@ protected:
 	 * They will be automatically called when the user does
 	 *   matrix[row][column]
 	 */
-	virtual T& getElement(const size_t& row, const size_t& col);
-	virtual const T& getElement(const size_t& row, const size_t& col) const;
+	virtual T& getElement(size_t row, size_t col);
+	virtual const T& getElement(size_t row, size_t col) const;
 
 	virtual void printOn(std::ostream& os) const;
 
@@ -135,8 +135,8 @@ private:
 	T** data;
 	size_t size;
 
-	T** create2DArray(const size_t& n) const;
-	void destroy2DArray(T** array, const size_t& n) const;
+	T** create2DArray(size_t n) const;
+	void destroy2DArray(T** array, size_t n) const;
 
 	static T nonConstZero;
 	static const T constZero;

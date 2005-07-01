@@ -1,0 +1,12 @@
+To build and use, just run the following:
+    automake --add-missing --foreign
+    autoconf
+    configure
+    make
+
+To execute the tests, run:
+    make check
+
+To generate the documentation, run:
+    doxygen Doxyfile
+

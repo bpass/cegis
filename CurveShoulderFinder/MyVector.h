@@ -2,7 +2,7 @@
  * @file MyVector.h
  * @author Austin Hartman
  *
- * $Id: MyVector.h,v 1.3 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: MyVector.h,v 1.4 2005/07/01 21:03:55 ahartman Exp $
  */
 
 #ifndef AUSTIN_MYVECTOR_H
@@ -52,38 +52,38 @@ public:
 
 	/**
 	 * Constructor to create a vector of the specified size.    
-	 * Pre: T must be assignable to 0.
-	 * Post: All elements are initialized to 0.
+	 * @pre T must be assignable to 0.
+	 * @post All elements are initialized to 0.
 	 */
 	explicit MyVector(size_t newSize);
 
 	/**
 	 * Copy constructor.
-	 * Pre: None
-	 * Post: Creates a vector that is a copy of rhs such that its
+	 * @pre None
+	 * @post Creates a vector that is a copy of rhs such that its
 	 * size is the same, as are all of its elements.
 	 */
 	MyVector(const MyVector<T>& rhs);
 
 	/**
 	 * Destructor.
-	 * Pre: None
-	 * Post: The object is destructed and memory is freed.
+	 * @pre None
+	 * @post The object is destructed and memory is freed.
 	 */
 	~MyVector();
 
 	/**
 	 * Assignment operator.
-	 * Pre: None
-	 * Post: Sets this vector to be a copy of rhs, such that its size
+	 * @pre None
+	 * @post Sets this vector to be a copy of rhs, such that its size
 	 * is the same, as are all of its elements.
 	 */
 	const MyVector<T>& operator=(const MyVector<T>& rhs);
 
 	/**
 	 * Adds the terms in rhs to the terms in this vector.
-	 * Pre: T defines operator+=, and this and rhs are the same size.
-	 * Post: The terms in rhs have been added to this vector, or a 
+	 * @pre T defines operator+=, and this and rhs are the same size.
+	 * @post The terms in rhs have been added to this vector, or a 
 	 * MyVector::IncompatibleVectorSizes exception is thrown if lhs and
 	 * rhs are not the same size.
 	 */
@@ -91,8 +91,8 @@ public:
 
 	/**
 	 * Adds the terms in lhs and rhs to form a new vector.
-	 * Pre: T defines operator+=, and lhs and rhs are the same size.
-	 * Post: Returns the new vector that is the same size as lhs and
+	 * @pre T defines operator+=, and lhs and rhs are the same size.
+	 * @post Returns the new vector that is the same size as lhs and
 	 * rhs and whose terms are the sum of the terms in lhs and rhs, 
 	 * or a MyVector::IncompatibleVectorSizes exception is thrown if lhs 
 	 * and rhs are not the same size.
@@ -102,9 +102,9 @@ public:
 
 	/**
 	 * Subtracts the terms in rhs from this vector.
-	 * Pre: T defines operator+= and unary operator-, and this and
+	 * @pre T defines operator+= and unary operator-, and this and
 	 * rhs are the same size.
-	 * Post: The terms in rhs have been subtracted from this vector, 
+	 * @post The terms in rhs have been subtracted from this vector, 
 	 * or a MyVector::IncompatibleVectorSizes exception is thrown if 
 	 * lhs and rhs are not the same size.
 	 */
@@ -112,9 +112,9 @@ public:
 
 	/**
 	 * Subtracts the terms in rhs from lhs to form a new vector.
-	 * Pre: T defines operator+= and unary operator-, and lhs and rhs
+	 * @pre T defines operator+= and unary operator-, and lhs and rhs
 	 * are the same size.
-	 * Post: Returns the new vector that is the same size as lhs and
+	 * @post Returns the new vector that is the same size as lhs and
 	 * rhs and whose terms are the result of subtracting rhs from lhs, 
 	 * or a MyVector::IncompatibleVectorSizes exception is thrown if 
 	 * lhs and rhs are not the same size.
@@ -125,17 +125,17 @@ public:
 	/**
 	 * Returns a new vector whose terms are the opposite of the terms
 	 * in this.
-	 * Pre: T defines unary operator-.
-	 * Post: Returns a new vector whose terms are the terms in this set
+	 * @pre T defines unary operator-.
+	 * @post Returns a new vector whose terms are the terms in this set
 	 * equal to themselves with unary operator- applied
 	 */ 
 	MyVector<T> operator-() const;
 
 	/**
 	 * Finds the dot product of two vectors.
-	 * Pre: T is constructable from 0, T defines binary operator*
+	 * @pre T is constructable from 0, T defines binary operator*
 	 * and operator+=, and lhs and rhs are the same size.
-	 * Post: Returns a new vector that is the result of multiplying 
+	 * @post Returns a new vector that is the result of multiplying 
 	 * the corresponding terms in lhs and rhs and summing them together, 
 	 * or a MyVector::IncompatibleVectorSizes exception is thrown if lhs 
 	 * and rhs are not the same size.
@@ -145,31 +145,31 @@ public:
 
 	/**
 	 * Multiplies a vector by a scalar.
-	 * Pre: T defines operator*=
-	 * Post: Returns a new vector that is the result of multiplying this 
+	 * @pre T defines operator*=
+	 * @post Returns a new vector that is the result of multiplying this 
 	 * vector by a scalar.
 	 */
 	MyVector<T> operator*(const T& scalar) const;
 
 	/**
 	 * Divides a vector by a scalar.
-	 * Pre: T defines operator*= and operator/
-	 * Post: Returns a new vector that is the result of dividing this
+	 * @pre T defines operator*= and operator/
+	 * @post Returns a new vector that is the result of dividing this
 	 * vector by a scalar.
 	 */
 	MyVector<T> operator/(const T& scalar) const;
 
 	/**
-	 * Pre: None
-	 * Post: Returns the size of the vector, which is greater than or
+	 * @pre None
+	 * @post Returns the size of the vector, which is greater than or
 	 * equal to 0.
 	 */
 	size_t getSize() const;
 
 	/**
 	 * Sets the new size of the vector.
-	 * Pre: T is assignable to 0.
-	 * Post: The size of this vector has been set to newSize.  Any old
+	 * @pre T is assignable to 0.
+	 * @post The size of this vector has been set to newSize.  Any old
 	 * terms that fit into a vector with the new size have been copied.
 	 * If the new size was greater than the old size, the new terms have
 	 * been initialized to 0.
@@ -178,25 +178,25 @@ public:
 
 	/**
 	 * Returns the term at position index.
-	 * Pre: index < getSize()
-	 * Post: returns the term at the requested position or throws an
+	 * @pre index < getSize()
+	 * @post returns the term at the requested position or throws an
 	 * exception if the position is invalid.
 	 */
 	T& operator[](size_t index);
 
 	/**
 	 * Returns the term at position index.
-	 * Pre: index < getSize()
-	 * Post: returns the term at the requested position or throws an
+	 * @pre index < getSize()
+	 * @post returns the term at the requested position or throws an
 	 * exception if the position is invalid.
 	 */
 	const T& operator[](size_t index) const;
 
 	/**
 	 * Returns the magnitude of the vector.
-	 * Pre: T is constructible from 0, has operator+= and binary operator*,
+	 * @pre T is constructible from 0, has operator+= and binary operator*,
 	 * and works as a parameter to std::sqrt.
-	 * Post: Returns the magnitude of the vector, which is defined as
+	 * @post Returns the magnitude of the vector, which is defined as
 	 * the square root of the sum of the squares of the components
 	 * of the vector.
 	 */
@@ -205,15 +205,15 @@ public:
 	/**
 	 * Outputs the terms of the vector in the form
 	 * [ a1 a2 ... an ].
-	 * Pre: None
-	 * Post: v has been outputted to os in the format described above
+	 * @pre None
+	 * @post v has been outputted to os in the format described above
 	 */
 	friend std::ostream& operator<< <>(std::ostream& os, const MyVector<T>& v);
 
 	/**
 	 * Reads in the terms for v from is.
-	 * Pre: v's size is equal to the number of terms to read in.
-	 * Post: v has been set to the terms read in from is.
+	 * @pre v's size is equal to the number of terms to read in.
+	 * @post v has been set to the terms read in from is.
 	 */
 	friend std::istream& operator>> <>(std::istream& is, MyVector<T>& v);
 
@@ -299,8 +299,8 @@ private:
 
 /**
  * Multiplies a vector by a scalar.
- * Pre: T defines operator*=
- * Post: Returns a new vector that is the result of multiplying v 
+ * @pre T defines operator*=
+ * @post Returns a new vector that is the result of multiplying v 
  * by a scalar.
  */
 template<class T>

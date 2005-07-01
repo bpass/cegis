@@ -2,7 +2,7 @@
  * @file ThomasAlgorithm.h
  * @author Austin Hartman
  *
- * $Id: ThomasAlgorithm.h,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: ThomasAlgorithm.h,v 1.3 2005/07/01 21:03:55 ahartman Exp $
  */
 
 #ifndef AUSTIN_THOMASALGORITHM_H
@@ -19,9 +19,9 @@ public:
 	/**
 	 * This function solves the system Ax = b for x,
 	 * where A is a tridiagonal matrix and b is a vector.
-	 * Pre: matrix contains the same number of columns as
+	 * @pre matrix contains the same number of columns as
 	 * vec has elements
-	 * Post: returns a Solution, which is described below
+	 * @post returns a Solution, which is described below
 	 */
 	Solution operator()(const TridiagonalMatrix<T>& matrix, 
 	                    const MyVector<T>& vec) const;
@@ -65,23 +65,23 @@ public:
 		 * Constructor that takes the number of rows in the matrix
 		 * and the number of elements in the vector whose sizes
 		 * meant that the operation was undefined.
-		 * Pre: None
-		 * Post: The object has been initialized with the data
+		 * @pre None
+		 * @post The object has been initialized with the data
 		 * passed into the constructor.
 		 */
 		IncompatibleMatrixAndVector(const size_t& matrixCols,
 		                            const size_t& vectorSize);
 
 		/**
-		 * Pre: None
-		 * Post: returns the number of cols in the matrix whose
+		 * @pre None
+		 * @post returns the number of cols in the matrix whose
 		 * size led to the operation being undefined.
 		 */
 		const size_t& getMatrixCols() const;
 
 		/**
-		 * Pre: None
-		 * Post: returns the number of elements in the vector
+		 * @pre None
+		 * @post returns the number of elements in the vector
 		 * whose size led to the operation being undefined.
 		 */
 		const size_t& getVectorSize() const;

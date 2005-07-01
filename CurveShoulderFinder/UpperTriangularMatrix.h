@@ -2,7 +2,7 @@
  * @file UpperTriangularMatrix.h
  * @author Austin Hartman
  *
- * $Id: UpperTriangularMatrix.h,v 1.3 2005/06/22 01:35:02 ahartman Exp $
+ * $Id: UpperTriangularMatrix.h,v 1.4 2005/07/01 21:03:55 ahartman Exp $
  */
 
 #ifndef AUSTIN_UPPERTRIANGULARMATRIX_H
@@ -69,9 +69,9 @@ public:
 
 	/**
 	 * Multiplies a matrix by a vector.
-	 * Pre: The number of columns in the matrix must equal the number
+	 * @pre The number of columns in the matrix must equal the number
 	 * of elements in the vector
-	 * Post: returns a vector that is the result of multiplying this
+	 * @post returns a vector that is the result of multiplying this
 	 * matrix by the vector v
 	 */
 	virtual MyVector<T> operator*(const MyVector<T>& v) const;
@@ -88,14 +88,14 @@ public:
 		operator*=(const UpperTriangularMatrix<T>& rhs);
 
 	/**
-	 * Pre: None
-	 * Post: returns the number of rows in the matrix.
+	 * @pre None
+	 * @post returns the number of rows in the matrix.
 	 */
 	virtual size_t getNumRows() const;
 
 	/**
-	 * Pre: None
-	 * Post: returns the number of columns in the matrix.
+	 * @pre None
+	 * @post returns the number of columns in the matrix.
 	 */
 	virtual size_t getNumCols() const;
 

@@ -2,7 +2,7 @@
  * @file PartialPivotingGaussianSolver.h
  * @author Austin Hartman
  *
- * $Id: PartialPivotingGaussianSolver.h,v 1.2 2005/06/13 18:28:46 ahartman Exp $
+ * $Id: PartialPivotingGaussianSolver.h,v 1.3 2005/07/01 21:03:55 ahartman Exp $
  */
 
 #ifndef AUSTIN_PARTIALPIVOTINGGAUSSIANSOLVER_H
@@ -19,10 +19,10 @@ public:
 	/**
 	 * Implements the GaussianSolver interface using Gaussian
 	 * elimination with partial pivoting.
-	 * Pre: T defines unary operator-, operator/, binary operator*,
+	 * @pre T defines unary operator-, operator/, binary operator*,
 	 * operator*=, operator+=, and operator>.  The columns of matrix
 	 * form a linearly independent set of vectors.
-	 * Post: returns the solution as described in GaussianSolver
+	 * @post returns the solution as described in GaussianSolver
 	 */
 	virtual typename GaussianSolver<T>::Solution 
 		operator()(const Matrix<T>& matrix, 
@@ -30,8 +30,8 @@ public:
 
 protected:
 	/**
-	 * Pre: row and column are valid for mat.  T defines operator>.
-	 * Post: swaps row with the row after row that has the largest
+	 * @pre row and column are valid for mat.  T defines operator>.
+	 * @post swaps row with the row after row that has the largest
 	 * element in column.  Also swaps the corresponding elements in
 	 * vec.
 	 */
@@ -39,9 +39,9 @@ protected:
 	                  const size_t& row, const size_t& column) const;
 
 	/**
-	 * Pre: rowToStart and column are valid rows in mat.  T defines
+	 * @pre rowToStart and column are valid rows in mat.  T defines
 	 * operator>
-	 * Post: searches all rows from rowToStart to the last row in mat
+	 * @post searches all rows from rowToStart to the last row in mat
 	 * and returns the index of the row that contains the element with
 	 * the largest absolute value in column
 	 */

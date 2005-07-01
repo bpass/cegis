@@ -2,7 +2,7 @@
  * @file TridiagonalMatrix.h
  * @author Austin Hartman
  *
- * $Id: TridiagonalMatrix.h,v 1.5 2005/06/22 01:35:02 ahartman Exp $
+ * $Id: TridiagonalMatrix.h,v 1.6 2005/07/01 21:03:55 ahartman Exp $
  */
 
 #ifndef AUSTIN_TRIDIAGONALMATRIX_H
@@ -55,17 +55,17 @@ public:
 
 	/**
 	 * Multiplies a tridiagonal matrix by a vector.
-	 * Pre: The number of columns in this matrix is the same as the
+	 * @pre The number of columns in this matrix is the same as the
 	 * number of elements in vec.
-	 * Post: returns a vector that is the result of this multiplication.
+	 * @post returns a vector that is the result of this multiplication.
 	 */
 	virtual MyVector<T> operator*(const MyVector<T>& vec) const;
 
 	/**
 	 * Adds a tridiagonal matrix to this matrix.
-	 * Pre: this and rhs are the same size.  T defines operator+= and
+	 * @pre this and rhs are the same size.  T defines operator+= and
 	 * binary operator*.
-	 * Post: Has added the elements in rhs to the corresponding elements
+	 * @post Has added the elements in rhs to the corresponding elements
 	 * in this.  Throws IncompatibleMatrixSizes if this and rhs are not 
 	 * the same size.
 	 */
@@ -73,9 +73,9 @@ public:
 
 	/**
 	 * Adds two tridiagonal matrices together.
-	 * Pre: lhs and rhs are the same size.  T defines operator+= and
+	 * @pre lhs and rhs are the same size.  T defines operator+= and
 	 * binary operator*.
-	 * Post: Has added the corresponding elements in lhs and rhs together.
+	 * @post Has added the corresponding elements in lhs and rhs together.
 	 * Throws IncompatibleMatrixSizes if this and rhs are not 
 	 * the same size.
 	 */
@@ -85,9 +85,9 @@ public:
 
 	/**
 	 * Subtracts a tridiagonal matrix from another.
-	 * Pre: lhs and rhs are the same size.  T defines unary operator-,
+	 * @pre lhs and rhs are the same size.  T defines unary operator-,
 	 * operator+=, and binary operator*.
-	 * Post: Has subtracted the elements in rhs from the corresponding 
+	 * @post Has subtracted the elements in rhs from the corresponding 
 	 * elements in lhs. Throws IncompatibleMatrixSizes if this and rhs 
 	 * are not the same size.
 	 */
@@ -96,39 +96,39 @@ public:
 		             const TridiagonalMatrix<T>& rhs);
 
 	/**
-	 * Pre: T defines unary operator-
-	 * Post: returns a tridiagonal matrix that has had all elements
+	 * @pre T defines unary operator-
+	 * @post returns a tridiagonal matrix that has had all elements
 	 * inverted from this matrix.
 	 */
 	TridiagonalMatrix<T> operator-() const;
 
 	/**
 	 * Subtracts a matrix from this matrix.
-	 * Pre: this and rhs are the same size.  T defines unary operator-, 
+	 * @pre this and rhs are the same size.  T defines unary operator-, 
 	 * operator+=, and binary operator*.
-	 * Post: Has subtracted the elements in rhs from the corresponding 
+	 * @post Has subtracted the elements in rhs from the corresponding 
 	 * elements in this.  Throws IncompatibleMatrixSizes if this and 
 	 * rhs are not the same size.
 	 */
 	TridiagonalMatrix<T>& operator-=(const TridiagonalMatrix<T>& rhs);
 
 	/**
-	 * Pre: None
-	 * Post: returns the number of rows in the matrix, which must
+	 * @pre None
+	 * @post returns the number of rows in the matrix, which must
 	 * be the same as the number of columns.
 	 */
 	virtual size_t getNumRows() const;
 
 	/**
-	 * Pre: None
-	 * Post: returns the number of columns in the matrix, which must
+	 * @pre None
+	 * @post returns the number of columns in the matrix, which must
 	 * be the same as the number of rows.
 	 */
 	virtual size_t getNumCols() const;
 
 protected:
 	/**
-	 * Pre: row < getNumRows and col < getNumCols
+	 * @pre row < getNumRows and col < getNumCols
 	 * Returns the element at position row, col.  Throws RowRangeError
 	 * or ColumnRangeError if row or column are out of range,
 	 * respectively.

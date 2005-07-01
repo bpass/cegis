@@ -2,7 +2,7 @@
  * @file CubicSplineSolver.h
  * @author Austin Hartman
  *
- * $Id: CubicSplineSolver.h,v 1.3 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: CubicSplineSolver.h,v 1.4 2005/07/01 21:03:55 ahartman Exp $
  */
 
 #ifndef AUSTIN_CUBICSPLINESOLVER_H
@@ -59,8 +59,8 @@ public:
 	/**
 	 * Builds a set of cubic splines using the input xCoords and
 	 * yCoords
-	 * Pre: xCoords contains x-coordinates in increasing order
-	 * Post: returns a set of cubic splines for the system
+	 * @pre xCoords contains x-coordinates in increasing order
+	 * @post returns a set of cubic splines for the system
 	 */
 	Solution operator()(const MyVector<T>& xCoords, 
 	                    const MyVector<T>& yCoords) const;

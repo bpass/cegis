@@ -2,7 +2,7 @@
  * @file DenseMatrix.h
  * @author Austin Hartman
  *
- * $Id: DenseMatrix.h,v 1.5 2005/06/22 01:35:02 ahartman Exp $
+ * $Id: DenseMatrix.h,v 1.6 2005/07/01 21:03:55 ahartman Exp $
  */
 
 #ifndef AUSTIN_DENSEMATRIX_H
@@ -47,8 +47,8 @@ public:
 	 * Constructor that can be used as a default constructor.  Allows
 	 * the input of the initial number of rows and columns, plus the
 	 * initial value for the every element of the matrix.
-	 * Pre: None
-	 * Post: creates a matrix with the specified number of rows and 
+	 * @pre None
+	 * @post creates a matrix with the specified number of rows and 
 	 * columns with each element equal to initialValue.  If either
 	 * rows or cols is 0, creates an empty matrix.
 	 */
@@ -57,8 +57,8 @@ public:
 
 	/**
 	 * Constructor to create a matrix from a vector.
-	 * Pre: None
-	 * Post: If the vector is empty, so is the resulting matrix.
+	 * @pre None
+	 * @post If the vector is empty, so is the resulting matrix.
 	 * Otherwise, creates a matrix with one column and with its
 	 * amount of rows equal to the size of the vector.  The elements
 	 * of the matrix are equal to the corresponding elements of the
@@ -68,8 +68,8 @@ public:
 
 	/**
 	 * Copy constructor.
-	 * Pre: None
-	 * Post: creates a matrix with the same number of rows and columns
+	 * @pre None
+	 * @post creates a matrix with the same number of rows and columns
 	 * as rhs.  The elements in the matrix are equal to the corresponding
 	 * elements of rhs.
 	 */
@@ -77,8 +77,8 @@ public:
 
 	/**
 	 * Constructor to construct a dense matrix from any other type of matrix
-	 * Pre: None
-	 * Post: creates a matrix with the same number of rows and columns
+	 * @pre None
+	 * @post creates a matrix with the same number of rows and columns
 	 * as rhs.  The elements in the matrix are equal to the corresponding
 	 * elements of rhs.
 	 */
@@ -86,15 +86,15 @@ public:
 
 	/**
 	 * Destructor.
-	 * Pre: None
-	 * Post: the matrix has been destructed
+	 * @pre None
+	 * @post the matrix has been destructed
 	 */
 	virtual ~DenseMatrix();
 
 	/**
 	 * Assignment operator.
-	 * Pre: None
-	 * Post: This matrix has the same number of rows and columns as rhs.  
+	 * @pre None
+	 * @post This matrix has the same number of rows and columns as rhs.  
 	 * The elements in the matrix are equal to the corresponding
 	 * elements of rhs.
 	 */
@@ -102,8 +102,8 @@ public:
 
 	/**
 	 * Assignment operator for any matrix type
-	 * Pre: None
-	 * Post: This matrix has the same number of rows and columns as rhs.  
+	 * @pre None
+	 * @post This matrix has the same number of rows and columns as rhs.  
 	 * The elements in the matrix are equal to the corresponding
 	 * elements of rhs.
 	 */
@@ -112,9 +112,9 @@ public:
 	/**
 	 * Adds the elements of rhs to the corresponding elements in this
 	 * matrix.
-	 * Pre: this and rhs have the same number of rows and columns.
+	 * @pre this and rhs have the same number of rows and columns.
 	 * T defines operator+=
-	 * Post: this matrix has been modified by adding the elements
+	 * @post this matrix has been modified by adding the elements
 	 * in rhs to the corresponding elements of this.  Throws 
 	 * IncompatibleMatrixSizes if this and rhs have a different number
 	 * of rows or columns
@@ -123,9 +123,9 @@ public:
 
 	/**
 	 * Adds the elements of lhs and rhs to create a new matrix.
-	 * Pre: lhs and rhs have the same number of rows and columns.
+	 * @pre lhs and rhs have the same number of rows and columns.
 	 * T defines operator+=
-	 * Post: Returns a new matrix that is the sum of lhs and rhs. 
+	 * @post Returns a new matrix that is the sum of lhs and rhs. 
 	 * Throws IncompatibleMatrixSizes if lhs and rhs have a different
 	 * number of rows or columns.
 	 */
@@ -134,9 +134,9 @@ public:
 
 	/**
 	 * Subtracts the elements of rhs from lhs to create a new matrix.
-	 * Pre: lhs and rhs have the same number of rows and columns.
+	 * @pre lhs and rhs have the same number of rows and columns.
 	 * T defines unary operator- and operator+=
-	 * Post: Returns a new matrix that is the difference of lhs and rhs. 
+	 * @post Returns a new matrix that is the difference of lhs and rhs. 
 	 * Throws IncompatibleMatrixSizes if lhs and rhs have a different
 	 * number of rows or columns.
 	 */
@@ -144,16 +144,16 @@ public:
 	                                   const DenseMatrix<T>& rhs);
 
 	/**
-	 * Pre: T defines unary operator-
-	 * Post: returns a new matrix with its elements equal to the
+	 * @pre T defines unary operator-
+	 * @post returns a new matrix with its elements equal to the
 	 * negative of the elements of this matrix
 	 */
 	DenseMatrix<T> operator-() const;
 
 	/**
-	 * Pre: this matrix and rhs have the same number of rows and
+	 * @pre this matrix and rhs have the same number of rows and
 	 * columns.  T defines unary operator- and operator+=
-	 * Post: this matrix has been modified by subtracting the elements
+	 * @post this matrix has been modified by subtracting the elements
 	 * in rhs from the corresponding elements of this.  Throws 
 	 * IncompatibleMatrixSizes if this and rhs have a different number
 	 * of rows or columns
@@ -163,9 +163,9 @@ public:
 	/**
 	 * Changes this matrix to be the result of multiplying itself
 	 * by rhs.
-	 * Pre: T defines binary operator* and operator+=.  This matrix
+	 * @pre T defines binary operator* and operator+=.  This matrix
 	 * has the same number of columns as the number of rows in rhs.
-	 * Post: This has the same number of rows as before and the same
+	 * @post This has the same number of rows as before and the same
 	 * number of columns as rhs.  The value of its elements is the result
 	 * of multipying this by rhs.  Throws IncompatibleMatrixSizes if the 
 	 * number of columns in this matrix differs from the number of rows
@@ -175,9 +175,9 @@ public:
 
 	/**
 	 * Returns a new matrix that is the result of multiplying lhs by rhs.
-	 * Pre: T defines binary operator* and operator+=.  lhs has the same
+	 * @pre T defines binary operator* and operator+=.  lhs has the same
 	 * number of columns as the number of rows in rhs.
-	 * Post: returns a new matrix that has the same number of rows as
+	 * @post returns a new matrix that has the same number of rows as
 	 * lhs and the same number of columns as rhs.  The elements in this
 	 * matrix are the result of multiplying lhs by rhs.  Throws 
 	 * IncompatibleMatrixSizes if the number of columns in lhs differs 
@@ -188,9 +188,9 @@ public:
 
 	/**
 	 * Multiplies this matrix by a vector to create a new vector.
-	 * Pre: This matrix has the same number of columns as there are
+	 * @pre This matrix has the same number of columns as there are
 	 * elements in v.  T defines binary operator* and operator+=
-	 * Post: Returns a new vector with the same number of rows
+	 * @post Returns a new vector with the same number of rows
 	 * as this matrix and one column.  The elements in the vector
 	 * are the result of multiplying this matrix by v.  Throws
 	 * IncompatibleMatrixSizes if the number of columns in this
@@ -199,22 +199,22 @@ public:
 	virtual MyVector<T> operator*(const MyVector<T>& v) const;
 
 	/**
-	 * Pre: None
-	 * Post: returns the number of rows in this matrix.
+	 * @pre None
+	 * @post returns the number of rows in this matrix.
 	 */
 	virtual size_t getNumRows() const;
 
 	/**
-	 * Pre: None
-	 * Post: returns the number of columns in this matrix.
+	 * @pre None
+	 * @post returns the number of columns in this matrix.
 	 */
 	virtual size_t getNumCols() const;
 
 	/**
 	 * Resets the matrix to have the passed-in number of rows and
 	 * columns.
-	 * Pre: None
-	 * Post: the matrix has newNumRows rows and newNumCols columns.  
+	 * @pre None
+	 * @post the matrix has newNumRows rows and newNumCols columns.  
 	 * The elements in the matrix are all set to be value.  If either
 	 * of newNumRows or newNumCols is 0, makes the matrix an empty matrix.
 	 */
@@ -223,8 +223,8 @@ public:
 
 	/**
 	 * Creates a vector from the specified column of the matrix
-	 * Pre: column < the number of columns
-	 * Post: Returns a new vector with its number of elements equal
+	 * @pre column < the number of columns
+	 * @post Returns a new vector with its number of elements equal
 	 * to the number of rows in the matrix.  The values in the vector
 	 * are equal to the corresponding values in the specified column
 	 * of the matrix.  Throws ColumnRangeError if column >= the number
@@ -234,8 +234,8 @@ public:
 
 	/**
 	 * Creates a vector from the specified row of the matrix
-	 * Pre: row < the number of rows
-	 * Post: Returns a new vector with its number of elements equal to
+	 * @pre row < the number of rows
+	 * @post Returns a new vector with its number of elements equal to
 	 * the number of columns in the matrix.  The values in the vector
 	 * are equal to the corresponding values in the specified row of
 	 * the matrix.  Throws RowRangeError if row >= the number of rows.
@@ -243,15 +243,15 @@ public:
 	MyVector<T> getRowAsVector(const size_t& row) const;
 
 	/**
-	 * Pre: None
-	 * Post: Creates a new matrix that is the transpose of this matrix.
+	 * @pre None
+	 * @post Creates a new matrix that is the transpose of this matrix.
 	 */
 	DenseMatrix<T> transpose() const;
 
 	/** Elementary Row Operations */
 	/**
-	 * Pre: row1 and row2 are both < the number of rows in the matrix.
-	 * Post: Interchanges the corresponding elements of row1 and row2.
+	 * @pre row1 and row2 are both < the number of rows in the matrix.
+	 * @post Interchanges the corresponding elements of row1 and row2.
 	 * No effect if row1 and row2 are the same, but may be inefficient.
 	 * Throws RowRangeError if row1 or row2 >= the number of rows in the
 	 * matrix.
@@ -259,18 +259,18 @@ public:
 	void rowInterchange(const size_t& row1, const size_t& row2);
 
 	/**
-	 * Pre: row is < the number of rows in the matrix.  constant should
+	 * @pre row is < the number of rows in the matrix.  constant should
 	 * be non-zero for the operation to be valid.  T defines operator*=
-	 * Post: multiplies the elements in row by constant. Throws 
+	 * @post multiplies the elements in row by constant. Throws 
 	 * RowRangeError if row >= the number of rows in the matrix.
 	 */
 	void rowScale(const size_t& row, const T& constant);
 
 	/**
-	 * Pre: rowToReplace and otherRow are both < the number of rows
+	 * @pre rowToReplace and otherRow are both < the number of rows
 	 * in the matrix.  multiple should be non-zero for the operation
 	 * to be valid.  T defines binary operator* and operator+=
-	 * Post: rowToReplace has been replaced by the sum of itself and
+	 * @post rowToReplace has been replaced by the sum of itself and
 	 * multiple times otherRow.  Throws RowRangeError if rowToReplace or 
 	 * otherRow >= the number of rows in the matrix.
 	 */

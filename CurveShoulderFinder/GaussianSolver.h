@@ -2,7 +2,7 @@
  * @file GaussianSolver.h
  * @author Austin Hartman
  *
- * $Id: GaussianSolver.h,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: GaussianSolver.h,v 1.3 2005/07/01 21:03:55 ahartman Exp $
  */
 
 #ifndef AUSTIN_GAUSSIANSOLVER_H
@@ -41,8 +41,8 @@ public:
 	public:
 		/**
 		 * Default constructor.
-		 * Pre: None
-		 * Post: The matrix and vector members have been
+		 * @pre None
+		 * @post The matrix and vector members have been
 		 * default-constructed.
 		 */
 		Solution();
@@ -50,36 +50,36 @@ public:
 		/**
 		 * Initialize the solution with the matrix m and the vector v.
 		 * This is useful so that they have the correct size.
-		 * Pre: None
-		 * Post: the matrix and vector of this object are copies of
+		 * @pre None
+		 * @post the matrix and vector of this object are copies of
 		 * m and v, respectively.
 		 */
 		Solution(const Matrix<T>& m, const MyVector<T>& v);
 
 		/**
-		 * Pre: None
-		 * Post: Returns a reference to the matrix member of this
+		 * @pre None
+		 * @post Returns a reference to the matrix member of this
 		 * object.
 		 */
 		DenseMatrix<T>& matrix();
 
 		/**
-		 * Pre: None
-		 * Post: Returns a const-reference to the matrix member of
+		 * @pre None
+		 * @post Returns a const-reference to the matrix member of
 		 * this object.
 		 */
 		const DenseMatrix<T>& matrix() const;
 
 		/**
-		 * Pre: None
-		 * Post: Returns a reference to the vector member of this
+		 * @pre None
+		 * @post Returns a reference to the vector member of this
 		 * object.
 		 */
 		MyVector<T>& vector();
 
 		/**
-		 * Pre: None
-		 * Post: Returns a const-reference to the vector member of 
+		 * @pre None
+		 * @post Returns a const-reference to the vector member of 
 		 * this object.
 		 */
 		const MyVector<T>& vector() const;
@@ -99,23 +99,23 @@ public:
 		 * Constructor that takes the number of rows in the matrix
 		 * and the number of elements in the vector whose sizes
 		 * meant that the operation was undefined.
-		 * Pre: None
-		 * Post: The object has been initialized with the data
+		 * @pre None
+		 * @post The object has been initialized with the data
 		 * passed into the constructor.
 		 */
 		IncompatibleMatrixAndVector(const size_t& matrixRows,
 		                            const size_t& vectorSize);
 
 		/**
-		 * Pre: None
-		 * Post: returns the number of rows in the matrix whose
+		 * @pre None
+		 * @post returns the number of rows in the matrix whose
 		 * size led to the operation being undefined.
 		 */
 		const size_t& getMatrixRows() const;
 
 		/**
-		 * Pre: None
-		 * Post: returns the number of elements in the vector
+		 * @pre None
+		 * @post returns the number of elements in the vector
 		 * whose size led to the operation being undefined.
 		 */
 		const size_t& getVectorSize() const;

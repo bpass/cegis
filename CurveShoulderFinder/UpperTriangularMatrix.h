@@ -2,7 +2,7 @@
  * @file UpperTriangularMatrix.h
  * @author Austin Hartman
  *
- * $Id: UpperTriangularMatrix.h,v 1.4 2005/07/01 21:03:55 ahartman Exp $
+ * $Id: UpperTriangularMatrix.h,v 1.5 2005/07/01 22:52:53 ahartman Exp $
  */
 
 #ifndef AUSTIN_UPPERTRIANGULARMATRIX_H
@@ -34,10 +34,26 @@ template<class T>
 DenseMatrix<T> operator*(const Matrix<T>& lhs,
                          const UpperTriangularMatrix<T>& rhs);
 
+/**
+ * A class to store an upper triangular matrix.  An upper triangular matrix
+ * is always square and is only allowed to have non-zero values for the 
+ * elements on and above the main diagonal. Below the main diagonal, every 
+ * element is zero.
+ */
 template<class T>
 class UpperTriangularMatrix : public Matrix<T>
 {
 public:
+	/**
+	 * Constructor to initialize the size of the matrix and to set the 
+	 * initial value of all the elements that can be non-zero.
+	 *
+	 * @param numRowsAndCols The number of rows and columns that the matrix
+	 * will have.  There is only one parameter for both values because the 
+	 * matrix must be square.
+	 * @param initialValue The initial value for every element that can
+	 * possibly be non-zero.
+	 */
 	UpperTriangularMatrix(const size_t& numRowsAndCols = 0,
 	                      const T& initialValue = 0);
 

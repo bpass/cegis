@@ -3,17 +3,18 @@
 # @file Makefile.am
 # @author Austin Hartman
 #
-# $Id: Makefile.am,v 1.7 2005/07/01 23:10:00 ahartman Exp $
+# $Id: Makefile.am,v 1.8 2005/07/06 20:52:03 ahartman Exp $
 #
 
 INCLUDES = -I..
 
-TESTS = DiagonalMatrix_t InvertMatrix_t LUDecomposition_t \
-        LUDecompositionSolver_t MarquardtMethod_t NonlinearRegression_t \
-        PolynomialRegression_t PolynomialCurve_t
+TESTS = BSQReader_t DiagonalMatrix_t InvertMatrix_t \
+        LUDecomposition_t LUDecompositionSolver_t MarquardtMethod_t \
+        NonlinearRegression_t PolynomialRegression_t PolynomialCurve_t
 
 noinst_PROGRAMS = $(TESTS)
 
+BSQReader_t_SOURCES = BSQReader_t.cpp
 DiagonalMatrix_t_SOURCES = DiagonalMatrix_t.cpp
 InvertMatrix_t_SOURCES = InvertMatrix_t.cpp
 LUDecomposition_t_SOURCES = LUDecomposition_t.cpp

@@ -1,4 +1,5 @@
 To build and use, just run the following:
+    aclocal
     automake --add-missing --foreign
     autoconf
     configure

@@ -28,12 +28,6 @@ void BigJob::setnumworkunits(workunitid_t newnumworkunits)
 
 void BigJob::insertscanline(unsigned char * scanline, long row)
 {
-  /*FILE * dump = fopen("scanlines", "a");
-  fprintf(dump, "%4ld:", row);
-  for(long i = 0; i < newwidth*spp; ++i)
-  fprintf(dump, "%02x", ((char*)scanline)[i]);
-  fprintf(dump, "\n");
-  fclose(dump);*/
   if(m_useThreads)
   {
     if ( out == NULL ) 
@@ -59,4 +53,5 @@ workunitid_t BigJob::getNumWorkUnits()
 {
   return numworkunits;
 }
+
 

@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 //
 // Original Programmer: Matt Zykan
 // 
@@ -82,7 +82,31 @@ WorkManager::WorkManager(BigJob* job)
       m_baseWorkUnit->setPmeshSize(m_externJob->getPmeshSize());
       m_baseWorkUnit->setPmeshName(m_externJob->getPmeshName());
       m_baseWorkUnit->setOutputProjection(m_externJob->getOutputProjection());
+  
+//      m_jpg = new USGSImageLib::JPEGImageOFile( std::string("out.jpg"),
+//                                                m_externJob->getnewheight(),
+//                                                m_externJob->getnewwidth(),
+//                                                JCS_GRAYSCALE, 
+//                                                70,
+//                                                false );
 
+      
+//      m_png = new USGSImageLib::PNGImageOFile( std::string("out.png"), 
+//                                               m_externJob->getnewheight(),
+//                                               m_externJob->getnewwidth(),
+//                                               PNG_COLOR_TYPE_GRAY,
+//                                               8, 
+//                                               PNG_INTERLACE_NONE );
+      
+      std::cout << "WORKMANAGER to STITCHER: m_totalLines is " 
+                << static_cast<unsigned long>(m_totalLines) << std::endl;
+      
+      m_externJob->setupOut();
+      m_workStitcher = new Stitcher(m_externJob->getOutputFile(),
+                       static_cast<unsigned long>(m_totalLines ));
+
+//      m_workStitcher = new Stitcher(m_jpg,
+//                                    static_cast<unsigned long>(m_totalLines ));
   } 
 
   return; 
@@ -100,6 +124,11 @@ WorkManager::~WorkManager()
     delete goal;
   if( m_workStitcher != NULL ) 
     delete m_workStitcher;
+//  if ( m_png ! = NULL ) 
+//      delete m_png;
+  if ( m_jpg != NULL ) 
+      delete m_jpg;
+  
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -128,8 +157,6 @@ WorkUnit *WorkManager::getWorkUnit()
 
 void WorkManager::putWorkResult(WorkUnit* workunit)
 {
-  static bool runOnce = false;
-
   if(verifyworkunit(workunit) && resultset.count(workunit->getid()) == 0)
   {
     // integrate the result
@@ -137,17 +164,6 @@ void WorkManager::putWorkResult(WorkUnit* workunit)
     long int base = workunit->getbasescanline();
     long int count = workunit->getscanlinecount();
     long int width = workunit->getnewwidth();
-    
-    if ( !runOnce ) 
-    {
-        std::cout << "WORKMANAGER to STITCHER: m_totalLines is " 
-                  << static_cast<unsigned long>(m_totalLines) << std::endl;
-        
-        runOnce = true;
-        m_externJob->setupOut();
-        m_workStitcher = new Stitcher(m_externJob->getOutputFile(),
-                                    static_cast<unsigned long>(m_totalLines ));
-    }
    
     std::cout << "has this many scanlines: " << count << std::endl;
     std::cerr << "sending them to stitcher." << std::endl;

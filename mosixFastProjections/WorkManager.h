@@ -28,6 +28,9 @@ using namespace std;
 #include "WorkUnit.h"
 #include "BigJob.h"
 
+#include "PNGImageOFile.h"
+#include "JPEGImageOFile.h"
+
 /* getWorkUnit returns a pointer to what is essentially a static WorkUnit
  *  object, so subsequent calls to getWorkUnit _will_ change the object
  *  returned by a previous call
@@ -88,6 +91,9 @@ class WorkManager
     bool verifyworkunit(WorkUnit * workunit);
 
     long int m_totalLines; 
+    
+    USGSImageLib::JPEGImageOFile * m_jpg;
+    USGSImageLib::PNGImageOFile * m_png;
     
     Stitcher* m_workStitcher;  ///<  Stitches the image back together
     

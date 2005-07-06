@@ -119,6 +119,28 @@ void WorkUnit::Execute()
     return;
   }
 
+  std::cout << "Old Scale x:" << oldscale.x << std::endl;
+  std::cout << "Old Scale y:" << oldscale.y << std::endl;
+
+  std::cout << "inRect left   :" << inRect.left << std::endl;
+  std::cout << "inRect top    :" << inRect.top  << std::endl;
+  std::cout << "inRect bottom :" << inRect.bottom << std::endl;
+  std::cout << "inRect right  :" << inRect.right << std::endl;
+  
+  std::cout << "OutRect left   :" << outRect.left << std::endl;
+  std::cout << "OutRect top    :" << outRect.top  << std::endl;
+  std::cout << "OutRect bottom :" << outRect.bottom << std::endl;
+  std::cout << "OutRect right  :" << outRect.right << std::endl;
+ 
+  std::cout << "NewScale x:" << newscale.x << std::endl;
+  std::cout << "NewScale y:" << newscale.y << std::endl;
+ 
+  std::cout << "inWidth: " << oldwidth << std::endl;
+  std::cout << "inHeight: " << oldheight << std::endl;
+  
+  std::cout << "outWidth: " << newwidth << std::endl;
+  std::cout << "outHeight: " << newheight << std::endl;
+ 
   reallocatescanlines();
   double xscaleinv = 1.0 / oldscale.x;
   double yscaleinv = 1.0 / oldscale.y;
@@ -159,6 +181,7 @@ void WorkUnit::Execute()
         }
         _x = static_cast<long int>((x - inRect.left) * (xscaleinv) + 0.5);
         _y = static_cast<long int>((inRect.top - y) * (yscaleinv) + 0.5);
+        
         if((_x >= oldwidth) || (_x < 0) || (_y >= oldheight) || (_y < 0))
         {
           for(sppcounter = 0; sppcounter < spp; ++sppcounter)

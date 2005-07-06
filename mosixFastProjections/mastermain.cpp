@@ -34,7 +34,7 @@
 
 int main(int argc,char ** argv)
 {
-  int workunits = 30;
+  int workunits = 1;
   
   // to keep this process on the machine it started... 
   // (because of input/output
@@ -67,12 +67,17 @@ int main(int argc,char ** argv)
     //generate the output projection based on the flat file
     outproj = SetProjection(inparms.parameterfile);
     if (!outproj)
+
     {
       std::cerr << "Could not create the output projection." << std::endl;
       return 1;
     }
 
     inparms.numPartitions = 0;
+    
+    // MS : test
+    projJob->enableJPEGOutput();
+    
     projJob->setOutputFileName(inparms.outfile_name);
     projJob->setOutputProjection(outproj);
     projJob->setPmeshName(inparms.pmeshname);
@@ -84,8 +89,11 @@ int main(int argc,char ** argv)
     projJob->setInputFile(inparms.filename);
 
     //done with the output projection
-    delete outproj;
-    outproj = NULL;
+    if ( outproj != NULL ) 
+    {
+        delete outproj;
+        outproj = NULL;
+    }
   }
   catch(ProjectorException & pe)
   {

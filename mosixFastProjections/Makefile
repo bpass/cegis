@@ -9,7 +9,7 @@
 #
 # Purpose   : Makefile for the main project.
 #
-# Date Last Modified: Thu Feb 24 09:58:47 CST 2005
+# Date Last Modified: Sun May 15 22:02:29 CDT 2005
 #
 ###############################################################################
 
@@ -20,12 +20,13 @@ SHELL = /bin/sh
 #set our prefix to the current directory
 PREFIX = /work/mosixFastProjections
 
-#this is the directory where the projector projector is
+#this is the directory where the projects projector is
 PRJRDIR = $(PREFIX)/include/Projector
 
 INCPATHS = -I$(PREFIX)/include \
 		   -I/usr/src/linux/include \
-		   -I$(PREFIX)/include/Projector
+		   -I$(PREFIX)/include/Projector \
+		   -I$(PREFIX)/include/ImageLib
 
 CXX = g++
 CXXFLAGS = -g -Wall -W -pthread -Wno-deprecated $(INCPATHS)
@@ -42,9 +43,11 @@ OBJDIR = .obj
 
 MLIBS = -lProjectionMesh -lMathLib -lProjectionIO -lImageLib \
         -lgeotiff -ltiff -lProjection -lMiscUtils \
-        -lpthread -lgctpc -lboost_thread 
+        -lpthread -lgctpc -lboost_thread -lpng -ljpeg
+		
 SLIBS = -lProjectionMesh -lMathLib -lProjectionIO -lImageLib \
-        -lgeotiff -ltiff -lProjection  -lgctpc -lMiscUtils 
+        -lgeotiff -ltiff -lProjection  -lgctpc -lMiscUtils -lpng \
+		-ljpeg
 
 # gnu make specific
 SOURCES = $(wildcard *.cpp) 
@@ -64,12 +67,16 @@ MOBJECTS = ${OBJDIR}/SlaveManager.o \
 		   ${OBJDIR}/StitcherNode.o \
 		   ${OBJDIR}/Stitcher.o \
 		   ${OBJDIR}/inparms.o \
+		   ${OBJDIR}/PNGImageOFile.o \
+		   ${OBJDIR}/JPEGImageOFile.o \
 		   $(POBJECTS)
 
 SOBJECTS = ${OBJDIR}/slavemain.o \
 		   ${OBJDIR}/WorkUnit.o \
 		   ${OBJDIR}/Pulsar.o \
 		   ${OBJDIR}/inparms.o \
+		   ${OBJDIR}/PNGImageOFile.o \
+		   ${OBJDIR}/JPEGImageOFile.o \
 		   $(POBJECTS)
 
 .SUFFIXES: .cpp 

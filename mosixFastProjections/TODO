@@ -1,0 +1,25 @@
+
+ TODO: 
+-------------------------------------------------------------
+
+- getPixel() functionality for list.
+
+- INPUT: generate geographic bounding box and use this in the list
+  to tell what image we need to grab data from.
+
+- INPUT: calculate geographic bounding boxes for each inputted image.  
+
+- make ProjImageScale better by adding functionality to 
+  change between DOQ, geoTIFF and everything else. 
+
+- std::nothrow on all new allocs
+
+- standardize how exceptions are thrown
+  
+ ambitious todo additions:
+------------------------------------------------------------
+
+- further encapsulate ProjImageData, making no protected data.
+
+- memory leaks ... need I say more?
+

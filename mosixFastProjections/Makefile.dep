@@ -93,10 +93,26 @@
   /work/mosixFastProjections/include/Projector/DRect.h \
   /work/mosixFastProjections/include/Projector/BaseProgress.h WorkUnit.h \
   Pulsar.h Stitcher.h \
-  /work/mosixFastProjections/include/ImageLib/ImageOFile.h StitcherNode.h
+  /work/mosixFastProjections/include/ImageLib/ImageOFile.h StitcherNode.h \
+  PNGImageOFile.h \
+  /work/mosixFastProjections/include/ImageLib/RGBPalette.h \
+  /work/mosixFastProjections/include/ImageLib/ImageOFile.h \
+  /work/mosixFastProjections/include/ImageLib/ImageException.h
 .obj/inparms.o: inparms.cpp inparms.h \
   /work/mosixFastProjections/include/MathLib/Point.h \
   /work/mosixFastProjections/include/MiscUtils/cmp_nocase.h
+.obj/JPEGImageOFile.o: JPEGImageOFile.cpp JPEGImageOFile.h \
+  /work/mosixFastProjections/include/ImageLib/RGBPalette.h \
+  /work/mosixFastProjections/include/ImageLib/Palette.h \
+  /work/mosixFastProjections/include/ImageLib/ImageException.h \
+  /work/mosixFastProjections/include/ImageLib/RGBPixel.h \
+  /work/mosixFastProjections/include/ImageLib/AbstractPixel.h \
+  /work/mosixFastProjections/include/ImageLib/ImageOFile.h \
+  /work/mosixFastProjections/include/ImageLib/ImageFile.h \
+  /work/mosixFastProjections/include/ImageLib/ImageData.h \
+  /work/mosixFastProjections/include/ImageLib/ImageCommon.h \
+  /work/mosixFastProjections/include/ImageLib/GreyPixel.h \
+  /work/mosixFastProjections/include/ImageLib/ImageException.h
 .obj/mastermain.o: mastermain.cpp WorkManager.h WorkUnit.h Pulsar.h \
   /work/mosixFastProjections/include/Projector/Projector.h \
   /work/mosixFastProjections/include/ImageLib/DOQImageIFile.h \
@@ -192,8 +208,24 @@
   /work/mosixFastProjections/include/Projector/DRect.h \
   /work/mosixFastProjections/include/Projector/BaseProgress.h BigJob.h \
   Stitcher.h /work/mosixFastProjections/include/ImageLib/ImageOFile.h \
-  StitcherNode.h SlaveManager.h SlaveInfo.h GobHeader.h inparms.h \
+  StitcherNode.h PNGImageOFile.h \
+  /work/mosixFastProjections/include/ImageLib/RGBPalette.h \
+  /work/mosixFastProjections/include/ImageLib/ImageOFile.h \
+  /work/mosixFastProjections/include/ImageLib/ImageException.h \
+  JPEGImageOFile.h SlaveManager.h SlaveInfo.h GobHeader.h inparms.h \
   /work/mosixFastProjections/include/MathLib/Point.h
+.obj/PNGImageOFile.o: PNGImageOFile.cpp PNGImageOFile.h \
+  /work/mosixFastProjections/include/ImageLib/RGBPalette.h \
+  /work/mosixFastProjections/include/ImageLib/Palette.h \
+  /work/mosixFastProjections/include/ImageLib/ImageException.h \
+  /work/mosixFastProjections/include/ImageLib/RGBPixel.h \
+  /work/mosixFastProjections/include/ImageLib/AbstractPixel.h \
+  /work/mosixFastProjections/include/ImageLib/ImageOFile.h \
+  /work/mosixFastProjections/include/ImageLib/ImageFile.h \
+  /work/mosixFastProjections/include/ImageLib/ImageData.h \
+  /work/mosixFastProjections/include/ImageLib/ImageCommon.h \
+  /work/mosixFastProjections/include/ImageLib/GreyPixel.h \
+  /work/mosixFastProjections/include/ImageLib/ImageException.h
 .obj/Pulsar.o: Pulsar.cpp Pulsar.h
 .obj/slavemain.o: slavemain.cpp WorkUnit.h Pulsar.h \
   /work/mosixFastProjections/include/Projector/Projector.h \
@@ -386,7 +418,11 @@
   /work/mosixFastProjections/include/Projector/BaseProgress.h \
   WorkManager.h BigJob.h Stitcher.h \
   /work/mosixFastProjections/include/ImageLib/ImageOFile.h StitcherNode.h \
-  GobHeader.h GeneralException.h Exception.h
+  PNGImageOFile.h \
+  /work/mosixFastProjections/include/ImageLib/RGBPalette.h \
+  /work/mosixFastProjections/include/ImageLib/ImageOFile.h \
+  /work/mosixFastProjections/include/ImageLib/ImageException.h \
+  JPEGImageOFile.h GobHeader.h GeneralException.h Exception.h
 .obj/Stitcher.o: Stitcher.cpp Stitcher.h \
   /work/mosixFastProjections/include/ImageLib/ImageOFile.h \
   /work/mosixFastProjections/include/ImageLib/ImageFile.h \
@@ -493,7 +529,11 @@
   /work/mosixFastProjections/include/Projector/DRect.h \
   /work/mosixFastProjections/include/Projector/BaseProgress.h BigJob.h \
   Stitcher.h /work/mosixFastProjections/include/ImageLib/ImageOFile.h \
-  StitcherNode.h
+  StitcherNode.h PNGImageOFile.h \
+  /work/mosixFastProjections/include/ImageLib/RGBPalette.h \
+  /work/mosixFastProjections/include/ImageLib/ImageOFile.h \
+  /work/mosixFastProjections/include/ImageLib/ImageException.h \
+  JPEGImageOFile.h
 .obj/WorkUnit.o: WorkUnit.cpp WorkUnit.h Pulsar.h \
   /work/mosixFastProjections/include/Projector/Projector.h \
   /work/mosixFastProjections/include/ImageLib/DOQImageIFile.h \

@@ -1,5 +1,7 @@
+package JGCTP;
 
-class Util 
+
+public class Util 
 {
 	
 	public static double asinz(double con)
@@ -382,9 +384,9 @@ class Util
 				--------------------------------------------------------------------*/
 				if (t_minor > 1.0)
 				{
-					outSphere.setRMajor(t_major);
-					outSphere.setRMinor(t_minor);
-					outSphere.setRadius(t_major);
+					outSphere.rMajor = t_major;
+					outSphere.rMinor = t_minor;
+					outSphere.radius = t_major;
 				} 
 				/* The semimajor axis and the eccentricity squared values are in the array,
 				therefore, the semiminor axis is computed from the eccentricity
@@ -393,18 +395,18 @@ class Util
 				else
 					if (t_minor > 0.0)
 					{
-						outSphere.setRMajor(t_major);
-						outSphere.setRadius(t_major);
-						outSphere.setRMinor((Math.sqrt(1.0 - t_minor)) * t_major); 
+						outSphere.rMajor = t_major;
+						outSphere.radius = t_major;
+						outSphere.rMinor = (Math.sqrt(1.0 - t_minor)) * t_major; 
 					}
 					/* The semiminor axis is zero or less, assign the semimajor axis to
 					the semiminor axis.
 					-----------------------------------------------------------------*/
 					else
 					{
-						outSphere.setRMajor(t_major);
-						outSphere.setRMinor(t_major);
-						outSphere.setRadius(t_major);
+						outSphere.rMajor = t_major;
+						outSphere.rMinor = t_major;
+						outSphere.radius = t_major;
 					}
 			}
 			/* The sphroid code is to be used to assign the axis
@@ -415,17 +417,17 @@ class Util
 					/* Assign Clarke 1866 semi-major and semi-minor axis
 					---------------------------------------------------*/
 				{
-					outSphere.setRMajor(Tables.major[0]);
-					outSphere.setRadius(Tables.major[0]);
-					outSphere.setRMinor(Tables.minor[0]);
+					outSphere.rMajor = Tables.major[0];
+					outSphere.radius = Tables.major[0];
+					outSphere.rMinor = Tables.minor[0];
 				}
 				else
 					/* Assign Spheroid radius to semi-major and semi-minor axis
 					---------------------------------------------------------*/
 				{
-					outSphere.setRMajor(Tables.major[Constants.RADVAL]);
-					outSphere.setRadius(Tables.major[Constants.RADVAL]);
-					outSphere.setRMinor(Tables.major[Constants.RADVAL]);
+					outSphere.rMajor = Tables.major[Constants.RADVAL];
+					outSphere.radius = Tables.major[Constants.RADVAL];
+					outSphere.rMinor = Tables.major[Constants.RADVAL];
 				}
 		}
 		/* Use the spheroid code to assign the semi-major and semi-minor axis
@@ -441,9 +443,9 @@ class Util
 			
 			/* Assign the radius argument to the standard radius value
 			-------------------------------------------------------*/
-			outSphere.setRMajor(Tables.major[jsph]);
-			outSphere.setRMinor(Tables.minor[jsph]);
-			outSphere.setRadius(Tables.major[Constants.RADVAL]);
+			outSphere.rMajor = Tables.major[jsph];
+			outSphere.rMinor = Tables.minor[jsph];
+			outSphere.radius = Tables.major[Constants.RADVAL];
 		}
 		return;
 	}

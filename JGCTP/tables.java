@@ -1,5 +1,7 @@
+package JGCTP;
 
-class Tables
+
+public class Tables
 {
 	public static final double factors[][] = 
 	    {

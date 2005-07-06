@@ -1,3 +1,5 @@
+package JGCTP;
+
 public enum ProjCode
 {
 	NONE(-1),

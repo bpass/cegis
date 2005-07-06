@@ -1,5 +1,6 @@
+package JGCTP;
 
-class Sinusoidal extends Projection
+public class Sinusoidal extends Projection
 {
 	public Sinusoidal()
 	{
@@ -15,11 +16,6 @@ class Sinusoidal extends Projection
 		setName("Sinusoidal");
 	}
 	
-	protected void _init() throws ProjException
-	{
-	   return;
-	}
-	
 	protected void _inverse(CoordPoint _p) throws ProjException
 	{
 	    double temp;		/* Re-used temporary variable */
@@ -28,22 +24,22 @@ class Sinusoidal extends Projection
 	    p.x -= m_falseEasting;
 	    p.y -= m_falseNorthing;
 
-	    m_latitude = p.y / m_radius;
+	    m_lonLat.lat = p.y / m_sphere.radius;
 
-	    if( Math.abs( m_latitude ) > Constants.HALF_PI) 
+	    if( Math.abs( m_lonLat.lat ) > Constants.HALF_PI) 
 	    {
 	  		throw(new ProjException(164, "Sinusoidal._inverse()"));
 	    }
 
-	    temp = Math.abs( m_latitude ) - Constants.HALF_PI;
+	    temp = Math.abs( m_lonLat.lat ) - Constants.HALF_PI;
 	    if( Math.abs( temp ) > Constants.EPSLN )
 	    {
-	       temp = m_centerLon + p.x / (m_radius * Math.cos( m_latitude ));
-	  	   m_longitude = Util.adjust_lon( temp );
+	       temp = m_center.lon + p.x / (m_sphere.radius * Math.cos( m_lonLat.lat ));
+	  	   m_lonLat.lon = Util.adjust_lon( temp );
 	    }
 	    else
 	    {
-	       m_longitude = m_centerLon;
+	       m_lonLat.lon = m_center.lon;
 	    }
 	}
 	
@@ -53,10 +49,10 @@ class Sinusoidal extends Projection
 	    
 	    GeoPoint p = new GeoPoint(_p);
 	    /* Forward equations */
-	    deltaLon = Util.adjust_lon(p.lon - m_centerLon);
+	    deltaLon = Util.adjust_lon(p.lon - m_center.lon);
 
-	    m_x_coord = m_radius * deltaLon * Math.cos(p.lat ) + m_falseEasting;
-	    m_y_coord = m_radius * p.lat + m_falseNorthing;
+	    m_xy.x = m_sphere.radius * deltaLon * Math.cos(p.lat ) + m_falseEasting;
+	    m_xy.y = m_sphere.radius * p.lat + m_falseNorthing;
 
 	}
 }

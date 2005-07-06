@@ -1,6 +1,6 @@
+package JGCTP;
 
-
-class ProjException extends Exception
+public class ProjException extends Exception
 {
 	private String m_functionName;
 	private int m_errorCode;

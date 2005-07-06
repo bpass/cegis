@@ -1,5 +1,7 @@
 
-class Constants
+package JGCTP;
+
+public class Constants
 {
 	public static final double PI = 3.141592653589793238;
 	public static final double HALF_PI = PI / 2;
@@ -19,4 +21,5 @@ class Constants
 	public static final int MAXUNIT = 5;
 	public static final int MAXPROJ = 31;
 	public static final int SPHDCT = 31;
+   
 }

@@ -1,106 +1,10 @@
-
-class CoordPoint
+package JGCTP;
+	
+public abstract class Projection 
 {
-	public double x;
-	public double y;
-	public CoordPoint(double _x, double _y)
-	{
-		x = _x;
-		y = _y;
-	}
-	
-	public CoordPoint(CoordPoint p)
-	{
-		x = p.x;
-		y = p.y;
-	}
-	
-}
-
-class GeoPoint
-{
-	public double lon;
-	public double lat;
-	public GeoPoint(double _lon, double _lat)
-	{
-		lon = _lon;
-		lat = _lat;
-	}
-	
-	public GeoPoint(GeoPoint p)
-	{
-		lon = p.lon;
-		lat = p.lat;
-	}
-}
-
-class Sphere
-{
-	private double m_rMajor;
-	private double m_rMinor;
-	private double m_radius;
-	
-	
-	public Sphere()
-	{
-		m_rMajor = 0.0;
-		m_rMinor = 0.0;
-		m_radius = 0.0;
-	}
-	
-	public Sphere(double rMajor, double rMinor, double radius)
-	{
-		m_rMajor = rMajor;
-		m_rMinor = rMinor;
-		m_radius = radius;
-	}
-	
-	public Sphere(Sphere s)
-	{
-		m_rMajor = s.m_rMajor;
-		m_rMinor = s.m_rMinor;
-		m_radius = s.m_radius;
-	}
-	
-	public double rMajor()
-	{
-		return m_rMajor;
-	}
-	
-	public double rMinor()
-	{
-		return m_rMinor;
-	}
-	
-	public double radius()
-	{
-		return m_radius;
-	}
-	
-	public void setRMinor(double rMinor)
-	{
-		m_rMinor = rMinor;
-	}
-	
-	public void setRMajor(double rMajor)
-	{
-		m_rMajor = rMajor;
-	}
-	
-	public void setRadius(double radius)
-	{
-		m_radius = radius;
-	}
-}
-	
-abstract class Projection 
-{
-	//!Center longitude / longitude of central meridian of the projection.
-	protected double m_centerLon;
-	
-	//!Center latitude / latitude of central merridian of the projection.
-	protected double m_centerLat;
-	
+    //!Center longitude and latitude / longitude and latitude of central meridian of the projection.
+	protected GeoPoint m_center;
+    
 	//!Latitude of first standard parallel.
 	protected double m_stdParallelLat1;
 	
@@ -113,26 +17,14 @@ abstract class Projection
 	//!False northing value.
 	protected double m_falseNorthing;
 	
-	//! The x coordinate produced from a forward transformation.
-	protected double m_x_coord;
+    //! Output x and y coordinates from a forward transformation.
+	protected CoordPoint m_xy;
+    
+    //! Output longitude and latitude coordinates from an inverse transformation.
+    protected GeoPoint m_lonLat;
 
-	//! The y coordinate produced from a forward transformation.
-	protected double m_y_coord;
-	
-	//! The longitude value produced from an inverse transformation.
-	protected double m_longitude;
-	
-	//! The latitude value produced from an inverse transformation.	
-	protected double m_latitude;
-
-	//! Major radius of sphere.
-	protected double m_rMajor;
-	
-	//! Minor radius of sphere.	
-	protected double m_rMinor;
-	
-	//! Radius of sphere.	
-	protected double m_radius;
+    //! Projection spheroid.
+	protected Sphere m_sphere;
 	
 	//! The numeric identifier for the units of this projection.	
 	protected ProjUnit m_unitCode;
@@ -157,14 +49,14 @@ abstract class Projection
 		
 	public Projection() 
 	{	
-		m_centerLon = 0.0;
-		m_centerLat = 0.0;
+		m_center.lon = 0.0;
+		m_center.lat = 0.0;
 		m_stdParallelLat1 = 0.0;
 		m_stdParallelLat2 = 0.0;
-		m_x_coord = 0.0;
-		m_y_coord = 0.0;
-		m_longitude = 0.0;
-		m_latitude = 0.0;
+		m_xy.x = 0.0;
+		m_xy.y = 0.0;
+		m_lonLat.lon = 0.0;
+		m_lonLat.lat = 0.0;
 		m_initNeeded = true;
 		m_paramLoadNeeded = true;
 		
@@ -177,16 +69,16 @@ abstract class Projection
 	
 	public Projection(double gctpParams[], ProjUnit units, ProjDatum datum)
 	{
-		m_centerLon = 0.0;
-		m_centerLat = 0.0;
-		m_stdParallelLat1 = 0.0;
-		m_stdParallelLat2 = 0.0;
-		m_x_coord = 0.0;
-		m_y_coord = 0.0;
-		m_longitude = 0.0;
-		m_latitude = 0.0;
-		m_initNeeded = true;
-		m_paramLoadNeeded = true;
+        m_center.lon = 0.0;
+        m_center.lat = 0.0;
+        m_stdParallelLat1 = 0.0;
+        m_stdParallelLat2 = 0.0;
+        m_xy.x = 0.0;
+        m_xy.y = 0.0;
+        m_lonLat.lon = 0.0;
+        m_lonLat.lat = 0.0;
+        m_initNeeded = true;
+        m_paramLoadNeeded = true;
 		m_unitCode = units;
 		m_datum = datum;
 		
@@ -198,7 +90,7 @@ abstract class Projection
 	}
 	
 	
-	public final void inverse(CoordPoint xy, GeoPoint lonLat) throws ProjException
+	public final void inverse(CoordPoint xy, GeoPoint lonLat) throws TransformationException, InitException
 	{
 		CoordPoint temp = new CoordPoint(xy);
 		
@@ -218,12 +110,17 @@ abstract class Projection
 		
 		catch(ProjException e)
 		{
-			throw(e);
+			throw(new TransformationException(e));
+		}
+		
+		catch(InitException e)
+		{
+		    throw(e);
 		}
 	}
 	
 	
-	public final void forward(GeoPoint lonLat, CoordPoint xy) throws ProjException
+	public final void forward(GeoPoint lonLat, CoordPoint xy) throws TransformationException, InitException
 	{
 		GeoPoint temp = new GeoPoint(lonLat);
 		try {
@@ -242,7 +139,12 @@ abstract class Projection
 		
 		catch(ProjException e)
 		{
-			throw(e);
+			throw(new TransformationException(e));
+		}
+		
+		catch(InitException e)
+		{
+		    throw(e);
 		}
 	}
 	
@@ -265,7 +167,7 @@ abstract class Projection
 	{
 		try 
 		{
-			m_centerLon = Util.convertAngle(lon);
+			m_center.lon = Util.convertAngle(lon);
 			setInit(true);
 		}
 		
@@ -280,7 +182,7 @@ abstract class Projection
 	{
 		try 
 		{
-			m_centerLat = Util.convertAngle(lat);
+			m_center.lat = Util.convertAngle(lat);
 			setInit(true);
 		}
 		
@@ -324,8 +226,7 @@ abstract class Projection
 
 	public void setRadii()
 	{
-		Sphere s = new Sphere();
-		Util.sphdz(m_datum.val(), m_gctpParams, s);
+		Util.sphdz(m_datum.val(), m_gctpParams, m_sphere);
 		setInit(true);	
 		
 	}
@@ -350,40 +251,40 @@ abstract class Projection
 
 	public double x() 
 	{
-		return m_x_coord;
+		return m_xy.x;
 	}
 	
 	//! Get the y coordinate from the most recent forward() call.
 
 	public double y()
 	{
-		return m_y_coord;
+		return m_xy.y;
 	}
 	
 	//! Get the longitude from the most recent inverse() call.
 
 	public double lon() 
 	{
-		return m_longitude;
+		return m_lonLat.lon;
 	}
 	
 	//! Get the latitude from the most recent inverse() call.
 
 	public double lat()
 	{
-		return m_latitude;
+		return m_lonLat.lat;
 	}
 	
 	//! Get the center longitude / longitude of central meridian for projection.
 	public double centerLon() 
 	{
-		return m_centerLon;
+		return m_center.lon;
 	}
 	
 	//! Get the center latitude / latitude of central meridian for projection.
 	public double centerLat()
 	{
-		return m_centerLat;
+		return m_center.lat;
 	}
 	
 	//! Get the latitude of the first standard parallel for projection.
@@ -435,7 +336,7 @@ abstract class Projection
 		projection.
 	*/
 	
-	public final void init() throws ProjException
+	public final void init() throws InitException
 	{
 	    try 
 	    {
@@ -445,7 +346,7 @@ abstract class Projection
 	    
 	    catch(ProjException e)
 	    {
-	        throw(e);
+	        throw(new InitException(e));
 	    }
 	}
 	
@@ -546,5 +447,9 @@ abstract class Projection
 	
 	//!This function performs the actual initialization for each projection.
 	
-	protected abstract void _init() throws ProjException;
+	protected void _init() throws ProjException
+    {
+	    return;
+    }
+    
 }

@@ -1,3 +1,5 @@
+package JGCTP;
+
 /* Define unit code numbers to their names */
 public enum ProjUnit 
 {

@@ -1,0 +1,9 @@
+/work/tiffs/37091H61.tif
+-91.76
+-91.75
+38.0
+37.9
+UTM
+NAD27
+METERS
+15

@@ -49,14 +49,14 @@ public abstract class Projection
 		
 	public Projection() 
 	{	
-		m_center.lon = 0.0;
-		m_center.lat = 0.0;
+        m_center = new GeoPoint(0.0,0.0);
+		
 		m_stdParallelLat1 = 0.0;
 		m_stdParallelLat2 = 0.0;
-		m_xy.x = 0.0;
-		m_xy.y = 0.0;
-		m_lonLat.lon = 0.0;
-		m_lonLat.lat = 0.0;
+        
+        m_xy = new CoordPoint(0.0, 0.0);
+		m_lonLat = new GeoPoint(0.0, 0.0);
+ 
 		m_initNeeded = true;
 		m_paramLoadNeeded = true;
 		
@@ -69,14 +69,14 @@ public abstract class Projection
 	
 	public Projection(double gctpParams[], ProjUnit units, ProjDatum datum)
 	{
-        m_center.lon = 0.0;
-        m_center.lat = 0.0;
+        m_center = new GeoPoint(0.0,0.0);
+        
         m_stdParallelLat1 = 0.0;
         m_stdParallelLat2 = 0.0;
-        m_xy.x = 0.0;
-        m_xy.y = 0.0;
-        m_lonLat.lon = 0.0;
-        m_lonLat.lat = 0.0;
+        
+        m_xy = new CoordPoint(0.0, 0.0);
+        m_lonLat = new GeoPoint(0.0, 0.0);
+        
         m_initNeeded = true;
         m_paramLoadNeeded = true;
 		m_unitCode = units;

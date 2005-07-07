@@ -13,6 +13,10 @@ public enum ProjUnit
 		  
 		  private final int m_val;
 		  
+          private ProjUnit()
+          {
+              m_val = -1;
+          }
 		  private ProjUnit(int val)
 		  {
 		  	m_val = val;

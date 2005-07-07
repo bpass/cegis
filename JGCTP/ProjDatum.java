@@ -37,7 +37,8 @@ public enum ProjDatum
 		WGS_60(30);
 		
 		private final int m_val;
-		  
+		
+        
         private ProjDatum(int val)
 		{
 		  	m_val = val;

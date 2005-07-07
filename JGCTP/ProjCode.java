@@ -37,10 +37,7 @@ public enum ProjCode
 	
 	private final int m_val;
 	
-    private ProjCode()
-    {
-        m_val = -1;
-    }
+   
 	private ProjCode(int val)
 	{
 		m_val = val;

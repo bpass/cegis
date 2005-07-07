@@ -56,7 +56,8 @@ public abstract class Projection
         
         m_xy = new CoordPoint(0.0, 0.0);
 		m_lonLat = new GeoPoint(0.0, 0.0);
- 
+		m_sphere = new Sphere();
+        m_name = new String();
 		m_initNeeded = true;
 		m_paramLoadNeeded = true;
 		
@@ -73,10 +74,10 @@ public abstract class Projection
         
         m_stdParallelLat1 = 0.0;
         m_stdParallelLat2 = 0.0;
-        
+        m_name = new String();
         m_xy = new CoordPoint(0.0, 0.0);
         m_lonLat = new GeoPoint(0.0, 0.0);
-        
+        m_sphere = new Sphere();
         m_initNeeded = true;
         m_paramLoadNeeded = true;
 		m_unitCode = units;
@@ -368,7 +369,7 @@ public abstract class Projection
 	
 	protected void setName(String name)
 	{
-		m_name = name;
+		m_name = new String(name);
 	}
 	
 	//!Set the numeric identifier for the projection.

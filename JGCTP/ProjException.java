@@ -8,10 +8,10 @@ public class ProjException extends Exception
 	public ProjException(int errorCode, String functionName)
 	{
 		m_errorCode = errorCode;
-		m_functionName = functionName;
+		m_functionName = new String(functionName);
 	}
 	
 	public int errorCode() {return m_errorCode;}
 	
-	public String function() {return m_functionName;}
+	public String function() {return new String(m_functionName);}
 }

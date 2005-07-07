@@ -2,7 +2,7 @@
  * @file BSQReader.h
  * @author Austin Hartman
  *
- * $Id: BSQReader.h,v 1.1 2005/07/06 20:49:26 ahartman Exp $
+ * $Id: BSQReader.h,v 1.2 2005/07/07 19:07:44 ahartman Exp $
  */
 
 #ifndef AUSTIN_BSQREADER_H
@@ -19,16 +19,42 @@ public:
     BSQReader(const std::string& bsqFileName);
     BSQReader(const std::string& bsqFileName,
               const std::string& headerFileName);
-    const DataType& getValue(size_t row, size_t col, size_t band);
-    const DataType& getValue(const UTMCoordinateType& xCoord, 
-                             const UTMCoordinateType& yCoord,
-                             size_t band);
+    DataType getValue(size_t row, size_t col, size_t band) const;
+    DataType getValue(const UTMCoordinateType& xCoord, 
+                      const UTMCoordinateType& yCoord,
+                      size_t band) const;
+    UTMCoordinateType getMinX() const;
+    UTMCoordinateType getMaxX() const;
+    UTMCoordinateType getMinY() const;
+    UTMCoordinateType getMaxY() const;
+    UTMCoordinateType getPixelWidth() const;
+    UTMCoordinateType getPixelHeight() const;
+    size_t getNumRows() const;
+    size_t getNumCols() const;
+    size_t getNumBands() const;
+
     class UnexpectedHeaderLine
     {};
 
+    class InvalidBand
+    {};
+
+    class InvalidRow
+    {};
+
+    class InvalidCol
+    {};
+
+    class InvalidXCoordinate
+    {};
+
+    class InvalidYCoordinate
+    {};
+
 private:
-    std::ifstream bsqFile;
+    mutable std::ifstream bsqFile;
     UTMCoordinateType upperLeftXCoordinate, upperLeftYCoordinate,
+                      lowerRightXCoordinate, lowerRightYCoordinate,
                       pixelWidth, pixelHeight;
     size_t numRows, numCols, numBands;
 

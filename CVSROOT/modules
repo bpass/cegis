@@ -30,7 +30,6 @@ bilinearInterp bilinearInterp
 classifier classifier
 classifierWin classifierWin
 CurveShoulderFinder CurveShoulderFinder
-CVSROOT CVSROOT
 DiffIMG DiffIMG
 DSS DSS
 FileConverter FileConverter
@@ -45,10 +44,8 @@ mosixFastProjections mosixFastProjections
 OClass OClass
 PolynomialRootFinder PolynomialRootFinder
 readIMG readIMG
-repository repository
 resample_console resample_console
 sample sample
 soil-moisture soil-moisture
-test test
 transferHeader transferHeader
 USGSVectorOverlapTool USGSVectorOverlapTool

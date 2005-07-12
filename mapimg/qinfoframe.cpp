@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.26 2005/06/08 21:14:42 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.27 2005/07/12 15:42:56 rbuehler Exp $
 
 
 #include "qinfoframe.h"
@@ -79,10 +79,10 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
 
    //ulBox - Contains line edits for defining the upper left corner of the map
    ulBox = new QVBox( contents );
-   (void) new QLabel( "UL Latitude in meters", ulBox);
-   ulLatEdit = new QLineEdit( ulBox, "ulLatEdit" );
    (void) new QLabel( "UL Longitude in meters", ulBox);
    ulLonEdit = new QLineEdit( ulBox, "ulLonEdit" );
+   (void) new QLabel( "UL Latitude in meters", ulBox);
+   ulLatEdit = new QLineEdit( ulBox, "ulLatEdit" );
 
    //dataBox - Contains one combo box for selecting what type of data it is
    dataBox = new QVBox( contents );
@@ -153,11 +153,11 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    pixelEdit->hide();
 
    //ulBox
-   ulLatEdit->setValidator( new MapimgValidator( -100000000, 100000000, 12, ulLatEdit ) );
-   QToolTip::add( ulLatEdit, "Latitude of upper left corner of map<br>"
-      "<b>Meters:</b> Entered value must be from -100000000 to 100000000." );
    ulLonEdit->setValidator( new MapimgValidator( -100000000, 100000000, 12, ulLonEdit ) );
    QToolTip::add( ulLonEdit, "Longitude of upper left corner of map<br>"
+      "<b>Meters:</b> Entered value must be from -100000000 to 100000000." );
+   ulLatEdit->setValidator( new MapimgValidator( -100000000, 100000000, 12, ulLatEdit ) );
+   QToolTip::add( ulLatEdit, "Latitude of upper left corner of map<br>"
       "<b>Meters:</b> Entered value must be from -100000000 to 100000000." );
 
    //dataBox
@@ -515,8 +515,8 @@ void QInfoFrame::reset()
    mapTab->pixelCombo->setCurrentItem( 0 );
    mapTab->pixelEdit->setText( "0.000000" );
    mapTab->pixelEdit->setShown( false );
-   mapTab->ulLatEdit->setText( "0.000000" );
    mapTab->ulLonEdit->setText( "0.000000" );
+   mapTab->ulLatEdit->setText( "0.000000" );
    mapTab->dataCombo->setCurrentItem( 0 );
    mapTab->fillEdit->setText( "0.000000" );
    mapTab->noDataEdit->setText( "0.000000" );
@@ -562,8 +562,8 @@ void QInfoFrame::setReadOnly( bool ro )
    mapTab->spheroidCombo->setDisabled( true );
    mapTab->pixelCombo->setDisabled( ro );
    mapTab->pixelEdit->setDisabled( ro );
-   mapTab->ulLatEdit->setDisabled( ro );
    mapTab->ulLonEdit->setDisabled( ro );
+   mapTab->ulLatEdit->setDisabled( ro );
    mapTab->dataCombo->setDisabled( ro );
 
    mapTab->hasFillCheck->setHidden( ro );
@@ -643,8 +643,8 @@ void QInfoFrame::setAsOutput()
 
    mapTab->rowSpin->setDisabled( true );
    mapTab->colSpin->setDisabled( true );
-   mapTab->ulLatEdit->setDisabled( true );
    mapTab->ulLonEdit->setDisabled( true );
+   mapTab->ulLatEdit->setDisabled( true );
    mapTab->dataCombo->setDisabled( true );
    mapTab->fillEdit->setDisabled( true );
    mapTab->noDataEdit->setDisabled( true );
@@ -696,8 +696,8 @@ void QInfoFrame::copy( QInfoFrame *src )
    mapTab->pixelCombo->setCurrentItem( 
       source->mapTab->pixelCombo->currentItem() );
    mapTab->pixelEdit->setText( source->mapTab->pixelEdit->text() );
-   mapTab->ulLatEdit->setText( source->mapTab->ulLatEdit->text() );
    mapTab->ulLonEdit->setText( source->mapTab->ulLonEdit->text() );
+   mapTab->ulLatEdit->setText( source->mapTab->ulLatEdit->text() );
    mapTab->dataCombo->setCurrentItem( 
       source->mapTab->dataCombo->currentItem() );
 
@@ -826,8 +826,8 @@ bool QInfoFrame::frame()
 
    mapTab->rowSpin->setValue( inf.rows() );
    mapTab->colSpin->setValue( inf.cols() );
-   mapTab->ulLatEdit->setText( QString::number( inf.ul_X(), 'f', 6 ) );
-   mapTab->ulLonEdit->setText( QString::number( inf.ul_Y(), 'f', 6 ) );
+   mapTab->ulLonEdit->setText( QString::number( inf.ul_X(), 'f', 6 ) );
+   mapTab->ulLatEdit->setText( QString::number( inf.ul_Y(), 'f', 6 ) );
    return true;
 }
 
@@ -904,8 +904,8 @@ void QInfoFrame::setInfo( RasterInfo &input )
    mapTab->pixelCombo->setCurrentItem( index + 1 );
    mapTab->pixelEdit->setShown( index == 5 );
 
-   mapTab->ulLatEdit->setText( QString::number(input.ul_X(), 'f', 6) );
-   mapTab->ulLonEdit->setText( QString::number(input.ul_Y(), 'f', 6) );
+   mapTab->ulLonEdit->setText( QString::number(input.ul_X(), 'f', 6) );
+   mapTab->ulLatEdit->setText( QString::number(input.ul_Y(), 'f', 6) );
 
    QString dtype(input.isSigned()?"Signed ":"Unsigned ");
    dtype += QString::number(input.bitCount());
@@ -981,8 +981,8 @@ RasterInfo QInfoFrame::info()
       xmlName );
 
    ret.setArea(
-      mapTab->ulLatEdit->text().toDouble(),
       mapTab->ulLonEdit->text().toDouble(),
+      mapTab->ulLatEdit->text().toDouble(),
       mapTab->rowSpin->value(), mapTab->colSpin->value() );
 
    ret.setPixelDescription(

@@ -1,4 +1,4 @@
-// $Id: qinfoframe.h,v 1.12 2005/05/31 22:21:45 rbuehler Exp $
+// $Id: qinfoframe.h,v 1.13 2005/07/12 15:42:56 rbuehler Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -66,8 +66,8 @@ public:
    QLineEdit   *pixelEdit;
 
    QVBox       *ulBox;
-   QLineEdit   *ulLatEdit;
    QLineEdit   *ulLonEdit;
+   QLineEdit   *ulLatEdit;
 
    QVBox       *dataBox;
    QComboBox   *dataCombo;

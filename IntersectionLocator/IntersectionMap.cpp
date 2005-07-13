@@ -20,7 +20,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionMap.cpp,v 1.10 2005/05/17 18:43:36 ahartman Exp $
+// $Id: IntersectionMap.cpp,v 1.11 2005/07/13 20:40:16 ahartman Exp $
 
 
 #include "IntersectionMap.h"
@@ -836,6 +836,9 @@ void IntersectionMap::templateTest( int i, const char *szFilename )
    return;
 } // End function templateTest
 
+
+namespace
+{
 class LessControlPointX
 {
 public:
@@ -861,9 +864,74 @@ LessControlPointY::operator()(const ControlPoint& p1,
 {
     return p1.point.getY() < p2.point.getY();
 }
+} // end unnamed namespace
 
-void
-IntersectionMap::addBoundingControlPoints()
+
+void addSmallSquareBoundingControlPoints()
+{
+    // get some iterators that point to the elements in vControl that have
+    // the minimum and maximum x- and y-coordinates
+    const std::vector<ControlPoint>::iterator maxXPoint = 
+        std::max_element( vControl.begin(), vControl.end(), 
+                          LessControlPointX() );
+    const std::vector<ControlPoint>::iterator maxYPoint = 
+        std::max_element( vControl.begin(), vControl.end(), 
+                          LessControlPointY() );
+    const std::vector<ControlPoint>::iterator minXPoint = 
+        std::min_element( vControl.begin(), vControl.end(), 
+                          LessControlPointX() );
+    const std::vector<ControlPoint>::iterator minYPoint = 
+        std::min_element( vControl.begin(), vControl.end(), 
+                          LessControlPointY() );
+
+    // get those max and min x and y values
+    const double maxX = maxXPoint->point.getX();
+    const double maxY = maxYPoint->point.getY();
+    const double minX = minXPoint->point.getX();
+    const double minY = minYPoint->point.getY();
+
+    const double dX = maxX - minX;
+    const double dY = maxY - minY;
+
+    // find x and y coordinates that will bound all of those points
+    const double maxBoundingX = maxX + dX;
+    const double maxBoundingY = maxY + dY;
+    const double minBoundingX = minX - dX;
+    const double minBoundingY = minY - dY;
+
+    // create the new control points and add them to the vector
+    const double correlationValue = 1.0; // XXX not sure what should go here
+    
+    ControlPoint cp1;
+    cp1.point.setX( minBoundingX ); 
+    cp1.point.setY( minBoundingY );
+    cp1.origPoint = cp1.point;
+    cp1.correlation = correlationValue;
+    vControl.push_back( cp1 );
+
+    ControlPoint cp2;
+    cp2.point.setX( maxBoundingX ); 
+    cp2.point.setY( minBoundingY );
+    cp2.origPoint = cp2.point;
+    cp2.correlation = correlationValue;
+    vControl.push_back( cp2 );
+
+    ControlPoint cp3;
+    cp3.point.setX( maxBoundingX ); 
+    cp3.point.setY( maxBoundingY );
+    cp3.origPoint = cp3.point;
+    cp3.correlation = correlationValue;
+    vControl.push_back( cp3 );
+
+    ControlPoint cp4;
+    cp4.point.setX( minBoundingX ); 
+    cp4.point.setY( maxBoundingY );
+    cp4.origPoint = cp4.point;
+    cp4.correlation = correlationValue;
+    vControl.push_back( cp4 );
+}
+
+void addLargeSquareBoundingControlPoints()
 {
     // get some iterators that point to the elements in vControl that have
     // the minimum and maximum x- and y-coordinates
@@ -925,5 +993,119 @@ IntersectionMap::addBoundingControlPoints()
     cp4.origPoint = cp4.point;
     cp4.correlation = correlationValue;
     vControl.push_back( cp4 );
+}
+
+void addSmallTriangleBoundingControlPoints()
+{
+    // get some iterators that point to the elements in vControl that have
+    // the minimum and maximum x- and y-coordinates
+    const std::vector<ControlPoint>::iterator maxXPoint = 
+        std::max_element( vControl.begin(), vControl.end(), 
+                          LessControlPointX() );
+    const std::vector<ControlPoint>::iterator maxYPoint = 
+        std::max_element( vControl.begin(), vControl.end(), 
+                          LessControlPointY() );
+    const std::vector<ControlPoint>::iterator minXPoint = 
+        std::min_element( vControl.begin(), vControl.end(), 
+                          LessControlPointX() );
+    const std::vector<ControlPoint>::iterator minYPoint = 
+        std::min_element( vControl.begin(), vControl.end(), 
+                          LessControlPointY() );
+
+    // get those max and min x and y values
+    const double maxX = maxXPoint->point.getX();
+    const double maxY = maxYPoint->point.getY();
+    const double minX = minXPoint->point.getX();
+    const double minY = minYPoint->point.getY();
+
+    const double dX = maxX - minX;
+    const double dY = maxY - minY;
+
+    // find x and y coordinates that will bound all of those points
+    const double maxBoundingX = maxX + dX;
+    const double maxBoundingY = maxY + dY;
+    const double minBoundingX = minX - dX;
+    const double minBoundingY = minY - dY;
+
+    // create the new control points and add them to the vector
+    const double correlationValue = 1.0; // XXX not sure what should go here
+    
+    ControlPoint cp1;
+    cp1.point.setX( minBoundingX ); 
+    cp1.point.setY( minBoundingY );
+    cp1.origPoint = cp1.point;
+    cp1.correlation = correlationValue;
+    vControl.push_back( cp1 );
+
+    ControlPoint cp2;
+    cp2.point.setX( maxBoundingX ); 
+    cp2.point.setY( minBoundingY );
+    cp2.origPoint = cp2.point;
+    cp2.correlation = correlationValue;
+    vControl.push_back( cp2 );
+
+    ControlPoint cp3;
+    cp3.point.setX( minBoundingX ); 
+    cp3.point.setY( maxBoundingY );
+    cp3.origPoint = cp3.point;
+    cp3.correlation = correlationValue;
+    vControl.push_back( cp3 );
+}
+
+void addLargeTriangleBoundingControlPoints()
+{
+    // get some iterators that point to the elements in vControl that have
+    // the minimum and maximum x- and y-coordinates
+    const std::vector<ControlPoint>::iterator maxXPoint = 
+        std::max_element( vControl.begin(), vControl.end(), 
+                          LessControlPointX() );
+    const std::vector<ControlPoint>::iterator maxYPoint = 
+        std::max_element( vControl.begin(), vControl.end(), 
+                          LessControlPointY() );
+    const std::vector<ControlPoint>::iterator minXPoint = 
+        std::min_element( vControl.begin(), vControl.end(), 
+                          LessControlPointX() );
+    const std::vector<ControlPoint>::iterator minYPoint = 
+        std::min_element( vControl.begin(), vControl.end(), 
+                          LessControlPointY() );
+
+    // get those max and min x and y values
+    const double maxX = maxXPoint->point.getX();
+    const double maxY = maxYPoint->point.getY();
+    const double minX = minXPoint->point.getX();
+    const double minY = minYPoint->point.getY();
+
+    const double dX = maxX - minX;
+    const double dY = maxY - minY;
+
+    // find x and y coordinates that will bound all of those points
+    const double maxBoundingX = maxX + 10 * dX;
+    const double maxBoundingY = maxY + 10 * dY;
+    const double minBoundingX = minX - 10 * dX;
+    const double minBoundingY = minY - 10 * dY;
+
+    // create the new control points and add them to the vector
+    const double correlationValue = 1.0; // XXX not sure what should go here
+    
+    ControlPoint cp1;
+    cp1.point.setX( minBoundingX ); 
+    cp1.point.setY( minBoundingY );
+    cp1.origPoint = cp1.point;
+    cp1.correlation = correlationValue;
+    vControl.push_back( cp1 );
+
+    ControlPoint cp2;
+    cp2.point.setX( maxBoundingX ); 
+    cp2.point.setY( minBoundingY );
+    cp2.origPoint = cp2.point;
+    cp2.correlation = correlationValue;
+    vControl.push_back( cp2 );
+
+    ControlPoint cp3;
+    cp3.point.setX( minBoundingX ); 
+    cp3.point.setY( maxBoundingY );
+    cp3.origPoint = cp3.point;
+    cp3.correlation = correlationValue;
+    vControl.push_back( cp3 );
 }
 

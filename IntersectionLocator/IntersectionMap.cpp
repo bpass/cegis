@@ -20,7 +20,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionMap.cpp,v 1.11 2005/07/13 20:40:16 ahartman Exp $
+// $Id: IntersectionMap.cpp,v 1.12 2005/07/14 01:43:52 ahartman Exp $
 
 
 #include "IntersectionMap.h"
@@ -867,7 +867,7 @@ LessControlPointY::operator()(const ControlPoint& p1,
 } // end unnamed namespace
 
 
-void addSmallSquareBoundingControlPoints()
+void IntersectionMap::addSmallSquareBoundingControlPoints()
 {
     // get some iterators that point to the elements in vControl that have
     // the minimum and maximum x- and y-coordinates
@@ -931,7 +931,7 @@ void addSmallSquareBoundingControlPoints()
     vControl.push_back( cp4 );
 }
 
-void addLargeSquareBoundingControlPoints()
+void IntersectionMap::addLargeSquareBoundingControlPoints()
 {
     // get some iterators that point to the elements in vControl that have
     // the minimum and maximum x- and y-coordinates
@@ -995,7 +995,7 @@ void addLargeSquareBoundingControlPoints()
     vControl.push_back( cp4 );
 }
 
-void addSmallTriangleBoundingControlPoints()
+void IntersectionMap::addSmallTriangleBoundingControlPoints()
 {
     // get some iterators that point to the elements in vControl that have
     // the minimum and maximum x- and y-coordinates
@@ -1052,7 +1052,7 @@ void addSmallTriangleBoundingControlPoints()
     vControl.push_back( cp3 );
 }
 
-void addLargeTriangleBoundingControlPoints()
+void IntersectionMap::addLargeTriangleBoundingControlPoints()
 {
     // get some iterators that point to the elements in vControl that have
     // the minimum and maximum x- and y-coordinates

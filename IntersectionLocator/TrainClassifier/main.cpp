@@ -18,46 +18,50 @@ void outputClassifiedImage( std::string ortho, std::string outputFile,
 
 int main()
 {
-   string rd( "F:\\rstelzleni\\GA2Quads\\classifierTraining\\"
-              "fewroads515605.tif" );
-   string nonrd( "F:\\rstelzleni\\GA2Quads\\classifierTraining\\"
-                 "nonroads515605.tif" );
-   string outfile( "F:\\rstelzleni\\GA2Quads\\"
-                   "classifierTraining\\newTrainingTest.dat" );
-   string testOrtho( "F:\\rstelzleni\\GA2Quads\\"
-               "classifierTraining\\TestImage\\16SGC515605.tif" );
-   string testOutput( "F:\\rstelzleni\\GA2Quads\\"
-               "classifierTraining\\TestImage\\newTrySeven.dat" );
+    const std::string rd("D:/Data/foristell_final/training/images/roads/c2_r7.tif");
+    const std::string nonrd("D:/Data/foristell_final/training/images/nonroads/c2_r7.tif");
+    const std::string outfile("D:/Data/foristell_final/training/output.dat");
+//    string rd( "F:\\rstelzleni\\GA2Quads\\classifierTraining\\"
+//               "fewroads515605.tif" );
+//    string nonrd( "F:\\rstelzleni\\GA2Quads\\classifierTraining\\"
+//                  "nonroads515605.tif" );
+//    string outfile( "F:\\rstelzleni\\GA2Quads\\"
+//                    "classifierTraining\\newTrainingTest.dat" );
+//    string testOrtho( "F:\\rstelzleni\\GA2Quads\\"
+//                "classifierTraining\\TestImage\\16SGC515605.tif" );
+//    string testOutput( "F:\\rstelzleni\\GA2Quads\\"
+//                "classifierTraining\\TestImage\\newTrySeven.dat" );
 
-   cout << "Running\n";
+    cout << "Running\n";
 
-   GDALAllRegister();
-   GDALDataset *pRd, *pNonRd;
+    GDALAllRegister();
+    GDALDataset *pRd, *pNonRd;
 
-   pRd = static_cast<GDALDataset *>( GDALOpen( rd.c_str(), GA_ReadOnly ) );
-   if( pRd == NULL )
-   {
-      fprintf( stderr, "Failed to open rd file\n" );
-      return -1;
-   }
-   pNonRd = static_cast<GDALDataset *>( GDALOpen( nonrd.c_str(), GA_ReadOnly ) );
-   if( pNonRd == NULL )
-   {
-      fprintf( stderr, "Failed to open nonrd file\n" );
-      return -1;
-   }
+    pRd = static_cast<GDALDataset *>( GDALOpen( rd.c_str(), GA_ReadOnly ) );
+    if( pRd == NULL )
+    {
+        fprintf( stderr, "Failed to open rd file\n" );
+        return -1;
+    }
+    pNonRd = static_cast<GDALDataset *>( GDALOpen( nonrd.c_str(), GA_ReadOnly ) );
+    if( pNonRd == NULL )
+    {
+        fprintf( stderr, "Failed to open nonrd file\n" );
+        return -1;
+    }
 
-   // Comment or uncomment lines as you see fit
-   Classifier C;
-   C.inputText( outfile.c_str() );
-   //for( int i=0; i<5; ++i )
-   //   C.addRdTraining( pRd );
-   C.addNonRdTraining( pNonRd );
-   C.outputText( outfile.c_str() );
+    // Comment or uncomment lines as you see fit
+    Classifier C;
+    C.inputText( outfile.c_str() );
+    //for( int i=0; i<5; ++i )
+    //   C.addRdTraining( pRd );
+    C.addRdTraining(pRd);
+    C.addNonRdTraining( pNonRd );
+    C.outputText( outfile.c_str() );
 
-   outputClassifiedImage( testOrtho, testOutput, C );
+    //outputClassifiedImage( testOrtho, testOutput, C );
 
-   return 0;
+    return 0;
 }
 
 
@@ -66,22 +70,22 @@ int main()
 // viewing the output, see the doxygen documentation for the main
 // project, on the page called Preparing for new data.
 void outputClassifiedImage( std::string ortho, std::string outputFile,
-                            Classifier &C )
+                             Classifier &C )
 {
-   GDALDataset *image;
-   image = static_cast<GDALDataset *>( GDALOpen( ortho.c_str(), GA_ReadOnly ) );
-   if( image == NULL )
-   {
-      fprintf( stderr, "Failed to open image file for test run\n" );
-      return;
-   }
+    GDALDataset *image;
+    image = static_cast<GDALDataset *>( GDALOpen( ortho.c_str(), GA_ReadOnly ) );
+    if( image == NULL )
+    {
+        fprintf( stderr, "Failed to open image file for test run\n" );
+        return;
+    }
 
-   InMemRaster rasta( image );
-   rasta.convertToHSV();
-   rasta.classify( C );
-   rasta.dumpToBinary( outputFile.c_str() );
+    InMemRaster rasta( image );
+    rasta.convertToHSV();
+    rasta.classify( C );
+    rasta.dumpToBinary( outputFile.c_str() );
 
-   return;
+    return;
 }
 
 

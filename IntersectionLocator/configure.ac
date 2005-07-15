@@ -1,6 +1,6 @@
 dnl @file configure.ac
 dnl @author Austin Hartman
-dnl $Id: configure.ac,v 1.2 2005/07/14 22:48:59 ahartman Exp $
+dnl $Id: configure.ac,v 1.3 2005/07/15 01:11:01 ahartman Exp $
 
 AC_INIT(IntersectionLocator, 0.5, ahartman@usgs.gov)
 AC_PREREQ(2.54)
@@ -8,7 +8,6 @@ AM_INIT_AUTOMAKE
 
 AC_PROG_CC
 AC_PROG_CXX
-dnl AC_PROG_RANLIB
 AC_PROG_LIBTOOL
 
 dnl

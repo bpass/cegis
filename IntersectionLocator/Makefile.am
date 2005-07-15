@@ -3,12 +3,15 @@
 # @file Makefile.am
 # @author Austin Hartman
 #
-# $Id: Makefile.am,v 1.3 2005/07/15 01:13:29 ahartman Exp $
+# $Id: Makefile.am,v 1.4 2005/07/15 20:55:33 ahartman Exp $
 #
 
 noinst_PROGRAMS = IntersectionLocator
 IntersectionLocator_SOURCES = IntersectionLocator.cpp
 IntersectionLocator_LDADD = -L. -lIntersectionLocator $(GDAL_LIBS)
+IntersectionLocator_LDFLAGS = -no-undefined \
+                              -static \
+                              --enable-runtime-pseudo-reloc
 
 noinst_LTLIBRARIES = libIntersectionLocator.la
 libIntersectionLocator_la_SOURCES = Circle.cpp \
@@ -22,7 +25,10 @@ libIntersectionLocator_la_SOURCES = Circle.cpp \
                                     SaalfeldRubberSheet.cpp \
                                     Template.cpp \
                                     VMFilter.cpp
-libIntersectionLocator_la_LIBADD = $(GDAL_LIBS)
+libIntersectionLocator_la_LIBADD = $(GDAL_LIBS) -L/usr/local/bin -lproj
+libIntersectionLocator_la_LDFLAGS = -no-undefined \
+                                    -static \
+                                    --enable-runtime-pseudo-reloc
 
 INCLUDES = $(GDAL_CFLAGS)
 
@@ -31,4 +37,4 @@ INCLUDES = $(GDAL_CFLAGS)
 # build it first before going there
 BUILT_SOURCES = libIntersectionLocator.la
 
-SUBDIRS = TrainClassifier
+#SUBDIRS = TrainClassifier

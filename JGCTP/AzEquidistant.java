@@ -36,6 +36,7 @@ protected 	void _init()
 
 protected void _forward(GeoPoint p) throws ProjException
 {
+   
     double sinphi, cosphi;  /* sin and cos value                */
     double dlon;        /* delta longitude value            */
     double coslon;      /* cos of longitude             */
@@ -73,10 +74,11 @@ protected void _forward(GeoPoint p) throws ProjException
 
 protected void _inverse(CoordPoint p) throws ProjException
 {
+   
     double rh;      /* height above ellipsoid           */
     double z;       /* angle                    */
     double sinz,cosz;   /* sin of z and cos of z            */
-    double temp;
+   
     double con;
 
 
@@ -124,7 +126,7 @@ protected void _inverse(CoordPoint p) throws ProjException
        return;
     }
 
-    temp =Math.atan2((p.x * sinz * m_cosCenterLat), (con * rh));
+  
     m_lonLat.lon = Util.adjust_lon(m_center.lon +Math.atan2((p.x * sinz * m_cosCenterLat), (con * rh)));
 
 }

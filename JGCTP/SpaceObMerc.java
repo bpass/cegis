@@ -418,7 +418,7 @@ protected void _forward(GeoPoint _p) throws ProjException
     long n=0,l=0;
     double delta_lon=0;
     double rlm=0,tabs=0,tlam=0,xlam=0,c=0,xlamt=0,ab2=0,ab1=0,xlamp=0,sav=0;
-    double d=0,sdsq=0,sd=0,tanlg=0,xtan=0,tphi=0,dp=0,dd=0,ds=0,rlm2=0;
+    double d=0,sdsq=0,sd=0,tanlg=0,xtan=0,tphi=0,dp=0,rlm2=0;
     double scl=0,tlamp=0,conv=0,delta_lat=0,radlt=0,radln=0;
     boolean end = false;
     
@@ -515,8 +515,8 @@ protected void _forward(GeoPoint _p) throws ProjException
     }
 
     
-    ds=Math.sin(tlam);
-    dd=ds*ds;
+    
+   
     dp=Math.sin(radlt);
     tphi=Math.asin(((1.0-m_es)*m_ca*dp-m_sa*Math.cos(radlt)*Math.sin(xlamt))/Math.sqrt(1.0-m_es*dp*dp));
 

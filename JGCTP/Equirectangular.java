@@ -16,9 +16,9 @@ public class Equirectangular extends Projection
         setName("Equirectangular");
     }
      
-    protected void _inverse(CoordPoint _p) throws ProjException
+    protected void _inverse(CoordPoint p) throws ProjException
     {
-        CoordPoint p = new CoordPoint(_p);
+      
         /* Inverse equations */
         p.x -= m_falseEasting;
         p.y -= m_falseNorthing;
@@ -32,10 +32,11 @@ public class Equirectangular extends Projection
 
         m_lonLat.lon = Util.adjust_lon( m_center.lon + p.x / ( m_sphere.radius * Math.cos( m_center.lon )));
     }
-    protected void _forward(GeoPoint _p) throws ProjException
+    
+    protected void _forward(GeoPoint p) throws ProjException
     {
         double deltaLon;        /* delta longitude value            */
-        GeoPoint p = new GeoPoint(_p);
+      
         /* Forward equations */
         deltaLon = Util.adjust_lon( p.lon - m_center.lon );
         m_xy.x = m_falseEasting + m_sphere.radius * deltaLon * Math.cos( m_center.lat );

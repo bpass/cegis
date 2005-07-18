@@ -96,6 +96,7 @@ protected   void _init() throws ProjException
 
 protected void _forward(GeoPoint p) throws ProjException
 {
+
     double sin_phi;     /* sine and cos values      */
     double qs;          /* small q          */
     double theta;           /* angle            */ 
@@ -114,13 +115,12 @@ protected void _forward(GeoPoint p) throws ProjException
 
 protected void _inverse(CoordPoint p) throws ProjException
 {
+   
     double rh1;         /* height above ellipsoid   */
     double qs;          /* function q           */
     double con;         /* temporary sign value     */
     double theta;           /* angle            */
-    long   flag;            /* error flag;          */
-    
-    flag = 0;
+   
     p.x -= m_falseEasting;
     p.y = m_rh - p.y + m_falseNorthing;;
     

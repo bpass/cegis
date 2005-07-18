@@ -11,5 +11,5 @@ public class InitException extends Exception
 	
 	public int errorCode() {return m_e.errorCode();}
 	
-	public String function() {return m_e.function();}
+	public String trace() {return m_e.trace();}
 }

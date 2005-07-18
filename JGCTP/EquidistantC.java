@@ -143,6 +143,7 @@ protected 	void _loadFromParams() throws ProjException
 
 protected void _forward(GeoPoint p)
 {
+
     double ml;
     double theta;
     double rh1;
@@ -159,6 +160,7 @@ protected void _forward(GeoPoint p)
 
 protected void _inverse(CoordPoint p) throws ProjException
 {
+   
     double rh1;
     double ml;
     double con;

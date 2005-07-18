@@ -39,6 +39,7 @@ public 	GenVertNSP(double gctpParams[], ProjUnit units, ProjDatum dat)
 public 	void setHeight(double height) 
 {
     m_height = height;
+    setInit(true);
 }
 
 public 	double height() 
@@ -48,6 +49,7 @@ public 	double height()
 
 protected void _forward(GeoPoint p) throws ProjException
 {
+    
     double dlon;
     double sinphi,cosphi;
     double coslon;
@@ -77,6 +79,7 @@ protected void _forward(GeoPoint p) throws ProjException
 
 protected void _inverse(CoordPoint p) throws ProjException
 {
+    
     double rh;
     double r;
     double con;

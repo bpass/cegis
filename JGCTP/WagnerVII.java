@@ -29,7 +29,7 @@ protected void _inverse(CoordPoint _p)
 {
     CoordPoint p = new CoordPoint(_p);
     
-    double t1, t2, p, c;
+    double t1, t2, p1, c;
 
     /* Inverse equations
     -----------------*/
@@ -39,10 +39,10 @@ protected void _inverse(CoordPoint _p)
     t2 = p.y / 1.24104;
     t1 *= t1;
     t2 *= t2;
-    p = Math.sqrt(t1 + t2);
-    c = 2.0 * Util.asinz(p / (2.0 * m_sphere.radius));
-    m_lonLat.lat = Util.asinz(p.y * Math.sin(c) / (1.24104 * 0.90631 * p));
-    m_lonLat.lon = Util.adjust_lon(m_center.lon + 3.0 * atan2(p.x * Math.tan(c), 2.66723 * p));
+    p1 = Math.sqrt(t1 + t2);
+    c = 2.0 * Util.asinz(p1 / (2.0 * m_sphere.radius));
+    m_lonLat.lat = Util.asinz(p.y * Math.sin(c) / (1.24104 * 0.90631 * p1));
+    m_lonLat.lon = Util.adjust_lon(m_center.lon + 3.0 * Math.atan2(p.x * Math.tan(c), 2.66723 * p1));
 }
 
 
@@ -57,7 +57,9 @@ protected void _forward(GeoPoint _p)
     /* Forward equations
     -----------------*/
     delta_lon = Util.adjust_lon(p.lon - m_center.lon);
-    Util::gctp_sinMath.cos((delta_lon/3.0), &sin_lon, &cos_lon);
+    sin_lon = Math.sin(delta_lon/3.0);
+    cos_lon = Math.cos(delta_lon/3.0);
+    
     s = 0.90631 * Math.sin(p.lat);
     c0 = Math.sqrt(1-s*s);
     c1 = Math.sqrt(2.0 / (1.0 + c0 * cos_lon));

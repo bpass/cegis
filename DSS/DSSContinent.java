@@ -7,8 +7,8 @@
  * by James Nelson
  * Current version is 100% portable
  * 
- * Modified for added comments 5-20-2005
- * by lwoodard
+ * Last modified by lwoodard on 7-18-2005
+ * 
  */
 
 /**
@@ -1049,16 +1049,25 @@ public class DSSContinent extends javax.swing.JApplet
               if(itemEvent.getSource() == dataTypeList)
               {
                         if(dataType=="Vector")
-                        {
+                        { //You must select each element and hide them 
+                            rasterDataList.select(0);     //individually
                             rasterDataList.setEnabled(false);
+                            rasterDataList.select(1);
+                            rasterDataList.setEnabled(false);
+                            
                             selected = rasterDataList.getSelectedIndex();
                             rasterDataList.deselect(selected);
                             rasterDataLabel.setEnabled(false);
                         }
                         else 
-                        {
+                        { //You must select each element and re-enable them
+                            rasterDataList.select(0); //individually
                             rasterDataList.setEnabled(true);
-                            rasterDataList.select(selected);
+                            rasterDataList.select(1);
+                            rasterDataList.setEnabled(true);
+                            
+                              //Makes first element selected
+                            rasterDataList.select(0);
                             rasterDataLabel.setEnabled(true);
                         }
               }

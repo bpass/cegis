@@ -3,7 +3,7 @@
  *
  * Created on June 20, 2002, 1:38 PM
  * 
- * Last modified by lwoodard on May 20, 2005
+ * Last modified by lwoodard on July 18, 2005
  * 
  * This java application provides the functions for the regional projection
  * applet.  It imports the main image than allows the user to use a selection 
@@ -454,15 +454,23 @@ public class DSSRegional extends javax.swing.JApplet
 	{
             if(dataType=="Vector")
             {
-                rasterDataList.setEnabled(false);
+                rasterDataList.select(0);         //You must select each element 
+                rasterDataList.setEnabled(false); //and hide them individually
+                rasterDataList.select(1);         
+                rasterDataList.setEnabled(false);   
+                
                 selected = rasterDataList.getSelectedIndex();
                 rasterDataList.deselect(selected);
                 rasterDataLabel.setEnabled(false);
             }
             else 
             {
+                rasterDataList.select(0);        //You must select each element
+                rasterDataList.setEnabled(true); //and re-enable them 
+                rasterDataList.select(1);        //individually
                 rasterDataList.setEnabled(true);
-                rasterDataList.select(selected);
+                
+                rasterDataList.select(0);       //Makes first element selected
                 rasterDataLabel.setEnabled(true);
             }
 	}

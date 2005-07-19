@@ -4,7 +4,7 @@ public enum ProjCode
 {
 	NONE(-1),
 	GEO(0), 
-	_UTM(1), 
+	UTM(1), 
 	SPCS(2), 
 	ALBERS(3), 
 	LAMCC(4), 

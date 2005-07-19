@@ -337,9 +337,9 @@ public class Util
 		return(e0*phi-e1*Math.sin(2.0*phi)+e2*Math.sin(4.0*phi)-e3*Math.sin(6.0*phi));
 	}
 
-	public static long calc_utm_zone(double lon) 
+	public static int calc_utm_zone(double lon) 
 	{
-		return((long)(((lon + 180.0) / 6.0) + 1.0));
+		return((int)(((lon + 180.0) / 6.0) + 1.0));
 	}
 	
 	public static double untfz(int inunit, int outunit) throws ProjException

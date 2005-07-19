@@ -183,7 +183,7 @@ protected:
 	//! The numeric identifier for the spheroid of this projection.
     ProjDatum m_datum;
 
-	//! The longitdue value produced from an inverse transformation.
+	//! The longitude value produced from an inverse transformation.
     double m_longitude;
 
 	//! The latitude value produced from an inverse transformation.
@@ -195,10 +195,10 @@ protected:
 	//! The y coordinate produced from a forward transformation.
     double m_y_coord;
 
-	//! False easting value for this projection.
+	//! False easting value.
 	double m_falseEasting;
 
-	//! False northing value for this projection.
+	//! False northing value.
 	double m_falseNorthing;
 
 	//! Major radius of sphere.
@@ -210,10 +210,10 @@ protected:
 	//! Radius of sphere.
 	double m_radius;
 
-	//! Center longitude of projection.
+	//!Center longitude / longitude of central meridian of the projection.
 	double m_centerLon;
 
-	//! Center latitude of projection.
+	//!Center latitude / latitude of central merridian of the projection.
 	double m_centerLat;
 
 	//! Latitude of first standard parallel.
@@ -225,10 +225,10 @@ protected:
 	//! Array of 15 projection parameters (as used in the original GCTP).
     double m_gctpParams[COEFCT];
 
-	//!do we need to do an initialization?
+	//!Do we need to do an initialization?
 	bool m_initNeeded;
 
-	//!do we need to reload the members from the parameter array?
+	//!Do we need to reload the members from the parameter array?
 	bool m_paramLoadNeeded;
 
 	//!Perform all intializations needed for forward and inverse transformations.
@@ -238,7 +238,9 @@ protected:
 	*/
 	void init();
 
+	//!This function performs the actual initialization for each projection.
 	virtual void _init() = 0;
+
 	//! Set the number of the projection.
 	void setNumber(ProjCode number) {m_number = number;}
 
@@ -246,7 +248,7 @@ protected:
 	void setName(std::string name) {m_name = name;}
 
 	//! Toggle forward and inverse initialization flags.
-	void setInit() {m_initNeeded = true;}
+	void setInit(bool set = true) {m_initNeeded = set;}
 
 	//! Do we need to reinitialize?
 	bool initNeeded() {return m_initNeeded;}

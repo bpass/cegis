@@ -1,13 +1,13 @@
 #include "vandergrinten.h"
 
-VanDerGrinten::VanDerGrinten() : Projection(), m_centerLon(0.0)
+VanDerGrinten::VanDerGrinten() : Projection()
 {
 	setNumber(VGRINT);
 	setName("Van Der Grinten");
 }
 
 VanDerGrinten::VanDerGrinten(double gctpParams[], ProjUnit units, ProjDatum dat) :
-Projection(gctpParams, units, dat), m_centerLon(0.0)
+Projection(gctpParams, units, dat)
 {
 	setNumber(VGRINT);
 	setName("Van Der Grinten");
@@ -126,20 +126,6 @@ void VanDerGrinten::_inverse(double x, double y)
 								   (xx * xx - yy * yy) + xys * xys)) / 2.0 / xx);
 }
 
-void VanDerGrinten::setCenterLon(double lon) 
-{
-	long err = 0;
-	double temp = 0;
-
-	temp = Util::paksz(lon, &err) * 3600 * S2R;
-	if(err != 0) {
-		setError(err);
-		return;
-	}
-
-	m_centerLon = temp;
-	setInit();
-}
 
 
 

@@ -3,7 +3,7 @@
 
 #include "projection.h"
 
-
+//! This is the object used for the Sinusoidal projection.
 class Sinusoidal : public Projection
 {
 public:
@@ -16,10 +16,11 @@ protected:
 	//! See documentation for Projection
 	void _init();
 
+	//! See documentation for Projection
 	void _forward(double lon, double lat);
-	void _inverse(double x, double y);
 
-  
+	//! See documentation for Projection
+	void _inverse(double x, double y);
 
 };
 

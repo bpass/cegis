@@ -21,20 +21,11 @@ public:
 	//!Set oval shape angle.
 	void setAngle(double theta);
 
-
-	void setCenterLon(double lon);
-
-	void setCenterLat(double lat);
-
 	double shapeM() {return m_m;}
 
 	double shapeN() {return m_n;}
 
 	double angle() {return m_theta;}
-
-	double centerLon() {return m_centerLon;}
-
-	double ceterLat() {return m_centerLat;}
 
 protected:
 
@@ -43,8 +34,6 @@ protected:
 	double m_n;
 	double m_sinLatO;
 	double m_cosLatO;
-	double m_centerLon;
-	double m_centerLat;
 
 	void _loadFromParams();
 

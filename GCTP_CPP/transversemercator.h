@@ -2,14 +2,17 @@
 #define TRANS_MERC_H
 #include "projection.h"
 
+//! This is the object used for the Transverse Mercator projection
 class TransverseMercator : public Projection 
 {
 public:
 	TransverseMercator();
 	TransverseMercator(double gctpParams[], ProjUnit units, ProjDatum datum);
 
+	//! Set the projection scale factor.
 	void setScaleFactor(double scale) {m_scaleFactor = scale; setInit();}
 
+	//! Get the scale factor.
 	double scaleFactor() {return m_scaleFactor;}
 
 protected:
@@ -17,9 +20,13 @@ protected:
 	//! See documentation for Projection
 	void _init();
 
+	//! See documentation for Projection
 	void _loadFromParams();
 
+	//! See documentation for Projection
 	void _forward(double lon, double lat);
+
+	//! See documentation for Projection
 	void _inverse(double x, double y);
 
 	double m_scaleFactor;

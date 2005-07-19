@@ -30,7 +30,6 @@ void AlbersConEqArea::_init() {
 	double qs1;            		/* small q 1                            */
 	double qs2;            		/* small q 2                            */
 	
-	clearError();
 
 	if (fabs(m_stdParallelLat1 + m_stdParallelLat2) < EPSLN) {
 		setError(31);

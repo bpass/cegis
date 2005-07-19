@@ -38,7 +38,8 @@ void Sinusoidal::_inverse(double x, double y)
 
   m_latitude = y / m_radius;
 
-  if( fabs( m_latitude ) > HALF_PI) {
+  if( fabs( m_latitude ) > HALF_PI) 
+  {
 		setError(164);
 		return;
   }

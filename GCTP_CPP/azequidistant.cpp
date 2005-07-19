@@ -61,7 +61,6 @@ void AzEquidistant::_inverse(double x, double y)
    double rh;		/* height above ellipsoid			*/
    double z;		/* angle					*/
    double sinz,cosz;	/* sin of z and cos of z			*/
-   double temp;
    double con;
 
 
@@ -107,7 +106,7 @@ void AzEquidistant::_inverse(double x, double y)
       return;
    }
 
-   temp = atan2((x * sinz * m_cosCenterLat), (con * rh));
+  
    m_longitude = Util::adjust_lon(m_centerLon + atan2((x * sinz * m_cosCenterLat), (con * rh)));
 
 }

@@ -1,7 +1,7 @@
 
 #include "utm.h"
 
-UTM::UTM() : Projection(), m_scaleFactor(0.0), m_centerLon(0.0), m_centerLat(0.0),
+UTM::UTM() : Projection(), m_scaleFactor(0.0), 
 m_e0(0.0), m_e1(0.0), m_e2(0.0), m_e3(0.0), m_e(0.0), m_es(0.0), m_esp(0.0),
 m_ml0(0.0), m_ind(0), m_zone(1)
 {
@@ -15,7 +15,7 @@ m_ml0(0.0), m_ind(0), m_zone(1)
 
 UTM::UTM(double gctpParams[], ProjUnit units, ProjDatum dat, int zone) : 
 Projection(gctpParams, units, dat),
-m_scaleFactor(0.0), m_centerLon(0.0), m_centerLat(0.0),
+m_scaleFactor(0.0), 
 m_e0(0.0), m_e1(0.0), m_e2(0.0), m_e3(0.0), m_e(0.0), m_es(0.0), m_esp(0.0),
 m_ml0(0.0), m_ind(0), m_zone(zone)
 {

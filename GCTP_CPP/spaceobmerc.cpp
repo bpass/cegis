@@ -177,19 +177,6 @@ void SpaceObMerc::setAlf(double val)
 	setInit();
 }
 
-void SpaceObMerc::setCenterLon(double lon)
-{
-	long err = 0;
-	err = Util::DMSToRad(lon);
-	if(err != 0)
-	{
-		setError(err);
-		return;
-	}
-	m_centerLon = lon;
-
-	setInit();
-}
 
 void SpaceObMerc::_inverse(double x, double y)
 {
@@ -262,7 +249,7 @@ void SpaceObMerc::_forward(double lon, double lat)
 	long n,l;
 	double delta_lon;
 	double rlm,tabs,tlam,xlam,c,xlamt,ab2,ab1,xlamp,sav;
-	double d,sdsq,sd,tanlg,xtan,tphi,dp,dd,ds,rlm2;
+	double d,sdsq,sd,tanlg,xtan,tphi,dp,rlm2;
 	double scl,tlamp,conv,delta_lat,radlt,radln;
 	bool end = false;
 	/* Forward equations
@@ -357,8 +344,8 @@ void SpaceObMerc::_forward(double lon, double lat)
 	}
 
 	
-	ds=sin(tlam);
-	dd=ds*ds;
+	
+	
 	dp=sin(radlt);
 	tphi=asin(((1.0-m_es)*m_ca*dp-m_sa*cos(radlt)*sin(xlamt))/sqrt(1.0-m_es*dp*dp));
 

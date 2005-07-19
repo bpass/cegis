@@ -269,9 +269,6 @@
 				RelativePath=".\spaceobmerc.cpp">
 			</File>
 			<File
-				RelativePath=".\spconst.cpp">
-			</File>
-			<File
 				RelativePath=".\stereo.cpp">
 			</File>
 			<File
@@ -370,9 +367,6 @@
 			</File>
 			<File
 				RelativePath=".\spaceobmerc.h">
-			</File>
-			<File
-				RelativePath=".\spconst.h">
 			</File>
 			<File
 				RelativePath=".\stereo.h">

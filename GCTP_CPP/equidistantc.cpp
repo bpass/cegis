@@ -26,8 +26,6 @@ void EquidistantC::_init()
 	double ms1,ms2;
 	double ml1,ml2;
 
-	clearError();
-
 	temp = m_rMinor / m_rMajor;
 	m_es = 1.0 - SQUARE(temp);
 	m_e = sqrt(m_es);

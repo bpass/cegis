@@ -2,8 +2,7 @@
 #include "oblatedeqarea.h"
 
 OblatedEqArea::OblatedEqArea() : Projection(),
-m_theta(0.0), m_m(0.0), m_n(0.0), m_sinLatO(0.0), m_cosLatO(0.0),
-m_centerLon(0.0), m_centerLat(0.0)
+m_theta(0.0), m_m(0.0), m_n(0.0), m_sinLatO(0.0), m_cosLatO(0.0)
 {
 	setNumber(OBEQA);
 	setName("Oblated Equal Area");
@@ -11,8 +10,7 @@ m_centerLon(0.0), m_centerLat(0.0)
 
 OblatedEqArea::OblatedEqArea(double gctpParams[], ProjUnit units, ProjDatum dat):
 Projection(gctpParams, units, dat),
-m_theta(0.0), m_m(0.0), m_n(0.0), m_sinLatO(0.0), m_cosLatO(0.0),
-m_centerLon(0.0), m_centerLat(0.0)
+m_theta(0.0), m_m(0.0), m_n(0.0), m_sinLatO(0.0), m_cosLatO(0.0)
 {
 	setNumber(OBEQA);
 	setName("Oblated Equal Area");
@@ -30,41 +28,12 @@ void OblatedEqArea::_loadFromParams()
 void OblatedEqArea::_init()
 {
 	
-	/* Calculate the sine and cosine of the latitude of the center of the map
-	 and store in static storage for common use.
-	-------------------------------------------*/
+	// Calculate the sine and cosine of the latitude of the center of the map
 	Util::gctp_sincos(m_centerLat, &m_sinLatO, &m_cosLatO);
+
 }
 
-void OblatedEqArea::setCenterLon(double lon)
-{
-	long err = 0;
-	double temp = 0;
 
-	temp = Util::paksz(lon, &err) * 3600 * S2R;
-	if(err != 0) {
-		setError(err);
-		return;
-	}
-
-	m_centerLon = temp;
-	setInit();
-}
-
-void OblatedEqArea::setCenterLat(double lat)
-{
-	long err = 0;
-	double temp = 0;
-
-	temp = Util::paksz(lat, &err) * 3600 * S2R;
-	if(err != 0) {
-		setError(err);
-		return;
-	}
-
-	m_centerLat = temp;
-	setInit();
-}
 
 void OblatedEqArea::setAngle(double theta)
 {

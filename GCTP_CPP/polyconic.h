@@ -3,6 +3,7 @@
 #define POLYCON_H
 #include "projection.h"
 
+//! This is the object used for the Polyconic projection.
 class Polyconic: public Projection 
 {
 public:
@@ -25,7 +26,10 @@ protected:
 	//! See documentation for Projection
 	void _init();
 
+	//! See documentation for Projection
 	void _forward(double lon, double lat);
+
+	//! See documentation for Projection
 	void _inverse(double x, double y);
 
 };

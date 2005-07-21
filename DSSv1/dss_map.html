@@ -1,0 +1,60 @@
+<html>
+<title>Decision Support System for Map Projections of Small Scale Data </title>
+<body>
+<form method=POST action="/research-bin/global.cgi">
+<p>
+<img src="usgs.gif"><br>
+<H3>Decision Support System for Map Projections of Small Scale Data</H3>
+<p>
+  Geographic Area:  
+  <select name=qst1 size=1>
+  <option>1. Global
+  <option>2. Continental
+  <option>3. Regional
+  </select>
+<p>
+  Preserve:  
+  <select name=qst2 size=1>
+  <option>1. Shape
+  <option>2. Area
+  <option>3. Compromise(Looks Good)
+  </select>
+&nbsp&nbsp&nbsp&nbsp<FONT COLOR=RED>("Compromise" is only for use with global data.)</FONT>
+<p>
+  Data Type:  
+  <select name=qst3 size=1>
+  <option>1. Raster
+  <option>2. Vector
+  </select>
+<p>
+<p>
+  <B>If Raster Data:</B> 
+  <UL TYPE = "square">
+  <LI> Choose mapping as <b>continuous</b> data, like </LI>
+  	<UL TYPE = "disc">
+	<LI>Elevation</LI> 
+	<LI>LANDSAT 7</LI>
+	<LI>Temperature</LI>
+	</UL>
+  <br>
+  <LI> Or choose mapping as <b>thematic</b> data, such as</LI>
+  	<UL TYPE="disc">
+  	<LI>LandCover</LI> 
+  	<LI>Soils</LI>
+	<LI>Vegetation</LI>
+  	</UL>
+  </UL>
+  Type of Raster Data:
+  <select name=qst4 size=1>
+  <option>1. Continuous
+  <option>2. Thematic
+  </select>
+<p>
+<br>
+Click on "Suggest Projection" after selecting the appropriate choices.
+<p>
+<input type="submit" value="Suggest Projection">
+
+</body>
+</html>
+

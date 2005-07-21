@@ -87,9 +87,8 @@ void outputClassifiedImage( std::string ortho, std::string outputFile,
 }
 
 // take the image named ortho, classify it with C and put the result
-// in a generic binary file called outputFile.  For instructions on
-// viewing the output, see the doxygen documentation for the main
-// project, on the page called Preparing for new data.
+// in a GeoTiff file called outputFile.  View the output like you would
+// any other Tiff file.
 void outputClassifiedImageAsGeoTiff( std::string ortho, std::string outputFile,
                                      Classifier &C )
 {

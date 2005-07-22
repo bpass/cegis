@@ -35,41 +35,41 @@ public class Transformer
    {
       return for_proj;
    }
-   
+
    public void transform( CoordPoint inPoint, CoordPoint outPoint )
    {
       GeoPoint gPoint = new GeoPoint();
-      
+
       try
       {
-         inv_proj.inverse(inPoint, gPoint);
-         for_proj.forward(gPoint, outPoint);
+         inv_proj.inverse( inPoint, gPoint );
+         for_proj.forward( gPoint, outPoint );
       }
-      catch( Exception e )
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
-   
+
    public void transformInverse( CoordPoint inPoint, GeoPoint outPoint )
    {
       try
       {
-         for_proj.inverse(inPoint, outPoint);
+         inv_proj.inverse( inPoint, outPoint );
       }
-      catch( Exception e )
+      catch (Exception e)
       {
          e.printStackTrace();
       }
    }
-   
+
    public void transformForward( GeoPoint inPoint, CoordPoint outPoint )
    {
       try
       {
-         for_proj.forward(inPoint, outPoint);
+         for_proj.forward( inPoint, outPoint );
       }
-      catch( Exception e )
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -77,7 +77,17 @@ public class Transformer
 
    public static Projection getProjection( ProjCode projCode )
    {
-      switch (projCode.val())
+      return getProjection(projCode.val());
+   }
+   
+   public static Projection getProjection( String projNumString )
+   {
+      return getProjection( Integer.parseInt(projNumString) );
+   }
+   
+   public static Projection getProjection( int projNum )
+   {
+      switch (projNum)
       {
       case 0:
          return null;

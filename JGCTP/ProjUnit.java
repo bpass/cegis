@@ -28,7 +28,7 @@ public enum ProjUnit
       return m_val;
    }
 
-   public ProjUnit fromVal( int val )
+   public static ProjUnit fromVal( int val )
    {
       switch (val)
       {

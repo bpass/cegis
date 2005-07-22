@@ -48,7 +48,7 @@ public enum ProjCode
       return m_val;
    }
 
-   public ProjCode fromVal( int val )
+   public static ProjCode fromVal( int val )
    {
       switch (val)
       {

@@ -48,7 +48,7 @@ public enum ProjDatum
       return m_val;
    }
 
-   public ProjDatum fromVal( int val )
+   public static ProjDatum fromVal( int val )
    {
       switch (val)
       {

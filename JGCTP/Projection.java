@@ -326,7 +326,7 @@ public abstract class Projection
 	}
 	
 	//!Get the numeric identifier for the projection.
-	public ProjCode number()
+	public ProjCode code()
 	{
 		return m_number;
 	}

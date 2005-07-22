@@ -1,5 +1,4 @@
-
-package JGCTP;
+package jgctp;
 
 public class Constants
 {

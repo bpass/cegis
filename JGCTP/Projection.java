@@ -1,4 +1,4 @@
-package JGCTP;
+package jgctp;
 	
 public abstract class Projection 
 {

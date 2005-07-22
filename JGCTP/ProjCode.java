@@ -1,8 +1,9 @@
-package JGCTP;
+package jgctp;
 
+// Projection Codes
 public enum ProjCode
 {
-	NONE(-1),
+	NULLPROJ(-1),
 	GEO(0), 
 	UTM(1), 
 	SPCS(2), 
@@ -36,15 +37,85 @@ public enum ProjCode
 	OBEQA(30);
 	
 	private final int m_val;
-	
-   
-	private ProjCode(int val)
-	{
-		m_val = val;
-	}
-	
-	public int val()
-	{
-		return m_val;
-	}
+
+   private ProjCode( int val )
+   {
+      m_val = val;
+   }
+
+   public int val()
+   {
+      return m_val;
+   }
+
+   public ProjCode fromVal( int val )
+   {
+      switch (val)
+      {
+      case 0:
+         return GEO;
+      case 1:
+         return UTM;
+      case 2:
+         return SPCS;
+      case 3:
+         return ALBERS;
+      case 4:
+         return LAMCC;
+      case 5:
+         return MERCAT;
+      case 6:
+         return PS;
+      case 7:
+         return POLYC;
+      case 8:
+         return EQUIDC;
+      case 9:
+         return TM;
+      case 10:
+         return STEREO;
+      case 11:
+         return LAMAZ;
+      case 12:
+         return AZMEQD;
+      case 13:
+         return GNOMON;
+      case 14:
+         return ORTHO;
+      case 15:
+         return GVNSP;
+      case 16:
+         return SNSOID;
+      case 17:
+         return EQRECT;
+      case 18:
+         return MILLER;
+      case 19:
+         return VGRINT;
+      case 20:
+         return HOM;
+      case 21:
+         return ROBIN;
+      case 22:
+         return SOM;
+      case 23:
+         return ALASKA;
+      case 24:
+         return GOOD;
+      case 25:
+         return MOLL;
+      case 26:
+         return IMOLL;
+      case 27:
+         return HAMMER;
+      case 28:
+         return WAGIV;
+      case 29:
+         return WAGVII;
+      case 30:
+         return OBEQA;
+      }
+
+      return NULLPROJ;
+   }
 }

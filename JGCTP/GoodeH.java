@@ -1,4 +1,4 @@
-package JGCTP;
+package jgctp;
 
 public class GoodeH extends Projection
 {

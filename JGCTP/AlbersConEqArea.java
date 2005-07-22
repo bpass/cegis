@@ -1,4 +1,4 @@
-package JGCTP;
+package jgctp;
 
 public class AlbersConEqArea extends Projection
 {
@@ -45,11 +45,11 @@ protected   void _init() throws ProjException
     double sin_po,cos_po;       /* sine and cos values          */
     double con;                 /* temporary variable           */
     double temp;                /* temporary variable           */
-    double ms1;                 /* small m 1                            */
-    double ms2;                 /* small m 2                            */
-    double qs0;                 /* small q 0                            */
-    double qs1;                 /* small q 1                            */
-    double qs2;                 /* small q 2                            */
+    double ms1;                 /* small m 1                    */
+    double ms2;                 /* small m 2                    */
+    double qs0;                 /* small q 0                    */
+    double qs1;                 /* small q 1                    */
+    double qs2;                 /* small q 2                    */
     
 
     if (Math.abs(m_stdParallelLat1 + m_stdParallelLat2) < Constants.EPSLN) {

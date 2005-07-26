@@ -29,7 +29,7 @@ INCPATHS = -I$(PREFIX)/include \
 		   -I$(PREFIX)/include/ImageLib
 
 CXX = g++
-CXXFLAGS = -g -Wall -W -pthread -Wno-deprecated $(INCPATHS)
+CXXFLAGS = -pg -g -Wall -W -pthread -Wno-deprecated $(INCPATHS)
 
 # -D_MOSIX will activate mosix-specific tidbits,like locking migration
 #  for socket communication etc. if running in a mosix environment, it's

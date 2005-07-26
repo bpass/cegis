@@ -83,13 +83,11 @@ WorkManager::WorkManager(BigJob* job)
       m_baseWorkUnit->setPmeshName(m_externJob->getPmeshName());
       m_baseWorkUnit->setOutputProjection(m_externJob->getOutputProjection());
   
-//      m_jpg = new USGSImageLib::JPEGImageOFile( std::string("out.jpg"),
-//                                                m_externJob->getnewheight(),
-//                                                m_externJob->getnewwidth(),
-//                                                JCS_GRAYSCALE, 
-//                                                70,
-//                                                false );
-
+      m_jpg = new USGSImageLib::JPEGImageOFile( std::string("out.jpg"),
+                                                m_externJob->getnewheight(),
+                                                m_externJob->getnewwidth(),
+                                                JCS_GRAYSCALE, 
+                                                70 );
       
 //      m_png = new USGSImageLib::PNGImageOFile( std::string("out.png"), 
 //                                               m_externJob->getnewheight(),
@@ -102,11 +100,10 @@ WorkManager::WorkManager(BigJob* job)
                 << static_cast<unsigned long>(m_totalLines) << std::endl;
       
       m_externJob->setupOut();
-      m_workStitcher = new Stitcher(m_externJob->getOutputFile(),
-                       static_cast<unsigned long>(m_totalLines ));
-
-//      m_workStitcher = new Stitcher(m_jpg,
-//                                    static_cast<unsigned long>(m_totalLines ));
+//      m_workStitcher = new Stitcher(m_externJob->getOutputFile(),
+//                       static_cast<unsigned long>(m_totalLines ));
+      m_workStitcher = new Stitcher(m_jpg,
+                                    static_cast<unsigned long>(m_totalLines ));
   } 
 
   return; 
@@ -126,8 +123,8 @@ WorkManager::~WorkManager()
     delete m_workStitcher;
 //  if ( m_png ! = NULL ) 
 //      delete m_png;
-  if ( m_jpg != NULL ) 
-      delete m_jpg;
+//  if ( m_jpg != NULL ) 
+//      delete m_jpg;
   
 }
 

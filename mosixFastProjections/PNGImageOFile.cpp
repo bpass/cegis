@@ -134,7 +134,7 @@ throw (ImageException, std::bad_alloc)
                 }
                 break;
             // RGB data (bit_depths 8, 16)
-            case PNG_COLOR_TYPE_RGB:
+            case PHOTO_RGB:
                 if ( !alpha_channel ) 
                 {
                     color_type = PNG_COLOR_TYPE_RGB;

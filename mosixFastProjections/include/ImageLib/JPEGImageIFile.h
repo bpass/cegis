@@ -1,8 +1,8 @@
 #ifndef _JPEGIMAGEIFILE_H_
 #define _JPEGIMAGEIFILE_H_
-// $Id: JPEGImageIFile.h,v 1.1 2005/03/11 23:59:08 mschisler Exp $
-// Brian Maddox - USGS MCMC SES - bmaddox@usgs.gov
-// Last modified by $Author: mschisler $ on $Date: 2005/03/11 23:59:08 $
+// $Id: JPEGImageIFile.h,v 1.2 2005/07/26 16:35:44 mschisler Exp $
+// Brian Maddox - gowaddle@yahoo.com
+// Last modified by $Author: mschisler $ on $Date: 2005/07/26 16:35:44 $
 
 /***************************************************************************
  *                                                                         *
@@ -91,8 +91,13 @@ protected:
 
   // Temporary scanline storage buffer.  
   JSAMPARRAY scanlinebuffer;
+
+  // Open the JPEG to avoid code duplication
+  void openJPEG() throw(ImageException);
+  // Reload the JPEG for when we loop through reading scanlines
+  void resetJPEG() throw(ImageException);
+
 };
-  
   
 // ***************************************************************************
 inline void JPEGImageIFile::getNumberPaletteColors(int& numcolors) const 

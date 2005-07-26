@@ -1,3 +1,6 @@
+#ifndef DRECT_H
+#define DRECT_H
+
 /***************************************************************************
                           DRect.h  -  description
                              -------------------
@@ -6,9 +9,8 @@
     email                : cbilderback@usgs.gov
  ***************************************************************************/
 
+#include <iostream>
 
-#ifndef DRECT_H
-#define DRECT_H
 class DRect
 {
 public:
@@ -19,7 +21,19 @@ public:
     // MS 5/26/2005: added for simplicity in construction
     DRect(double t, double r, double b, double l) : 
         left(l), right(r), top(t), bottom(b) {} 
+
+    // MS 7/21/2005: added 
+    friend std::ostream& operator<<(std::ostream& os, const DRect & r)
+    {
+        os  << "left   : " << r.left << std::endl
+            << "right  : " << r.right << std::endl
+            << "top    : " << r.top << std::endl
+            << "bottom : " << r.bottom << std::endl;
+
+        return os;
+    }
     
     double left, right, top, bottom;
 };
-#endif //DRECT_H
+
+#endif // DRECT_H

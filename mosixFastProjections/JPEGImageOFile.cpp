@@ -39,7 +39,6 @@ throw (ImageException, std::bad_alloc)
     m_currentLine(0)
 {
     
-    std::cout << " constructing JPEGImageOFile " << std::endl;
     try { 
         
         // set the error mode
@@ -88,8 +87,8 @@ throw (ImageException, std::bad_alloc)
         // the resulting image always uses greyscale as the 
         // output colorspace
         // if ( bGreySpace ) 
-        jpeg_set_colorspace( &m_jInfo, JCS_GRAYSCALE ); 
-
+        // jpeg_set_colorspace( &m_jInfo, JCS_GRAYSCALE ); 
+ 
         // Since jpeg is a "lossy" format, one must select the 
         // quality of the resulting image, denoting how much 
         // data "loss" will take place in the saving of the 
@@ -114,7 +113,6 @@ throw (ImageException, std::bad_alloc)
 
 JPEGImageOFile::~JPEGImageOFile()
 {
-    std::cout << "proper destructor being called." << std::endl;
     jpeg_finish_compress( &m_jInfo );
     fclose( m_jFile );
     jpeg_destroy_compress( &m_jInfo );

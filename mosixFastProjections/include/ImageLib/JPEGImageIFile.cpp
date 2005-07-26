@@ -1,8 +1,8 @@
 #ifndef _JPEGIMAGEIFILE_CPP_
 #define _JPEGIMAGEIFILE_CPP_
-// $Id: JPEGImageIFile.cpp,v 1.1 2005/03/11 23:59:08 mschisler Exp $
-// Brian Maddox
-// Last modified by $Author: mschisler $ on $Date: 2005/03/11 23:59:08 $
+// $Id: JPEGImageIFile.cpp,v 1.2 2005/07/26 16:35:44 mschisler Exp $
+// Brian Maddox - gowaddle@yahoo.com
+// Last modified by $Author: mschisler $ on $Date: 2005/07/26 16:35:44 $
 
 /***************************************************************************
  *                                                                         *
@@ -27,70 +27,54 @@ JPEGImageIFile::JPEGImageIFile(std::string& infilename)
   if ( (jpegfile = std::fopen(infilename.c_str(), "rb")) == NULL)
     throw ImageException(IMAGE_FILE_OPEN_ERR);
   
-  try
+  // Call openJPEG to init the JPEG object and read the header info
+  openJPEG();
+
+  // Since we got here, the jpeg must be ok.  Go ahead and set some of our
+  // internal fields.
+  Width           = jpeginfo.image_width;
+  Height          = jpeginfo.image_height;
+  samplesPerPixel = jpeginfo.num_components;
+  bitsPerSample   = 8; // Most jpegs are 8 bit/sample, unless special
+  
+  switch (jpeginfo.jpeg_color_space)
   {
-    // Set the error mechanism
-    jpeginfo.err = jpeg_std_error(&jerr);
-    // Initialize the JPEG decompression object
-    jpeg_create_decompress(&jpeginfo);
-    // Specify where the input data is coming from
-    jpeg_stdio_src(&jpeginfo, jpegfile);
-
-    // Now read the header in.  If something went wrong, throw an exception
-    if (jpeg_read_header(&jpeginfo, TRUE) != JPEG_HEADER_OK)
-      throw ImageException(IMAGE_FILE_OPEN_ERR);
-
-    // Since we got here, the jpeg must be ok.  Go ahead and set some of our
-    // internal fields.
-    Width           = jpeginfo.image_width;
-    Height          = jpeginfo.image_height;
-    samplesPerPixel = jpeginfo.num_components;
-    bitsPerSample   = 8; // Most jpegs are 8 bit/sample, unless special
-
-    switch (jpeginfo.jpeg_color_space)
-    {
-    case JCS_RGB:
-      Photometric = PHOTO_RGB;
-      break;
-    case JCS_GRAYSCALE:
-      Photometric = PHOTO_GRAY;
-      break;
-    case JCS_YCbCr:
-      // Force libjpeg to convert to RGB colorspace and let the user change
-      // the colorspace on their own
-      jpeginfo.out_color_space = JCS_RGB;
-      Photometric              = PHOTO_RGB;
-      break;
-    default:
-      // If it's none of the above, then we can't handle it.  Might try to do
-      // something for CMYK jpegs, though.
-      setFailRBit();
-    }
-
-    // If the JFIF marker is present, record the version and resolution info
-    if (jpeginfo.saw_JFIF_marker == TRUE)
-    {
-      major_version = jpeginfo.JFIF_major_version;
-      minor_version = jpeginfo.JFIF_minor_version;
-      density_unit  = jpeginfo.density_unit;
-      x_density     = jpeginfo.X_density;
-      y_density     = jpeginfo.Y_density;
-    }
-
-    // Now check for the Adobe APP14 marker
-    if (jpeginfo.saw_Adobe_marker == TRUE)
-    {
-      saw_adobe_marker = true;
-      adobe_transform  = jpeginfo.Adobe_transform;
-    }
-
-    ImageType = IMAGE_JPEG; // Set the type for ImageLib querying
-  }
-  catch (...)
-  {
+  case JCS_RGB:
+    Photometric = PHOTO_RGB;
+    break;
+  case JCS_GRAYSCALE:
+    Photometric = PHOTO_GRAY;
+    break;
+  case JCS_YCbCr:
+    // Force libjpeg to convert to RGB colorspace and let the user change
+    // the colorspace on their own
+    jpeginfo.out_color_space = JCS_RGB;
+    Photometric              = PHOTO_RGB;
+    break;
+  default:
+    // If it's none of the above, then we can't handle it.  Might try to do
+    // something for CMYK jpegs, though.
     setFailRBit();
-    return;
   }
+  
+  // If the JFIF marker is present, record the version and resolution info
+  if (jpeginfo.saw_JFIF_marker == TRUE)
+  {
+    major_version = jpeginfo.JFIF_major_version;
+    minor_version = jpeginfo.JFIF_minor_version;
+    density_unit  = jpeginfo.density_unit;
+    x_density     = jpeginfo.X_density;
+    y_density     = jpeginfo.Y_density;
+  }
+  
+  // Now check for the Adobe APP14 marker
+  if (jpeginfo.saw_Adobe_marker == TRUE)
+  {
+    saw_adobe_marker = true;
+    adobe_transform  = jpeginfo.Adobe_transform;
+  }
+  
+  ImageType = IMAGE_JPEG; // Set the type for ImageLib querying
 }
 
 
@@ -106,7 +90,7 @@ JPEGImageIFile::~JPEGImageIFile()
 
 
 // ***************************************************************************
-// This function returns wraps jpeg_read_scanlines.  If you select color-
+// This function wraps jpeg_read_scanlines.  If you select color-
 // mapped output, it returns the index into the palette.  Otherwise, it'll
 // return gray or color data.  Being that JPEG is a streaming format, it can
 // get really slow when trying to do random access.  No internal caching is
@@ -149,21 +133,18 @@ void JPEGImageIFile::getRawScanline(long int row, unsigned char* inarray)
     }
     else
     {
-      // Ok, this is where it can get bad if you have a large image.  We have
-      // to seek to the beginning of the file and read up until we get to the 
-      // requested scanline.  Sorry, it's a streaming format and random access
-      // isn't easy.
-      std::rewind(jpegfile);
-
-      // Try to call jpeg_read_header again.  We basically are treating this
-      // as if it were a file with multiple images encoded it.  By rewinding
-      // and calling the setup functions again, we'll see if we can read from
-      // the beginning again
-      if (jpeg_read_header(&jpeginfo, TRUE) != JPEG_HEADER_OK)
-        throw ImageException(IMAGE_FILE_OPEN_ERR);
-
-      // (Hopefully) restart decompression
+      // Go ahead and reset the JPEG so we can loop through again      
+      resetJPEG();
+      // Restart decompression
       jpeg_start_decompress(&jpeginfo);
+      startdecompress = true;
+
+      // Since we deleted the jpeg object, we have to have it reallocate
+      // the scanline buffer here
+      scanlinebuffer = (*jpeginfo.mem->alloc_sarray)((j_common_ptr)&jpeginfo,
+                                                     JPOOL_IMAGE,
+                                                     (Width * samplesPerPixel),
+                                                     1);
 
       curr_read = 0;
       for (skipcounter = 0; skipcounter < row; ++skipcounter)
@@ -739,5 +720,54 @@ bool JPEGImageIFile::setBlockSmoothing(bool& on) throw()
 
   return true;
 }
+
+
+// ***************************************************************************
+// Reopen the JPEG.  We need to do this since libJPEG doesn't provide a decent
+// way to return to the beginning of a file to start again (JPEG being a 
+// streaming file format).
+void JPEGImageIFile::resetJPEG() throw(ImageException)
+{
+  // Destroy the compression object, which also handily aborts things
+  jpeg_destroy_decompress(&jpeginfo);
+
+  // Rewind the file pointer.  We don't close here so we can at least try to
+  // avoid a lot of file opens and closes
+  std::rewind(jpegfile);
+
+  // Call openJPEG to recreate the JPEG object and reparse everything.
+  openJPEG();
+}
+
+
+// ***************************************************************************
+// We not only need to open the file in the constructor, but we also need to 
+// reopen it to allow simulated random access.  The open functions are moved
+// here to avoid duplicating code.  Note that we don't reopen the file here
+// since we can keep the file pointer and just rewind it whenever we create a
+// new jpeg object.
+void JPEGImageIFile::openJPEG() throw (ImageException)
+{
+  try
+  {
+    // Set the error mechanism
+    jpeginfo.err = jpeg_std_error(&jerr);
+    // Initialize the JPEG decompression object
+    jpeg_create_decompress(&jpeginfo);
+    // Specify where the input data is coming from
+    jpeg_stdio_src(&jpeginfo, jpegfile);
+    
+    // Now read the header in.  If something went wrong, throw an exception
+    if (jpeg_read_header(&jpeginfo, TRUE) != JPEG_HEADER_OK)
+      throw ImageException(IMAGE_FILE_OPEN_ERR);
+  }
+  catch (...)
+  {
+    setFailRBit();
+    throw ImageException(IMAGE_FILE_OPEN_ERR);
+    return;
+  }
+}
+
 
 #endif

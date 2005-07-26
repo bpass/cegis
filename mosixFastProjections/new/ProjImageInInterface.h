@@ -25,43 +25,29 @@
 #include <ProjectionLib/Projection.h>
 #include <MathLib/InterpolatorTypes.h>
 #include "DRect.h"
+#include "ProjImageDataInterface.h" 
 #include "ProjImageScale.h"
 
 namespace USGSMosix 
 {
-    class ProjImageInInterface 
+    class ProjImageInInterface : public virtual ProjImageDataInterface 
     {
         public:
             
         ProjImageInInterface() {} 
         virtual ~ProjImageInInterface() {} 
-         
-        // virtual get
-        virtual double getLeftBound()                       const = 0;
-        virtual double getRightBound()                      const = 0;
-        virtual double getTopBound()                        const = 0;
-        virtual double getBottomBound()                     const = 0;
-        virtual DRect  getOuterBounds()                     const = 0;
-        virtual long int getHeight()                        const = 0;
-        virtual long int getWidth()                         const = 0;
-        virtual const ProjLib::Projection * getProjection() const = 0;
-        virtual ProjImageScale getPixelScale()              const = 0;
-        virtual int getPhotometric()                        const = 0;
-        virtual int getBPS()                                const = 0;
-        virtual int getSPP()                                const = 0;
-        virtual const unsigned char * 
-        getPixel( const unsigned int& x, 
-                  const unsigned int& y )                   const = 0;
-        virtual DRect 
-        getNewBounds(const PmeshLib::ProjectionMesh & m)   const  = 0; 
-        virtual const PmeshLib::ProjectionMesh & 
-        setupMesh( const ProjLib::Projection & secondProjection,
-                   unsigned int divisions = kgMeshDivisions,  
-                   MathLib::InterpolatorType interp = kgInterpolator ) = 0;
-    
-        // virtual set 
-        virtual void setPixelScale( const ProjImageScale&  p)     = 0;
         
+        // virtual get
+        virtual const unsigned char * 
+        getPixel( const unsigned int& x, const unsigned int& y )const = 0;
+        
+        virtual const unsigned char * 
+        getPixel( const double & latitude, const double & longitude )const = 0;
+        
+        virtual DRect 
+        getNewBounds(const PmeshLib::ProjectionMesh & m)const = 0; 
+
+        virtual DRect getGeographicBounds()const = 0;
    };
     
 } //namespace

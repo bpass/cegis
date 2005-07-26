@@ -38,8 +38,8 @@ FromMultiGeoProjector::FromMultiGeoProjector(
     m_projWriter(projWriter),
     m_projReader(projReader),
     m_params(params),
-    m_pmeshDivisions(4), 
-    m_pmeshInterp( MathLib::CubicSpline ), 
+    m_pmeshDivisions(kgMeshDivisions), 
+    m_pmeshInterp( kgInterpolator ), 
     m_forwardMesh(NULL),
     m_reverseMesh(NULL)
 {
@@ -171,12 +171,14 @@ void FromMultiGeoProjector::project()
 scanlines_t FromMultiGeoProjector::project( long unsigned int beginLine, 
                                             long unsigned int endLine )
 {
+    static const ProjLib::GeographicProjection geoProj;
     double xSrcScale(0.0f), ySrcScale(0.0f);
     long unsigned int xPixelCount(0), yPixelCount(beginLine);
-    long int xSrcPixel(0), ySrcPixel(0);
     int sppCount(0);
     scanlines_t scanlines = NULL;
     const unsigned char * tmpPixel = NULL;
+    
+    std::cout << " begin projecting " << std::endl;
     
     try {
 
@@ -186,8 +188,6 @@ scanlines_t FromMultiGeoProjector::project( long unsigned int beginLine,
         // grab these to start to speed up computation ... 
         // i.e., we don't want to be fetching these variables
         // thousands of times in the double for loop.
-        const long unsigned int inWidth(m_imgIn.getWidth());
-        const long unsigned int inHeight(m_imgIn.getHeight());
         const long unsigned int outWidth(m_imgOut->getWidth());
         const long unsigned int outHeight(m_imgOut->getHeight());
         const ProjImageScale inScale(m_imgIn.getPixelScale());
@@ -196,8 +196,7 @@ scanlines_t FromMultiGeoProjector::project( long unsigned int beginLine,
         const DRect outBounds(m_imgOut->getOuterBounds());
         const int spp(m_imgIn.getSPP());
 
-        if ( !Math<long int>::inInclusiveRange(beginLine, 0, outHeight ) ||
-             !Math<long int>::inInclusiveRange(endLine, 0, outHeight ) )
+        if ( beginLine > outHeight || endLine > outHeight  )  
             throw GeneralException("Line boundaries out of range."); 
 
         // allocate the dynamic memory for the resulting scanlines.
@@ -211,10 +210,14 @@ scanlines_t FromMultiGeoProjector::project( long unsigned int beginLine,
         }
 
         // setup the reverse projection's mesh            
-        m_reverseMesh = & m_imgOut->setupMesh( *(m_fromProj), 
+        m_reverseMesh = & m_imgOut->setupMesh( geoProj, 
                                                m_pmeshDivisions,
                                                m_pmeshInterp ); 
-        
+
+//        std::cout << "outscale x: " << outScale.x << std::endl;
+  //      std::cout << "outscale y: " << outScale.y << std::endl;
+    std::cout << " begin reverse projection " << std::endl;
+
         // This is a reverse projection, so in other words,  we're iterating 
         // over the new image's x/y pixels with the double for loops, using 
         // first source image 'to scale' coordinates and then x/y pixel 
@@ -229,25 +232,18 @@ scanlines_t FromMultiGeoProjector::project( long unsigned int beginLine,
                 // on this image.
                 xSrcScale = outBounds.left + outScale.x * xPixelCount;
                 ySrcScale = outBounds.top - outScale.y * yPixelCount;
+    
+ //               std::cout << "xsrcscale: " << xSrcScale << std::endl;
+   //             std::cout << "ysrcscale: " << ySrcScale << std::endl;
                 
-                // reverse project those points to get the 'to scale'
-                // location on our old image of the pixels we need 
-                // to place on this one, considering the projection 
-                // we're doing. So, what's returned from here is to scale 
-                // of our input image. 
-                reverseProjectPoint(xSrcScale, ySrcScale);    
+                // xSrcScale is now a latitude after this call
+                // ySrcScale is now a longitude after this call
+                m_reverseMesh->projectPoint(xSrcScale, ySrcScale);
                 
-                // take those x,y coordinates to scale and then 
-                // translate them to the x,y pixel coordinates 
-                // of the input image.
-                xSrcPixel  = Math<long int>::ceil( (xSrcScale - inBounds.left) 
-                             / inScale.x ); 
-                ySrcPixel  = Math<long int>::ceil( (inBounds.top - ySrcScale) 
-                             / inScale.y );
+                // get a pixel from these latitude and longitudes
+                tmpPixel = m_imgIn.getPixel(ySrcScale, xSrcScale);
                 
-                // if the resulting pixel coordinates are out of bounds
-                if (!Math<long int>::inInclusiveRange(xSrcPixel,0,inWidth-1) ||
-                    !Math<long int>::inInclusiveRange(ySrcPixel,0,inHeight-1) )
+                if ( tmpPixel == NULL ) 
                 {
                    // place a black pixel in each sample (channel)
                    for( sppCount = 0; sppCount < spp; ++sppCount)
@@ -257,11 +253,10 @@ scanlines_t FromMultiGeoProjector::project( long unsigned int beginLine,
                    }
                    
                 } else // if they are instead in bounds
-                {
-                   tmpPixel = m_imgIn.getPixel(xSrcPixel, ySrcPixel);
+                { 
+                //    std::cout << "in " << std::endl;
                     
-                   // get the pixel from the group of source images.  
-                   for( sppCount = 0; sppCount < spp; ++sppCount)
+                    for( sppCount = 0; sppCount < spp; ++sppCount)
                    {
                        scanlines[(yPixelCount - beginLine)]
                                 [ xPixelCount*spp + sppCount ] = 
@@ -270,6 +265,7 @@ scanlines_t FromMultiGeoProjector::project( long unsigned int beginLine,
                 }
             }
         }
+
     } catch ( GeneralException & e ) 
     {
         std::cout << "FromMultiGeoProjector: " << e.toString() << std::endl;   
@@ -295,7 +291,13 @@ const PmeshLib::ProjectionMesh & translatingMesh )
         
         if ( m_fromProj == NULL || m_toProj == NULL )
             throw GeneralException("m_imgOut is NULL");
+        
         outputBounds = m_imgIn.getNewBounds(translatingMesh);
+       
+        std::cout << "output left   :" << outputBounds.left << std::endl
+                  << "output right  :" << outputBounds.right << std::endl
+                  << "output bottom :" << outputBounds.bottom << std::endl
+                  << "output top    :" << outputBounds.top << std::endl;
         
         // calculate the pixel to "true scale" ratio, keeping the 
         // same number of pixels in each direction so as to keep
@@ -310,7 +312,16 @@ const PmeshLib::ProjectionMesh & translatingMesh )
         
         outHeight = Math<long int>::ceil((outputBounds.top-outputBounds.bottom) 
                     / (outputScale.y) );
+      
+        std::cout << "height:" << outHeight << std::endl
+                  << "width :" << outWidth << std::endl;
+        
        
+        std::cout << "Constructing source image: "
+                  << "bits per sample: " << m_imgIn.getBPS() 
+                  << "samples per pixel: " << m_imgIn.getSPP() << std::endl;
+                    
+        
         // set what we've learned up in the new image object.
         m_imgOut = new(std::nothrow)ProjImageOut( 
                                      *m_toProj,
@@ -322,6 +333,8 @@ const PmeshLib::ProjectionMesh & translatingMesh )
                                      m_imgIn.getBPS(), 
                                      m_imgIn.getSPP(),
                                      outputBounds );
+
+        std::cout << " done creating output" << std::endl;
         
         if (m_imgOut == NULL ) throw std::bad_alloc();
 

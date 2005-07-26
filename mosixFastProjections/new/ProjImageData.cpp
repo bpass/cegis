@@ -40,10 +40,8 @@ ProjImageData::ProjImageData( DRect bounds,
 
 ProjImageData::~ProjImageData()
 {
-    std::cout << "proj image data destructor called." << std::endl;
     if ( m_file != NULL )
     {
-        std::cout << "deleting m_file" << std::endl;
         delete m_file;
     }
 }
@@ -64,14 +62,15 @@ std::string ProjImageData::getFileExtension( const std::string& filename )
     return extension;
 }
 
-/*****************************************************************************/
+/******************************************************************************/
+
 const PmeshLib::ProjectionMesh & ProjImageData::setupMesh(
-        const ProjLib::Projection & secondProjection,
+        const ProjLib::Projection & toProjection,
         unsigned int divisions, 
-        MathLib::InterpolatorType interp ) 
+        MathLib::InterpolatorType interp )const  
  { 
-    PmeshLib::ProjectionMesh* mesh=
-        new(std::nothrow) PmeshLib::ProjectionMesh;
+    PmeshLib::ProjectionMesh * mesh; 
+    mesh = new(std::nothrow) PmeshLib::ProjectionMesh;
     
     try { 
     
@@ -85,14 +84,51 @@ const PmeshLib::ProjectionMesh & ProjImageData::setupMesh(
         
         mesh->setMeshSize( divisions, divisions );
         mesh->setInterpolator( interp );
-        mesh->calculateMesh( *(m_proj), secondProjection );
+        mesh->calculateMesh( *(m_proj), toProjection );
         
     } catch ( GeneralException & ge ) 
     {
         std::cout << ge.toString() << std::endl;
+        throw; 
     }
    
     return *(mesh);
  } 
+
+/*****************************************************************************/
+
+const PmeshLib::ProjectionMesh & ProjImageData::setupReverseMesh(
+        const ProjLib::Projection & fromProjection,
+        const DRect & boundaries,
+        unsigned int divisions, 
+        MathLib::InterpolatorType interp )const
+ {
+    PmeshLib::ProjectionMesh * mesh; 
+    mesh = new(std::nothrow) PmeshLib::ProjectionMesh;
+    
+    try { 
+    
+        if ( m_proj == NULL || mesh == NULL  ) 
+            throw GeneralException("NULL in setting up Mesh.");
+        
+        mesh->setSourceMeshBounds( boundaries.left,
+                                   boundaries.bottom,
+                                   boundaries.right,
+                                   boundaries.top );
+        
+        mesh->setMeshSize( divisions, divisions );
+        mesh->setInterpolator( interp );
+        mesh->calculateMesh( fromProjection , *(m_proj));
+        
+    } catch ( GeneralException & ge ) 
+    {
+        std::cout << ge.toString() << std::endl;
+        throw;
+    }
+   
+    return *(mesh);
+ } 
+
+/*****************************************************************************/
 
 } // namespace USGSMosix

@@ -32,7 +32,11 @@ namespace USGSMosix
 class ProjImageInList : public ProjImageInInterface 
 {
     public:
-        ProjImageInList();
+        
+        ProjImageInList(unsigned long height, unsigned long width);
+        
+        ProjImageInList(const ProjImageScale & scale); 
+        
         virtual ~ProjImageInList();
 
         // INTERFACE FUNCTIONS
@@ -65,17 +69,28 @@ class ProjImageInList : public ProjImageInInterface
         /// list is empty, an exception is also thrown.
         virtual const ProjLib::Projection * getProjection()const;
        
+        inline const unsigned char * 
+        getPixel( const double & x, const double & y)const;
+
         virtual const unsigned char *  
         getPixel( const unsigned int & x, const unsigned int & y )const; 
         
-        virtual int getPhotometric() const { return 0; } // TODO....
-        virtual int getBPS() const { return 0; }   // TODO....
-        virtual int getSPP() const { return 0; }   // TODO....
+        virtual int getPhotometric() const;
+        virtual int getBPS() const;
+        virtual int getSPP() const; 
         virtual DRect getNewBounds(const PmeshLib::ProjectionMesh & mesh)const;
+        virtual DRect getGeographicBounds()const;
+        
         virtual const PmeshLib::ProjectionMesh & setupMesh(
-            const ProjLib::Projection & secondProjection,
-            unsigned int divisions, 
-            MathLib::InterpolatorType interp );
+            const ProjLib::Projection & fromProjection,
+            unsigned int divisions = kgMeshDivisions,  
+            MathLib::InterpolatorType interp = kgInterpolator)const;
+
+        virtual const PmeshLib::ProjectionMesh & setupReverseMesh(
+            const ProjLib::Projection & fromProjection,
+            const DRect & boundaries, 
+            unsigned int divisions = kgMeshDivisions, 
+            MathLib::InterpolatorType interp = kgInterpolator)const;
 
         /// LIST FUNCTIONALITY 
         
@@ -96,9 +111,9 @@ class ProjImageInList : public ProjImageInInterface
         static const ProjLib::GeographicProjection m_geoProjection; 
         std::list<std::pair<ProjImageInInterface*,DRect> >::iterator m_iterator;
         std::list<std::pair<ProjImageInInterface*,DRect> > m_imgList;
-        long int m_height;           ///< TODO: calculate this or input it
-        long int m_width;            ///< TODO: calculate this or input it
-        ProjImageScale m_pixelRatio; ///< TODO: calculate this or input it.
+        long int m_height;           
+        long int m_width;            
+        ProjImageScale m_pixelRatio; 
         mutable DRect m_outermost; 
         mutable bool m_modified; 
 };
@@ -110,8 +125,9 @@ inline bool ProjImageInList::appendHead(ProjImageInInterface * img)
 
     if ( img != NULL ) 
     {
+        std::cout << "appending to head" << std::endl;
         m_modified = true;
-        DRect rect = img->getNewBounds(img->setupMesh(m_geoProjection)); 
+        DRect rect = img->getGeographicBounds();
         m_imgList.push_front(std::pair<ProjImageInInterface*, DRect>(img,rect));
         return true;
     } 
@@ -125,7 +141,7 @@ inline bool ProjImageInList::appendTail(ProjImageInInterface * img)
     if ( img != NULL )
     {
         m_modified = true;
-        DRect rect = img->getNewBounds(img->setupMesh(m_geoProjection)); 
+        DRect rect = img->getGeographicBounds(); 
         m_imgList.push_back(std::pair<ProjImageInInterface*, DRect>(img,rect));
         return true;
     }
@@ -224,35 +240,73 @@ inline ProjImageScale ProjImageInList::getPixelScale()const
 /****************************************************************************/
 
 inline const unsigned char * 
+ProjImageInList::getPixel( const double & latit, const double & longit)const
+{
+    std::list<std::pair<ProjImageInInterface*, DRect> >::const_iterator kit;
+    //std::cout << std::endl << "latitude: " << latit << std::endl;
+    //std::cout << "longitude" << longit << std::endl;
+    
+    for ( kit = m_imgList.begin(); kit != m_imgList.end(); ++kit ) 
+    {
+        // if the latitude and longitude is contained within the 
+        // bounding box
+        if ( latit  <= kit->second.top && 
+             latit  >= kit->second.bottom && 
+             longit <= kit->second.right && 
+             longit >= kit->second.left )
+        {
+            // std::cout << "not NULL!!!!!!!!!!!!!!!!" << std::endl;
+            return kit->first->getPixel(latit,longit); 
+        } 
+    }
+    
+    // else return an empty pixel.
+    return NULL; 
+}
+
+/****************************************************************************/
+
+inline int ProjImageInList::getPhotometric() const 
+{ 
+   // TODO: always make appear as a RGB.
+   if ( m_imgList.size() > 0 )
+       return m_imgList.begin()->first->getPhotometric();
+   else 
+       throw GeneralException("Error, list is empty.");
+} 
+
+/****************************************************************************/
+
+/// \note The assumption here is everything has the same BPS in the list.  
+/// This could NOT be the case, in which case this function will, 
+/// inevitably, blow up.  
+inline int ProjImageInList::getBPS() const 
+{ 
+   if ( m_imgList.size() > 0 )
+       return m_imgList.begin()->first->getBPS();
+   else
+       throw GeneralException("Error, list is empty.");
+}  
+
+/****************************************************************************/
+
+inline int ProjImageInList::getSPP() const 
+{ 
+   // TODO: account for different samples per pixels.
+   if ( m_imgList.size() > 0 )
+       return m_imgList.begin()->first->getSPP();
+   else
+       throw GeneralException("Error, list is empty.");
+}  
+
+/****************************************************************************/
+
+inline const unsigned char * 
 ProjImageInList::getPixel(const unsigned int & x, const unsigned int & y)const
 {
-   /// TODO.......
    (void)x;
    (void)y;
    return NULL; 
-}
-
-/****************************************************************************/
-inline
-DRect ProjImageInList::getNewBounds(const PmeshLib::ProjectionMesh & mesh)const
-{
-    // TODO ............
-    (void)mesh;
-    return *(new DRect);
-}
-
-/****************************************************************************/
-inline
-const PmeshLib::ProjectionMesh & ProjImageInList::setupMesh(
-    const ProjLib::Projection & secondProjection,
-    unsigned int divisions, 
-    MathLib::InterpolatorType interp )
-{
-    // TODO.............
-    (void)secondProjection;
-    (void)divisions;
-    (void)interp;
-    return *(new PmeshLib::ProjectionMesh);
 }
 
 /****************************************************************************/

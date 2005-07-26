@@ -19,6 +19,7 @@
  *
  */
 
+
 namespace USGSMosix 
 {
 
@@ -98,6 +99,34 @@ inline int Math<T>::truncate(int a, double prec) throw()
 {
     (void)prec;
     return a;
+}
+
+/*****************************************************************************/
+
+template<typename T> 
+inline T Math<T>::getMin( const std::list<T>& l ) throw()
+{
+   T _min = *(l.begin());
+   
+   for( typename std::list<T>::const_iterator i = ++l.begin(); 
+        i != l.end(); ++i)
+        if ( *i < _min ) _min = *i;
+
+   return _min;
+}
+
+/*****************************************************************************/
+
+template<typename T> 
+inline T Math<T>::getMax( const std::list<T>& l ) throw()
+{
+    T _max = *(l.begin());
+
+    for( typename std::list<T>::const_iterator i = ++l.begin(); 
+         i != l.end(); ++i) 
+        if ( *i > _max ) _max = *i;
+
+    return _max;
 }
 
 /*****************************************************************************/

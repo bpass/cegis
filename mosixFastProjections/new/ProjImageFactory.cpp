@@ -14,7 +14,7 @@
  *
  */
 
-
+#include <utility>
 #include "ProjImageIn.h"
 #include "ProjImageFactory.h"
 
@@ -44,18 +44,25 @@ ProjImageInInterface*
 ProjImageFactory::makeProjImageInList( std::list<ProjImageParams*> & params )
 {
     ProjImageInInterface *temp(NULL);
-    ProjImageInList *list = new ProjImageInList; 
-    m_images.push_back(temp);
+    // ProjImageInList *list = new ProjImageInList(7631, 6211); 
+    ProjImageInList *list = new ProjImageInList(763, 621); 
+    //ProjImageInList *list = new ProjImageInList(1200, 2400); 
+    // TODO : m_images.push_back(list);
+    
+    std::cout << params.size() << std::endl;
     
     for( std::list<ProjImageParams*>::iterator i = params.begin();
          i != params.end();
          ++i  )
     {
+        std::cout << "making new image" << std::endl;
         temp = new ProjImageIn( *(*i), m_reader);
         m_images.push_front(temp);
-        list->appendHead(temp); 
+        assert (list->appendHead(temp)); 
     }
     
+        std::cout << "done making new image" << std::endl;
+        std::cout << "size: " << m_images.size() << std::endl;
     return list;
 }
 

@@ -91,9 +91,10 @@ class FromMultiGeoProjector : public ProjectorInterface
        ProjIOLib::ProjectionReader & m_projReader;
        ProjImageParams & m_params;
        
-       int m_pmeshDivisions; ///< Used for the number of divisions vertically 
-                             ///< and horizontally made for the image when 
-                             ///< calculating a mesh
+       unsigned int m_pmeshDivisions; ///< Used for the number of divisions 
+                                      ///<vertically  and horizontally made 
+                                      ///< for the image when 
+                                      ///< calculating a mesh
                              
        MathLib::InterpolatorType m_pmeshInterp; ///< An enum type which can be 
                                                 ///< found in 

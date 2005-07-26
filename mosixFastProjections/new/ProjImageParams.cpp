@@ -5,7 +5,7 @@
  *
  * \file ProjImageParams.h
  *
- * \date $Date: 2005/07/06 23:16:45 $
+ * \date $Date: 2005/07/26 16:30:16 $
  *
  * \version 0.1
  * 
@@ -32,7 +32,7 @@ ProjImageParams::ProjImageParams( std::string paramFilename, FileType ft )
 
 ProjImageParams::~ProjImageParams()
 {
-    if ( m_projection != NULL ) delete m_projection; 
+    //TODO if ( m_projection != NULL ) delete m_projection; 
 }
 
 istream& operator>>( istream& in, ProjImageParams& params )
@@ -57,21 +57,21 @@ ostream& operator<<( ostream& out, const ProjImageParams& params )
     if ( params.m_projection != NULL )
     {
         out << "Image Information-------------------------------- " << std::endl
-        << "Image file: " << params.m_imageFilename << std::endl;
+            << "Image file: " << params.m_imageFilename << std::endl;
 
         if ( params.m_fileType == ProjImageParams::INPUT )
         {
             out <<"File type: Input" << std::endl
-            <<"West Longitude (deg.): "<<params.m_bounds.left<< std::endl
-            <<"East Longitude (deg.): "<<params.m_bounds.right<<std::endl
-            <<"North Latitude (deg.): "<< params.m_bounds.top << std::endl
-            <<"South Latitude (deg.): "<<params.m_bounds.bottom<<std::endl
-            << std::endl;
+                <<"Left Bound (deg.): "<<params.m_bounds.left<< std::endl
+                <<"Right Bound (deg.): "<<params.m_bounds.right<<std::endl
+                <<"Top Bound (deg.): "<< params.m_bounds.top << std::endl
+                <<"Bottom Bound (deg.): "<<params.m_bounds.bottom<<std::endl
+                << std::endl;
         } else
             out <<"File type: Output" << std::endl;
 
         out << "Projection Information--------------------------- "<< std::endl
-        << params.m_projection->toString() << std::endl;
+            << params.m_projection->toString() << std::endl;
     } else
         out << "No input projection created." << std::endl;
 
@@ -87,13 +87,9 @@ Projection * ProjImageParams::constructProjection(istream& in)
     double NatOriginLat = 0.0;
     double FalseEasting = 0.0;
     double FalseNorthing = 0.0;
-//    double FalseOriginLat = 0.0;
     double CenterLong = 0.0;
     double CenterLat = 0.0;
-//    double CenterEasting = 0.0;
-//    double CenterNorthing = 0.0;
     double ScaleAtNatOrigin = 1.0;
-//    double AzimuthAngle = 0.0;
     double StraightVertPoleLong = 0.0;
     double SemiMajorAxis = 0.0; // MS: addition Thu Jun  9 2005
     double SemiMinorAxis = 0.0; // MS: addition Thu Jun  9 2005
@@ -520,7 +516,7 @@ Projection * ProjImageParams::constructProjection(istream& in)
 
     m_projection = proj;
     
-    return proj;
+    return m_projection;
 }
 
 

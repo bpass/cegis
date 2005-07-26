@@ -59,7 +59,7 @@ int main(int argc, char** argv )
     ProjectorInterface * projector = NULL;
     ProjImageParams * outputFileParams = NULL;
     std::list<ProjImageParams* > inputFiles;  // contains parameter filenames
-    ProjImageInInterface * input = NULL;
+  //  ProjImageInInterface * input = NULL;
    
     try { 
         // objects for projector
@@ -81,13 +81,15 @@ int main(int argc, char** argv )
         // iterate through the input files
         for ( int i = 1; i < argc - 1; ++i )
         {
+           std::cout << " new input file " << std::endl;    
            inputFiles.push_back( new ProjImageParams( std::string(argv[i]), 
                                                       ProjImageParams::INPUT ));
 
-           input = new ProjImageIn( *(*inputFiles.begin()), projReader ); 
-           
+//           input = new ProjImageIn( *(*inputFiles.begin()), projReader ); 
         }
-
+        
+        std::cout << inputFiles.size() << std::endl;
+            
         // assign output parameter files
         outputFileParams = new ProjImageParams( std::string(argv[argc - 1]), 
                                                 ProjImageParams::OUTPUT );
@@ -99,8 +101,9 @@ int main(int argc, char** argv )
             projector = new FromMultiGeoProjector( projWriter,
                                                    projReader,
                                                    *outputFileParams,
-                                                   *input
-                                                   /* WAS: *inputImageList */ );
+                                                 //  *input
+                                                   *inputImageList 
+                                                  );
             projector->project();
         }
 

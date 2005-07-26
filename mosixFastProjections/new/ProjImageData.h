@@ -9,7 +9,7 @@
  *
  * \version 0.1
  * 
- * \file ProjImage.h 
+ * \file ProjImageData.h 
  * 
  * \brief The ProjImage object is meant to be a representation 
  * of a image for an image projection and all of its 
@@ -34,8 +34,7 @@
 namespace USGSMosix
 {
 
-class ProjImageData : public virtual ProjImageOutInterface,
-                      public virtual ProjImageInInterface
+class ProjImageData : public virtual ProjImageDataInterface
 {
     public:
         ProjImageData( DRect bounds, 
@@ -72,41 +71,18 @@ class ProjImageData : public virtual ProjImageOutInterface,
         void setWidth( const long int& w);
         void setHeight(const long int& h);
         void setFilename( std::string & s );
-       
-        virtual void putScanline( scanline_t scanline, 
-                                  const unsigned int& lineNo) 
-        {
-            (void)scanline;
-            (void)lineNo;
-        }
-        
-        virtual void putScanlines( scanlines_t scanlines, 
-                                   const unsigned int& height ) 
-        {
-            (void)scanlines;
-            (void)height;
-        } 
-        
-        virtual const unsigned char * getPixel( const unsigned int& x, 
-                                                const unsigned int& y ) const 
-        {
-            (void)x;
-            (void)y;
-            return NULL;
-        }
-        
-        virtual DRect getNewBounds(const PmeshLib::ProjectionMesh & mesh)const
-        {
-            DRect d;
-            (void)mesh;
-            return d;
-        }
 
-         virtual const PmeshLib::ProjectionMesh & setupMesh(
+        virtual const PmeshLib::ProjectionMesh & setupMesh(
                 const ProjLib::Projection & secondProjection,
                 unsigned int divisions = kgMeshDivisions , 
-                MathLib::InterpolatorType interp = kgInterpolator );
+                MathLib::InterpolatorType interp = kgInterpolator )const;
 
+        virtual const PmeshLib::ProjectionMesh & setupReverseMesh(
+                const ProjLib::Projection & secondProjection,
+                const DRect & boundaries, 
+                unsigned int divisions = kgMeshDivisions , 
+                MathLib::InterpolatorType interp = kgInterpolator )const;
+        
     protected:
         std::string getFileExtension( const std::string& filename );
         ProjImageScale m_scale;

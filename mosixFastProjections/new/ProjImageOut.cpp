@@ -47,7 +47,6 @@ ProjImageOut::ProjImageOut ( const ProjLib::Projection & proj,
    this->setBounds(bounds);
     
     m_scale = newScale;
-    m_scale.setProjSys( proj.getProjectionSystem() );
     setupImage(filename, heightThenWidth, newScale, photometric, bps, spp ); 
 }
 
@@ -55,7 +54,6 @@ ProjImageOut::ProjImageOut ( const ProjLib::Projection & proj,
 
 ProjImageOut::~ProjImageOut()
 {
-    std::cout << "ProjImageOut destructor called." << std::endl;
 }
 
 /****************************************************************************/
@@ -85,12 +83,10 @@ void ProjImageOut::setupImage( std::string filename,
         throw GeneralException("Height and width problem.");
 
     strExtension = getFileExtension(filename);
-    std::cout << strExtension << std::endl;
     
     if ( !cmp_nocase( strExtension, "TIFF" ) ||
          !cmp_nocase( strExtension, "TIF" ) ) 
     {
-        std::cout << " outputing  tiff " << std::endl;
         // for incorrect const in projlib.
         if( m_proj != NULL )  proj = m_proj->clone();
         else throw GeneralException("No Projection.");
@@ -113,17 +109,15 @@ void ProjImageOut::setupImage( std::string filename,
     } else if ( !cmp_nocase( strExtension, "JPEG" ) || 
                 !cmp_nocase( strExtension, "JPG" ) ) 
     {
-       std::cout << " outputing  jpeg " << std::endl;
        if(!( m_file = new(nothrow)JPEGImageOFile( filename,
                        heightThenWidth.first,
                        heightThenWidth.second,
                        photometric,
-                       70 )))
+                       80 ))) // JPEG quality
            throw std::bad_alloc();
         
     } else if ( !cmp_nocase( strExtension, "PNG" ) ) 
     {  
-       std::cout << " outputing png " << std::endl;
        if (!( m_file = new(nothrow)PNGImageOFile( filename,
                         heightThenWidth.first,
                         heightThenWidth.second,

@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/07/06 23:16:45 $
+ * \date $Date: 2005/07/26 16:30:16 $
  *
  * \version 0.1
  * 
@@ -26,6 +26,7 @@
 #include "ProjectorInterface.h"
 #include "ProjImageParams.h"
 #include <ImageLib/CacheManager.h>
+#include <ProjectionLib/GeographicProjection.h>
 
 namespace USGSMosix 
 {
@@ -34,22 +35,31 @@ namespace USGSMosix
  *  reprojecting a specific image (i.e., its scale, samples
  *  per pixel, bits per sample, photometric, filename, etc.)
  */
-class ProjImageIn : private ProjImageData,
+class ProjImageIn : private virtual ProjImageData,
                     public virtual ProjImageInInterface
-                    
 {
     public:
-  
+        
         ProjImageIn( const ProjImageParams & params,  
                      ProjIOLib::ProjectionReader& projReader );
         
         virtual ~ProjImageIn() {}
-        virtual DRect getNewBounds(const PmeshLib::ProjectionMesh & mesh)const; 
+        
+        virtual DRect getNewBounds(const PmeshLib::ProjectionMesh & mesh) const;
+        
+        virtual DRect getGeographicBounds()const;
+        
         const_scanline_t getCachedLine( unsigned int line ) const; 
+        
         virtual const unsigned char *  
         getPixel( const unsigned int& x, const unsigned int& y ) const;
 
+        virtual const unsigned char * 
+        getPixel( const double& latitude, const double& longitude ) const;
+
+        
     private:
+        
         double getMax( const std::list<double>& l )const;
         double getMin( const std::list<double>& l )const;
         ProjImageScale calculateScale(const DRect& bounds);
@@ -58,7 +68,13 @@ class ProjImageIn : private ProjImageData,
         ProjImageParams m_parameters;
         ProjIOLib::ProjectionReader& m_projReader;
         USGSImageLib::CacheManager* m_cache;
-        
+        static const ProjLib::GeographicProjection m_geoProjection; 
+
+        int m_spp;
+        mutable std::pair<long int, const unsigned char *> m_lastLine;
+        mutable const PmeshLib::ProjectionMesh * m_geoMesh;
+        mutable DRect m_geoBounds; 
+        mutable bool m_haveGeoBounds;
 };
 
 } // namespace 

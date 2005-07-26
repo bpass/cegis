@@ -51,7 +51,7 @@ const double kgEqTol = 0.001f;
 /*! Default divisions in the width, in the height for the projection
  *  mesh that is created.  i.e., if kgMeshDivisions is 4, then the
  *  number of distinct areas in the mesh would be 16. */
-const unsigned int kgMeshDivisions = 4; 
+const unsigned int kgMeshDivisions = 6; 
 
 /*! Default type of interpolation that will be used for the MathLib. */
 const MathLib::InterpolatorType kgInterpolator = MathLib::CubicSpline;

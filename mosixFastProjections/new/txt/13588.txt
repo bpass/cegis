@@ -1,0 +1,8 @@
+/work/tiffs/iowa/13588.jpg
+-93.09
+-93.02
+42.53
+42.58
+GEO
+NAD83
+METERS

@@ -1,0 +1,8 @@
+/work/tiffs/iowa/left.tif
+-93.16
+-93.09
+42.53
+42.58
+GEO
+NAD83
+METERS

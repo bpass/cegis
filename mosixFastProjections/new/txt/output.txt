@@ -1,6 +1,6 @@
-/work/tiffs/out.jpg
+/work/tiffs/out.png
 TM
-NAD83
+NAD27
 METERS
 1
 -95

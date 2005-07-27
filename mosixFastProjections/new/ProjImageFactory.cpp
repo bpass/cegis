@@ -41,18 +41,18 @@ ProjImageFactory::makeProjImageIn( const ProjImageParams & param )
 }
 
 ProjImageInInterface* 
-ProjImageFactory::makeProjImageInList( std::list<ProjImageParams*> & params )
+ProjImageFactory::makeProjImageInList( std::list<ProjImageParams*> & inParams,
+                                       ProjImageParams & outParams )
 {
     ProjImageInInterface *temp(NULL);
-    // ProjImageInList *list = new ProjImageInList(7631, 6211); 
-    ProjImageInList *list = new ProjImageInList(763, 621); 
-    //ProjImageInList *list = new ProjImageInList(1200, 2400); 
+    std::pair<long int, long int> hwPair = outParams.getHeightWidthPair();
+    ProjImageInList *list = new ProjImageInList(hwPair.first, hwPair.second); 
     // TODO : m_images.push_back(list);
     
-    std::cout << params.size() << std::endl;
+    std::cout << inParams.size() << std::endl;
     
-    for( std::list<ProjImageParams*>::iterator i = params.begin();
-         i != params.end();
+    for( std::list<ProjImageParams*>::iterator i = inParams.begin();
+         i != inParams.end();
          ++i  )
     {
         std::cout << "making new image" << std::endl;

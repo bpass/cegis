@@ -58,7 +58,7 @@ int main(int argc, char** argv )
 {
     ProjectorInterface * projector = NULL;
     ProjImageParams * outputFileParams = NULL;
-    std::list<ProjImageParams* > inputFiles;  // contains parameter filenames
+    std::list<ProjImageParams* > inputFileParams;  
   //  ProjImageInInterface * input = NULL;
    
     try { 
@@ -82,19 +82,20 @@ int main(int argc, char** argv )
         for ( int i = 1; i < argc - 1; ++i )
         {
            std::cout << " new input file " << std::endl;    
-           inputFiles.push_back( new ProjImageParams( std::string(argv[i]), 
-                                                      ProjImageParams::INPUT ));
+           inputFileParams.push_back( new ProjImageParams(std::string(argv[i]), 
+                                      ProjImageParams::INPUT ) );
 
-//           input = new ProjImageIn( *(*inputFiles.begin()), projReader ); 
+         //  input = new ProjImageIn( *(*inputFileParams.begin()), projReader); 
         }
         
-        std::cout << inputFiles.size() << std::endl;
+        std::cout << inputFileParams.size() << std::endl;
             
         // assign output parameter files
         outputFileParams = new ProjImageParams( std::string(argv[argc - 1]), 
                                                 ProjImageParams::OUTPUT );
         
-        inputImageList = imageFactory.makeProjImageInList(inputFiles); 
+        inputImageList = imageFactory.makeProjImageInList( inputFileParams, 
+                                                           *outputFileParams ); 
        
         if ( inputImageList != NULL  && outputFileParams != NULL )
         {
@@ -114,7 +115,7 @@ int main(int argc, char** argv )
 
     if ( projector != NULL ) delete projector;
     if ( outputFileParams != NULL ) delete outputFileParams;
-    cleanupPtrList(inputFiles);
+    cleanupPtrList(inputFileParams);
 
     return 0;
 }

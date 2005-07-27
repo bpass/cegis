@@ -7,7 +7,7 @@
  *
  * \file InputReader.h
  *
- * \date $Date: 2005/07/06 23:16:45 $
+ * \date $Date: 2005/07/27 17:16:37 $
  *
  * \version 0.1
  * 
@@ -21,6 +21,8 @@
 #include <ProjectionIO/ProjectionReader.h>
 #include <ProjectionIO/ProjectionWriter.h>
 #include <DRect.h>
+#include <utility>
+#include "GeneralException.h"
 
 namespace USGSMosix 
 {
@@ -42,6 +44,7 @@ class ProjImageParams
         std::string getFilename()const { return m_imageFilename; }
         DRect getBounds()const  { return m_bounds;  }
         const Projection * getProjection()const { return m_projection; } 
+        std::pair<long int, long int> getHeightWidthPair(); 
        
     private:
         Projection * constructProjection(istream& in);
@@ -49,6 +52,7 @@ class ProjImageParams
         std::string m_imageFilename;
         DRect m_bounds;
         Projection * m_projection; 
+        long int m_outHeight, m_outWidth;
 };
 
 } // namespace

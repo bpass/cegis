@@ -315,11 +315,10 @@ const PmeshLib::ProjectionMesh & translatingMesh )
       
         std::cout << "height:" << outHeight << std::endl
                   << "width :" << outWidth << std::endl;
-        
        
-        std::cout << "Constructing source image: "
-                  << "bits per sample: " << m_imgIn.getBPS() 
-                  << "samples per pixel: " << m_imgIn.getSPP() << std::endl;
+       //  std::cout << "Constructing source image: "
+       //           << "bits per sample: " << m_imgIn.getBPS() 
+       //           << "samples per pixel: " << m_imgIn.getSPP() << std::endl;
                     
         
         // set what we've learned up in the new image object.

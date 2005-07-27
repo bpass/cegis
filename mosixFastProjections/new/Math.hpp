@@ -72,7 +72,7 @@ inline T Math<T>::min(T a, T b) throw()
 template<typename T>
 inline T Math<T>::floor(double a) throw()
 {
-    return static_cast<T>(static_cast<long long int>(a));
+    return static_cast<T>(static_cast<long int>(a));
 }
 
 /*****************************************************************************/
@@ -80,7 +80,7 @@ inline T Math<T>::floor(double a) throw()
 template<typename T>
 inline T Math<T>::ceil(double b) throw()
 {
-    return static_cast<T>(static_cast<long long int>(b + 0.5f));
+    return static_cast<T>(static_cast<long int>(b + 0.5f));
 }
 
 /*****************************************************************************/

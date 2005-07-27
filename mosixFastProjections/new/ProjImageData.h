@@ -11,9 +11,13 @@
  * 
  * \file ProjImageData.h 
  * 
- * \brief The ProjImage object is meant to be a representation 
+ * \brief A ProjImage object is meant to be a representation 
  * of a image for an image projection and all of its 
- * implicit characteristics.
+ * implicit characteristics.  The ProjImageData object 
+ * exploits the commonality between ProjImageIn and ProjImageOut
+ * and avoids repeated code by being in the inheritence tree
+ * of both, implementing their common get/set and setup mesh 
+ * funcitons.
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 

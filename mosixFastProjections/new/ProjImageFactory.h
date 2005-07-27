@@ -41,8 +41,9 @@ class ProjImageFactory
         makeProjImageIn( const ProjImageParams & param );
         
         ProjImageInInterface* 
-        makeProjImageInList( std::list<ProjImageParams*>& params );
-       
+        makeProjImageInList( std::list<ProjImageParams*>& params,
+                             ProjImageParams & outputParams );
+        
     private:
         std::list<ProjImageInInterface *> m_images;
         ProjectionWriter & m_writer;

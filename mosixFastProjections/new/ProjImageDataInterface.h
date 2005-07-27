@@ -12,9 +12,11 @@
  * 
  * \file ProjImageDataInterface.h 
  * 
- * \brief The ProjImage object is meant to be a representation 
+ * \brief A ProjImage object is meant to be a representation 
  * of a image for an image projection and all of its 
- * implicit characteristics.
+ * implicit characteristics.  The ProjImageDataInterface defines
+ * the common set and get functions for the ProjImage set of 
+ * objects.
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 

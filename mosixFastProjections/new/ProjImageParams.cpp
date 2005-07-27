@@ -5,7 +5,7 @@
  *
  * \file ProjImageParams.h
  *
- * \date $Date: 2005/07/26 16:30:16 $
+ * \date $Date: 2005/07/27 17:16:37 $
  *
  * \version 0.1
  * 
@@ -35,6 +35,16 @@ ProjImageParams::~ProjImageParams()
     //TODO if ( m_projection != NULL ) delete m_projection; 
 }
 
+std::pair<long int, long int> ProjImageParams::getHeightWidthPair()
+{
+    if ( m_fileType == OUTPUT ) 
+    {
+        std::pair<long int, long int> hw(m_outHeight,m_outWidth);
+        return hw;
+    } else
+        throw GeneralException("Error: no height width data for input params.");
+}
+
 istream& operator>>( istream& in, ProjImageParams& params )
 {
     // get input data
@@ -46,10 +56,15 @@ istream& operator>>( istream& in, ProjImageParams& params )
         >> params.m_bounds.right
         >> params.m_bounds.top
         >> params.m_bounds.bottom;
+    } else 
+    {
+        in >> params.m_outHeight
+        >> params.m_outWidth; 
     }
 
     params.m_projection = params.constructProjection( in );
     return in;
+    
 }
 
 ostream& operator<<( ostream& out, const ProjImageParams& params )
@@ -63,12 +78,16 @@ ostream& operator<<( ostream& out, const ProjImageParams& params )
         {
             out <<"File type: Input" << std::endl
                 <<"Left Bound (deg.): "<<params.m_bounds.left<< std::endl
-                <<"Right Bound (deg.): "<<params.m_bounds.right<<std::endl
+                <<"Right Bound (deg.): "<<params.m_bounds.right<< std::endl
                 <<"Top Bound (deg.): "<< params.m_bounds.top << std::endl
-                <<"Bottom Bound (deg.): "<<params.m_bounds.bottom<<std::endl
+                <<"Bottom Bound (deg.): "<<params.m_bounds.bottom<< std::endl
                 << std::endl;
-        } else
-            out <<"File type: Output" << std::endl;
+        } else 
+        {
+            out <<"File type: Output" << std::endl
+                <<"Output Height (pixels): " << params.m_outHeight << std::endl
+                <<"Output Width  (pixels): " << params.m_outWidth << std::endl;
+        }
 
         out << "Projection Information--------------------------- "<< std::endl
             << params.m_projection->toString() << std::endl;
@@ -515,7 +534,6 @@ Projection * ProjImageParams::constructProjection(istream& in)
     }
 
     m_projection = proj;
-    
     return m_projection;
 }
 

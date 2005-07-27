@@ -18,7 +18,7 @@
 # @file Makefile.am
 # @author Austin Hartman
 #
-# $Id: Makefile,v 1.2 2005/07/27 17:16:37 mschisler Exp $
+# $Id: Makefile.auto,v 1.1 2005/07/27 17:16:37 mschisler Exp $
 #
 
 # SUBDIRS = tests
@@ -64,11 +64,7 @@ am_reproject_OBJECTS = driver.$(OBJEXT) ProjImageFactory.$(OBJEXT) \
 	ProjImageIn.$(OBJEXT) ProjImageParams.$(OBJEXT) \
 	ProjImageData.$(OBJEXT) ProjImageInList.$(OBJEXT)
 reproject_OBJECTS = $(am_reproject_OBJECTS)
-reproject_DEPENDENCIES = /work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
-	/work/mosixFastProjections/include/Projector/.obj/ProjectorException.o \
-	/work/mosixFastProjections/include/Projector/.obj/ProjUtil.o \
-	/work/mosixFastProjections/.obj/JPEGImageOFile.o \
-	/work/mosixFastProjections/.obj/PNGImageOFile.o
+reproject_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -167,32 +163,22 @@ sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 sysconfdir = ${prefix}/etc
 target_alias = 
-OBJDIR = .obj
-COMPILE = %OD
 reproject_SOURCES = driver.cpp ProjImageFactory.cpp ProjImageOut.cpp \
 FromMultiGeoProjector.cpp  ProjImageIn.cpp ProjImageParams.cpp \
 ProjImageData.cpp ProjImageInList.cpp
 
-AM_CPPFLAGS = -pg -g -Wno-deprecated -Wall -W -pedantic
-reproject_LDFLAGS = -pg 
-reproject_LDADD = \
-/work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
-/work/mosixFastProjections/include/Projector/.obj/ProjectorException.o \
-/work/mosixFastProjections/include/Projector/.obj/ProjUtil.o \
-/work/mosixFastProjections/.obj/JPEGImageOFile.o \
-/work/mosixFastProjections/.obj/PNGImageOFile.o \
--L/work/mosixFastProjections/lib \
--L/usr/local/lib \
--L/usr/lib \
--lProjectionMesh -lMathLib -lProjectionIO -lImageLib \
--lgeotiff -ltiff -lProjection -lMiscUtils \
--lpthread -lgctpc -lboost_thread -lpng -ljpeg 
+reproject_LDFLAGS = -L/work/mosixFastProjections/lib \
+   		            -L/usr/local/lib \
+			        -L/usr/lib \
+                    -pg -lProjectionMesh -lMathLib -lProjectionIO -lImageLib \
+                    -lgeotiff -ltiff -lProjection -lMiscUtils \
+			        -lpthread -lgctpc -lboost_thread -lpng -ljpeg 
 
 INCLUDES = -I/work/mosixFastProjections/include/Projector \
--I/usr/src/linux/include \
--I/work/mosixFastProjections/include \
--I/work/mosixFastProjections/ImageLib \
--I/work/mosixFastProjections/
+           -I/usr/src/linux/include \
+           -I/work/mosixFastProjections/include \
+           -I/work/mosixFastProjections/ImageLib \
+           -I/work/mosixFastProjections/
 
 all: all-am
 

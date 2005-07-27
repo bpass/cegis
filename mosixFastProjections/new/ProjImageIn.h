@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/07/26 16:30:16 $
+ * \date $Date: 2005/07/27 17:16:37 $
  *
  * \version 0.1
  * 
@@ -56,7 +56,6 @@ class ProjImageIn : private virtual ProjImageData,
 
         virtual const unsigned char * 
         getPixel( const double& latitude, const double& longitude ) const;
-
         
     private:
         

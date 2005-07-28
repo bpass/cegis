@@ -18,7 +18,7 @@
 # @file Makefile.am
 # @author Austin Hartman
 #
-# $Id: Makefile,v 1.2 2005/07/27 17:16:37 mschisler Exp $
+# $Id: Makefile,v 1.3 2005/07/28 00:30:09 mschisler Exp $
 #
 
 # SUBDIRS = tests
@@ -106,7 +106,7 @@ AMDEP_TRUE =
 AMTAR = ${SHELL} /home/mschisler/MOSIX/new/missing --run tar
 AUTOCONF = ${SHELL} /home/mschisler/MOSIX/new/missing --run autoconf
 AUTOHEADER = ${SHELL} /home/mschisler/MOSIX/new/missing --run autoheader
-AUTOMAKE = automake --foreign
+AUTOMAKE = ${SHELL} /home/mschisler/MOSIX/new/missing --run automake-1.8
 AWK = gawk
 CPPFLAGS = 
 CXX = g++
@@ -173,7 +173,13 @@ reproject_SOURCES = driver.cpp ProjImageFactory.cpp ProjImageOut.cpp \
 FromMultiGeoProjector.cpp  ProjImageIn.cpp ProjImageParams.cpp \
 ProjImageData.cpp ProjImageInList.cpp
 
-AM_CPPFLAGS = -pg -g -Wno-deprecated -Wall -W -pedantic
+AM_CPPFLAGS = -pg -g -Wno-deprecated -Wall -W -pedantic \
+-I/work/mosixFastProjections/include/Projector \
+-I/usr/src/linux/include \
+-I/work/mosixFastProjections/include \
+-I/work/mosixFastProjections/ImageLib \
+-I/work/mosixFastProjections/
+
 reproject_LDFLAGS = -pg 
 reproject_LDADD = \
 /work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
@@ -187,12 +193,6 @@ reproject_LDADD = \
 -lProjectionMesh -lMathLib -lProjectionIO -lImageLib \
 -lgeotiff -ltiff -lProjection -lMiscUtils \
 -lpthread -lgctpc -lboost_thread -lpng -ljpeg 
-
-INCLUDES = -I/work/mosixFastProjections/include/Projector \
--I/usr/src/linux/include \
--I/work/mosixFastProjections/include \
--I/work/mosixFastProjections/ImageLib \
--I/work/mosixFastProjections/
 
 all: all-am
 

@@ -257,24 +257,26 @@ bool ProjImageIn::openImageWithParamFile(const std::string& filename)
 
 /*****************************************************************************/
 
-inline const unsigned char * ProjImageIn::getPixel( 
+inline const PixelInterface<sample_t> * ProjImageIn::getPixel( 
 const unsigned int& x, const unsigned int& y ) const 
 {
-    if ( static_cast<unsigned int>(m_lastLine.first) == y ) 
-    {
-        return (m_lastLine.second +( x * m_spp ) );
-        
-    } else
+    if ( static_cast<unsigned int>(m_lastLine.first) != y ) 
     {
         m_lastLine.second = m_cache->getRawScanline(y);
         m_lastLine.first = y;
-        return (m_lastLine.second + (x * m_spp) );
     }
+    
+    if ( getPhotometric() == PHOTO_RGB ) 
+        return new PixelRGB<sample_t>(m_lastLine.second + (x * m_spp) );
+    else if ( getPhotometric() == PHOTO_GREY ) 
+        return new PixelGrey<sample_t>(m_lastLine.second + (x * m_spp) );
+    else
+        throw GeneralException("Unsupported image coloring system.");
 }
 
 /*****************************************************************************/
 
-const unsigned char * 
+const PixelInterface<sample_t> *
 ProjImageIn::getPixel( const double& latitude, const double& longitude ) const
 {
     static long int xSrcPixel(0), ySrcPixel(0); 

@@ -176,8 +176,7 @@ scanlines_t FromMultiGeoProjector::project( long unsigned int beginLine,
     long unsigned int xPixelCount(0), yPixelCount(beginLine);
     int sppCount(0);
     scanlines_t scanlines = NULL;
-    const unsigned char * tmpPixel = NULL;
-    
+    const PixelInterface<unsigned char>* tmpPixel = NULL;
     std::cout << " begin projecting " << std::endl;
     
     try {
@@ -203,6 +202,10 @@ scanlines_t FromMultiGeoProjector::project( long unsigned int beginLine,
         if ( !(scanlines = new(std::nothrow)unsigned char*[endLine-beginLine]))
             throw std::bad_alloc();
 
+        if ( m_imgOut->getPhotometric() != PHOTO_RGB && 
+             m_imgOut->getPhotometric() != PHOTO_GREY ) 
+            throw GeneralException("Unsupported output format.");
+        
         for ( unsigned int i = 0; i < (endLine-beginLine); ++i )
         {
             if (!(scanlines[i] = new(std::nothrow)unsigned char[outWidth*spp]))
@@ -214,9 +217,9 @@ scanlines_t FromMultiGeoProjector::project( long unsigned int beginLine,
                                                m_pmeshDivisions,
                                                m_pmeshInterp ); 
 
-//        std::cout << "outscale x: " << outScale.x << std::endl;
-  //      std::cout << "outscale y: " << outScale.y << std::endl;
-    std::cout << " begin reverse projection " << std::endl;
+        //      std::cout << "outscale x: " << outScale.x << std::endl;
+        //      std::cout << "outscale y: " << outScale.y << std::endl;
+        std::cout << " begin reverse projection " << std::endl;
 
         // This is a reverse projection, so in other words,  we're iterating 
         // over the new image's x/y pixels with the double for loops, using 
@@ -233,15 +236,15 @@ scanlines_t FromMultiGeoProjector::project( long unsigned int beginLine,
                 xSrcScale = outBounds.left + outScale.x * xPixelCount;
                 ySrcScale = outBounds.top - outScale.y * yPixelCount;
     
- //               std::cout << "xsrcscale: " << xSrcScale << std::endl;
-   //             std::cout << "ysrcscale: " << ySrcScale << std::endl;
+   //           std::cout << "xsrcscale: " << xSrcScale << std::endl;
+   //           std::cout << "ysrcscale: " << ySrcScale << std::endl;
                 
                 // xSrcScale is now a latitude after this call
                 // ySrcScale is now a longitude after this call
                 m_reverseMesh->projectPoint(xSrcScale, ySrcScale);
                 
                 // get a pixel from these latitude and longitudes
-                tmpPixel = m_imgIn.getPixel(ySrcScale, xSrcScale);
+                tmpPixel=m_imgIn.getPixel(ySrcScale, xSrcScale);
                 
                 if ( tmpPixel == NULL ) 
                 {
@@ -254,14 +257,25 @@ scanlines_t FromMultiGeoProjector::project( long unsigned int beginLine,
                    
                 } else // if they are instead in bounds
                 { 
-                //    std::cout << "in " << std::endl;
-                    
-                    for( sppCount = 0; sppCount < spp; ++sppCount)
-                   {
-                       scanlines[(yPixelCount - beginLine)]
-                                [ xPixelCount*spp + sppCount ] = 
-                       tmpPixel[sppCount]; 
-                   }
+                    //    std::cout << "in " << std::endl;
+                    if ( m_imgOut->getPhotometric() == PHOTO_RGB ) 
+                    {
+                         tmpPixel->getRGB( 
+                                scanlines[(yPixelCount - beginLine)]
+                                         [ xPixelCount*spp],
+                                scanlines[(yPixelCount - beginLine)]
+                                         [ xPixelCount*spp + 1],
+                                scanlines[(yPixelCount - beginLine)]
+                                         [ xPixelCount*spp + 2]  );
+                     
+                    } else // i.e., photometric == PHOTO_GREY, which
+                           // is one sample per pixel.
+                    {
+                        tmpPixel->getGrey(scanlines[(yPixelCount - beginLine)]
+                                                   [ xPixelCount*spp] );
+                    } 
+
+                    delete tmpPixel;
                 }
             }
         }

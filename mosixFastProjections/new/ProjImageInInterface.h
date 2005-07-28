@@ -21,9 +21,11 @@
  *
  */
 
+#include "Globals.h"
 #include <ProjectionMesh/ProjectionMesh.h>
 #include <ProjectionLib/Projection.h>
 #include <MathLib/InterpolatorTypes.h>
+#include "PixelInterface.h"
 #include "DRect.h"
 #include "ProjImageDataInterface.h" 
 #include "ProjImageScale.h"
@@ -38,10 +40,10 @@ namespace USGSMosix
         virtual ~ProjImageInInterface() {} 
         
         // virtual get
-        virtual const unsigned char * 
+        virtual const PixelInterface<sample_t> *
         getPixel( const unsigned int& x, const unsigned int& y )const = 0;
         
-        virtual const unsigned char * 
+        virtual const PixelInterface<sample_t> *
         getPixel( const double & latitude, const double & longitude )const = 0;
         
         virtual DRect 

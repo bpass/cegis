@@ -482,7 +482,7 @@ s,@PACKAGE@,mosixfastreprojections,;t t
 s,@VERSION@,0.1,;t t
 s,@ACLOCAL@,${SHELL} /home/mschisler/MOSIX/new/missing --run aclocal-1.8,;t t
 s,@AUTOCONF@,${SHELL} /home/mschisler/MOSIX/new/missing --run autoconf,;t t
-s,@AUTOMAKE@,automake --foreign,;t t
+s,@AUTOMAKE@,${SHELL} /home/mschisler/MOSIX/new/missing --run automake-1.8,;t t
 s,@AUTOHEADER@,${SHELL} /home/mschisler/MOSIX/new/missing --run autoheader,;t t
 s,@MAKEINFO@,${SHELL} /home/mschisler/MOSIX/new/missing --run makeinfo,;t t
 s,@AMTAR@,${SHELL} /home/mschisler/MOSIX/new/missing --run tar,;t t

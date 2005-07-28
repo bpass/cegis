@@ -23,6 +23,7 @@
 #include "ProjImageInInterface.h"
 #include "GeneralException.h"
 #include <ProjectionLib/GeographicProjection.h>
+#include <ImageLib/ImageCommon.h>
 #include <list>
 #include <utility>
 
@@ -68,12 +69,12 @@ class ProjImageInList : public ProjImageInInterface
         /// the same, then a general exception is thrown.  If the
         /// list is empty, an exception is also thrown.
         virtual const ProjLib::Projection * getProjection()const;
-       
-        inline const unsigned char * 
-        getPixel( const double & x, const double & y)const;
 
-        virtual const unsigned char *  
-        getPixel( const unsigned int & x, const unsigned int & y )const; 
+        virtual const PixelInterface<sample_t> *
+        getPixel( const unsigned int& x, const unsigned int& y )const;
+        
+        virtual const PixelInterface<sample_t> *
+        getPixel( const double & latitude, const double & longitude )const;
         
         virtual int getPhotometric() const;
         virtual int getBPS() const;
@@ -239,12 +240,12 @@ inline ProjImageScale ProjImageInList::getPixelScale()const
 
 /****************************************************************************/
 
-inline const unsigned char * 
+inline const PixelInterface<sample_t> *  
 ProjImageInList::getPixel( const double & latit, const double & longit)const
 {
     std::list<std::pair<ProjImageInInterface*, DRect> >::const_iterator kit;
-    //std::cout << std::endl << "latitude: " << latit << std::endl;
-    //std::cout << "longitude" << longit << std::endl;
+    // std::cout << std::endl << "latitude: " << latit << std::endl;
+    // std::cout << "longitude" << longit << std::endl;
     
     for ( kit = m_imgList.begin(); kit != m_imgList.end(); ++kit ) 
     {
@@ -268,9 +269,16 @@ ProjImageInList::getPixel( const double & latit, const double & longit)const
 
 inline int ProjImageInList::getPhotometric() const 
 { 
-   // TODO: always make appear as a RGB.
    if ( m_imgList.size() > 0 )
-       return m_imgList.begin()->first->getPhotometric();
+   {
+        std::list<std::pair<ProjImageInInterface*, DRect> >::const_iterator kit;
+        for ( kit = m_imgList.begin(); kit != m_imgList.end(); ++kit ) 
+        {
+            if ( kit->first->getPhotometric() == PHOTO_RGB ) 
+                return PHOTO_RGB;
+        }
+        return PHOTO_GREY;
+   }
    else 
        throw GeneralException("Error, list is empty.");
 } 
@@ -282,27 +290,46 @@ inline int ProjImageInList::getPhotometric() const
 /// inevitably, blow up.  
 inline int ProjImageInList::getBPS() const 
 { 
+   int maxBPS = -1;
    if ( m_imgList.size() > 0 )
-       return m_imgList.begin()->first->getBPS();
-   else
+   {
+        std::list<std::pair<ProjImageInInterface*, DRect> >::const_iterator kit;
+        for ( kit = m_imgList.begin(); kit != m_imgList.end(); ++kit ) 
+        {
+            maxBPS = Math<int>::max(kit->first->getBPS(), maxBPS);
+        }
+        
+        return maxBPS;
+        
+   } else
        throw GeneralException("Error, list is empty.");
 }  
 
 /****************************************************************************/
 
 inline int ProjImageInList::getSPP() const 
-{ 
+{
+   int maxSPP = -1;
+    
    // TODO: account for different samples per pixels.
    if ( m_imgList.size() > 0 )
-       return m_imgList.begin()->first->getSPP();
-   else
+   {
+       std::list<std::pair<ProjImageInInterface*, DRect> >::const_iterator kit;
+       for ( kit = m_imgList.begin(); kit != m_imgList.end(); ++kit ) 
+       {
+           maxSPP = Math<int>::max(kit->first->getSPP(), maxSPP);
+       }
+       
+       return maxSPP; 
+       
+   } else
        throw GeneralException("Error, list is empty.");
 }  
 
 /****************************************************************************/
 
-inline const unsigned char * 
-ProjImageInList::getPixel(const unsigned int & x, const unsigned int & y)const
+inline const PixelInterface<sample_t> *
+ProjImageInList::getPixel( const unsigned int& x, const unsigned int& y )const
 {
    (void)x;
    (void)y;

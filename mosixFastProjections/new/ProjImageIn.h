@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/07/27 17:16:37 $
+ * \date $Date: 2005/07/28 00:30:09 $
  *
  * \version 0.1
  * 
@@ -20,13 +20,15 @@
  * the file COPYING.  
  *
  */
-
+#include <ImageLib/CacheManager.h>
+#include <ProjectionLib/GeographicProjection.h>
 #include "Globals.h"
 #include "ProjImageData.h"
 #include "ProjectorInterface.h"
 #include "ProjImageParams.h"
-#include <ImageLib/CacheManager.h>
-#include <ProjectionLib/GeographicProjection.h>
+#include "PixelRGB.h"
+#include "PixelGrey.h"
+
 
 namespace USGSMosix 
 {
@@ -50,11 +52,11 @@ class ProjImageIn : private virtual ProjImageData,
         virtual DRect getGeographicBounds()const;
         
         const_scanline_t getCachedLine( unsigned int line ) const; 
-        
-        virtual const unsigned char *  
+       
+        virtual const PixelInterface<sample_t> * 
         getPixel( const unsigned int& x, const unsigned int& y ) const;
 
-        virtual const unsigned char * 
+        virtual const PixelInterface<sample_t> *
         getPixel( const double& latitude, const double& longitude ) const;
         
     private:

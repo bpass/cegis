@@ -5,7 +5,7 @@
  *
  * \file ProjImageParams.h
  *
- * \date $Date: 2005/07/27 17:16:37 $
+ * \date $Date: 2005/07/28 00:30:09 $
  *
  * \version 0.1
  * 
@@ -58,8 +58,9 @@ istream& operator>>( istream& in, ProjImageParams& params )
         >> params.m_bounds.bottom;
     } else 
     {
-        in >> params.m_outHeight
-        >> params.m_outWidth; 
+        in >> params.m_outWidth
+           >> params.m_outHeight;
+            
     }
 
     params.m_projection = params.constructProjection( in );

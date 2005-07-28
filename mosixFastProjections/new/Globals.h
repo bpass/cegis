@@ -30,6 +30,8 @@ namespace USGSMosix
 // typedefs 
 ///////////////////////////////
 
+typedef unsigned char sample_t; 
+    
 typedef unsigned char * scanline_t;
 
 typedef const unsigned char * const_scanline_t;

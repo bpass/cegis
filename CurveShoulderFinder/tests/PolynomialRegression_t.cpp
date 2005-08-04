@@ -1,8 +1,8 @@
 /**
- * @file PolynomialCurve_t.cpp
+ * @file PolynomialRegression_t.cpp
  * @author Austin Hartman
  *
- * $Id: PolynomialRegression_t.cpp,v 1.2 2005/06/17 01:53:02 ahartman Exp $
+ * $Id: PolynomialRegression_t.cpp,v 1.3 2005/08/04 17:50:44 ahartman Exp $
  */
 
 #include <cmath>

@@ -1,4 +1,4 @@
-# Doxyfile 1.4.3
+# Doxyfile 1.4.4
 
 # This file describes the settings to be used by the documentation system
 # doxygen (www.doxygen.org) for a project
@@ -376,7 +376,7 @@ SHOW_USED_FILES        = YES
 
 # If the sources in your project are distributed over multiple directories 
 # then setting the SHOW_DIRECTORIES tag to YES will show the directory hierarchy 
-# in the documentation.
+# in the documentation. The default is YES.
 
 SHOW_DIRECTORIES       = YES
 
@@ -450,7 +450,8 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = . tests
+INPUT                  = . \
+                         tests
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -459,7 +460,9 @@ INPUT                  = . tests
 # *.c *.cc *.cxx *.cpp *.c++ *.java *.ii *.ixx *.ipp *.i++ *.inl *.h *.hh *.hxx 
 # *.hpp *.h++ *.idl *.odl *.cs *.php *.php3 *.inc *.m *.mm
 
-FILE_PATTERNS          = *.h *.hpp *.cpp
+FILE_PATTERNS          = *.h \
+                         *.hpp \
+                         *.cpp
 
 # The RECURSIVE tag can be used to turn specify whether or not subdirectories 
 # should be searched for input files as well. Possible values are YES and NO. 
@@ -481,7 +484,9 @@ EXCLUDE_SYMLINKS       = NO
 
 # If the value of the INPUT tag contains directories, you can use the 
 # EXCLUDE_PATTERNS tag to specify one or more wildcard patterns to exclude 
-# certain files from those directories.
+# certain files from those directories. Note that the wildcards are matched 
+# against the file with absolute path, so to exclude all test directories 
+# for example use the pattern */test/*
 
 EXCLUDE_PATTERNS       = 
 

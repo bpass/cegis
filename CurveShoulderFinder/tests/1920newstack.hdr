@@ -1,0 +1,37 @@
+BANDS:     15
+ROWS:      20
+COLS:      19
+INTERLEAVING:   BSQ
+DATATYPE: F32  
+BYTE_ORDER: MOTOROLA
+UL_X_COORDINATE:         231405.500000
+UL_Y_COORDINATE:        3520201.500000
+LR_X_COORDINATE:         265965.500000
+LR_Y_COORDINATE:        3483721.500000
+PIXEL_WIDTH:            1920.000000
+PIXEL_HEIGHT:           1920.000000
+MAP_UNITS:    meters               
+PROJECTION_NAME: UTM                                     
+PROJECTION_ZONE:    17
+PROJECTION_PARAMETERS:
+	             0.000000
+	             0.000000
+	             0.000000
+	             1.000000
+	             0.000000
+	             0.000000
+	             0.000000
+	             0.000000
+	             0.000000
+	             0.000000
+	             0.000000
+	             0.000000
+	             0.000000
+	             0.000000
+	             0.000000
+SPHEROID_NAME: GRS 1980                                
+DATUM_NAME:    NAD83                                   
+SEMI_MAJOR_AXIS:        6378137.000000
+SEMI_MINOR_AXIS:        6356752.314140
+E_SQUARED:                    0.006694
+RADIUS:                 6371007.180883

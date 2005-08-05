@@ -2,7 +2,6 @@
     <qresource prefix="/new/prefix1" >
         <file>Resources\USGS Logo.png</file>
         <file>Resources\USGS Swirl Sphere.png</file>
-        <file>Resources\blank.png</file>
         <file>Resources\calculate.png</file>
         <file>Resources\copy.png</file>
         <file>Resources\exit.png</file>

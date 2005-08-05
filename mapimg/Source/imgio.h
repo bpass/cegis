@@ -1,6 +1,5 @@
-// $Id: imgio.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
+// $Id: imgio.h,v 1.3 2005/08/05 19:50:50 lwoodard Exp $
 
-//Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
 //Copyright 2002 United States Geological Survey
 //Released under GPL with mapimg copyright 2003 USGS
@@ -29,7 +28,7 @@
 #include <QMessageBox>
 
 #include "rasterinfo.h"
-#include <QCache>//					#include <q3cache.h>
+#include <q3cache.h>
 
 
 
@@ -59,7 +58,7 @@ class IMGIO
 {
 private:
    int Max_Data_Element_Count;
-   QCache<type, type>* inputDataMap;// Q3Cache<type>* inputDataMap;
+   Q3Cache<type>* inputDataMap;
 
    QString infile_name;       // Name of input file
    QString outfile_name;      // Name of output file
@@ -345,8 +344,8 @@ public:
    {
       if( inputDataMap == NULL )
       {
-         inputDataMap = new QCache<type,type>( Max_Data_Element_Count, (int)(1.6*Max_Data_Element_Count) );
-//         inputDataMap->setAutoDelete( true );
+         inputDataMap = new Q3Cache<type>( Max_Data_Element_Count, (int)(1.6*Max_Data_Element_Count) );
+         inputDataMap->setAutoDelete( true );
          last_offset = offset;
       }
       else if( last_offset == offset )

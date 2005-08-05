@@ -1,6 +1,6 @@
 #include <q3progressdialog.h>
 #include <QColor>
-#include QString>
+#include <QString>
 
 #include "mapimgprogressdialog.h"
 

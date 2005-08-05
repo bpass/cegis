@@ -1,18 +1,19 @@
-// $Id: qdmsedit.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: qdmsedit.cpp,v 1.3 2005/08/05 19:50:51 lwoodard Exp $
 
 
 #include "qdmsedit.h"
 //Added by qt3to4:
 #include <QLabel>
-#include <QFrame>
+#include <Q3Frame>
 #include "mapimgvalidator.h"
+
 #include <QRegexp>
 #include <QToolTip>
 
 QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction )
-: QWidget( parent,name )		//Q3HBox( parent, name)
+: Q3HBox( parent, name)
 {
-   setFrameStyle( QFrame::LineEditPanel | QFrame::Sunken );
+   setFrameStyle( Q3Frame::LineEditPanel | Q3Frame::Sunken );
    setLineWidth( 2 );
    setMargin( 0 );
    layout()->setMargin( 2 );

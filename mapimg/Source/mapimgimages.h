@@ -1,7 +1,7 @@
 #ifndef _QEMBED_41
 #define _QEMBED_41
 #include <qimage.h>
-#include <qdict.h>
+#include <q3dict.h>
 static const QRgb calculate_data[] = {
    0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
       0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,
@@ -16011,7 +16011,7 @@ static struct EmbedImage {
 
 static const QImage& mapimgImage( const QString& name )
 {
-   static QDict<QImage> dict;
+   static Q3Dict<QImage> dict;
    QImage* img = dict.find( name );
    if ( !img ) {
       for ( int i = 0; embed_image_vec[i].data; i++ ) {

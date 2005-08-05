@@ -1,10 +1,11 @@
-// $Id: mapimgvalidator.h,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: mapimgvalidator.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 #ifndef MAPIMGVALIDATOR_H
 #define MAPIMGVALIDATOR_H
 
-#include <qobject.h>
-#include <qvalidator.h>
+#include <QObject>
+#include <QValidator>
+
 #include <qglobal.h>
 
 #include "mapimgdatatypes.h"

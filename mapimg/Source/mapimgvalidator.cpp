@@ -1,8 +1,8 @@
-// $Id: mapimgvalidator.cpp,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: mapimgvalidator.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
-#include <qvalidator.h>
-#include <qstring.h>
-#include <qmessagebox.h>
+#include <QValidator>
+#include <QString>
+#include <QMessageBox>
 
 #include <limits.h>
 #include <math.h>
@@ -186,7 +186,10 @@ QValidator::State MapimgValidator::validate( QString & input, int & ) const
       return Intermediate;
    bool ok = TRUE;
    double entered = input.toDouble( &ok );
-   int nume = input.contains( 'e', FALSE );
+/****/
+   bool nume = FALSE;
+   nume = input.contains( 'e');
+/****/
    if ( !ok ) {
       // explicit exponent regexp
       QRegExp expexpexp( QString::fromLatin1("[Ee][+-]?\\d*$") );

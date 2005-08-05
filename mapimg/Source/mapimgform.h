@@ -1,4 +1,4 @@
-// $Id: mapimgform.h,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: mapimgform.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
 
 
 /****************************************************************************
@@ -12,28 +12,36 @@
 #define mapimgFORM_H
 
 #include <qvariant.h>
-#include <qmainwindow.h>
+#include <q3mainwindow.h>
 #include <qmessagebox.h>
+//Added by qt3to4:
+#include <Q3ActionGroup>
+#include <QGridLayout>
+#include <QEvent>
+#include <QHBoxLayout>
+#include <QDropEvent>
+#include <Q3PopupMenu>
+#include <QDragEnterEvent>
 
 class QHBoxLayout;
 class QGridLayout;
 class QSpacerItem;
 class QAction;
-class QActionGroup;
-class QPopupMenu;
-class QToolBar;
+class Q3ActionGroup;
+class Q3PopupMenu;
+class Q3ToolBar;
 class QToolButton;
-class QWidgetStack;
+class Q3WidgetStack;
 class QImgFrame;
 class QInfoFrame;
 class RasterInfo;
 
-class mapimgForm : public QMainWindow
+class mapimgForm : public Q3MainWindow
 {
    Q_OBJECT
 
 public:
-   mapimgForm( QWidget* parent = 0, const char* name = 0, WFlags fl = WType_TopLevel );
+   mapimgForm( QWidget* parent = 0, const char* name = 0, Qt::WFlags fl = Qt::WType_TopLevel );
    ~mapimgForm();
 
    void dragEnterEvent( QDragEnterEvent *evt );
@@ -64,13 +72,13 @@ protected slots:
 
 private:
    QMenuBar       *menuBar;
-   QToolBar       *toolBar;
+   Q3ToolBar       *toolBar;
 
-   QPopupMenu     *File;
+   Q3PopupMenu     *File;
    QAction        *exitAction;
    QAction        *bigAction;
 
-   QPopupMenu     *Options;
+   Q3PopupMenu     *Options;
    QAction        *authAction;
 
    QAction        *inInfoAction;
@@ -78,7 +86,7 @@ private:
    QAction        *inSaveAction;
    QInfoFrame     *inInfoFrame;
 
-   QPopupMenu     *Preview;
+   Q3PopupMenu     *Preview;
    QAction        *viewShowAction;
    QAction        *viewResampleAction;
    QAction        *previewProjAction;
@@ -89,15 +97,15 @@ private:
    QInfoFrame     *outInfoFrame;
 
    QToolButton    *viewShowButton;
-   QPopupMenu     *viewShowPopup;
-   QActionGroup   *prevGroup;
+   Q3PopupMenu     *viewShowPopup;
+   Q3ActionGroup   *prevGroup;
    QAction        *prevInput;
    QAction        *prevOutput;
 
-   QPopupMenu     *Tools;
+   Q3PopupMenu     *Tools;
    QAction        *webDSS;
 
-   QPopupMenu     *Help;
+   Q3PopupMenu     *Help;
    QAction        *aboutAction;
    QAction        *aboutQtAction;
 

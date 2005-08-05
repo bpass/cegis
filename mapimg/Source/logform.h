@@ -1,18 +1,24 @@
-// $Id: logform.h,v 1.1 2005/07/12 16:21:04 rbuehler Exp $
+// $Id: logform.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
 
+//Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
 /****************************************************************************
 ** Form interface generated from reading ui file 'logForm.ui'
 **
 ** Created: Fri Jan 14 15:41:20 2005
-**      by: The User Interface Compiler ($Id: logform.h,v 1.1 2005/07/12 16:21:04 rbuehler Exp $)
+**      by: The User Interface Compiler ($Id: logform.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $)
 ****************************************************************************/
 
 #ifndef LOGFORM_H
 #define LOGFORM_H
 
-#include <qvariant.h>
-#include <qdialog.h>
+#include <QVariant>
+#include <QDialog>
+
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
 
 class QVBoxLayout;
 class QHBoxLayout;
@@ -30,7 +36,7 @@ class logForm : public QDialog
    Q_OBJECT
 
 public:
-   logForm( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
+   logForm( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
    ~logForm();
 
    QPushButton* saveButton;

@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: qgctpbox.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 #include <qtooltip.h>
@@ -6,15 +6,18 @@
 
 #include "qgctpbox.h"
 #include "qdmsedit.h"
+//Added by qt3to4:
+#include <QLabel>
+#include <Q3Frame>
 
 const uint INFO_PRECISION = 6;
 
 QMap<QString,double> *QGctpBox::holdValues=0;
 
 QGctpBox::QGctpBox( QWidget* parent, const char* name )
-: QVBox( parent, name )
+: Q3VBox( parent, name )
 {
-   QFrame *line = new QFrame( this );
+   Q3Frame *line = new Q3Frame( this );
    line->setMinimumHeight( 5 );
    label = new QLabel( this, "label" );
    lineEdit = new QLineEdit( "0.000000", this, "lineEdit" );
@@ -25,7 +28,7 @@ QGctpBox::QGctpBox( QWidget* parent, const char* name )
    dmsEdit->setValue( 0 );
 
    activeEdit = NULL;
-   name = QString::null;
+/****/   name=NULL;
 
    hide();
    initializeHoldValues();
@@ -89,7 +92,7 @@ QString QGctpBox::output()
       cleanUp = QString::number( dmsEdit->value(), 'f', 14 );
 
    cleanUp.stripWhiteSpace();
-   uint newLen = cleanUp.find( '.' ) + INFO_PRECISION + 1;
+   int newLen = cleanUp.find( '.' ) + INFO_PRECISION + 1;
    if( newLen == INFO_PRECISION ) //No '.' found
       cleanUp.append( ".000000" );
    else if( newLen < cleanUp.length() )

@@ -1,24 +1,32 @@
-// $Id: mapimgform.cpp,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
-
+// $Id: mapimgform.cpp,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
+//Last Edited: August 2005; by: lwoodard; for:qt3 to qt4 porting
 
 #include "mapimgform.h"
 
 #include <qvariant.h>
 #include <qlayout.h>
 #include <qtooltip.h>
-#include <qwhatsthis.h>
+#include <q3whatsthis.h>
 #include <qaction.h>
 #include <qmenubar.h>
 #include <qtoolbutton.h>
-#include <qpopupmenu.h>
-#include <qtoolbar.h>
-#include <qdragobject.h>
-#include <qwidgetstack.h>
-#include <qfiledialog.h>
+#include <q3popupmenu.h>
+#include <q3toolbar.h>
+#include <q3dragobject.h>
+#include <q3widgetstack.h>
+#include <q3filedialog.h>
 #include <qfile.h>
 #include <qdatastream.h>
 #include <qsettings.h>
-#include <qprocess.h>
+#include <q3process.h>
+//Added by qt3to4:
+#include <Q3CString>
+#include <QEvent>
+#include <Q3Frame>
+#include <QHBoxLayout>
+#include <QDropEvent>
+#include <QDragEnterEvent>
+#include <QMouseEvent>
 
 #include "mapimgversion.h"
 #include "mapimgimages.h"
@@ -61,10 +69,10 @@ TOOLBARS creates the button toolbar with the actions to open a new input,
 reproject to a file, hide/show the three frames, resample the imgframe, and
 preview the reprojection.
 */
-mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
-: QMainWindow( parent, name, fl )
+mapimgForm::mapimgForm( QWidget* parent, const char* name, Qt::WFlags fl )
+: Q3MainWindow( parent, name, fl )
 {
-   setIcon( mapimgImage( "USGS Swirl Sphere" ) );
+   setIcon( QPixmap( "./Resources/USGS Swirl Sphere.png" ) );
    setCaption( QString("MapIMG %1").arg(MAJOR_VERSION) );
 
    setCentralWidget( new QWidget( this, "qt_central_widget" ) );
@@ -75,11 +83,14 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    ////////
 
    //actions
-   exitAction = new QAction( QIconSet( mapimgImage( "exit" ) ), 
-      "E&xit", QKeySequence("Ctrl+X"), this, "exitAction" );
+
+/****/
+   exitAction = new QAction( QIcon( "./Resources/exit.png" ),
+	   "E&xit", QKeySequence("Ctrl+X"), this, "exitAction" );
    bigAction = new QAction(
-      "Use &Big Icons", QKeySequence("Ctrl+B"), this, "bigAction" );
-   bigAction->setToggleAction( true );
+	   "Use &Big Icons", QKeySequence("Ctrl+B"), this, "bigAction" );
+   bigAction->setCheckable( true );
+/****/
 
    //signals and slots
    connect( exitAction, SIGNAL( activated() ), this, SLOT( close() ) );
@@ -90,7 +101,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    ////////
 
    //actions
-   authAction = new QAction( QIconSet( mapimgImage( "" ) ), 
+   authAction = new QAction( QIcon( ""  ), 
       "Edit &Author", QKeySequence("Ctrl+A"), this, "authAction" );
 
    //signals and slots
@@ -110,15 +121,16 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    //inInfoFrame->setShown( false );
 
    //actions
-   inInfoAction = new QAction( QIconSet( mapimgImage( "inputinfo" ) ), 
-      "Show Input Parameters", QKeySequence(), this, "inInfoAction" );
-   inInfoAction->setToggleAction( true );
-   inInfoAction->setOn( inInfoFrame->isShown() );
-   inOpenAction = new QAction( QIconSet( mapimgImage( "open" ) ), 
-      "&Open", QKeySequence("Ctrl+O"), this, "inOpenAction" );
-   inSaveAction = new QAction( QIconSet( mapimgImage( "insave" ) ), 
-      "Save Input Parameters", QKeySequence(), this, "inSaveAction" );
-
+/****/
+   inInfoAction = new QAction( QIcon( "./Resources/inputinfo.png" ),
+	   "Show Input Parameters", QKeySequence(), this, "inInfoAction" );
+   inInfoAction->setCheckable( true );
+   inInfoAction->setChecked( true );
+   inOpenAction = new QAction( QIcon( "./Resources/open.png" ),
+	   "&Open", QKeySequence("Ctrl+O"), this, "inOpenAction" );
+   inSaveAction = new QAction( QIcon( "./Resources/insave.png" ),
+	   "Save Input Parameters", QKeySequence(), this, "inSaveAction" ); 
+/****/
 
    //signals and slots
    connect( inInfoAction, SIGNAL( toggled(bool) ), inInfoFrame, SLOT( setShown(bool) ) );
@@ -133,9 +145,9 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
 
    //widgets
    imgFrame = new QImgFrame( centralWidget(), "imgFrame" );
-   imgFrame->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
+   imgFrame->setFrameStyle( Q3Frame::StyledPanel | Q3Frame::Sunken );
    imgFrame->setLineWidth(2);
-   imgFrame->setPixmap( mapimgImage( "USGS Logo" ) );
+   imgFrame->setPixmap( QPixmap("./Resources/USGS Logo.png" ) );
    imgFrame->setMinimumSize( QSize( 167, 62 ) );
    imgFrame->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding );
    imgFrame->setShown( false );
@@ -143,16 +155,18 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    formLayout->addWidget( imgFrame );
 
    //actions
-   viewShowAction = new QAction( QIconSet( mapimgImage( "preview" ) ),
-      "Show Preview", QKeySequence(), this, "inViewAction" );
-   viewShowAction->setToggleAction( true );
-   viewResampleAction = new QAction( QIconSet( mapimgImage( "resample" ) ), 
-      "Resample Preview", QKeySequence("F5"), this, "resampleAction" );
-   previewProjAction = new QAction( QIconSet( mapimgImage( "previewproject" ) ), 
-      "&Preview Reprojection", QKeySequence("Ctrl+P"), this, "resampleAction" );
+/****/
+	viewShowAction = new QAction( QIcon( "./Resources/preview.png" ),
+		"Show Preview", QKeySequence(), this, "inViewAction" );
+	viewShowAction->setCheckable( true );
+	viewResampleAction = new QAction( QIcon( "./Resources/resample.png" ),
+		"Resample Preview", QKeySequence("F5"), this, "resampleAction" );
+	previewProjAction = new QAction( QIcon( "./Resources/previewproject.png" ),
+		"&Preview Reprojection", QKeySequence("Ctrl+P"), this, "resampleAction" );
+/****/
 
    //signals and slots
-   connect( viewShowAction, SIGNAL( toggled(bool) ), this, SLOT( previewClicked(bool) ) );
+   connect( viewShowAction, SIGNAL( checked(bool) ), this, SLOT( previewClicked(bool) ) );
    connect( viewResampleAction, SIGNAL( activated() ), imgFrame, SLOT( resample() ) );
    connect( previewProjAction, SIGNAL( activated() ), this, SLOT( previewOutput() ) );
 
@@ -169,16 +183,21 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    //outInfoFrame->setShown( false );
 
    //actions
-   outInfoAction = new QAction( QIconSet( mapimgImage( "outputinfo" ) ), 
-      "Show Output Parameters", QKeySequence(), this, "outInfoAction" );
-   outInfoAction->setToggleAction( true );
-   outInfoAction->setOn( outInfoFrame->isShown() );
-   outSaveAction = new QAction( QIconSet( mapimgImage( "outsave" ) ), 
-      "Reproject and &Save", QKeySequence("Ctrl+S"), this, "outSaveAction" );
 
+/****/
+	outInfoAction = new QAction( QIcon ( "./Resources/outputinfo.png" ),
+		"Show Output Parameters", QKeySequence(), this, "outInfoAction" );
+/****/
+   outInfoAction->setCheckable( true );
+   outInfoAction->setOn( outInfoFrame->isShown() );
+
+/****/
+   outSaveAction = new QAction( QIcon( "./Resources/outsave.png" ),
+	   "Reproject and &Save", QKeySequence("Ctrl+S"), this, "outSaveAction" );
+/****/
 
    //signals and slots
-   connect( outInfoAction, SIGNAL( toggled(bool) ), outInfoFrame, SLOT( setShown(bool) ) );
+   connect( outInfoAction, SIGNAL( checked(bool) ), outInfoFrame, SLOT( setShown(bool) ) );
    connect( outSaveAction, SIGNAL( activated() ), this, SLOT( outSaveClicked() ) );
 
 
@@ -210,14 +229,17 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    //TOOLBAR
    ////////
 
-   toolBar = new QToolBar( this, "toolBar" );
+   toolBar = new Q3ToolBar( this, "toolBar" );
 
    inOpenAction->addTo( toolBar );
    outSaveAction->addTo( toolBar );
    toolBar->addSeparator();
    inInfoAction->addTo( toolBar );
-   viewShowButton = new QToolButton( QIconSet( mapimgImage( "preview" ) ), 
-      "Show Preview", "", NULL, 0, toolBar, "previewButton" );
+
+/****/
+   viewShowButton = new QToolButton( QIcon( "./Resources/preview.png" ),
+	   "Show Preview", "", NULL, 0, toolBar, "previewButton" );
+/****/
    viewShowButton->installEventFilter( this );
    outInfoAction->addTo( toolBar );
    toolBar->addSeparator();
@@ -225,20 +247,20 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    previewProjAction->addTo( toolBar );
 
    //preview button extra features
-   viewShowPopup = new QPopupMenu( viewShowButton, "viewShowPopup" );
+   viewShowPopup = new Q3PopupMenu( viewShowButton, "viewShowPopup" );
 
    prevInput = new QAction( "Preview Input", QKeySequence(""), this, "prevInput" );
-   prevInput->setToggleAction( true );
+   prevInput->setCheckable( true );
    prevInput->addTo( viewShowPopup );
    prevOutput = new QAction( "Preview Output", QKeySequence(""), this, "prevOutput" );
-   prevOutput->setToggleAction( true );
+   prevOutput->setCheckable( true );
    prevOutput->addTo( viewShowPopup );
 
-   viewShowButton->setToggleButton(true);
+   viewShowButton->setCheckable(true);
 
-   connect( viewShowButton, SIGNAL( toggled(bool) ), this, SLOT( previewClicked(bool) ) );
-   connect( prevInput, SIGNAL( toggled(bool) ), this, SLOT( previewInput(bool) ) );
-   connect( prevOutput, SIGNAL( toggled(bool) ), this, SLOT( previewOutput(bool) ) );
+   connect( viewShowButton, SIGNAL( checked(bool) ), this, SLOT( previewClicked(bool) ) );
+   connect( prevInput, SIGNAL( checked(bool) ), this, SLOT( previewInput(bool) ) );
+   connect( prevOutput, SIGNAL( checked(bool) ), this, SLOT( previewOutput(bool) ) );
 
 
    ////////
@@ -248,7 +270,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    menuBar = new QMenuBar( this, "menuBar" );
 
    //File
-   File = new QPopupMenu( this );
+   File = new Q3PopupMenu( this );
    inOpenAction->addTo( File );
    File->insertSeparator();
    inSaveAction->addTo( File );
@@ -258,25 +280,25 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    menuBar->insertItem( "&File", File);
 
    //Options
-   Options = new QPopupMenu( this );
+   Options = new Q3PopupMenu( this );
    authAction->addTo( Options );
    menuBar->insertItem( "&Options", Options );
 
    //Preview
-   Preview = new QPopupMenu( this );
+   Preview = new Q3PopupMenu( this );
    viewResampleAction->addTo( Preview );
    previewProjAction->addTo( Preview );
    menuBar->insertItem( "&Preview", Preview);
 
    //Tools
-   Tools = new QPopupMenu( this );
-   QPopupMenu* webBased = new QPopupMenu( Tools, "webBased" );
+   Tools = new Q3PopupMenu( this );
+   Q3PopupMenu* webBased = new Q3PopupMenu( Tools, "webBased" );
    webDSS->addTo( webBased );
    Tools->insertItem( "Web Based", webBased );
    menuBar->insertItem( "&Tools", Tools);
 
    //Help
-   Help = new QPopupMenu( this );
+   Help = new Q3PopupMenu( this );
    aboutAction->addTo( Help );
    aboutQtAction->addTo( Help );
    menuBar->insertItem( "&Help", Help);
@@ -286,7 +308,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
    // SETTINGS
    ////////
 
-   QSettings *settings = new QSettings( QSettings::Ini );
+   QSettings *settings = new QSettings(QSettings::IniFormat, QSettings::SystemScope,"" /**QSettings::Ini**/ );
    settings->setPath( "USGS.gov", "MapIMG" );
 
    inPath = settings->readEntry( "/USGS/MapIMG/DefaultInputPath" );
@@ -313,7 +335,6 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, WFlags fl )
 
 
    resize( QSize(600, 524).expandedTo(minimumSizeHint()) );
-   clearWState( WState_Polished );
    setAcceptDrops( true );
 
    ////////
@@ -381,12 +402,12 @@ bool mapimgForm::eventFilter( QObject* object, QEvent* event )
          return true;
       }
    }
-   return QMainWindow::eventFilter( object, event );
+   return Q3MainWindow::eventFilter( object, event );
 }
 
 void mapimgForm::dragEnterEvent( QDragEnterEvent *evt )
 {
-   if ( QTextDrag::canDecode( evt ) )
+   if ( Q3TextDrag::canDecode( evt ) )
       evt->accept();
 }
 
@@ -394,7 +415,7 @@ void mapimgForm::dropEvent( QDropEvent *evt )
 {
    QString text;
 
-   if ( QTextDrag::decode( evt, text ) )
+   if ( Q3TextDrag::decode( evt, text ) )
    {
       int gi = text.findRev( "img" );
       int li = text.findRev( "xml" );
@@ -437,13 +458,13 @@ messages the user and asks them to genererate one using the input frame.
 */
 void mapimgForm::inOpenClicked()
 {
-   QString temp = QFileDialog::getOpenFileName(
+   QString temp = Q3FileDialog::getOpenFileName(
       inPath, "MapIMG Files (*.img);;Tiff Files (*.tif)", this, "", "Choose an image");
 
    if( openFile(temp) )
    {   
       inPath = imgName.left( imgName.findRev( "/" ) );
-      QSettings *settings = new QSettings( QSettings::Ini );
+	  QSettings *settings = new QSettings(QSettings::IniFormat, QSettings::SystemScope,"" /*QSettings::Ini*/ );
       settings->setPath( "USGS.gov", "MapIMG" );
       settings->writeEntry( "/USGS/MapIMG/DefaultInputPath", inPath );
       delete settings;
@@ -520,7 +541,7 @@ bool mapimgForm::openFile( QString inFile )
       inInfoAction->setOn( true );
       outInfoAction->setOn( false );
 
-      imgFrame->setPixmap( mapimgImage( "USGS Logo" ) );
+      imgFrame->setPixmap( QPixmap( "./Resources/USGS Logo.png" ) );
       viewShowButton->setOn( false );
       inInfoFrame->setInfo( info );
 
@@ -768,7 +789,7 @@ void mapimgForm::outSaveClicked()
       return;
 
    // Prompt for destination of new projection
-   QString temp = QFileDialog::getSaveFileName(
+   QString temp = Q3FileDialog::getSaveFileName(
       outPath, "MapIMG Raster Files (*.img)", this, "", "Choose a destination for the reprojection");
    if( temp.isNull() )
       return;
@@ -826,7 +847,7 @@ void mapimgForm::outSaveClicked()
 
    // Save output path to settings
    outPath = temp.left( temp.findRev( "/" ) );
-   QSettings *settings = new QSettings( QSettings::Ini );
+   QSettings *settings = new QSettings( QSettings::IniFormat, QSettings::SystemScope,"" /**QSettings::Ini**/ );
    settings->setPath( "USGS.gov", "MapIMG" );
    settings->writeEntry( "/USGS/MapIMG/DefaultOutputPath", outPath );
    delete settings;
@@ -834,7 +855,7 @@ void mapimgForm::outSaveClicked()
 
 void mapimgForm::editAuthor()
 {
-   QSettings *settings = new QSettings( QSettings::Ini );
+	QSettings *settings = new QSettings( QSettings::IniFormat, QSettings::SystemScope,""/**QSettings::Ini**/ );
    settings->setPath( "USGS.gov", "MapIMG" );
 
    authorForm *form = new authorForm(settings, this, "about", false,
@@ -884,7 +905,7 @@ void mapimgForm::webDSSClicked()
 
 void mapimgForm::launchWebTool( const QString& url )
 {
-   QProcess* web = new QProcess( this, "webTool" );
+   Q3Process* web = new Q3Process( this, "webTool" );
    bool supportedPlatform = true;
    bool executeProcess = false;
 
@@ -902,7 +923,7 @@ void mapimgForm::launchWebTool( const QString& url )
 #include <stdlib.h>
 
    //get : delimited list of all perferred browsers
-   QCString allBrowsers = getenv( "BROWSER" );
+   Q3CString allBrowsers = getenv( "BROWSER" );
 
    if( allBrowsers.isEmpty() ) //if it is empty we're hosed
    {

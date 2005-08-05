@@ -2,18 +2,18 @@
 #define MAPIMGPROGRESSDIALOG_H
 
 
-#include <qprogressdialog.h>
-#include <qcolor.h>
+#include <q3progressdialog.h>
+#include <QColor>
 
 #define defaultStepsPerUpdate 10
 
-class MapimgProgressDialog : public QProgressDialog
+class MapimgProgressDialog : public Q3ProgressDialog
 {
    Q_OBJECT
 
 public:
-   MapimgProgressDialog( const QColor* color1 = 0, const QColor* color2 = 0, QWidget* creator = 0, const char* name = 0, bool modal = FALSE, WFlags f = 0 );
-   MapimgProgressDialog( const QString& labelText, const QString& cancelButtonText, int totalSteps, const QColor* color1 = 0, const QColor* color2 = 0, QWidget* creator = 0, const char* name = 0, bool modal = FALSE, WFlags f = 0 );
+   MapimgProgressDialog( const QColor* color1 = 0, const QColor* color2 = 0, QWidget* creator = 0, const char* name = 0, bool modal = FALSE, Qt::WFlags f = 0 );
+   MapimgProgressDialog( const QString& labelText, const QString& cancelButtonText, int totalSteps, const QColor* color1 = 0, const QColor* color2 = 0, QWidget* creator = 0, const char* name = 0, bool modal = FALSE, Qt::WFlags f = 0 );
    ~MapimgProgressDialog();
 
 public slots:
@@ -39,6 +39,3 @@ private:
 };
 
 #endif //MAPIMGPROGRESSDIALOG_H
-
-
-

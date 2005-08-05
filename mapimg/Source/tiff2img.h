@@ -1,4 +1,4 @@
-// $Id: tiff2img.h,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: tiff2img.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 #ifndef TIFF2IMG_H
@@ -78,7 +78,7 @@ bool tiff2img( QString tiffFile, QString imgFile )
                _TIFFfree(raster);
 
                QFile newImg( imgFile );
-               newImg.open( IO_WriteOnly );
+               newImg.open( QIODevice::WriteOnly );
 
                for( y = 0; y < h; y++ )
                {

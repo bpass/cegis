@@ -1,13 +1,16 @@
-// $Id: qdmsedit.cpp,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: qdmsedit.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 #include "qdmsedit.h"
+//Added by qt3to4:
+#include <QLabel>
+#include <QFrame>
 #include "mapimgvalidator.h"
-#include <qregexp.h>
-#include <qtooltip.h>
+#include <QRegexp>
+#include <QToolTip>
 
 QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction )
-: QHBox( parent, name)
+: QWidget( parent,name )		//Q3HBox( parent, name)
 {
    setFrameStyle( QFrame::LineEditPanel | QFrame::Sunken );
    setLineWidth( 2 );
@@ -18,18 +21,18 @@ QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction 
    dmsLabel = new QLabel( this, "dmsLabel" );
    dEdit = new QLineEdit( this, "dEdit" );
    dEdit->setMaximumSize( QSize( 40, 32767 ) );
-   dEdit->setAlignment( int( QLineEdit::AlignRight ) );
-   dEdit->setFrameStyle( QFrame::NoFrame );
+   /***/dEdit->setAlignment( Qt::AlignRight );
+   /****/dEdit->setFrame( false );
    dLabel = new QLabel( this, "dLabel" );
    mEdit = new QLineEdit( this, "mEdit" );
    mEdit->setMaximumSize( QSize( 30, 32767 ) );
-   mEdit->setAlignment( int( QLineEdit::AlignRight ) );
-   mEdit->setFrameStyle( QFrame::NoFrame );
+   /****/ mEdit->setAlignment( Qt::AlignRight );
+   /****/mEdit->setFrame( false );
    mLabel = new QLabel( this, "mLabel" );
    sEdit = new QLineEdit( this, "sEdit" );
    sEdit->setMaximumSize( QSize( 80, 32767 ) );
-   sEdit->setAlignment( int( QLineEdit::AlignRight ) );
-   sEdit->setFrameStyle( QFrame::NoFrame );
+   /***/ sEdit->setAlignment( Qt::AlignRight );
+   /****/sEdit->setFrame( false );
    sLabel = new QLabel( this, "sLabel" );
    directionLabel = new QLabel( this, "directionLabel" );
 

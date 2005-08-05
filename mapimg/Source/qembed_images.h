@@ -1,10 +1,10 @@
-// $Id: qembed_images.h,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: qembed_images.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 #ifndef _QEMBED_41
 #define _QEMBED_41
 #include <qimage.h>
-#include <qdict.h>
+#include <q3dict.h>
 static const QRgb usgs_data[] = {
    0xff559d80,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff13734c,
       0xff1a714d,0xff4e997a,0xff559d80,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,0xff007042,
@@ -88,7 +88,7 @@ static struct EmbedImage {
 
 static const QImage& qembed_findImage( const QString& name )
 {
-   static QDict<QImage> dict;
+   static Q3Dict<QImage> dict;
    QImage* img = dict.find( name );
    if ( !img ) {
       for ( int i = 0; embed_image_vec[i].data; i++ ) {

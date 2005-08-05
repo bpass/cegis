@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: resampleform.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 /****************************************************************************
@@ -13,7 +13,14 @@
 
 #include <qvariant.h>
 #include <qdialog.h>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
+//Added by qt3to4:
+#include <QGridLayout>
+#include <QEvent>
+#include <QKeyEvent>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QVBoxLayout>
 #include "resampleinfo.h"
 #include "rasterinfo.h"
 
@@ -21,25 +28,25 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QGridLayout;
 class QSpacerItem;
-class QGroupBox;
+class Q3GroupBox;
 class QComboBox;
 class QLabel;
-class QButtonGroup;
+class Q3ButtonGroup;
 class QRadioButton;
 class QLineEdit;
 class QPushButton;
-class QListBox;
-class QListBoxItem;
+class Q3ListBox;
+class Q3ListBoxItem;
 class QEvent;
 class QSlider;
-class QHBox;
+class Q3HBox;
 
 class ResampleForm : public QDialog
 {
    Q_OBJECT
 
 public:
-   ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
+   ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
    ~ResampleForm();
 
    ResampleInfo info();
@@ -47,18 +54,18 @@ public:
    bool wasCanceled(){return canceled;}
 
 protected:
-   QGroupBox* resampleBox;
+   Q3GroupBox* resampleBox;
    QComboBox* resampleCombo;
    QLabel* catconLabel;
-   QButtonGroup* catconButtonGroup;
+   Q3ButtonGroup* catconButtonGroup;
    QRadioButton* catRadio;
    QRadioButton* conRadio;
 
-   QGroupBox* ignoreBox;
+   Q3GroupBox* ignoreBox;
    QLineEdit* ignoreEdit;
    QPushButton* newButton;
    QPushButton* delButton;
-   QListBox* ignoreListBox;
+   Q3ListBox* ignoreListBox;
    QPushButton* okButton;
    QPushButton* cancelButton;
    QLabel* ignoreLabel;
@@ -73,7 +80,7 @@ protected:
    QHBoxLayout* okLayout;
    QSpacerItem* okSpacer;
 
-   QGroupBox* memoryBox;
+   Q3GroupBox* memoryBox;
    QSlider* memoryAllocation;
    QPushButton* memoryResetButton;
    QHBoxLayout* memoryLabelResetLayout;

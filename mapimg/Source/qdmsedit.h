@@ -1,15 +1,16 @@
-// $Id: qdmsedit.h,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: qdmsedit.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 #ifndef QDMSEDIT_H
 #define QDMSEDIT_H
 
-#include <qhbox.h>
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qlineedit.h>
+#include <QLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QWidget>
+//				#include <q3hbox.h>
 
-class QDmsEdit : public QHBox
+class QDmsEdit : public QWidget		//Q3HBox
 {
    Q_OBJECT
       Q_PROPERTY( int minVal READ minVal WRITE setMinVal )

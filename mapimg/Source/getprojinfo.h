@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.1 2005/07/12 16:21:04 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -118,7 +118,7 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
 
       progress.setProgress(out_line);
 
-      if(progress.wasCancelled())
+      if(progress.wasCanceled())
       {
          break;
       }
@@ -161,7 +161,7 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
             {
                if( resample.resampleCode() == ResampleInfo::NearestNeighbor ) //NN same for categorical and continuous
                {
-                  imgIO.get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
+                  imgIO.get_line(  mapimginbuf, (qulonglong)inbox[4][1], inimg.ns, useType );
 
                   if( mapimginbuf != NULL )
                   {
@@ -234,7 +234,7 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
                      coord[1] = currentY;
 
                      //Loads into memory the current line of input needed
-                     imgIO.get_line(  mapimginbuf, (Q_ULLONG)coord[1], inimg.ns, useType );
+                     imgIO.get_line(  mapimginbuf, (qulonglong)coord[1], inimg.ns, useType );
                      if( mapimginbuf == NULL )
                         break;
 
@@ -266,7 +266,7 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
                   if(boxError)   //no pixels from rectangle in the minbox, get NN.
                   {
                      //Loads into memory the current line of input needed
-                     imgIO.get_line(  mapimginbuf, (Q_ULLONG)inbox[4][1], inimg.ns, useType );
+                     imgIO.get_line(  mapimginbuf, (qulonglong)inbox[4][1], inimg.ns, useType );
 
                      if( mapimginbuf != NULL )
                      {
@@ -535,9 +535,9 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
    fclose( paramfile );
 
    if( mapimgdial == 0 )
-      return progress.wasCancelled();
+      return progress.wasCanceled();
 
-   if(progress.wasCancelled())
+   if(progress.wasCanceled())
    {
       QMessageBox::information (mapimgdial, "Aborted!","MapIMG has been aborted",
          QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton);
@@ -563,7 +563,7 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
       if( QFile::exists( logFile ) )
       {
          QFile appendLog( logFile );
-         appendLog.open( IO_WriteOnly | IO_Append );
+         appendLog.open( QIODevice::WriteOnly | QIODevice::Append );
          QTextStream appendStream( &appendLog );
          appendStream << '\n' << out;
          appendLog.close();
@@ -624,10 +624,10 @@ bool mapimg_downsample( const RasterInfo &input, const RasterInfo &output, type 
       // Set progress of Dialog box and cancel if process was cancelled
       progress.setProgress( outY );
 
-      if(progress.wasCancelled())
+      if(progress.wasCanceled())
          break;
 
-      imgIO.get_line( mapimginbuf, (Q_ULLONG)(outY*pixRatio), inimg.ns, useType );
+      imgIO.get_line( mapimginbuf, (qulonglong)(outY*pixRatio), inimg.ns, useType );
 
       if( mapimginbuf == NULL )
          break;

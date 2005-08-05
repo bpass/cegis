@@ -1,5 +1,6 @@
-// $Id: imgio.cpp,v 1.1 2005/07/12 16:21:04 rbuehler Exp $
+// $Id: imgio.cpp,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
 
+//Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
 //Copyright 2002 United States Geological Survey
 //Released under GPL with mapimg copyright 2003 USGS
@@ -16,14 +17,14 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-#include <qmessagebox.h>
-#include <qstring.h>
+#include <QMessageBox>
+#include <QString>
+#include <String>
+#include <QFile>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <qfile.h>
-#include "imgio.h"
 
+#include "imgio.h"
 #include "mapimg.h"
 
 

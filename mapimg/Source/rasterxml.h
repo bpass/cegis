@@ -1,4 +1,4 @@
-// $Id: rasterxml.h,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: rasterxml.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 /*! \mainpage RasterXML class for mapimg
@@ -325,4 +325,3 @@ private:
 
 
 #endif
-

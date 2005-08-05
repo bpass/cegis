@@ -1,4 +1,4 @@
-// $Id: resampleinfo.cpp,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: resampleinfo.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 #include "resampleinfo.h"
@@ -102,7 +102,7 @@ bool ResampleInfo::shouldIgnore( IgnoreValue val ) const
    if( hasNoDataVal && val == (IgnoreValue)noval )
       return true;
 
-   for( unsigned int i = 0; i < ilist.size(); ++i )
+   for( int i = 0; i < ilist.size(); ++i )
    {
       if( val == (IgnoreValue)ilist[i] )
          return true;

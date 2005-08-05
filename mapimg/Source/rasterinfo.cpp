@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: rasterinfo.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 #include "rasterinfo.h"
@@ -340,7 +340,7 @@ bool RasterInfo::parseFileName()
 void RasterInfo::loadInfo()
 {
    QFile *file = new QFile( fileName + ".img.info" );
-   file->open( IO_ReadOnly );
+   file->open( QIODevice::ReadOnly );
    QStringList inFile( QStringList::split( '\n', QString(file->readAll()) ) );
    file->close();
    delete file;

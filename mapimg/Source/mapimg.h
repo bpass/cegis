@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: mapimg.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
 
 
 #ifndef MAPIMG_H
@@ -23,14 +23,14 @@ This is to make the higher level code easier to read. ( ie. mapimgForm.cpp )
 --Error Checking Functions:
 
 readytoFrameIt() will show a QMessageBox explaining any errors found that
-migh make frameIt() fail.
+might make frameIt() fail.
 
 readytoReproject() will show a QMessageBox explaining any errors found that
-migh make reproject() fail.
+might make reproject() fail.
 
 projectionErros() returns a QString that explains errors that have to deal
 the projection parameters as they stand by themselves. This QString is meant
-to be show to the user so they know what to fix.
+to be shown to the user so they know what to fix.
 
 
 --Parameter Manipulation Functions
@@ -69,7 +69,7 @@ round the same way.
 
 <>quickSortAndSearch() does a recursive, in place, quick sort on values and returns
 the index of AN occurance of searchValue in the list, or -1 if it is not present.
-It is not guaranteed whether this index will point to teh first, last, or middle 
+It is not guaranteed whether this index will point to the first, last, or middle 
 occurance, just AN occurance. This allows the median resample method to quickly
 find the section of the list that should be ignored, if it exists.
 

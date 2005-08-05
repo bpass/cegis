@@ -1,5 +1,6 @@
-// $Id: logform.cpp,v 1.1 2005/07/12 16:21:04 rbuehler Exp $
+// $Id: logform.cpp,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
 
+//Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
 /****************************************************************************
 ** Form implementation generated from reading ui file 'logForm.ui'
@@ -11,16 +12,25 @@
 #include "logform.h"
 #include "getprojinfo.h"
 
+#include <QVariant>
+#include <QPushButton>
+#include <QLayout>
+#include <QTooltip>
+#include <QTextStream>
+#include <QFile>
+#include <QMessageBox>
 #include <qvariant.h>
 #include <qpushbutton.h>
-#include <qtextedit.h>
-#include <qlayout.h>
-#include <qtooltip.h>
-#include <qwhatsthis.h>
-#include <qtextstream.h>
-#include <qfile.h>
-#include <qfiledialog.h>
-#include <qmessagebox.h>
+#include <QTextEdit>
+#include <QWhatsThis>
+#include <QFileDialog>
+				//#include <q3textedit.h>
+				//#include <q3whatsthis.h>
+				//#include <q3filedialog.h>
+
+//Added by qt3to4:
+#include <QGridLayout>
+#include <QHBoxLayout>
 
 /*
 *  Constructs a logForm as a child of 'parent', with the
@@ -29,7 +39,7 @@
 *  The dialog will by default be modeless, unless you set 'modal' to
 *  TRUE to construct a modal dialog.
 */
-logForm::logForm( QWidget* parent, const char* name, bool modal, WFlags fl )
+logForm::logForm( QWidget* parent, const char* name, bool modal, Qt::WFlags fl )
 : QDialog( parent, name, modal, fl )
 {
    if ( !name )
@@ -58,7 +68,6 @@ logForm::logForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    logFormLayout->addWidget( logViewer, 0, 0 );
    languageChange();
    resize( QSize(361, 365).expandedTo(minimumSizeHint()) );
-   clearWState( WState_Polished );
 
    // signals and slots connections
    connect( okButton, SIGNAL( clicked() ), this, SLOT( accept() ) );
@@ -104,13 +113,13 @@ void logForm::saveLog()
       "Choose a filename to save under" );
 
    int answer = -1;
-   if( s == NULL ) return;   //cancel pressed
+   if( s.isNull() ) return;   //cancel pressed
 
    //add default extension if none is provided
    if( (s.find( '.' ) == -1 ) ) s.append( ".txt" );
 
    // if output file exists, ask about overwriting
-   if( s  &&  QFile::exists(s) )
+   if( !s.isNull()  &&  QFile::exists(s) )
    {
       answer = QMessageBox::warning(
          this, "MapIMG -- Overwrite Log File",
@@ -132,10 +141,10 @@ void logForm::saveLog()
 
    //if s is defined and not empty
    //save the log
-   if( s && s != "")
+   if( !s.isNull() && s != "")
    {
       QFile logFileOutput( s );
-      if ( !logFileOutput.open( IO_WriteOnly ) )
+      if ( !logFileOutput.open( QIODevice::WriteOnly ) )
       {
          //error opening the file
          QMessageBox::critical( 0, "MapIMG",
@@ -165,7 +174,8 @@ void logForm::refreshLog()
 
 void logForm::loadLog()
 {
-   QString fullLog = "", tempLine = "";
+   QString fullLog = ""; 
+  /****/ char *tempLine = "";
    const Q_LONG MAX_LINE_LENGTH = 500;  //maximum number of characters to read at one time
 
    if( QFile::exists( logFile ) )
@@ -174,7 +184,7 @@ void logForm::loadLog()
       logViewer->setReadOnly( true );
 
       QFile log( logFile );
-      log.open( IO_ReadOnly );
+      log.open( QIODevice::ReadOnly );
 
       while( !log.atEnd() )
       {

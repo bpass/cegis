@@ -1,5 +1,6 @@
-// $Id: authorform.h,v 1.1 2005/07/12 16:21:04 rbuehler Exp $
+// $Id: authorform.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
 
+//Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
 /****************************************************************************
 ** Form interface generated from reading ui file 'form1.ui'
@@ -11,9 +12,15 @@
 #ifndef AUTHORFORM_H
 #define AUTHORFORM_H
 
-#include <qvariant.h>
-#include <qdialog.h>
-#include <qsettings.h>
+#include <QVariant>
+#include <QDialog>
+#include <QSettings>
+
+//Added by qt3to4:
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
 
 class QVBoxLayout;
 class QHBoxLayout;
@@ -34,7 +41,7 @@ class authorForm : public QDialog
    Q_OBJECT
 
 public:
-   authorForm( QSettings *settings = 0, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
+   authorForm( QSettings *settings = 0, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
    ~authorForm();
 
    QLabel* descrLabel;
@@ -62,7 +69,6 @@ protected:
 protected slots:
    virtual void languageChange();
    void okClicked();
-
 };
 
 #endif // AUTHORFORM_H

@@ -1,5 +1,6 @@
-// $Id: aboutform.h,v 1.1 2005/07/12 16:21:04 rbuehler Exp $
+// $Id: aboutform.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
 
+//Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
 /****************************************************************************
 ** Form interface generated from reading ui file 'aboutform.ui'
@@ -11,16 +12,23 @@
 #ifndef ABOUTFORM_H
 #define ABOUTFORM_H
 
-#include <qvariant.h>
-#include <qpixmap.h>
-#include <qdialog.h>
+#include <QVariant>
+#include <QPixmap>
+#include <QDialog>
+
+//Added by qt3to4:
+#include <QLabel>
+#include <QVBoxLayout>
+				#include <Q3Frame>
+#include <QHBoxLayout>
+#include <QGridLayout>
 
 class QVBoxLayout;
 class QHBoxLayout;
 class QGridLayout;
 class QSpacerItem;
 class QLabel;
-class QFrame;
+class Q3Frame;
 class QPushButton;
 
 /*
@@ -33,7 +41,7 @@ class aboutForm : public QDialog
    Q_OBJECT
 
 public:
-   aboutForm( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
+   aboutForm( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
    ~aboutForm(){}
 
    QLabel* logoLabel;

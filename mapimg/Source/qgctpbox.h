@@ -1,10 +1,10 @@
-// $Id: qgctpbox.h,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: qgctpbox.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 #ifndef QGCTPBOX_H
 #define QGCTPBOX_H
 
-#include <qvbox.h>
+#include <q3vbox.h>
 #include <qstring.h>
 #include <qlabel.h>
 #include <qlineedit.h>
@@ -13,7 +13,7 @@
 
 class QDmsEdit;
 
-class QGctpBox : public QVBox
+class QGctpBox : public Q3VBox
 {
    Q_OBJECT
 

@@ -1,8 +1,12 @@
-// $Id: mapimg.cpp,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: mapimg.cpp,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
 
 
 #include "mapimg.h"
-
+/*
+#include <QWidget>
+#include <QDir>
+#include <QString>
+*/
 #include <qwidget.h>
 #include <qdir.h>
 #include <qstring.h>
@@ -605,5 +609,3 @@ bool mapimg::reproject( const RasterInfo &input, const RasterInfo &output, const
    {  Q_UINT8 data = 0;
       return mapimg_resample( input, output, resample, data, parent);   }
 }
-
-

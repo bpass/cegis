@@ -1,5 +1,6 @@
-// $Id: authorform.cpp,v 1.1 2005/07/12 16:21:04 rbuehler Exp $
+// $Id: authorform.cpp,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
 
+//Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
 /****************************************************************************
 ** Form implementation generated from reading ui file 'form1.ui'
@@ -12,20 +13,25 @@
 #include "mapimgversion.h"
 #include "mapimgpalette.h"
 
-#include <qvariant.h>
-#include <qgroupbox.h>
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qpushbutton.h>
-#include <qlayout.h>
-#include <qtooltip.h>
-#include <qwhatsthis.h>
+#include <QVariant>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QLayout>
+#include <QTooltip>
+#include <QGroupBox>
+#include <QWhatsThis>
+
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
 
 /*
 *  Constructs a authorForm as a child of 'parent', with the
 *  name 'name'.
 */
-authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, bool modal, WFlags fl )
+authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, bool modal, Qt::WFlags fl )
 : QDialog( parent, name, modal, fl )
 {
    set = settings;
@@ -37,7 +43,7 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, 
    authorFormLayout = new QVBoxLayout( this, 5, 3, "authorFormLayout"); 
 
    descrLabel = new QLabel( this, "descrLabel" );
-   descrLabel->setAlignment( int( QLabel::WordBreak | QLabel::AlignVCenter ) );
+   descrLabel->setAlignment( int(  Qt::TextWordWrap | Qt::AlignVCenter ) );
    authorFormLayout->addWidget( descrLabel );
 
    inputBox = new QGroupBox( this, "inputBox" );
@@ -64,7 +70,7 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, 
    authorFormLayout->addItem( spacer3 );
 
    infoLabel = new QLabel( this, "infoLabel" );
-   infoLabel->setAlignment( int( QLabel::WordBreak | QLabel::AlignVCenter ) );
+/****/   infoLabel->setAlignment( int (Qt::TextWordWrap | Qt::AlignVCenter ) );
    authorFormLayout->addWidget( infoLabel );
 
    layout2 = new QHBoxLayout( 0, 0, 6, "layout2"); 
@@ -80,7 +86,6 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, 
    authorFormLayout->addLayout( layout2 );
    languageChange();
    resize( QSize(265, 200).expandedTo(minimumSizeHint()) );
-   clearWState( WState_Polished );
 
    connect( okButton, SIGNAL( clicked() ), this, SLOT(okClicked()) );
    connect( cancelButton, SIGNAL( clicked() ), this, SLOT(close()) );

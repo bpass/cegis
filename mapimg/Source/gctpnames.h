@@ -1,28 +1,10 @@
-// $Id: gctpnames.h,v 1.1 2005/07/12 16:21:04 rbuehler Exp $
+// $Id: gctpnames.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
 
 
 #ifndef GCTPNAMES_H
 #define GCTPNAMES_H
 
 #include <qstringlist.h>
-
-/*
-A quick subclassing of the QStringList to make it faster at dealing with
-negative indexes in the operator[]() function.
-*/
-class SmartQStringList : public QStringList
-{
-public:
-   SmartQStringList(const QStringList & I):QStringList(I){}
-
-   const QString &operator[](long i) const
-   {
-      if( i < 0 || i > (long)(size()-1) ) 
-         return QString::null;
-      else
-         return (*at(i));
-   }
-};
 
 namespace
 {
@@ -262,7 +244,7 @@ namespace
    }
 
    // A list of projections sorted by projection code
-   const SmartQStringList projNames(QStringList::split( ',', 
+   const QStringList projNames(QStringList::split( ',', 
       "Geographic,Universal Transverse Mercator,State Plane Coordinates,"
       "Albers Conical Equal Area,Lambert Conformal Conic,Mercator,"
       "Polar Stereographic,Polyconic,Equidistant Conic,Transverse Mercator,"

@@ -1,12 +1,12 @@
-// $Id: qinfoframe.h,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: qinfoframe.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 #ifndef QINFOFRAME_H
 #define QINFOFRAME_H
 
 // Qt classes used
-#include <qscrollview.h>
-#include <qvbox.h>
+#include <q3scrollview.h>
+#include <q3vbox.h>
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
@@ -14,8 +14,10 @@
 #include <qcombobox.h>
 #include <qtabwidget.h>
 #include <qpushbutton.h>
-#include <qpopupmenu.h>
+#include <q3popupmenu.h>
 #include <qcheckbox.h>
+//Added by qt3to4:
+#include <QEvent>
 
 // My classes used
 class QDmsEdit;
@@ -36,7 +38,7 @@ See the QInfoFrame class for a description of their purpose.
 By subclassing the QScrollView the user is able to have greater freedom in
 resizing the application and it leaves unlimited room for adding parameters.
 */
-class QMapTab : public QScrollView
+class QMapTab : public Q3ScrollView
 {
    Q_OBJECT
 
@@ -46,30 +48,30 @@ public:
 
    bool eventFilter( QObject* object, QEvent* event );
 
-   QVBox       *contents;
+   Q3VBox       *contents;
 
    QPushButton *copyButton;
    QPushButton *lockButton;
    QPushButton *frameButton;
 
-   QVBox       *fileBox;
+   Q3VBox       *fileBox;
    QLineEdit   *fileEdit;
 
-   QVBox       *rowcolBox;
+   Q3VBox       *rowcolBox;
    QSpinBox    *rowSpin;
    QSpinBox    *colSpin;
 
-   QVBox       *comboBox;
+   Q3VBox       *comboBox;
    QComboBox   *unitCombo;
    QComboBox   *spheroidCombo;
    QComboBox   *pixelCombo;
    QLineEdit   *pixelEdit;
 
-   QVBox       *ulBox;
+   Q3VBox       *ulBox;
    QLineEdit   *ulLonEdit;
    QLineEdit   *ulLatEdit;
 
-   QVBox       *dataBox;
+   Q3VBox       *dataBox;
    QComboBox   *dataCombo;
    QLineEdit   *fillEdit;
    QPushButton *fillButton;
@@ -104,7 +106,7 @@ See the QInfoFrame class for a description of their purpose.
 By subclassing the QScrollView the user is able to have greater freedom in
 resizing the application and it leaves unlimited room for adding parameters.
 */
-class QGctpTab : public QScrollView
+class QGctpTab : public Q3ScrollView
 {
    Q_OBJECT
 
@@ -112,17 +114,17 @@ public:
    QGctpTab( QWidget* parent = 0, const char* name = 0);
    ~QGctpTab();
 
-   QVBox       *contents;
+   Q3VBox       *contents;
 
    QPushButton *copyButton;
    QPushButton *lockButton;
 
-   QVBox       *projBox;
+   Q3VBox       *projBox;
    QComboBox   *projCombo;
    QWidget     *badProjBlank;
    QLabel      *badProjLabel;
 
-   QVBox       *zoneBox;
+   Q3VBox       *zoneBox;
    QSpinBox    *zoneSpin;
 
    QGctpBox   **gctpBoxes;
@@ -194,5 +196,3 @@ private:
 
 
 #endif
-
-

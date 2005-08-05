@@ -1,11 +1,11 @@
-#include <qprogressdialog.h>
-#include <qcolor.h>
-#include <qstring.h>
+#include <q3progressdialog.h>
+#include <QColor>
+#include QString>
 
 #include "mapimgprogressdialog.h"
 
-MapimgProgressDialog::MapimgProgressDialog( const QColor* color1, const QColor* color2, QWidget* creator, const char* name, bool modal, WFlags f )
-: QProgressDialog( creator, name, modal, f )
+MapimgProgressDialog::MapimgProgressDialog( const QColor* color1, const QColor* color2, QWidget* creator, const char* name, bool modal, Qt::WFlags f )
+: Q3ProgressDialog( creator, name, modal, f )
 {
    defaults();
 
@@ -14,9 +14,9 @@ MapimgProgressDialog::MapimgProgressDialog( const QColor* color1, const QColor* 
 
    if( colorStart && colorEnd )
    {
-      currentRed = colorStart->red();
-      currentGreen = colorStart->green();
-      currentBlue = colorStart->blue();
+      currentRed = colorStart->red();		//Took away Qt::  
+      currentGreen = colorStart->green(); //before color names here 
+      currentBlue = colorStart->blue();	//and below
 
       deltaRed = (colorEnd->red() - currentRed) / 1;
       deltaGreen = (colorEnd->green() - currentGreen) / 1;
@@ -27,8 +27,8 @@ MapimgProgressDialog::MapimgProgressDialog( const QColor* color1, const QColor* 
 }
 
 
-MapimgProgressDialog::MapimgProgressDialog( const QString& labelText, const QString& cancelButtonText, int totalSteps, const QColor* color1, const QColor* color2, QWidget* creator, const char* name, bool modal, WFlags f )
-: QProgressDialog( labelText, cancelButtonText, totalSteps, creator, name, modal, f )
+MapimgProgressDialog::MapimgProgressDialog( const QString& labelText, const QString& cancelButtonText, int totalSteps, const QColor* color1, const QColor* color2, QWidget* creator, const char* name, bool modal, Qt::WFlags f )
+: Q3ProgressDialog( labelText, cancelButtonText, totalSteps, creator, name, modal, f )
 {
    defaults();
 
@@ -85,13 +85,13 @@ void MapimgProgressDialog::defaults()
 
 void MapimgProgressDialog::setProgress( int progress )
 {
-   QProgressDialog::setProgress( progress );
+   Q3ProgressDialog::setProgress( progress );
 
    if( progress == totalSteps() && colorEnd )
    {
-      currentRed = colorEnd->red();
-      currentGreen = colorEnd->green();
-      currentBlue = colorEnd->blue();
+      currentRed = colorEnd->red();		//took Qt:: away
+      currentGreen = colorEnd->green();	//before color
+	  currentBlue = colorEnd->blue();		//names
    }
    else
    {
@@ -112,7 +112,7 @@ void MapimgProgressDialog::setProgress( int progress )
 
 void MapimgProgressDialog::setTotalSteps( int totalSteps )
 {
-   QProgressDialog::setTotalSteps( totalSteps );
+   Q3ProgressDialog::setTotalSteps( totalSteps );
 
    int tempSteps = totalSteps;
    if( tempSteps <= 0 )

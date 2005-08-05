@@ -1,5 +1,6 @@
-// $Id: imgio.h,v 1.1 2005/07/12 16:21:04 rbuehler Exp $
+// $Id: imgio.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
 
+//Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
 //Copyright 2002 United States Geological Survey
 //Released under GPL with mapimg copyright 2003 USGS
@@ -23,11 +24,12 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
-#include <qstring.h>
-#include <qfile.h>
-#include <qmessagebox.h>
+#include <QString>
+#include <QFile>
+#include <QMessageBox>
+
 #include "rasterinfo.h"
-#include <qcache.h>
+#include <QCache>//					#include <q3cache.h>
 
 
 
@@ -57,7 +59,7 @@ class IMGIO
 {
 private:
    int Max_Data_Element_Count;
-   QCache<type>* inputDataMap;
+   QCache<type, type>* inputDataMap;// Q3Cache<type>* inputDataMap;
 
    QString infile_name;       // Name of input file
    QString outfile_name;      // Name of output file
@@ -65,7 +67,7 @@ private:
    QFile inptr;               // Input file pointer
    QFile outptr;              // Output file pointer
 
-   Q_ULLONG last_offset;      // Last offset for get_line
+   qulonglong last_offset;      // Last offset for get_line
 
 public:
    long insize;               // Number of bytes in input image
@@ -197,7 +199,7 @@ public:
          inptr.close();
 
       inptr.setName( infile_name );
-      inptr.open( IO_ReadOnly | IO_Raw );
+      inptr.open( QIODevice::ReadOnly );
 
       if( !inptr.isOpen() || !inptr.isReadable() )
       {
@@ -212,7 +214,7 @@ public:
          outptr.close();
 
       outptr.setName( outfile_name );
-      outptr.open( IO_WriteOnly | IO_Raw );
+      outptr.open( QIODevice::WriteOnly );
 
       if(!outptr.isOpen() || !outptr.isWritable() )
       {
@@ -266,12 +268,12 @@ public:
    // ---------------------------
    static type get_max_value( const RasterInfo &input, type )
    {
-      const Q_ULLONG MAXSAMPLE = 15000;
-      const Q_ULLONG SUBSAMPLE = MAXSAMPLE / 3;
-      const Q_ULLONG INPUTSIZE = input.rows() * input.cols();
+      const qulonglong MAXSAMPLE = 15000;
+      const qulonglong SUBSAMPLE = MAXSAMPLE / 3;
+      const qulonglong INPUTSIZE = input.rows() * input.cols();
 
       QFile inFile( input.imgFileName().ascii() );
-      inFile.open( IO_ReadOnly | IO_Raw );
+      inFile.open( QIODevice::ReadOnly );
 
       if( !inFile.isOpen() || !inFile.isReadable() )
       {
@@ -339,12 +341,12 @@ public:
    // Definition must be in header for
    // Solaris compiler compatability
    // ---------------------------
-   void get_line(void* &buf, Q_ULLONG  offset, int lineLength, type)
+   void get_line(void* &buf, qulonglong  offset, int lineLength, type)
    {
       if( inputDataMap == NULL )
       {
-         inputDataMap = new QCache<type>( Max_Data_Element_Count, (int)(1.6*Max_Data_Element_Count) );
-         inputDataMap->setAutoDelete( true );
+         inputDataMap = new QCache<type,type>( Max_Data_Element_Count, (int)(1.6*Max_Data_Element_Count) );
+//         inputDataMap->setAutoDelete( true );
          last_offset = offset;
       }
       else if( last_offset == offset )
@@ -360,7 +362,7 @@ public:
 
       if( buf ==  0 )
       {
-         if( !inptr.at( (Q_ULLONG)(offset) * lineLength * sizeof(type)) )
+         if( !inptr.at( (qulonglong)(offset) * lineLength * sizeof(type)) )
          {
             // end of file or corrupt file found
             printf( "error seeking!!!\n" );

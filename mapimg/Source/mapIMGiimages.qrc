@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/new/prefix1" >
+        <file>Resources\USGS Logo.png</file>
+        <file>Resources\USGS Swirl Sphere.png</file>
+        <file>Resources\blank.png</file>
+        <file>Resources\calculate.png</file>
+        <file>Resources\copy.png</file>
+        <file>Resources\exit.png</file>
+        <file>Resources\inputinfo.png</file>
+        <file>Resources\insave.png</file>
+        <file>Resources\locked.png</file>
+        <file>Resources\open.png</file>
+        <file>Resources\outputinfo.png</file>
+        <file>Resources\outsave.png</file>
+        <file>Resources\preview.png</file>
+        <file>Resources\previewproject.png</file>
+        <file>Resources\reload.png</file>
+        <file>Resources\resample.png</file>
+        <file>Resources\save.png</file>
+        <file>Resources\unlocked.png</file>
+    </qresource>
+</RCC>

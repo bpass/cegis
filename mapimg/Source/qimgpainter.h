@@ -1,4 +1,4 @@
-// $Id: qimgpainter.h,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: qimgpainter.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 #ifndef QIMGPAINTER_H
@@ -43,9 +43,9 @@ private:
       void clearColorTable(Type data);
 
    //Create the color table and save it in the void * vColorTable
-   void callConstruct(Q_ULLONG offset);
+   void callConstruct(qulonglong offset);
    template <class Type>
-      void constructColorTable(Type data, Q_ULLONG offset);
+      void constructColorTable(Type data, qulonglong offset);
 
    //Draw the pixmap to be returned by getPixmap
    void callPaint();
@@ -170,7 +170,7 @@ void QImgPainter::clearColorTable( Type )
 
 
 ////////CALL TEMPLATE FUNCTION TO constructColorTable
-void QImgPainter::callConstruct(Q_ULLONG offset)
+void QImgPainter::callConstruct(qulonglong offset)
 {
    if( dataType == "Signed 64 Bit IEEE Float" )
    {	double data = 0;
@@ -205,7 +205,7 @@ void QImgPainter::callConstruct(Q_ULLONG offset)
 //Once all the values are read it applies a grayscale gradient
 //across all of the values with black being the lowest value
 template <class Type>
-void QImgPainter::constructColorTable(Type data, Q_ULLONG offset)
+void QImgPainter::constructColorTable(Type data, qulonglong offset)
 {
    tableAbort = false;
    if(vColorTable)
@@ -223,9 +223,9 @@ void QImgPainter::constructColorTable(Type data, Q_ULLONG offset)
       "Abort", pixmap.height(), NULL, NULL,
       0, "progress", TRUE);
    pd.setMinimumDuration(500);
-   Q_ULLONG yOffSet, xOffSet;
+   qulonglong yOffSet, xOffSet;
    int dataBytes = sizeof(data);
-   file.open(IO_ReadOnly);
+   file.open(QIODevice::ReadOnly);
    dataStream.setDevice(&file);
    for( int y = 0; y < pixmap.height(); y++ )
    {
@@ -237,10 +237,10 @@ void QImgPainter::constructColorTable(Type data, Q_ULLONG offset)
          return;
       }
       pd.setProgress(y);
-      yOffSet = static_cast<Q_ULLONG>(offset * y) * cols * dataBytes;
+      yOffSet = static_cast<qulonglong>(offset * y) * cols * dataBytes;
       for( int x = 0; x < pixmap.width(); x++ )
       {
-         xOffSet = static_cast<Q_ULLONG>(offset * x) * dataBytes;
+         xOffSet = static_cast<qulonglong>(offset * x) * dataBytes;
          file.at(yOffSet + xOffSet);
          dataStream >> data;
          colorTable->insert(data, QColor(0,0,0), false);
@@ -343,7 +343,7 @@ void QImgPainter::paintPixmap(Type data)
 
    lastRatio = file_pixRatio;
    if(optimized)
-      callConstruct(static_cast<Q_ULLONG>(file_pixRatio));
+      callConstruct(static_cast<qulonglong>(file_pixRatio));
 
    if(tableAbort)
    {
@@ -363,11 +363,11 @@ void QImgPainter::paintPixmap(Type data)
    MapimgProgressDialog pd( "Generating preview...",
       "Abort", pixmap.height(), &INPUT_COLOR, &IMGCOLOR, 0, "progress", TRUE);
    pd.setMinimumDuration(500);
-   Q_ULLONG yOffSet, xOffSet;
+   qulonglong yOffSet, xOffSet;
    QPainter painter( &pixmap );
    painter.setWindow( 0, 0, pixmap.width(), pixmap.height() );
    int dataBytes = sizeof(data);
-   file.open(IO_ReadOnly);
+   file.open(QIODevice::ReadOnly);
    dataStream.setDevice(&file);
    for( int y = 0; y < pixmap.height(); y++ )
    {
@@ -380,10 +380,10 @@ void QImgPainter::paintPixmap(Type data)
          return;
       }
       pd.setProgress(y);
-      yOffSet = static_cast<Q_ULLONG>(file_pixRatio * y) * cols * dataBytes;
+      yOffSet = static_cast<qulonglong>(file_pixRatio * y) * cols * dataBytes;
       for( int x = 0; x < pixmap.width(); x++ )
       {
-         xOffSet = static_cast<Q_ULLONG>(file_pixRatio * x) * dataBytes;
+         xOffSet = static_cast<qulonglong>(file_pixRatio * x) * dataBytes;
          file.at(yOffSet + xOffSet);
          dataStream >> data;
          painter.setPen( QPen( colorTable->find(data).data() ) );

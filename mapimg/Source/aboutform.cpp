@@ -1,5 +1,6 @@
-// $Id: aboutform.cpp,v 1.1 2005/07/12 16:21:04 rbuehler Exp $
+// $Id: aboutform.cpp,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
 
+//Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
 /****************************************************************************
 ** Form implementation generated from reading ui file 'aboutform.ui'
@@ -14,15 +15,18 @@
 #include "mapimgimages.h"
 #include "mapimgpalette.h"
 
-#include <qvariant.h>
-#include <qpushbutton.h>
-#include <qlabel.h>
-#include <qframe.h>
-#include <qlayout.h>
-#include <qtooltip.h>
-#include <qwhatsthis.h>
-#include <qimage.h>
-#include <qpixmap.h>
+#include <QVariant>
+#include <QPushButton>
+#include <QFrame>
+#include <QLayout>
+#include <QTooltip>
+#include <QWhatsThis>
+#include <QImage>
+#include <QPixmap>
+
+//Added by qt3to4:
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 /*
 *  Constructs an aboutForm as a child of 'parent', with the
@@ -31,7 +35,7 @@
 *  The dialog will by default be modeless, unless you set 'modal' to
 *  TRUE to construct a modal dialog.
 */
-aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
+aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, Qt::WFlags fl )
 : QDialog( parent, name, modal, fl )
 {
    if ( !name )
@@ -47,7 +51,7 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    logoLabel->setMaximumSize( QSize( 400, 147 ) );
    logoLabel->setFrameShape( QLabel::WinPanel );
    logoLabel->setFrameShadow( QLabel::Sunken );
-   logoLabel->setPixmap( mapimgImage( "USGS Logo" ) );
+   /****/logoLabel->setPixmap( QPixmap( "./Resources/USGS Logo.png" ) );
    logoLabel->setScaledContents( TRUE );
    aboutFormLayout->addWidget( logoLabel );
 
@@ -57,7 +61,7 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    titleLabel_font.setPointSize( 22 );
    titleLabel_font.setBold( TRUE );
    titleLabel->setFont( titleLabel_font ); 
-   titleLabel->setAlignment( int( QLabel::WordBreak | QLabel::AlignCenter ) );
+   /****/titleLabel->setAlignment( int( Qt::TextWordWrap | Qt::AlignCenter ) );
    aboutFormLayout->addWidget( titleLabel );
 
    descFrame = new QFrame( this, "descFrame" );
@@ -70,8 +74,8 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    descLabel1_font.setFamily( "Arial" );
    descLabel1_font.setPointSize( 10 );
    descLabel1->setFont( descLabel1_font ); 
-   descLabel1->setTextFormat( QLabel::RichText );
-   descLabel1->setAlignment( int( QLabel::WordBreak | QLabel::AlignJustify | QLabel::AlignTop ) );
+   descLabel1->setTextFormat( Qt::RichText );
+   /****/descLabel1->setAlignment( int( Qt::TextWordWrap | Qt::AlignJustify | Qt::AlignTop ) );
    descFrameLayout->addWidget( descLabel1 );
 
    descLabel2 = new QLabel( descFrame, "descLabel2" );
@@ -79,15 +83,15 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, WFlags fl )
    descLabel2_font.setFamily( "Arial" );
    descLabel2_font.setPointSize( 12 );
    descLabel2->setFont( descLabel2_font ); 
-   descLabel2->setTextFormat( QLabel::RichText );
-   descLabel2->setAlignment( int( QLabel::WordBreak | QLabel::AlignJustify | QLabel::AlignTop ) );
+   descLabel2->setTextFormat( Qt::RichText );
+   /****/descLabel2->setAlignment( int( Qt::TextWordWrap | Qt::AlignJustify | Qt::AlignTop ) );
    descFrameLayout->addWidget( descLabel2 );
    aboutFormLayout->addWidget( descFrame );
 
    descLabel3 = new QLabel( descFrame, "descLabel3" );
    descLabel3->setFont( descLabel1_font ); 
-   descLabel3->setTextFormat( QLabel::RichText );
-   descLabel3->setAlignment( int( QLabel::WordBreak | QLabel::AlignJustify | QLabel::AlignTop ) );
+   descLabel3->setTextFormat( Qt::RichText );
+   /****/descLabel3->setAlignment( int( Qt::TextWordWrap | Qt::AlignJustify | Qt::AlignTop ) );
    descFrameLayout->addWidget( descLabel3 );
 
    okLayout = new QHBoxLayout( this, 4, 3, "okLayout" );

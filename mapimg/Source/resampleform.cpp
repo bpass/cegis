@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: resampleform.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 /****************************************************************************
@@ -12,21 +12,27 @@
 
 #include <qvariant.h>
 #include <qpushbutton.h>
-#include <qgroupbox.h>
+#include <q3groupbox.h>
 #include <qcombobox.h>
 #include <qlabel.h>
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qradiobutton.h>
 #include <qlineedit.h>
-#include <qlistbox.h>
+#include <q3listbox.h>
 #include <qlayout.h>
 #include <qtooltip.h>
-#include <qwhatsthis.h>
+#include <q3whatsthis.h>
 #include <qevent.h>
 #include <qvalidator.h>
 #include <qmessagebox.h>
 #include <qslider.h>
-#include <qhbox.h>
+#include <q3hbox.h>
+//Added by qt3to4:
+#include <QKeyEvent>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <Qt>
+#include <Q3IconView>
 
 #include "mapimgform.h"
 #include "mapimgvalidator.h"
@@ -41,7 +47,7 @@
 *  The dialog will by default be modeless, unless you set 'modal' to
 *  TRUE to construct a modal dialog.
 */
-ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent, const char* name, bool modal, WFlags fl )
+ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent, const char* name, bool modal, Qt::WFlags fl )
 : QDialog( parent, name, modal, fl )
 {
    if ( !name )
@@ -55,7 +61,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
    inputLayout = new QVBoxLayout( 0, 0, 6, "inputLayout"); 
 
-   resampleBox = new QGroupBox( this, "resampleBox" );
+   resampleBox = new Q3GroupBox( this, "resampleBox" );
    resampleBox->setColumnLayout(0, Qt::Vertical );
    resampleBox->layout()->setSpacing( 6 );
    resampleBox->layout()->setMargin( 11 );
@@ -71,7 +77,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    catconLabel = new QLabel( "", resampleBox, "catconLabel" );
    conRadio = new QRadioButton( "Continuous Data", resampleBox, "conRadio" );
    catRadio = new QRadioButton( "Categorical Data", resampleBox, "catRadio" );
-   catconButtonGroup = new QButtonGroup( resampleBox, "catconButtonGroup" );
+   catconButtonGroup = new Q3ButtonGroup( resampleBox, "catconButtonGroup" );
    catconButtonGroup->hide();
    catconButtonGroup->insert( catRadio );
    catconButtonGroup->insert( conRadio );
@@ -81,7 +87,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
    inputLayout->addWidget( resampleBox );
 
-   ignoreBox = new QGroupBox( this, "ignoreBox" );
+   ignoreBox = new Q3GroupBox( this, "ignoreBox" );
    ignoreBox->setColumnLayout(0, Qt::Vertical );
    ignoreBox->layout()->setSpacing( 6 );
    ignoreBox->layout()->setMargin( 11 );
@@ -111,7 +117,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    ignoreLayout->addItem( ingoreSpacer );
    ignoreBoxLayout->addLayout( ignoreLayout );
 
-   ignoreListBox = new QListBox( ignoreBox, "ignoreListBox" );
+   ignoreListBox = new Q3ListBox( ignoreBox, "ignoreListBox" );
    ignoreListBox->setMinimumSize( QSize( 125, 0 ) );
    ignoreListBox->installEventFilter( this );
    ignoreBoxLayout->addWidget( ignoreListBox );
@@ -129,7 +135,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
    ResampleFormLayout->addLayout( inputLayout );
 
-   memoryBox = new QGroupBox( this, "memoryBox" );
+   memoryBox = new Q3GroupBox( this, "memoryBox" );
    memoryBox->setColumnLayout(0, Qt::Vertical );
    memoryBox->layout()->setSpacing( 6 );
    memoryBox->layout()->setMargin( 11 );
@@ -175,12 +181,12 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
    cancelButton = new QPushButton( this, "cancelButton" );
    cancelButton->setAutoDefault( false );
-   cancelButton->setAccel( Key_Escape );
+   cancelButton->setAccel( Qt::Key_Escape );
    okLayout->addWidget( cancelButton );
    ResampleFormLayout->addLayout( okLayout );
    languageChange();
    resize( QSize(300, 218).expandedTo(minimumSizeHint()) );
-   clearWState( WState_Polished );
+//   clearWState( WState_Polished );
 
 
    connect( okButton, SIGNAL( clicked() ), this, SLOT( accept() ) );
@@ -368,7 +374,7 @@ void ResampleForm::newVal()
       }
       else
       {
-         QListBoxItem* ignoreListItem = ignoreListBox->findItem( QString::number( i, 'f', decimals ), Qt::ExactMatch );
+         Q3ListBoxItem* ignoreListItem = ignoreListBox->findItem( QString::number( i, 'f', decimals ), Q3IconView::ExactMatch );
          ignoreListBox->setSelected( ignoreListItem, TRUE );
       }
 

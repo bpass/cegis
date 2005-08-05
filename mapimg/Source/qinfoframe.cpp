@@ -1,8 +1,12 @@
-// $Id: qinfoframe.cpp,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: qinfoframe.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 #include "qinfoframe.h"
 #include "qgctpbox.h"
+//Added by qt3to4:
+#include <QEvent>
+#include <QLabel>
+#include <QMouseEvent>
 #include "mapimgimages.h"
 #include "mapimg.h"
 #include "rasterinfo.h"
@@ -33,42 +37,46 @@ STAGE 3: A level of polish is applied to every widget. Adding QTooltips,
 applying QValidators, fixing sizes, and making connections happens here.
 */
 QMapTab::QMapTab( QWidget* parent, const char* name)
-: QScrollView( parent, name)
+: Q3ScrollView( parent, name)
 {
    ////////STAGE 1: Appearance/Setup
    //
-   setHScrollBarMode( QScrollView::AlwaysOff );
-   setVScrollBarMode( QScrollView::AlwaysOn );
+   setHScrollBarMode( Q3ScrollView::AlwaysOff );
+   setVScrollBarMode( Q3ScrollView::AlwaysOn );
 
-   contents = new QVBox( viewport(), "contents" );
+   contents = new Q3VBox( viewport(), "contents" );
    addChild( contents );
 
    ////////STAGE 2: Generate Widgets
    //
    //titleBox - Contains function buttons and the title of the Tab
-   QHBox *titleBox = new QHBox( contents );
-   copyButton = new QPushButton( QIconSet( mapimgImage( "copy" ) ),
-      "", titleBox, "copyButton" );
-   lockButton = new QPushButton( QIconSet( mapimgImage( "unlocked" ) ),
-      "", titleBox, "lockButton" );
-   QLabel *mapLabel = new QLabel( "Map Info", titleBox, "mapLabel" );
-   frameButton = new QPushButton( QIconSet( mapimgImage( "calculate" ) ),
-      "", titleBox, "frameButton" );
+   Q3HBox *titleBox = new Q3HBox( contents );
+
+/*************/
+	copyButton = new QPushButton( QIcon( "./Resources/copy.png" ),
+		"", titleBox, "copyButton" );
+	lockButton = new QPushButton( QIcon( "./Resources/unlocked.png" ),
+		"", titleBox, "lockButton");
+	QLabel *mapLabel = new QLabel( "Map Info", titleBox, "mapLabel" );
+	frameButton = new QPushButton( QIcon( "./Resources/calculate.png" ),
+		"", titleBox, "frameButton");
+/*************/
+
 
    //fileBox - Contains a lineedit for displaying the ".info" filename
-   fileBox = new QVBox( contents );
+   fileBox = new Q3VBox( contents );
    (void) new QLabel( "File Name:", fileBox);
    fileEdit = new QLineEdit( "", "", fileBox, "fileEdit" );
 
    //rowcolBox - Contains two spin boxes for defining the pixel dimensions
-   rowcolBox = new QVBox( contents );
+   rowcolBox = new Q3VBox( contents );
    (void) new QLabel( "Rows of Pixels:", rowcolBox);
    rowSpin = new QSpinBox( 0, 100000000, 1, rowcolBox, "rowSpin" );
    (void) new QLabel( "Columns of Pixels:", rowcolBox);
    colSpin = new QSpinBox( 0, 100000000, 1, rowcolBox, "colSpin" );
 
    //comboBox - Contains four combo boxes for selecting preset values
-   comboBox = new QVBox( contents );
+   comboBox = new Q3VBox( contents );
    (void) new QLabel( "Units", comboBox, "unitLabel");
    unitCombo = new QComboBox( comboBox, "unitCombo" );
    (void) new QLabel( "Spheroid", comboBox, "spheroidLabel" );
@@ -78,18 +86,18 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    pixelEdit = new QLineEdit( comboBox, "pixelEdit" );
 
    //ulBox - Contains line edits for defining the upper left corner of the map
-   ulBox = new QVBox( contents );
+   ulBox = new Q3VBox( contents );
    (void) new QLabel( "UL Longitude in meters", ulBox);
    ulLonEdit = new QLineEdit( ulBox, "ulLonEdit" );
    (void) new QLabel( "UL Latitude in meters", ulBox);
    ulLatEdit = new QLineEdit( ulBox, "ulLatEdit" );
 
    //dataBox - Contains one combo box for selecting what type of data it is
-   dataBox = new QVBox( contents );
+   dataBox = new Q3VBox( contents );
    (void) new QLabel( "Pixel Data Type", dataBox);
    dataCombo = new QComboBox( dataBox, "dataCombo" );
    (void) new QLabel( "Fill Value", dataBox );
-   QHBox *fillBox = new QHBox( dataBox );
+   Q3HBox *fillBox = new Q3HBox( dataBox );
    fillBox->setSpacing( 5 );
    hasFillCheck = new QCheckBox( fillBox, "hasFillCheck" );
    hasFillCheck->hide();
@@ -98,7 +106,7 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    fillButton = new QPushButton( "?", fillBox );
 
    (void) new QLabel( "No Data Value", dataBox );
-   QHBox *noDataBox = new QHBox( dataBox );
+   Q3HBox *noDataBox = new Q3HBox( dataBox );
    noDataBox->setSpacing( 5 );
    hasNoDataCheck = new QCheckBox( noDataBox, "hasNoDataCheck" );
    hasNoDataCheck->hide();
@@ -119,7 +127,7 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
    QFont largeFont(  mapLabel->font() );
    largeFont.setPointSize( 12 );
    mapLabel->setFont( largeFont );
-   mapLabel->setAlignment( int( QLabel::AlignCenter ) );
+/**/   mapLabel->setAlignment(Qt::AlignCenter);
    frameButton->setMaximumWidth( 28 ); frameButton->setMaximumHeight( 28 );
    QToolTip::add( frameButton, "Calculate rows, columns, and upper left coordinates." );
 
@@ -219,11 +227,11 @@ bool QMapTab::eventFilter( QObject* object, QEvent* event )
       }
       else
       {
-         return QScrollView::eventFilter( object, event );
+         return Q3ScrollView::eventFilter( object, event );
       }
    }
 
-   return QScrollView::eventFilter( object, event );
+   return Q3ScrollView::eventFilter( object, event );
 }
 
 
@@ -231,8 +239,8 @@ void QMapTab::fillCheckToggled( bool state )
 {
    if(fillEdit->validator() != 0 )
       ((MapimgValidator*)fillEdit->validator())->setAllowUndefined( !state );
-
-   if( state == QButton::Off )
+   
+   if( state == QCheckBox::Off )
    {
       lastFillValue = fillEdit->text();
       fillEdit->setText( "Undefined" );
@@ -335,36 +343,39 @@ STAGE 3: A level of polish is applied to every widget. Adding QTooltips,
 applying QValidators, fixing sizes, and making connections happens here.
 */
 QGctpTab::QGctpTab( QWidget* parent, const char* name)
-: QScrollView( parent, name)
+: Q3ScrollView( parent, name)
 {
    ////////STAGE 1: Appearance/Setup
    //
-   setHScrollBarMode( QScrollView::AlwaysOff );
-   setVScrollBarMode( QScrollView::AlwaysOn );
+   setHScrollBarMode( Q3ScrollView::AlwaysOff );
+   setVScrollBarMode( Q3ScrollView::AlwaysOn );
 
-   contents = new QVBox( viewport(), "contents" );
+   contents = new Q3VBox( viewport(), "contents" );
    addChild( contents );
 
    ////////STAGE 2: Generate Widgets
    //
    //titleBox - Contains function buttons and the title of the Tab
-   QHBox *titleBox = new QHBox( contents );
-   copyButton = new QPushButton( QIconSet( mapimgImage( "copy" ) ),
-      "", titleBox, "copyButton" );
-   lockButton = new QPushButton( QIconSet( mapimgImage( "unlocked" ) ),
-      "", titleBox, "lockButton" );
+   Q3HBox *titleBox = new Q3HBox( contents );
+
+/****/
+	copyButton = new QPushButton( QIcon( "./Resources/copy.png" ),
+		"", titleBox, "copyButton" );
+	lockButton = new QPushButton( QIcon( "./Resources/unlocked.png" ),
+		"", titleBox, "lockedButton" );
+/****/
    QLabel *gctpLabel = new QLabel( "Projection Info", titleBox, "gctpLabel" );
 
    //projBox - Contains the combo box for selecting which projection to use
    //    Also contains the bad projection label
-   projBox = new QVBox( contents );
+   projBox = new Q3VBox( contents );
    (void) new QLabel( "Projection", projBox);
    projCombo = new QComboBox( projBox, "projCombo" );
    badProjBlank = new QWidget( contents );
    badProjLabel = new QLabel( badProjBlank, "badProjLabel" );
 
    //zoneBox - Contains a spin box for selecting  which UTM zone to use
-   zoneBox = new QVBox( contents );
+   zoneBox = new Q3VBox( contents );
    (void) new QLabel( "UTM Zone Code", zoneBox);
    zoneSpin = new QSpinBox( -60, 60, 1, zoneBox, "zoneSpin" );
 
@@ -385,7 +396,7 @@ QGctpTab::QGctpTab( QWidget* parent, const char* name)
    QFont largeFont(  gctpLabel->font() );
    largeFont.setPointSize( 12 );
    gctpLabel->setFont( largeFont ); 
-   gctpLabel->setAlignment( int( QLabel::AlignCenter ) );
+/**/  gctpLabel->setAlignment( Qt::AlignCenter );
    titleBox->setMaximumHeight( titleBox->height() );
 
    //projBox
@@ -785,13 +796,18 @@ void QInfoFrame::lock( bool on, bool saveFile )
    setReadOnly( on );
    if( on )
    {
-      mapTab->lockButton->setIconSet( QIconSet( mapimgImage( "locked" ) ) );
-      gctpTab->lockButton->setIconSet( QIconSet( mapimgImage( "locked" ) ) );
+
+/****/
+	   mapTab->lockButton->setIcon( QIcon( "./Resources/locked.png" ) );
+	   gctpTab->lockButton->setIcon( QIcon( "./Resources/locked.png" ) );
+/****/
    }
    else
    {
-      mapTab->lockButton->setIconSet( QIconSet( mapimgImage( "unlocked" ) ) );
-      gctpTab->lockButton->setIconSet( QIconSet( mapimgImage( "unlocked" ) ) );
+/****/
+	   mapTab->lockButton->setIcon( QIcon( "./Resources/unlocked.png" ) );
+	   gctpTab->lockButton->setIcon( QIcon( "./Resources/unclocked.png" ) );
+/****/
    }
    mapTab->lockButton->setOn( on );
    gctpTab->lockButton->setOn( on );

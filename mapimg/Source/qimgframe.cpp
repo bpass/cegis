@@ -1,12 +1,18 @@
-// $Id: qimgframe.cpp,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: qimgframe.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
 
 
 #include "qimgframe.h"
 #include "qimgpainter.h"
+//Added by qt3to4:
+#include <QPixmap>
+#include <QLabel>
+#include <QShowEvent>
+#include <Q3Frame>
+#include <QResizeEvent>
 #include "mapimgpalette.h"
 
 QImgFrame::QImgFrame( QWidget* parent, const char* name)
-: QFrame( parent, name)
+: Q3Frame( parent, name)
 {
    setPaletteBackgroundColor( IMGCOLOR );
 
@@ -31,12 +37,12 @@ void QImgFrame::setPixmap( const QPixmap &pixmap)
 {
    imgName = "";
    pixmapLabel->setPixmap(pixmap);
-   pixmapLabel->pixmap()->setOptimization(QPixmap::BestOptim);
+//   pixmapLabel->pixmap()->setOptimization(QPixmap::BestOptim);
    resizeEvent(NULL);
 }
 
 
-QPixmap *QImgFrame::pixmap() const
+const QPixmap *QImgFrame::pixmap() const
 {
    return pixmapLabel->pixmap();
 }
@@ -69,7 +75,7 @@ void QImgFrame::resample()
 void QImgFrame::resizeEvent( QResizeEvent * )
 {
    QSize newS(pixmapLabel->pixmap()->size());
-   newS.scale(contentsRect().size(), QSize::ScaleMin);
+   newS.scale(contentsRect().size(), Qt::KeepAspectRatio/*QSize::ScaleMin*/);
    QRect newG(QPoint(0,0), newS);
    newG.moveCenter(contentsRect().center());
    pixmapLabel->setGeometry(newG);

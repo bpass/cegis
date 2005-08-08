@@ -1,12 +1,14 @@
-// $Id: qinfoframe.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: qinfoframe.h,v 1.3 2005/08/08 13:53:18 lwoodard Exp $
 
 
 #ifndef QINFOFRAME_H
 #define QINFOFRAME_H
 
 // Qt classes used
-#include <q3scrollview.h>
+//#include <q3scrollview.h>
+#include <QScrollArea>
 #include <q3vbox.h>
+#include <QVBoxLayout>
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
@@ -16,6 +18,7 @@
 #include <qpushbutton.h>
 #include <q3popupmenu.h>
 #include <qcheckbox.h>
+#include <QWidget>
 //Added by qt3to4:
 #include <QEvent>
 
@@ -38,59 +41,59 @@ See the QInfoFrame class for a description of their purpose.
 By subclassing the QScrollView the user is able to have greater freedom in
 resizing the application and it leaves unlimited room for adding parameters.
 */
-class QMapTab : public Q3ScrollView
+class QMapTab : public QScrollArea	//Q3ScrollView
 {
-   Q_OBJECT
+	Q_OBJECT
 
 public:
-   QMapTab( QWidget* parent = 0, const char* name = 0);
-   ~QMapTab();
+	QMapTab( QWidget* parent = 0, const char* name = 0);
+	~QMapTab();
 
-   bool eventFilter( QObject* object, QEvent* event );
+	bool eventFilter( QObject* object, QEvent* event );
 
-   Q3VBox       *contents;
+	Q3VBox       *contents;
 
-   QPushButton *copyButton;
-   QPushButton *lockButton;
-   QPushButton *frameButton;
+	QPushButton *copyButton;
+	QPushButton *lockButton;
+	QPushButton *frameButton;
 
-   Q3VBox       *fileBox;
-   QLineEdit   *fileEdit;
+	QWidget		*fileBox;
+	QLineEdit   *fileEdit;
 
-   Q3VBox       *rowcolBox;
-   QSpinBox    *rowSpin;
-   QSpinBox    *colSpin;
+	Q3VBox      *rowcolBox;
+	QSpinBox    *rowSpin;
+	QSpinBox    *colSpin;
 
-   Q3VBox       *comboBox;
-   QComboBox   *unitCombo;
-   QComboBox   *spheroidCombo;
-   QComboBox   *pixelCombo;
-   QLineEdit   *pixelEdit;
+	Q3VBox       *comboBox;
+	QComboBox   *unitCombo;
+	QComboBox   *spheroidCombo;
+	QComboBox   *pixelCombo;
+	QLineEdit   *pixelEdit;
 
-   Q3VBox       *ulBox;
-   QLineEdit   *ulLonEdit;
-   QLineEdit   *ulLatEdit;
+	Q3VBox       *ulBox;
+	QLineEdit   *ulLonEdit;
+	QLineEdit   *ulLatEdit;
 
-   Q3VBox       *dataBox;
-   QComboBox   *dataCombo;
-   QLineEdit   *fillEdit;
-   QPushButton *fillButton;
-   QLineEdit   *noDataEdit;
+	Q3VBox       *dataBox;
+	QComboBox   *dataCombo;
+	QLineEdit   *fillEdit;
+	QPushButton *fillButton;
+	QLineEdit   *noDataEdit;
 
-   QCheckBox   *hasFillCheck;
-   QString     lastFillValue;
-   QCheckBox   *hasNoDataCheck;
-   QString     lastNoDataValue;
+	QCheckBox   *hasFillCheck;
+	QString     lastFillValue;
+	QCheckBox   *hasNoDataCheck;
+	QString     lastNoDataValue;
 
-   QString     authName;
-   QString     authCompany;
-   QString     authEmail;
+	QString     authName;
+	QString     authCompany;
+	QString     authEmail;
 
 public slots:
-   void pixelChange(int);
-   void dataChange(const QString&);
-   void fillCheckToggled( bool state );
-   void noDataCheckToggled( bool state );
+	void pixelChange(int);
+	void dataChange(const QString&);
+	void fillCheckToggled( bool state );
+	void noDataCheckToggled( bool state );
 };
 
 
@@ -106,31 +109,31 @@ See the QInfoFrame class for a description of their purpose.
 By subclassing the QScrollView the user is able to have greater freedom in
 resizing the application and it leaves unlimited room for adding parameters.
 */
-class QGctpTab : public Q3ScrollView
+class QGctpTab : public QScrollArea
 {
-   Q_OBJECT
+	Q_OBJECT
 
 public:
-   QGctpTab( QWidget* parent = 0, const char* name = 0);
-   ~QGctpTab();
+	QGctpTab( QWidget* parent = 0, const char* name = 0);
+	~QGctpTab();
 
-   Q3VBox       *contents;
+	Q3VBox       *contents;
 
-   QPushButton *copyButton;
-   QPushButton *lockButton;
+	QPushButton *copyButton;
+	QPushButton *lockButton;
 
-   Q3VBox       *projBox;
-   QComboBox   *projCombo;
-   QWidget     *badProjBlank;
-   QLabel      *badProjLabel;
+	Q3VBox       *projBox;
+	QComboBox   *projCombo;
+	QWidget     *badProjBlank;
+	QLabel      *badProjLabel;
 
-   Q3VBox       *zoneBox;
-   QSpinBox    *zoneSpin;
+	Q3VBox       *zoneBox;
+	QSpinBox    *zoneSpin;
 
-   QGctpBox   **gctpBoxes;
+	QGctpBox   **gctpBoxes;
 
 public slots:
-   void projChange();
+	void projChange();
 };
 
 
@@ -154,44 +157,44 @@ the current values of a loaded map.
 */
 class QInfoFrame : public QTabWidget
 {
-   Q_OBJECT
+	Q_OBJECT
 
 public:
-   QInfoFrame( QWidget* parent = 0, const char* name = 0);
-   ~QInfoFrame();
+	QInfoFrame( QWidget* parent = 0, const char* name = 0);
+	~QInfoFrame();
 
-   void reset();
-   void fixWidth( uint w );
+	void reset();
+	void fixWidth( uint w );
 
-   void setReadOnly( bool ro );
-   void setAsInput();
-   void setAsOutput();
-   void setPartner( QInfoFrame * i );
+	void setReadOnly( bool ro );
+	void setAsInput();
+	void setAsOutput();
+	void setPartner( QInfoFrame * i );
 
-   void setInfo( RasterInfo &input );
-   RasterInfo info();
+	void setInfo( RasterInfo &input );
+	RasterInfo info();
 
-   QMapTab     *mapTab;
-   QGctpTab    *gctpTab;
+	QMapTab     *mapTab;
+	QGctpTab    *gctpTab;
 
 public slots:
-   //copy() copies all non-calculated info from another QInfoFrame
-   //if (src) copy from src, else copy from partner
-   void copy( QInfoFrame* src = 0 );
-   void partnerChanged();
+	//copy() copies all non-calculated info from another QInfoFrame
+	//if (src) copy from src, else copy from partner
+	void copy( QInfoFrame* src = 0 );
+	void partnerChanged();
 
-   //Locks the info editor and emits the locked() signal if on == TRUE
-   void lock( bool on, bool saveFile = true );
-   bool frame();
-   void getFill();
+	//Locks the info editor and emits the locked() signal if on == TRUE
+	void lock( bool on, bool saveFile = true );
+	bool frame();
+	void getFill();
 
 signals:
-   void locked();
+	void locked();
 
 private:
-   QString     xmlName;
-   bool        locking;
-   QInfoFrame  *partner;
+	QString     xmlName;
+	bool        locking;
+	QInfoFrame  *partner;
 };
 
 

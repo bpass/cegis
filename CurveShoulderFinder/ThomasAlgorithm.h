@@ -2,7 +2,7 @@
  * @file ThomasAlgorithm.h
  * @author Austin Hartman
  *
- * $Id: ThomasAlgorithm.h,v 1.4 2005/07/01 23:05:37 ahartman Exp $
+ * $Id: ThomasAlgorithm.h,v 1.5 2005/08/08 20:04:15 ahartman Exp $
  */
 
 #ifndef AUSTIN_THOMASALGORITHM_H
@@ -10,6 +10,9 @@
 
 #include "TridiagonalMatrix.h"
 
+/**
+ * A functor to solve a linear system Ax = b when A is a tridiagonal matrix.
+ */
 template<class T>
 class ThomasAlgorithm
 {
@@ -26,6 +29,10 @@ public:
 	Solution operator()(const TridiagonalMatrix<T>& matrix, 
 	                    const MyVector<T>& vec) const;
 
+    /**
+     * Holds the solution to a system that has been solved with the Thomas
+     * Algorithm.
+     */
 	class Solution
 	{
 	public:
@@ -41,14 +48,18 @@ public:
 		 * the elements of L on the subdiagonal.  The elements of L
 		 * on the main diagonal are all 1, and everything else is 0.
 		 */
+        //@{
 		TridiagonalMatrix<T>& matrix();
 		const TridiagonalMatrix<T>& matrix() const;
+        //@}
 
 		/**
 		 * This returns the solved vector for the system
 		 */
+        //@{
 		MyVector<T>& vector();
 		const MyVector<T>& vector() const;
+        //@}
 	private:
 		TridiagonalMatrix<T> mat;
 		MyVector<T> vec;

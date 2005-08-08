@@ -5,6 +5,10 @@ To build and use, just run the following:
     configure
     make
 
+  OR
+
+    autoreconf --force --install --symlink --verbose
+
 To execute the tests, run:
     make check
 

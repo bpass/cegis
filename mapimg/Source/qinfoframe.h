@@ -1,4 +1,4 @@
-// $Id: qinfoframe.h,v 1.3 2005/08/08 13:53:18 lwoodard Exp $
+// $Id: qinfoframe.h,v 1.4 2005/08/08 20:06:17 lwoodard Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -19,6 +19,7 @@
 #include <q3popupmenu.h>
 #include <qcheckbox.h>
 #include <QWidget>
+#include <QVBoxLayout>
 //Added by qt3to4:
 #include <QEvent>
 
@@ -38,43 +39,43 @@ projection. (ie. Size, Location, Resoultion, Scale)
 The QMapTab also has three buttons which are connected to by the QInfoFrame.
 See the QInfoFrame class for a description of their purpose.
 
-By subclassing the QScrollView the user is able to have greater freedom in
+By subclassing the QScrollARea the user is able to have greater freedom in
 resizing the application and it leaves unlimited room for adding parameters.
 */
-class QMapTab : public QScrollArea	//Q3ScrollView
+class QMapTab : public QScrollArea	//QScrollARea
 {
 	Q_OBJECT
 
 public:
-	QMapTab( QWidget* parent = 0, const char* name = 0);
+	QMapTab( QWidget* parent = 0 );
 	~QMapTab();
 
 	bool eventFilter( QObject* object, QEvent* event );
 
-	Q3VBox       *contents;
+	QWidget	*contents;	
 
 	QPushButton *copyButton;
 	QPushButton *lockButton;
 	QPushButton *frameButton;
 
-	QWidget		*fileBox;
+	QVBoxLayout *fileBox;	
 	QLineEdit   *fileEdit;
 
-	Q3VBox      *rowcolBox;
+	QVBoxLayout		*rowcolBox;	
 	QSpinBox    *rowSpin;
 	QSpinBox    *colSpin;
 
-	Q3VBox       *comboBox;
+	QVBoxLayout *comboBox;	
 	QComboBox   *unitCombo;
 	QComboBox   *spheroidCombo;
 	QComboBox   *pixelCombo;
 	QLineEdit   *pixelEdit;
 
-	Q3VBox       *ulBox;
+	QVBoxLayout	*ulBox;	
 	QLineEdit   *ulLonEdit;
 	QLineEdit   *ulLatEdit;
 
-	Q3VBox       *dataBox;
+	QVBoxLayout	*dataBox;	
 	QComboBox   *dataCombo;
 	QLineEdit   *fillEdit;
 	QPushButton *fillButton;
@@ -106,7 +107,7 @@ only contains the projection parameters. (ie. Projection Name, 15 GCTP Params)
 The QGctpTab also has two buttons which are connected to by the QInfoFrame.
 See the QInfoFrame class for a description of their purpose.
 
-By subclassing the QScrollView the user is able to have greater freedom in
+By subclassing the QScrollARea the user is able to have greater freedom in
 resizing the application and it leaves unlimited room for adding parameters.
 */
 class QGctpTab : public QScrollArea
@@ -114,23 +115,27 @@ class QGctpTab : public QScrollArea
 	Q_OBJECT
 
 public:
-	QGctpTab( QWidget* parent = 0, const char* name = 0);
+	QGctpTab( QWidget* parent = 0 );
 	~QGctpTab();
 
-	Q3VBox       *contents;
+/*	Q3VBox       *contents;	*/
+/****/	QWidget *contents;	/****/
 
-	QPushButton *copyButton;
-	QPushButton *lockButton;
+   QPushButton *copyButton;
+   QPushButton *lockButton;
 
-	Q3VBox       *projBox;
-	QComboBox   *projCombo;
-	QWidget     *badProjBlank;
-	QLabel      *badProjLabel;
+/*   Q3VBox       *projBox;	*/
+/****/	QVBoxLayout	*projBox;	/****/
+   QComboBox   *projCombo;
+   QWidget     *badProjBlank;
+   QLabel      *badProjLabel;
 
-	Q3VBox       *zoneBox;
-	QSpinBox    *zoneSpin;
+/*   Q3VBox       *zoneBox;	*/
+/****	QVBoxLayout *zoneBox;	/****/
+/****/	QWidget *zoneBox;	/****/
+   QSpinBox    *zoneSpin;
 
-	QGctpBox   **gctpBoxes;
+   QGctpBox   **gctpBoxes;
 
 public slots:
 	void projChange();

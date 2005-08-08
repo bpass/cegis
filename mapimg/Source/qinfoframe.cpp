@@ -1,4 +1,4 @@
-// $Id: qinfoframe.cpp,v 1.3 2005/08/08 13:53:18 lwoodard Exp $
+// $Id: qinfoframe.cpp,v 1.4 2005/08/08 20:06:17 lwoodard Exp $
 
 
 #include "qinfoframe.h"
@@ -19,6 +19,10 @@
 #include <QCheckBox>
 #include <QVBoxLayout>
 #include <QBoxLayout>
+#include <QLayout>
+#include <QSpinBox>
+#include <QScrollArea>
+#include <QSizePolicy>
 
 const uint INFO_PRECISION = 6;
 
@@ -38,7 +42,7 @@ they all reside.
 STAGE 3: A level of polish is applied to every widget. Adding QTooltips,
 applying QValidators, fixing sizes, and making connections happens here.
 */
-QMapTab::QMapTab( QWidget* parent, const char* name)
+QMapTab::QMapTab( QWidget* parent )
 : QScrollArea( parent )	//Q3ScrollView( parent, name)
 {
 	////////STAGE 1: Appearance/Setup
@@ -46,71 +50,117 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
 
 	setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+	
+	contents = new QWidget( viewport(), "contents" );	
 
-	contents = new Q3VBox( viewport(), "contents" );
-	//addChild( contents );
+		//Created a mainLayout to inorder to insert multiple Layouts into the contents widget
+	QVBoxLayout *mainLayout = new QVBoxLayout( contents );	
+	contents->setLayout( mainLayout );	
+	mainLayout->setSpacing(1);
 
 	////////STAGE 2: Generate Widgets
 	//
 	//titleBox - Contains function buttons and the title of the Tab
-	Q3HBox *titleBox = new Q3HBox( contents );
+	QHBoxLayout *titleBox = new QHBoxLayout( mainLayout );	
 
 	copyButton = new QPushButton( QIcon( "./Resources/copy.png" ),
-		"", titleBox, "copyButton" );
+		"", this, "copyButton" );
 	lockButton = new QPushButton( QIcon( "./Resources/unlocked.png" ),
-		"", titleBox, "lockButton");
-	QLabel *mapLabel = new QLabel( "Map Info", titleBox, "mapLabel" );
+		"", this, "lockButton");
+	QLabel *mapLabel = new QLabel( "Map Info", this, "mapLabel" );
 	frameButton = new QPushButton( QIcon( "./Resources/calculate.png" ),
-		"", titleBox, "frameButton");
+		"", this, "frameButton");	
+		//Adding widgets to the titleBox group layout
+	titleBox->addWidget( copyButton );	
+	titleBox->addWidget( lockButton );	
+	titleBox->addWidget( mapLabel );
+	titleBox->addWidget( frameButton );		
 
 	//fileBox - Contains a lineedit for displaying the ".info" filename
-	fileBox = new Q3VBox( contents );
-	(void) new QLabel( "File Name:", fileBox);
-	fileEdit = new QLineEdit( "", "", fileBox, "fileEdit" );
+	fileBox = new QVBoxLayout( mainLayout );
+	QLabel *fileNameLabel = new QLabel( "File Name:", this );
+	fileEdit = new QLineEdit( "", "", this, "fileEdit" );
+	
+	fileBox->addWidget( fileNameLabel );
+	fileBox->addWidget( fileEdit );
 
 	//rowcolBox - Contains two spin boxes for defining the pixel dimensions
-	rowcolBox = new Q3VBox( contents );
-	(void) new QLabel( "Rows of Pixels:", rowcolBox);
-	rowSpin = new QSpinBox( 0, 100000000, 1, rowcolBox, "rowSpin" );
-	(void) new QLabel( "Columns of Pixels:", rowcolBox);
-	colSpin = new QSpinBox( 0, 100000000, 1, rowcolBox, "colSpin" );
+	rowcolBox = new QVBoxLayout( mainLayout );
+	QLabel *rowsOfPixelsLabel = new QLabel( "Rows of Pixels:", this );
+	rowSpin = new QSpinBox( 0, 100000000, 1, this, "rowSpin" ); 
+	QLabel *colsOfPixelsLabel = new QLabel( "Columns of Pixels:", this );
+	colSpin = new QSpinBox( 0, 100000000, 1, this, "colSpin" );
+		//Adding widgets to the rowcolBox group layout
+	rowcolBox->addWidget( rowsOfPixelsLabel );
+	rowcolBox->addWidget( rowSpin );
+	rowcolBox->addWidget( colsOfPixelsLabel );
+	rowcolBox->addWidget( colSpin );
 
 	//comboBox - Contains four combo boxes for selecting preset values
-	comboBox = new Q3VBox( contents );
-	(void) new QLabel( "Units", comboBox, "unitLabel");
-	unitCombo = new QComboBox( comboBox, "unitCombo" );
-	(void) new QLabel( "Spheroid", comboBox, "spheroidLabel" );
-	spheroidCombo = new QComboBox( comboBox, "spheroidCombo" );
-	(void) new QLabel( "Pixel Size", comboBox);
-	pixelCombo = new QComboBox( comboBox, "pixelCombo" );
-	pixelEdit = new QLineEdit( comboBox, "pixelEdit" );
+	comboBox = new QVBoxLayout( mainLayout );
+	QLabel *unitLabel = new QLabel( "Units", this, "unitLabel" );
+	unitCombo = new QComboBox( this, "unitCombo" );
+	QLabel *spheroidLabel = new QLabel( "Spheroid", this, "spheroidLabel" );
+	spheroidCombo = new QComboBox( this, "spheroidCombo" );
+	QLabel *pixelSizeLabel = new QLabel( "Pixel Size", this );
+	pixelCombo = new QComboBox( this, "pixelCombo" );
+	pixelEdit = new QLineEdit( this, "pixelEdit" );
+
+	comboBox->addWidget( unitLabel );
+	comboBox->addWidget( unitCombo );
+	comboBox->addWidget( spheroidLabel );
+	comboBox->addWidget( spheroidCombo );
+	comboBox->addWidget( pixelSizeLabel );
+	comboBox->addWidget( pixelCombo );
+	comboBox->addWidget( pixelEdit );
 
 	//ulBox - Contains line edits for defining the upper left corner of the map
-	ulBox = new Q3VBox( contents );
-	(void) new QLabel( "UL Longitude in meters", ulBox);
-	ulLonEdit = new QLineEdit( ulBox, "ulLonEdit" );
-	(void) new QLabel( "UL Latitude in meters", ulBox);
-	ulLatEdit = new QLineEdit( ulBox, "ulLatEdit" );
+	ulBox = new QVBoxLayout( mainLayout );
+	QLabel *ULLongLabel = new QLabel( "UL Longitude in meters", this );
+	ulLonEdit = new QLineEdit( this, "ulLonEdit" );
+	QLabel *ULLatLabel =  new QLabel( "UL Latitude in meters", this);
+	ulLatEdit = new QLineEdit( this, "ulLatEdit" );
+
+	ulBox->addWidget( ULLongLabel );
+	ulBox->addWidget( ulLonEdit );
+	ulBox->addWidget( ULLatLabel );
+	ulBox->addWidget( ulLatEdit );
 
 	//dataBox - Contains one combo box for selecting what type of data it is
-	dataBox = new Q3VBox( contents );
-	(void) new QLabel( "Pixel Data Type", dataBox);
-	dataCombo = new QComboBox( dataBox, "dataCombo" );
-	(void) new QLabel( "Fill Value", dataBox );
-	Q3HBox *fillBox = new Q3HBox( dataBox );
+	dataBox = new QVBoxLayout( mainLayout );
+	QLabel *pixelDataTypeLabel = new QLabel( "Pixel Data Type", this);
+	dataCombo = new QComboBox( this, "dataCombo" );
+	QLabel *fillValueLabel = new QLabel( "Fill Value", this );
+	
+	dataBox->addWidget( pixelDataTypeLabel );
+	dataBox->addWidget( dataCombo );
+	dataBox->addWidget( fillValueLabel );
+	
+	QHBoxLayout *fillBox = new QHBoxLayout( dataBox );
 	fillBox->setSpacing( 5 );
-	hasFillCheck = new QCheckBox( fillBox, "hasFillCheck" );
+	hasFillCheck = new QCheckBox( this, "hasFillCheck" );
 	hasFillCheck->hide();
-	fillEdit = new QLineEdit( fillBox, "fillEdit" );
+	fillEdit = new QLineEdit( this, "fillEdit" );
 	fillEdit->installEventFilter( this );
-	fillButton = new QPushButton( "?", fillBox );
+	fillButton = new QPushButton( "?", this );
 
-	(void) new QLabel( "No Data Value", dataBox );
-	Q3HBox *noDataBox = new Q3HBox( dataBox );
+	fillBox->addWidget( hasFillCheck );
+	fillBox->addWidget( fillEdit );
+	fillBox->addWidget( fillButton );
+	dataBox->addLayout( fillBox );
+
+	QLabel *noDataValueLabel = new QLabel( "No Data Value", this );
+	dataBox->addWidget( noDataValueLabel );
+
+	QHBoxLayout *noDataBox = new QHBoxLayout( dataBox );
 	noDataBox->setSpacing( 5 );
-	hasNoDataCheck = new QCheckBox( noDataBox, "hasNoDataCheck" );
+	hasNoDataCheck = new QCheckBox( this, "hasNoDataCheck" );
 	hasNoDataCheck->hide();
-	noDataEdit = new QLineEdit( noDataBox, "noDataEdit" );
+	noDataEdit = new QLineEdit( this, "noDataEdit" );
+
+	noDataBox->addWidget( hasNoDataCheck );
+	noDataBox->addWidget( noDataEdit );
+	dataBox->addLayout( noDataBox );
 
 	lastFillValue = "";
 	lastNoDataValue = "";
@@ -127,7 +177,7 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
 	QFont largeFont(  mapLabel->font() );
 	largeFont.setPointSize( 12 );
 	mapLabel->setFont( largeFont );
-	/**/   mapLabel->setAlignment(Qt::AlignCenter);
+	mapLabel->setAlignment(Qt::AlignCenter);
 	frameButton->setMaximumWidth( 28 ); frameButton->setMaximumHeight( 28 );
 	QToolTip::add( frameButton, "Calculate rows, columns, and upper left coordinates." );
 
@@ -194,6 +244,8 @@ QMapTab::QMapTab( QWidget* parent, const char* name)
 	connect(dataCombo, SIGNAL(activated(const QString&)), this, SLOT(dataChange(const QString&)));
 	connect(hasFillCheck, SIGNAL(toggled(bool)), this, SLOT(fillCheckToggled(bool)));
 	connect(hasNoDataCheck, SIGNAL(toggled(bool)), this, SLOT(noDataCheckToggled(bool)));
+
+	setWidget( contents );	//Allows the contents top be moved by scrollbar
 }
 
 /*
@@ -342,7 +394,7 @@ they all reside.
 STAGE 3: A level of polish is applied to every widget. Adding QTooltips,
 applying QValidators, fixing sizes, and making connections happens here.
 */
-QGctpTab::QGctpTab( QWidget* parent, const char* name)
+QGctpTab::QGctpTab( QWidget* parent )
 : QScrollArea( parent )
 {
 	////////STAGE 1: Appearance/Setup
@@ -351,89 +403,111 @@ QGctpTab::QGctpTab( QWidget* parent, const char* name)
 	setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 
-	contents = new Q3VBox( viewport(), "contents" );
-	//   addChild( contents );
-
+	contents = new QWidget( viewport(), "contents" );
+//   addChild( contents );
+	contents->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding );/*!!!!!!!*/
+   
 	////////STAGE 2: Generate Widgets
-	//
-	//titleBox - Contains function buttons and the title of the Tab
-	Q3HBox *titleBox = new Q3HBox( contents );
+   //
+	QVBoxLayout *mainLayout = new QVBoxLayout( contents );
+mainLayout->setSizeConstraint( QLayout::SetNoConstraint );	/*****!!!!!!!!!!!!!!!!!***/
+	contents->setLayout( mainLayout );
 
-	/****/
+   //titleBox - Contains function buttons and the title of the Tab
+   QHBoxLayout *titleBox = new QHBoxLayout( mainLayout );
+
 	copyButton = new QPushButton( QIcon( "./Resources/copy.png" ),
-		"", titleBox, "copyButton" );
+		"", this, "copyButton" );
 	lockButton = new QPushButton( QIcon( "./Resources/unlocked.png" ),
-		"", titleBox, "lockedButton" );
-	/****/
-	QLabel *gctpLabel = new QLabel( "Projection Info", titleBox, "gctpLabel" );
+		"", this, "lockedButton" );
+   QLabel *gctpLabel = new QLabel( "Projection Info", this, "gctpLabel" );
 
-	//projBox - Contains the combo box for selecting which projection to use
-	//    Also contains the bad projection label
-	projBox = new Q3VBox( contents );
-	(void) new QLabel( "Projection", projBox);
-	projCombo = new QComboBox( projBox, "projCombo" );
-	badProjBlank = new QWidget( contents );
-	badProjLabel = new QLabel( badProjBlank, "badProjLabel" );
+   titleBox->addWidget( copyButton );
+   titleBox->addWidget( lockButton );
+   titleBox->addWidget( gctpLabel );
 
-	//zoneBox - Contains a spin box for selecting  which UTM zone to use
-	zoneBox = new Q3VBox( contents );
-	(void) new QLabel( "UTM Zone Code", zoneBox);
-	zoneSpin = new QSpinBox( -60, 60, 1, zoneBox, "zoneSpin" );
+   //projBox - Contains the combo box for selecting which projection to use
+   //    Also contains the bad projection label
+   projBox = new QVBoxLayout( mainLayout );
+   QLabel *projectionLabel = new QLabel( "Projection", this);
+   projCombo = new QComboBox( this, "projCombo" );
+   badProjBlank = new QWidget( this );
+   badProjLabel = new QLabel( badProjBlank, "badProjLabel" );
 
-	//gctpBoxes - Label and edit fields adaptable to each GCTP parameter
-	gctpBoxes = new QGctpBox*[15];
-	for( int i = 0; i < 15; ++i )
-		gctpBoxes[i] = new QGctpBox( contents );
+   projBox->addWidget( projectionLabel );
+   projBox->addWidget( projCombo );
+   projBox->addWidget( badProjBlank );
 
-	////////STAGE 3: Polish Widgets
-	//
-	//titleBox
-	copyButton->setMaximumWidth( 28 ); copyButton->setMaximumHeight( 28 );
-	QToolTip::add( copyButton, "Copy from input info editor." );
-	lockButton->setMaximumWidth( 28 ); lockButton->setMaximumHeight( 28 );
-	lockButton->setToggleButton( true );
-	QToolTip::add( lockButton, "Use to allow editing of .xml file.<br><br>"
-		"<b>Note</b>: Locking this info editor automatically saves to the .xml file." );
-	QFont largeFont(  gctpLabel->font() );
-	largeFont.setPointSize( 12 );
-	gctpLabel->setFont( largeFont ); 
-	/**/  gctpLabel->setAlignment( Qt::AlignCenter );
-	titleBox->setMaximumHeight( titleBox->height() );
+   //zoneBox - Contains a spin box for selecting  which UTM zone to use
+   zoneBox = new QWidget( this );
+   mainLayout->addWidget( zoneBox );
+   QVBoxLayout *zoneBoxLayout = new QVBoxLayout( zoneBox ); //puts layout in widget
+   QLabel *zoneLabel = new QLabel( "UTM Zone Code", this); 
+   zoneSpin = new QSpinBox( -60, 60, 1, this, "zoneSpin" );
 
-	//projBox
-	projCombo->insertItem( "" );
-	projCombo->insertStringList( projNames );
-	int c = 23;
-	projCombo->removeItem( c );
-	projCombo->insertItem( "Space Oblique Mercator b", c );
-	projCombo->insertItem( "Space Oblique Mercator a", c );
-	c = 21;
-	projCombo->removeItem( c );
-	projCombo->insertItem( "Hotine Oblique Mercator b", c );
-	projCombo->insertItem( "Hotine Oblique Mercator a", c );
-	c = 9;
-	projCombo->removeItem( c );
-	projCombo->insertItem( "Equidistant Conic b", c );
-	projCombo->insertItem( "Equidistant Conic a", c );
-	QToolTip::add( projCombo, "Name of map projection" );
+   zoneBoxLayout->addWidget( zoneLabel );
+   zoneBoxLayout->addWidget( zoneSpin );
 
-	badProjBlank->setFixedHeight(10);
-	badProjLabel->setFixedHeight(10);
-	badProjLabel->hide();
-	badProjLabel->setText( "Bad Projection *" );
-	QToolTip::add( badProjLabel, 
-		"<b>Bad Projection</b>: This projection either generates "
-		"useless data or crashes. It is recommended that you "
-		"choose a different one. This issue may be addressed in "
-		"Future versions of mapimg." );
+   //gctpBoxes - Label and edit fields adaptable to each GCTP parameter
+   gctpBoxes = new QGctpBox*[15];
+   for( int i = 0; i < 15; ++i )
+   {
+	   gctpBoxes[i] = new QGctpBox( this );
+	   mainLayout->addWidget( gctpBoxes[i] );
+   }
 
-	//zoneBox
-	zoneSpin->setValue( 0 );
-	zoneBox->hide();
-	QToolTip::add( zoneSpin, "Zone code used in UTM Projection" );
+   ////////STAGE 3: Polish Widgets
+   //
+   //titleBox
+   copyButton->setMaximumWidth( 28 ); copyButton->setMaximumHeight( 28 );
+   QToolTip::add( copyButton, "Copy from input info editor." );
+   lockButton->setMaximumWidth( 28 ); lockButton->setMaximumHeight( 28 );
+   lockButton->setToggleButton( true );
+   QToolTip::add( lockButton, "Use to allow editing of .xml file.<br><br>"
+      "<b>Note</b>: Locking this info editor automatically saves to the .xml file." );
+   QFont largeFont(  gctpLabel->font() );
+   largeFont.setPointSize( 12 );
+   gctpLabel->setFont( largeFont ); 
+/**/  gctpLabel->setAlignment( Qt::AlignCenter );
+//   titleBox->setMaximumHeight( titleBox->height() );
 
-	//This connection is for updating the gctpBoxes whenever the projection changes
-	connect( projCombo, SIGNAL( activated(int) ), this, SLOT( projChange() ) );
+   //projBox
+   projCombo->insertItem( "" );
+   projCombo->insertStringList( projNames );
+   int c = 23;
+   projCombo->removeItem( c );
+   projCombo->insertItem( "Space Oblique Mercator b", c );
+   projCombo->insertItem( "Space Oblique Mercator a", c );
+   c = 21;
+   projCombo->removeItem( c );
+   projCombo->insertItem( "Hotine Oblique Mercator b", c );
+   projCombo->insertItem( "Hotine Oblique Mercator a", c );
+   c = 9;
+   projCombo->removeItem( c );
+   projCombo->insertItem( "Equidistant Conic b", c );
+   projCombo->insertItem( "Equidistant Conic a", c );
+   QToolTip::add( projCombo, "Name of map projection" );
+
+   badProjBlank->setFixedHeight(10);
+   badProjLabel->setFixedHeight(10);
+   badProjLabel->hide();
+   badProjLabel->setText( "Bad Projection *" );
+   QToolTip::add( badProjLabel, 
+      "<b>Bad Projection</b>: This projection either generates "
+      "useless data or crashes. It is recommended that you "
+      "choose a different one. This issue may be addressed in "
+      "Future versions of mapimg." );
+
+   //zoneBox
+   zoneSpin->setValue( 0 );
+   zoneBox->hide();
+   QToolTip::add( zoneSpin, "Zone code used in UTM Projection" );
+
+   //This connection is for updating the gctpBoxes whenever the projection changes
+   connect( projCombo, SIGNAL( activated(int) ), this, SLOT( projChange() ) );
+
+   setWidget( contents );	//Allows the association of the scrollbar with the contents
+								//of the tab
 }
 
 /*
@@ -490,8 +564,8 @@ it needs to be renamed is currently undecided.
 QInfoFrame::QInfoFrame( QWidget* parent, const char* name)
 : QTabWidget( parent, name)
 {
-	mapTab = new QMapTab( this, "mapTab" );
-	gctpTab = new QGctpTab( this, "gctpTab" );
+	mapTab = new QMapTab( this );
+	gctpTab = new QGctpTab( this );
 
 	addTab( mapTab, "Map" );
 	addTab( gctpTab, "Projection" );
@@ -553,11 +627,11 @@ practical and needed for my application in mapimg.
 void QInfoFrame::fixWidth( uint w )
 {
 	setMinimumWidth( w );
-	mapTab->contents->setMargin( 5 );
-	mapTab->contents->setSpacing( 5 );
+/*	mapTab->contents->setMargin( 5 );	*/
+/*	mapTab->contents->setSpacing( 5 );	*/
 	mapTab->contents->setMinimumWidth( w - 24 );
-	gctpTab->contents->setMargin( 5 );
-	gctpTab->contents->setSpacing( 5 );
+//	gctpTab->contents->setMargin( 5 );
+//	gctpTab->contents->setSpacing( 5 );
 	gctpTab->contents->setMinimumWidth( w - 24 );
 	gctpTab->contents->setMaximumWidth( w - 24 );
 }

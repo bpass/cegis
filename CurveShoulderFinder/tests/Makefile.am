@@ -3,14 +3,20 @@
 # @file Makefile.am
 # @author Austin Hartman
 #
-# $Id: Makefile.am,v 1.8 2005/07/06 20:52:03 ahartman Exp $
+# $Id: Makefile.am,v 1.9 2005/08/08 20:24:15 ahartman Exp $
 #
 
-INCLUDES = -I..
+AM_CPPFLAGS = -I..
 
-TESTS = BSQReader_t DiagonalMatrix_t InvertMatrix_t \
-        LUDecomposition_t LUDecompositionSolver_t MarquardtMethod_t \
-        NonlinearRegression_t PolynomialRegression_t PolynomialCurve_t
+TESTS = BSQReader_t \
+        DiagonalMatrix_t \
+        InvertMatrix_t \
+        LUDecomposition_t \
+        LUDecompositionSolver_t \
+        MarquardtMethod_t \
+        NonlinearRegression_t \
+        PolynomialRegression_t \
+        PolynomialCurve_t
 
 noinst_PROGRAMS = $(TESTS)
 

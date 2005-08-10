@@ -2,7 +2,7 @@
  * @file BSQReader.h
  * @author Austin Hartman
  *
- * $Id: BSQReader.h,v 1.4 2005/08/10 01:00:21 ahartman Exp $
+ * $Id: BSQReader.h,v 1.5 2005/08/10 18:25:59 ahartman Exp $
  */
 
 #ifndef AUSTIN_BSQREADER_H
@@ -86,6 +86,21 @@ public:
     DataType getValue(const UTMCoordinateType& xCoord, 
                       const UTMCoordinateType& yCoord,
                       size_t band) const;
+
+    /**
+     * Get the name of the BSQ file that this object is reading from.
+     *
+     * @return The BSQ file's name.
+     */
+    const std::string& getBSQFilename() const;
+
+    /**
+     * Get the name of the header file that describes the BSQ file this
+     * object is reading from.
+     *
+     * @return The header file's name.
+     */
+    const std::string& getHeaderFilename() const;
 
     /**
      * Gets the minimum value of the x-coordinate that the image contains

@@ -2,7 +2,7 @@
  * @file BSQReader.hpp
  * @author Austin Hartman
  *
- * $Id: BSQReader.hpp,v 1.3 2005/08/10 01:00:21 ahartman Exp $
+ * $Id: BSQReader.hpp,v 1.4 2005/08/10 18:25:59 ahartman Exp $
  */
 
 #ifdef AUSTIN_BSQREADER_H
@@ -146,6 +146,20 @@ BSQReader<DataType>::getValue(
         ((xCoord - m_upperLeftXCoordinate) / m_pixelWidth + .5);
 
     return getValue(row, col, band);
+}
+
+template<class DataType>
+const std::string&
+BSQReader<DataType>::getBSQFilename() const
+{
+    return m_bsqFilename;
+}
+
+template<class DataType>
+const std::string&
+BSQReader<DataType>::getHeaderFilename() const
+{
+    return m_headerFilename;
 }
 
 template<class DataType>

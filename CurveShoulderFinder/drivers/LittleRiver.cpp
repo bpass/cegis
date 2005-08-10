@@ -1,10 +1,12 @@
 /**
  * @file LittleRiver.cpp
  *
- * $Id: LittleRiver.cpp,v 1.1 2005/08/09 19:19:13 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.2 2005/08/10 01:04:29 ahartman Exp $
  */
 
+#include <iomanip>
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -12,16 +14,47 @@
 #include "BSQReader.h"
 #include "Point2D.h"
 
-typedef std::vector<std::vector<std::string> > filenames_t;
-filenames_t createFilenames();
+
+//typedef std::vector<std::vector<std::string> > filenames_t;
+//filenames_t createFilenames();
+std::map<std::string, size_t> createFileTypesMap();
 void littleRiverPrintPoints();
+
+//enum FileTypes { clay = 0, hydro, lagg, nitro, 
+//                 phospho, sagg, sand, silt, total };
+const std::map<std::string, size_t> fileTypes = createFileTypesMap();
 
 int main()
 {
     littleRiverPrintPoints();
 }
 
-filenames_t createFilenames()
+std::map<std::string, size_t>
+createFileTypesMap()
+{
+    const std::string fileTypes[] =
+    {
+        "clay",
+        "hydro",
+        "lagg",
+        "nitro",
+        "phospho",
+        "sagg",
+        "sand",
+        "silt",
+        "total"
+    };
+    const size_t numFileTypes = sizeof(fileTypes) / sizeof(std::string);
+
+    std::map<std::string, size_t> fileTypesMap;
+    for(size_t i = 0; i < numFileTypes; ++i)
+    {
+        fileTypesMap.insert(make_pair(fileTypes[i], i));
+    }
+    return fileTypesMap;
+}
+
+void littleRiverPrintPoints()
 {
     // Set up the main data directory
     const std::string dataDir = "D:/Data/Little_River/";
@@ -73,6 +106,7 @@ filenames_t createFilenames()
     const std::string extension = ".bsq";
 
     // Set up all the filenames
+    typedef std::vector<std::vector<std::string> > filenames_t;
     filenames_t filenames(numResolutions, 
                           std::vector<std::string>(numSuffixes));
     for(size_t i = 0; i < numResolutions; ++i)
@@ -99,17 +133,50 @@ filenames_t createFilenames()
     }
     std::cout.flush();
 
-    return filenames;
-}
-
-void littleRiverPrintPoints()
-{
-    filenames_t filenames = createFilenames();
-
+    // Read the data from various points at each resolution
     typedef float Data_t;
-    typedef Point2D<BSQReader<Data_t>::UTMCoordinateType> Point_t;
+    typedef BSQReader<Data_t> BSQReader_t;
+    typedef Point2D<BSQReader_t::UTMCoordinateType> Point_t;
     typedef std::vector<Point_t> Points_t;
+
+    // Set up the points we want to read
     Points_t points;
     points.push_back(Point_t(249064.067797, 3499322.525424));
+
+    // Set up the data files we want to read
+    const std::string myFileTypes[] = { "clay", "nitro" };
+    const size_t numMyFileTypes = sizeof(myFileTypes) / sizeof(myFileTypes[0]);
+
+    // Create the BSQReaders for the files we want
+    std::vector<std::vector<BSQReader_t> > bsqReaders(numResolutions);
+    for(size_t i = 0; i < numResolutions; ++i)
+    {
+        for(size_t j = 0; j < numMyFileTypes; ++j)
+        {
+            const size_t indexInFilenames = 
+                (fileTypes.find(myFileTypes[j]))->second;
+            bsqReaders[i].push_back
+                (BSQReader_t(filenames[i][indexInFilenames]));
+        }
+    }
+
+    for(size_t myFileType = 0; myFileType < numMyFileTypes; ++myFileType)
+    {
+        std::cout << "Values for " << myFileTypes[myFileType] << ":\n";
+        for(Points_t::const_iterator point = points.begin();
+            point != points.end(); ++point)
+        {
+            std::cout << "\tValues at " << *point << '\n';
+            for(size_t resolution = 0; resolution < numResolutions; 
+                ++resolution)
+            {
+                const Data_t value = 
+                    bsqReaders[resolution][myFileType].
+                        getValue(point->x(), point->y(), 0);
+                std::cout << "\t\t" << std::setw(4) << resolutions[resolution]
+                          << ": " << value << '\n';
+            }
+        }
+    }
 }
 

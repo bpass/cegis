@@ -2,7 +2,7 @@
  * @file BSQReader.hpp
  * @author Austin Hartman
  *
- * $Id: BSQReader.hpp,v 1.5 2005/08/10 20:22:11 ahartman Exp $
+ * $Id: BSQReader.hpp,v 1.6 2005/08/10 22:15:20 ahartman Exp $
  */
 
 #ifdef AUSTIN_BSQREADER_H
@@ -119,6 +119,7 @@ BSQReader<DataType>::getValue(size_t row, size_t col, size_t band) const
         m_numRows * m_numCols * band + m_numCols * row + col; 
 
     // read the data value at the specified offset
+    m_bsqFile.clear();
     m_bsqFile.seekg(pixelOffset * sizeof(DataType));
     DataType value;
     m_bsqFile.read(reinterpret_cast<char*>(&value), sizeof(DataType));

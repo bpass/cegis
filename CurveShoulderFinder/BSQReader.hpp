@@ -2,7 +2,7 @@
  * @file BSQReader.hpp
  * @author Austin Hartman
  *
- * $Id: BSQReader.hpp,v 1.4 2005/08/10 18:25:59 ahartman Exp $
+ * $Id: BSQReader.hpp,v 1.5 2005/08/10 20:22:11 ahartman Exp $
  */
 
 #ifdef AUSTIN_BSQREADER_H
@@ -17,6 +17,11 @@ BSQReader<DataType>::BSQReader(const std::string& bsqFilename)
     : m_bsqFilename(bsqFilename),
       m_bsqFile(bsqFilename.c_str(), std::ios::in | std::ios::binary)
 {
+    if(!m_bsqFile)
+    {
+        throw typename BSQReader<DataType>::FailedOpeningBSQFile();
+    }
+
     // guess the name of the header file based on the name of the
     // bsq file by removing the extension .bsq and replacing it with
     // the extension .hdr
@@ -34,6 +39,11 @@ BSQReader<DataType>::BSQReader(const std::string& bsqFilename,
       m_headerFilename(headerFilename),
       m_bsqFile(bsqFilename.c_str(), std::ios::in | std::ios::binary)
 {
+    if(!m_bsqFile)
+    {
+        throw typename BSQReader<DataType>::FailedOpeningBSQFile();
+    }
+
     readHeaderFile(m_headerFilename);
 }
 
@@ -51,7 +61,12 @@ BSQReader<DataType>::BSQReader(const BSQReader<DataType>& rhs)
       m_numRows(rhs.m_numRows),
       m_numCols(rhs.m_numCols),
       m_numBands(rhs.m_numBands)
-{}
+{
+    if(!m_bsqFile)
+    {
+        throw typename BSQReader<DataType>::FailedOpeningBSQFile();
+    }
+}
 
 template<class DataType>
 BSQReader<DataType>&
@@ -71,6 +86,10 @@ BSQReader<DataType>::operator=(const BSQReader<DataType>& rhs)
 
     m_bsqFile.close();
     m_bsqFile.open(rhs.m_bsqFilename.c_str());
+    if(!m_bsqFile)
+    {
+        throw typename BSQReader<DataType>::FailedOpeningBSQFile();
+    }
 
     return *this;
 }
@@ -230,6 +249,11 @@ void
 BSQReader<DataType>::readHeaderFile(const std::string& headerFilename)
 {
     std::ifstream headerFile(headerFilename.c_str());
+    if(!headerFile)
+    {
+        throw typename BSQReader<DataType>::FailedOpeningHeaderFile();
+    }
+
     std::string line;
 
     // read each line of the header file

@@ -2,7 +2,7 @@
  * @file BSQReader.h
  * @author Austin Hartman
  *
- * $Id: BSQReader.h,v 1.5 2005/08/10 18:25:59 ahartman Exp $
+ * $Id: BSQReader.h,v 1.6 2005/08/10 20:22:11 ahartman Exp $
  */
 
 #ifndef AUSTIN_BSQREADER_H
@@ -168,6 +168,18 @@ public:
      * @return The number of bands.
      */
     size_t getNumBands() const;
+
+    /**
+     * Exception class to be used when opening the BSQ file fails.
+     */
+    class FailedOpeningBSQFile
+    {};
+
+    /**
+     * Exception class to be used when opening the header file fails.
+     */
+    class FailedOpeningHeaderFile
+    {};
 
     /**
      * Exception class to be used when the header file contains an unexpected

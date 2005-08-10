@@ -2,7 +2,7 @@
  * @file BSQReader.hpp
  * @author Austin Hartman
  *
- * $Id: BSQReader.hpp,v 1.2 2005/07/07 19:07:44 ahartman Exp $
+ * $Id: BSQReader.hpp,v 1.3 2005/08/10 01:00:21 ahartman Exp $
  */
 
 #ifdef AUSTIN_BSQREADER_H
@@ -13,25 +13,66 @@
 #include <sstream>
 
 template<class DataType>
-BSQReader<DataType>::BSQReader(const std::string& bsqFileName)
-    : bsqFile(bsqFileName.c_str(), std::ios::in | std::ios::binary)
+BSQReader<DataType>::BSQReader(const std::string& bsqFilename)
+    : m_bsqFilename(bsqFilename),
+      m_bsqFile(bsqFilename.c_str(), std::ios::in | std::ios::binary)
 {
     // guess the name of the header file based on the name of the
     // bsq file by removing the extension .bsq and replacing it with
     // the extension .hdr
     const std::string::size_type extensionIndex = 
-        bsqFileName.rfind(".bsq");
-    const std::string headerFileName = 
-        bsqFileName.substr(0, extensionIndex) + ".hdr";
-    readHeaderFile(headerFileName);
+        bsqFilename.rfind(".bsq");
+    m_headerFilename = 
+        bsqFilename.substr(0, extensionIndex) + ".hdr";
+    readHeaderFile(m_headerFilename);
 }
 
 template<class DataType>
-BSQReader<DataType>::BSQReader(const std::string& bsqFileName,
-                               const std::string& headerFileName)
-    : bsqFile(bsqFileName.c_str(), std::ios::in | std::ios::binary)
+BSQReader<DataType>::BSQReader(const std::string& bsqFilename,
+                               const std::string& headerFilename)
+    : m_bsqFilename(bsqFilename),
+      m_headerFilename(headerFilename),
+      m_bsqFile(bsqFilename.c_str(), std::ios::in | std::ios::binary)
 {
-    readHeaderFile(headerFileName);
+    readHeaderFile(m_headerFilename);
+}
+
+template<class DataType>
+BSQReader<DataType>::BSQReader(const BSQReader<DataType>& rhs)
+    : m_bsqFilename(rhs.m_bsqFilename), 
+      m_headerFilename(rhs.m_headerFilename),
+      m_bsqFile(rhs.m_bsqFilename.c_str()),
+      m_upperLeftXCoordinate(rhs.m_upperLeftXCoordinate),
+      m_upperLeftYCoordinate(rhs.m_upperLeftYCoordinate),
+      m_lowerRightXCoordinate(rhs.m_lowerRightXCoordinate),
+      m_lowerRightYCoordinate(rhs.m_lowerRightYCoordinate),
+      m_pixelWidth(rhs.m_pixelWidth),
+      m_pixelHeight(rhs.m_pixelHeight),
+      m_numRows(rhs.m_numRows),
+      m_numCols(rhs.m_numCols),
+      m_numBands(rhs.m_numBands)
+{}
+
+template<class DataType>
+BSQReader<DataType>&
+BSQReader<DataType>::operator=(const BSQReader<DataType>& rhs)
+{
+    m_bsqFilename = rhs.m_bsqFilename;
+    m_headerFilename = rhs.m_headerFilename;
+    m_upperLeftXCoordinate = rhs.m_upperLeftXCoordinate;
+    m_upperLeftYCoordinate = rhs.m_upperLeftYCoordinate;
+    m_lowerRightXCoordinate = rhs.m_lowerRightXCoordinate;
+    m_lowerRightYCoordinate = rhs.m_lowerRightYCoordinate;
+    m_pixelWidth = rhs.m_pixelWidth;
+    m_pixelHeight = rhs.m_pixelHeight;
+    m_numRows = rhs.m_numRows;
+    m_numCols = rhs.m_numCols;
+    m_numBands = rhs.m_numBands;
+
+    m_bsqFile.close();
+    m_bsqFile.open(rhs.m_bsqFilename.c_str());
+
+    return *this;
 }
 
 template<class DataType>
@@ -39,15 +80,15 @@ DataType
 BSQReader<DataType>::getValue(size_t row, size_t col, size_t band) const
 {
     // check if the specified band, row, and column are valid
-    if(band >= numBands)
+    if(band >= m_numBands)
     {
         throw typename BSQReader<DataType>::InvalidBand();
     }
-    if(row >= numRows)
+    if(row >= m_numRows)
     {
         throw typename BSQReader<DataType>::InvalidRow();
     }
-    if(col >= numCols)
+    if(col >= m_numCols)
     {
         throw typename BSQReader<DataType>::InvalidCol();
     }
@@ -55,12 +96,13 @@ BSQReader<DataType>::getValue(size_t row, size_t col, size_t band) const
     // calculate the offset
     // BSQ is stored with one complete band followed by the next complete band
     // Inside each band, pixels are stored row by row
-    const size_t pixelOffset = numRows * numCols * band + numCols * row + col; 
+    const size_t pixelOffset = 
+        m_numRows * m_numCols * band + m_numCols * row + col; 
 
     // read the data value at the specified offset
-    bsqFile.seekg(pixelOffset * sizeof(DataType));
+    m_bsqFile.seekg(pixelOffset * sizeof(DataType));
     DataType value;
-    bsqFile.read(reinterpret_cast<char*>(&value), sizeof(DataType));
+    m_bsqFile.read(reinterpret_cast<char*>(&value), sizeof(DataType));
 
     return value;
 }
@@ -76,32 +118,32 @@ BSQReader<DataType>::getValue(
     // account that the coordinate corresponds with the same pixel if it's half
     // a pixel width or height off in the x- and y-directions, respectively
     const typename BSQReader<DataType>::UTMCoordinateType halfPixelWidth =
-        pixelWidth / 2;
+        m_pixelWidth / 2;
     const typename BSQReader<DataType>::UTMCoordinateType halfPixelHeight =
-        pixelHeight / 2;
+        m_pixelHeight / 2;
 
     // check if the specified band and coordinates are valid
-    if(band >= numBands)
+    if(band >= m_numBands)
     {
         throw typename BSQReader<DataType>::InvalidBand();
     }
-    if(xCoord < upperLeftXCoordinate - halfPixelWidth || 
-       xCoord > lowerRightXCoordinate + halfPixelWidth)
+    if(xCoord < m_upperLeftXCoordinate - halfPixelWidth || 
+       xCoord > m_lowerRightXCoordinate + halfPixelWidth)
     {
         throw typename BSQReader<DataType>::InvalidXCoordinate();
     }
-    if(yCoord > upperLeftYCoordinate + halfPixelHeight ||
-       yCoord < lowerRightYCoordinate - halfPixelHeight)
+    if(yCoord > m_upperLeftYCoordinate + halfPixelHeight ||
+       yCoord < m_lowerRightYCoordinate - halfPixelHeight)
     {
         throw typename BSQReader<DataType>::InvalidYCoordinate();
     }
 
     const size_t row = 
         static_cast<size_t>
-        ((upperLeftYCoordinate - yCoord) / pixelHeight + .5);
+        ((m_upperLeftYCoordinate - yCoord) / m_pixelHeight + .5);
     const size_t col =
         static_cast<size_t>
-        ((xCoord - upperLeftXCoordinate) / pixelWidth + .5);
+        ((xCoord - m_upperLeftXCoordinate) / m_pixelWidth + .5);
 
     return getValue(row, col, band);
 }
@@ -110,70 +152,70 @@ template<class DataType>
 typename BSQReader<DataType>::UTMCoordinateType
 BSQReader<DataType>::getMinX() const
 {
-    return upperLeftXCoordinate;
+    return m_upperLeftXCoordinate;
 }
 
 template<class DataType>
 typename BSQReader<DataType>::UTMCoordinateType
 BSQReader<DataType>::getMaxX() const
 {
-    return lowerRightXCoordinate;
+    return m_lowerRightXCoordinate;
 }
 
 template<class DataType>
 typename BSQReader<DataType>::UTMCoordinateType
 BSQReader<DataType>::getMinY() const
 {
-    return lowerRightYCoordinate;
+    return m_lowerRightYCoordinate;
 }
 
 template<class DataType>
 typename BSQReader<DataType>::UTMCoordinateType
 BSQReader<DataType>::getMaxY() const
 {
-    return upperLeftYCoordinate;
+    return m_upperLeftYCoordinate;
 }
 
 template<class DataType>
 typename BSQReader<DataType>::UTMCoordinateType
 BSQReader<DataType>::getPixelWidth() const
 {
-    return pixelWidth;
+    return m_pixelWidth;
 }
 
 template<class DataType>
 typename BSQReader<DataType>::UTMCoordinateType
 BSQReader<DataType>::getPixelHeight() const
 {
-    return pixelHeight;
+    return m_pixelHeight;
 }
 
 template<class DataType>
 size_t 
 BSQReader<DataType>::getNumRows() const
 {
-    return numRows;
+    return m_numRows;
 }
 
 template<class DataType>
 size_t 
 BSQReader<DataType>::getNumCols() const
 {
-    return numCols;
+    return m_numCols;
 }
 
 template<class DataType>
 size_t 
 BSQReader<DataType>::getNumBands() const
 {
-    return numBands;
+    return m_numBands;
 }
 
 template<class DataType>
 void 
-BSQReader<DataType>::readHeaderFile(const std::string& headerFileName)
+BSQReader<DataType>::readHeaderFile(const std::string& headerFilename)
 {
-    std::ifstream headerFile(headerFileName.c_str());
+    std::ifstream headerFile(headerFilename.c_str());
     std::string line;
 
     // read each line of the header file
@@ -188,39 +230,39 @@ BSQReader<DataType>::readHeaderFile(const std::string& headerFileName)
         // interested in
         if(key == "BANDS")
         {
-            valueInterpreter >> numBands;
+            valueInterpreter >> m_numBands;
         }
         else if(key == "UL_X_COORDINATE")
         {
-            valueInterpreter >> upperLeftXCoordinate;
+            valueInterpreter >> m_upperLeftXCoordinate;
         }
         else if(key == "UL_Y_COORDINATE")
         {
-            valueInterpreter >> upperLeftYCoordinate;
+            valueInterpreter >> m_upperLeftYCoordinate;
         }
         else if(key == "LR_X_COORDINATE")
         {
-            valueInterpreter >> lowerRightXCoordinate;
+            valueInterpreter >> m_lowerRightXCoordinate;
         }
         else if(key == "LR_Y_COORDINATE")
         {
-            valueInterpreter >> lowerRightYCoordinate;
+            valueInterpreter >> m_lowerRightYCoordinate;
         }
         else if(key == "PIXEL_WIDTH")
         {
-            valueInterpreter >> pixelWidth;
+            valueInterpreter >> m_pixelWidth;
         }
         else if(key == "PIXEL_HEIGHT")
         {
-            valueInterpreter >> pixelHeight;
+            valueInterpreter >> m_pixelHeight;
         }
         else if(key == "ROWS")
         {
-            valueInterpreter >> numRows;
+            valueInterpreter >> m_numRows;
         }
         else if(key == "COLS")
         {
-            valueInterpreter >> numCols;
+            valueInterpreter >> m_numCols;
         }
         else if(key == "PROJECTION_PARAMETERS")
         {
@@ -233,19 +275,6 @@ BSQReader<DataType>::readHeaderFile(const std::string& headerFileName)
             }
         }
     }
-
-//    std::cout << std::fixed;
-//    std::cout.precision(6);
-//    std::cout << __FILE__ << ':' << __LINE__ << '\n';
-//    std::cout << "\tnumBands = " << numBands << '\n';
-//    std::cout << "\tupperLeftXCoordinate = " << upperLeftXCoordinate << '\n';
-//    std::cout << "\tupperLeftYCoordinate = " << upperLeftYCoordinate << '\n';
-//    std::cout << "\tlowerRightXCoordinate = " << lowerRightXCoordinate << '\n';
-//    std::cout << "\tlowerRightYCoordinate = " << lowerRightYCoordinate << '\n';
-//    std::cout << "\tpixelWidth = " << pixelWidth << '\n';
-//    std::cout << "\tpixelHeight = " << pixelHeight << '\n';
-//    std::cout << "\tnumRows = " << numRows << '\n';
-//    std::cout << "\tnumCols = " << numCols << '\n';
 }
 
 template<class DataType>

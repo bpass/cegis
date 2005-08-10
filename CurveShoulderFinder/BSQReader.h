@@ -2,7 +2,7 @@
  * @file BSQReader.h
  * @author Austin Hartman
  *
- * $Id: BSQReader.h,v 1.3 2005/08/04 19:46:37 ahartman Exp $
+ * $Id: BSQReader.h,v 1.4 2005/08/10 01:00:21 ahartman Exp $
  */
 
 #ifndef AUSTIN_BSQREADER_H
@@ -44,6 +44,16 @@ public:
      */
     BSQReader(const std::string& bsqFileName,
               const std::string& headerFileName);
+
+    /**
+     * Copy constructor.
+     */
+    BSQReader(const BSQReader<DataType>& rhs);
+
+    /**
+     * Copy assignment operator.
+     */
+    BSQReader<DataType>& operator=(const BSQReader<DataType>& rhs);
 
     /**
      * Gets the value at specified row, column, and band in the image, where
@@ -188,23 +198,28 @@ public:
 
 private:
     /**
+     * The names of the bsq file and header file that we're reading from.
+     */
+    std::string m_bsqFilename, m_headerFilename;
+
+    /**
      * The image file that we're reading from.
      *
      * @note This is mutable so the user can treat this object as if it
      * contains the complete contents of the file in memory, even though
      * it is actually only read when a request for a pixel is made.
      */
-    mutable std::ifstream bsqFile;
+    mutable std::ifstream m_bsqFile;
 
     /**
      * Holds some of the data that was read from the header file and contains
      * information about the image file.
      */
     //@{
-    UTMCoordinateType upperLeftXCoordinate, upperLeftYCoordinate,
-                      lowerRightXCoordinate, lowerRightYCoordinate,
-                      pixelWidth, pixelHeight;
-    size_t numRows, numCols, numBands;
+    UTMCoordinateType m_upperLeftXCoordinate, m_upperLeftYCoordinate,
+                      m_lowerRightXCoordinate, m_lowerRightYCoordinate,
+                      m_pixelWidth, m_pixelHeight;
+    size_t m_numRows, m_numCols, m_numBands;
     //@}
 
     /**

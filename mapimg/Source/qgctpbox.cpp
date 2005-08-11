@@ -1,24 +1,28 @@
-// $Id: qgctpbox.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: qgctpbox.cpp,v 1.3 2005/08/11 20:21:50 lwoodard Exp $
 
 
-#include <qtooltip.h>
-#include <qvalidator.h>
+#include <QToolTip>
+#include <QValidator>
 
 #include "qgctpbox.h"
 #include "qdmsedit.h"
 //Added by qt3to4:
 #include <QLabel>
 #include <Q3Frame>
+#include <QVBoxLayout>
 
 const uint INFO_PRECISION = 6;
 
 QMap<QString,double> *QGctpBox::holdValues=0;
 
 QGctpBox::QGctpBox( QWidget* parent, const char* name )
-: Q3VBox( parent, name )
+: QWidget( parent, name )
 {
-   Q3Frame *line = new Q3Frame( this );
-   line->setMinimumHeight( 5 );
+	/****/QVBoxLayout *mainLayout = new QVBoxLayout( this );
+	mainLayout->setSizeConstraint( QLayout::SetNoConstraint );
+	setLayout( mainLayout );
+//   Q3Frame *line = new Q3Frame( this );
+//   line->setMinimumHeight( 5 );
    label = new QLabel( this, "label" );
    lineEdit = new QLineEdit( "0.000000", this, "lineEdit" );
    lineEdit->setValidator( new QDoubleValidator( 0.0, 1000000.0, 6, lineEdit ) );
@@ -26,6 +30,12 @@ QGctpBox::QGctpBox( QWidget* parent, const char* name )
    spinBox->setValue( 0 );
    dmsEdit = new QDmsEdit( this, "dmsEdit" );
    dmsEdit->setValue( 0 );
+
+//   /****/mainLayout->addWidget( line );
+   /****/mainLayout->addWidget( label );
+   /****/mainLayout->addWidget( lineEdit );
+   /****/mainLayout->addWidget( spinBox );
+   /****/mainLayout->addWidget( dmsEdit );
 
    activeEdit = NULL;
 /****/   name=NULL;

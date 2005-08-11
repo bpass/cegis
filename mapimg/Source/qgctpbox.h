@@ -1,19 +1,21 @@
-// $Id: qgctpbox.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: qgctpbox.h,v 1.3 2005/08/11 20:21:51 lwoodard Exp $
 
 
 #ifndef QGCTPBOX_H
 #define QGCTPBOX_H
 
-#include <q3vbox.h>
-#include <qstring.h>
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qspinbox.h>
-#include <qmap.h>
+//#include <q3vbox.h>
+/****/#include <QVBoxLayout>
+/****/#include <QWidget>
+#include <QString>
+#include <QLabel>
+#include <QLineEdit>
+#include <QSpinBox>
+#include <QMap>
 
 class QDmsEdit;
 
-class QGctpBox : public Q3VBox
+class QGctpBox : public QWidget
 {
    Q_OBJECT
 

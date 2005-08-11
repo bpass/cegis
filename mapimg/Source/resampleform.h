@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: resampleform.h,v 1.3 2005/08/11 20:21:51 lwoodard Exp $
 
 
 /****************************************************************************
@@ -28,7 +28,7 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QGridLayout;
 class QSpacerItem;
-class Q3GroupBox;
+class QGroupBox;
 class QComboBox;
 class QLabel;
 class Q3ButtonGroup;
@@ -54,14 +54,15 @@ public:
    bool wasCanceled(){return canceled;}
 
 protected:
-   Q3GroupBox* resampleBox;
+   QGroupBox* resampleBox;
    QComboBox* resampleCombo;
    QLabel* catconLabel;
-   Q3ButtonGroup* catconButtonGroup;
+ //****  Q3ButtonGroup* catconButtonGroup;
+/****/QGroupBox* catconButtonGroup;
    QRadioButton* catRadio;
    QRadioButton* conRadio;
 
-   Q3GroupBox* ignoreBox;
+   QGroupBox* ignoreBox;
    QLineEdit* ignoreEdit;
    QPushButton* newButton;
    QPushButton* delButton;
@@ -80,7 +81,7 @@ protected:
    QHBoxLayout* okLayout;
    QSpacerItem* okSpacer;
 
-   Q3GroupBox* memoryBox;
+   QGroupBox* memoryBox;
    QSlider* memoryAllocation;
    QPushButton* memoryResetButton;
    QHBoxLayout* memoryLabelResetLayout;

@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: resampleform.cpp,v 1.3 2005/08/11 20:21:51 lwoodard Exp $
 
 
 /****************************************************************************
@@ -10,22 +10,23 @@
 
 #include "resampleform.h"
 
-#include <qvariant.h>
-#include <qpushbutton.h>
-#include <q3groupbox.h>
-#include <qcombobox.h>
-#include <qlabel.h>
+#include <QVariant>
+#include <QPushButton>
+//#include <q3groupbox.h>
+#include <QGroupBox>
+#include <QComboBox>
+#include <QLabel>
 #include <q3buttongroup.h>
-#include <qradiobutton.h>
-#include <qlineedit.h>
+#include <QRadioButton>
+#include <QLineEdit>
 #include <q3listbox.h>
-#include <qlayout.h>
-#include <qtooltip.h>
-#include <q3whatsthis.h>
-#include <qevent.h>
-#include <qvalidator.h>
-#include <qmessagebox.h>
-#include <qslider.h>
+#include <QLayout>
+#include <QToolTip>
+#include <QWhatsThis>
+#include <QEvent>
+#include <QValidator>
+#include <QMessageBox>
+#include <QSlider>
 #include <q3hbox.h>
 //Added by qt3to4:
 #include <QKeyEvent>
@@ -61,8 +62,8 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
    inputLayout = new QVBoxLayout( 0, 0, 6, "inputLayout"); 
 
-   resampleBox = new Q3GroupBox( this, "resampleBox" );
-   resampleBox->setColumnLayout(0, Qt::Vertical );
+   resampleBox = new QGroupBox( this, "resampleBox" );
+/****///   resampleBox->setColumnLayout(0, Qt::Vertical );
    resampleBox->layout()->setSpacing( 6 );
    resampleBox->layout()->setMargin( 11 );
    resampleBoxLayout = new QVBoxLayout( resampleBox->layout() );
@@ -77,18 +78,19 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    catconLabel = new QLabel( "", resampleBox, "catconLabel" );
    conRadio = new QRadioButton( "Continuous Data", resampleBox, "conRadio" );
    catRadio = new QRadioButton( "Categorical Data", resampleBox, "catRadio" );
-   catconButtonGroup = new Q3ButtonGroup( resampleBox, "catconButtonGroup" );
+   catconButtonGroup = new QGroupBox( resampleBox, "catconButtonGroup" );
    catconButtonGroup->hide();
-   catconButtonGroup->insert( catRadio );
-   catconButtonGroup->insert( conRadio );
+//*****   catconButtonGroup->insert( catRadio );
+//*****   catconButtonGroup->insert( conRadio );
+   /****/
    categoricalLayout->addWidget( catconLabel );
    categoricalLayout->addWidget( conRadio );
    categoricalLayout->addWidget( catRadio );
 
    inputLayout->addWidget( resampleBox );
 
-   ignoreBox = new Q3GroupBox( this, "ignoreBox" );
-   ignoreBox->setColumnLayout(0, Qt::Vertical );
+   ignoreBox = new QGroupBox( this, "ignoreBox" );
+//   ignoreBox->setColumnLayout(0, Qt::Vertical );
    ignoreBox->layout()->setSpacing( 6 );
    ignoreBox->layout()->setMargin( 11 );
    ignoreBoxLayout = new QHBoxLayout( ignoreBox->layout() );
@@ -135,8 +137,8 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
    ResampleFormLayout->addLayout( inputLayout );
 
-   memoryBox = new Q3GroupBox( this, "memoryBox" );
-   memoryBox->setColumnLayout(0, Qt::Vertical );
+   memoryBox = new QGroupBox( this, "memoryBox" );
+ //  memoryBox->setColumnLayout(0, Qt::Vertical );
    memoryBox->layout()->setSpacing( 6 );
    memoryBox->layout()->setMargin( 11 );
    memoryBoxLayout = new QVBoxLayout( memoryBox->layout() );

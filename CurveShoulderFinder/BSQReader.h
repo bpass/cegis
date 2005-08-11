@@ -2,14 +2,15 @@
  * @file BSQReader.h
  * @author Austin Hartman
  *
- * $Id: BSQReader.h,v 1.6 2005/08/10 20:22:11 ahartman Exp $
+ * $Id: BSQReader.h,v 1.7 2005/08/11 20:10:42 ahartman Exp $
  */
 
 #ifndef AUSTIN_BSQREADER_H
 #define AUSTIN_BSQREADER_H
 
-#include <string>
 #include <fstream>
+#include <string>
+#include <vector>
 
 /**
  * A class used to hold information about a BSQ file and to allow the user to
@@ -44,16 +45,6 @@ public:
      */
     BSQReader(const std::string& bsqFileName,
               const std::string& headerFileName);
-
-    /**
-     * Copy constructor.
-     */
-    BSQReader(const BSQReader<DataType>& rhs);
-
-    /**
-     * Copy assignment operator.
-     */
-    BSQReader<DataType>& operator=(const BSQReader<DataType>& rhs);
 
     /**
      * Gets the value at specified row, column, and band in the image, where
@@ -230,13 +221,9 @@ private:
     std::string m_bsqFilename, m_headerFilename;
 
     /**
-     * The image file that we're reading from.
-     *
-     * @note This is mutable so the user can treat this object as if it
-     * contains the complete contents of the file in memory, even though
-     * it is actually only read when a request for a pixel is made.
+     * The values read from the image file.
      */
-    mutable std::ifstream m_bsqFile;
+    std::vector<DataType> m_data;
 
     /**
      * Holds some of the data that was read from the header file and contains
@@ -261,12 +248,30 @@ private:
     };
 
     /**
+     * Reads the header file and bsq file.  This is a function that
+     * constructors should call if they need the files to be read.
+     *
+     * @param headerFilename The path to the header file to be read.
+     * @param bsqFilename The path to the BSQ file to be read.
+     */
+    void init(const std::string& bsqFilename, 
+              const std::string& headerFilename);
+
+    /**
      * Reads the header file and fills in the private data members with the
      * information from it.
      *
-     * @param headerFileName The path to the header file to be read.
+     * @param headerFilename The path to the header file to be read.
      */
-    void readHeaderFile(const std::string& headerFileName);
+    void readHeaderFile(const std::string& headerFilename);
+
+    /**
+     * Reads the BSQ file and places its contents into the m_data member
+     * variable.
+     *
+     * @param bsqFilename The path to the BSQ file to be read.
+     */
+    void readBSQFile(const std::string& bsqFilename);
 
     /**
      * Parses a single line from the header file and returns the key and value

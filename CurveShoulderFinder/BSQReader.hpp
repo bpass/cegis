@@ -2,26 +2,21 @@
  * @file BSQReader.hpp
  * @author Austin Hartman
  *
- * $Id: BSQReader.hpp,v 1.6 2005/08/10 22:15:20 ahartman Exp $
+ * $Id: BSQReader.hpp,v 1.7 2005/08/11 20:10:42 ahartman Exp $
  */
 
 #ifdef AUSTIN_BSQREADER_H
 #ifndef AUSTIN_BSQREADER_HPP
 #define AUSTIN_BSQREADER_HPP
 
+#include <cassert>
 #include <iostream>
 #include <sstream>
 
 template<class DataType>
 BSQReader<DataType>::BSQReader(const std::string& bsqFilename)
-    : m_bsqFilename(bsqFilename),
-      m_bsqFile(bsqFilename.c_str(), std::ios::in | std::ios::binary)
+    : m_bsqFilename(bsqFilename)
 {
-    if(!m_bsqFile)
-    {
-        throw typename BSQReader<DataType>::FailedOpeningBSQFile();
-    }
-
     // guess the name of the header file based on the name of the
     // bsq file by removing the extension .bsq and replacing it with
     // the extension .hdr
@@ -29,69 +24,17 @@ BSQReader<DataType>::BSQReader(const std::string& bsqFilename)
         bsqFilename.rfind(".bsq");
     m_headerFilename = 
         bsqFilename.substr(0, extensionIndex) + ".hdr";
-    readHeaderFile(m_headerFilename);
+
+    init(m_bsqFilename, m_headerFilename);
 }
 
 template<class DataType>
 BSQReader<DataType>::BSQReader(const std::string& bsqFilename,
                                const std::string& headerFilename)
     : m_bsqFilename(bsqFilename),
-      m_headerFilename(headerFilename),
-      m_bsqFile(bsqFilename.c_str(), std::ios::in | std::ios::binary)
+      m_headerFilename(headerFilename)
 {
-    if(!m_bsqFile)
-    {
-        throw typename BSQReader<DataType>::FailedOpeningBSQFile();
-    }
-
-    readHeaderFile(m_headerFilename);
-}
-
-template<class DataType>
-BSQReader<DataType>::BSQReader(const BSQReader<DataType>& rhs)
-    : m_bsqFilename(rhs.m_bsqFilename), 
-      m_headerFilename(rhs.m_headerFilename),
-      m_bsqFile(rhs.m_bsqFilename.c_str()),
-      m_upperLeftXCoordinate(rhs.m_upperLeftXCoordinate),
-      m_upperLeftYCoordinate(rhs.m_upperLeftYCoordinate),
-      m_lowerRightXCoordinate(rhs.m_lowerRightXCoordinate),
-      m_lowerRightYCoordinate(rhs.m_lowerRightYCoordinate),
-      m_pixelWidth(rhs.m_pixelWidth),
-      m_pixelHeight(rhs.m_pixelHeight),
-      m_numRows(rhs.m_numRows),
-      m_numCols(rhs.m_numCols),
-      m_numBands(rhs.m_numBands)
-{
-    if(!m_bsqFile)
-    {
-        throw typename BSQReader<DataType>::FailedOpeningBSQFile();
-    }
-}
-
-template<class DataType>
-BSQReader<DataType>&
-BSQReader<DataType>::operator=(const BSQReader<DataType>& rhs)
-{
-    m_bsqFilename = rhs.m_bsqFilename;
-    m_headerFilename = rhs.m_headerFilename;
-    m_upperLeftXCoordinate = rhs.m_upperLeftXCoordinate;
-    m_upperLeftYCoordinate = rhs.m_upperLeftYCoordinate;
-    m_lowerRightXCoordinate = rhs.m_lowerRightXCoordinate;
-    m_lowerRightYCoordinate = rhs.m_lowerRightYCoordinate;
-    m_pixelWidth = rhs.m_pixelWidth;
-    m_pixelHeight = rhs.m_pixelHeight;
-    m_numRows = rhs.m_numRows;
-    m_numCols = rhs.m_numCols;
-    m_numBands = rhs.m_numBands;
-
-    m_bsqFile.close();
-    m_bsqFile.open(rhs.m_bsqFilename.c_str());
-    if(!m_bsqFile)
-    {
-        throw typename BSQReader<DataType>::FailedOpeningBSQFile();
-    }
-
-    return *this;
+    init(m_bsqFilename, m_headerFilename);
 }
 
 template<class DataType>
@@ -118,13 +61,9 @@ BSQReader<DataType>::getValue(size_t row, size_t col, size_t band) const
     const size_t pixelOffset = 
         m_numRows * m_numCols * band + m_numCols * row + col; 
 
-    // read the data value at the specified offset
-    m_bsqFile.clear();
-    m_bsqFile.seekg(pixelOffset * sizeof(DataType));
-    DataType value;
-    m_bsqFile.read(reinterpret_cast<char*>(&value), sizeof(DataType));
+    assert(pixelOffset < m_data.size());
 
-    return value;
+    return m_data[pixelOffset];
 }
 
 template<class DataType>
@@ -246,6 +185,15 @@ BSQReader<DataType>::getNumBands() const
 }
 
 template<class DataType>
+void
+BSQReader<DataType>::init(const std::string& bsqFilename, 
+                          const std::string& headerFilename)
+{
+    readHeaderFile(headerFilename);
+    readBSQFile(bsqFilename);
+}
+
+template<class DataType>
 void 
 BSQReader<DataType>::readHeaderFile(const std::string& headerFilename)
 {
@@ -314,6 +262,27 @@ BSQReader<DataType>::readHeaderFile(const std::string& headerFilename)
             }
         }
     }
+}
+
+template<class DataType>
+void
+BSQReader<DataType>::readBSQFile(const std::string& bsqFilename)
+{
+    std::ifstream bsqFile(bsqFilename.c_str(), 
+                          std::ios::in | std::ios::binary);
+    if(!bsqFile)
+    {
+        throw typename BSQReader<DataType>::FailedOpeningBSQFile();
+    }
+
+    m_data.clear();
+    const size_t fileSize = m_numRows * m_numCols * m_numBands;
+    m_data.resize(fileSize);
+
+    bsqFile.read(reinterpret_cast<char*>(&m_data[0]), 
+                 sizeof(DataType) * fileSize);
+
+    assert(m_data.size() == m_numRows * m_numCols * m_numBands);
 }
 
 template<class DataType>

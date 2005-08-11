@@ -1,7 +1,7 @@
 /**
  * @file LittleRiver.cpp
  *
- * $Id: LittleRiver.cpp,v 1.6 2005/08/11 23:16:38 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.7 2005/08/11 23:49:26 ahartman Exp $
  */
 
 #include <iomanip>
@@ -69,7 +69,11 @@ createFileTypesMap()
 void littleRiverPrintPoints()
 {
     // Set up the main data directory
+#ifdef WIN32
+    const std::string dataDir = "D:/Data/Little_River/";
+#else
     const std::string dataDir = "/snap/ahartman/AGNPSOutput/BSQs/Little_River/";
+#endif
 
     // Set up the numbers for each resolution that will be part of each of
     // folder and file names

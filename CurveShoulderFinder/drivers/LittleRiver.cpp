@@ -1,7 +1,7 @@
 /**
  * @file LittleRiver.cpp
  *
- * $Id: LittleRiver.cpp,v 1.2 2005/08/10 01:04:29 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.3 2005/08/11 21:25:05 ahartman Exp $
  */
 
 #include <iomanip>
@@ -14,6 +14,9 @@
 #include "BSQReader.h"
 #include "Point2D.h"
 
+//#define PRINT_RESOLUTIONS
+//#define PRINT_FILENAMES
+//#define PRINT_SUFFIXES
 
 //typedef std::vector<std::vector<std::string> > filenames_t;
 //filenames_t createFilenames();
@@ -26,6 +29,8 @@ const std::map<std::string, size_t> fileTypes = createFileTypesMap();
 
 int main()
 {
+    std::cout << std::fixed;
+    std::cout.precision(4);
     littleRiverPrintPoints();
 }
 
@@ -68,6 +73,7 @@ void littleRiverPrintPoints()
     const std::vector<int> 
         resolutions(resolutionsAsArray, resolutionsAsArray + numResolutions);
 
+#ifdef PRINT_RESOLUTIONS
     // Test to make sure the resolutions were set up correctly
     std::cout << "Resolutions:\n";
     for(std::vector<int>::const_iterator i = resolutions.begin();
@@ -75,6 +81,7 @@ void littleRiverPrintPoints()
     {
         std::cout << '\t' << *i << '\n';
     }
+#endif
 
     const std::string prefix = "n";
 
@@ -95,6 +102,7 @@ void littleRiverPrintPoints()
     const std::vector<std::string> 
         suffixes(suffixesAsArray, suffixesAsArray + numSuffixes);
 
+#ifdef PRINT_SUFFIXES
     // Test to make sure the suffixes were set up correctly
     std::cout << "Suffixes:\n";
     for(std::vector<std::string>::const_iterator i = suffixes.begin();
@@ -102,6 +110,7 @@ void littleRiverPrintPoints()
     {
         std::cout << '\t' << *i << '\n';
     }
+#endif
 
     const std::string extension = ".bsq";
 
@@ -122,6 +131,7 @@ void littleRiverPrintPoints()
         }
     }
 
+#ifdef PRINT_FILENAMES
     // Test to see if the filenames were set up correctly
     std::cout << "Filenames:\n";
     for(size_t i = 0; i < filenames.size(); ++i)
@@ -132,6 +142,7 @@ void littleRiverPrintPoints()
         }
     }
     std::cout.flush();
+#endif
 
     // Read the data from various points at each resolution
     typedef float Data_t;
@@ -146,6 +157,24 @@ void littleRiverPrintPoints()
     // Set up the data files we want to read
     const std::string myFileTypes[] = { "clay", "nitro" };
     const size_t numMyFileTypes = sizeof(myFileTypes) / sizeof(myFileTypes[0]);
+
+    // Set up the bands we want to read
+    typedef std::vector<size_t> BandsList_t;
+    typedef std::map<std::string, BandsList_t> Bands_t;
+    Bands_t myBands;
+
+    const size_t myClayBandsAsArray[] = { 1, 2, 3, 4, 5 };
+    const BandsList_t myClayBands(
+                      myClayBandsAsArray, myClayBandsAsArray + 
+                      sizeof(myClayBandsAsArray) / sizeof(size_t));
+
+    const size_t myNitroBandsAsArray[] = { 1, 2, 3, 4, 5, 6};
+    const BandsList_t myNitroBands(
+                      myNitroBandsAsArray, myNitroBandsAsArray + 
+                      sizeof(myNitroBandsAsArray) / sizeof(size_t));
+
+    myBands["clay"] = myClayBands;
+    myBands["nitro"] = myNitroBands;
 
     // Create the BSQReaders for the files we want
     std::vector<std::vector<BSQReader_t> > bsqReaders(numResolutions);
@@ -167,14 +196,24 @@ void littleRiverPrintPoints()
             point != points.end(); ++point)
         {
             std::cout << "\tValues at " << *point << '\n';
-            for(size_t resolution = 0; resolution < numResolutions; 
-                ++resolution)
+
+            const BandsList_t& bands = 
+                myBands.find(myFileTypes[myFileType])->second;
+            for(BandsList_t::const_iterator band = bands.begin(); 
+                band != bands.end(); ++band)
             {
-                const Data_t value = 
-                    bsqReaders[resolution][myFileType].
-                        getValue(point->x(), point->y(), 0);
-                std::cout << "\t\t" << std::setw(4) << resolutions[resolution]
-                          << ": " << value << '\n';
+                std::cout << "\t\tValues for band " << *band << '\n';
+
+                for(size_t resolution = 0; resolution < numResolutions; 
+                    ++resolution)
+                {
+                    const Data_t value = 
+                        bsqReaders[resolution][myFileType].
+                            getValue(point->x(), point->y(), *band);
+                    std::cout << "\t\t\t" << std::setw(4) 
+                              << resolutions[resolution]
+                              << ": " << value << '\n';
+                }
             }
         }
     }

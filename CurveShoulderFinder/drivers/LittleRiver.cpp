@@ -1,7 +1,7 @@
 /**
  * @file LittleRiver.cpp
  *
- * $Id: LittleRiver.cpp,v 1.4 2005/08/11 21:35:14 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.5 2005/08/11 22:20:03 ahartman Exp $
  */
 
 #include <iomanip>
@@ -160,6 +160,10 @@ void littleRiverPrintPoints()
     // Set up the points we want to read
     Points_t points;
     points.push_back(Point_t(249064.067797, 3499322.525424));
+    points.push_back(Point_t(237282.596600, 3516595.420200));
+    points.push_back(Point_t(260622.596600, 3516595.420200));
+    points.push_back(Point_t(237282.596600, 3485425.420200));
+    points.push_back(Point_t(260622.596600, 3485425.420200));
 
     // Set up the data files we want to read
     const std::string myFileTypes[] = { "clay", "nitro" };
@@ -198,7 +202,7 @@ void littleRiverPrintPoints()
 
     for(size_t myFileType = 0; myFileType < numMyFileTypes; ++myFileType)
     {
-        std::cout << "Values for " << myFileTypes[myFileType] << ":\n";
+        std::cout << "Values for " << myFileTypes[myFileType] << '\n';
         for(Points_t::const_iterator point = points.begin();
             point != points.end(); ++point)
         {

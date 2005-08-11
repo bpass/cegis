@@ -2,7 +2,7 @@
  * @file BSQReader.hpp
  * @author Austin Hartman
  *
- * $Id: BSQReader.hpp,v 1.7 2005/08/11 20:10:42 ahartman Exp $
+ * $Id: BSQReader.hpp,v 1.8 2005/08/11 20:43:50 ahartman Exp $
  */
 
 #ifdef AUSTIN_BSQREADER_H
@@ -41,6 +41,8 @@ template<class DataType>
 DataType
 BSQReader<DataType>::getValue(size_t row, size_t col, size_t band) const
 {
+    --band;
+
     // check if the specified band, row, and column are valid
     if(band >= m_numBands)
     {
@@ -73,6 +75,8 @@ BSQReader<DataType>::getValue(
     const typename BSQReader<DataType>::UTMCoordinateType& yCoord,
     size_t band) const
 {
+    --band;
+
     // the coordinate is for the middle of the pixel, so we have to take into
     // account that the coordinate corresponds with the same pixel if it's half
     // a pixel width or height off in the x- and y-directions, respectively
@@ -104,7 +108,7 @@ BSQReader<DataType>::getValue(
         static_cast<size_t>
         ((xCoord - m_upperLeftXCoordinate) / m_pixelWidth + .5);
 
-    return getValue(row, col, band);
+    return getValue(row, col, band + 1);
 }
 
 template<class DataType>

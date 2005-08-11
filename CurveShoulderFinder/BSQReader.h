@@ -2,7 +2,7 @@
  * @file BSQReader.h
  * @author Austin Hartman
  *
- * $Id: BSQReader.h,v 1.7 2005/08/11 20:10:42 ahartman Exp $
+ * $Id: BSQReader.h,v 1.8 2005/08/11 20:43:50 ahartman Exp $
  */
 
 #ifndef AUSTIN_BSQREADER_H
@@ -56,7 +56,8 @@ public:
      * the top of the image.
      * @param col The column of the pixel in the image.  Columns start at zero
      * at the left of the image.
-     * @param band The band of the pixel in the image.
+     * @param band The band of the pixel in the image.  Valid bands are from
+     * 1 to getNumBands().
      *
      * @return The value from the image at the specified position and band.
      */
@@ -70,7 +71,8 @@ public:
      * value from.
      * @param yCoord The y-coordinate of the location we want to get the
      * value from.
-     * @param band The band we want to get the value from.
+     * @param band The band we want to get the value from.  Valid bands are 
+     * from 1 to getNumBands().
      *
      * @return The value from the image at the specified position and band.
      */

@@ -1,7 +1,7 @@
 /**
  * @file LittleRiver.cpp
  *
- * $Id: LittleRiver.cpp,v 1.5 2005/08/11 22:20:03 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.6 2005/08/11 23:16:38 ahartman Exp $
  */
 
 #include <iomanip>
@@ -69,7 +69,7 @@ createFileTypesMap()
 void littleRiverPrintPoints()
 {
     // Set up the main data directory
-    const std::string dataDir = "D:/Data/Little_River/";
+    const std::string dataDir = "/snap/ahartman/AGNPSOutput/BSQs/Little_River/";
 
     // Set up the numbers for each resolution that will be part of each of
     // folder and file names
@@ -160,10 +160,10 @@ void littleRiverPrintPoints()
     // Set up the points we want to read
     Points_t points;
     points.push_back(Point_t(249064.067797, 3499322.525424));
-    points.push_back(Point_t(237282.596600, 3516595.420200));
-    points.push_back(Point_t(260622.596600, 3516595.420200));
-    points.push_back(Point_t(237282.596600, 3485425.420200));
-    points.push_back(Point_t(260622.596600, 3485425.420200));
+    points.push_back(Point_t(237540.000000, 3516595.420200));
+    points.push_back(Point_t(260580.000000, 3516595.420200));
+    points.push_back(Point_t(237540.000000, 3485911.000000));
+    points.push_back(Point_t(260580.000000, 3485911.000000));
 
     // Set up the data files we want to read
     const std::string myFileTypes[] = { "clay", "nitro" };

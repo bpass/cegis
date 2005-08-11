@@ -1,7 +1,7 @@
 /**
  * @file LittleRiver.cpp
  *
- * $Id: LittleRiver.cpp,v 1.3 2005/08/11 21:25:05 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.4 2005/08/11 21:35:14 ahartman Exp $
  */
 
 #include <iomanip>
@@ -17,6 +17,7 @@
 //#define PRINT_RESOLUTIONS
 //#define PRINT_FILENAMES
 //#define PRINT_SUFFIXES
+//#define PAUSE_AT_END
 
 //typedef std::vector<std::vector<std::string> > filenames_t;
 //filenames_t createFilenames();
@@ -32,6 +33,12 @@ int main()
     std::cout << std::fixed;
     std::cout.precision(4);
     littleRiverPrintPoints();
+
+#ifdef PAUSE_AT_END
+    std::cout << "Press any key to continue...";
+    std::string blah;
+    std::getline(std::cin, blah);
+#endif
 }
 
 std::map<std::string, size_t>

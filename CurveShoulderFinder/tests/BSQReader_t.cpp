@@ -2,7 +2,7 @@
  * @file BSQReader_t.cpp
  * @author Austin Hartman
  *
- * $Id: BSQReader_t.cpp,v 1.4 2005/08/10 01:01:13 ahartman Exp $
+ * $Id: BSQReader_t.cpp,v 1.5 2005/08/11 20:26:33 ahartman Exp $
  */
 
 #include "BSQReader.h"
@@ -10,7 +10,7 @@
 #include <cassert>
 #include <cmath>
 
-#define PRINT_VALUES
+//#define PRINT_VALUES
 #ifdef PRINT_VALUES
 #include <iostream>
 #endif

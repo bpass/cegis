@@ -2,7 +2,7 @@
  * @file BSQReader_t.cpp
  * @author Austin Hartman
  *
- * $Id: BSQReader_t.cpp,v 1.5 2005/08/11 20:26:33 ahartman Exp $
+ * $Id: BSQReader_t.cpp,v 1.6 2005/08/11 20:44:54 ahartman Exp $
  */
 
 #include "BSQReader.h"
@@ -96,172 +96,164 @@ int main()
     // ==== Point 0 ====
     const BSQReader<type>::UTMCoordinateType point0X = expectedMinX;
     const BSQReader<type>::UTMCoordinateType point0Y = expectedMinY;
-    const type point0Band0Value = 0.000;
-    const type point0Band2Value = 64.000;
+    const type point0Band1Value = 0.000;
+    const type point0Band3Value = 64.000;
 
 #ifdef PRINT_VALUES
     cerr << "POINT 0 VALUES\n";
-    cerr << "reader.getValue(point0X, point0Y, 0) = " 
-         << reader.getValue(point0X, point0Y, 0) << '\n';
-    cerr << "reader.getValue(point0X, point0Y, 2) = " 
-         << reader.getValue(point0X, point0Y, 2) << '\n';
-    cerr << "reader2.getValue(point0X, point0Y, 0) = " 
-         << reader2.getValue(point0X, point0Y, 0) << '\n';
-    cerr << "reader2.getValue(point0X, point0Y, 2) = " 
-         << reader2.getValue(point0X, point0Y, 2) << '\n';
-    cerr << "reader3.getValue(point0X, point0Y, 0) = " 
-         << reader3.getValue(point0X, point0Y, 0) << '\n';
-    cerr << "reader3.getValue(point0X, point0Y, 2) = " 
-         << reader3.getValue(point0X, point0Y, 2) << '\n';
-    cerr << "reader4.getValue(point0X, point0Y, 0) = " 
-         << reader4.getValue(point0X, point0Y, 0) << '\n';
-    cerr << "reader4.getValue(point0X, point0Y, 2) = " 
-         << reader4.getValue(point0X, point0Y, 2) << '\n';
+    cerr << "reader.getValue(point0X, point0Y, 1) = " 
+         << reader.getValue(point0X, point0Y, 1) << '\n';
+    cerr << "reader.getValue(point0X, point0Y, 3) = " 
+         << reader.getValue(point0X, point0Y, 3) << '\n';
+    cerr << "reader2.getValue(point0X, point0Y, 1) = " 
+         << reader2.getValue(point0X, point0Y, 1) << '\n';
+    cerr << "reader2.getValue(point0X, point0Y, 3) = " 
+         << reader2.getValue(point0X, point0Y, 3) << '\n';
+    cerr << "reader3.getValue(point0X, point0Y, 1) = " 
+         << reader3.getValue(point0X, point0Y, 1) << '\n';
+    cerr << "reader3.getValue(point0X, point0Y, 3) = " 
+         << reader3.getValue(point0X, point0Y, 3) << '\n';
+    cerr << "reader4.getValue(point0X, point0Y, 1) = " 
+         << reader4.getValue(point0X, point0Y, 1) << '\n';
+    cerr << "reader4.getValue(point0X, point0Y, 3) = " 
+         << reader4.getValue(point0X, point0Y, 3) << '\n';
 #endif
-    assert(floatsEqual(reader.getValue(point0X, point0Y, 0), point0Band0Value));
-    assert(floatsEqual(reader.getValue(point0X, point0Y, 2), point0Band2Value));
-    assert(floatsEqual(reader2.getValue(point0X, point0Y, 0), point0Band0Value));
-    assert(floatsEqual(reader2.getValue(point0X, point0Y, 2), point0Band2Value));
-    assert(floatsEqual(reader3.getValue(point0X, point0Y, 0), point0Band0Value));
-    assert(floatsEqual(reader3.getValue(point0X, point0Y, 2), point0Band2Value));
-    assert(floatsEqual(reader4.getValue(point0X, point0Y, 0), point0Band0Value));
-    assert(floatsEqual(reader4.getValue(point0X, point0Y, 2), point0Band2Value));
+    assert(floatsEqual(reader.getValue(point0X, point0Y, 1), point0Band1Value));
+    assert(floatsEqual(reader.getValue(point0X, point0Y, 3), point0Band3Value));
+    assert(floatsEqual(reader2.getValue(point0X, point0Y, 1), point0Band1Value));
+    assert(floatsEqual(reader2.getValue(point0X, point0Y, 3), point0Band3Value));
+    assert(floatsEqual(reader3.getValue(point0X, point0Y, 1), point0Band1Value));
+    assert(floatsEqual(reader3.getValue(point0X, point0Y, 3), point0Band3Value));
+    assert(floatsEqual(reader4.getValue(point0X, point0Y, 1), point0Band1Value));
+    assert(floatsEqual(reader4.getValue(point0X, point0Y, 3), point0Band3Value));
 
     // ==== Point 1 ====
     const BSQReader<type>::UTMCoordinateType point1X = expectedMinX;
     const BSQReader<type>::UTMCoordinateType point1Y = expectedMaxY;
-    const type point1Band0Value = 0.000;
-    const type point1Band2Value = 32.000;
+    const type point1Band1Value = 0.000;
+    const type point1Band3Value = 32.000;
 
 #ifdef PRINT_VALUES
     cerr << "POINT 1 VALUES\n";
-    cerr << "reader.getValue(point1X, point1Y, 0) = " 
-         << reader.getValue(point1X, point1Y, 0) << '\n';
-    cerr << "reader.getValue(point1X, point1Y, 2) = " 
-         << reader.getValue(point1X, point1Y, 2) << '\n';
-    cerr << "reader2.getValue(point1X, point1Y, 0) = " 
-         << reader2.getValue(point1X, point1Y, 0) << '\n';
-    cerr << "reader2.getValue(point1X, point1Y, 2) = " 
-         << reader2.getValue(point1X, point1Y, 2) << '\n';
-    cerr << "reader3.getValue(point1X, point1Y, 0) = " 
-         << reader3.getValue(point1X, point1Y, 0) << '\n';
-    cerr << "reader3.getValue(point1X, point1Y, 2) = " 
-         << reader3.getValue(point1X, point1Y, 2) << '\n';
-    cerr << "reader4.getValue(point1X, point1Y, 0) = " 
-         << reader4.getValue(point1X, point1Y, 0) << '\n';
-    cerr << "reader4.getValue(point1X, point1Y, 2) = " 
-         << reader4.getValue(point1X, point1Y, 2) << '\n';
+    cerr << "reader.getValue(point1X, point1Y, 1) = " 
+         << reader.getValue(point1X, point1Y, 1) << '\n';
+    cerr << "reader.getValue(point1X, point1Y, 3) = " 
+         << reader.getValue(point1X, point1Y, 3) << '\n';
+    cerr << "reader2.getValue(point1X, point1Y, 1) = " 
+         << reader2.getValue(point1X, point1Y, 1) << '\n';
+    cerr << "reader2.getValue(point1X, point1Y, 3) = " 
+         << reader2.getValue(point1X, point1Y, 3) << '\n';
+    cerr << "reader3.getValue(point1X, point1Y, 1) = " 
+         << reader3.getValue(point1X, point1Y, 1) << '\n';
+    cerr << "reader3.getValue(point1X, point1Y, 3) = " 
+         << reader3.getValue(point1X, point1Y, 3) << '\n';
+    cerr << "reader4.getValue(point1X, point1Y, 1) = " 
+         << reader4.getValue(point1X, point1Y, 1) << '\n';
+    cerr << "reader4.getValue(point1X, point1Y, 3) = " 
+         << reader4.getValue(point1X, point1Y, 3) << '\n';
 #endif
-    assert(floatsEqual(reader.getValue(point1X, point1Y, 0), point1Band0Value));
-    assert(floatsEqual(reader.getValue(point1X, point1Y, 2), point1Band2Value));
-    assert(floatsEqual(reader2.getValue(point1X, point1Y, 0), point1Band0Value));
-    assert(floatsEqual(reader2.getValue(point1X, point1Y, 2), point1Band2Value));
-    assert(floatsEqual(reader3.getValue(point1X, point1Y, 0), point1Band0Value));
-    assert(floatsEqual(reader3.getValue(point1X, point1Y, 2), point1Band2Value));
-    assert(floatsEqual(reader4.getValue(point1X, point1Y, 0), point1Band0Value));
-    assert(floatsEqual(reader4.getValue(point1X, point1Y, 2), point1Band2Value));
+    assert(floatsEqual(reader.getValue(point1X, point1Y, 1), point1Band1Value));
+    assert(floatsEqual(reader.getValue(point1X, point1Y, 3), point1Band3Value));
+    assert(floatsEqual(reader2.getValue(point1X, point1Y, 1), point1Band1Value));
+    assert(floatsEqual(reader2.getValue(point1X, point1Y, 3), point1Band3Value));
+    assert(floatsEqual(reader3.getValue(point1X, point1Y, 1), point1Band1Value));
+    assert(floatsEqual(reader3.getValue(point1X, point1Y, 3), point1Band3Value));
+    assert(floatsEqual(reader4.getValue(point1X, point1Y, 1), point1Band1Value));
+    assert(floatsEqual(reader4.getValue(point1X, point1Y, 3), point1Band3Value));
 
     // ==== Point 2 ====
     const BSQReader<type>::UTMCoordinateType point2X = 250391.940678;
     const BSQReader<type>::UTMCoordinateType point2Y = 3497456.415254; 
-    const type point2Band0Value = 77.000;
-    const type point2Band3Value = 79.000;
-    const type point2Band12Value = 3.000;
+    const type point2Band1Value = 77.000;
+    const type point2Band4Value = 79.000;
+    const type point2Band13Value = 3.000;
 
 #ifdef PRINT_VALUES
     cerr << "POINT 2 VALUES\n";
-    cerr << "reader.getValue(point2X, point2Y, 0) = " 
-         << reader.getValue(point2X, point2Y, 0) << '\n';
-    cerr << "reader.getValue(point2X, point2Y, 3) = " 
-         << reader.getValue(point2X, point2Y, 3) << '\n';
-    cerr << "reader.getValue(point2X, point2Y, 12) = " 
-         << reader.getValue(point2X, point2Y, 12) << '\n';
-    cerr << "reader2.getValue(point2X, point2Y, 0) = " 
-         << reader2.getValue(point2X, point2Y, 0) << '\n';
-    cerr << "reader2.getValue(point2X, point2Y, 3) = " 
-         << reader2.getValue(point2X, point2Y, 3) << '\n';
-    cerr << "reader2.getValue(point2X, point2Y, 12) = " 
-         << reader2.getValue(point2X, point2Y, 12) << '\n';
-    cerr << "reader3.getValue(point2X, point2Y, 0) = " 
-         << reader3.getValue(point2X, point2Y, 0) << '\n';
-    cerr << "reader3.getValue(point2X, point2Y, 3) = " 
-         << reader3.getValue(point2X, point2Y, 3) << '\n';
-    cerr << "reader3.getValue(point2X, point2Y, 12) = " 
-         << reader3.getValue(point2X, point2Y, 12) << '\n';
-    cerr << "reader4.getValue(point2X, point2Y, 0) = " 
-         << reader4.getValue(point2X, point2Y, 0) << '\n';
-    cerr << "reader4.getValue(point2X, point2Y, 3) = " 
-         << reader4.getValue(point2X, point2Y, 3) << '\n';
-    cerr << "reader4.getValue(point2X, point2Y, 12) = " 
-         << reader4.getValue(point2X, point2Y, 12) << '\n';
+    cerr << "reader.getValue(point2X, point2Y, 1) = " 
+         << reader.getValue(point2X, point2Y, 1) << '\n';
+    cerr << "reader.getValue(point2X, point2Y, 4) = " 
+         << reader.getValue(point2X, point2Y, 4) << '\n';
+    cerr << "reader.getValue(point2X, point2Y, 13) = " 
+         << reader.getValue(point2X, point2Y, 13) << '\n';
+    cerr << "reader2.getValue(point2X, point2Y, 1) = " 
+         << reader2.getValue(point2X, point2Y, 1) << '\n';
+    cerr << "reader2.getValue(point2X, point2Y, 4) = " 
+         << reader2.getValue(point2X, point2Y, 4) << '\n';
+    cerr << "reader2.getValue(point2X, point2Y, 13) = " 
+         << reader2.getValue(point2X, point2Y, 13) << '\n';
+    cerr << "reader3.getValue(point2X, point2Y, 1) = " 
+         << reader3.getValue(point2X, point2Y, 1) << '\n';
+    cerr << "reader3.getValue(point2X, point2Y, 4) = " 
+         << reader3.getValue(point2X, point2Y, 4) << '\n';
+    cerr << "reader3.getValue(point2X, point2Y, 13) = " 
+         << reader3.getValue(point2X, point2Y, 13) << '\n';
+    cerr << "reader4.getValue(point2X, point2Y, 1) = " 
+         << reader4.getValue(point2X, point2Y, 1) << '\n';
+    cerr << "reader4.getValue(point2X, point2Y, 4) = " 
+         << reader4.getValue(point2X, point2Y, 4) << '\n';
+    cerr << "reader4.getValue(point2X, point2Y, 13) = " 
+         << reader4.getValue(point2X, point2Y, 13) << '\n';
 #endif
-    assert(floatsEqual(reader.getValue(point2X, point2Y, 0), point2Band0Value));
-    assert(floatsEqual(reader.getValue(point2X, point2Y, 3), point2Band3Value));
-    assert(floatsEqual(reader.getValue(point2X, point2Y, 12), point2Band12Value));
-    assert(floatsEqual(reader2.getValue(point2X, point2Y, 0), point2Band0Value));
-    assert(floatsEqual(reader2.getValue(point2X, point2Y, 3), point2Band3Value));
-    assert(floatsEqual(reader2.getValue(point2X, point2Y, 12), point2Band12Value));
-    assert(floatsEqual(reader3.getValue(point2X, point2Y, 0), point2Band0Value));
-    assert(floatsEqual(reader3.getValue(point2X, point2Y, 3), point2Band3Value));
-    assert(floatsEqual(reader3.getValue(point2X, point2Y, 12), point2Band12Value));
-    assert(floatsEqual(reader4.getValue(point2X, point2Y, 0), point2Band0Value));
-    assert(floatsEqual(reader4.getValue(point2X, point2Y, 3), point2Band3Value));
-    assert(floatsEqual(reader4.getValue(point2X, point2Y, 12), point2Band12Value));
+    assert(floatsEqual(reader.getValue(point2X, point2Y, 1), point2Band1Value));
+    assert(floatsEqual(reader.getValue(point2X, point2Y, 4), point2Band4Value));
+    assert(floatsEqual(reader.getValue(point2X, point2Y, 13), point2Band13Value));
+    assert(floatsEqual(reader2.getValue(point2X, point2Y, 1), point2Band1Value));
+    assert(floatsEqual(reader2.getValue(point2X, point2Y, 4), point2Band4Value));
+    assert(floatsEqual(reader2.getValue(point2X, point2Y, 13), point2Band13Value));
+    assert(floatsEqual(reader3.getValue(point2X, point2Y, 1), point2Band1Value));
+    assert(floatsEqual(reader3.getValue(point2X, point2Y, 4), point2Band4Value));
+    assert(floatsEqual(reader3.getValue(point2X, point2Y, 13), point2Band13Value));
+    assert(floatsEqual(reader4.getValue(point2X, point2Y, 1), point2Band1Value));
+    assert(floatsEqual(reader4.getValue(point2X, point2Y, 4), point2Band4Value));
+    assert(floatsEqual(reader4.getValue(point2X, point2Y, 13), point2Band13Value));
 
     // ==== Point 3 ====
     const BSQReader<type>::UTMCoordinateType point3X = 243676.347701;
     const BSQReader<type>::UTMCoordinateType point3Y = 3500067.099730;
-    const type point3Band0Value = 57.000;
-    const type point3Band4Value = 0.177;
-    const type point3Band14Value = 1.000;
+    const type point3Band1Value = 57.000;
+    const type point3Band5Value = 0.177;
+    const type point3Band15Value = 1.000;
 
 #ifdef PRINT_VALUES
     cerr << "POINT 3 VALUES\n";
-    cerr << "reader.getValue(point3X, point3Y, 0) = " 
-         << reader.getValue(point3X, point3Y, 0) << '\n';
-    cerr << "reader.getValue(point3X, point3Y, 4) = " 
-         << reader.getValue(point3X, point3Y, 4) << '\n';
-    cerr << "reader.getValue(point3X, point3Y, 14) = " 
-         << reader.getValue(point3X, point3Y, 14) << '\n';
-    cerr << "reader2.getValue(point3X, point3Y, 0) = " 
-         << reader2.getValue(point3X, point3Y, 0) << '\n';
-    cerr << "reader2.getValue(point3X, point3Y, 4) = " 
-         << reader2.getValue(point3X, point3Y, 4) << '\n';
-    cerr << "reader2.getValue(point3X, point3Y, 14) = " 
-         << reader2.getValue(point3X, point3Y, 14) << '\n';
-    cerr << "reader3.getValue(point3X, point3Y, 0) = " 
-         << reader3.getValue(point3X, point3Y, 0) << '\n';
-    cerr << "reader3.getValue(point3X, point3Y, 4) = " 
-         << reader3.getValue(point3X, point3Y, 4) << '\n';
-    cerr << "reader3.getValue(point3X, point3Y, 14) = " 
-         << reader3.getValue(point3X, point3Y, 14) << '\n';
-    cerr << "reader4.getValue(point3X, point3Y, 0) = " 
-         << reader4.getValue(point3X, point3Y, 0) << '\n';
-    cerr << "reader4.getValue(point3X, point3Y, 4) = " 
-         << reader4.getValue(point3X, point3Y, 4) << '\n';
-    cerr << "reader4.getValue(point3X, point3Y, 14) = " 
-         << reader4.getValue(point3X, point3Y, 14) << '\n';
+    cerr << "reader.getValue(point3X, point3Y, 1) = " 
+         << reader.getValue(point3X, point3Y, 1) << '\n';
+    cerr << "reader.getValue(point3X, point3Y, 5) = " 
+         << reader.getValue(point3X, point3Y, 5) << '\n';
+    cerr << "reader.getValue(point3X, point3Y, 15) = " 
+         << reader.getValue(point3X, point3Y, 15) << '\n';
+    cerr << "reader2.getValue(point3X, point3Y, 1) = " 
+         << reader2.getValue(point3X, point3Y, 1) << '\n';
+    cerr << "reader2.getValue(point3X, point3Y, 5) = " 
+         << reader2.getValue(point3X, point3Y, 5) << '\n';
+    cerr << "reader2.getValue(point3X, point3Y, 15) = " 
+         << reader2.getValue(point3X, point3Y, 15) << '\n';
+    cerr << "reader3.getValue(point3X, point3Y, 1) = " 
+         << reader3.getValue(point3X, point3Y, 1) << '\n';
+    cerr << "reader3.getValue(point3X, point3Y, 5) = " 
+         << reader3.getValue(point3X, point3Y, 5) << '\n';
+    cerr << "reader3.getValue(point3X, point3Y, 15) = " 
+         << reader3.getValue(point3X, point3Y, 15) << '\n';
+    cerr << "reader4.getValue(point3X, point3Y, 1) = " 
+         << reader4.getValue(point3X, point3Y, 1) << '\n';
+    cerr << "reader4.getValue(point3X, point3Y, 5) = " 
+         << reader4.getValue(point3X, point3Y, 5) << '\n';
+    cerr << "reader4.getValue(point3X, point3Y, 15) = " 
+         << reader4.getValue(point3X, point3Y, 15) << '\n';
 #endif
-    assert(floatsEqual(reader.getValue(point3X, point3Y, 0), point3Band0Value));
-    assert(floatsEqual(reader.getValue(point3X, point3Y, 4), point3Band4Value));
-    assert(floatsEqual(reader.getValue(point3X, point3Y, 14), point3Band14Value));
-    assert(floatsEqual(reader2.getValue(point3X, point3Y, 0), point3Band0Value));
-    assert(floatsEqual(reader2.getValue(point3X, point3Y, 4), point3Band4Value));
-    assert(floatsEqual(reader2.getValue(point3X, point3Y, 14), point3Band14Value));
-#ifdef PRINT_VALUES
-    cerr << "reader3.getValue(point3X, point3Y, 0) = " 
-         << reader3.getValue(point3X, point3Y, 0) << '\n';
-    cerr << "reader3.getValue(point3X, point3Y, 4) = " 
-         << reader3.getValue(point3X, point3Y, 4) << '\n';
-    cerr << "reader3.getValue(point3X, point3Y, 14) = " 
-         << reader3.getValue(point3X, point3Y, 14) << '\n';
-#endif
-    assert(floatsEqual(reader3.getValue(point3X, point3Y, 0), point3Band0Value));
-    assert(floatsEqual(reader3.getValue(point3X, point3Y, 4), point3Band4Value));
-    assert(floatsEqual(reader3.getValue(point3X, point3Y, 14), point3Band14Value));
-    assert(floatsEqual(reader4.getValue(point3X, point3Y, 0), point3Band0Value));
-    assert(floatsEqual(reader4.getValue(point3X, point3Y, 4), point3Band4Value));
-    assert(floatsEqual(reader4.getValue(point3X, point3Y, 14), point3Band14Value));
+    assert(floatsEqual(reader.getValue(point3X, point3Y, 1), point3Band1Value));
+    assert(floatsEqual(reader.getValue(point3X, point3Y, 5), point3Band5Value));
+    assert(floatsEqual(reader.getValue(point3X, point3Y, 15), point3Band15Value));
+    assert(floatsEqual(reader2.getValue(point3X, point3Y, 1), point3Band1Value));
+    assert(floatsEqual(reader2.getValue(point3X, point3Y, 5), point3Band5Value));
+    assert(floatsEqual(reader2.getValue(point3X, point3Y, 15), point3Band15Value));
+    assert(floatsEqual(reader3.getValue(point3X, point3Y, 1), point3Band1Value));
+    assert(floatsEqual(reader3.getValue(point3X, point3Y, 5), point3Band5Value));
+    assert(floatsEqual(reader3.getValue(point3X, point3Y, 15), point3Band15Value));
+    assert(floatsEqual(reader4.getValue(point3X, point3Y, 1), point3Band1Value));
+    assert(floatsEqual(reader4.getValue(point3X, point3Y, 5), point3Band5Value));
+    assert(floatsEqual(reader4.getValue(point3X, point3Y, 15), point3Band15Value));
 }
 
 template<class T>

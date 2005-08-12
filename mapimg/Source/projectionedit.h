@@ -35,11 +35,16 @@ public:
 	ProjectionEdit( QWidget* parent = 0 );
 	~ProjectionEdit();
 
-	QSize sizeHint() const;
-
 	friend void QInfoFrame::copy( QInfoFrame *src );
 	friend void QInfoFrame::setInfo( RasterInfo &input );
 	friend RasterInfo QInfoFrame::info();
+
+	void reset();
+	void setRO( bool ro );
+	void setAsInput();
+	void setAsOutput();
+	void lock( bool on );
+	void setFrameInfo( QString projName );
 
 signals:
 	void copyButtonClicked();
@@ -47,13 +52,6 @@ signals:
 
 public slots:
 	void projChange();
-	void reset();
-	/*void fixWidth( uint w );*/
-	void setRO( bool ro );
-	void setAsInput();
-	void setAsOutput();
-	void lock( bool on );
-	void setFrameInfo( QString projName );
 
 protected:
 	void appearanceSetup();

@@ -1,4 +1,4 @@
-// $Id: mapimgedit.h,v 1.1 2005/08/11 20:21:51 lwoodard Exp $
+// $Id: mapimgedit.h,v 1.2 2005/08/12 20:15:44 lwoodard Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -46,6 +46,8 @@ public:
 	QInfoFrame( QWidget* parent = 0, const char* name = 0);
 	~QInfoFrame();
 
+	QSize sizeHint() const;
+
 	void reset();
 	void fixWidth( uint w );
 
@@ -70,22 +72,6 @@ public slots:
 
 signals:
 	void locked();
-	void resetMapData();
-	void resetProjectionData();
-	void setMapTabWidth( uint w );
-	void setGctpTabWidth( uint w );
-	void setMapTabRO( bool ro );
-	void setGctpTabRO( bool ro );
-	void setMapTabsetAsInput();
-	void setGctpTabsetAsInput();
-	void setMapTabsetAsOutput();
-	void setGctpTabsetAsOutput();
-	void mapTabLock( bool on );
-	void gctpTabLock( bool on );
-	void mapTabFrame( int rows, int cols, QString ul_X, QString ul_Y );
-	void gctpTabFrame( QString projName );
-	void mapTabgetFill( QString fillString );
-
 
 
 private:

@@ -1,13 +1,13 @@
 #ifndef MAPIMGPROGRESSDIALOG_H
 #define MAPIMGPROGRESSDIALOG_H
 
-
+#include <QProgressDialog>
 #include <q3progressdialog.h>
 #include <QColor>
 
 #define defaultStepsPerUpdate 10
 
-class MapimgProgressDialog : public Q3ProgressDialog
+class MapimgProgressDialog : public QProgressDialog
 {
    Q_OBJECT
 

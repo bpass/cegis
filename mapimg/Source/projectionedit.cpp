@@ -59,13 +59,6 @@ ProjectionEdit::~ProjectionEdit()
 	delete [] gctpBoxes;
 }
 
-/*This function over rides the default size hint function.  It's main purpose
-is to make sure the width will be 300 to keep uniformity between the tabs*/
-QSize ProjectionEdit::sizeHint() const
-{
-	return QSize( 300, QTabWidget::sizeHint().height() );
-}
-
 /*
 The projChange() function is connected to the projCombo so that whenever
 the user selects a new projection this function is called. Its purpose is to

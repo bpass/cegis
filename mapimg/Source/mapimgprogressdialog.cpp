@@ -1,12 +1,14 @@
 #include <q3progressdialog.h>
 #include <QColor>
 #include <QString>
+#include <QProgressDialog>
 
 #include "mapimgprogressdialog.h"
 
 MapimgProgressDialog::MapimgProgressDialog( const QColor* color1, const QColor* color2, QWidget* creator, const char* name, bool modal, Qt::WFlags f )
-: Q3ProgressDialog( creator, name, modal, f )
+: QProgressDialog( creator, f )
 {
+	setModal( modal );
    defaults();
 
    colorStart = new QColor( *color1 );
@@ -28,8 +30,9 @@ MapimgProgressDialog::MapimgProgressDialog( const QColor* color1, const QColor* 
 
 
 MapimgProgressDialog::MapimgProgressDialog( const QString& labelText, const QString& cancelButtonText, int totalSteps, const QColor* color1, const QColor* color2, QWidget* creator, const char* name, bool modal, Qt::WFlags f )
-: Q3ProgressDialog( labelText, cancelButtonText, totalSteps, creator, name, modal, f )
+: QProgressDialog( labelText, cancelButtonText,0, totalSteps, creator, f )
 {
+	setModal( modal );
    defaults();
 
    int tempSteps = totalSteps;
@@ -85,9 +88,10 @@ void MapimgProgressDialog::defaults()
 
 void MapimgProgressDialog::setProgress( int progress )
 {
-   Q3ProgressDialog::setProgress( progress );
+	QProgressDialog::setValue( progress ); 
+   //QProgressDialog::setProgress( progress );
 
-   if( progress == totalSteps() && colorEnd )
+   if( progress == maximum()/*totalSteps()*/ && colorEnd )
    {
       currentRed = colorEnd->red();		//took Qt:: away
       currentGreen = colorEnd->green();	//before color
@@ -112,7 +116,8 @@ void MapimgProgressDialog::setProgress( int progress )
 
 void MapimgProgressDialog::setTotalSteps( int totalSteps )
 {
-   Q3ProgressDialog::setTotalSteps( totalSteps );
+	QProgressDialog::setMaximum( totalSteps );
+   //QProgressDialog::setTotalSteps( totalSteps );
 
    int tempSteps = totalSteps;
    if( tempSteps <= 0 )
@@ -134,8 +139,10 @@ void MapimgProgressDialog::setTotalSteps( int totalSteps )
 
 void MapimgProgressDialog::setProgress( int progress, int totalSteps )
 {
-   setTotalSteps( totalSteps );
-   setProgress( progress );
+   //setTotalSteps( totalSteps );
+	setMaximum( totalSteps );
+   //setProgress( progress );
+	setValue( progress );
 
    return;
 }

@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.3 2005/08/11 20:21:51 lwoodard Exp $
+// $Id: resampleform.cpp,v 1.4 2005/08/12 20:15:44 lwoodard Exp $
 
 
 /****************************************************************************
@@ -12,14 +12,15 @@
 
 #include <QVariant>
 #include <QPushButton>
-//#include <q3groupbox.h>
+					//#include <q3groupbox.h>
 #include <QGroupBox>
 #include <QComboBox>
 #include <QLabel>
-#include <q3buttongroup.h>
+					#include <q3buttongroup.h>
 #include <QRadioButton>
 #include <QLineEdit>
-#include <q3listbox.h>
+					//#include <q3listbox.h>
+#include <QListWidget>
 #include <QLayout>
 #include <QToolTip>
 #include <QWhatsThis>
@@ -27,7 +28,7 @@
 #include <QValidator>
 #include <QMessageBox>
 #include <QSlider>
-#include <q3hbox.h>
+					#include <q3hbox.h>
 //Added by qt3to4:
 #include <QKeyEvent>
 #include <QHBoxLayout>
@@ -62,8 +63,8 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
    inputLayout = new QVBoxLayout( 0, 0, 6, "inputLayout"); 
 
-   resampleBox = new QGroupBox( this, "resampleBox" );
-/****///   resampleBox->setColumnLayout(0, Qt::Vertical );
+   resampleBox = new QGroupBox( this, "resampleBox" );		/**3**/
+//   resampleBox->setColumnLayout(0, Qt::Vertical );
    resampleBox->layout()->setSpacing( 6 );
    resampleBox->layout()->setMargin( 11 );
    resampleBoxLayout = new QVBoxLayout( resampleBox->layout() );
@@ -78,18 +79,22 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    catconLabel = new QLabel( "", resampleBox, "catconLabel" );
    conRadio = new QRadioButton( "Continuous Data", resampleBox, "conRadio" );
    catRadio = new QRadioButton( "Categorical Data", resampleBox, "catRadio" );
+/*   catconButtonGroup = new Q3ButtonGroup( resampleBox, "catconButtonGroup" );*/
    catconButtonGroup = new QGroupBox( resampleBox, "catconButtonGroup" );
    catconButtonGroup->hide();
-//*****   catconButtonGroup->insert( catRadio );
-//*****   catconButtonGroup->insert( conRadio );
-   /****/
+   /*catconButtonGroup->insert( catRadio );
+   catconButtonGroup->insert( conRadio );*/
+   QHBoxLayout *catconLayout = new QHBoxLayout( catconButtonGroup );
+   catconLayout->addWidget( catRadio );
+   catconLayout->addWidget( conRadio );
+ //  catconButtonGroup->setLayout( catconLayout );
    categoricalLayout->addWidget( catconLabel );
    categoricalLayout->addWidget( conRadio );
    categoricalLayout->addWidget( catRadio );
 
    inputLayout->addWidget( resampleBox );
 
-   ignoreBox = new QGroupBox( this, "ignoreBox" );
+   ignoreBox = new QGroupBox( this, "ignoreBox" );		/**3**/
 //   ignoreBox->setColumnLayout(0, Qt::Vertical );
    ignoreBox->layout()->setSpacing( 6 );
    ignoreBox->layout()->setMargin( 11 );
@@ -119,7 +124,8 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
    ignoreLayout->addItem( ingoreSpacer );
    ignoreBoxLayout->addLayout( ignoreLayout );
 
-   ignoreListBox = new Q3ListBox( ignoreBox, "ignoreListBox" );
+   /*ignoreListBox = new Q3ListBox( ignoreBox, "ignoreListBox" );*/
+   ignoreListBox = new QListWidget( ignoreBox );
    ignoreListBox->setMinimumSize( QSize( 125, 0 ) );
    ignoreListBox->installEventFilter( this );
    ignoreBoxLayout->addWidget( ignoreListBox );
@@ -137,8 +143,8 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
    ResampleFormLayout->addLayout( inputLayout );
 
-   memoryBox = new QGroupBox( this, "memoryBox" );
- //  memoryBox->setColumnLayout(0, Qt::Vertical );
+   memoryBox = new QGroupBox( this, "memoryBox" );		/**3**/
+//   memoryBox->setColumnLayout(0, Qt::Vertical );
    memoryBox->layout()->setSpacing( 6 );
    memoryBox->layout()->setMargin( 11 );
    memoryBoxLayout = new QVBoxLayout( memoryBox->layout() );
@@ -372,11 +378,12 @@ void ResampleForm::newVal()
       if(  ilist.contains( i ) < 1 )
       {
          ilist.append( i );
-         ignoreListBox->insertItem( QString::number( i, 'f', decimals ) );
+/*         ignoreListBox->insertItem( QString::number( i, 'f', decimals ) );*/
+		ignoreListBox->addItem( QString::number( i, 'f', decimals ) );
       }
       else
       {
-         Q3ListBoxItem* ignoreListItem = ignoreListBox->findItem( QString::number( i, 'f', decimals ), Q3IconView::ExactMatch );
+		  Q3ListBoxItem* ignoreListItem = ignoreListBox->findItems( QString::number( i, 'f', decimals ), Qt::MatchExactly );
          ignoreListBox->setSelected( ignoreListItem, TRUE );
       }
 

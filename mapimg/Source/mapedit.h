@@ -40,12 +40,18 @@ public:
 	MapEdit( QWidget* parent = 0 );
 	~MapEdit();
 
-	QSize sizeHint() const;
-
 	friend void QInfoFrame::copy( QInfoFrame *src );
 	friend void QInfoFrame::partnerChanged();
 	friend void QInfoFrame::setInfo( RasterInfo &input );
 	friend RasterInfo QInfoFrame::info();
+
+	void reset();
+	void setRO( bool ro );
+	void setAsInput();
+	void setAsOutput();
+	void lock( bool on );
+	void setFrameInfo( int rows, int cols, QString ul_X, QString ul_Y );
+	void getFill( QString fillString );
 
 signals:
 	void copyButtonClicked();
@@ -61,14 +67,6 @@ public slots:
 	void dataChange(const QString&);
 	void fillCheckToggled( bool state );
 	void noDataCheckToggled( bool state );
-	void reset();
-/*	void fixWidth( uint w );*/
-	void setRO( bool ro );
-	void setAsInput();
-	void setAsOutput();
-	void lock( bool on );
-	void setFrameInfo( int rows, int cols, QString ul_X, QString ul_Y );
-	void getFill( QString fillString );
 
 protected:
 	void appearanceSetup();

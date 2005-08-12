@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.3 2005/08/11 20:21:51 lwoodard Exp $
+// $Id: resampleform.h,v 1.4 2005/08/12 20:15:44 lwoodard Exp $
 
 
 /****************************************************************************
@@ -28,7 +28,7 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QGridLayout;
 class QSpacerItem;
-class QGroupBox;
+class QGroupBox;	/**3**/
 class QComboBox;
 class QLabel;
 class Q3ButtonGroup;
@@ -40,6 +40,7 @@ class Q3ListBoxItem;
 class QEvent;
 class QSlider;
 class Q3HBox;
+class QListWidget;
 
 class ResampleForm : public QDialog
 {
@@ -54,19 +55,20 @@ public:
    bool wasCanceled(){return canceled;}
 
 protected:
-   QGroupBox* resampleBox;
+   QGroupBox* resampleBox;		/**3**/
    QComboBox* resampleCombo;
    QLabel* catconLabel;
- //****  Q3ButtonGroup* catconButtonGroup;
-/****/QGroupBox* catconButtonGroup;
+/*   Q3ButtonGroup* catconButtonGroup;*/
+QGroupBox* catconButtonGroup;
    QRadioButton* catRadio;
    QRadioButton* conRadio;
 
-   QGroupBox* ignoreBox;
+   QGroupBox* ignoreBox;		/**3**/
    QLineEdit* ignoreEdit;
    QPushButton* newButton;
    QPushButton* delButton;
-   Q3ListBox* ignoreListBox;
+/*   Q3ListBox* ignoreListBox;*/
+   QListWidget* ignoreListBox;
    QPushButton* okButton;
    QPushButton* cancelButton;
    QLabel* ignoreLabel;
@@ -81,7 +83,7 @@ protected:
    QHBoxLayout* okLayout;
    QSpacerItem* okSpacer;
 
-   QGroupBox* memoryBox;
+   QGroupBox* memoryBox;		/**3**/
    QSlider* memoryAllocation;
    QPushButton* memoryResetButton;
    QHBoxLayout* memoryLabelResetLayout;

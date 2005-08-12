@@ -71,12 +71,6 @@ Nothing to destruct because QObjects take care of their children.
 MapEdit::~MapEdit()
 {}
 
-/*This function over rides the default size hint function.  It's main purpose
-is to make sure the width will be 300 to keep uniformity between the tabs*/
-QSize MapEdit::sizeHint() const
-{
-	return QSize( 300, QTabWidget::sizeHint().height() );
-}
 
 /* eventFilter is an event filter for misc GUI events. Right now it is used
 to dsiplay a popup menu when a user right-clicks on teh fill value edit box

@@ -1,4 +1,4 @@
-// $Id: mapimgedit.cpp,v 1.1 2005/08/11 20:21:51 lwoodard Exp $
+// $Id: mapimgedit.cpp,v 1.2 2005/08/12 20:15:44 lwoodard Exp $
 
 
 #include "qinfoframe.h"
@@ -58,22 +58,6 @@ QInfoFrame::QInfoFrame( QWidget* parent, const char* name)
 	connect(gctpTab, SIGNAL( lockButtonToggled() ), this, SLOT(lock(bool)) );
 	connect(mapTab, SIGNAL( frameButtonClicked() ), this, SLOT(frame()));
 	connect(mapTab, SIGNAL( fillButtonClicked() ), this, SLOT(getFill()) );
-	connect(this, SIGNAL( resetMapData() ), mapTab, SLOT( reset() ) );
-	connect( this, SIGNAL( resetProjectionData() ), gctpTab, SLOT( reset() ) );
-	/*connect( this, SIGNAL( setMapTabWidth( uint ) ), mapTab, SLOT( fixWidth( uint ) ) );
-	connect( this, SIGNAL( setGctpTabWidth( uint ) ), gctpTab, SLOT( fixWidth( uint )));*/
-	connect( this, SIGNAL( setMapTabRO( bool ) ), mapTab, SLOT( setRO( bool ) ) );
-	connect( this, SIGNAL( setGctpTabRO( bool ) ), gctpTab, SLOT( setRO( bool ) ) );
-	connect( this, SIGNAL( setMapTabsetAsInput() ), mapTab, SLOT(setAsInput() ) );
-	connect( this, SIGNAL( setGctpTabsetAsInput() ), gctpTab, SLOT( setAsInput() ) );
-	connect( this, SIGNAL( setMapTabsetAsOutput() ), mapTab, SLOT( setAsOutput() ) );
-	connect( this, SIGNAL( setGctpTabsetAsOutput() ), gctpTab, SLOT( setAsOutput() ) );
-	connect( this, SIGNAL( mapTabLock( bool ) ), mapTab, SLOT( lock( bool ) ) );
-	connect( this, SIGNAL( gctpTabLock( bool ) ), gctpTab, SLOT( lock( bool ) ) );
-	connect( this, SIGNAL( mapTabFrame( QString ul_X, QString ul_Y ) ), mapTab,
-		SLOT( setFrameInfo( int rows, int cols, QString ul_X, QString ul_Y ) ) );
-	connect( this, SIGNAL( gctpTabFrame( QString projName ) ),
-		gctpTab, SLOT( setFrameInfo( QString projName ) ) );
 
 	locking = false;
 	reset();
@@ -85,14 +69,22 @@ Nothing to destruct because QObjects take care of their children.
 QInfoFrame::~QInfoFrame()
 {}
 
+/*This function over rides the default size hint function.  It's main purpose
+is to make sure the width will be 300 to keep uniformity between the tabs*/
+QSize QInfoFrame::sizeHint() const
+{
+	return QSize( 300, QTabWidget::sizeHint().height() );
+}
+
+
 /*
 The reset() function sets all values in both tabs to their defaults, all
 zeros except for the first gctpBox.
 */
 void QInfoFrame::reset()
 {
-	emit resetMapData();
-	emit resetProjectionData();
+	mapTab->reset();
+	gctpTab->reset();
 	
 	return;
 }
@@ -118,8 +110,8 @@ allow all access to the parameters found in a QInfoFrame.
 */
 void QInfoFrame::setReadOnly( bool ro )
 {
-	emit setMapTabRO( ro );
-	emit setGctpTabRO( ro );
+	mapTab->setRO( ro );
+	gctpTab->setRO( ro );
 }
 
 /*
@@ -135,8 +127,8 @@ here as an additional step in initialization.
 */
 void QInfoFrame::setAsInput()
 {
-	emit setMapTabsetAsInput();
-	emit setGctpTabsetAsInput();
+	mapTab->setAsInput();
+	gctpTab->setAsInput();
 
 	lock( true, false );
 }
@@ -146,8 +138,8 @@ See comments on setAsInput().
 */
 void QInfoFrame::setAsOutput()
 {
-	emit setMapTabsetAsOutput();
-	emit setGctpTabsetAsOutput();
+	mapTab->setAsOutput();
+	gctpTab->setAsOutput();
 
 	lock( false, false );
 }
@@ -280,8 +272,8 @@ void QInfoFrame::lock( bool on, bool saveFile )
 	locking = true;
 	setReadOnly( on );
 
-	emit mapTabLock( on );
-	emit gctpTabLock( on );
+	mapTab->lock( on );
+	gctpTab->lock( on );
 
 	locking = false;
 
@@ -302,7 +294,7 @@ bool QInfoFrame::frame()
 	{
 		mapimg::geo2eqr( inf );
 
-		emit gctpTabFrame( projNames[ inf.projectionNumber() ] );
+		gctpTab->setFrameInfo( projNames[ inf.projectionNumber() ] );
 	}
 	else
 	{
@@ -311,7 +303,7 @@ bool QInfoFrame::frame()
 		mapimg::frameIt( inf );
 	}
 
-	emit mapTabFrame( inf.rows(), inf.cols(), QString::number( inf.ul_X(), 'f', 6 ), 
+	mapTab->setFrameInfo( inf.rows(), inf.cols(), QString::number( inf.ul_X(), 'f', 6 ), 
 		QString::number( inf.ul_Y(), 'f', 6 ) );
 
 	return true;
@@ -337,7 +329,7 @@ void QInfoFrame::getFill()
 		fillString = QString::number(maxValue + 2, 'f', 6 );
 	}
 
-	emit mapTabgetFill( fillString );
+	mapTab->getFill( fillString );
 }
 
 /*!!!!!!!!!!!!!!!!!

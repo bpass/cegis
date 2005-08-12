@@ -1,7 +1,7 @@
 /**
  * @file LittleRiver.cpp
  *
- * $Id: LittleRiver.cpp,v 1.7 2005/08/11 23:49:26 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.8 2005/08/12 00:26:50 ahartman Exp $
  */
 
 #include <iomanip>
@@ -19,13 +19,14 @@
 //#define PRINT_SUFFIXES
 //#define PAUSE_AT_END
 
-//typedef std::vector<std::vector<std::string> > filenames_t;
-//filenames_t createFilenames();
+typedef std::vector<unsigned int> Resolutions_t;
+typedef std::vector<std::vector<std::string> > Filenames_t;
+
+Resolutions_t createResolutions();
+Filenames_t createFilenames();
 std::map<std::string, size_t> createFileTypesMap();
 void littleRiverPrintPoints();
 
-//enum FileTypes { clay = 0, hydro, lagg, nitro, 
-//                 phospho, sagg, sand, silt, total };
 const std::map<std::string, size_t> fileTypes = createFileTypesMap();
 
 int main()
@@ -66,23 +67,17 @@ createFileTypesMap()
     return fileTypesMap;
 }
 
-void littleRiverPrintPoints()
+std::vector<unsigned int>
+createResolutions()
 {
-    // Set up the main data directory
-#ifdef WIN32
-    const std::string dataDir = "D:/Data/Little_River/";
-#else
-    const std::string dataDir = "/snap/ahartman/AGNPSOutput/BSQs/Little_River/";
-#endif
-
     // Set up the numbers for each resolution that will be part of each of
     // folder and file names
-    const int resolutionsAsArray[] = 
+    const unsigned int resolutionsAsArray[] = 
         { 30, 60, 120, 210, 240, 480, 960, 1920 };
     const size_t numResolutions = 
         sizeof(resolutionsAsArray) / sizeof(int);
-    const std::vector<int> 
-        resolutions(resolutionsAsArray, resolutionsAsArray + numResolutions);
+    Resolutions_t resolutions(resolutionsAsArray, 
+                              resolutionsAsArray + numResolutions);
 
 #ifdef PRINT_RESOLUTIONS
     // Test to make sure the resolutions were set up correctly
@@ -93,6 +88,20 @@ void littleRiverPrintPoints()
         std::cout << '\t' << *i << '\n';
     }
 #endif
+
+    return resolutions;
+}
+
+void littleRiverPrintPoints()
+{
+    // Set up the main data directory
+#ifdef WIN32
+    const std::string dataDir = "D:/Data/Little_River/";
+#else
+    const std::string dataDir = "/snap/ahartman/AGNPSOutput/BSQs/Little_River/";
+#endif
+
+    Resolutions_t resolutions = createResolutions();
 
     const std::string prefix = "n";
 
@@ -126,10 +135,9 @@ void littleRiverPrintPoints()
     const std::string extension = ".bsq";
 
     // Set up all the filenames
-    typedef std::vector<std::vector<std::string> > filenames_t;
-    filenames_t filenames(numResolutions, 
+    Filenames_t filenames(resolutions.size(), 
                           std::vector<std::string>(numSuffixes));
-    for(size_t i = 0; i < numResolutions; ++i)
+    for(size_t i = 0; i < resolutions.size(); ++i)
     {
         std::ostringstream oss;
         oss << resolutions[i];
@@ -192,8 +200,8 @@ void littleRiverPrintPoints()
     myBands["nitro"] = myNitroBands;
 
     // Create the BSQReaders for the files we want
-    std::vector<std::vector<BSQReader_t> > bsqReaders(numResolutions);
-    for(size_t i = 0; i < numResolutions; ++i)
+    std::vector<std::vector<BSQReader_t> > bsqReaders(resolutions.size());
+    for(size_t i = 0; i < resolutions.size(); ++i)
     {
         for(size_t j = 0; j < numMyFileTypes; ++j)
         {
@@ -219,15 +227,23 @@ void littleRiverPrintPoints()
             {
                 std::cout << "\t\tValues for band " << *band << '\n';
 
-                for(size_t resolution = 0; resolution < numResolutions; 
+                for(size_t resolution = 0; resolution < resolutions.size(); 
                     ++resolution)
                 {
-                    const Data_t value = 
-                        bsqReaders[resolution][myFileType].
-                            getValue(point->x(), point->y(), *band);
                     std::cout << "\t\t\t" << std::setw(4) 
                               << resolutions[resolution]
-                              << ": " << value << '\n';
+                              << ": ";
+                    try
+                    {
+                        const Data_t value = 
+                            bsqReaders[resolution][myFileType].
+                                getValue(point->x(), point->y(), *band);
+                        std::cout << value << '\n';
+                    }
+                    catch(...)
+                    {
+                        std::cout << "Error getting value\n";
+                    }
                 }
             }
         }

@@ -1,7 +1,7 @@
 /**
  * @file LittleRiver.cpp
  *
- * $Id: LittleRiver.cpp,v 1.8 2005/08/12 00:26:50 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.9 2005/08/12 00:44:45 ahartman Exp $
  */
 
 #include <iomanip>
@@ -67,22 +67,22 @@ createFileTypesMap()
     return fileTypesMap;
 }
 
-std::vector<unsigned int>
+Resolutions_t
 createResolutions()
 {
     // Set up the numbers for each resolution that will be part of each of
     // folder and file names
-    const unsigned int resolutionsAsArray[] = 
+    const Resolutions_t::value_type resolutionsAsArray[] = 
         { 30, 60, 120, 210, 240, 480, 960, 1920 };
     const size_t numResolutions = 
-        sizeof(resolutionsAsArray) / sizeof(int);
+        sizeof(resolutionsAsArray) / sizeof(Resolutions_t::value_type);
     Resolutions_t resolutions(resolutionsAsArray, 
                               resolutionsAsArray + numResolutions);
 
 #ifdef PRINT_RESOLUTIONS
     // Test to make sure the resolutions were set up correctly
     std::cout << "Resolutions:\n";
-    for(std::vector<int>::const_iterator i = resolutions.begin();
+    for(Resolutions_t::const_iterator i = resolutions.begin();
         i != resolutions.end(); ++i)
     {
         std::cout << '\t' << *i << '\n';
@@ -92,7 +92,8 @@ createResolutions()
     return resolutions;
 }
 
-void littleRiverPrintPoints()
+Filenames_t
+createFilenames()
 {
     // Set up the main data directory
 #ifdef WIN32
@@ -101,8 +102,7 @@ void littleRiverPrintPoints()
     const std::string dataDir = "/snap/ahartman/AGNPSOutput/BSQs/Little_River/";
 #endif
 
-    Resolutions_t resolutions = createResolutions();
-
+    const Resolutions_t resolutions = createResolutions();
     const std::string prefix = "n";
 
     // Set up the suffixes for each filename
@@ -163,6 +163,11 @@ void littleRiverPrintPoints()
     std::cout.flush();
 #endif
 
+    return filenames;
+}
+
+void littleRiverPrintPoints()
+{
     // Read the data from various points at each resolution
     typedef float Data_t;
     typedef BSQReader<Data_t> BSQReader_t;
@@ -200,6 +205,8 @@ void littleRiverPrintPoints()
     myBands["nitro"] = myNitroBands;
 
     // Create the BSQReaders for the files we want
+    const Resolutions_t resolutions = createResolutions();
+    const Filenames_t filenames = createFilenames();
     std::vector<std::vector<BSQReader_t> > bsqReaders(resolutions.size());
     for(size_t i = 0; i < resolutions.size(); ++i)
     {

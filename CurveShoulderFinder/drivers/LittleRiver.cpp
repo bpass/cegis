@@ -1,7 +1,7 @@
 /**
  * @file LittleRiver.cpp
  *
- * $Id: LittleRiver.cpp,v 1.9 2005/08/12 00:44:45 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.10 2005/08/13 01:30:11 ahartman Exp $
  */
 
 #include <iomanip>
@@ -36,7 +36,7 @@ int main()
     littleRiverPrintPoints();
 
 #ifdef PAUSE_AT_END
-    std::cout << "Press any key to continue...";
+    std::cout << "Press ENTER to continue...";
     std::string blah;
     std::getline(std::cin, blah);
 #endif
@@ -177,13 +177,14 @@ void littleRiverPrintPoints()
     // Set up the points we want to read
     Points_t points;
     points.push_back(Point_t(249064.067797, 3499322.525424));
-    points.push_back(Point_t(237540.000000, 3516595.420200));
-    points.push_back(Point_t(260580.000000, 3516595.420200));
-    points.push_back(Point_t(237540.000000, 3485911.000000));
-    points.push_back(Point_t(260580.000000, 3485911.000000));
+    points.push_back(Point_t(254786.440678, 3485895.745763));
+//    points.push_back(Point_t(237540.000000, 3516595.420200));
+//    points.push_back(Point_t(260580.000000, 3516595.420200));
+//    points.push_back(Point_t(237540.000000, 3485911.000000));
+//    points.push_back(Point_t(260580.000000, 3485911.000000));
 
     // Set up the data files we want to read
-    const std::string myFileTypes[] = { "clay", "nitro" };
+    const std::string myFileTypes[] = { "hydro", "nitro", "phospho" };
     const size_t numMyFileTypes = sizeof(myFileTypes) / sizeof(myFileTypes[0]);
 
     // Set up the bands we want to read
@@ -196,13 +197,55 @@ void littleRiverPrintPoints()
                       myClayBandsAsArray, myClayBandsAsArray + 
                       sizeof(myClayBandsAsArray) / sizeof(size_t));
 
-    const size_t myNitroBandsAsArray[] = { 1, 2, 3, 4, 5, 6};
+    const size_t myHydroBandsAsArray[] = { 1, 2, 3, 4, 5, 6, 7 };
+    const BandsList_t myHydroBands(
+                      myHydroBandsAsArray, myHydroBandsAsArray + 
+                      sizeof(myHydroBandsAsArray) / sizeof(size_t));
+
+    const size_t myLaggBandsAsArray[] = { 1, 2, 3, 4, 5 };
+    const BandsList_t myLaggBands(
+                      myLaggBandsAsArray, myLaggBandsAsArray + 
+                      sizeof(myLaggBandsAsArray) / sizeof(size_t));
+
+    const size_t myNitroBandsAsArray[] = { 1, 2, 3, 4, 5, 6 };
     const BandsList_t myNitroBands(
                       myNitroBandsAsArray, myNitroBandsAsArray + 
                       sizeof(myNitroBandsAsArray) / sizeof(size_t));
 
+    const size_t myPhosphoBandsAsArray[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+    const BandsList_t myPhosphoBands(
+                      myPhosphoBandsAsArray, myPhosphoBandsAsArray + 
+                      sizeof(myPhosphoBandsAsArray) / sizeof(size_t));
+
+    const size_t mySaggBandsAsArray[] = { 1, 2, 3, 4, 5 };
+    const BandsList_t mySaggBands(
+                      mySaggBandsAsArray, mySaggBandsAsArray + 
+                      sizeof(mySaggBandsAsArray) / sizeof(size_t));
+
+    const size_t mySandBandsAsArray[] = { 1, 2, 3, 4, 5 };
+    const BandsList_t mySandBands(
+                      mySandBandsAsArray, mySandBandsAsArray + 
+                      sizeof(mySandBandsAsArray) / sizeof(size_t));
+
+    const size_t mySiltBandsAsArray[] = { 1, 2, 3, 4, 5 };
+    const BandsList_t mySiltBands(
+                      mySiltBandsAsArray, mySiltBandsAsArray + 
+                      sizeof(mySiltBandsAsArray) / sizeof(size_t));
+
+    const size_t myTotalBandsAsArray[] = { 1, 2, 3, 4, 5 };
+    const BandsList_t myTotalBands(
+                      myTotalBandsAsArray, myTotalBandsAsArray + 
+                      sizeof(myTotalBandsAsArray) / sizeof(size_t));
+
     myBands["clay"] = myClayBands;
+    myBands["hydro"] = myHydroBands;
+    myBands["lagg"] = myLaggBands;
     myBands["nitro"] = myNitroBands;
+    myBands["phospho"] = myPhosphoBands;
+    myBands["sagg"] = mySaggBands;
+    myBands["sand"] = mySandBands;
+    myBands["silt"] = mySiltBands;
+    myBands["total"] = myTotalBands;
 
     // Create the BSQReaders for the files we want
     const Resolutions_t resolutions = createResolutions();

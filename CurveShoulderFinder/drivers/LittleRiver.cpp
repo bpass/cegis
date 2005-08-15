@@ -1,7 +1,7 @@
 /**
  * @file LittleRiver.cpp
  *
- * $Id: LittleRiver.cpp,v 1.10 2005/08/13 01:30:11 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.11 2005/08/15 18:10:10 ahartman Exp $
  */
 
 #include <iomanip>
@@ -17,7 +17,7 @@
 //#define PRINT_RESOLUTIONS
 //#define PRINT_FILENAMES
 //#define PRINT_SUFFIXES
-//#define PAUSE_AT_END
+#define PAUSE_AT_END
 
 typedef std::vector<unsigned int> Resolutions_t;
 typedef std::vector<std::vector<std::string> > Filenames_t;
@@ -184,7 +184,9 @@ void littleRiverPrintPoints()
 //    points.push_back(Point_t(260580.000000, 3485911.000000));
 
     // Set up the data files we want to read
-    const std::string myFileTypes[] = { "hydro", "nitro", "phospho" };
+    const std::string myFileTypes[] = { "clay", "hydro", "lagg", "nitro", 
+                                        "phospho", "sagg", "sand", "silt",
+                                        "total" };
     const size_t numMyFileTypes = sizeof(myFileTypes) / sizeof(myFileTypes[0]);
 
     // Set up the bands we want to read

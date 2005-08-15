@@ -15,7 +15,8 @@ using namespace std;
 
 void outputClassifiedImage( std::string ortho, std::string outputFile,
                             Classifier &C );
-void outputClassifiedImageAsGeoTiff( std::string ortho, std::string outputFile,
+void outputClassifiedImageAsGeoTiff( const std::string& ortho, 
+                                     const std::string& outputFile,
                                      Classifier &C );
 
 int main()
@@ -23,11 +24,11 @@ int main()
     using std::cerr;
     using std::cout;
 
-    const std::string rd("D:/Data/foristell_final/training/images/roads/c2_r7.tif");
-    const std::string nonrd("D:/Data/foristell_final/training/images/nonroads/c2_r7.tif");
-    const std::string outfile("D:/Data/foristell_final/training/output.dat");
-    const std::string testOrtho("D:/Data/foristell_final/orthoimages/c2_r7.tif");
-    const std::string testOutput("D:/Data/foristell_final/training/output/c2_r7.tif");
+    const std::string rd("D:/Data/foristell_final/training/images/reprojected/roads/c2_r7.tif");
+    const std::string nonrd("D:/Data/foristell_final/training/images/reprojected/nonroads/c2_r7.tif");
+    const std::string outfile("D:/Data/foristell_final/training/reprojectedOutput.dat");
+    const std::string testOrtho("D:/Data/foristell_final/orthoimages/reprojected/c2_r7.tif");
+    const std::string testOutput("D:/Data/foristell_final/training/output/reprojected/c2_r7.tif");
 
     cerr << "Running\n";
 
@@ -37,13 +38,13 @@ int main()
     pRd = static_cast<GDALDataset *>( GDALOpen( rd.c_str(), GA_ReadOnly ) );
     if( pRd == NULL )
     {
-        fprintf( stderr, "Failed to open rd file\n" );
+        cerr << "Failed to open rd file\n";
         return -1;
     }
     pNonRd = static_cast<GDALDataset *>( GDALOpen( nonrd.c_str(), GA_ReadOnly ) );
     if( pNonRd == NULL )
     {
-        fprintf( stderr, "Failed to open nonrd file\n" );
+        cerr, "Failed to open nonrd file\n";
         return -1;
     }
 
@@ -57,7 +58,7 @@ int main()
     C.outputText( outfile.c_str() );
 
 //    outputClassifiedImage( testOrtho, testOutput, C );
-    outputClassifiedImageAsGeoTiff( testOrtho, testOutput, C );
+//    outputClassifiedImageAsGeoTiff( testOrtho, testOutput, C );
 
     return 0;
 }
@@ -89,7 +90,8 @@ void outputClassifiedImage( std::string ortho, std::string outputFile,
 // take the image named ortho, classify it with C and put the result
 // in a GeoTiff file called outputFile.  View the output like you would
 // any other Tiff file.
-void outputClassifiedImageAsGeoTiff( std::string ortho, std::string outputFile,
+void outputClassifiedImageAsGeoTiff( const std::string& ortho, 
+                                     const std::string& outputFile,
                                      Classifier &C )
 {
     using std::cerr;

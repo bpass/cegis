@@ -10,7 +10,7 @@
 
 
 // Majic numbers for CVS
-// $Id: IntersectionLocator.cpp,v 1.17 2005/05/17 18:48:25 ahartman Exp $
+// $Id: IntersectionLocator.cpp,v 1.18 2005/08/15 20:55:08 ahartman Exp $
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1300
@@ -21,6 +21,8 @@
 #include "gdal_priv.h"
 #include "ogrsf_frmts.h"
 #include <stdio.h>
+#include <iostream>
+#include <sstream>
 #include <string>
 
 #include "IntersectionMap.h"
@@ -38,6 +40,7 @@ void filterTests();
 void recursiveTriangulatorTest();
 void triangleOutputTest();
 void profilerTest();
+void runForistellData();
 
 
 /**
@@ -78,9 +81,13 @@ OGRDataSource *createOGRFile(const char *pszFName, char *pszDName)
  * */
 int main( /*int argc, char *argv[]*/ )
 {
-//   // Run the function to profile this project
-//   profilerTest();
-//   return 0;
+    // Run the function that runs the program on the Foristell data
+    runForistellData();
+    return 0;
+
+   // Run the function to profile this project
+   profilerTest();
+   return 0;
 
    // Test the triangle output
    triangleOutputTest();
@@ -866,18 +873,13 @@ void triangleOutputTest()
    std::string szRaster, szVector, szOutput, szPoints, szLines, szAbbrev,
                szTriangles;
 
-//   std::string szRasterDir = "L:\\cartoresearch\\data-integration\\gjaromack\\STL\\orthoimages\\15SYC";
-//   std::string szVectorDir = "L:\\sdir_snap\\rstelzleni\\Mo2Quads\\OriginalRoads\\";
-//   //std::string szOutputDir = "L:\\sdir_snap\\rstelzleni\\Mo2Quads\\CorrectedRoads_10-90\\";
-//   std::string szOutputDir = "D:\\Data\\Output\\boundingSmallSquare\\"; 
+   const std::string szRasterDir = "L:/cartoresearch/data-integration/gjaromack/STL/orthoimages/15SYC";
+   const std::string szVectorDir = "L:/sdir_snap/rstelzleni/Mo2Quads/OriginalRoads/";
+   const std::string szOutputDir = "D:/Data/Output/boundingSmallSquare/"; 
 
-   const std::string szRasterDir = "/snap/ahartman/Data/STL/orthoimages/15SYC";
-   const std::string szVectorDir = "/snap/rstelzleni/Mo2Quads/OriginalRoads/";
-   const std::string szOutputDir = "/snap/ahartman/Data/Output/boundingLargeSquare/";
    const std::string szTiffExtension = ".tif";
 
    const double templateSize = 50, areaSize = 65;
-
 
    const char * const aszNames[] = {
         //"065630",
@@ -1056,8 +1058,7 @@ void triangleOutputTest()
 
    Classifier C;
    printf( "Loading classifier training\n\n" );
-   //C.inputText("L:\\sdir_snap\\rstelzleni\\Mo2Quads\\classifiertraining\\training.dat");
-   C.inputText("/snap/rstelzleni/Mo2Quads/classifiertraining/training.dat");
+   C.inputText("L:/sdir_snap/rstelzleni/Mo2Quads/classifiertraining/training.dat");
 
    DelauneyTriangulator *Triangulator = new QuarticTriangulator;
    RubberSheetTransform *Transformer = new SaalfeldRubberSheet;
@@ -1109,7 +1110,7 @@ void triangleOutputTest()
       Intersections.findControlPoints( Rasta, templateSize, areaSize );
 
       // add the bounding control points
-      Intersections.addBoundingControlPoints();
+      //Intersections.addBoundingControlPoints();
       
       printf( "Saving control points\n" );
       std::vector<ControlPoint> originalPoints = 
@@ -1353,7 +1354,7 @@ void profilerTest()
       Intersections.findControlPoints( Rasta, templateSize, areaSize );
 
       // add the bounding control points
-      Intersections.addBoundingControlPoints();
+      //Intersections.addBoundingControlPoints();
       
       printf( "Saving control points\n" );
       const std::vector<ControlPoint> originalPoints = 
@@ -1472,4 +1473,205 @@ void profilerTest()
    delete Transformer;
 
    return;
+}
+
+void runForistellData()
+{
+    using std::cout;
+    using std::cerr;
+    using std::ostringstream;
+
+    const std::string szRasterDir = "D:/Data/foristell_final/orthoimages/reprojected/";
+    const std::string szVectorDir = "D:/Data/foristell_final/OriginalRoads/reprojected/";
+    const std::string szOutputDir = "D:/Data/foristell_final/CorrectedRoads/";
+    const std::string szRasterExtension = ".tif";
+    const std::string szVectorExtension = "";
+    const std::string szTrainingFile = 
+        "D:/Data/foristell_final/training/training.dat";
+
+    const double templateSize = 50, areaSize = 65;
+
+    const char * const aszNames[] =
+    {
+        "c1_r1",
+        "c1_r2",
+        "c1_r3",
+        "c1_r4",
+        "c1_r5",
+        "c1_r6",
+        "c1_r7",
+        "c1_r8",
+        "c1_r9",
+        "c2_r1",
+        "c2_r2",
+        "c2_r3",
+        "c2_r4",
+        "c2_r5",
+        "c2_r6",
+        "c2_r7",
+        "c2_r8",
+        "c2_r9",
+        "c3_r1",
+        "c3_r2",
+        "c3_r3",
+        "c3_r4",
+        "c3_r5",
+        "c3_r6",
+        "c3_r7",
+        "c3_r8",
+        "c3_r9"
+   };
+
+    const int n = 27; // number of names
+
+    OGRRegisterAll();
+    GDALAllRegister();
+
+    Classifier C;
+    cout << "Loading classifier training\n\n";
+    C.inputText(szTrainingFile.c_str());
+
+    DelauneyTriangulator *Triangulator = new QuarticTriangulator;
+    RubberSheetTransform *Transformer = new SaalfeldRubberSheet;
+
+    for( int i=0; i<n; ++i )
+    {
+        // Figure out the names of the raster and vector files to open
+        cout << "\n\nBeginning area " << aszNames[i] << "\n\n";
+        const std::string szRaster = 
+            szRasterDir + aszNames[i] + szRasterExtension;
+        const std::string szVector =
+            szVectorDir + aszNames[i] + szVectorExtension;
+ 
+        // Open the raster file and check for errors
+        GDALDataset* const pRaster = static_cast<GDALDataset *> 
+            ( GDALOpen( szRaster.c_str(), GA_ReadOnly ) );
+        if( pRaster == NULL )
+        { 
+            cerr << "Failed to open raster file\n"; 
+            exit( -1 );
+        }
+ 
+        // Open the vector file and check for errors
+        OGRDataSource* const pVectorDS = 
+            OGRSFDriverRegistrar::Open( szVector.c_str(), FALSE, NULL);
+        if( pVectorDS == NULL )
+        { 
+            cerr << "Failed opening vector file\n";
+            cerr << CPLGetLastErrorNo() << "\n";
+            cerr << CPLGetLastErrorMsg() << "\n";
+            exit( -1 );
+        }
+ 
+ 
+        cout << "Input files opened successfully\n\n";
+ 
+        // Run the classifier on the raster file
+        cout << "Loading raster image\n";
+        InMemRaster Rasta( pRaster );
+        cout << "Converting to HSV\n";
+        Rasta.convertToHSV();
+        cout << "Classifying road pixels\n\n";
+        Rasta.classify( C );
+ 
+        // Create the IntersectionMap
+        cout << "Loading intersection data\n";
+        IntersectionMap Intersections( pVectorDS, pRaster );
+        cout << "Finding control points\n\n";
+ 
+        // Get the original control points
+        cout << "\n10-90\n";
+        Intersections.findControlPoints( Rasta, templateSize, areaSize );
+        cout << "Saving control points\n";
+        std::vector<ControlPoint> originalPoints = 
+            Intersections.getControlPoints();
+ 
+        // Got the control points, now start manipulating the data
+ 
+        // First dump the unfiltered data and lines
+        std::string szOutput = szOutputDir + "Unfiltered/";
+        std::string szPoints =
+            szOutput + "Points/" + aszNames[i] + "_Points.shp";
+        std::string szLines =
+            szOutput + "Lines/" + aszNames[i] + "_Lines.shp";
+ 
+        // Open the file to output the original points
+        OGRDataSource* pOutputDS = 
+            createOGRFile( szPoints.c_str(), "ESRI Shapefile" );
+        if( pOutputDS == NULL )
+        {
+            cerr << "pOutputDS is NULL\n";
+            exit( -1 );
+        }
+ 
+        // Open the file to output the original lines
+        OGRDataSource* pLinesDS =
+            createOGRFile( szLines.c_str(), "ESRI Shapefile" );
+        if( pLinesDS == NULL )
+        {
+            cerr << "pLinesDS is NULL\n";
+            exit( -1 );
+        }
+ 
+        // Output the original points
+        cout << "Outputting base control point set and lines\n";
+        Intersections.outputControlPoints( pOutputDS );
+ 
+        // Do the triangulation and transform
+        Intersections.triangulateAndAdjust( Triangulator, Transformer,
+                                            pLinesDS );
+ 
+        delete pOutputDS;
+        delete pLinesDS;
+ 
+ 
+        // Now filter the points using all filters and combinations
+        for( int r = 10; r <= 90; r += 10 )
+        {
+            ostringstream temp;
+            temp << "_" << r << "VMF";
+            const std::string szAbbrev = temp.str();
+  
+            szOutput = szOutputDir + "Filter" ;
+            szOutput += szAbbrev + "/";
+            szPoints = szOutput + "Points/" + aszNames[i] + "_Points.shp";
+            szLines = szOutput + "Lines/" + aszNames[i] + "_Lines.shp";
+  
+            pOutputDS = createOGRFile( szPoints.c_str(), "ESRI Shapefile" );
+            if( pOutputDS == NULL )
+            { 
+                cerr << "pOutputDS is NULL\n";
+                exit( -1 );
+            }
+  
+            pLinesDS = createOGRFile( szLines.c_str(), "ESRI Shapefile" );
+            if( pLinesDS == NULL )
+            {
+                cerr << "pLinesDS is NULL\n";
+                exit( -1 );
+            }
+  
+            cout << "VMF Filtering and outputting control points\n\n";
+            Filter *filter = new VMFilter;
+            Intersections.setControlPoints( originalPoints );
+            Intersections.filter( filter, r/100.0 );
+            Intersections.outputControlPoints( pOutputDS );
+            Intersections.triangulateAndAdjust( Triangulator, Transformer,
+                                                pLinesDS );
+  
+            delete filter;
+            delete pOutputDS;
+            delete pLinesDS;
+        } // end for r (ratio)
+ 
+        delete pRaster;
+        delete pVectorDS;
+ 
+        cout << "Finished Area " << aszNames[i] << "\n";
+     } // end for i
+
+    delete Triangulator;
+    delete Transformer;
+
+    return;
 }

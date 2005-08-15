@@ -1,6 +1,6 @@
 
 // CVS magic symbols for voodoo practitioners
-// $Id: doxygenMain.h,v 1.12 2004/11/30 19:37:52 rstelzleni Exp $
+// $Id: doxygenMain.h,v 1.13 2005/08/15 20:41:39 ahartman Exp $
 
 /** \mainpage IntersectionLocator
  *
@@ -45,10 +45,9 @@
  *
  * \section installation Installation
  * 
- * This project was developed in VC6.  I haven't tried to build it in
- * any other environments, but in theory I didn't use anything that
- * isn't portable.  To build the project you will need the GDAL/OGR 
- * library, which is available at 
+ * This project was originally developed in VC6.  It has since been ported
+ * to work with the GNU Autotools, which work in both Linux and Windows.  To 
+ * build the project you will need the GDAL/OGR library, which is available at 
  * <a href="http://www.remotesensing.org/gdal/">www.remotesensing.org/gdal</a>
  * 
  * I built the project using version 1.2.0 of that library.  If you

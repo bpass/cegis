@@ -1,13 +1,15 @@
-// $Id: resampleinfo.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: resampleinfo.h,v 1.3 2005/08/15 19:51:40 lwoodard Exp $
 
 
 #ifndef RESAMPLEINFO_H
 #define RESAMPLEINFO_H
 
-#include <q3valuelist.h>
+#include <QList>
+//#include <q3valuelist.h>
 
 typedef double IgnoreValue;
-typedef Q3ValueList<IgnoreValue> IgnoreList;
+//typedef Q3ValueList<IgnoreValue> IgnoreList;
+typedef QList<IgnoreValue> IgnoreList;
 
 //class QStringList;
 

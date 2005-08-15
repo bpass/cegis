@@ -1,8 +1,8 @@
-// $Id: resampleinfo.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: resampleinfo.cpp,v 1.3 2005/08/15 19:51:40 lwoodard Exp $
 
 
 #include "resampleinfo.h"
-#include <qstringlist.h>
+#include <QStringList>
 
 #include "imgio.h"
 

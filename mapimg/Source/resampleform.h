@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.4 2005/08/12 20:15:44 lwoodard Exp $
+// $Id: resampleform.h,v 1.5 2005/08/15 19:51:40 lwoodard Exp $
 
 
 /****************************************************************************
@@ -41,6 +41,7 @@ class QEvent;
 class QSlider;
 class Q3HBox;
 class QListWidget;
+class QList;
 
 class ResampleForm : public QDialog
 {

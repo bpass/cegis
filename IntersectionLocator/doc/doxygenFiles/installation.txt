@@ -1,4 +1,4 @@
-// $Id: installation.txt,v 1.1 2005/08/16 02:04:34 ahartman Exp $
+// $Id: installation.txt,v 1.2 2005/08/16 02:20:45 ahartman Exp $
 
 /**
  * \page installation Installation
@@ -9,6 +9,9 @@
  * to work with the GNU Autotools, which work in both Linux and Windows.  
  *
  * \section installationPrerequisites Prerequisites
+ * This section describes how to build the libraries that the program depends
+ * upon in order to compile and run.  The instructions are separated for the
+ * individual platforms.
  *
  * \subsection installationPrerequisitesCommon Common 
  * <a href="http://www.remotesensing.org/gdal/">GDAL</a> - This program requires

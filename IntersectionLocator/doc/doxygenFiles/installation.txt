@@ -1,0 +1,108 @@
+// $Id: installation.txt,v 1.1 2005/08/16 02:04:34 ahartman Exp $
+
+/**
+ * \page installation Installation
+ * 
+ * \section installationIntroduction Introduction
+ * 
+ * This project was originally developed in VC6.  It has since been ported
+ * to work with the GNU Autotools, which work in both Linux and Windows.  
+ *
+ * \section installationPrerequisites Prerequisites
+ *
+ * \subsection installationPrerequisitesCommon Common 
+ * <a href="http://www.remotesensing.org/gdal/">GDAL</a> - This program requires
+ * the GDAL library in order to read and write common raster and vector file
+ * formats.  This program currently works with GDAL version 1.2.6, but it's
+ * likely that both newer and older versions will work as well. <BR>
+ * <a href="http://proj.maptools.org/">PROJ</a> - GDAL claims to require this
+ * library when transforming coordinates between projections, and it gives
+ * a runtime error if it can't find this library, so you'll need it as well.
+ * <BR><BR>
+ * Build instructions for these libraries will be discussed below in the 
+ * sections for the individual platforms.
+ *
+ * \subsection installationPrerequisitesWindows Windows 
+ * The first step is get MinGW and MSys from 
+ * <a href="http://www.mingw.org">http://www.mingw.org</a> so that you can
+ * use the build system.  First, download and install the package labeled 
+ * as just MinGW, which will install the packages labeled MinGW Runtime, 
+ * Windows API, binutils, gcc-*, and make.  You can also get those separately 
+ * if you desire.  Second, download and install the MSys package, followed by 
+ * autoconf, automake, and libtool from the MSys Developer Toolkit package. 
+ * <BR><BR>
+ * Now you're ready to build PROJ and GDAL using MSys and MinGW.  PROJ needs
+ * to be built first, since GDAL requires it.  After extracting PROJ, run the
+ * following commands in MSys while in PROJ's top directory:
+ * <ul>
+ *   <li> configure </li>
+ *   <li> make </li>
+ *   <li> make install </li>
+ * </ul>
+ * Do the same thing for GDAL, except run the following commands:
+ * <ul>
+ *   <li> configure --with-unix-stdio-64=no --with-static-proj4=yes 
+ *        --enable-shared=no </li>
+ *   <li> make </li>
+ *   <li> make install </li>
+ * </ul>
+ * The options passed to configure will build GDAL as a static library, because
+ * linking to it dynamically causes linker errors with the current version
+ * of MinGW.  Possibly with future improvements to MinGW, it will work 
+ * correctly.  The configure options also fix a problem with GDAL's configure
+ * script that improperly detects MinGW as having a 64-bit cstdio header.
+ * <BR>
+ *
+ * \subsection installationPrerequisitesLinux Linux 
+ *
+ * \section installationProgram Building the Actual Program
+ *
+ * Now that the prerequisites have been taken care of, the actual program can
+ * be installed.
+ *
+ * \subsection installationProgramWindows Windows
+ * Change to the top directory of the program and run the following commands 
+ * from MSys:
+ * <ul>
+ *   <li> export AUTOMAKE='automake --foreign' </li>
+ *   <li> autoreconf --force --install --verbose </li>
+ *   <li> configure --enable-static --disable-shared </li>
+ *   <li> make </li>
+ *   <li> make install </li>
+ * </ul>
+ *
+ * \subsection installationProgramLinux Linux
+ *
+ * \subsection installationProgramFinal Wrapping Up
+ * The build step for the program is now complete.  Running the program is a 
+ * whole 'nother story.  Because the requirements have been changing so 
+ * quickly, our solution has been to write a specialized driver for each run.  
+ * To do this you will need to do some reading up on how the program works, 
+ * and that's what this documentation is for.
+ * Good Luck.
+ */ 
+// To 
+// build the project you will need the GDAL/OGR library, which is available at 
+// <a href="http://www.remotesensing.org/gdal/">www.remotesensing.org/gdal</a>
+// 
+// I built the project using version 1.2.0 of that library.  If you
+// download the pre-built gdal-120-ntbin.zip package it includes 
+// everything you will need.  If you can't find that package then feel
+// free to try the latest version.  It "should" work, but of course,
+// there are no guarantees.  If whatever version of gdal you get doesn't
+// include the proj dynamic library then you will have to find a copy
+// of that too.
+// 
+// To build the project the include files for gdal will need to be in
+// your include path, and you will need to link against the static library
+// gdal_i.lib.  The easiest way to handle that in VC6 is to add it to the
+// "Source Files" folder.  To run the built executable you will need to
+// have the gdal12.dll and proj.dll (both can be easily acquired from the
+// website mentioned above, in the mentined package for instance)
+// somewhere where the program can find them.  In the project directory 
+// is a simple solution.
+// 
+// 
+//
+// \subsection linuxInstallation Installation in Linux
+// \ref buildingOnLinux Linux Installation Guide

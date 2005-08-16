@@ -1,6 +1,6 @@
 
 // CVS magic symbols for voodoo practitioners
-// $Id: doxygenMain.h,v 1.13 2005/08/15 20:41:39 ahartman Exp $
+// $Id: doxygenMain.h,v 1.14 2005/08/16 02:04:34 ahartman Exp $
 
 /** \mainpage IntersectionLocator
  *
@@ -29,10 +29,17 @@
  * 
  *
  * \section usage Usage
+ * These pages will provide instructions for how to use the program, such as
+ * how to build it or how to set up data to work with it. <BR><BR>
+ * \ref installation Instructions for building the program and supporting
+ * libraries <BR>
  * \ref preparingForNewData Instructions for preparing for a new dataset <BR>
  * \ref overallProcess Explanation of the overall process <BR>
  * \ref printingInstructions In case you need to plot some maps<BR>
  * \ref relatedLinks Web pages that you might find helpful<BR><BR>
+ * \section mainPageNotes Notes
+ *
+ * \subsection notesOutputInconsistencies Output Inconsistencies
  * It is probably worth pointing out here that the 
  * IntersectionMap::findControlPoints function will print out a bunch of
  * messages that say "processing intersection 1 of 543" or some other 
@@ -42,42 +49,6 @@
  * by looping through the mIntersectMap once and counting the number of
  * points that are intersections, but I didn't go to the trouble, so ... 
  * sorry.
- *
- * \section installation Installation
- * 
- * This project was originally developed in VC6.  It has since been ported
- * to work with the GNU Autotools, which work in both Linux and Windows.  To 
- * build the project you will need the GDAL/OGR library, which is available at 
- * <a href="http://www.remotesensing.org/gdal/">www.remotesensing.org/gdal</a>
- * 
- * I built the project using version 1.2.0 of that library.  If you
- * download the pre-built gdal-120-ntbin.zip package it includes 
- * everything you will need.  If you can't find that package then feel
- * free to try the latest version.  It "should" work, but of course,
- * there are no guarantees.  If whatever version of gdal you get doesn't
- * include the proj dynamic library then you will have to find a copy
- * of that too.
- * 
- * To build the project the include files for gdal will need to be in
- * your include path, and you will need to link against the static library
- * gdal_i.lib.  The easiest way to handle that in VC6 is to add it to the
- * "Source Files" folder.  To run the built executable you will need to
- * have the gdal12.dll and proj.dll (both can be easily acquired from the
- * website mentioned above, in the mentined package for instance)
- * somewhere where the program can find them.  In the project directory 
- * is a simple solution.
- * 
- * Running the program is a whole 'nother story.  Because the requirements
- * have been changing so quickly my solution has been to write a specialized
- * driver for each run.  To do this you will need to do some reading up
- * on how the program works, and that's what this documentation is for.
- * Good Luck.
- * 
- *
- * \subsection linuxInstallation Installation in Linux
- * \ref buildingOnLinux Linux Installation Guide
- *
- * \section mainPageNotes Notes
  *
  * \subsection dependencyOnGDALOGR Dependency on GDAL/OGR
  * One thing that I think it is good to point out is why there is a 

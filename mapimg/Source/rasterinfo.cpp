@@ -1,11 +1,11 @@
-// $Id: rasterinfo.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: rasterinfo.cpp,v 1.3 2005/08/16 12:57:20 lwoodard Exp $
 
 
 #include "rasterinfo.h"
 
-#include <qmessagebox.h>
-#include <qstringlist.h>
-#include <qfile.h>
+#include <QMessageBox>
+#include <QStringList>
+#include <QFile>
 
 #include "rasterxml.h"
 #include "gctpnames.h"

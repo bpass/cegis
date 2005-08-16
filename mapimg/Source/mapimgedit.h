@@ -1,4 +1,4 @@
-// $Id: mapimgedit.h,v 1.2 2005/08/12 20:15:44 lwoodard Exp $
+// $Id: mapimgedit.h,v 1.3 2005/08/16 12:57:20 lwoodard Exp $
 
 
 #ifndef QINFOFRAME_H
@@ -13,13 +13,15 @@
 //Added by qt3to4:
 #include <QEvent>
 
+#include "mapimgform.h"
+
 // My classes used
 class QDmsEdit;
 class MapEdit;
 class ProjectionEdit;
 class RasterInfo;
 class QSize;
-
+class mapimgForm;
 /*
 QInfoFrame is the main class here and it contains one MapEdit and one 
 ProjectionEdit. It is a subclass of a QTabWidget for easy switching between the two
@@ -45,6 +47,9 @@ class QInfoFrame : public QTabWidget
 public:
 	QInfoFrame( QWidget* parent = 0, const char* name = 0);
 	~QInfoFrame();
+
+	friend bool mapimgForm::allowIgnoreValues() const;
+	friend QString mapimgForm::dataType() const;
 
 	QSize sizeHint() const;
 

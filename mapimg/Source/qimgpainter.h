@@ -1,4 +1,4 @@
-// $Id: qimgpainter.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: qimgpainter.h,v 1.3 2005/08/16 12:57:20 lwoodard Exp $
 
 
 #ifndef QIMGPAINTER_H
@@ -233,7 +233,7 @@ void QImgPainter::constructColorTable(Type data, qulonglong offset)
       {
          file.close();
          tableAbort = true;
-         pd.setProgress(pd.totalSteps());
+         pd.setProgress(pd.maximum());
          return;
       }
       pd.setProgress(y);
@@ -265,7 +265,7 @@ void QImgPainter::constructColorTable(Type data, qulonglong offset)
          {
             file.close();
             tableAbort = true;
-            pd.setProgress(pd.totalSteps());
+			pd.setProgress(pd.maximum() );	//totalSteps());
             return;
          }
          pd.setProgress(static_cast<int>(f));
@@ -275,7 +275,7 @@ void QImgPainter::constructColorTable(Type data, qulonglong offset)
    }
    vColorTable = colorTable;
 
-   pd.setProgress(pd.totalSteps()); //finish off the progress bar
+   pd.setProgress(pd.maximum()); //finish off the progress bar
 }
 
 
@@ -376,7 +376,7 @@ void QImgPainter::paintPixmap(Type data)
          file.close();
          pixmap.fill(Qt::black);
          lastRatio = 0;
-         pd.setProgress(pd.totalSteps());
+         pd.setProgress(pd.maximum());
          return;
       }
       pd.setProgress(y);
@@ -392,7 +392,7 @@ void QImgPainter::paintPixmap(Type data)
    }
    file.close();
 
-   pd.setProgress(pd.totalSteps());
+   pd.setProgress(pd.maximum());
 
 }
 

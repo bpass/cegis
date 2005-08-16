@@ -1,7 +1,7 @@
-// $Id: mapimgedit.cpp,v 1.2 2005/08/12 20:15:44 lwoodard Exp $
+// $Id: mapimgedit.cpp,v 1.3 2005/08/16 12:57:20 lwoodard Exp $
 
 
-#include "qinfoframe.h"
+#include "mapimgedit.h"
 #include "qgctpbox.h"
 //Added by qt3to4:
 #include <QEvent>

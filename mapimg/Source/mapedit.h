@@ -15,9 +15,11 @@
 #include <QLabel>
 
 #include "mapimgedit.h"
+#include "mapimgform.h"
 
 class QInfoFrame;
 class RasterInfo;
+class mapimgForm;
 
 /*
 MapEdit is the first of two tabs made for use in the QInfoFrame. It uses
@@ -44,6 +46,8 @@ public:
 	friend void QInfoFrame::partnerChanged();
 	friend void QInfoFrame::setInfo( RasterInfo &input );
 	friend RasterInfo QInfoFrame::info();
+	friend bool mapimgForm::allowIgnoreValues() const;
+	friend QString mapimgForm::dataType() const;
 
 	void reset();
 	void setRO( bool ro );

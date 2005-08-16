@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.5 2005/08/15 19:51:40 lwoodard Exp $
+// $Id: resampleform.h,v 1.6 2005/08/16 12:57:21 lwoodard Exp $
 
 
 /****************************************************************************
@@ -11,9 +11,9 @@
 #ifndef RESAMPLEFORM_H
 #define RESAMPLEFORM_H
 
-#include <qvariant.h>
-#include <qdialog.h>
-#include <q3valuelist.h>
+#include <QVariant>
+#include <QDialog>
+
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QEvent>
@@ -28,18 +28,14 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QGridLayout;
 class QSpacerItem;
-class QGroupBox;	/**3**/
+class QGroupBox;	
 class QComboBox;
 class QLabel;
-class Q3ButtonGroup;
 class QRadioButton;
 class QLineEdit;
 class QPushButton;
-class Q3ListBox;
-class Q3ListBoxItem;
 class QEvent;
 class QSlider;
-class Q3HBox;
 class QListWidget;
 class QList;
 
@@ -56,19 +52,17 @@ public:
    bool wasCanceled(){return canceled;}
 
 protected:
-   QGroupBox* resampleBox;		/**3**/
+   QGroupBox* resampleBox;		
    QComboBox* resampleCombo;
    QLabel* catconLabel;
-/*   Q3ButtonGroup* catconButtonGroup;*/
 QGroupBox* catconButtonGroup;
    QRadioButton* catRadio;
    QRadioButton* conRadio;
 
-   QGroupBox* ignoreBox;		/**3**/
+   QGroupBox* ignoreBox;		
    QLineEdit* ignoreEdit;
    QPushButton* newButton;
    QPushButton* delButton;
-/*   Q3ListBox* ignoreListBox;*/
    QListWidget* ignoreListBox;
    QPushButton* okButton;
    QPushButton* cancelButton;
@@ -84,7 +78,7 @@ QGroupBox* catconButtonGroup;
    QHBoxLayout* okLayout;
    QSpacerItem* okSpacer;
 
-   QGroupBox* memoryBox;		/**3**/
+   QGroupBox* memoryBox;		
    QSlider* memoryAllocation;
    QPushButton* memoryResetButton;
    QHBoxLayout* memoryLabelResetLayout;

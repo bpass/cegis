@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.5 2005/08/15 19:51:40 lwoodard Exp $
+// $Id: resampleform.cpp,v 1.6 2005/08/16 12:57:20 lwoodard Exp $
 
 
 /****************************************************************************
@@ -12,14 +12,11 @@
 
 #include <QVariant>
 #include <QPushButton>
-//#include <q3groupbox.h>
 #include <QGroupBox>
 #include <QComboBox>
 #include <QLabel>
-#include <q3buttongroup.h>
 #include <QRadioButton>
 #include <QLineEdit>
-//#include <q3listbox.h>
 #include <QList>
 #include <QListWidget>
 #include <QLayout>
@@ -29,13 +26,12 @@
 #include <QValidator>
 #include <QMessageBox>
 #include <QSlider>
-#include <q3hbox.h>
+
 //Added by qt3to4:
 #include <QKeyEvent>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <Qt>
-#include <Q3IconView>
 
 #include "mapimgform.h"
 #include "mapimgvalidator.h"
@@ -125,10 +121,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 	ignoreLayout->addItem( ingoreSpacer );
 	ignoreBoxLayout->addLayout( ignoreLayout );
 
-	/*ignoreListBox = new Q3ListBox( ignoreBox, "ignoreListBox" );*/
 	ignoreListBox = new QListWidget( ignoreBox );
-	//   QListWidgetItem* ignoreListItem = new QListWidgetItem;
-
 	ignoreListBox->setMinimumSize( QSize( 125, 0 ) );
 	ignoreListBox->installEventFilter( this );
 	ignoreBoxLayout->addWidget( ignoreListBox );

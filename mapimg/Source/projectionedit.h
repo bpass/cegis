@@ -15,6 +15,7 @@
 class QGctpBox;
 class QInfoFrame;
 class QRasterInfo;
+class QSpinBox;
 /*
 ProjectionEdit is the second of two tabs made for use in the QInfoFrame. It uses
 QLineEdits, QSpinBoxes, and QComboBoxes to provide the user with methods to

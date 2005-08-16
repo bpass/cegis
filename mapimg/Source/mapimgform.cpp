@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.3 2005/08/05 19:50:51 lwoodard Exp $
+// $Id: mapimgform.cpp,v 1.4 2005/08/16 12:57:20 lwoodard Exp $
 //Last Edited: August 2005; by: lwoodard; for:qt3 to qt4 porting
 
 #include "mapimgform.h"
@@ -34,7 +34,7 @@
 #include "mapimgversion.h"
 #include "mapimgimages.h"
 #include "qimgframe.h"
-#include "qinfoframe.h"
+#include "mapimgedit.h"
 #include "rasterinfo.h"
 #include "resampleinfo.h"
 #include "window_flags.h"
@@ -43,6 +43,7 @@
 #include "authorform.h"
 #include "tiff2img.h"
 #include "mapimg.h"
+#include "mapedit.h"
 
 /*
 The mapimgForm has one constructor separated by sections of the form.

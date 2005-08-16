@@ -1,4 +1,3 @@
-#include <q3progressdialog.h>
 #include <QColor>
 #include <QString>
 #include <QProgressDialog>

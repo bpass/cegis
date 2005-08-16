@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
+// $Id: getprojinfo.h,v 1.3 2005/08/16 12:57:20 lwoodard Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -640,7 +640,7 @@ bool mapimg_downsample( const RasterInfo &input, const RasterInfo &output, type 
       imgIO.put_line( mapimgoutbuf, useType );
    }
 
-   progress.setProgress( progress.totalSteps() );
+   progress.setProgress( progress.maximum() );
 
    return true;
 }

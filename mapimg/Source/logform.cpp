@@ -1,4 +1,4 @@
-// $Id: logform.cpp,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
+// $Id: logform.cpp,v 1.3 2005/08/16 12:57:20 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -24,9 +24,6 @@
 #include <QTextEdit>
 #include <QWhatsThis>
 #include <QFileDialog>
-				//#include <q3textedit.h>
-				//#include <q3whatsthis.h>
-				//#include <q3filedialog.h>
 
 //Added by qt3to4:
 #include <QGridLayout>

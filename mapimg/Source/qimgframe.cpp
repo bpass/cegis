@@ -1,4 +1,4 @@
-// $Id: qimgframe.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: qimgframe.cpp,v 1.3 2005/08/16 14:25:30 lwoodard Exp $
 
 
 #include "qimgframe.h"
@@ -7,12 +7,12 @@
 #include <QPixmap>
 #include <QLabel>
 #include <QShowEvent>
-#include <Q3Frame>
+#include <QFrame>
 #include <QResizeEvent>
 #include "mapimgpalette.h"
 
 QImgFrame::QImgFrame( QWidget* parent, const char* name)
-: Q3Frame( parent, name)
+: QFrame( parent, name)
 {
    setPaletteBackgroundColor( IMGCOLOR );
 

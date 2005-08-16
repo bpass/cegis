@@ -1,12 +1,13 @@
-// $Id: qimgframe.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: qimgframe.h,v 1.3 2005/08/16 14:25:30 lwoodard Exp $
 
 
 #ifndef QIMGFRAME_H
 #define QIMGFRAME_H
 
-#include <q3frame.h>
-#include <qlabel.h>
-#include <qpixmap.h>
+			#include <q3frame.h>
+#include <QFrame>
+#include <QLabel>
+#include <QPixmap>
 //Added by qt3to4:
 #include <QShowEvent>
 #include <QResizeEvent>
@@ -27,7 +28,7 @@ To use the QImgFrame in the Qt Designer create a new Custom Widget.
 */
 
 
-class QImgFrame : public Q3Frame
+class QImgFrame : public QFrame
 {
    Q_OBJECT
       Q_PROPERTY( QPixmap pixmap READ pixmap WRITE setPixmap )

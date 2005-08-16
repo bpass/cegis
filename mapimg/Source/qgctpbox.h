@@ -1,12 +1,11 @@
-// $Id: qgctpbox.h,v 1.3 2005/08/11 20:21:51 lwoodard Exp $
+// $Id: qgctpbox.h,v 1.4 2005/08/16 14:25:30 lwoodard Exp $
 
 
 #ifndef QGCTPBOX_H
 #define QGCTPBOX_H
 
-//#include <q3vbox.h>
-/****/#include <QVBoxLayout>
-/****/#include <QWidget>
+#include <QVBoxLayout>
+#include <QWidget>
 #include <QString>
 #include <QLabel>
 #include <QLineEdit>

@@ -60,7 +60,7 @@ protected:
 	void polishWidgets();
 
 private:
-	
+
 	//appearanceSetup()
 	QWidget *contents;	
 

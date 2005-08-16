@@ -1,4 +1,4 @@
-// $Id: mapimgedit.cpp,v 1.3 2005/08/16 12:57:20 lwoodard Exp $
+// $Id: mapimgedit.cpp,v 1.4 2005/08/16 14:25:30 lwoodard Exp $
 
 
 #include "mapimgedit.h"
@@ -85,7 +85,7 @@ void QInfoFrame::reset()
 {
 	mapTab->reset();
 	gctpTab->reset();
-	
+
 	return;
 }
 
@@ -98,10 +98,10 @@ practical and needed for my application in mapimg.
 void QInfoFrame::fixWidth( uint w )
 {
 	setMinimumWidth( w );
-/*
+	/*
 	emit setMapTabWidth( w );
 	emit setGctpTabWidth( w );
-*/
+	*/
 }
 
 /*
@@ -173,35 +173,35 @@ void QInfoFrame::copy( QInfoFrame *src )
 {
 	QInfoFrame *source = src;
 
-   if( src == 0 )
-      source = partner;
+	if( src == 0 )
+		source = partner;
 
-   if( partner == 0 )
-      return;
+	if( partner == 0 )
+		return;
 
-   mapTab->rowSpin->setValue( source->mapTab->rowSpin->value() );
-   mapTab->colSpin->setValue( source->mapTab->colSpin->value() );
-   mapTab->pixelCombo->setCurrentItem( 
-      source->mapTab->pixelCombo->currentItem() );
-   mapTab->pixelEdit->setText( source->mapTab->pixelEdit->text() );
-   mapTab->ulLonEdit->setText( source->mapTab->ulLonEdit->text() );
-   mapTab->ulLatEdit->setText( source->mapTab->ulLatEdit->text() );
-   mapTab->dataCombo->setCurrentItem( 
-      source->mapTab->dataCombo->currentItem() );
+	mapTab->rowSpin->setValue( source->mapTab->rowSpin->value() );
+	mapTab->colSpin->setValue( source->mapTab->colSpin->value() );
+	mapTab->pixelCombo->setCurrentItem( 
+		source->mapTab->pixelCombo->currentItem() );
+	mapTab->pixelEdit->setText( source->mapTab->pixelEdit->text() );
+	mapTab->ulLonEdit->setText( source->mapTab->ulLonEdit->text() );
+	mapTab->ulLatEdit->setText( source->mapTab->ulLatEdit->text() );
+	mapTab->dataCombo->setCurrentItem( 
+		source->mapTab->dataCombo->currentItem() );
 
-   if( source->mapTab->hasFillCheck->isChecked() )
-      mapTab->fillEdit->setText( source->mapTab->fillEdit->text() );
+	if( source->mapTab->hasFillCheck->isChecked() )
+		mapTab->fillEdit->setText( source->mapTab->fillEdit->text() );
 
-   mapTab->hasNoDataCheck->setChecked( source->mapTab->hasNoDataCheck->isChecked() );
-   mapTab->noDataEdit->setText( source->mapTab->noDataEdit->text() );
+	mapTab->hasNoDataCheck->setChecked( source->mapTab->hasNoDataCheck->isChecked() );
+	mapTab->noDataEdit->setText( source->mapTab->noDataEdit->text() );
 
 	gctpTab->projCombo->setCurrentText( 
-      source->gctpTab->projCombo->currentText() );
-   gctpTab->projChange();
-   gctpTab->zoneSpin->setValue( source->gctpTab->zoneSpin->value() );
-   for( int i = 0; i < 15; ++i )
-      gctpTab->gctpBoxes[i]->setValue(
-      source->gctpTab->gctpBoxes[i]->value() );	
+		source->gctpTab->projCombo->currentText() );
+	gctpTab->projChange();
+	gctpTab->zoneSpin->setValue( source->gctpTab->zoneSpin->value() );
+	for( int i = 0; i < 15; ++i )
+		gctpTab->gctpBoxes[i]->setValue(
+		source->gctpTab->gctpBoxes[i]->value() );	
 }
 
 /*
@@ -211,51 +211,51 @@ the signal and updates those two values.
 void QInfoFrame::partnerChanged()
 {
 	mapTab->dataCombo->setCurrentItem(
-      partner->mapTab->dataCombo->currentItem() );
+		partner->mapTab->dataCombo->currentItem() );
 
-   if( mapTab->fillEdit->validator() != 0 )
-   {
-      QString fillString = mapTab->fillEdit->text();
-      ((MapimgValidator*)mapTab->fillEdit->validator())->setDataType( mapTab->dataCombo->currentText(), true );
-      ((MapimgValidator*)mapTab->fillEdit->validator())->fixup( fillString );
-      mapTab->fillEdit->setText( fillString );
-   }
+	if( mapTab->fillEdit->validator() != 0 )
+	{
+		QString fillString = mapTab->fillEdit->text();
+		((MapimgValidator*)mapTab->fillEdit->validator())->setDataType( mapTab->dataCombo->currentText(), true );
+		((MapimgValidator*)mapTab->fillEdit->validator())->fixup( fillString );
+		mapTab->fillEdit->setText( fillString );
+	}
 
-   if( mapTab->noDataEdit->validator() != 0 )
-   {
-      QString noDataString = mapTab->noDataEdit->text();
-      ((MapimgValidator*)mapTab->noDataEdit->validator())->setDataType( mapTab->dataCombo->currentText(), true );
-      ((MapimgValidator*)mapTab->noDataEdit->validator())->fixup( noDataString );
-      mapTab->noDataEdit->setText( noDataString );
-   }
+	if( mapTab->noDataEdit->validator() != 0 )
+	{
+		QString noDataString = mapTab->noDataEdit->text();
+		((MapimgValidator*)mapTab->noDataEdit->validator())->setDataType( mapTab->dataCombo->currentText(), true );
+		((MapimgValidator*)mapTab->noDataEdit->validator())->fixup( noDataString );
+		mapTab->noDataEdit->setText( noDataString );
+	}
 
 
-   QString fillString = partner->mapTab->fillEdit->text();
+	QString fillString = partner->mapTab->fillEdit->text();
 
-   if( fillString.upper() == "UNDEFINED" && static_cast<QLabel*>(mapTab->child( "mapLabel" ))->text().contains( "Output", false ) )
-   {
-      mapTab->fillEdit->setEnabled( true );
-      mapTab->fillButton->setShown( true );
-   }
-   else
-   {
-      mapTab->fillEdit->setEnabled( false );
-      mapTab->fillButton->setShown( false );
-      mapTab->fillEdit->setText( fillString );
-   }
+	if( fillString.upper() == "UNDEFINED" && static_cast<QLabel*>(mapTab->child( "mapLabel" ))->text().contains( "Output", false ) )
+	{
+		mapTab->fillEdit->setEnabled( true );
+		mapTab->fillButton->setShown( true );
+	}
+	else
+	{
+		mapTab->fillEdit->setEnabled( false );
+		mapTab->fillButton->setShown( false );
+		mapTab->fillEdit->setText( fillString );
+	}
 
-   if( partner->mapTab->hasNoDataCheck->isChecked() )
-   {  // Hide checkbox and disable edit because they are already defined
-      mapTab->hasNoDataCheck->setShown( false );
-      mapTab->hasNoDataCheck->setChecked( true );
-      mapTab->noDataEdit->setEnabled( false );
-      mapTab->noDataEdit->setText( partner->mapTab->noDataEdit->text() );
-   }
-   else
-   {
-      mapTab->hasNoDataCheck->setShown( true );
-      mapTab->noDataCheckToggled( mapTab->hasNoDataCheck->isChecked() );
-   }
+	if( partner->mapTab->hasNoDataCheck->isChecked() )
+	{  // Hide checkbox and disable edit because they are already defined
+		mapTab->hasNoDataCheck->setShown( false );
+		mapTab->hasNoDataCheck->setChecked( true );
+		mapTab->noDataEdit->setEnabled( false );
+		mapTab->noDataEdit->setText( partner->mapTab->noDataEdit->text() );
+	}
+	else
+	{
+		mapTab->hasNoDataCheck->setShown( true );
+		mapTab->noDataCheckToggled( mapTab->hasNoDataCheck->isChecked() );
+	}
 }
 
 /*
@@ -410,7 +410,7 @@ void QInfoFrame::setInfo( RasterInfo &input )
 
 	mapTab->noDataEdit->setText( noDataString );
 
-		////////GCTP Params
+	////////GCTP Params
 	//   Complications in here arise from the multiple variations for some
 	//projections. Since they have the same projection code, the different
 	//variations are only discernable by their GCTP parameters.

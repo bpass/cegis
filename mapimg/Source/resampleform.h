@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.6 2005/08/16 12:57:21 lwoodard Exp $
+// $Id: resampleform.h,v 1.7 2005/08/16 14:25:30 lwoodard Exp $
 
 
 /****************************************************************************
@@ -41,69 +41,69 @@ class QList;
 
 class ResampleForm : public QDialog
 {
-   Q_OBJECT
+	Q_OBJECT
 
 public:
-   ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
-   ~ResampleForm();
+	ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
+	~ResampleForm();
 
-   ResampleInfo info();
-   IgnoreList &ignoreList(){return ilist;}
-   bool wasCanceled(){return canceled;}
+	ResampleInfo info();
+	IgnoreList &ignoreList(){return ilist;}
+	bool wasCanceled(){return canceled;}
 
 protected:
-   QGroupBox* resampleBox;		
-   QComboBox* resampleCombo;
-   QLabel* catconLabel;
-QGroupBox* catconButtonGroup;
-   QRadioButton* catRadio;
-   QRadioButton* conRadio;
+	QGroupBox* resampleBox;		
+	QComboBox* resampleCombo;
+	QLabel* catconLabel;
+	QGroupBox* catconButtonGroup;
+	QRadioButton* catRadio;
+	QRadioButton* conRadio;
 
-   QGroupBox* ignoreBox;		
-   QLineEdit* ignoreEdit;
-   QPushButton* newButton;
-   QPushButton* delButton;
-   QListWidget* ignoreListBox;
-   QPushButton* okButton;
-   QPushButton* cancelButton;
-   QLabel* ignoreLabel;
+	QGroupBox* ignoreBox;		
+	QLineEdit* ignoreEdit;
+	QPushButton* newButton;
+	QPushButton* delButton;
+	QListWidget* ignoreListBox;
+	QPushButton* okButton;
+	QPushButton* cancelButton;
+	QLabel* ignoreLabel;
 
-   QVBoxLayout* ResampleFormLayout;
-   QHBoxLayout* categoricalLayout;
-   QVBoxLayout* inputLayout;
-   QVBoxLayout* resampleBoxLayout;
-   QHBoxLayout* ignoreBoxLayout;
-   QVBoxLayout* ignoreLayout;
-   QSpacerItem* ingoreSpacer;
-   QHBoxLayout* okLayout;
-   QSpacerItem* okSpacer;
+	QVBoxLayout* ResampleFormLayout;
+	QHBoxLayout* categoricalLayout;
+	QVBoxLayout* inputLayout;
+	QVBoxLayout* resampleBoxLayout;
+	QHBoxLayout* ignoreBoxLayout;
+	QVBoxLayout* ignoreLayout;
+	QSpacerItem* ingoreSpacer;
+	QHBoxLayout* okLayout;
+	QSpacerItem* okSpacer;
 
-   QGroupBox* memoryBox;		
-   QSlider* memoryAllocation;
-   QPushButton* memoryResetButton;
-   QHBoxLayout* memoryLabelResetLayout;
-   QVBoxLayout* memoryBoxLayout;
-   QLabel* memoryLabel;
+	QGroupBox* memoryBox;		
+	QSlider* memoryAllocation;
+	QPushButton* memoryResetButton;
+	QHBoxLayout* memoryLabelResetLayout;
+	QVBoxLayout* memoryBoxLayout;
+	QLabel* memoryLabel;
 
-   bool eventFilter( QObject* object, QEvent* event );
+	bool eventFilter( QObject* object, QEvent* event );
 
 protected slots:
-   virtual void languageChange();
-   void rcodeChanged( const QString &rcode );
-   void newVal();
-   void delVal();
-   void cancel();
-   void reject();
-   void ignoreListKeyPress( QKeyEvent* e );
-   void updateMemoryAllocation();
-   void resetMemory();
+	virtual void languageChange();
+	void rcodeChanged( const QString &rcode );
+	void newVal();
+	void delVal();
+	void cancel();
+	void reject();
+	void ignoreListKeyPress( QKeyEvent* e );
+	void updateMemoryAllocation();
+	void resetMemory();
 
 private:
-   IgnoreList ilist;
-   bool canceled;
-   int defaultMemory;
+	IgnoreList ilist;
+	bool canceled;
+	int defaultMemory;
 
-   float bytesPerRow;
+	float bytesPerRow;
 };
 
 #endif // RESAMPLEFORM_H

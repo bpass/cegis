@@ -2,7 +2,6 @@
 #define MAPIMGPROGRESSDIALOG_H
 
 #include <QProgressDialog>
-#include <q3progressdialog.h>
 #include <QColor>
 
 #define defaultStepsPerUpdate 10

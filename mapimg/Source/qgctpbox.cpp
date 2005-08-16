@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.3 2005/08/11 20:21:50 lwoodard Exp $
+// $Id: qgctpbox.cpp,v 1.4 2005/08/16 14:25:30 lwoodard Exp $
 
 
 #include <QToolTip>
@@ -8,7 +8,7 @@
 #include "qdmsedit.h"
 //Added by qt3to4:
 #include <QLabel>
-#include <Q3Frame>
+//#include <QFrame>
 #include <QVBoxLayout>
 
 const uint INFO_PRECISION = 6;
@@ -18,7 +18,7 @@ QMap<QString,double> *QGctpBox::holdValues=0;
 QGctpBox::QGctpBox( QWidget* parent, const char* name )
 : QWidget( parent, name )
 {
-	/****/QVBoxLayout *mainLayout = new QVBoxLayout( this );
+	QVBoxLayout *mainLayout = new QVBoxLayout( this );
 	mainLayout->setSizeConstraint( QLayout::SetNoConstraint );
 	setLayout( mainLayout );
 //   Q3Frame *line = new Q3Frame( this );
@@ -31,14 +31,14 @@ QGctpBox::QGctpBox( QWidget* parent, const char* name )
    dmsEdit = new QDmsEdit( this, "dmsEdit" );
    dmsEdit->setValue( 0 );
 
-//   /****/mainLayout->addWidget( line );
-   /****/mainLayout->addWidget( label );
-   /****/mainLayout->addWidget( lineEdit );
-   /****/mainLayout->addWidget( spinBox );
-   /****/mainLayout->addWidget( dmsEdit );
+//   mainLayout->addWidget( line );
+   mainLayout->addWidget( label );
+   mainLayout->addWidget( lineEdit );
+   mainLayout->addWidget( spinBox );
+   mainLayout->addWidget( dmsEdit );
 
    activeEdit = NULL;
-/****/   name=NULL;
+   name=NULL;
 
    hide();
    initializeHoldValues();

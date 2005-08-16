@@ -1,15 +1,11 @@
-// $Id: mapimg.cpp,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
+// $Id: mapimg.cpp,v 1.3 2005/08/16 14:25:30 lwoodard Exp $
 
 
 #include "mapimg.h"
-/*
+
 #include <QWidget>
 #include <QDir>
 #include <QString>
-*/
-#include <qwidget.h>
-#include <qdir.h>
-#include <qstring.h>
 
 #include "rasterinfo.h"
 #include "resampleinfo.h"

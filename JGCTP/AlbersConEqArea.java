@@ -165,9 +165,9 @@ protected void _inverse(CoordPoint p) throws ProjException
     
         {
          if (qs >= 0)
-            m_lonLat.lat = .5 * Math.PI;
+            m_lonLat.lat = .5 * Constants.PI;
          else
-            m_lonLat.lat = -.5 * Math.PI;
+            m_lonLat.lat = -.5 * Constants.PI;
         }
     }
     

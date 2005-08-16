@@ -38,7 +38,7 @@ protected void _forward(GeoPoint p) throws ProjException
     -----------------*/
     delta_lon = Util.adjust_lon(p.lon - m_center.lon);
     theta = p.lat;
-    con = Math.PI * Math.sin(p.lat);
+    con = Constants.PI * Math.sin(p.lat);
 
    /* Iterate using the Newton-Raphson method to find theta
     -----------------------------------------------------*/
@@ -59,7 +59,7 @@ protected void _forward(GeoPoint p) throws ProjException
     /*  If the latitude is 90 deg, force the p.x coordinate to be "0 + false easting"
     this is done here because of precision problems with "Math.cos(theta)"
      --------------------------------------------------------------------------*/
-    if (Math.PI/2 - Math.abs(p.lat) < Constants.EPSLN)
+    if (Constants.PI/2 - Math.abs(p.lat) < Constants.EPSLN)
         delta_lon =0;
     
     m_xy.x = 0.900316316158 * m_sphere.radius * delta_lon * Math.cos(theta) + m_falseEasting;
@@ -85,11 +85,11 @@ protected void _inverse(CoordPoint p)
       arg=0.999999999999;
     theta = Math.asin(arg);
     m_lonLat.lon = Util.adjust_lon(m_center.lon + (p.x / (0.900316316158 * m_sphere.radius * Math.cos(theta))));
-    if(m_lonLat.lon < (-Math.PI)) 
-      m_lonLat.lon = -Math.PI;
-    if(m_lonLat.lon > Math.PI) 
-      m_lonLat.lon = Math.PI;
-    arg = (2.0 * theta + Math.sin(2.0 * theta)) / Math.PI;
+    if(m_lonLat.lon < (-Constants.PI)) 
+      m_lonLat.lon = -Constants.PI;
+    if(m_lonLat.lon > Constants.PI) 
+      m_lonLat.lon = Constants.PI;
+    arg = (2.0 * theta + Math.sin(2.0 * theta)) / Constants.PI;
     if(Math.abs(arg) > 1.0)
       arg=1.0;
     m_lonLat.lat = Math.asin(arg);

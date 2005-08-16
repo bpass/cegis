@@ -138,7 +138,7 @@ protected void _inverse(CoordPoint p) throws ProjException
     p.x -= m_falseEasting;
     p.y -= m_falseNorthing;
 
-    yy = 2.0 * p.y / Math.PI / m_sphere.radius;
+    yy = 2.0 * p.y / Constants.PI / m_sphere.radius;
     phid = yy * 90.0;
     p2 = Math.abs(phid / 5.0);
     ip1 = (int)(p2 - Constants.EPSLN);
@@ -174,12 +174,12 @@ protected void _inverse(CoordPoint p) throws ProjException
                 if (p.y >= 0)
                 y1 = m_sphere.radius * (m_pr[ip1 +2] + p2 *(m_pr[ip1 + 3] - m_pr[ip1 +1]) / 2.0 + p2 
                         * p2 * (m_pr[ip1 + 3] - 2.0 * m_pr[ip1 + 2] + m_pr[ip1 + 1])/2.0) 
-                        * Math.PI / 2.0; 
+                        * Constants.PI / 2.0; 
                 else
                 y1 = -m_sphere.radius * (m_pr[ip1 +2] + p2 *(m_pr[ip1 + 3] - m_pr[ip1 +1]) / 2.0 + p2 
                         * p2 * (m_pr[ip1 + 3] - 2.0 * m_pr[ip1 + 2] + m_pr[ip1 + 1])/2.0) 
-                        * Math.PI / 2.0; 
-                phid += -180.0 * (y1 - p.y) / Math.PI / m_sphere.radius;
+                        * Constants.PI / 2.0; 
+                phid += -180.0 * (y1 - p.y) / Constants.PI / m_sphere.radius;
                 i++;
                 if (i > 75)
                 {
@@ -233,11 +233,11 @@ protected void _forward(GeoPoint p) throws ProjException
 
     if (p.lat >= 0)
         m_xy.y = m_sphere.radius * (m_pr[ip1 + 2] + p2 * (m_pr[ip1 + 3] - m_pr[ip1 +1]) / 2.0 + p2 * p2 *
-                    (m_pr[ip1 + 3] - 2.0 * m_pr[ip1 + 2] + m_pr[ip1 + 1]) / 2.0) * Math.PI / 2.0 +
+                    (m_pr[ip1 + 3] - 2.0 * m_pr[ip1 + 2] + m_pr[ip1 + 1]) / 2.0) * Constants.PI / 2.0 +
                 m_falseNorthing;
     else
          m_xy.y = -m_sphere.radius * (m_pr[ip1 + 2] + p2 * (m_pr[ip1 + 3] - m_pr[ip1 +1]) / 2.0 + p2 * p2 *
-             (m_pr[ip1 + 3] - 2.0 * m_pr[ip1 + 2] + m_pr[ip1 + 1]) / 2.0) * Math.PI / 2.0 + m_falseNorthing;
+             (m_pr[ip1 + 3] - 2.0 * m_pr[ip1 + 2] + m_pr[ip1 + 1]) / 2.0) * Constants.PI / 2.0 + m_falseNorthing;
 }
 
 

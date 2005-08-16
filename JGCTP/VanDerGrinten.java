@@ -39,7 +39,7 @@ protected void _inverse(CoordPoint p) throws ProjException
     -----------------*/
     p.x -= m_falseEasting;
     p.y -= m_falseNorthing;
-    con = Math.PI * m_sphere.radius;
+    con = Constants.PI * m_sphere.radius;
     xx = p.x / con;
     yy = p.y / con;
     xys = xx * xx + yy * yy;
@@ -60,9 +60,9 @@ protected void _inverse(CoordPoint p) throws ProjException
     }
     th1 = Math.acos(con) / 3.0;
     if (p.y >= 0)
-    m_lonLat.lat = (-m1 * Math.cos(th1 + Math.PI / 3.0) - c2 / 3.0 / c3) * Math.PI;
+    m_lonLat.lat = (-m1 * Math.cos(th1 + Constants.PI / 3.0) - c2 / 3.0 / c3) * Constants.PI;
     else
-    m_lonLat.lat = -(-m1 * Math.cos(th1 + Math.PI / 3.0) - c2 / 3.0 / c3) * Math.PI;
+    m_lonLat.lat = -(-m1 * Math.cos(th1 + Constants.PI / 3.0) - c2 / 3.0 / c3) * Constants.PI;
 
     if (Math.abs(xx) < Constants.EPSLN)
     {
@@ -70,7 +70,7 @@ protected void _inverse(CoordPoint p) throws ProjException
         return;
     }
     
-    m_lonLat.lon = Util.adjust_lon(m_center.lon + Math.PI * (xys - 1.0 + Math.sqrt(1.0 + 2.0 * 
+    m_lonLat.lon = Util.adjust_lon(m_center.lon + Constants.PI * (xys - 1.0 + Math.sqrt(1.0 + 2.0 * 
                                    (xx * xx - yy * yy) + xys * xys)) / 2.0 / xx);
 }
 
@@ -96,21 +96,21 @@ protected void _forward(GeoPoint p) throws ProjException
         return;
     }
 
-    theta = Util.asinz(2.0 * Math.abs(p.lat / Math.PI));
+    theta = Util.asinz(2.0 * Math.abs(p.lat / Constants.PI));
 
-    if ((Math.abs(dlon) <= Constants.EPSLN) || (Math.abs(Math.abs(p.lat) - ((Math.PI)/2)) <= Constants.EPSLN))
+    if ((Math.abs(dlon) <= Constants.EPSLN) || (Math.abs(Math.abs(p.lat) - ((Constants.PI)/2)) <= Constants.EPSLN))
     {
         m_xy.x = m_falseEasting;
         
         if (p.lat >= 0)
-            m_xy.y = m_falseNorthing + Math.PI * m_sphere.radius * Math.tan(.5 * theta);
+            m_xy.y = m_falseNorthing + Constants.PI * m_sphere.radius * Math.tan(.5 * theta);
         else
-            m_xy.x = m_falseNorthing + Math.PI * m_sphere.radius * -Math.tan(.5 * theta);
+            m_xy.x = m_falseNorthing + Constants.PI * m_sphere.radius * -Math.tan(.5 * theta);
 
         return;
     }
     
-    al = .5 * Math.abs((Math.PI / dlon) - (dlon / Math.PI));
+    al = .5 * Math.abs((Constants.PI / dlon) - (dlon / Constants.PI));
     asq = al * al;
      sinth = Math.sin(theta);
      costh = Math.cos(theta);
@@ -119,19 +119,19 @@ protected void _forward(GeoPoint p) throws ProjException
     gsq = g * g;
     m = g * (2.0 / sinth - 1.0);
     msq = m * m;
-    con = Math.PI * m_sphere.radius * (al * (g - msq) + Math.sqrt(asq * (g - msq) * (g - msq) - (msq + asq)
+    con = Constants.PI * m_sphere.radius * (al * (g - msq) + Math.sqrt(asq * (g - msq) * (g - msq) - (msq + asq)
         * (gsq - msq))) / (msq + asq);
     
     if (dlon < 0)
         con = -con;
     
     m_xy.x = m_falseEasting + con;
-    con = Math.abs(con / (Math.PI * m_sphere.radius));
+    con = Math.abs(con / (Constants.PI * m_sphere.radius));
 
     if (p.lat >= 0)
-        m_xy.y = m_falseNorthing + Math.PI * m_sphere.radius * Math.sqrt(1.0 - con * con - 2.0 * al * con);
+        m_xy.y = m_falseNorthing + Constants.PI * m_sphere.radius * Math.sqrt(1.0 - con * con - 2.0 * al * con);
     else
-        m_xy.y = m_falseNorthing - Math.PI * m_sphere.radius * Math.sqrt(1.0 - con * con - 2.0 * al * con);
+        m_xy.y = m_falseNorthing - Constants.PI * m_sphere.radius * Math.sqrt(1.0 - con * con - 2.0 * al * con);
 }
 
 

@@ -65,7 +65,7 @@ protected void _forward(GeoPoint p) throws ProjException
 
     /* Forward equations
     -----------------*/
-    /* Note:  Math.PI has been adjusted so that the correct region will be assigned
+    /* Note:  Constants.PI has been adjusted so that the correct region will be assigned
     when p.lon = 180 deg.
     ----------------------------------------------------------------------*/
     if (p.lat >= 0.0)
@@ -73,8 +73,8 @@ protected void _forward(GeoPoint p) throws ProjException
         if (p.lon >= 0.34906585 && p.lon < 1.91986217719) 
             region = 0; 
         else if 
-            ((p.lon >= 1.919862177 && p.lon <= (Math.PI + 1.0E-14)) ||
-                        (p.lon >= (-Math.PI - 1.0E-14) && p.lon < -1.745329252))
+            ((p.lon >= 1.919862177 && p.lon <= (Constants.PI + 1.0E-14)) ||
+                        (p.lon >= (-Constants.PI - 1.0E-14) && p.lon < -1.745329252))
             region=1; 
         else 
             region = 2;
@@ -84,8 +84,8 @@ protected void _forward(GeoPoint p) throws ProjException
         if (p.lon >= 0.34906585 && p.lon < 2.44346095279) 
             region = 3; 
         else if 
-            ((p.lon >= 2.44346095279 && p.lon <= (Math.PI +1.0E-14)) ||
-                        (p.lon >= (-Math.PI - 1.0E-14) && p.lon<-1.2217304764))
+            ((p.lon >= 2.44346095279 && p.lon <= (Constants.PI +1.0E-14)) ||
+                        (p.lon >= (-Constants.PI - 1.0E-14) && p.lon<-1.2217304764))
                 region=4; 
         else 
             region = 5;
@@ -93,7 +93,7 @@ protected void _forward(GeoPoint p) throws ProjException
 
     delta_lon = Util.adjust_lon(p.lon - m_centerLons[region]);
     theta = p.lat;
-    con = Math.PI * Math.sin(p.lat);
+    con = Constants.PI * Math.sin(p.lat);
 
     /* Iterate using the Newton-Raphson method to find theta
     -----------------------------------------------------*/
@@ -115,7 +115,7 @@ protected void _forward(GeoPoint p) throws ProjException
     /* If the latitude is 90 deg, force the p.x coordinate to be "0 + false easting"
     this is done here because of percision problems with "Math.cos(theta)"
     --------------------------------------------------------------------------*/
-    if (Math.PI / 2 - Math.abs(p.lat) < Constants.EPSLN)
+    if (Constants.PI / 2 - Math.abs(p.lat) < Constants.EPSLN)
         delta_lon = 0;
 
     m_xy.x = m_falseEastings[region] + 0.900316316158 * m_sphere.radius * delta_lon * Math.cos(theta);
@@ -153,7 +153,7 @@ protected void _inverse(CoordPoint p) throws ProjException
 
     theta = Math.asin(p.y / (1.4142135623731 * m_sphere.radius));
     m_lonLat.lon = Util.adjust_lon(m_centerLons[region] + (p.x / (0.900316316158*m_sphere.radius * Math.cos(theta))));
-    m_lonLat.lat = Math.asin((2.0 * theta + Math.sin(2.0 * theta)) / Math.PI);
+    m_lonLat.lat = Math.asin((2.0 * theta + Math.sin(2.0 * theta)) / Constants.PI);
 
     /* Are we in a interrupted area?  If so, return status code of Constants.IN_BREAK.
     ---------------------------------------------------------------------*/

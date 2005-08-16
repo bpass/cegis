@@ -225,7 +225,7 @@ protected void _inverse(CoordPoint p) throws ProjException
           
         }
     }
-    if (Math.abs(phi) < ((Math.PI)/2))
+    if (Math.abs(phi) < ((Constants.PI)/2))
     {
          sin_phi = Math.sin(phi);
          cos_phi = Math.cos(phi);
@@ -249,7 +249,7 @@ protected void _inverse(CoordPoint p) throws ProjException
     }
     else
     {
-        m_lonLat.lat = ((Math.PI)/2) * Util.sign(p.y);
+        m_lonLat.lat = ((Constants.PI)/2) * Util.sign(p.y);
         m_lonLat.lon = m_center.lon;
     }
 }

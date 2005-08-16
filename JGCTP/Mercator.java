@@ -53,7 +53,7 @@ protected void _forward(GeoPoint p) throws ProjException
 
     /* Forward equations
      -----------------*/
-    if (Math.abs(Math.abs(p.lat) - ((Math.PI)/2))  <= Constants.EPSLN) {
+    if (Math.abs(Math.abs(p.lat) - ((Constants.PI)/2))  <= Constants.EPSLN) {
         throw(new ProjException(52, "Mercator._forward()"));
        
     }

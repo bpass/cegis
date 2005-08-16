@@ -375,7 +375,7 @@ protected void _inverse(CoordPoint _p) throws ProjException
     st=Math.sin(tlon);
     defac=Math.exp(Math.sqrt(1.0+m_s*m_s/m_xj/m_xj)*(p.y/m_a-m_c1*st-m_c3*Math.sin(3.0*tlon)));
     actan=Math.atan(defac);
-    tlat=2.0*(actan-(Math.PI/4.0));
+    tlat=2.0*(actan-(Constants.PI/4.0));
 
     /* Compute geodetic longitude
     --------------------------*/
@@ -400,7 +400,7 @@ protected void _inverse(CoordPoint _p) throws ProjException
     if(Math.cos(tlon)<0.0) 
         scl= -1.0;
     
-    xlamt=xlamt-((Math.PI/2.0)*(1.0-scl)*sl);
+    xlamt=xlamt-((Constants.PI/2.0)*(1.0-scl)*sl);
     dlon=xlamt-m_p21*tlon;
 
     /* Compute geodetic latitude
@@ -440,11 +440,11 @@ protected void _forward(GeoPoint _p) throws ProjException
     radln=delta_lon;
 
     if(delta_lat>=0.0)
-        tlamp=Math.PI/2.0; 
+        tlamp=Constants.PI/2.0; 
     if(m_start != 0.0)
-        tlamp=2.5*Math.PI;
+        tlamp=2.5*Constants.PI;
     if(delta_lat<0.0) 
-        tlamp=1.5*Math.PI;
+        tlamp=1.5*Constants.PI;
     n=0;
 
     while(true)
@@ -464,7 +464,7 @@ protected void _forward(GeoPoint _p) throws ProjException
         if(ab1<0.0) 
             scl= -1.0;
 
-        ab2=tlamp-(scl)*Math.sin(tlamp)*(Math.PI/2);
+        ab2=tlamp-(scl)*Math.sin(tlamp)*(Constants.PI/2);
 
         while(true)
         {
@@ -481,8 +481,8 @@ protected void _forward(GeoPoint _p) throws ProjException
 
             if(Math.abs(tabs)<conv) 
             {
-                rlm=Math.PI*Constants.LANDSAT_RATIO;
-                rlm2=rlm+2.0*Math.PI;
+                rlm=Constants.PI*Constants.LANDSAT_RATIO;
+                rlm2=rlm+2.0*Constants.PI;
                 n++;
 
                 if(n >= 3)
@@ -492,9 +492,9 @@ protected void _forward(GeoPoint _p) throws ProjException
                     end = true;
 
                 if(tlam<rlm)
-                    tlamp=2.50*Math.PI;
+                    tlamp=2.50*Constants.PI;
                 if(tlam>=rlm2) 
-                    tlamp= Math.PI/2;
+                    tlamp= Constants.PI/2;
 
                 break;
             }
@@ -522,7 +522,7 @@ protected void _forward(GeoPoint _p) throws ProjException
 
     /* compute x and y
     ---------------*/
-    xtan = (Math.PI/4.0) + (tphi/2.0);
+    xtan = (Constants.PI/4.0) + (tphi/2.0);
     tanlg = Math.log(Math.tan(xtan));
     sd=Math.sin(tlam);
     sdsq=sd*sd;

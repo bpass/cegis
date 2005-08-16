@@ -112,7 +112,7 @@ protected void _inverse(CoordPoint p) throws ProjException
         return;
     }
     m_lonLat.lat = Util.asinz(cosz * m_sinCenterLat + ( p.y * sinz * m_cosCenterLat)/rh);
-    con = Math.abs(m_center.lat) - ((Math.PI)/2);
+    con = Math.abs(m_center.lat) - ((Constants.PI)/2);
     if (Math.abs(con) <= Constants.EPSLN)
     {
         if (m_center.lat >= 0.0)

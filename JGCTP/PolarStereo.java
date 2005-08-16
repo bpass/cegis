@@ -63,7 +63,7 @@ protected 	void _init() throws ProjException
         m_fac = 1.0;
     
     m_ind = 0;
-    if (Math.abs(Math.abs(m_center.lat) - ((Math.PI)/2)) > Constants.EPSLN)
+    if (Math.abs(Math.abs(m_center.lat) - ((Constants.PI)/2)) > Constants.EPSLN)
     {
         m_ind = 1;
         con1 = m_fac * m_center.lat; 

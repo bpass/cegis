@@ -283,7 +283,7 @@ protected 	void _init() throws ProjException
         m_center.lon= m_center.lon- Util.asinz(g * Math.tan(gama))/m_bl;
 
         con = Math.abs(m_center.lat);
-        if ((con > Constants.EPSLN) && (Math.abs(con - ((Math.PI)/2)) > Constants.EPSLN))
+        if ((con > Constants.EPSLN) && (Math.abs(con - ((Constants.PI)/2)) > Constants.EPSLN))
         {
              m_singam = Math.sin(gama);
              m_cosgam = Math.cos(gama);
@@ -315,10 +315,10 @@ protected 	void _init() throws ProjException
         j = (m_el * m_el - l * h)/(m_el * m_el + l * h);
         p = (l - h) / (l + h);
         dlon = m_lon1 - m_lon2;
-        if (dlon < -Math.PI)
-            m_lon2 = m_lon2 - 2.0 * Math.PI;
-        if (dlon > Math.PI)
-            m_lon2 = m_lon2 + 2.0 * Math.PI;
+        if (dlon < -Constants.PI)
+            m_lon2 = m_lon2 - 2.0 * Constants.PI;
+        if (dlon > Constants.PI)
+            m_lon2 = m_lon2 + 2.0 * Constants.PI;
         dlon = m_lon1 - m_lon2;
         m_center.lon= .5 * (m_lon1 + m_lon2) - Math.atan(j * Math.tan(.5 * m_bl * dlon)/p)/m_bl;
         dlon  = Util.adjust_lon(m_lon1 - m_center.lon);
@@ -332,13 +332,13 @@ protected 	void _init() throws ProjException
         }
         else
             con = Math.abs(m_lat1);
-        if ((con <= Constants.EPSLN) || (Math.abs(con - ((Math.PI)/2)) <= Constants.EPSLN))
+        if ((con <= Constants.EPSLN) || (Math.abs(con - ((Constants.PI)/2)) <= Constants.EPSLN))
         {
             throw(new ProjException(202, "HotineObMerc._init()"));
            
         }
         else 
-            if (Math.abs(Math.abs(m_center.lat) - ((Math.PI)/2)) <= Constants.EPSLN)
+            if (Math.abs(Math.abs(m_center.lat) - ((Constants.PI)/2)) <= Constants.EPSLN)
             {
                 throw(new ProjException(202, "HotineObMerc._init()"));
                
@@ -414,9 +414,9 @@ protected void _inverse(CoordPoint p) throws ProjException
     {
         m_lonLat.lon = m_center.lon;
         if (ul >= 0.0)
-            m_lonLat.lat = ((Math.PI)/2);
+            m_lonLat.lat = ((Constants.PI)/2);
         else
-            m_lonLat.lat = -((Math.PI)/2);
+            m_lonLat.lat = -((Constants.PI)/2);
     }
     else
     {
@@ -458,7 +458,7 @@ protected void _forward(GeoPoint p) throws ProjException
     sin_phi = Math.sin(p.lat);
     dlon = Util.adjust_lon(p.lon - m_center.lon);
     vl = Math.sin(m_bl * dlon);
-    if (Math.abs(Math.abs(p.lat) - ((Math.PI)/2)) > Constants.EPSLN)
+    if (Math.abs(Math.abs(p.lat) - ((Constants.PI)/2)) > Constants.EPSLN)
     {
         ts1 = Util.tsfnz(m_e,p.lat,sin_phi);
         q = m_el / (Math.pow(ts1,m_bl));
@@ -474,7 +474,7 @@ protected void _forward(GeoPoint p) throws ProjException
         {
             us = m_al * Math.atan((s * m_cosgam + vl * m_singam) / con)/m_bl;
             if (con < 0)
-                us = us + Math.PI * m_al / m_bl;
+                us = us + Constants.PI * m_al / m_bl;
         }
     }
     else

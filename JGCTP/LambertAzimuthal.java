@@ -101,7 +101,7 @@ protected void _inverse(CoordPoint p) throws ProjException
     if (Math.abs(Rh) > Constants.EPSLN)
     {
         m_lonLat.lat = Util.asinz(m_sinCenterLat * cos_z + m_cosCenterLat * sin_z * p.y / Rh);
-        temp = Math.abs(m_center.lat) - ((Math.PI)/2);
+        temp = Math.abs(m_center.lat) - ((Constants.PI)/2);
         if (Math.abs(temp) > Constants.EPSLN)
         {
             temp = cos_z - m_sinCenterLat * Math.sin(m_lonLat.lat);

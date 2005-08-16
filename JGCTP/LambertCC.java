@@ -94,7 +94,7 @@ protected void _forward(GeoPoint p) throws ProjException
     double theta;                   /* angle                                */
     double ts;                      /* small value t                        */
     
-    con  = Math.abs( Math.abs(p.lat) - ((Math.PI)/2));
+    con  = Math.abs( Math.abs(p.lat) - ((Constants.PI)/2));
     if (con > Constants.EPSLN)
     {
         sinphi = Math.sin(p.lat);
@@ -155,7 +155,7 @@ protected void _inverse(CoordPoint p) throws ProjException
         }
     }
     else
-        m_lonLat.lat = -((Math.PI)/2);
+        m_lonLat.lat = -((Constants.PI)/2);
     
     m_lonLat.lon = Util.adjust_lon(theta/m_ns + m_center.lon);
 }

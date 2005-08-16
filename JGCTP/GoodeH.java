@@ -145,7 +145,7 @@ public 	void _forward(GeoPoint p) throws ProjException
     {
         delta_lon = Util.adjust_lon(p.lon - m_centerLons[region]);
         theta = p.lat;
-        constant = Math.PI * Math.sin(p.lat);
+        constant = Constants.PI * Math.sin(p.lat);
 
         /* Iterate using the Newton-Raphson method to find theta
         -----------------------------------------------------*/
@@ -168,7 +168,7 @@ public 	void _forward(GeoPoint p) throws ProjException
             "0 + false easting" this is done here because of precision problems
             with "Math.cos(theta)"
             ------------------------------------------------------------------*/
-        if (Math.PI / 2 - Math.abs(p.lat) < Constants.EPSLN)
+        if (Constants.PI / 2 - Math.abs(p.lat) < Constants.EPSLN)
             delta_lon = 0;
         m_xy.x = m_falseEastings[region] + 0.900316316158 * m_sphere.radius * delta_lon * Math.cos(theta);
         m_xy.y = m_sphere.radius * (1.4142135623731 * Math.sin(theta) - 0.0528035274542 * Util.sign(p.lat));
@@ -228,12 +228,12 @@ public 	void _inverse(CoordPoint _p) throws ProjException
     if (region==1||region==3||region==4||region==5||region==8||region==9)
     {
         m_lonLat.lat = p.y / m_sphere.radius;
-        if (Math.abs(m_lonLat.lat) > ((Math.PI)/2)) 
+        if (Math.abs(m_lonLat.lat) > ((Constants.PI)/2)) 
         {
             throw(new ProjException(252, "GoodeH._inverse()"));
            
         }
-        temp = Math.abs(m_lonLat.lat) - ((Math.PI)/2);
+        temp = Math.abs(m_lonLat.lat) - ((Constants.PI)/2);
         if (Math.abs(temp) > Constants.EPSLN)
         {
             temp = m_centerLons[region] + p.x / (m_sphere.radius * Math.cos(m_lonLat.lat));
@@ -252,12 +252,12 @@ public 	void _inverse(CoordPoint _p) throws ProjException
         }
         theta = Math.asin(arg);
         m_lonLat.lon = Util.adjust_lon(m_centerLons[region]+(p.x/(0.900316316158 * m_sphere.radius * Math.cos(theta))));
-        if(m_lonLat.lon < -(Math.PI + Constants.EPSLN)) 
+        if(m_lonLat.lon < -(Constants.PI + Constants.EPSLN)) 
         {
             throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
             
         }
-        arg = (2.0 * theta + Math.sin(2.0 * theta)) / Math.PI;
+        arg = (2.0 * theta + Math.sin(2.0 * theta)) / Constants.PI;
         if (Math.abs(arg) > 1.0) 
         {
             throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
@@ -268,34 +268,34 @@ public 	void _inverse(CoordPoint _p) throws ProjException
     /* because of precision problems, long values of 180 deg and -180 deg
     may be mixed.
     ----------------------------------------------------------------*/
-    if (((p.x < 0) && (Math.PI - m_lonLat.lon < Constants.EPSLN)) || ((p.x > 0) && (Math.PI + m_lonLat.lon < Constants.EPSLN)))
+    if (((p.x < 0) && (Constants.PI - m_lonLat.lon < Constants.EPSLN)) || ((p.x > 0) && (Constants.PI + m_lonLat.lon < Constants.EPSLN)))
         m_lonLat.lon = -(m_lonLat.lon);
 
     /* Are we in a interrupted area?  If so, return status code of Constants.IN_BREAK.
     ---------------------------------------------------------------------*/
-    if (region == 0 && (m_lonLat.lon < -(Math.PI + Constants.EPSLN) || m_lonLat.lon > -0.698131700798))
+    if (region == 0 && (m_lonLat.lon < -(Constants.PI + Constants.EPSLN) || m_lonLat.lon > -0.698131700798))
         throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
-    if (region == 1 && (m_lonLat.lon < -(Math.PI + Constants.EPSLN) || m_lonLat.lon > -0.698131700798))
+    if (region == 1 && (m_lonLat.lon < -(Constants.PI + Constants.EPSLN) || m_lonLat.lon > -0.698131700798))
         throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
-    if (region == 2 && (m_lonLat.lon < -0.698131700798 || m_lonLat.lon > Math.PI + Constants.EPSLN))
+    if (region == 2 && (m_lonLat.lon < -0.698131700798 || m_lonLat.lon > Constants.PI + Constants.EPSLN))
         throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
-    if (region == 3 && (m_lonLat.lon < -0.698131700798 || m_lonLat.lon > Math.PI + Constants.EPSLN))
+    if (region == 3 && (m_lonLat.lon < -0.698131700798 || m_lonLat.lon > Constants.PI + Constants.EPSLN))
         throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
-    if (region == 4 && (m_lonLat.lon < -(Math.PI + Constants.EPSLN) || m_lonLat.lon > -1.74532925199))
+    if (region == 4 && (m_lonLat.lon < -(Constants.PI + Constants.EPSLN) || m_lonLat.lon > -1.74532925199))
         throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
     if (region == 5 && (m_lonLat.lon < -1.74532925199 || m_lonLat.lon > -0.349065850399))
         throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
-    if (region == 6 && (m_lonLat.lon < -(Math.PI + Constants.EPSLN) || m_lonLat.lon > -1.74532925199))
+    if (region == 6 && (m_lonLat.lon < -(Constants.PI + Constants.EPSLN) || m_lonLat.lon > -1.74532925199))
         throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
     if (region == 7 && (m_lonLat.lon < -1.74532925199 || m_lonLat.lon > -0.349065850399))
         throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
     if (region == 8 && (m_lonLat.lon < -0.349065850399 || m_lonLat.lon > 1.3962634016))
         throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
-    if (region == 9 && (m_lonLat.lon < 1.3962634016|| m_lonLat.lon > Math.PI + Constants.EPSLN))
+    if (region == 9 && (m_lonLat.lon < 1.3962634016|| m_lonLat.lon > Constants.PI + Constants.EPSLN))
         throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
     if (region ==10 && (m_lonLat.lon < -0.349065850399 || m_lonLat.lon > 1.3962634016))
         throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
-    if (region ==11 && (m_lonLat.lon < 1.3962634016 || m_lonLat.lon > Math.PI + Constants.EPSLN))
+    if (region ==11 && (m_lonLat.lon < 1.3962634016 || m_lonLat.lon > Constants.PI + Constants.EPSLN))
         throw(new ProjException(Constants.IN_BREAK, "GoodeH._inverse()"));
 
 }

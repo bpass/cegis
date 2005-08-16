@@ -87,7 +87,7 @@ protected void _inverse(CoordPoint p) throws ProjException
     p.x -= m_falseEasting;
     p.y -= m_falseNorthing;
     rh =Math.sqrt(p.x * p.x + p.y * p.y);
-    if (rh > (2.0 * ((Math.PI)/2) * m_sphere.rMajor))
+    if (rh > (2.0 * ((Constants.PI)/2) * m_sphere.rMajor))
     {
        throw(new ProjException(125, "AzEquidistant._inverse()"));
      
@@ -105,7 +105,7 @@ protected void _inverse(CoordPoint p) throws ProjException
     }
 
     m_lonLat.lat = Util.asinz(cosz * m_sinCenterLat + (p.y * sinz * m_cosCenterLat) / rh);
-    con =Math.abs(m_center.lat) - ((Math.PI)/2);
+    con =Math.abs(m_center.lat) - ((Constants.PI)/2);
     if (Math.abs(con) <= Constants.EPSLN)
     {
        if (m_center.lat >= 0.0)

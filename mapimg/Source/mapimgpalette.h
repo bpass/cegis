@@ -1,9 +1,9 @@
-// $Id: mapimgpalette.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: mapimgpalette.h,v 1.3 2005/08/17 19:42:34 lwoodard Exp $
 
 #ifndef MAPIMGPALETTE_H
 #define MAPIMGPALETTE_H
 
-#include <qcolor.h>
+#include <QColor>
 
 const QColor INPUT_COLOR        ( 151, 160, 148 );
 const QColor OUTPUT_COLOR       ( 163, 146, 146 );

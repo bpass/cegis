@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.4 2005/08/16 12:57:20 lwoodard Exp $
+// $Id: mapimgform.cpp,v 1.5 2005/08/17 19:42:34 lwoodard Exp $
 //Last Edited: August 2005; by: lwoodard; for:qt3 to qt4 porting
 
 #include "mapimgform.h"
@@ -32,7 +32,6 @@
 #include <QMouseEvent>
 
 #include "mapimgversion.h"
-#include "mapimgimages.h"
 #include "qimgframe.h"
 #include "mapimgedit.h"
 #include "rasterinfo.h"

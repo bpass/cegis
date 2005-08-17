@@ -4,7 +4,7 @@
 
 #include "mapimgprogressdialog.h"
 
-MapimgProgressDialog::MapimgProgressDialog( const QColor* color1, const QColor* color2, QWidget* creator, const char* name, bool modal, Qt::WFlags f )
+MapimgProgressDialog::MapimgProgressDialog( const QColor* color1, const QColor* color2, QWidget* creator, const char* , bool modal, Qt::WFlags f )
 : QProgressDialog( creator, f )
 {
 	setModal( modal );
@@ -28,7 +28,7 @@ MapimgProgressDialog::MapimgProgressDialog( const QColor* color1, const QColor* 
 }
 
 
-MapimgProgressDialog::MapimgProgressDialog( const QString& labelText, const QString& cancelButtonText, int totalSteps, const QColor* color1, const QColor* color2, QWidget* creator, const char* name, bool modal, Qt::WFlags f )
+MapimgProgressDialog::MapimgProgressDialog( const QString& labelText, const QString& cancelButtonText, int totalSteps, const QColor* color1, const QColor* color2, QWidget* creator, const char* , bool modal, Qt::WFlags f )
 : QProgressDialog( labelText, cancelButtonText,0, totalSteps, creator, f )
 {
 	setModal( modal );

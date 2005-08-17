@@ -1,10 +1,10 @@
-// $Id: rasterinfo.h,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: rasterinfo.h,v 1.2 2005/08/17 19:42:34 lwoodard Exp $
 
 
 #ifndef RASTERINFO_H
 #define RASTERINFO_H
 
-#include <qstring.h>
+#include <QString>
 
 class RasterInfo
 {

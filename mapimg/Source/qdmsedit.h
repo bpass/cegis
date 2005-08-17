@@ -1,4 +1,4 @@
-// $Id: qdmsedit.h,v 1.4 2005/08/16 14:25:30 lwoodard Exp $
+// $Id: qdmsedit.h,v 1.5 2005/08/17 19:42:34 lwoodard Exp $
 
 
 #ifndef QDMSEDIT_H
@@ -8,7 +8,6 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QWidget>
-				#include <q3hbox.h>
 
 class QDmsEdit : public QWidget
 {

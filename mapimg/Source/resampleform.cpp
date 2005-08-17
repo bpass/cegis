@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.6 2005/08/16 12:57:20 lwoodard Exp $
+// $Id: resampleform.cpp,v 1.7 2005/08/17 19:42:34 lwoodard Exp $
 
 
 /****************************************************************************
@@ -60,7 +60,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
 	inputLayout = new QVBoxLayout( 0, 0, 6, "inputLayout"); 
 
-	resampleBox = new QGroupBox( this, "resampleBox" );		/**3**/
+	resampleBox = new QGroupBox( this, "resampleBox" );		
 	//   resampleBox->setColumnLayout(0, Qt::Vertical );
 	resampleBox->layout()->setSpacing( 6 );
 	resampleBox->layout()->setMargin( 11 );
@@ -91,7 +91,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
 	inputLayout->addWidget( resampleBox );
 
-	ignoreBox = new QGroupBox( this, "ignoreBox" );		/**3**/
+	ignoreBox = new QGroupBox( this, "ignoreBox" );		
 	//   ignoreBox->setColumnLayout(0, Qt::Vertical );
 	ignoreBox->layout()->setSpacing( 6 );
 	ignoreBox->layout()->setMargin( 11 );
@@ -139,7 +139,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
 	ResampleFormLayout->addLayout( inputLayout );
 
-	memoryBox = new QGroupBox( this, "memoryBox" );		/**3**/
+	memoryBox = new QGroupBox( this, "memoryBox" );		
 	//   memoryBox->setColumnLayout(0, Qt::Vertical );
 	memoryBox->layout()->setSpacing( 6 );
 	memoryBox->layout()->setMargin( 11 );

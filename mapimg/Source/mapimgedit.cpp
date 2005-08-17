@@ -1,4 +1,4 @@
-// $Id: mapimgedit.cpp,v 1.4 2005/08/16 14:25:30 lwoodard Exp $
+// $Id: mapimgedit.cpp,v 1.5 2005/08/17 19:42:34 lwoodard Exp $
 
 
 #include "mapimgedit.h"
@@ -13,7 +13,7 @@
 #include "mapimgvalidator.h"
 #include "gctpnames.h"
 #include "mapimgpalette.h"
-#include "mapimgedit.h"
+#include "mapimgedit.h"	
 #include "mapedit.h"
 #include "projectionedit.h"
 

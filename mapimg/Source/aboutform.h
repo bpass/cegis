@@ -1,4 +1,4 @@
-// $Id: aboutform.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
+// $Id: aboutform.h,v 1.3 2005/08/17 19:42:34 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -19,7 +19,6 @@
 //Added by qt3to4:
 #include <QLabel>
 #include <QVBoxLayout>
-				#include <Q3Frame>
 #include <QHBoxLayout>
 #include <QGridLayout>
 
@@ -28,7 +27,6 @@ class QHBoxLayout;
 class QGridLayout;
 class QSpacerItem;
 class QLabel;
-class Q3Frame;
 class QPushButton;
 
 /*

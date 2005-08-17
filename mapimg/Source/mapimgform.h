@@ -1,4 +1,4 @@
-// $Id: mapimgform.h,v 1.3 2005/08/05 19:50:51 lwoodard Exp $
+// $Id: mapimgform.h,v 1.4 2005/08/17 19:42:34 lwoodard Exp $
 
 
 /****************************************************************************
@@ -23,7 +23,7 @@
 #include <QDropEvent>
 #include <Q3PopupMenu>
 #include <QDragEnterEvent>
-/***/#include <QToolBar>
+#include <QToolBar>
 
 class QHBoxLayout;
 class QGridLayout;
@@ -31,7 +31,7 @@ class QSpacerItem;
 class QAction;
 class Q3ActionGroup;
 class Q3PopupMenu;
-class QToolBar;	/*****************/
+class QToolBar;	
 class QToolButton;
 class Q3WidgetStack;
 class QImgFrame;

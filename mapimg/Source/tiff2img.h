@@ -1,12 +1,12 @@
-// $Id: tiff2img.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: tiff2img.h,v 1.3 2005/08/17 19:44:32 lwoodard Exp $
 
 
 #ifndef TIFF2IMG_H
 #define TIFF2IMG_H
 
 #include <qmap.h>
-#include <qmessagebox.h>
-#include <qfile.h>
+#include <QMessageBox>
+#include <QFile>
 
 #include <tiff.h>
 #include <tiffio.h>

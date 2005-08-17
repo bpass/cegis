@@ -14,10 +14,9 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
-#include "mapimgedit.h"
-#include "mapimgform.h"
+#include "mapimgedit.h"	//QInfoFrame class
+//#include "mapimgform.h"
 
-class QInfoFrame;
 class RasterInfo;
 class mapimgForm;
 

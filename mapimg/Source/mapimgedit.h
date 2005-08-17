@@ -1,5 +1,4 @@
-// $Id: mapimgedit.h,v 1.3 2005/08/16 12:57:20 lwoodard Exp $
-
+// $Id: mapimgedit.h,v 1.4 2005/08/17 19:42:34 lwoodard Exp $
 
 #ifndef QINFOFRAME_H
 #define QINFOFRAME_H
@@ -14,6 +13,8 @@
 #include <QEvent>
 
 #include "mapimgform.h"
+//#include "mapedit.h"
+//#include "projectionedit.h"
 
 // My classes used
 class QDmsEdit;

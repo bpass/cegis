@@ -1,10 +1,10 @@
-// $Id: gctpnames.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
+// $Id: gctpnames.h,v 1.3 2005/08/17 19:42:34 lwoodard Exp $
 
 
 #ifndef GCTPNAMES_H
 #define GCTPNAMES_H
 
-#include <qstringlist.h>
+#include <QStringList>
 
 namespace
 {

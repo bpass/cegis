@@ -10,10 +10,9 @@
 #include <QLabel>
 #include <QEvent>
 
-#include "mapimgedit.h"
+#include "mapimgedit.h"	//QInfoFrame class
 
 class QGctpBox;
-class QInfoFrame;
 class QRasterInfo;
 class QSpinBox;
 /*

@@ -1,4 +1,4 @@
-// $Id: qimgpainter.h,v 1.3 2005/08/16 12:57:20 lwoodard Exp $
+// $Id: qimgpainter.h,v 1.4 2005/08/17 19:42:34 lwoodard Exp $
 
 
 #ifndef QIMGPAINTER_H
@@ -14,13 +14,13 @@
 ** of a requested size.
 *****************************************************************************/
 
-#include <qstring.h>
-#include <qpixmap.h>
-#include <qmap.h>
-#include <qcolor.h>
-#include <qpainter.h>
-#include <qfile.h>
-#include <qdatastream.h>
+#include <QString>
+#include <QPixmap>
+#include <QMap>
+#include <QColor>
+#include <QPainter>
+#include <QFile>
+#include <QDataStream>
 
 #include "mapimgprogressdialog.h"
 #include "rasterinfo.h"

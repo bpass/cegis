@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.3 2005/08/05 19:50:50 lwoodard Exp $
+// $Id: imgio.h,v 1.4 2005/08/17 19:42:34 lwoodard Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -28,9 +28,7 @@
 #include <QMessageBox>
 
 #include "rasterinfo.h"
-#include <q3cache.h>
-
-
+#include <QCache>
 
 #define DEFAULT_Max_Data_Element_Count 100
 
@@ -58,7 +56,7 @@ class IMGIO
 {
 private:
    int Max_Data_Element_Count;
-   Q3Cache<type>* inputDataMap;
+   QCache< QString, type >* inputDataMap;
 
    QString infile_name;       // Name of input file
    QString outfile_name;      // Name of output file
@@ -344,8 +342,7 @@ public:
    {
       if( inputDataMap == NULL )
       {
-         inputDataMap = new Q3Cache<type>( Max_Data_Element_Count, (int)(1.6*Max_Data_Element_Count) );
-         inputDataMap->setAutoDelete( true );
+         inputDataMap = new QCache< QString, type >( Max_Data_Element_Count, (int)(1.6*Max_Data_Element_Count) );
          last_offset = offset;
       }
       else if( last_offset == offset )
@@ -356,8 +353,7 @@ public:
       // check and see if line requested is already in memory
       QString offsetString(QString::number( offset ));
 
-
-      buf = inputDataMap->find( offsetString );
+	  buf = inputDataMap->object( offsetString );
 
       if( buf ==  0 )
       {

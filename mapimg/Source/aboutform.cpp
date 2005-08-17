@@ -1,4 +1,4 @@
-// $Id: aboutform.cpp,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
+// $Id: aboutform.cpp,v 1.3 2005/08/17 19:42:34 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -12,7 +12,6 @@
 #include "aboutform.h"
 
 #include "mapimgversion.h"
-#include "mapimgimages.h"
 #include "mapimgpalette.h"
 
 #include <QVariant>
@@ -51,7 +50,7 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, Qt::WFlags 
    logoLabel->setMaximumSize( QSize( 400, 147 ) );
    logoLabel->setFrameShape( QLabel::WinPanel );
    logoLabel->setFrameShadow( QLabel::Sunken );
-   /****/logoLabel->setPixmap( QPixmap( "./Resources/USGS Logo.png" ) );
+   logoLabel->setPixmap( QPixmap( "./Resources/USGS Logo.png" ) );
    logoLabel->setScaledContents( TRUE );
    aboutFormLayout->addWidget( logoLabel );
 

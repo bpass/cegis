@@ -1,14 +1,14 @@
-// $Id: qgctpbox.cpp,v 1.4 2005/08/16 14:25:30 lwoodard Exp $
+// $Id: qgctpbox.cpp,v 1.5 2005/08/17 19:42:34 lwoodard Exp $
 
 
 #include <QToolTip>
 #include <QValidator>
+#include <QWidget>
 
 #include "qgctpbox.h"
 #include "qdmsedit.h"
 //Added by qt3to4:
 #include <QLabel>
-//#include <QFrame>
 #include <QVBoxLayout>
 
 const uint INFO_PRECISION = 6;

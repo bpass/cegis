@@ -1,11 +1,11 @@
-// $Id: jt_time.h,v 1.1 2005/07/12 16:21:04 rbuehler Exp $
+// $Id: jt_time.h,v 1.2 2005/08/17 19:42:34 lwoodard Exp $
 
 
 #ifndef JT_TIME_H
 #define JT_TIME_H
 
 
-#include <qdatetime.h>
+#include <QDateTime>
 
 /*
 This function is used to time the reprojection.

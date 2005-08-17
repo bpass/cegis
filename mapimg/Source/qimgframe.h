@@ -1,10 +1,9 @@
-// $Id: qimgframe.h,v 1.3 2005/08/16 14:25:30 lwoodard Exp $
+// $Id: qimgframe.h,v 1.4 2005/08/17 19:42:34 lwoodard Exp $
 
 
 #ifndef QIMGFRAME_H
 #define QIMGFRAME_H
 
-			#include <q3frame.h>
 #include <QFrame>
 #include <QLabel>
 #include <QPixmap>

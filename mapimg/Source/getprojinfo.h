@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.3 2005/08/16 12:57:20 lwoodard Exp $
+// $Id: getprojinfo.h,v 1.4 2005/08/17 19:42:34 lwoodard Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -13,12 +13,12 @@
 // Modified by Jason Trent to allow for templating  -- 7/03
 // Modified by Jason Trent and Bob Buehler to add resampling -- 2/05
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#include <qwidget.h>
-#include <qmessagebox.h>
-#include <qtextstream.h>
-#include <qdir.h>
-#include <qcolor.h>
-#include <qmap.h>
+#include <QWidget>
+#include <QMessageBox>
+#include <QTextStream>
+#include <QDir>
+#include <QColor>
+#include <QMap>
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>

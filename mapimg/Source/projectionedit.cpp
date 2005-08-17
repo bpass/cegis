@@ -23,8 +23,8 @@
 #include "mapimgpalette.h"
 #include "projectionedit.h"
 #include "mapimgvalidator.h"
-#include "qgctpbox.cpp"
-#include "mapimgedit.h"
+#include "qgctpbox.h"
+#include "mapimgedit.h"	//QInfoFrame class
 
 /*
 The ProjectionEdit has one constructor. It executes in three stages.

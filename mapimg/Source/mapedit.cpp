@@ -26,8 +26,7 @@ const uint INFO_PRECISION = 6;
 #include "mapimgpalette.h"
 #include "mapedit.h"
 #include "mapimgvalidator.h"
-#include "mapimgedit.h"
-#include "mapimgedit.h"
+#include "mapimgedit.h"	//QInfoFrame class
 
 
 /*

@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -32,7 +32,8 @@
 
 namespace USGSMosix 
 {
-    class ProjImageInInterface : public virtual ProjImageDataInterface 
+    class ProjImageInInterface : public virtual ProjImageDataInterface,
+                                 public virtual SerializableInterface
     {
         public:
             

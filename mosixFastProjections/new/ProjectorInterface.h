@@ -1,12 +1,11 @@
-
-#ifndef _USGSMOSIX_PROJECTORINTERFACE_H_
-#define _USGSMOSIX_PROJECTORINTERFACE_H_
+#ifndef __USGSMOSIX_PROJECTORINTERFACE_H_
+#define __USGSMOSIX_PROJECTORINTERFACE_H_
 
 /*! 
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -23,25 +22,32 @@
  *
  */
 
-#include "Globals.h"
 #include<ProjectorException.h>
+#include "Globals.h"
+#include "SerializableInterface.h"
+#include "ProjImageInInterface.h"
+#include "ProjImageOutInterface.h"
 
 namespace USGSMosix 
 {
 
-class ProjectorInterface 
+class ProjectorInterface : public SerializableInterface 
 {
     public:
 
         ProjectorInterface() {}
         virtual ~ProjectorInterface() {} 
         virtual const ProjLib::Projection * getOutputProjection()const = 0;
-        virtual void getNewExtents() = 0;
+        virtual bool setupOutput() = 0;
         virtual scanlines_t project( long unsigned int beginLine, 
                                      long unsigned int endLine ) = 0;
-        virtual void project() = 0;   
+        virtual void project() = 0;  
+        
+        virtual const ProjImageInInterface * getProjImageIn()const = 0;
+        virtual const ProjImageOutInterface * getProjImageOut()const = 0;
 };
 
 } // namespace
 
 #endif // _USGSMOSIX_PROJECTORINTERFACE_H_
+

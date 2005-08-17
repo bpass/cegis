@@ -3,7 +3,7 @@
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -289,6 +289,22 @@ const PmeshLib::ProjectionMesh & ProjImageInList::setupReverseMesh(
     
     
     return *(mesh);
+}
+
+/****************************************************************************/
+
+void ProjImageInList::exportToSocket( ClientSocket & socket )const 
+{
+    std::list<std::pair<ProjImageInInterface*,DRect> >::const_iterator 
+        kiterator = m_imgList.begin();
+    unsigned int _size = size();
+    
+    socket.send(&_size, sizeof(_size));
+    
+    for( ; kiterator != m_imgList.end(); ++kiterator )
+    {
+        kiterator->first->exportToSocket(socket); 
+    }
 }
 
 /****************************************************************************/

@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -59,6 +59,33 @@ ClientSocket::~ClientSocket()
 
 /*****************************************************************************/
 
+bool ClientSocket::send( const void * in_buffer, unsigned int in_size )
+{
+  size_t sentthiscall = 0;
+  size_t sentsofar = 0;
+  
+  do {
+      
+    sentsofar += ( sentthiscall = ::send( m_socketDesc,
+        static_cast<const unsigned char *>(in_buffer) + sentsofar, 
+        in_size - sentsofar, 
+        MSG_NOSIGNAL ) );
+    
+  } while((sentsofar < m_bufferEnd) && (sentthiscall > 0));
+  
+  if(sentsofar == in_size)
+  {
+    return true;
+
+  } else
+  {
+    perror("Send failed");
+    return false;
+  }
+}
+
+/******************************************************************************/
+
 bool ClientSocket::sendFromBuffer()
 {
   if( m_bufferEnd == 0 )
@@ -69,10 +96,10 @@ bool ClientSocket::sendFromBuffer()
   
   do {
       
-    sentsofar += ( sentthiscall = send( m_socketDesc,
-                                        &m_buffer[sentsofar], 
-                                        m_bufferEnd - sentsofar, 
-                                        MSG_NOSIGNAL ) );
+    sentsofar += ( sentthiscall = ::send( m_socketDesc,
+                                          &m_buffer[sentsofar], 
+                                          m_bufferEnd - sentsofar, 
+                                          MSG_NOSIGNAL ) );
     
   } while((sentsofar < m_bufferEnd) && (sentthiscall > 0));
   

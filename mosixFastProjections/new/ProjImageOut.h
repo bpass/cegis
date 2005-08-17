@@ -1,11 +1,11 @@
-#ifndef _USGSMOSIX_PROJIAMGEOUT_H_
-#define _USGSMOSIX_PROJIMAGEOUT_H_
+#ifndef __USGSMOSIX_PROJIAMGEOUT_H_
+#define __USGSMOSIX_PROJIMAGEOUT_H_
 
 /*! 
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -26,7 +26,9 @@
 #include <string>
 #include <utility>
 #include "ProjImageData.h"
+#include "ProjImageParams.h"
 #include "ProjUtil.h"
+#include "ClientSocket.h"
 
 namespace USGSMosix
 {
@@ -36,7 +38,7 @@ class ProjImageOut : private virtual ProjImageData,
 {
     public:
         
-        ProjImageOut( const ProjLib::Projection & proj,
+        ProjImageOut( const ProjImageParams & params, 
                       ProjIOLib::ProjectionWriter & writer, 
                       std::string filename, 
                       std::pair<long int, long int> heightThenWidth,
@@ -46,9 +48,13 @@ class ProjImageOut : private virtual ProjImageData,
                       int spp,           ///< samples per pixel 
                       DRect bounds,      ///< bounding box for image
                       USGSImageLib::RGBPalette * pal = NULL );
-
+        
         virtual ~ProjImageOut(); 
-      
+
+        static ProjImageOut createFromSocket( ClientSocket & socket );
+        
+        virtual void exportToSocket( ClientSocket & socket)const;
+        
         virtual void putScanline( scanline_t scanline,
                                   const unsigned int& lineNo );
         
@@ -62,11 +68,12 @@ class ProjImageOut : private virtual ProjImageData,
                          int photometric,
                          int bps,
                          int spp );
-       
+        
+        const ProjImageParams & m_params; 
         ProjIOLib::ProjectionWriter& m_writer;
         USGSImageLib::RGBPalette * m_pal;
 };
 
 } // namespace 
 
-#endif // _USGSMOSIX_PROJIMAGEOUT_H_
+#endif // __USGSMOSIX_PROJIMAGEOUT_H_

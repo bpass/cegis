@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -40,7 +40,7 @@ namespace USGSMosix
 class SocketWrapper
 {
 public:
-    SocketWrapper( );
+    SocketWrapper();
     SocketWrapper( size_t newbufsize );
     
     virtual ~SocketWrapper();
@@ -48,15 +48,17 @@ public:
     // \note may block, if buffer fills and send() can't handle it immediately
     // returns true on success on failure, buffer is not damaged
     void appendToBuffer( const void * in_buffer, size_t in_size );
-
-    bool sendBuffer();
     
     // sets the buffer size to zero.
     void clearBuffer();
        
     // simple blocking call to recv()
     bool receive( void * buffer, size_t size );
-   
+  
+    // receives from the socket, but then zeros out the file pointer
+    // so that it is as if that a message was not receieved.
+    bool peek( void * buffer, size_t size );
+    
     size_t getBytesSent()const;
     size_t getBytesRcv()const;
 

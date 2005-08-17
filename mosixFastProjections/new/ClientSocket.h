@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -26,6 +26,7 @@
  */
 
 #include<string>
+#include "Globals.h"
 #include "SocketWrapper.h"
 #include "ServerSocket.h"
 
@@ -40,6 +41,8 @@ public:
     ClientSocket( std::string hostname, unsigned int port );
    
     virtual ~ClientSocket();
+    
+    bool send(const void * in_buffer, unsigned int in_size);
     
     bool sendFromBuffer();
 

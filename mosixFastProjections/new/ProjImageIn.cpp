@@ -4,7 +4,7 @@
  * \author Mark Schisler \n
  *         Chris Bilderback 
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -35,17 +35,19 @@
 namespace USGSMosix 
 {
 
+// static data
 /*****************************************************************************/
 
 const ProjLib::GeographicProjection ProjImageIn::m_geoProjection;
-    
+ProjIOLib::ProjectionReader ProjImageIn::m_projReader;
+
+// member functions
 /*****************************************************************************/
 
-ProjImageIn::ProjImageIn( const ProjImageParams & params,
-                          ProjIOLib::ProjectionReader& projReader ) 
+ProjImageIn::ProjImageIn( const ProjImageParams & params ) 
     : ProjImageData(params.getBounds(), NULL, params.getProjection()),
       ProjImageInInterface(),
-      m_projReader(projReader), 
+      m_params(params),
       m_cache( NULL ),
       m_spp(1),
       m_lastLine(-1, NULL),
@@ -175,6 +177,30 @@ ProjImageIn::ProjImageIn( const ProjImageParams & params,
   {
     std::cout << ge.toString() << std::endl;
   }
+}
+
+/*****************************************************************************/
+
+ProjImageIn::ProjImageIn( const ProjImageIn & copyOf )
+    : ProjImageDataInterface(),
+    ProjImageData(copyOf.getOuterBounds(), NULL, 
+                  copyOf.getProjection()),
+    SerializableInterface(),
+    ProjImageInInterface(),
+    m_params( copyOf.m_params ),
+    m_cache(new USGSImageLib::CacheManager(*copyOf.m_cache)),
+    m_spp(copyOf.m_spp),
+    m_lastLine(copyOf.m_lastLine),
+    m_geoMesh(copyOf.m_geoMesh),
+    m_haveGeoBounds(copyOf.m_haveGeoBounds)
+{
+}
+
+/*****************************************************************************/
+
+ProjImageIn::~ProjImageIn()
+{
+    delete m_cache;
 }
 
 /*****************************************************************************/
@@ -413,6 +439,50 @@ DRect ProjImageIn::getGeographicBounds()const
             
     } else
         return m_geoBounds;
+}
+
+/*****************************************************************************/
+
+ProjImageIn ProjImageIn::createFromSocket( ClientSocket & socket )
+{
+    unsigned int strLen(0);
+    char * pszParamfilename = NULL;
+    std::string strParamfilename("");
+    static unsigned int i = 1; 
+    
+    socket.receive(&i, sizeof(i));
+    if ( i != 1 )
+    {
+        i = 1;
+        throw GeneralException("Error, not an individual image in transit.");        }
+
+    socket.receive(&strLen,sizeof(strLen));
+    
+    if ( strLen <= 0 )
+        throw GeneralException("Cannot make array of size less than zero.");
+    if ( ( pszParamfilename = new (std::nothrow)char[strLen] ) == NULL ) 
+        throw GeneralException("Failed Dynamic Allocation.");
+    socket.receive(pszParamfilename, strLen);
+
+    return ProjImageIn(ProjImageParams(std::string(pszParamfilename), 
+                       ProjImageParams::INPUT ));
+}
+ 
+/*****************************************************************************/
+
+void ProjImageIn::exportToSocket( ClientSocket & socket )const
+{
+    std::string paramFilename = m_params.getParamFilename();
+    unsigned int length = paramFilename.length();
+    static unsigned int i = 1; 
+
+    socket.appendToBuffer(&i, sizeof(i));
+    socket.appendToBuffer(&length, sizeof(length));
+
+    socket.appendToBuffer(paramFilename.c_str(), 
+                          paramFilename.length());
+    
+    socket.sendFromBuffer();
 }
 
 /*****************************************************************************/

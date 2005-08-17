@@ -1,8 +1,9 @@
+
 /*! 
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -17,9 +18,10 @@
  *
  */
 
-#ifndef _USGSMOSIX_GLOBALS
-#define _USGSMOSIX_GLOBALS
+#ifndef _USGSMOSIX_GLOBALS_H_
+#define _USGSMOSIX_GLOBALS_H_
 
+#include "Macros.h"
 #include <MathLib/InterpolatorTypes.h> 
 #include <ProjectionLib/ProjectionTypes.h>
 
@@ -31,7 +33,7 @@ namespace USGSMosix
 ///////////////////////////////
 
 typedef unsigned char sample_t; 
-    
+
 typedef unsigned char * scanline_t;
 
 typedef const unsigned char * const_scanline_t;
@@ -43,6 +45,19 @@ typedef double scale_t;
 //////////////////////////////
 // global constants 
 //////////////////////////////
+
+/*! The number of alloted retry attempts for connecting to a socket. */
+const unsigned int kgConnectRetries = 5;
+
+/*! the number of seconds that will elapse between connect retries between
+ * sockets */
+const unsigned int kgReconnectDelaySecs = 2;
+
+/*! Maximum backlogged connections to the server. */
+const unsigned int kgMaxBackloggedSlaves = 20;
+
+/*! maximum size for the SocketWrapper's buffer. */
+const unsigned int kgSocketBuffSize = 1000;
 
 /*! Cache size for LRU cache */
 const unsigned int kgCacheSize = 100; 
@@ -66,6 +81,11 @@ const MathLib::InterpolatorType kgInterpolator = MathLib::CubicSpline;
 enum IMAGETYPE
 {
     DOQ = 0, JPEG, TIFF, GEOTIFF, PNG, OTHER = -1
+};
+
+enum PROJECTORTYPE 
+{
+    GEOPROJ = 0, SLAVEPROJ, UNKNOWN = -1
 };
 
 } // namespace USGSMosix 

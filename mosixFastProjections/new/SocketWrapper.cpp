@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -47,8 +47,8 @@ SocketWrapper::SocketWrapper()
 
 SocketWrapper::SocketWrapper( size_t bufferSize )
     : m_socketDesc(-1),
-      m_bufferAlloced(bufferSize),
       m_bufferEnd(0),
+      m_bufferAlloced(bufferSize),
       m_bytesSent(0),
       m_bytesRecv(0)
 {
@@ -101,6 +101,17 @@ bool SocketWrapper::receive(void * buffer, size_t size)
   
   ssize_t thisrecv = read( m_socketDesc, buffer, size );
   m_bytesRecv += thisrecv;
+  return ( static_cast<size_t>(thisrecv) == size ) ;
+}
+
+/******************************************************************************/
+
+bool SocketWrapper::peek(void * buffer, size_t size)
+{
+    if ( m_socketDesc < 0 )
+        return false;
+
+  ssize_t thisrecv = recv( m_socketDesc, buffer, size, MSG_PEEK | MSG_WAITALL );
   return ( static_cast<size_t>(thisrecv) == size ) ;
 }
 

@@ -16,9 +16,9 @@
 
 #
 # @file Makefile.am
-# @author Austin Hartman
+# @author Mark Schisler 
 #
-# $Id: Makefile,v 1.3 2005/07/28 00:30:09 mschisler Exp $
+# $Id: Makefile,v 1.4 2005/08/17 01:09:01 mschisler Exp $
 #
 
 # SUBDIRS = tests
@@ -59,10 +59,14 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
 mkinstalldirs = $(mkdir_p)
 CONFIG_CLEAN_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
-am_reproject_OBJECTS = driver.$(OBJEXT) ProjImageFactory.$(OBJEXT) \
-	ProjImageOut.$(OBJEXT) FromMultiGeoProjector.$(OBJEXT) \
-	ProjImageIn.$(OBJEXT) ProjImageParams.$(OBJEXT) \
-	ProjImageData.$(OBJEXT) ProjImageInList.$(OBJEXT)
+am_reproject_OBJECTS = ClientSocket.$(OBJEXT) \
+	ProjImageFactory.$(OBJEXT) driver.$(OBJEXT) \
+	ProjImageIn.$(OBJEXT) ServerSocket.$(OBJEXT) \
+	FromMultiGeoProjector.$(OBJEXT) ProjImageInList.$(OBJEXT) \
+	SlaveProjector.$(OBJEXT) ProjectorFactory.$(OBJEXT) \
+	ProjImageOut.$(OBJEXT) SocketWrapper.$(OBJEXT) \
+	ProjImageParams.$(OBJEXT) ProjImageData.$(OBJEXT) \
+	ProjImageScale.$(OBJEXT)
 reproject_OBJECTS = $(am_reproject_OBJECTS)
 reproject_DEPENDENCIES = /work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
 	/work/mosixFastProjections/include/Projector/.obj/ProjectorException.o \
@@ -72,14 +76,19 @@ reproject_DEPENDENCIES = /work/mosixFastProjections/include/Projector/.obj/Proje
 DEFAULT_INCLUDES = -I. -I$(srcdir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-DEP_FILES = ./$(DEPDIR)/FromMultiGeoProjector.Po \
+DEP_FILES = ./$(DEPDIR)/ClientSocket.Po \
+	./$(DEPDIR)/FromMultiGeoProjector.Po \
 	./$(DEPDIR)/ProjImageData.Po \
 	./$(DEPDIR)/ProjImageFactory.Po \
 	./$(DEPDIR)/ProjImageIn.Po \
 	./$(DEPDIR)/ProjImageInList.Po \
 	./$(DEPDIR)/ProjImageOut.Po \
 	./$(DEPDIR)/ProjImageParams.Po \
-	./$(DEPDIR)/driver.Po
+	./$(DEPDIR)/ProjImageScale.Po \
+	./$(DEPDIR)/ProjectorFactory.Po \
+	./$(DEPDIR)/ServerSocket.Po \
+	./$(DEPDIR)/SlaveProjector.Po \
+	./$(DEPDIR)/SocketWrapper.Po ./$(DEPDIR)/driver.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -161,7 +170,7 @@ localstatedir = ${prefix}/var
 mandir = ${prefix}/man
 mkdir_p = mkdir -p -- .
 oldincludedir = /usr/include
-prefix = /usr/local
+prefix = /home/mschisler/MOSIX/new
 program_transform_name = s,x,x,
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
@@ -169,9 +178,14 @@ sysconfdir = ${prefix}/etc
 target_alias = 
 OBJDIR = .obj
 COMPILE = %OD
-reproject_SOURCES = driver.cpp ProjImageFactory.cpp ProjImageOut.cpp \
-FromMultiGeoProjector.cpp  ProjImageIn.cpp ProjImageParams.cpp \
-ProjImageData.cpp ProjImageInList.cpp
+reproject_SOURCES = ClientSocket.cpp ProjImageFactory.cpp \
+				   driver.cpp \
+				   ProjImageIn.cpp ServerSocket.cpp \
+				   FromMultiGeoProjector.cpp  ProjImageInList.cpp \
+				   SlaveProjector.cpp ProjectorFactory.cpp \
+				   ProjImageOut.cpp  SocketWrapper.cpp \
+				   ProjImageParams.cpp \
+                   ProjImageData.cpp  ProjImageScale.cpp
 
 AM_CPPFLAGS = -pg -g -Wno-deprecated -Wall -W -pedantic \
 -I/work/mosixFastProjections/include/Projector \
@@ -204,15 +218,15 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
-	      echo ' cd $(srcdir) && $(AUTOMAKE) --foreign '; \
-	      cd $(srcdir) && $(AUTOMAKE) --foreign  \
+	      echo ' cd $(srcdir) && $(AUTOMAKE) --gnu '; \
+	      cd $(srcdir) && $(AUTOMAKE) --gnu  \
 		&& exit 0; \
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign  Makefile
+	  $(AUTOMAKE) --gnu  Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -244,6 +258,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/ClientSocket.Po
 include ./$(DEPDIR)/FromMultiGeoProjector.Po
 include ./$(DEPDIR)/ProjImageData.Po
 include ./$(DEPDIR)/ProjImageFactory.Po
@@ -251,6 +266,11 @@ include ./$(DEPDIR)/ProjImageIn.Po
 include ./$(DEPDIR)/ProjImageInList.Po
 include ./$(DEPDIR)/ProjImageOut.Po
 include ./$(DEPDIR)/ProjImageParams.Po
+include ./$(DEPDIR)/ProjImageScale.Po
+include ./$(DEPDIR)/ProjectorFactory.Po
+include ./$(DEPDIR)/ServerSocket.Po
+include ./$(DEPDIR)/SlaveProjector.Po
+include ./$(DEPDIR)/SocketWrapper.Po
 include ./$(DEPDIR)/driver.Po
 
 .cpp.o:
@@ -537,6 +557,7 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
 
+                   # ProjProcessSpawner.cpp  ProjectorSplitter.cpp
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

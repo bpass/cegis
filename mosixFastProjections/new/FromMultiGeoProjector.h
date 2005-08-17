@@ -6,7 +6,7 @@
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -30,8 +30,9 @@
 #include <MathLib/InterpolatorTypes.h>
 #include "ProjImageParams.h"
 #include "ProjectorInterface.h"
-#include "ProjImageOut.h"
-#include "ProjImageInList.h"
+#include "ProjImageInInterface.h"
+#include "ProjImageOutInterface.h"
+#include "ProjImageFactory.h"
 
 namespace USGSMosix 
 {
@@ -44,11 +45,11 @@ class FromMultiGeoProjector : public ProjectorInterface
 {
    public:
        
-       FromMultiGeoProjector( ProjIOLib::ProjectionWriter & projWriter,
-                              ProjIOLib::ProjectionReader & projReader,
-                              ProjImageParams & params,
-                              ProjImageInInterface & source
-                            ); 
+       FromMultiGeoProjector( ProjImageParams & params,
+                              ProjImageInInterface & source ); 
+      
+       FromMultiGeoProjector( ProjImageInInterface & source,
+                              ProjImageOutInterface & destination );
        
        virtual ~FromMultiGeoProjector(); 
        
@@ -63,14 +64,20 @@ class FromMultiGeoProjector : public ProjectorInterface
        DRect getoutRect() const;
        virtual const ProjLib::Projection* getOutputProjection() const; 
 
+       virtual const ProjImageInInterface * getProjImageIn()const;
+       virtual const ProjImageOutInterface * getProjImageOut()const;
+       
        // Projection Functions 
-       virtual void getNewExtents();
+       virtual bool setupOutput();
        
        /// \pre To use this function you must have called getNewExtents()
        /// first.
        virtual scanlines_t project( long unsigned int beginLine, 
                                     long unsigned int endLine ); 
        virtual void project();    
+      
+       static FromMultiGeoProjector createFromSocket( ClientSocket & socket);
+       virtual void exportToSocket( ClientSocket & socket )const;
        
     private:
        PmeshLib::ProjectionMesh * setupPmesh( PmeshLib::ProjectionMesh *& mesh,
@@ -79,17 +86,12 @@ class FromMultiGeoProjector : public ProjectorInterface
        
        void getImageBounds( const PmeshLib::ProjectionMesh & translatingMesh );
 
-       /// \pre  m_fromProj is not NULL. m_toProj is not NULL.
-       /// \post x and y are projected to the projection specified
-       /// by the m_from and m_to pointers.
-       void projectPoint(double& x, double& y);
-       void reverseProjectPoint(double& x, double& y);
-
        ProjImageInInterface & m_imgIn;
        ProjImageOutInterface * m_imgOut;
-       ProjIOLib::ProjectionWriter & m_projWriter;
-       ProjIOLib::ProjectionReader & m_projReader;
-       ProjImageParams & m_params;
+       static ProjIOLib::ProjectionReader m_projReader;
+       static ProjIOLib::ProjectionWriter m_projWriter;
+       static ProjImageFactory m_imgFactory;
+       ProjImageParams * m_params;
        
        unsigned int m_pmeshDivisions; ///< Used for the number of divisions 
                                       ///<vertically  and horizontally made 
@@ -114,51 +116,21 @@ class FromMultiGeoProjector : public ProjectorInterface
 
 /******************************************************************************/
 
-inline void FromMultiGeoProjector::projectPoint(double& x, double& y)
+inline const ProjImageInInterface * 
+FromMultiGeoProjector::getProjImageIn()const
 {
-    if( m_forwardMesh != NULL )
-        m_forwardMesh->projectPoint(x, y);
-    else
-    {
-        // y and x become actual latitude and longitude 
-        // after executing this line
-        m_fromProj->projectToGeo(x,y,y,x);
-        
-        // after execution of this line of code:
-        // y and x are now to "true scale" with regard 
-        // to the original map, however they are now 
-        // reprojected to a different location on the 
-        // old map's grid.  Note that these new x and y 
-        // are not latitude and longitude or pixel 
-        // values.  They are to the arbitary scale of the
-        // source map.
-        m_toProj->projectFromGeo(y,x,x,y);
-    }
+    return &m_imgIn;
 }
 
 /******************************************************************************/
 
-inline void FromMultiGeoProjector::reverseProjectPoint(double& x, double& y)
+inline const ProjImageOutInterface * 
+FromMultiGeoProjector::getProjImageOut()const
 {
-    if( m_reverseMesh != NULL )
-        m_reverseMesh->projectPoint(x, y);
-    else
-    {
-        // y and x become actual latitude and longitude 
-        // after executing this line
-        m_toProj->projectToGeo(x,y,y,x);
-
-        // after execution of this line of code:
-        // y and x are now to "true scale" with regard 
-        // to the original map, however they are now 
-        // reprojected to a different location on the 
-        // old map's grid.  Note that these new x and y 
-        // are not latitude and longitude or pixel 
-        // values.  They are to the arbitary scale of the
-        // source map.
-        m_fromProj->projectFromGeo(y,x,x,y);
-    }
+    return m_imgOut;
 }
+
+/******************************************************************************/
 
 } // namespace
 

@@ -1,9 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 #
 # @file Makefile.am
-# @author Austin Hartman
+# @author Mark Schisler 
 #
-# $Id: Makefile.am,v 1.1 2005/07/27 17:16:37 mschisler Exp $
+# $Id: Makefile.am,v 1.2 2005/08/17 01:09:01 mschisler Exp $
 #
 
 # SUBDIRS = tests
@@ -14,17 +14,22 @@ COMPILE = %OD
 
 noinst_PROGRAMS = reproject
 
-reproject_SOURCES = driver.cpp ProjImageFactory.cpp ProjImageOut.cpp \
-FromMultiGeoProjector.cpp  ProjImageIn.cpp ProjImageParams.cpp \
-ProjImageData.cpp ProjImageInList.cpp
-
+reproject_SOURCES =ClientSocket.cpp ProjImageFactory.cpp \
+				   driver.cpp \
+				   ProjImageIn.cpp ServerSocket.cpp \
+				   FromMultiGeoProjector.cpp  ProjImageInList.cpp \
+				   SlaveProjector.cpp ProjectorFactory.cpp \
+				   ProjImageOut.cpp  SocketWrapper.cpp \
+				   ProjImageParams.cpp \
+                   ProjImageData.cpp  ProjImageScale.cpp
+                   # ProjProcessSpawner.cpp  ProjectorSplitter.cpp
+				    
 AM_CPPFLAGS = -pg -g -Wno-deprecated -Wall -W -pedantic \
 -I/work/mosixFastProjections/include/Projector \
 -I/usr/src/linux/include \
 -I/work/mosixFastProjections/include \
 -I/work/mosixFastProjections/ImageLib \
 -I/work/mosixFastProjections/
-
 
 reproject_LDFLAGS = -pg 
 

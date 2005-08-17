@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -21,22 +21,17 @@
  *
  */
 
-#include "DRect.h"
+#include  "ProjImageDataOutInterface.h"
 
 namespace USGSMosix 
 {
-    class ProjImageOutInterface : public virtual ProjImageDataInterface 
+    class ProjImageOutInterface : public virtual ProjImageDataInterface,
+                                  public virtual ProjImageDataOutInterface,
+                                  public virtual SerializableInterface
     {
-        public:
-            
+    public:
         ProjImageOutInterface() {} 
         virtual ~ProjImageOutInterface() {} 
-
-        // virtual set 
-        virtual void putScanline( scanline_t scanline, 
-                                  const unsigned int& lineNo )   = 0;
-        virtual void putScanlines( scanlines_t scanlines, 
-                                   const unsigned int& height )  = 0; 
     };
     
 } //namespace

@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -28,28 +28,29 @@
 namespace USGSMosix 
 {
     
+    
 /****************************************************************************/
 
-ProjImageOut::ProjImageOut ( const ProjLib::Projection & proj,
-                             ProjIOLib::ProjectionWriter& writer,
-                             std::string filename,
-                             std::pair<long int ,long int> heightThenWidth,
-                       	     const ProjImageScale & newScale,
-                             int photometric,
-                             int bps,
-                             int spp,
-                             DRect bounds,
-                             USGSImageLib::RGBPalette * pal )
-    : ProjImageData(bounds, NULL, &proj), 
+ProjImageOut::ProjImageOut( const ProjImageParams & params, 
+                            ProjIOLib::ProjectionWriter & writer, 
+                            std::string filename, 
+                            std::pair<long int, long int> heightThenWidth,
+                            const ProjImageScale & newScale,
+                            int photometric,
+                            int bps,           ///< bits per sample
+                            int spp,           ///< samples per pixel 
+                            DRect bounds,      ///< bounding box for image
+                            USGSImageLib::RGBPalette * pal )
+    : ProjImageData(bounds, NULL, params.getProjection()),
+      m_params(params),
       m_writer(writer),
       m_pal(pal)
 {
    this->setBounds(bounds);
-    
-    m_scale = newScale;
-    setupImage(filename, heightThenWidth, newScale, photometric, bps, spp ); 
+   m_scale = newScale;
+   setupImage(filename, heightThenWidth, newScale, photometric, bps, spp ); 
 }
-
+    
 /****************************************************************************/
 
 ProjImageOut::~ProjImageOut()
@@ -200,6 +201,63 @@ void ProjImageOut::putScanlines( scanlines_t scanlines,
         std::cout << "Dynamic cast failure in ProjImageOut." << std::endl;
     }
 
+    return;
+}
+
+/****************************************************************************/
+
+ProjImageOut ProjImageOut::createFromSocket( ClientSocket & socket )
+{
+    ProjImageParams params = ProjImageParams::createFromSocket(socket);
+    ProjImageScale newScale = ProjImageScale::createFromSocket(socket);
+    static ProjIOLib::ProjectionWriter writer;
+    unsigned int filenameLength = 0;
+    char * filename = NULL; 
+    std::pair<long int, long int> heightThenWidth; 
+    int photometric(0);
+    int bps(0);           ///< bits per sample
+    int spp(0);           ///< samples per pixel 
+    DRect bounds;      ///< bounding box for image
+
+    socket.receive(&filenameLength, sizeof(filenameLength) );
+    if ( filenameLength <= 0 ) 
+        throw GeneralException("Error: cannot create array of size <= 0");
+    else
+        filename = new char[filenameLength];
+
+    socket.receive( filename, filenameLength); 
+    socket.receive( &heightThenWidth.first, sizeof(heightThenWidth.first) );
+    socket.receive( &heightThenWidth.second, sizeof(heightThenWidth.second) );
+    socket.receive( &photometric, sizeof(photometric) );
+    socket.receive( &spp, sizeof(spp) );
+    socket.receive( &bounds, sizeof(bounds) );
+    
+    
+    return ProjImageOut( params,writer,filename,heightThenWidth,newScale,
+                         photometric, bps, spp, bounds ) ;
+}
+
+/****************************************************************************/
+
+void ProjImageOut::exportToSocket( ClientSocket & socket )const
+{
+    std::string filename = getFilename();
+    const unsigned int length = filename.length();
+    const long unsigned int height(getHeight()), width(getWidth());
+    const int photometric(getPhotometric()), spp(getSPP());
+    const DRect bounds(getOuterBounds());
+    
+    m_params.exportToSocket(socket);
+    m_scale.exportToSocket(socket); 
+    socket.appendToBuffer(&length,sizeof(length));
+    socket.appendToBuffer(filename.c_str(), filename.length());
+    socket.appendToBuffer(&height, sizeof(height));
+    socket.appendToBuffer(&width, sizeof(width));
+    socket.appendToBuffer(&photometric, sizeof(photometric));
+    socket.appendToBuffer(&spp, sizeof(getSPP()));
+    socket.appendToBuffer(&bounds, sizeof(bounds));
+    socket.sendFromBuffer();
+    
     return;
 }
 

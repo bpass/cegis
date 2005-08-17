@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/07/28 00:30:09 $
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -42,10 +42,11 @@ class ProjImageIn : private virtual ProjImageData,
 {
     public:
         
-        ProjImageIn( const ProjImageParams & params,  
-                     ProjIOLib::ProjectionReader& projReader );
+        ProjImageIn( const ProjImageParams & params );
+
+        ProjImageIn( const ProjImageIn & copyOf );
         
-        virtual ~ProjImageIn() {}
+        virtual ~ProjImageIn(); 
         
         virtual DRect getNewBounds(const PmeshLib::ProjectionMesh & mesh) const;
         
@@ -58,6 +59,9 @@ class ProjImageIn : private virtual ProjImageData,
 
         virtual const PixelInterface<sample_t> *
         getPixel( const double& latitude, const double& longitude ) const;
+       
+        static ProjImageIn createFromSocket( ClientSocket & socket );
+        virtual void exportToSocket( ClientSocket & socket )const;
         
     private:
         
@@ -65,9 +69,9 @@ class ProjImageIn : private virtual ProjImageData,
         double getMin( const std::list<double>& l )const;
         ProjImageScale calculateScale(const DRect& bounds);
         bool openImageWithParamFile(const std::string& filename); 
-        
-        ProjImageParams m_parameters;
-        ProjIOLib::ProjectionReader& m_projReader;
+       
+        const ProjImageParams & m_params;
+        static ProjIOLib::ProjectionReader m_projReader;
         USGSImageLib::CacheManager* m_cache;
         static const ProjLib::GeographicProjection m_geoProjection; 
 

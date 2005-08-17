@@ -1,5 +1,5 @@
-#ifndef _USGSMOSIX_PROJIMAGEFACTORY_H_
-#define _USGSMOSIX_PROJIMAGEFACTORY_H_
+#ifndef __USGSMOSIX_PROJIMAGEFACTORY_H_
+#define __USGSMOSIX_PROJIMAGEFACTORY_H_
 
 /*!
  * 
@@ -7,7 +7,7 @@
  *
  * \file ProjImageFactory.h
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  *
@@ -23,6 +23,7 @@
 #include "ProjImageInInterface.h"
 #include "ProjImageInList.h"
 #include "ProjImageParams.h"
+#include "ClientSocket.h"
 
 namespace USGSMosix 
 {
@@ -44,8 +45,14 @@ class ProjImageFactory
         makeProjImageInList( std::list<ProjImageParams*>& params,
                              ProjImageParams & outputParams );
         
+        ProjImageInInterface * 
+        makeProjImageIn( ClientSocket & socket );
+
+        ProjImageOutInterface * 
+        makeProjImageOut( ClientSocket & socket );
+        
     private:
-        std::list<ProjImageInInterface *> m_images;
+        std::list<ProjImageDataInterface *> m_images;
         ProjectionWriter & m_writer;
         ProjectionReader & m_reader;
 };

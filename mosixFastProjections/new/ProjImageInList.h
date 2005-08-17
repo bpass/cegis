@@ -1,11 +1,11 @@
-#ifndef _USGSMOSIX_PROJIMAGEINLIST_H_
-#define _USGSMOSIX_PROJIMAGEINLIST_H_
+#ifndef __USGSMOSIX_PROJIMAGEINLIST_H_
+#define __USGSMOSIX_PROJIMAGEINLIST_H_
 
 /*! 
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -40,6 +40,8 @@ class ProjImageInList : public ProjImageInInterface
         
         virtual ~ProjImageInList();
 
+        virtual void exportToSocket( ClientSocket & socket )const;
+        
         // INTERFACE FUNCTIONS
 
         /// get the virtual bounds of the image 
@@ -101,16 +103,19 @@ class ProjImageInList : public ProjImageInInterface
         void removeTail(); 
         void removeHead();
         void clear();
-
+        
+        unsigned int size()const;
+        
         // iterator control
-        ProjImageInInterface* first();
-        ProjImageInInterface* next();
-        ProjImageInInterface* prev();
-        ProjImageInInterface* last();
+        ProjImageInInterface* first()const;
+        ProjImageInInterface* next()const;
+        ProjImageInInterface* prev()const;
+        ProjImageInInterface* last()const;
         
     private:
         static const ProjLib::GeographicProjection m_geoProjection; 
-        std::list<std::pair<ProjImageInInterface*,DRect> >::iterator m_iterator;
+        mutable std::list<std::pair<ProjImageInInterface*,DRect> >::const_iterator 
+                m_iterator;
         std::list<std::pair<ProjImageInInterface*,DRect> > m_imgList;
         long int m_height;           
         long int m_width;            
@@ -123,7 +128,6 @@ class ProjImageInList : public ProjImageInInterface
 
 inline bool ProjImageInList::appendHead(ProjImageInInterface * img)
 {
-
     if ( img != NULL ) 
     {
         std::cout << "appending to head" << std::endl;
@@ -191,28 +195,28 @@ inline void ProjImageInList::clear()
 
 /****************************************************************************/
 
-inline ProjImageInInterface* ProjImageInList::first()
+inline ProjImageInInterface* ProjImageInList::first()const
 {
     return (m_iterator = m_imgList.begin())->first;
 }
 
 /****************************************************************************/
 
-inline ProjImageInInterface* ProjImageInList::next()
+inline ProjImageInInterface* ProjImageInList::next()const
 {
     return (++m_iterator != m_imgList.end())?(m_iterator->first):(NULL);
 }
 
 /****************************************************************************/
 
-inline ProjImageInInterface* ProjImageInList::prev()
+inline ProjImageInInterface* ProjImageInList::prev()const
 {
     return (--m_iterator != m_imgList.end())?(m_iterator->first):(NULL);
 }
 
 /****************************************************************************/
 
-inline ProjImageInInterface* ProjImageInList::last()
+inline ProjImageInInterface* ProjImageInList::last()const
 {
     return (m_iterator = m_imgList.end())->first;
 }
@@ -334,6 +338,13 @@ ProjImageInList::getPixel( const unsigned int& x, const unsigned int& y )const
    (void)x;
    (void)y;
    return NULL; 
+}
+
+/****************************************************************************/
+
+inline unsigned int ProjImageInList::size()const
+{
+    return static_cast<unsigned int>(m_imgList.size());    
 }
 
 /****************************************************************************/

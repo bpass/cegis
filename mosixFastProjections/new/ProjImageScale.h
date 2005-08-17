@@ -8,7 +8,7 @@
  *
  * \version 0.1
  * 
- * \file ImageScale.h
+ * \file ProjImageScale.h
  *
  * \brief The ImageScale object is meant to encapsulate the comparison 
  * of different types of image scales. 
@@ -19,17 +19,18 @@
  * 
  */
 
-#include "Globals.h"
-#include "Math.h"
 #include <ProjectionLib/ProjectionTypes.h>
 #include <utility>
+#include "Globals.h"
+#include "Math.h"
+#include "SerializableInterface.h"
+#include "ClientSocket.h"
 
 namespace USGSMosix 
 {
     using ProjLib::UNIT;
     
-    class ProjImageScale
-    {
+    class ProjImageScale : public SerializableInterface {
         public:
             ProjImageScale()
                 : x(0.0f), y(0.0f),
@@ -43,11 +44,33 @@ namespace USGSMosix
                             UNIT unit )
                 : x(_x), y(_y), m_units(unit) {}  
             
+            static ProjImageScale createFromSocket( ClientSocket & socket ) 
+            {
+                scale_t _x, _y;
+                UNIT units; 
+                
+                socket.receive( &_x, sizeof(_x) );
+                socket.receive( &_y, sizeof(_y) );
+                socket.receive( &units, sizeof(units) );
+                
+                return ProjImageScale( _x, _y, units );
+            }
+            
+            void exportToSocket( ClientSocket& socket ) const
+            {
+                socket.appendToBuffer( &x, sizeof(x) );
+                socket.appendToBuffer( &y, sizeof(y) );
+                socket.appendToBuffer( &m_units, sizeof(m_units) );
+                socket.sendFromBuffer();
+
+                return;
+            }
+            
             scale_t x;
             scale_t y;
             
             UNIT getUnits() { return m_units; }     
-            void setUnits( UNIT _unit) { m_units = _unit; }             
+            void setUnits( UNIT _unit ) { m_units = _unit; }             
         private:
             UNIT m_units; // per pixel 
     };

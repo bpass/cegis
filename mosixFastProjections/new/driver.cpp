@@ -4,7 +4,7 @@
  *
  * \file driver.cpp
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \brief Purpose is to be a temporary test driver for the mosix
  * fast projections project.
@@ -99,12 +99,9 @@ int main(int argc, char** argv )
        
         if ( inputImageList != NULL  && outputFileParams != NULL )
         {
-            projector = new FromMultiGeoProjector( projWriter,
-                                                   projReader,
-                                                   *outputFileParams,
-                                                 //  *input
-                                                   *inputImageList 
-                                                  );
+            projector = new FromMultiGeoProjector( *outputFileParams,
+                                                   //  *input
+                                                   *inputImageList );
             projector->project();
         }
 

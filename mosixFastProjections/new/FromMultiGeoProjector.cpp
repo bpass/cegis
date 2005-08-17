@@ -3,7 +3,7 @@
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -22,29 +22,55 @@
 #include "Globals.h"
 #include "FromMultiGeoProjector.h"
 #include "Math.h"
+#include "ProjImageOut.h"
 
 namespace USGSMosix
 {
 
+// initialization of static members
+/******************************************************************************/
+    
+ProjIOLib::ProjectionReader FromMultiGeoProjector::m_projReader;
+ProjIOLib::ProjectionWriter FromMultiGeoProjector::m_projWriter;
+ProjImageFactory 
+FromMultiGeoProjector::m_imgFactory(m_projReader, m_projWriter); 
+   
+// member functions
 /******************************************************************************/
 
 FromMultiGeoProjector::FromMultiGeoProjector( 
-            ProjIOLib::ProjectionWriter & projWriter,
-            ProjIOLib::ProjectionReader & projReader,
-            ProjImageParams & params,
-            ProjImageInInterface & source
+            ProjImageInInterface & source,
+            ProjImageOutInterface & destination 
 ) 
 :   m_imgIn(source),
-    m_projWriter(projWriter),
-    m_projReader(projReader),
-    m_params(params),
+    m_imgOut(&destination),
     m_pmeshDivisions(kgMeshDivisions), 
     m_pmeshInterp( kgInterpolator ), 
     m_forwardMesh(NULL),
     m_reverseMesh(NULL)
 {
     m_fromProj = m_imgIn.getProjection();
-    m_toProj = m_params.getProjection(); 
+    m_toProj = m_imgOut->getProjection(); 
+    if (m_toProj == NULL ) 
+        throw GeneralException("No to Projection");
+}
+    
+/******************************************************************************/
+
+FromMultiGeoProjector::FromMultiGeoProjector( 
+            ProjImageParams & params,
+            ProjImageInInterface & source
+) 
+:   m_imgIn(source),
+    m_imgOut(NULL),
+    m_params(&params),
+    m_pmeshDivisions(kgMeshDivisions), 
+    m_pmeshInterp( kgInterpolator ), 
+    m_forwardMesh(NULL),
+    m_reverseMesh(NULL)
+{
+    m_fromProj = m_imgIn.getProjection();
+    m_toProj = m_params->getProjection(); 
     if (m_toProj == NULL ) 
         throw GeneralException("No to Projection");
 }
@@ -53,7 +79,7 @@ FromMultiGeoProjector::FromMultiGeoProjector(
 
 FromMultiGeoProjector::~FromMultiGeoProjector()
 {
-    if ( m_imgOut ) delete m_imgOut;    
+    delete m_imgOut;    
 }
 
 /******************************************************************************/
@@ -111,31 +137,34 @@ DRect FromMultiGeoProjector::getoutRect() const
 
 /******************************************************************************/
 
-void FromMultiGeoProjector::getNewExtents()
+bool FromMultiGeoProjector::setupOutput()
 {
-    // set up the mesh for the forward projection using for the bounds
-    // of said image, the outermost edges of the input list of images.
-    m_forwardMesh = & m_imgIn.setupMesh( *(m_toProj), 
-                                          m_pmeshDivisions,
-                                          m_pmeshInterp ); 
-    
-    if( m_forwardMesh != NULL ) 
+    if ( m_imgOut == NULL ) 
     {
-        // get the boundaries for the potential image, the one that we 
-        // are projecting onto.
-        getImageBounds( *m_forwardMesh);
-    
-        // delete this mesh as we're now done with it.
-        if ( m_forwardMesh != NULL ) 
-        {   
-            delete m_forwardMesh;
-            m_forwardMesh = NULL;
-        }
+        // set up the mesh for the forward projection using for the bounds
+        // of said image, the outermost edges of the input list of images.
+        m_forwardMesh = & m_imgIn.setupMesh( *(m_toProj), 
+                                              m_pmeshDivisions,
+                                              m_pmeshInterp ); 
+        
+        if( m_forwardMesh != NULL ) 
+        {
+            // get the boundaries for the potential image, the one that we 
+            // are projecting onto.
+            getImageBounds( *m_forwardMesh);
+        
+            // delete this mesh as we're now done with it.
+            if ( m_forwardMesh != NULL ) 
+            {   
+                delete m_forwardMesh;
+                m_forwardMesh = NULL;
+            }
 
-    } else
-        throw GeneralException("m_forwardMesh is NULL");
-
-    return;
+        } else
+            throw GeneralException("m_forwardMesh is NULL");
+    }
+        
+    return true;
 }
 
 /******************************************************************************/
@@ -145,7 +174,7 @@ void FromMultiGeoProjector::project()
     scanlines_t scanlines;
    
     // get the extents of the new image. 
-    getNewExtents();
+    setupOutput();
     
     if ( m_imgOut != NULL ) 
     {
@@ -153,8 +182,7 @@ void FromMultiGeoProjector::project()
         scanlines = project(0, m_imgOut->getHeight());
         
         // write out data to image
-        m_imgOut->putScanlines( scanlines, 
-                                m_imgOut->getHeight() );
+        m_imgOut->putScanlines( scanlines, m_imgOut->getHeight() );
                             
         // cleanup space for scanlines    
         for( int i = 0; i < m_imgOut->getHeight(); ++i ) 
@@ -303,8 +331,8 @@ const PmeshLib::ProjectionMesh & translatingMesh )
     try {
         m_forwardMesh = &translatingMesh;
         
-        if ( m_fromProj == NULL || m_toProj == NULL )
-            throw GeneralException("m_imgOut is NULL");
+        if ( m_fromProj == NULL || m_toProj == NULL || m_params == NULL )
+            throw GeneralException("NULL pointer in getImageBounds");
         
         outputBounds = m_imgIn.getNewBounds(translatingMesh);
        
@@ -330,22 +358,21 @@ const PmeshLib::ProjectionMesh & translatingMesh )
         std::cout << "height:" << outHeight << std::endl
                   << "width :" << outWidth << std::endl;
        
-       //  std::cout << "Constructing source image: "
+       // std::cout << "Constructing source image: "
        //           << "bits per sample: " << m_imgIn.getBPS() 
        //           << "samples per pixel: " << m_imgIn.getSPP() << std::endl;
-                    
+       // set what we've learned up in the new image object.
         
-        // set what we've learned up in the new image object.
-        m_imgOut = new(std::nothrow)ProjImageOut( 
-                                     *m_toProj,
-                                     m_projWriter,
-                                     m_params.getFilename(),
-                                     std::pair<long,long>(outHeight,outWidth),
-                                     outputScale,
-                                     m_imgIn.getPhotometric(), 
-                                     m_imgIn.getBPS(), 
-                                     m_imgIn.getSPP(),
-                                     outputBounds );
+        m_imgOut = new (std::nothrow)ProjImageOut( 
+                                      *m_params,
+                                      m_projWriter,
+                                      m_params->getFilename(),
+                                      std::pair<long,long>(outHeight,outWidth),
+                                      outputScale,
+                                      m_imgIn.getPhotometric(), 
+                                      m_imgIn.getBPS(), 
+                                      m_imgIn.getSPP(),
+                                      outputBounds );
 
         std::cout << " done creating output" << std::endl;
         
@@ -356,6 +383,41 @@ const PmeshLib::ProjectionMesh & translatingMesh )
         std::cout << ge.toString() << std::endl;
     }
 
+    return;
+}
+
+/*****************************************************************************/
+
+FromMultiGeoProjector 
+FromMultiGeoProjector::createFromSocket( ClientSocket & socket )
+{
+    PROJECTORTYPE ty = UNKNOWN; // from Globals.h
+  
+    socket.receive(&ty, sizeof(ty));
+    if ( ty != GEOPROJ ) 
+        throw GeneralException(
+        "GeoProjector cannot create different projector.");
+    
+    ProjImageInInterface * imgIn = m_imgFactory.makeProjImageIn( socket );
+    ProjImageOutInterface * imgOut = m_imgFactory.makeProjImageOut( socket );
+    if ( imgIn != NULL && imgOut != NULL ) 
+        return FromMultiGeoProjector( *imgIn, *imgOut );
+    else throw GeneralException("Tried to coonsturct projector from NULL ptr.");
+}
+
+/*****************************************************************************/
+
+void FromMultiGeoProjector::exportToSocket( ClientSocket & socket )const
+{
+    static PROJECTORTYPE ty = GEOPROJ; /// from Globals.h
+    
+    if ( m_imgOut == NULL ) 
+        throw GeneralException("Error: Cannot export object.  Has no out img.");
+       
+    socket.send(&ty, sizeof(ty));
+    m_imgIn.exportToSocket(socket);
+    m_imgOut->exportToSocket(socket);
+    
     return;
 }
 

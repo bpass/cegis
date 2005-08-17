@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $date$
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -33,7 +33,7 @@ namespace USGSMosix
 ServerSocket::ServerSocket()
     : SocketWrapper(),
     m_hostname(""),
-    m_portNo(::htons(0))
+    m_portNo(0)
 {
     if( setupSocket() == false ) 
       throw GeneralException("Server: Socket setup failed.");

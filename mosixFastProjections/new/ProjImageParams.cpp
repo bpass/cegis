@@ -5,7 +5,7 @@
  *
  * \file ProjImageParams.h
  *
- * \date $Date: 2005/07/28 00:30:09 $
+ * \date $Date: 2005/08/17 01:09:01 $
  *
  * \version 0.1
  * 
@@ -21,8 +21,11 @@
 
 namespace USGSMosix {
 
+/*****************************************************************************/
+    
 ProjImageParams::ProjImageParams( std::string paramFilename, FileType ft )
-    : m_projection(NULL)
+    : m_paramFilename(paramFilename),
+      m_projection(NULL)
 {
     m_fileType = ft;
     std::ifstream in(paramFilename.c_str());
@@ -30,10 +33,63 @@ ProjImageParams::ProjImageParams( std::string paramFilename, FileType ft )
     in.close();
 }
 
+/*****************************************************************************/
+
 ProjImageParams::~ProjImageParams()
 {
-    //TODO if ( m_projection != NULL ) delete m_projection; 
+    // TODO: if ( m_projection != NULL ) delete m_projection; 
 }
+
+/*****************************************************************************/
+
+ProjImageParams::ProjImageParams( const ProjImageParams & params)
+    : SerializableInterface(), 
+      m_fileType( params.m_fileType ),
+      m_imageFilename( params.m_imageFilename ),
+      m_bounds( params.m_bounds ),
+      m_outHeight( params.m_outHeight ),
+      m_outWidth( params.m_outWidth ) 
+{
+    m_projection = params.m_projection->clone();    
+}
+
+/*****************************************************************************/
+
+ProjImageParams 
+ProjImageParams::createFromSocket( ClientSocket & socket )
+{
+    unsigned int len; 
+    char * msg = NULL;
+    FileType ft; 
+    
+    socket.receive( &len, sizeof(len) );
+    if ( len <= 0 ) 
+        msg = new char[len]; 
+    else
+        throw GeneralException("Error: Cannot make array of size less than 1");
+   
+    socket.receive( &msg, len );
+    socket.receive( &ft, sizeof(ft) );
+    
+    return ProjImageParams( std::string(msg), ft );
+            
+}
+
+/*****************************************************************************/
+
+void ProjImageParams::exportToSocket( ClientSocket & socket )const
+{
+    unsigned int len = m_imageFilename.length(); 
+    
+    socket.appendToBuffer( &len, sizeof(len) );
+    socket.appendToBuffer( m_paramFilename.c_str(), len );
+    socket.appendToBuffer( &m_fileType, sizeof(m_fileType) );
+    socket.sendFromBuffer();
+
+    return;
+}
+
+/*****************************************************************************/
 
 std::pair<long int, long int> ProjImageParams::getHeightWidthPair()
 {
@@ -44,6 +100,8 @@ std::pair<long int, long int> ProjImageParams::getHeightWidthPair()
     } else
         throw GeneralException("Error: no height width data for input params.");
 }
+
+/*****************************************************************************/
 
 istream& operator>>( istream& in, ProjImageParams& params )
 {
@@ -67,6 +125,8 @@ istream& operator>>( istream& in, ProjImageParams& params )
     return in;
     
 }
+
+/*****************************************************************************/
 
 ostream& operator<<( ostream& out, const ProjImageParams& params )
 {
@@ -97,6 +157,8 @@ ostream& operator<<( ostream& out, const ProjImageParams& params )
 
     return out;
 }
+
+/*****************************************************************************/
 
 Projection * ProjImageParams::constructProjection(istream& in)
 {
@@ -538,5 +600,6 @@ Projection * ProjImageParams::constructProjection(istream& in)
     return m_projection;
 }
 
+/*****************************************************************************/
 
 } // namespace USGSMosix

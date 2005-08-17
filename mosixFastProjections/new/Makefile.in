@@ -18,7 +18,7 @@
 # @file Makefile.am
 # @author Mark Schisler 
 #
-# $Id: Makefile.in,v 1.3 2005/08/17 01:09:01 mschisler Exp $
+# $Id: Makefile.in,v 1.4 2005/08/17 20:56:35 mschisler Exp $
 #
 
 # SUBDIRS = tests
@@ -94,6 +94,8 @@ CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(reproject_SOURCES)
 DIST_SOURCES = $(reproject_SOURCES)
 ETAGS = etags
@@ -185,7 +187,8 @@ reproject_SOURCES = ClientSocket.cpp ProjImageFactory.cpp \
 				   SlaveProjector.cpp ProjectorFactory.cpp \
 				   ProjImageOut.cpp  SocketWrapper.cpp \
 				   ProjImageParams.cpp \
-                   ProjImageData.cpp  ProjImageScale.cpp
+                   ProjImageData.cpp  ProjImageScale.cpp \
+				   ProjImageOutPiece.h
 
 AM_CPPFLAGS = -pg -g -Wno-deprecated -Wall -W -pedantic \
 -I/work/mosixFastProjections/include/Projector \

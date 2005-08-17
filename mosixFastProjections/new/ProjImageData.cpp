@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/17 20:56:34 $
  *
  * \version 0.1
  * 
@@ -40,10 +40,7 @@ ProjImageData::ProjImageData( DRect bounds,
 
 ProjImageData::~ProjImageData()
 {
-    if ( m_file != NULL )
-    {
-        delete m_file;
-    }
+    delete m_file;
 }
 
 /******************************************************************************/

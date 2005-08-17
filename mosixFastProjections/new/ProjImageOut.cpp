@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/17 20:56:35 $
  *
  * \version 0.1
  * 
@@ -178,7 +178,8 @@ void ProjImageOut::putScanline( scanline_t scanline,
 /****************************************************************************/
 
 void ProjImageOut::putScanlines( scanlines_t scanlines,
-                                 const unsigned int& height )
+                                 const unsigned int& beginLine,
+                                 const unsigned int& endLine )
 {
     using USGSImageLib::ImageOFile;
     
@@ -188,11 +189,11 @@ void ProjImageOut::putScanlines( scanlines_t scanlines,
         
         if ( file != NULL ) 
         {
-	        for( unsigned long int h = 0; h < height; ++h ) 
+	        for( unsigned long int h = beginLine; h <= endLine; ++h ) 
 	        {
 	            file->putRawScanline(h, scanlines[h]);
 	        }            
-            
+           
         } else 
             throw std::bad_cast();        
         
@@ -217,7 +218,7 @@ ProjImageOut ProjImageOut::createFromSocket( ClientSocket & socket )
     int photometric(0);
     int bps(0);           ///< bits per sample
     int spp(0);           ///< samples per pixel 
-    DRect bounds;      ///< bounding box for image
+    DRect bounds;         ///< bounding box for image
 
     socket.receive(&filenameLength, sizeof(filenameLength) );
     if ( filenameLength <= 0 ) 
@@ -231,10 +232,9 @@ ProjImageOut ProjImageOut::createFromSocket( ClientSocket & socket )
     socket.receive( &photometric, sizeof(photometric) );
     socket.receive( &spp, sizeof(spp) );
     socket.receive( &bounds, sizeof(bounds) );
-    
-    
-    return ProjImageOut( params,writer,filename,heightThenWidth,newScale,
-                         photometric, bps, spp, bounds ) ;
+ 
+    return ProjImageOut(params,writer,filename,heightThenWidth,newScale,
+                        photometric, bps, spp, bounds );
 }
 
 /****************************************************************************/
@@ -246,7 +246,7 @@ void ProjImageOut::exportToSocket( ClientSocket & socket )const
     const long unsigned int height(getHeight()), width(getWidth());
     const int photometric(getPhotometric()), spp(getSPP());
     const DRect bounds(getOuterBounds());
-    
+
     m_params.exportToSocket(socket);
     m_scale.exportToSocket(socket); 
     socket.appendToBuffer(&length,sizeof(length));
@@ -263,4 +263,15 @@ void ProjImageOut::exportToSocket( ClientSocket & socket )const
 
 /****************************************************************************/
 
+
+void ProjImageOut::putScanlines( const ProjImageOutPiece & piece )
+{
+    (void)piece;
+    // TODO
+    return;
 }
+
+/****************************************************************************/
+
+} // namespace 
+

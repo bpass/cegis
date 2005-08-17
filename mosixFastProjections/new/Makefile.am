@@ -3,7 +3,7 @@
 # @file Makefile.am
 # @author Mark Schisler 
 #
-# $Id: Makefile.am,v 1.2 2005/08/17 01:09:01 mschisler Exp $
+# $Id: Makefile.am,v 1.3 2005/08/17 20:56:35 mschisler Exp $
 #
 
 # SUBDIRS = tests
@@ -21,7 +21,8 @@ reproject_SOURCES =ClientSocket.cpp ProjImageFactory.cpp \
 				   SlaveProjector.cpp ProjectorFactory.cpp \
 				   ProjImageOut.cpp  SocketWrapper.cpp \
 				   ProjImageParams.cpp \
-                   ProjImageData.cpp  ProjImageScale.cpp
+                   ProjImageData.cpp  ProjImageScale.cpp \
+				   ProjImageOutPiece.h
                    # ProjProcessSpawner.cpp  ProjectorSplitter.cpp
 				    
 AM_CPPFLAGS = -pg -g -Wno-deprecated -Wall -W -pedantic \

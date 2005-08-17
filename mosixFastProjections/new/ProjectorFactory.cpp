@@ -5,7 +5,7 @@
  *
  * \file ProjectorFactory.h
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/17 20:57:02 $
  *
  * \version 0.1
  *
@@ -26,10 +26,10 @@ namespace USGSMosix {
 
 ProjectorFactory::~ProjectorFactory()
 {
-    for( std::list<ProjectorInterface *>::iterator i; 
+/*    for( std::list<ProjectorInterface *>::iterator i; 
          i != m_projectors.end();
          ++i )
-        delete *i;
+        delete *i; */
 }
     
 /******************************************************************************/

@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/17 20:56:34 $
  *
  * \version 0.1
  * 
@@ -59,16 +59,20 @@ class ProjImageOut : private virtual ProjImageData,
                                   const unsigned int& lineNo );
         
         virtual void putScanlines( scanlines_t scanlines,
-                                   const unsigned int& height ); 
+                                   const unsigned int& beginLine,
+                                   const unsigned int& endLine ); 
+
+        virtual void putScanlines( const ProjImageOutPiece & piece );
+
     private:
-        
+
         void setupImage( std::string filename,
                          std::pair<long int, long int> heightThenWidth,
                          const ProjImageScale & newscale,
                          int photometric,
                          int bps,
                          int spp );
-        
+       
         const ProjImageParams & m_params; 
         ProjIOLib::ProjectionWriter& m_writer;
         USGSImageLib::RGBPalette * m_pal;

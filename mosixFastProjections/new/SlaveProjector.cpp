@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/17 20:56:34 $
  *
  * \version 0.1
  * 
@@ -49,13 +49,12 @@ m_scanlines( NULL )
 /******************************************************************************/
 
 SlaveProjector::SlaveProjector( ProjectorInterface & interface,
-std::pair<unsigned long, unsigned long> scanlineRange,
-scanlines_t scanlines ) :
+std::pair<unsigned long, unsigned long> scanlineRange ) :
 
 m_projInterface( &interface ),
 m_scanlineRange( scanlineRange ),
 m_noScanlines( 0 ),
-m_scanlines( scanlines )
+m_scanlines( NULL )
    
 {
     ++m_id; 
@@ -133,11 +132,6 @@ void SlaveProjector::cleanupScanlines()
 void SlaveProjector::exportToSocket( ClientSocket & client ) const
 {
     static PROJECTORTYPE ty = SLAVEPROJ; /// from Globals.h
-    int spp = this->getProjImageOut()->getSPP();
-    unsigned long int width = this->getProjImageOut()->getWidth();
-    unsigned long int height = this->getProjImageOut()->getHeight();
-    unsigned char * blankscanline = NULL; 
-    bool bSendScanlines = false;
    
     // sync our immediate data members
     client.appendToBuffer(&ty, sizeof(ty));
@@ -148,28 +142,8 @@ void SlaveProjector::exportToSocket( ClientSocket & client ) const
 
     // sync interface members
     m_projInterface->exportToSocket(client); 
-  
-    // sync resulting scanlines if they are there.
-    bSendScanlines = (m_scanlines != NULL );
-    client.send(&bSendScanlines, sizeof(bSendScanlines));
-    
-    if ( bSendScanlines )
-    {
-        if ( !(blankscanline = new(std::nothrow) unsigned char[ width*spp ]))
-            throw GeneralException("Dynamic Alloc' failed.");
-            
-        for( unsigned long int h = 0; h < height; ++h )
-        {
-            if ( m_scanlines[h] != NULL ) 
-                client.appendToBuffer( m_scanlines[h], spp * width ); 
-            else
-                client.appendToBuffer( blankscanline, spp * width ); 
-        }
-        
-        client.sendFromBuffer();
-        delete[] blankscanline;
-    }
 
+    return;
 }
 
 /******************************************************************************/
@@ -179,10 +153,6 @@ SlaveProjector SlaveProjector::createFromSocket( ClientSocket & client )
     PROJECTORTYPE ty = UNKNOWN;
     std::pair<long unsigned int, long unsigned int> range(0,0);
     ProjectorInterface * interface = NULL;
-    bool bAcceptScanlines = false;
-    scanlines_t scanlines = NULL;
-    unsigned long int width(0), height(0);
-    int spp(0);
 
     // sync our immediate data members
     client.receive(&ty, sizeof(ty));
@@ -199,47 +169,11 @@ SlaveProjector SlaveProjector::createFromSocket( ClientSocket & client )
     if ( interface == NULL )
         throw GeneralException("Creation of projector failed.");
     
-    width = interface->getProjImageOut()->getWidth();
-    height = interface->getProjImageOut()->getHeight();
-    spp = interface->getProjImageOut()->getSPP();
-  
-    // sync resulting scanlines if they are there.
-    client.receive(&bAcceptScanlines, sizeof(bAcceptScanlines));
-    if ( bAcceptScanlines )
-    {
-        // allocate memory for scanlines
-        scanlines = allocScanlines (
-                    std::pair<unsigned long, unsigned long>(height,width),spp); 
-        
-        const unsigned int height = range.second - range.first;
-        for ( unsigned int i = 0; i < height; ++i )
-        {
-            client.receive(scanlines[i] ,spp * width ); 
-        }
-    }
-    
-    return SlaveProjector(*interface, range, scanlines );
+    return SlaveProjector(*interface, range );
 }
 
 /******************************************************************************/
 
-scanlines_t 
-SlaveProjector::allocScanlines(std::pair<unsigned long, unsigned long> hwPixels,
-                               int spp )
-{
-    scanlines_t scanlines;
-
-    if ( !(scanlines = new(std::nothrow) scanline_t[hwPixels.first] ) )
-        throw GeneralException("Dynamic Alloc' failed.");
-
-    for( unsigned int i = 0; i < hwPixels.first; ++i )
-    {
-        if ( !(scanlines[i] = new(std::nothrow) sample_t[hwPixels.second*spp]))
-            throw GeneralException("Dynamic Alloc' failed.");
-    }
-    
-    return scanlines;
-}
 
 
 } // namespace

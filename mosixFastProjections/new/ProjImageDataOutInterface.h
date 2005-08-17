@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/17 20:56:34 $
  *
  * \version 0.1
  * 
@@ -33,7 +33,8 @@ namespace USGSMosix
                                   const unsigned int& lineNo )   = 0;
 
         virtual void putScanlines( scanlines_t scanlines, 
-                                   const unsigned int& height )  = 0; 
+                                   const unsigned int& beginLine,
+                                   const unsigned int& endLine )  = 0; 
     };
 
 } // namespace 

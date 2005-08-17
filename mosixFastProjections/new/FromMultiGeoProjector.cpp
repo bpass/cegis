@@ -3,7 +3,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/17 20:56:35 $
  *
  * \version 0.1
  * 
@@ -182,7 +182,8 @@ void FromMultiGeoProjector::project()
         scanlines = project(0, m_imgOut->getHeight());
         
         // write out data to image
-        m_imgOut->putScanlines( scanlines, m_imgOut->getHeight() );
+        m_imgOut->putScanlines( scanlines, static_cast<unsigned int>(0), 
+                  static_cast<unsigned int>(m_imgOut->getHeight() - 1) );
                             
         // cleanup space for scanlines    
         for( int i = 0; i < m_imgOut->getHeight(); ++i ) 

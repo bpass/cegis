@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/17 20:56:35 $
  *
  * \version 0.1
  * 
@@ -21,7 +21,8 @@
  *
  */
 
-#include  "ProjImageDataOutInterface.h"
+#include "ProjImageDataOutInterface.h"
+#include "ProjImageOutPiece.h" 
 
 namespace USGSMosix 
 {
@@ -30,8 +31,11 @@ namespace USGSMosix
                                   public virtual SerializableInterface
     {
     public:
+        using ProjImageDataOutInterface::putScanlines;
+
         ProjImageOutInterface() {} 
         virtual ~ProjImageOutInterface() {} 
+        virtual void putScanlines( const ProjImageOutPiece & piece ) = 0;
     };
     
 } //namespace

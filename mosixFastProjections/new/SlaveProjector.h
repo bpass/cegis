@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/17 20:56:34 $
  *
  * \version 0.1
  * 
@@ -41,11 +41,9 @@ namespace USGSMosix
                         ProjImageOutInterface & imgOutInterface,
                         std::pair<unsigned long, unsigned long> scanlineRange ); 
         SlaveProjector( ProjectorInterface & interface, 
-                        std::pair<unsigned long, unsigned long> scanlineRange,
-                        scanlines_t scanlines );
+                        std::pair<unsigned long, unsigned long> scanlineRange );
         
         virtual ~SlaveProjector();
-    
         
         virtual const ProjLib::Projection * getOutputProjection()const;
         virtual bool setupOutput();
@@ -65,10 +63,6 @@ namespace USGSMosix
     private:
         void cleanupScanlines();
 
-        static scanlines_t 
-        allocScanlines( std::pair<unsigned long, unsigned long> hwPixels,
-                        int spp);
-        
         static ProjectorFactory m_projFactory;
         static long int m_id;  
         ProjectorInterface * m_projInterface;

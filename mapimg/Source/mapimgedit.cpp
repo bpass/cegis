@@ -1,4 +1,4 @@
-// $Id: mapimgedit.cpp,v 1.5 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: mapimgedit.cpp,v 1.6 2005/08/18 12:20:49 lwoodard Exp $
 
 
 #include "mapimgedit.h"
@@ -7,7 +7,6 @@
 #include <QEvent>
 #include <QLabel>
 #include <QMouseEvent>
-#include "mapimgimages.h"
 #include "mapimg.h"
 #include "rasterinfo.h"
 #include "mapimgvalidator.h"

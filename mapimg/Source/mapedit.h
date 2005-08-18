@@ -48,8 +48,6 @@ public:
 	friend void QInfoFrame::partnerChanged();
 	friend void QInfoFrame::setInfo( RasterInfo &input );
 	friend RasterInfo QInfoFrame::info();
-	friend bool mapimgForm::allowIgnoreValues() const;
-	friend QString mapimgForm::dataType() const;
 
 	void reset();
 	void setRO( bool ro );

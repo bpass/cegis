@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.7 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: resampleform.cpp,v 1.8 2005/08/18 17:49:18 rbuehler Exp $
 
 
 /****************************************************************************
@@ -107,7 +107,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
 	ignoreEdit = new QLineEdit( ignoreBox, "ignoreEdit" );
 	ignoreEdit->setMinimumSize( QSize( 125, 0 ) );
-	ignoreEdit->setValidator( new MapimgValidator( ((mapimgForm*)parent)->dataType(), ignoreEdit ) );
+	ignoreEdit->setValidator( new MapimgValidator( output.dataType(), ignoreEdit ) );
 	ignoreLayout->addWidget( ignoreEdit );
 
 	newButton = new QPushButton( ignoreBox, "newButton" );
@@ -127,7 +127,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 	ignoreBoxLayout->addWidget( ignoreListBox );
 	inputLayout->addWidget( ignoreBox );
 
-	if( !((mapimgForm*)parent)->allowIgnoreValues() )
+	if( !output.hasNoDataValue() )
 	{
 		ignoreLabel->show();
 

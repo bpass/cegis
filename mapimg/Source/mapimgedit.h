@@ -1,4 +1,4 @@
-// $Id: mapimgedit.h,v 1.5 2005/08/18 15:23:01 lwoodard Exp $
+// $Id: mapimgedit.h,v 1.6 2005/08/18 17:49:18 rbuehler Exp $
 
 #ifndef QINFOFRAME_H
 #define QINFOFRAME_H
@@ -44,9 +44,6 @@ class QInfoFrame : public QTabWidget
 public:
 	QInfoFrame( QWidget* parent = 0, const char* name = 0);
 	~QInfoFrame();
-
-	friend bool mapimgForm::allowIgnoreValues() const;
-	friend QString mapimgForm::dataType() const;
 
 	QSize sizeHint() const;
 

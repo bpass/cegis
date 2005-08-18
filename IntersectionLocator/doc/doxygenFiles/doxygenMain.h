@@ -1,6 +1,6 @@
 
 // CVS magic symbols for voodoo practitioners
-// $Id: doxygenMain.h,v 1.14 2005/08/16 02:04:34 ahartman Exp $
+// $Id: doxygenMain.h,v 1.15 2005/08/18 23:48:00 ahartman Exp $
 
 /** \mainpage IntersectionLocator
  *
@@ -29,14 +29,14 @@
  * 
  *
  * \section usage Usage
- * These pages will provide instructions for how to use the program, such as
- * how to build it or how to set up data to work with it. <BR><BR>
+ * The following pages provide instructions for how to use the program, such 
+ * as how to build it or how to set up data to work with it. <BR><BR>
  * \ref installation Instructions for building the program and supporting
  * libraries <BR>
  * \ref preparingForNewData Instructions for preparing for a new dataset <BR>
  * \ref overallProcess Explanation of the overall process <BR>
  * \ref printingInstructions In case you need to plot some maps<BR>
- * \ref relatedLinks Web pages that you might find helpful<BR><BR>
+ * \ref relatedLinks Web pages that you might find helpful<BR>
  * \section mainPageNotes Notes
  *
  * \subsection notesOutputInconsistencies Output Inconsistencies

@@ -1,0 +1,1132 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.61 [en] (Win98; U) [Netscape]">
+   <title>TARDEM, A suite of programs for the Analysis of Digital Elevation Data</title>
+</head>
+<body link="#0000FF">
+
+<h2>
+<b>TARDEM, A suite of programs for the Analysis of Digital Elevation Data</b></h2>
+David G. Tarboton&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+June 9, 1999
+<br>Utah State University
+<br>8200 Old Main Hill
+<br>Logan, UT 84322-8200
+<br>USA
+<br><a href="http://www.engineering.usu.edu/dtarb/" target="_top">http://www.engineering.usu.edu/dtarb/</a>
+<br>email:&nbsp; <a href="mailto:dtarb@cc.usu.edu">dtarb@cc.usu.edu</a>
+<ul>
+<li>
+<a href="#copy">Distribution and Copyright</a></li>
+
+<li>
+<a href="#quick">Quick Downloads</a></li>
+
+<li>
+<a href="#programs">The programs and what they do.</a></li>
+
+<li>
+<a href="#Background">Background on Working with Digital Elevation Models
+(DEM).</a></li>
+
+<li>
+<a href="#Data">Data formats and file naming conventions.</a></li>
+
+<li>
+<a href="#Installation">Installation and Setup.</a></li>
+
+<li>
+<a href="#executable">Windows 95/98/NT executable programs, tardem.zip.</a></li>
+
+<li>
+<a href="#Source">Source codes, tardemsource.zip.</a></li>
+
+<li>
+<a href="#History">History and Old Versions.</a></li>
+
+<li>
+<a href="#Acknowledgements">Acknowledgements</a></li>
+
+<li>
+<a href="#References">References.</a></li>
+</ul>
+
+<hr WIDTH="100%">
+<h3>
+<a NAME="copy"></a>Distribution and Copyright</h3>
+Copyright (C) 2000&nbsp; David Tarboton, Utah State University
+<p>This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License version 2, 1991 as
+published by the Free Software Foundation.
+<p>This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.&nbsp; See the GNU General Public License
+for more details.
+<p>A copy of the full GNU General Public License is included in file <a href="gpl.html">gpl.html</a>.
+This is also available at:
+<br><a href="http://www.gnu.org/copyleft/gpl.html">http://www.gnu.org/copyleft/gpl.html</a>
+<br>or from:
+<br>The Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+<br>Boston, MA&nbsp; 02111-1307, USA.
+<p>If you wish to use or incorporate this program (or parts of it) into
+other software that does not meet the GNU General Public License conditions
+contact the author to request permission.
+<br>David G. Tarboton
+<br>Utah State University
+<br>8200 Old Main Hill
+<br>Logan, UT 84322-8200
+<br>USA
+<br>http://www.engineering.usu.edu/dtarb/
+<br>email:&nbsp; dtarb@cc.usu.edu
+<hr WIDTH="100%">
+<h3>
+<a NAME="quick"></a>Quick Downloads</h3>
+
+<ul>
+<li>
+<b>Windows 95/98/NT executable programs, <a href="tardem/tardem.zip">tardem.zip</a></b></li>
+
+<li>
+<b>Source codes <a href="tardemsource.zip">tardemsource.zip</a></b></li>
+</ul>
+
+<hr WIDTH="100%">
+<h3>
+<a NAME="programs"></a>The programs and what they do</h3>
+These are task oriented command line programs that need to be run from
+a DOS prompt on a PC, or shell on UNIX.&nbsp; (The latest versions have
+not been compiled or tested for UNIX)&nbsp; The program can be run with
+all input on the command line, or if no input is given the programs will
+prompt for input or let you know the format of command line input required.&nbsp;
+Where grid file input is required the programs work with BOTH the ESRI
+binary grid format and ASCII export grid format.&nbsp; If you specify a
+file name in one or the other the code will detect which it is and open
+it appropriately.&nbsp; (The programs try the ESRI binary format first
+and if that fails assume the ASCII format.)&nbsp; TARDEM has no display
+capability.&nbsp; For this ArcView (or some other GIS or display package)
+needs to be used.&nbsp; ESRI binary grids can be added as theme's to a
+view once each program has completed.&nbsp; ASCII grids need to be imported
+then added as themes.
+<p>All programs take command line arguments.&nbsp; When run without a command
+line argument, they tell you what arguments they are expecting, or prompt
+for input.
+<p><b>Streamtogrid</b>
+<br>This takes as input an EPA style river reach file in 'shape file' format
+and a DEM grid, and outputs a grid of flow directions along the rivers
+to enforce drainage along delineated river channels.
+<p><b>Tdprepro</b>
+<br>A batch file that runs Flood, D8, Aread8 and Gridnet.&nbsp; This takes
+as input an elevation data grid and optionally a river flow enforcement
+direction grid.
+<p><b>Flood</b>
+<br>This takes as input an elevation data grid and outputs a grid file
+‘fel’ with pits filled, using the flooding algorithm.&nbsp; The river flow
+enforcement direction grid is an optional input, and if input, pits will
+be filled consistent with drainage along existing streams.
+<p><b>D8</b>
+<br>This takes as input pit filled elevation data file 'fel' and outputs
+D8 flow directions 'p' and slopes 'sd8' for each grid cell. The following
+coding is used for direction of flow from a pixel to ONE of its eight neighbors:
+<br>4 3 2
+<br>5&nbsp;&nbsp;&nbsp; 1
+<br>6 7 8
+<br>In flat areas flow directions are assigned away from higher ground
+and towards lower ground using the method of Garbrecht and Martz (1997).&nbsp;
+The river flow enforcement direction grid is an optional input, and if
+input, directions will be set consistent with drainage along existing streams.
+<p><b>Dinf</b>
+<br>The Dinf approach assigns a flow direction based on steepest slope
+on a triangular facet (Tarboton, 1997). This is saved as an angle ‘ang’
+in radians anti-clockwise from east. In flat areas the D8 flow directions
+are converted to angles and used.&nbsp; The river flow enforcement direction
+grid is an optional input, and if input, directions will be set consistent
+with drainage along existing streams.
+<p><b>Aread8</b>
+<br>This takes as input a D8 flow directions file ‘p’ and outputs the contributing
+area. Optional command line arguments for the outlet coordinate result
+in only the area contributing to the designated outlet being calculated.&nbsp;
+The result is the number of grid cells draining through each grid cell.
+<p><b>Areadinf</b>
+<br>This takes as input a Dinf angle file ‘ang’ and outputs the specific
+catchment area. Optional command line arguments for the outlet coordinate
+result in only the area contributing to the designated outlet being calculated.&nbsp;
+Specific catchment area is defined as contributing area per unit contour
+length.&nbsp; Here the contour length is taken as the grid cell size.&nbsp;
+The result has length units the same as grid cell size.
+<p><b>Gridnet</b>
+<br>This takes as input a D8 flow directions file 'p' and outputs three
+grid files:
+<br>'plen'&nbsp; Each grid cell contains the path length from the furthest
+cell that drains to each cell.
+<br>'tlen'&nbsp; Each grid cell contains the total length of all paths
+draining to each cell.
+<br>'gord'&nbsp; Each grid cell contains the Strahler order associated
+with that cell for a flow network defined using the D8 flow directions
+and including each grid cell.&nbsp; Strahler order is defined as follows.&nbsp;
+Cells that don't have any other grid cells draining in to them are order
+1.&nbsp; When two (or more) flow paths of different order join the order
+of the downstream flow path is the order of the highest incoming flow path.&nbsp;
+When two (or more) flow paths of equal order join the downstream flow path
+is increased by 1.&nbsp; Algorithmically this is implemented as:
+<br>Order = Max(Highest incoming flow path order, Second highest incoming
+flow path order + 1)
+<br>These outputs are used by netsetup in some of the options for mapping
+channel networks.
+<p><b>Netsetup</b>
+<br>This takes input from D8 flow directions and contributing area grids,
+the pit filled elevation grid and needed grids from 'plen', 'gord', 'sd8'
+depending upon the method used to map channel networks.&nbsp; Typical command
+line input is:
+<pre>netsetup file_name_prefix -m&nbsp; 4 .4 .1 .05 20 -xy outlet_x Outlet_y</pre>
+A method as well as outlet coordinates must be specified.&nbsp; I suggest
+identifing outlet coordinates using the identify tool within a View in
+ArcView.&nbsp; The methods available range from a specified contributing
+area threshold to the use of upward curved grid cells (e.g. Tarboton and
+Shankar, 1998) and grid network pruning by order (e.g. Peckham, 1995 as
+used in <a href="http://cires.colorado.edu/people/peckham.scott/RT.html" target="_top">RiverTools</a>).
+My current favorite method uses upward curved grid cells with the parameters
+above.&nbsp; If a constant support area threshold is used I recommend selecting
+it objectively using the methods of Tarboton et al. (1991, 1992).&nbsp;
+Output consists of two grids and two ascii files defining the channel network.&nbsp;
+The grid files are the 'src' file (essentially an intermediate file) containing
+the contributing area computed using only pixels that meet the channel
+network extraction threshold for the method being used, and the 'ord' file
+containing the Strahler stream order of grid cells on the channel network.&nbsp;
+The ASCII files are the 'tree.dat' file containing a list of links (channel
+segments) comprising the channel network, with connectivity and other information,
+and the 'coord.dat' containing the vector points along each channel segment.
+<p>&nbsp;The methods for defining channel networks are
+<p>1. Catchment area threshold A >= p[0].
+<br>2. Area-Slope threshold A S^p[1] >= p[0].
+<br>3. Length-Area threshold A >= p[0] L^p[1]. Here L is the maximum drainage
+length to each cell in the plen file.
+<br>4. Accumulation area of upward curved grid cells.&nbsp; The DEM is
+first smoothed by a kernel with value p[0] at its center, p[1] on its edges,
+and p[2] on diagonals.&nbsp; The Peuker and Douglas (1975) method is then
+used to identify upwards curved grid cells and contributing area computed
+using only these cells.&nbsp; A threshold, A<sub>uc</sub> >= p[3] on these
+cells is used to map the channel network.
+<br>5. Grid order threshold&nbsp; O >= p[0].
+<br>6. Use existing channel networks specified in a *fdrn file [fdrn file
+created from fdr file by flood.&nbsp; fdr file created from shape file
+by streamtogrid]
+<p><b>Arclinks</b>
+<br>This takes input from the 'tree.dat' and 'coord.dat' files that define
+a channel network and imports them into ArcView as a Vector feature file.&nbsp;
+The vector feature file has a single item for each link (stream segment
+between junctions). An intermediate *.e00 file is generated and the 'import71'
+program run.&nbsp; Attribute information is included with these files allowing
+stream properties to be identified.&nbsp; The program also allows a subnetwork,
+or network with different support area threshold to be imported through
+the specification of a link number (from the links field in the attribute
+table) using option -l and alternative support area threshold, using option
+-am.
+<p><b>Arcstreams</b>
+<br>This is similar to arclinks in that it takes input from the 'tree.dat'
+and 'coord.dat' files that define a channel network and imports them into
+ArcView as a Vector feature file.&nbsp; The vector feature file has a single
+item for each Strahler stream (a sequence of stream segments with the same
+Strahler order).&nbsp; An intermediate *.e00 file is generated and the
+'import71' program run.&nbsp; Attribute information is included with these
+files allowing stream properties to be identified.&nbsp; The program also
+allows a subnetwork, or network with different support area threshold to
+be imported through the specification of a link number (from the links
+field in the attribute table) using option -l and alternative support area
+threshold, using option -am.
+<p><b>Linkan</b>
+<br>Program to compute link properties associated with channel network.
+Input is 'coord.dat' and 'tree.dat' files&nbsp; Output is an ASCII file
+'li.dat' listing properties associated with each link.&nbsp; These results
+are used in the analysis to objectively determine a support area threshold
+to use to map channel networks following the procedure of Tarboton et al.
+(1991, 1992).
+<p><b>Streaman</b>
+<br>Program to compute Strahler stream properties. Input is 'coord.dat'
+and 'tree.dat' files.&nbsp; Output is an ASCII file 'st.dat' listing properties
+associated with each Strahler stream. These results are also used in the
+analysis to objectively determine a support area threshold to use to map
+channel networks following the procedure of Tarboton et al. (1991, 1992).
+<p><b>Asfgrid</b>
+<br>Program to tabulate the area and slope data for an area-slope analysis
+to objectively determine a support area threshold to use to map channel
+networks following the procedure of Tarboton et al. (1991, 1992).&nbsp;
+Input are the files 'sd8' and 'ad8' if D8 is being used and 'sca' and 'slp'
+if D<font face="Symbol">&yen;</font> is being used.&nbsp; Output is two
+ASCII text&nbsp; files suffixed by 'saraw.dat' containing each slope and
+area value, and 'sa.dat' containing the data binned into a specified bin
+size (default 100).&nbsp; The 'saraw.dat' file can be very large (15 MB
+for an 800 x 700 DEM) so be sure you have sufficient disk space before
+execution of this program.
+<p><b>Subbasinsetup</b>
+<br>Program to define subbasins draining to each link (stream segment)
+in a channel network controlled by the Strahler order threshold parameter
+given.&nbsp; Input is the flow directions 'p' grid and 'tree.dat' and 'coord.dat'
+files.&nbsp; Output is a grid (suffix 'w') that has a separate value for
+each subbasin over which parameter values can be averaged for distributed
+hydrologic modeling using these subbasins as model elements.&nbsp;&nbsp;
+Streams of order lower than the threshold given are stripped off the network
+before mapping resulting in a coarser watershed delineation.&nbsp;&nbsp;
+The output also includes two vector shape files, suffix '.shp' a stream
+network shape file and suffix 'w.shp' a shape file of subwatershed boundaries.&nbsp;
+In these shape files the 'wsno' (watershed number) identifier in '.shp'
+corresponds with the 'id' in 'w.shp' and is the same as the values in the
+'w' grid allowing database linking and cross referencing.
+<p><b>Hack</b>
+<br>Program to tabulate the contributing area and longest upstream path
+at the downstream end of each link in a channel network.&nbsp; Empirically
+the relationship between Area and mainstream length has been reported to
+be L= A^H where H is Hack's exponent around 0.55 to 0.6.&nbsp; This program
+allows this relationship to be tested.&nbsp; Input is the files defining
+the channel network, with suffixes 'tree.dat' and 'coord.dat' as well as
+grid file 'plen' that gives the longest flow path to each grid cell.&nbsp;
+Output is a table of contributing area and length.
+<br>
+<hr WIDTH="100%">
+<h3>
+<a NAME="Background"></a><b>Background on working with Digital Elevation
+Models</b></h3>
+The data storage structures available to digitally encode topography comprise:
+(1) Grid Digital Elevation Models (DEMs); (2) Triangular irregular networks
+(TINs); and (3) contour based storage structures. Grid DEMs consist of
+a matrix data structure with the topographic elevation of each pixel stored
+in a matrix node. TINs store the X-Y location as well as elevation at irregularly
+spaced nodes. Contour based data structures store vector data along contour
+lines. Grid DEMs are readily available and simple to use and hence have
+seen widespread application to the analysis of hydrologic problems. Slope,
+flow directions, and contributing area are the primary hydrologic quantities
+derived from DEMs. Other useful quantities are derived from these three.
+Here grid DEM are used due to their availability and simplicity. The grid
+DEM processing routines used are based upon methods described by O'Callaghan
+and Mark (1984), Marks et al. (1984), Band (1986), Jenson and Domingue
+(1988), Tarboton (1989, 1997) and Garbrecht and Martz (1997). The steps
+involved are: (1) Pit filling corrections, (2) Computation of slopes and
+flow directions; (3) Computation of contributing area and specific catchment
+area and (4) Channel network extraction and computation of other quantities.
+<p><b>Pit Filling Corrections</b>
+<p>Pits in digital elevation data are defined as grid elements or sets
+of grid elements surrounded by higher terrain that, in terms of the DEM,
+do not drain. These are rare in natural topography and generally assumed
+to be artifacts arising due to the discrete nature and data errors in the
+preparation of the DEM. They are eliminated here using a ‘flooding’ approach.
+This raises the elevation of each pit grid cell within the DEM to the elevation
+of the lowest pour point on the perimeter of the pit .
+<p><b>Slopes and Flow Directions</b>
+<p>Working with grid DEMs slope may be computed as the difference in elevation
+between two adjacent cells divided by the distance between them. In dealing
+with flow this is usually done in a forward downwards direction. The slope
+associated with a cell is the slope from the cell to a downslope neighbor.
+This makes sense because it is where water will go. Radiation computations
+sometimes use slope based upon central finite difference methods. The earliest
+and simplest method for specifying flow directions is to assign flow from
+each grid cell to one of its eight neighbors, either adjacent or diagonally,
+in the direction with steepest downward slope. This method, designated
+D8 (8 flow directions), was introduced by O'Callaghan and Mark (1984) and
+has been widely used. The D8 approach has disadvantages arising from the
+discretization of flow into only one of eight possible directions, separated
+by 45&deg; . These have motivated the development of other methods comprising
+multiple flow direction methods , random direction methods and grid flow
+tube methods . Tarboton (1997) discusses the relative merits of these.
+<p>In the D<font face="Symbol">&yen;</font> method, the flow direction
+angle measured counter clockwise from east is represented as a continuous
+quantity between 0 and 2<font face="Symbol">p</font>. This angle is determined
+as the direction of the steepest downward slope on the eight triangular
+facets formed in a 3 x 3 grid cell window centered on the grid cell of
+interest as illustrated in figure 1. A block-centered representation is
+used with each elevation value taken to represent the elevation of the
+center of the corresponding grid cell. Eight planar triangular facets are
+formed between each grid cell and its eight neighbors. Each of these has
+a downslope vector which when drawn outwards from the center may be at
+an angle that lies within or outside the 45<sup>o </sup>(<font face="Symbol">p</font>/4
+radian) angle range of the facet at the center point. If the slope vector
+angle is within the facet angle, it represents the steepest flow direction
+on that facet. If the slope vector angle is outside a facet, the steepest
+flow direction associated with that facet is taken along the steepest edge.
+The slope and flow direction associated with the grid cell is taken as
+the magnitude and direction of the steepest downslope vector from all eight
+facets. This is implemented using equations given in Tarboton (1997).
+<center>
+<p><img SRC="tardemfig.gif" height=325 width=416>
+<p><font size=+0>Figure 1</font>. Flow direction defined as steepest downward
+slope on planar triangular facets on a block centered grid.</center>
+
+<p>In the case where no slope vectors are positive (downslope), the flow
+direction is set using the method of Garbrecht and Martz (1997) for the
+determination of flow across flat areas. This makes flat areas drain away
+from high ground and towards low ground. The D<font face="Symbol">&yen;</font>method
+is preferred for the computation of flow directions on hillslopes where
+D8 grid bias is significant the the calculation of specific catchment area.
+D8 is still used for the definition of channel networks because we can
+not (have not yet learned to) work with channel networks that bifurcate
+in a downwards direction
+<p><b>Contributing Area</b>
+<p>Upslope area (counted in terms of the number of grid cells) is calculated
+for both single and multiple flow directions using a recursive procedure
+that is an extension of the very efficient recursive algorithm for single
+directions (Mark, 1988). The upslope area of each grid cell is taken as
+its own area (one) plus the area from upslope neighbors that have some
+fraction draining to it. The flow from each cell either all drains to one
+neighbor, if the angle falls along a cardinal (0, <font face="Symbol">p</font>/2,
+<font face="Symbol">p</font>,
+3<font face="Symbol">p</font>/2) or diagonal (<font face="Symbol">p</font>/4,
+3<font face="Symbol">p</font>/4, 5<font face="Symbol">p</font>/4, 7<font face="Symbol">p</font>/4)
+direction, or is on an angle falling between the direct angle to two adjacent
+neighbors. In the latter case the flow is proportioned between these two
+neighbor pixels according to how close the flow direction angle is to the
+direct angle to those pixels, as illustrated in Figure 1. Specific catchment
+area, a, is then upslope area per unit contour length, taken here as the
+number of cells times grid cell size (cell area divided by cell size).
+This assumes that grid cell size is the effective contour length, b, in
+the definition of specific catchment area and does not distinguish any
+difference in contour length dependent upon the flow direction.
+<p><b>Channel Networks</b>
+<p>When a map of contributing area is viewed using a threshold, the channel
+networks stand out as those cells with contributing area greater than a
+threshold of contributing area. It is an issue to decide the most appropriate
+threshold, or whether some other quantity such as slope should be part
+of the threshold. This is discussed at length in my research papers, Tarboton
+et al. (1991, 1992). One approach that has some theoretical justification
+is to look for a break in the plot of slope versus contributing area .
+Once a threshold has been established the channel network can be defined
+(mapped) as all those grid cells with contributing area greater than the
+threshold.
+<br>
+<hr WIDTH="100%">
+<h3>
+<a NAME="Data"></a>Data formats</h3>
+<b>Grid data</b>
+<br>The programs are written to directly access the ESRI binary grid format
+accessible through the gridio application programmers interface that is
+part of Spatial Analyst (version 1.0a or higher) with ArcView (version
+3.0a or higher).&nbsp; The programs can also access ASCII grid data files
+in the format used by ESRI for export of files from ArcView and Arc/Info.
+This comprises a few lines of header data followed by lists of cell values.
+The header data includes the following keywords and values:
+<ul>
+<li>
+ncols - number of columns in the data set.</li>
+
+<li>
+nrows - number of rows in the data set.</li>
+
+<li>
+xllcenter or xllcorner - x-coordinate of the center or lower-left corner
+of the lower-left cell.</li>
+
+<li>
+yllcenter or yllcorner - y-coordinate of the center or lower-left corner
+of the lower-left cell.</li>
+
+<li>
+cellsize - cell size for the data set.</li>
+
+<li>
+nodata_value - value in the file assigned to cells whose value is unknown.
+This keyword and value is optional. The nodata_value defaults to -9999.</li>
+</ul>
+For example,
+<pre>ncols 480
+nrows 450
+xllcorner 378923
+yllcorner 4072345
+cellsize 30
+nodata_value -32768
+43 3 45 7 3 56 2 5 23 65 34 6 32 etc
+35 45 65 34 2 6 78 4 38 44 89 3 2 7 etc
+etc</pre>
+The first row of data is at the top of the data set, moving from left to
+right. Cell values should be delimited by spaces. No carriage returns are
+necessary at the end of each row in the data set. The number of columns
+in the header is used to determine when a new row begins. The number of
+cell values must be equal to the number of rows times the number of columns.
+<br>&nbsp;
+<p><u>Grid naming convention.</u>
+<p>The following default naming convention is suggested and used by the
+programs with command line input.&nbsp; Any file names may be used with
+interactive input, but I suggest sticking to this convention to avoid confusion.&nbsp;
+File names are:
+<p>nnnnsss[.asc]
+<br>nnnn comprises the name of the dataset. Maximum length is operating
+system dependent.
+<br>sss comprises the suffix used to designate the data type as follows:
+<br>&nbsp;
+<table>
+<tr>
+<td VALIGN=TOP>no suffix.&nbsp;</td>
+
+<td VALIGN=TOP>Elevation data.</td>
+
+<td VALIGN=TOP></td>
+
+<td VALIGN=TOP></td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>fel</td>
+
+<td VALIGN=TOP>Pit filled elevation data.&nbsp;</td>
+
+<td VALIGN=TOP>produced by flood</td>
+
+<td VALIGN=TOP>input to D8, Dinf, netsetup</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>p</td>
+
+<td VALIGN=TOP>D8 drainage directions.&nbsp;</td>
+
+<td VALIGN=TOP>produced by D8</td>
+
+<td VALIGN=TOP>input to aread8</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>sd8</td>
+
+<td VALIGN=TOP>D8 slopes.&nbsp;</td>
+
+<td VALIGN=TOP>produced by D8&nbsp;</td>
+
+<td VALIGN=TOP>input to netsetup, some methods</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>ad8&nbsp;</td>
+
+<td VALIGN=TOP>D8 contributing area’s, units are number of grid cells.</td>
+
+<td VALIGN=TOP>produced by aread8</td>
+
+<td VALIGN=TOP>input to netsetup</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>slp</td>
+
+<td VALIGN=TOP>Dinf slopes.</td>
+
+<td VALIGN=TOP>produced by Dinf</td>
+
+<td VALIGN=TOP></td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>ang&nbsp;</td>
+
+<td VALIGN=TOP>Dinf flow directions.&nbsp;</td>
+
+<td VALIGN=TOP>produced by Dinf&nbsp;</td>
+
+<td VALIGN=TOP>input to areadinf</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>sca&nbsp;</td>
+
+<td VALIGN=TOP>Dinf contributing area’s, units are specific catchment area,
+i.e. number of grid cells times cell size.</td>
+
+<td VALIGN=TOP>produced by areadinf</td>
+
+<td VALIGN=TOP></td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>plen&nbsp;</td>
+
+<td VALIGN=TOP>Longest path length to each grid point along D8 directions.</td>
+
+<td VALIGN=TOP>produced by gridnet</td>
+
+<td VALIGN=TOP></td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>tlen&nbsp;</td>
+
+<td VALIGN=TOP>Total path length to each grid point along D8 directions.</td>
+
+<td VALIGN=TOP>produced by gridnet</td>
+
+<td VALIGN=TOP></td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>gord&nbsp;</td>
+
+<td VALIGN=TOP>Strahler order for grid network defined from D8 flow directions.&nbsp;</td>
+
+<td VALIGN=TOP>produced by gridnet</td>
+
+<td VALIGN=TOP></td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>src</td>
+
+<td VALIGN=TOP>Network mask based on channel source rules.&nbsp;</td>
+
+<td VALIGN=TOP>produced by netsetup</td>
+
+<td VALIGN=TOP></td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>ord&nbsp;</td>
+
+<td VALIGN=TOP>Grid with Strahler order for mapped stream network.&nbsp;</td>
+
+<td VALIGN=TOP>produced by netsetup</td>
+
+<td VALIGN=TOP></td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>w</td>
+
+<td VALIGN=TOP>Subbasins mapped using subbasinsetup.&nbsp;</td>
+
+<td VALIGN=TOP>produced by subbasinsetup</td>
+
+<td VALIGN=TOP></td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>fdr</td>
+
+<td VALIGN=TOP>Flow directions enforced to follow the existing stream network&nbsp;</td>
+
+<td VALIGN=TOP>produced by streamtogrid</td>
+
+<td VALIGN=TOP>optional input to flood</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>fdrn</td>
+
+<td VALIGN=TOP>Flow directions enforced to follow the existing stream network
+after cleaning to remove any loops&nbsp;</td>
+
+<td VALIGN=TOP>produced by flood</td>
+
+<td VALIGN=TOP>optional input to d8, dinf</td>
+</tr>
+</table>
+The .asc extension is used if the data is ASCII. Otherwise it is assumed
+to be ESRI’s proprietary grid format and accessed using the gridio library
+supplied with ArcView. Command line C programs are aware of this suffix
+convention so only need be given a command line argument of the form nnn[.asc].
+The suffix sss is appended automatically.&nbsp; DO NOT USE SUFFIXES ON
+PROGRAM COMMAND LINES.
+<p><b>Vector Data</b>
+<p>The following files are used to represent channel networks.
+<p><u>Network connectivity file, nnnntree.dat.</u>
+<br>This is essentially a list of links comprising a channel network. It
+is text with 7 columns as follows:
+<blockquote>1 LINK NUMBER
+<br>2 START POINT NUMBER IN COORD
+<br>3 END POINT NUMBER IN COORD
+<br>4 NEXT (DOWNSTREAM) LINK NUMBER IN CNET
+<br>5&amp;6 PREVIOUS (UPSTREAM) LINK NUMBERS IN CNET
+<br>7 STRAHLER ORDER OF LINK IN CNET</blockquote>
+In fortran programs this is generally stored in the array CNET. This file
+is produced by the program ‘netsetup’. The second and third columns refer
+to point coordinates, vectors along each link, from upstream to downstream,
+stored on the network coordinate, or ‘coord.dat’, file.
+<p><u>Network coordinate file, nnnncoord.dat.</u>
+<br>This is a list of coordinates defining the points along each channel
+link. It is text with 5 coulmns of data as follows:
+<blockquote>1 X COORDINATE (metres)
+<br>2 Y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "
+<br>3 DISTANCE ALONG CHANNELS TO GAUGE (metres or whateve units grid size
+is in)
+<br>4 ELEVATION (metres or whateve units the DEM is in)
+<br>5 CONTRIBUTING AREA (meter<sup>2</sup> or whatever units grid size
+is in)</blockquote>
+In fortran programs this is generally stored in the array COORD. This file
+is produced by the program ‘netsetup’. The coordinates are based on the
+coordinate system (and projection) implicit in the header bounding box
+information in the raster grid file. Coordinates are the centers of grid
+elements (pixels) corresponding to each channel network link. This file
+is only useful in conjunction with the ‘tree’ file which gives the start
+and end position (line or record) in this file of each channel network
+link.
+<p><u>Arc Export/Import ‘.e00’ file</u>.
+<br>This is an ASCII file that is my interpretation of the format used
+by Arc/Info and Arcview for vector export files. It is written by the programs
+‘arclinks’ and ‘arcstreams’ and can be read into Arcview using the IMPORT71
+utility. Then it is available as a ‘feature data source’ for viewing as
+a ‘theme’. There is an ‘arc’ for each link or Strahler stream that has
+various attributes.
+<p><u>Shape Files</u>
+<br>This is an open ESRI data format that stores vector data in DBF files.&nbsp;
+It is described in a <a href="http://gdal.velocet.ca/projects/shapelib/shapefile.pdf">white
+paper</a>.&nbsp; TARDEM reads EPA reach files in Shape file format to enforce
+flow directions to follow existing streams where desired.&nbsp; TARDEM
+also outputs the delineated channel network and reach subwatersheds in
+Shape file format.&nbsp; The header information in these files is designed
+to be self explanatory.
+<br>
+<hr WIDTH="100%">
+<h3>
+<a NAME="Installation"></a><b>Installation and Setup</b></h3>
+Compiled Windows 95/98/NT executable programs are distributed in a zip
+file.&nbsp; These should be extracted and placed in any convenient directory,
+e.g. c:\tardem\exec.&nbsp; To effectively use these programs this directory
+needs to be on the system search path.&nbsp; Since these programs use the
+ESRI gridio library this library also needs to be on the system search
+path.&nbsp; Both these requirements can be easily met by including the
+following line in the autoexec.bat file.
+<p>Windows 95/98
+<br>SET PATH=C:\WINDOWS;C:\WINDOWS\COMMAND;C:\DOS;C:\TARDEM\EXEC;C:\ESRI\AV_GIS30\ARCVIEW\BIN32
+<p>Windows NT
+<br>path=c:\tardem\exec;c:\esri\av_gis30\arcview\bin32
+<p>There may be other entries on your system depending on the software
+you have.&nbsp; You should leave them alone and only add the entries involving
+TARDEM and ARCVIEW.&nbsp; Once these changes have been made the system
+should be rebooted.&nbsp; <b><font color="#FF0000">Make sure there are
+no blanks or trailing blanks in these paths or it won't work.</font></b>
+<p><u>Test data.</u>
+<br>The enclosed file <a href="tardem/test.asc">test.asc</a> includes a
+small
+grid dataset that can be used to unsure you have things installed right.&nbsp;
+The following sequence of commands illustrates the use of the suite.
+<ol>
+<li>
+Start ArcView.&nbsp; Load Spatial Analyst extension.</li>
+
+<li>
+Import the data source (file 'test.asc') as an ASCII grid.&nbsp; Name the
+grid 'test'.</li>
+
+<li>
+Open a DOS prompt and navigate to the folder where you saved the imported
+ESRI grid.</li>
+
+<li>
+flood test</li>
+
+<li>
+d8 test</li>
+
+<li>
+dinf test</li>
+
+<li>
+aread8 test</li>
+
+<li>
+areadinf test</li>
+
+<li>
+gridnet test</li>
+
+<li>
+View the results by loading some of the layers created, particularly 'testsca',
+'testad8' and 'testgord'.</li>
+
+<li>
+Use the ArcView identify button to select the outlet of the subbasin to
+work with.&nbsp; With the test data a good one is x: 2439530&nbsp; y: 5857710</li>
+
+<li>
+netsetup test -m 4 .4 .1 .05 20 -xy 2439530&nbsp; 5857710</li>
+
+<li>
+arclinks test -i</li>
+
+<li>
+Add the feature theme testli to the View within ArcView to see the channel
+network mapped.</li>
+
+<li>
+subbasinsetup test 1</li>
+
+<li>
+Add the grid theme testw to the View within ArcView to see the subwatersheds
+mapped.</li>
+
+<li>
+Add the shape themes test.shp and testw.shp to the View within ArcView
+to see the subwatersheds mapped in vector form.</li>
+
+<li>
+Experiment with some of the other programs and look at datafiles.</li>
+</ol>
+The illustrative data given above is from the Grey River watershed on the
+west coast of the South Island of New Zealand, based on contours supplied
+by Land Information New Zealand.
+<br>
+<hr WIDTH="100%">
+<h3>
+<a NAME="Source"></a>Source Code, <a href="tardem/tardemsource.zip">tardemsource.zip</a>.</h3>
+These programs have all been compiled and tested under Microsoft Windows
+using the Microsoft Visual C++ (version 6.0) compiler and Digital Visual
+Fortran (version 6.0).&nbsp; Many (though not the latest) have also been
+compiled and tested under UNIX.&nbsp; For the latest release most of&nbsp;
+the code was switched to C++ from C and grouped into fewer files, with
+most of the substantial work in the file tardemlib.cpp.&nbsp; This was
+done to facilitate linkage into an OCX control for use with a Visual Basic
+program <a href="http://tmdl.org">TMDL toolkit</a>.&nbsp; There are functions
+in tardemlib.cpp that access Numerical Recipe, Fortran DLL and Shape library
+routines.&nbsp; The result is that (somewhat counter to my goal) compilation
+and linking is more complex, against requiring library functions that are
+not actually used for each program.&nbsp; I have grouped the files needed
+for compilation into library sets, and indicated which library set is required
+for each executable.&nbsp; The following table gives the library sets required
+for each program, followed by a table giving the files in each library
+set.
+<p><u>Link library sets required for each executable program.</u>
+<table BORDER BORDERCOLOR="#000000" >
+<tr>
+<td>Name</td>
+
+<td>Main</td>
+
+<td>Library Sets or files required for linking</td>
+</tr>
+
+<tr>
+<td>Aread8</td>
+
+<td>aread8.cpp</td>
+
+<td>Tardem</td>
+</tr>
+
+<tr>
+<td>Areadinf</td>
+
+<td>areadinf.cpp</td>
+
+<td>Tardem</td>
+</tr>
+
+<tr>
+<td>Arclinks</td>
+
+<td>arclinksmn.c</td>
+
+<td>arcls.f, gridio</td>
+</tr>
+
+<tr>
+<td>Arcstreams</td>
+
+<td>arcstreamsmn.c</td>
+
+<td>arcls.f, gridio</td>
+</tr>
+
+<tr>
+<td>Asfgrid</td>
+
+<td>aread8.cpp</td>
+
+<td>asfgrid.f, gridio</td>
+</tr>
+
+<tr>
+<td>D8</td>
+
+<td>d8.cpp</td>
+
+<td>Tardem</td>
+</tr>
+
+<tr>
+<td>Dinf</td>
+
+<td>dinf.cpp</td>
+
+<td>Tardem</td>
+</tr>
+
+<tr>
+<td>Flood</td>
+
+<td>floodmn.cpp</td>
+
+<td>Tardem</td>
+</tr>
+
+<tr>
+<td>Gridnet</td>
+
+<td>gridnet.cpp</td>
+
+<td>Tardem</td>
+</tr>
+
+<tr>
+<td>Hack</td>
+
+<td>hack.cpp</td>
+
+<td>Tardem</td>
+</tr>
+
+<tr>
+<td>Linkan</td>
+
+<td>linkanmn.cpp</td>
+
+<td>linkan.f, gridio</td>
+</tr>
+
+<tr>
+<td>Netsetup</td>
+
+<td>netsetupmn.cpp</td>
+
+<td>Tardem</td>
+</tr>
+
+<tr>
+<td>Streaman</td>
+
+<td>streamanmn.cpp</td>
+
+<td>streaman.f, gridio</td>
+</tr>
+
+<tr>
+<td>Streamtogrid</td>
+
+<td>streamtogrid.cpp</td>
+
+<td>shapetogrid, gridiocpp</td>
+</tr>
+
+<tr>
+<td>Subbasinsetup</td>
+
+<td>Subbasinsetupmn.cpp</td>
+
+<td>Tardem, wshedtopoly</td>
+</tr>
+</table>
+
+<p><u>Link library set files</u>
+<table BORDER BORDERCOLOR="#000000" >
+<tr>
+<td>Library set</td>
+
+<td>Files</td>
+</tr>
+
+<tr>
+<td>Tardem</td>
+
+<td>tardemlib.cpp, nrutil.cpp, feedback_print.cpp, avcalls_null.cpp, gridio.cpp,
+avgridio.lib<sup>1</sup>,cell.cpp, dbf.cpp, exception.cpp, field.cpp, point.cpp,
+shape.cpp, shapefile.cpp, shapemain.cpp, shp_point.cpp, shp_line.cpp, shp_polygon.cpp,
+asfgrid.f, streaman.f, tardemflib.f&nbsp;</td>
+</tr>
+
+<tr>
+<td>gridio</td>
+
+<td>gridio.c, avgridio.lib<sup>1</sup></td>
+</tr>
+
+<tr>
+<td>gridiocpp</td>
+
+<td>gridiocpp, avgridio.lib<sup>1</sup></td>
+</tr>
+
+<tr>
+<td>wshedtopoly</td>
+
+<td>areatree.cpp, boundbox.cpp, Fileheader.cpp, linklist.cpp, myshp.cpp,
+point1.cpp, polygon.cpp, polygonmap.cpp, polyline.cpp, shpopen.cpp, shputils.cpp,
+touchpoint.cpp</td>
+</tr>
+</table>
+1.&nbsp; Supplies as part of Spatial Analyst GRIDIO Package.&nbsp; For
+the standalone use, the file gridio_null.cpp may be substituted.&nbsp;
+The programs will then not work with ESRI grid files.
+<p>The <a href="tardemsource.zip">tardemsource.zip</a> file also contains
+the necessary directory structure and Visual Studio workspace to compile
+and link these programs on a Windows PC, with Microsoft Visual Studio and
+Digital/Compaq Visual Fortran.
+<br>
+<hr WIDTH="100%">
+<h3>
+<a NAME="History"></a>History and Old Versions</h3>
+<b>The current version is version 4</b>
+<p><u>Changes in version 4.</u> - released May 5, 2000.
+<ol>
+<li>
+Code restructures into C++.</li>
+
+<li>
+Addition of capability to follow existing streams input as shape files.</li>
+
+<li>
+Addition of capability to output shape files.</li>
+
+<li>
+Addition of options to aread8 and areadinf to use weight files and override
+edge contamination checks.</li>
+
+<li>
+Addition of hack program to output area and length data to determine the
+exponent in Hack's law.</li>
+
+<li>
+Distributed under GNU General public license.</li>
+</ol>
+<u>Changes in version 3.</u> (released June 9, 1999)
+<ol>
+<li>
+Consolidation of SOURCEDEF, NETEX, NETPROP into a single program NETSETUP.</li>
+
+<li>
+Addition of the programs GRIDNET, and SUBBASINSETUP.</li>
+
+<li>
+Revision of the interfaces of all programs to ( hopefully) make easier
+to use and better documented.</li>
+</ol>
+<b>Version 3 is still available</b>
+<br><a href="tardemv3.html">Version 3 documentation</a>.
+<br>Version 3 executables, <a href="tardemv3.zip">tardemv3.zip</a>.
+<br>Version 3 sources, <a href="tardemsourcev3.zip">tardemsourcev3.zip</a>.
+<h4>
+Version 2 is still available (at your peril).</h4>
+
+<ul>
+<li>
+<a href="ftp://fox.cee.usu.edu/pub/dtarb/demdir" target="_top">Directory
+with UNIX source and Make files</a></li>
+
+<li>
+Ftp&nbsp;<a="ftp://fox.cee.usu.edu/pub/dtarb/demexe" target="_top" >directory
+with executable programs (DOS/WINTEL). Download individually, or the zip
+file <a href=":/fox.cee.usu.edu/pub/dtarb/demexe/tardemexe.zip">tardem.zip</a>
+that contains all programs.</li>
+
+<li>
+<a href="ftp://fox.cee.usu.edu/pub/dtarb/demexamples" target="_top">Directory
+with examples and data.</a></li>
+
+<ul>
+<li>
+Example input files <a href="ftp://fox.cee.usu.edu/pub/dtarb/demexamples/netex.in" target="_top">netex.in</a>,
+<a href="ftp://fox.cee.usu.edu/pub/dtarb/demexamples/asf.in" target="_top">asf.in</a></li>
+
+<li>
+Example <a href="ftp://fox.cee.usu.edu/pub/dtarb/demexamples/example.f" target="_top">Fortran
+code</a> for working with DEM's.</li>
+
+<li>
+Example <a href="ftp://fox.cee.usu.edu/pub/dtarb/demexamples/cexample.c" target="_top">C
+code</a> for working with DEM's</li>
+
+<li>
+ASCII grid input and output functions, <a href="ftp://fox.cee.usu.edu/pub/dtarb/demexamples/qgio.f" target="_top">qgio.f</a>.</li>
+</ul>
+</ul>
+<u>Changes in Version 2</u>
+<ol>
+<li>
+Use of ArcView/ArcInfo grid file format.&nbsp; This works with ASCII files
+and direct access of Arc binary grid files using the ESRI application programmers
+interface.</li>
+
+<li>
+Edge contamination checking in contributing area computations.</li>
+
+<li>
+More channel network extraction programs.&nbsp; Channel networks can be
+extracted using a number of algorithms, such as Peuker Douglas curvature
+criterion, Slope and Area function, in addition to the constant support
+area threshold that was used earlier.&nbsp; Extracted channel networks
+can be saved in an Arc export format for ready import to ArcInfo or Arcview.</li>
+</ol>
+
+<h4>
+Version 1.</h4>
+The actual code used to generate results in Tarboton (1997).
+<ul>
+<li>
+<a href="ftp://fox.cee.usu.edu/pub/dtarb/distrib.tar" target="_top">Unix
+tar file</a></li>
+
+<br><a href="ftp://fox.cee.usu.edu/pub/dtarb/distrib" target="_top">Directory
+with UNIX source and Make files</a></ul>
+
+<h3>
+
+<hr WIDTH="100%"><a NAME="acknowledgements"></a>Acknowledgements</h3>
+These have been developed during the course of my research over the years
+with support from a variety of sponsors, whose support is gratefully acknowledged.
+Specific sponsors include:
+<br>1. Massachusetts Institute of Technology, research assistantship under
+Rafael Bras, for my Sc.D. research where this all got started. Some remnants
+of the code from this work still remain.
+<br>2. National Science Foundation grant EAR-9318977 for the development
+of the D<font face="Symbol">&yen; </font>approach <a href="#References">(Tarboton,
+D. G., 1997)</a>.
+<br>3. Forest Renewal of British Columbia, for the development of <a href="sinmap.htm">Terrain
+Stability Mapping methodology</a> and Arcview Implementation, in a collaborative
+project involving Canadian Forest Products Ltd., Vancouver, British Columbia,
+<a href="http://www.tclbc.com/" target="_top">Terratech
+Consulting Ltd</a>., British Columbia (Bob Pack), and Craig Goodwin.
+<br>4. National Science Foundation grant INT-9724720 and NIWA New Zealand
+for the work on <a href="http://www.engineering.usu.edu/cee/faculty/dtarb/agu98dem/" target="_top">methods
+for mapping and identification of flow methods from digital elevation data</a>.
+<br>5. Idaho National Engineering and Environmental Laboratory for work
+on the adaptation of these codes for use with the TMDL Toolkit, and integration
+of flow with existing channel networks.
+<hr WIDTH="100%"><a NAME="References"></a>
+<h3>
+References</h3>
+Band, L. E., (1986), "Topographic partition of watersheds with digital
+elevation models," Water Resources Research, 22(1): l5-24.
+<p>Garbrecht, J. and L. W. Martz, (1997), "The Assignment of Drainage Direction
+Over Flat Surfaces in Raster Digital Elevation Models," Journal of Hydrology,
+193: 204-213.
+<p>Jenson, S. K. and J. O. Domingue, (1988), "Extracting Topographic Structure
+from Digital Elevation Data for Geographic Information System Analysis,"
+Photogrammetric Engineering and Remote Sensing, 54(11): 1593-1600.
+<p>Mark, D. M., (1988), "Network models in geomorphology," Chapter 4 in
+Modelling in Geomorphological Systems, Edited by M. G. Anderson, John Wiley.,
+p.73-97.
+<p>Marks, D., J. Dozier and J. Frew, (1984), "Automated Basin Delineation
+From Digital Elevation Data," Geo. Processing, 2: 299-311.
+<p>O'Callaghan, J. F. and D. M. Mark, (1984), "The Extraction of Drainage
+Networks From Digital Elevation Data," Computer Vision, Graphics and Image
+Processing, 28: 328-344.
+<p>Peckham, S. D., (1995), "Self-Similarity in the Three-Dimensional Geometry
+and Dynamics of Large River Basins," PhD Thesis, Program in Geophysics,
+University of Colorado.
+<p>Peuker, T. K. and D. H. Douglas, (1975), "Detection of surface-specific
+points by local parallel processing of discrete terrain elevation data,"
+Comput. Graphics Image Process., 4: 375-387.
+<p>Tarboton, D. G., (1989), "The analysis of river basins and channel networks
+using digital terrain data," Sc.D. Thesis, M.I.T., Cambridge, MA, (Also
+available as Tarboton D. G., R. L. Bras and I. Rodriguez-Iturbe, (Same
+title), Technical report no 326, Ralph M. Parsons Laboratory for Water
+resources and Hydrodynamics, Department of Civil Engineering, M.I.T., September
+1989).
+<p>Tarboton, D. G., R. L. Bras and I. Rodriguez-Iturbe, (1991), "On the
+Extraction of Channel Networks from Digital Elevation Data," Hydrologic
+Processes, 5(1): 81-100.
+<p>Tarboton, D. G., R. L. Bras and I. Rodriguez-Iturbe, (1992), "A Physical
+Basis for Drainage Density," Geomorphology, 5(1/2): 59-76.
+<p><a href="dinf.pdf">Tarboton, D. G., (1997), "A New Method for the Determination
+of Flow Directions and Contributing Areas in Grid Digital Elevation Models,"
+Water Resources Research, 33(2): 309-319.</a>
+<p><a href="http://www.engineering.usu.edu/cee/faculty/dtarb/agu98dem/" target="_top">Tarboton,
+D. G. and U. Shankar, (1998), "The Identification and Mapping of Flow Networks
+from Digital Elevation Data," Invited Presentation at AGU Fall Meeting,
+San Francisco, December 6 to 10.</a>
+<br>&nbsp;
+<br>&nbsp;
+</body>
+</html>

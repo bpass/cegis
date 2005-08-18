@@ -1,0 +1,215 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "arclinks"=.\TARDEMCPP\arclinks\arclinks.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "arcstreams"=.\TARDEMCPP\arcstreams\arcstreams.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "aread8"=.\TARDEMCPP\aread8\aread8.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name fortcalls
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "areadinf"=.\TARDEMCPP\areadinf\areadinf.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name fortcalls
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "d8"=.\TARDEMCPP\d8\d8.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name fortcalls
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "dinf"=.\TARDEMCPP\dinf\dinf.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name fortcalls
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "flood"=.\TARDEMCPP\flood\flood.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name fortcalls
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "fortcalls"=".\TARDEMOCX Source\fortcalls\fortcalls.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "gridnet"=.\TARDEMCPP\gridnet\gridnet.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name fortcalls
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "hack"=.\TARDEMCPP\hack\hack.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name fortcalls
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "netsetup"=.\TARDEMCPP\netsetup\netsetup.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name fortcalls
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "streamtogrid"=.\TARDEMCPP\streamtogrid\streamtogrid.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "subbasinsetup"=.\TARDEMCPP\subbasinsetup\subbasinsetup.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name fortcalls
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "tardem"=".\TARDEMOCX Source\tardem.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name fortcalls
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

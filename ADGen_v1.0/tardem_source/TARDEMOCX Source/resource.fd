@@ -1,0 +1,11 @@
+!MS$FREEFORM
+! Microsoft Developer Studio generated include file.
+! Used by tardem.rc
+!
+      integer, parameter :: IDS_TARDEM                      = 1
+      integer, parameter :: IDD_ABOUTBOX_TARDEM             = 1
+      integer, parameter :: IDB_TARDEM                      = 1
+      integer, parameter :: IDI_ABOUTDLL                    = 1
+      integer, parameter :: IDS_TARDEM_PPG                  = 2
+      integer, parameter :: IDS_TARDEM_PPG_CAPTION          = 200
+      integer, parameter :: IDD_PROPPAGE_TARDEM             = 200

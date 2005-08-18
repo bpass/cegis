@@ -1,0 +1,87 @@
+// tardem.odl : type library source for ActiveX Control project.
+
+// This file will be processed by the Make Type Library (mktyplib) tool to
+// produce the type library (tardem.tlb) that will become a resource in
+// tardem.ocx.
+
+#include <olectl.h>
+#include <idispids.h>
+
+[ uuid(C0296102-ACE2-11D3-AD09-0050048D1D2C), version(1.0),
+  helpfile("tardem.hlp"),
+  helpstring("tardem ActiveX Control module"),
+  control ]
+library TARDEMLib
+{
+	importlib(STDOLE_TLB);
+	importlib(STDTYPE_TLB);
+
+	//  Primary dispatch interface for CTardemCtrl
+
+	[ uuid(C0296103-ACE2-11D3-AD09-0050048D1D2C),
+	  helpstring("Dispatch interface for Tardem Control"), hidden ]
+	dispinterface _DTardem
+	{
+		properties:
+			// NOTE - ClassWizard will maintain property information here.
+			//    Use extreme caution when editing this section.
+			//{{AFX_ODL_PROP(CTardemCtrl)
+			[id(1)] BSTR demfile;
+			//}}AFX_ODL_PROP
+
+		methods:
+			// NOTE - ClassWizard will maintain method information here.
+			//    Use extreme caution when editing this section.
+			//{{AFX_ODL_METHOD(CTardemCtrl)
+			[id(2)] BSTR Flood(short useflowFile);
+			[id(3)] BSTR D8( short useflowFile );
+			[id(4)] BSTR Dinf(short useflowFile);
+			[id(5)] BSTR AreaDinf(long outletX, long outletY, BSTR weightFile, boolean contamination);
+			[id(6)] BSTR Gridnet(long outletX, long outletY, BSTR maskFile, long threshold);
+			[id(7)] BSTR Arclinks(short link, double minArea);
+			[id(8)] BSTR Arcstreams(short link, double minArea);
+			[id(9)] BSTR SubbasinSetup(short order);
+			[id(10)] boolean MaxAreaCoords(long* x, long* y);
+			[id(11)] boolean BurnDown(BSTR flowDirectionFile, BSTR outFile);
+			[id(12)] BSTR AreaD8(long OutletX, long OutletY, BSTR weightFile, boolean contamination);
+			[id(13)] long OneOutlet(short index, boolean xtrueyfalse);
+			[id(14)] short ValidateOutlet(long x, long y);
+			[id(15)] short Outlets(short nmax, long method, float p1, float p2, float p3, float p4, short PotentialSourceThreshold, boolean Contamination);
+			[id(16)] BSTR Netsetup(long method, float p1, float p2, float p3, float p4, long OutletX, long OutletY, boolean contamination);
+			//}}AFX_ODL_METHOD
+
+			[id(DISPID_ABOUTBOX)] void AboutBox();
+	};
+
+	//  Event dispatch interface for CTardemCtrl
+
+	[ uuid(C0296104-ACE2-11D3-AD09-0050048D1D2C),
+	  helpstring("Event interface for Tardem Control") ]
+	dispinterface _DTardemEvents
+	{
+		properties:
+			//  Event interface has no properties
+
+		methods:
+			// NOTE - ClassWizard will maintain event information here.
+			//    Use extreme caution when editing this section.
+			//{{AFX_ODL_EVENT(CTardemCtrl)
+			[id(1)] void FloodProgress(short percentage);
+			[id(2)] void BurnEvent(short percent, short event_id, BSTR event_descrip);
+			//}}AFX_ODL_EVENT
+	};
+
+	//  Class information for CTardemCtrl
+
+	[ uuid(C0296105-ACE2-11D3-AD09-0050048D1D2C),
+	  helpstring("Tardem Control"), control ]
+	coclass Tardem
+	{
+		[default] dispinterface _DTardem;
+		[default, source] dispinterface _DTardemEvents;
+	};
+
+
+	//{{AFX_APPEND_ODL}}
+	//}}AFX_APPEND_ODL}}
+};

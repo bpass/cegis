@@ -1,0 +1,224 @@
+C
+C      PROGRAM TO ANALYSE LINKS OF CHANNEL NETWORK TREE STRUCTURE
+C       CREATED BY DAVID G TARBOTON
+C       THIS VERSION EXTRACTS NETWORK BASED ON MIN SUPPORT AREA
+C
+       subroutine LINKAN(coordfile,treefile,outfile,ilink,amin,err)
+	!DEC$ ATTRIBUTES DLLEXPORT::LINKAN
+       parameter(nlmax=50000,nc=500000)   !  remember to change subroutines
+       INTEGER CNET(0:nlmax,7),TREE(nlmax,5),SOURCE(nlmax),
+     & E(nlmax),F,FOUND,FOUNDT,err       
+       REAL COORD(0:nc,5)
+       CHARACTER*128 COORDFILE,TREEFILE,OUTFILE
+C  
+C     DATA STRUCTURE:
+C     ---------------
+C     COORD CONTAINS DIGITISED POINTS AS FOLLOWS:
+C     COORD(*,1) = X COORDINATE (metres)
+C       "    ,2    Y    "
+C       "    ,3    DISTANCE ALONG CHANNELS TO GAUGE (metres)
+C       "    ,4    ELEVATION (tenths of metres)          
+C       "    ,5    area M**2
+C                                                
+C     CNET CONTAINS LINKS AS STRINGS OF DIGITISED POINTS AS FOLLOWS:
+C     CNET(*,1) = LINK NUMBER                                       
+C       "   ,2    START POINT NUMBER IN COORD
+C       "   ,3    END POINT NUMBER IN COORD
+C       "   ,4    NEXT (DOWNSTREAM) LINK NUMBER IN CNET
+C       "   ,5&6  PREVIOUS (UPSTREAM) LINK NUMBERS IN CNET
+C       "   ,7    STRAHLER ORDER OF LINK IN CNET
+C
+C     TREE CONTAINS THE NETWORK AS BUILT UP DURING EXECUTION
+C     TREE(*,1) = LAST LINK NUMBER (POINTS TO CNET)
+C     TREE(*,2) = FIRST LINK NUMBER (POINTS TO CNET)
+C       "   ,3    NEXT (DOWNSTREAM) LINK (POINTS TO TREE)
+C       "   ,4&5  PREVIOUS (U.S.) LINKS (POINTS TO TREE) (0 WHEN NOT FULL)
+C
+C     SOURCE CONTAINS LINK NUMBERS (POINTS TO TREE) OF FIRST ORDER STREAMS
+C      STILL OPEN I.E. MAY BIFURCATE UPSTREAM AT HIGHER ELEVATION
+C 
+C     E CONTAINS ELEVATIONS CORRESPONDING TO MAGNITUDE (ELEVATION AT WHICH
+C       BIFURCATION TO THAT MAGNITUDE OCCURS WHEN WORKING UPWARDS)
+C
+c       OPEN(UNIT=9,FILE='netex.in',STATUS='OLD',readonly)
+c       READ(9,10)TREEFILE,COORDFILE,OUTFILE
+c 10    FORMAT(///////A80//A80/A80)
+         OPEN(UNIT=11,FILE=TREEFILE,STATUS='OLD',readonly)
+C---READ IN LINKS
+       DO N=0,nlmax
+         READ(11,*,END=333)(CNET(N,I),I=1,7)
+       ENDDO
+cc       WRITE(6,*)'TOO MANY LINKS'
+	 err=1
+	 close(11)
+	 return
+ 333   NL=N-1     
+         CLOSE(11)
+         OPEN(UNIT=10,FILE=COORDFILE,STATUS='OLD',readonly)
+C---READ IN COORDS AND ELEVATIONS
+       DO I=0,nc
+         READ(10,*,END=444)(COORD(I,J),J=1,5)
+       ENDDO
+cc       WRITE(6,*)'TOO MANY CO ORDS'
+	 err=2
+	 close(10)
+	 return 
+C--- GET MAX MAGNITUDE AND START LINK
+ 444   CONTINUE                   
+       close(10)
+         OPEN(UNIT=12,FILE=OUTFILE)
+C       WRITE(6,*)'INPUT MAGNITUDE AND START LINK'
+c       read(9,*)   ! skip lines
+c       read(9,*)
+c       READ(9,*)NMAX,ILINK,ISUP,APIX
+       nmax = nlmax/2-1
+c       READ(9,*)ILINK,ISUP,apix
+c       AMIN=ISUP*APIX
+C                                         
+C---INITIALISE        
+       N=1
+       NS=1             ! SOURCE SET POINTER
+       SOURCE(1)=1      ! SOURCE SET INITIALLY ROOT LINK
+       IT=1             ! TREE POINTER
+       DO J=1,2*NMAX-1          ! INITIALISE TREE ARRAY TO ZERO
+         DO K=1,5
+           TREE(J,K)=0
+         ENDDO
+       ENDDO
+       TREE(1,1)=ILINK           ! TREE INITIALLY ROOT LINK STARTS FROM
+       TREE(1,2)=ILINK           ! POSITION 1, VALUE ZERO INDICATES NO BRANCH
+       E(N)=COORD(CNET(TREE(1,1),3),5)
+       DO WHILE (NS.GT.0.AND.N.LE.NMAX)    ! SOURCE SET NOT EMPTY 
+C---SEARCH SOURCE SET FOR LINK WITH highest UPSTREAM area
+         F=1
+         DO J=2,NS
+           IF(COORD(CNET(TREE(SOURCE(J),2),2),5).GT.
+     &     COORD(CNET(TREE(SOURCE(F),2),2),5))F=J
+         ENDDO                 
+         FOUNDT=SOURCE(F)    ! LINK IN TREE         
+         FOUND=TREE(FOUNDT,2)! LINK IN CNET
+C---REMOVE THIS LINK FROM SOURCE
+         ELEV=COORD(CNET(FOUND,2),5)
+         CALL REMOVE(SOURCE,F,NS)
+	   if(err.ne.0) then
+		close(12)
+		return
+	   endif
+C---IF THERE ARE LINKS UPSTREAM OF F ADD THEM TO TREE AND SOURCE SET
+         IF(CNET(FOUND,5).GT.0)THEN
+          LINK1=CNET(FOUND,5)
+          ICRD1=MAX(CNET(LINK1,3)-1,CNET(LINK1,2))
+          AREA1=COORD(ICRD1,5)
+          LINK2=CNET(FOUND,6)
+          ICRD2=MAX(CNET(LINK2,3)-1,CNET(LINK2,2))
+          AREA2=COORD(ICRD2,5)
+          IF(AREA1.GE.AMIN.AND.AREA2.GE.AMIN)THEN
+C---ADD LINKS UPSTREAM OF FOUND TO TREE
+           IT=IT+1
+           CALL ADD(SOURCE,IT,NS)
+           TREE(IT,1)=CNET(FOUND,5)
+           TREE(IT,2)=CNET(FOUND,5)
+           TREE(IT,3)=FOUNDT
+           TREE(FOUNDT,4)=IT
+           IT=IT+1
+           CALL ADD(SOURCE,IT,NS)
+           TREE(IT,1)=CNET(FOUND,6)
+           TREE(IT,2)=CNET(FOUND,6)
+           TREE(IT,3)=FOUNDT
+           TREE(FOUNDT,5)=IT
+           N=N+1
+           E(N)=ELEV    
+          ELSE IF(AREA1.GE.AMIN)THEN
+           TREE(FOUNDT,2)=LINK1
+           CALL ADD(SOURCE,FOUNDT,NS)
+          ELSE IF(AREA2.GE.AMIN)THEN
+           TREE(FOUNDT,2)=LINK2
+           CALL ADD(SOURCE,FOUNDT,NS)
+          ENDIF
+         ENDIF
+       ENDDO          
+           CALL ANAL4(TREE,IT,COORD,CNET,N,ISUP,AMIN)
+cc       WRITE(6,*)'FINAL MAGNITUDE =',N
+       END   
+C
+C      SUBROUTINE TO ANALYSE TREE STRUCTURE
+C                                           
+      SUBROUTINE ANAL4(TREE,IT,COORD,CNET,N,ISUP,AMIN)
+      parameter(nlmax=50000,nc=500000)   !  remember to change subroutines
+      INTEGER CNET(0:nlmax,7),TREE(nlmax,5),GEN(nlmax),MAG(nlmax),
+     &IORD(nlmax)
+      REAL COORD(0:nc,5),HEIGHT,DELEV,LENGTH,
+     &GLEN,DAREA                               
+      LOGICAL DONE
+C    
+C    SCAN THROUGH TREE COMPUTING GENERATION, HEIGHT, LENGTH,
+C     GEOMETRIC LENGTH, DOWNSTREAM ELEVATION, AND MAGNITUDE OF EACH LINK
+C
+C---COMPUTE MAGNITUDE AND ORDER
+C
+C----INITIALISE
+      DO 3 I=1,IT
+        IORD(I)=0
+ 3      MAG(I)=0
+ 1    DONE=.TRUE.
+      DO 4 I=1,IT 
+       IF(MAG(I).EQ.0)THEN
+        IUP1=TREE(I,4)
+        IUP2=TREE(I,5)
+        IF(IUP1.EQ.0.AND.IUP2.EQ.0)THEN
+          MAG(I)=1
+          IORD(I)=1
+        ELSE IF(MAG(IUP1).GT.0.AND.MAG(IUP2).GT.0)THEN
+          MAG(I)=MAG(IUP1)+MAG(IUP2)
+          IOMAX=MAX(IORD(IUP1),IORD(IUP2))
+          IOMIN=MIN(IORD(IUP1),IORD(IUP2))
+          IORD(I)=MAX(IOMAX,IOMIN+1)
+        ELSE    ! PASS FOR NOW              
+          DONE=.FALSE.
+        ENDIF
+       ENDIF
+ 4    CONTINUE        
+      IF(.NOT.DONE)GO TO 1
+C--WRITE HEADERS
+      WRITE(12,144)ISUP,AMIN,TREE(1,1)
+ 144  FORMAT(1X,I5,E12.4,'  LINK DATA FROM LINK',I6/1X,'10'/
+     &1X,'LINK NO'/1X,'GENERATION'/1X,'LINK DROP'/1X,'LENGTH'/
+     &1X,'G. LENGTH'/1X,'ELEVATION'/1X,'STRAHLER ORDER'/1X,'MAGNITUDE'/
+     &1X,'AREA'/1X,'SLOPE')
+      DO 2 I=1,IT
+C---GENERATIONS
+        IF(I.EQ.1)THEN
+          GEN(I)=0
+        ELSE
+          GEN(I)=GEN(TREE(I,3))+1
+        ENDIF  
+C---HEIGHTS
+        LINKE=TREE(I,1)   ! END LINK NO IN CNET
+        LINKS=TREE(I,2)   ! START LINK NO IN CNET
+        IUP=CNET(LINKS,2) ! UPSTREAM POINT IN COORD
+C---SEARCH DOWN LINK FOR AREA .GE. AMIN
+ 10     IF(COORD(IUP,5).LT.AMIN)THEN
+          IUP=IUP+1
+          GO TO 10
+        ENDIF
+        ID=CNET(LINKE,3)  ! DOWNSTREAM PT IN COORD
+        HEIGHT=COORD(IUP,4)-COORD(ID,4)
+        LENGTH=COORD(IUP,3)-COORD(ID,3)
+        DX=COORD(IUP,1)-COORD(ID,1)
+        DY=COORD(IUP,2)-COORD(ID,2)
+        GLEN=SQRT(DX*DX+DY*DY)
+        DELEV=COORD(ID,4)
+C---OBTAIN AREA FROM PIXEL JUST BEFORE END OF LINK SINCE PIXEL AT END OF
+C    LINK ALSO CONTAINS AREA OF MERGING PIXELS
+C
+        IARP=MAX(IUP,ID-1)     
+        DAREA=COORD(IARP,5)   
+        SLOPE=HEIGHT/MAX(LENGTH,.0001)
+        RNO=LINKS+LINKE/100000.
+        WRITE(12,100)RNO,GEN(I),HEIGHT,LENGTH,GLEN,DELEV
+     &  ,IORD(I),MAG(I),DAREA,SLOPE
+ 100    FORMAT(1X,F12.5,I6,4F9.2,2I6,2E12.5)
+ 2    CONTINUE
+	close(12)
+      RETURN                         
+      END              

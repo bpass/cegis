@@ -1,33 +1,29 @@
-// $Id: mapimgedit.cpp,v 1.6 2005/08/18 12:20:49 lwoodard Exp $
+// $Id: mapimgedit.cpp,v 1.7 2005/08/18 15:23:01 lwoodard Exp $
 
-
-#include "mapimgedit.h"
-#include "qgctpbox.h"
-//Added by qt3to4:
-#include <QEvent>
-#include <QLabel>
-#include <QMouseEvent>
-#include "mapimg.h"
-#include "rasterinfo.h"
-#include "mapimgvalidator.h"
-#include "gctpnames.h"
-#include "mapimgpalette.h"
-#include "mapimgedit.h"	
-#include "mapedit.h"
-#include "projectionedit.h"
-
-#include <QValidator>
-#include <QMessageBox>
-#include <QTextStream>
-#include <QToolTip>
-#include <QCheckBox>
-#include <QVBoxLayout>
 #include <QBoxLayout>
+#include <QCheckBox>
+#include <QLabel>
 #include <QLayout>
+#include <QMessageBox>
+#include <QMouseEvent>
 #include <QSpinBox>
 #include <QScrollArea>
 #include <QSizePolicy>
 #include <Qt>
+#include <QTextStream>
+#include <QToolTip>
+#include <QValidator>
+#include <QVBoxLayout>
+
+#include "qgctpbox.h"
+#include "gctpnames.h"
+#include "mapedit.h"
+#include "mapimg.h"
+#include "mapimgpalette.h"
+#include "mapimgedit.h"	
+#include "mapimgvalidator.h"
+#include "projectionedit.h"
+#include "rasterinfo.h"
 
 const uint INFO_PRECISION = 6;
 
@@ -53,8 +49,8 @@ QInfoFrame::QInfoFrame( QWidget* parent, const char* name)
 
 	connect(mapTab, SIGNAL( copyButtonClicked() ), this, SLOT(copy()));
 	connect(gctpTab, SIGNAL( copyButtonClicked() ), this, SLOT(copy()));
-	connect(mapTab, SIGNAL( lockButtonClicked() ), this, SLOT(lock(bool)) );
-	connect(gctpTab, SIGNAL( lockButtonToggled() ), this, SLOT(lock(bool)) );
+	connect(mapTab->lockButton, SIGNAL(toggled(bool)), this, SLOT(lock(bool)) );
+	connect(gctpTab->lockButton, SIGNAL(toggled(bool)), this, SLOT(lock(bool)) );
 	connect(mapTab, SIGNAL( frameButtonClicked() ), this, SLOT(frame()));
 	connect(mapTab, SIGNAL( fillButtonClicked() ), this, SLOT(getFill()) );
 
@@ -265,14 +261,23 @@ whether they are locking or unlocking with the current click.
 */
 void QInfoFrame::lock( bool on, bool saveFile )
 {
-	if(locking)
-		return;
+	 if(locking)
+      return;
 
-	locking = true;
-	setReadOnly( on );
-
-	mapTab->lock( on );
-	gctpTab->lock( on );
+   locking = true;
+   setReadOnly( on );
+   if( on )
+   {
+	   mapTab->lockButton->setIcon( QIcon( "./Resources/locked.png" ) );
+	   gctpTab->lockButton->setIcon( QIcon( "./Resources/locked.png" ) );
+   }
+   else
+   {
+	   mapTab->lockButton->setIcon( QIcon( "./Resources/unlocked.png" ) );
+	   gctpTab->lockButton->setIcon( QIcon( "./Resources/unlocked.png" ) );
+   }
+   mapTab->lockButton->setOn( on );
+   gctpTab->lockButton->setOn( on );
 
 	locking = false;
 

@@ -1,32 +1,32 @@
-#include <QScrollArea>
-#include <QVBoxLayout>
-#include <QString>
-#include <QLineEdit>
-#include <QWidget>
-#include <QPushButton>
-#include <QSpinBox>
-#include <QComboBox>
 #include <QCheckBox>
+#include <QColor>
+#include <QColorGroup>
+#include <QComboBox>
 #include <QEvent>
 #include <QHBoxLayout>
+#include <QLineEdit>
+#include <QMessageBox>
 #include <QMouseEvent>
+#include <QPalette>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QSize>
 #include <QSizePolicy>
+#include <QSpinBox>
+#include <QString>
 #include <Qt>
 #include <QToolTip>
-#include <QColor>
-#include <QPalette>
-#include <QColorGroup>
-#include <QMessageBox>
-#include <QSize>
 #include <QTabWidget>
+#include <QVBoxLayout>
+#include <QWidget>
 
 const uint INFO_PRECISION = 6;
 
 #include "gctpnames.h"
-#include "mapimgpalette.h"
 #include "mapedit.h"
-#include "mapimgvalidator.h"
 #include "mapimgedit.h"	//QInfoFrame class
+#include "mapimgpalette.h"
+#include "mapimgvalidator.h"
 
 
 /*
@@ -307,22 +307,6 @@ void MapEdit::setAsOutput()
 	hasNoDataCheck->setDisabled( false );
 	hasNoDataCheck->setHidden( true );
 	hasNoDataCheck->setChecked( true );
-}
-
-/*
-The lock(bool) function is used for locking and unlocking mapTabs. The
-event that triggers this function is usually a click of the lockButton found
-in the mapTab. They are toggle buttons that emit
-whether they are locking or unlocking with the current click.
-*/
-void MapEdit::lock( bool on )
-{
-	if( on )
-		lockButton->setIcon( QIcon( "./Resources/locked.png" ) );
-	else
-		lockButton->setIcon( QIcon( "./Resources/unlocked.png" ) );
-		
-	lockButton->setOn( on );
 }
 
 /*

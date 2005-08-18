@@ -1,21 +1,20 @@
 #ifndef	MAPEDIT_H
 #define MAPEDIT_H
 
-#include <QScrollArea>
-#include <QVBoxLayout>
-#include <QString>
-#include <QLineEdit>
-#include <QWidget>
-#include <QPushButton>
-#include <QSpinBox>
-#include <QComboBox>
 #include <QCheckBox>
+#include <QComboBox>
 #include <QEvent>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QSpinBox>
+#include <QString>
+#include <QVBoxLayout>
+#include <QWidget>
 
 #include "mapimgedit.h"	//QInfoFrame class
-//#include "mapimgform.h"
 
 class RasterInfo;
 class mapimgForm;
@@ -40,8 +39,12 @@ class MapEdit : public QScrollArea
 public:
 	MapEdit( QWidget* parent = 0 );
 	~MapEdit();
+	
+		//Let be public due to conflicts
+	QPushButton *lockButton;
 
 	friend void QInfoFrame::copy( QInfoFrame *src );
+	friend void QInfoFrame::lock( bool on, bool saveFile );
 	friend void QInfoFrame::partnerChanged();
 	friend void QInfoFrame::setInfo( RasterInfo &input );
 	friend RasterInfo QInfoFrame::info();
@@ -52,7 +55,6 @@ public:
 	void setRO( bool ro );
 	void setAsInput();
 	void setAsOutput();
-	void lock( bool on );
 	void setFrameInfo( int rows, int cols, QString ul_X, QString ul_Y );
 	void getFill( QString fillString );
 
@@ -86,7 +88,6 @@ private:
 	//generateWidgets() titleBox objects
 	QHBoxLayout *titleBox;
 	QPushButton *copyButton;
-	QPushButton *lockButton;
 	QLabel		*mapLabel;
 	QPushButton *frameButton;
 

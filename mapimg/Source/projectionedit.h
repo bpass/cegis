@@ -1,14 +1,14 @@
 #ifndef PROJECTIONEDIT_H
 #define PROJECTIONEDIT_H
 
-#include <QScrollArea>
-#include <QPushButton>
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QComboBox>
-#include <QLabel>
 #include <QEvent>
+#include <QComboBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QVBoxLayout>
+#include <QWidget>
 
 #include "mapimgedit.h"	//QInfoFrame class
 
@@ -35,7 +35,11 @@ public:
 	ProjectionEdit( QWidget* parent = 0 );
 	~ProjectionEdit();
 
+		//Let be public to avoid conflicts with mapimgEdit (QInfoFrame)
+	QPushButton *lockButton;
+
 	friend void QInfoFrame::copy( QInfoFrame *src );
+	friend void QInfoFrame::lock( bool on, bool saveFile );
 	friend void QInfoFrame::setInfo( RasterInfo &input );
 	friend RasterInfo QInfoFrame::info();
 
@@ -43,7 +47,6 @@ public:
 	void setRO( bool ro );
 	void setAsInput();
 	void setAsOutput();
-	void lock( bool on );
 	void setFrameInfo( QString projName );
 
 signals:
@@ -69,7 +72,6 @@ private:
 	//generateWidgets() - titleBox
 	QHBoxLayout *titleBox;
 	QPushButton *copyButton;
-	QPushButton *lockButton;
 	QLabel		*gctpLabel;
 
 	//generateWidgets() - projBox

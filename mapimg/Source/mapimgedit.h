@@ -1,20 +1,16 @@
-// $Id: mapimgedit.h,v 1.4 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: mapimgedit.h,v 1.5 2005/08/18 15:23:01 lwoodard Exp $
 
 #ifndef QINFOFRAME_H
 #define QINFOFRAME_H
 
 // Qt classes used
-#include <QTabWidget>
-#include <QString>
-
-#include <QWidget>
-#include <QVBoxLayout>
-//Added by qt3to4:
 #include <QEvent>
+#include <QString>
+#include <QTabWidget>
+#include <QVBoxLayout>
+#include <QWidget>
 
 #include "mapimgform.h"
-//#include "mapedit.h"
-//#include "projectionedit.h"
 
 // My classes used
 class QDmsEdit;

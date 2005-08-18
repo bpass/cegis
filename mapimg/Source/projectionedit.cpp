@@ -1,30 +1,30 @@
-#include <QScrollArea>
-#include <QVBoxLayout>
-#include <QString>
-#include <QLineEdit>
-#include <QWidget>
-#include <QPushButton>
-#include <QSpinBox>
-#include <QComboBox>
 #include <QCheckBox>
+#include <QColor>
+#include <QColorGroup>
+#include <QComboBox>
 #include <QEvent>
 #include <QHBoxLayout>
+#include <QLineEdit>
 #include <QMouseEvent>
-#include <QSizePolicy>
-#include <Qt>
-#include <QToolTip>
-#include <QColor>
 #include <QPalette>
-#include <QColorGroup>
+#include <QPushButton>
+#include <QScrollArea>
 #include <QSize>
+#include <QSizePolicy>
+#include <QSpinBox>
+#include <QString>
+#include <Qt>
 #include <QTabWidget>
+#include <QToolTip>
+#include <QVBoxLayout>
+#include <QWidget>
 
 #include "gctpnames.h"
-#include "mapimgpalette.h"
-#include "projectionedit.h"
-#include "mapimgvalidator.h"
-#include "qgctpbox.h"
 #include "mapimgedit.h"	//QInfoFrame class
+#include "mapimgpalette.h"
+#include "mapimgvalidator.h"
+#include "projectionedit.h"
+#include "qgctpbox.h"
 
 /*
 The ProjectionEdit has one constructor. It executes in three stages.
@@ -155,22 +155,6 @@ void ProjectionEdit::setAsOutput()
 	p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
 	viewport()->setPalette( p );
 	viewport()->setEraseColor( QColor( 163, 146, 146 ) );//OUTPUT_COLOR 
-}
-
-/*
-The lock(bool) function is used for locking and unlocking mapTabs. The
-event that triggers this function is usually a click of the lockButton found
-in the mapTab. They are toggle buttons that emit
-whether they are locking or unlocking with the current click.
-*/
-void ProjectionEdit::lock( bool on )
-{
-	if( on )
-		lockButton->setIcon( QIcon( "./Resources/locked.png" ) );
-	else
-		lockButton->setIcon( QIcon( "./Resources/unlocked.png" ) );
-	
-	lockButton->setOn( on );
 }
 
 /*

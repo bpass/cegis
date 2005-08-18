@@ -1,6 +1,6 @@
-// $Id: qgctpbox.cpp,v 1.5 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: qgctpbox.cpp,v 1.6 2005/08/18 17:45:22 lwoodard Exp $
 
-
+#include <QFrame>
 #include <QToolTip>
 #include <QValidator>
 #include <QWidget>
@@ -21,8 +21,8 @@ QGctpBox::QGctpBox( QWidget* parent, const char* name )
 	QVBoxLayout *mainLayout = new QVBoxLayout( this );
 	mainLayout->setSizeConstraint( QLayout::SetNoConstraint );
 	setLayout( mainLayout );
-//   Q3Frame *line = new Q3Frame( this );
-//   line->setMinimumHeight( 5 );
+   QFrame *line = new QFrame( this );
+   line->setMinimumHeight( 5 );
    label = new QLabel( this, "label" );
    lineEdit = new QLineEdit( "0.000000", this, "lineEdit" );
    lineEdit->setValidator( new QDoubleValidator( 0.0, 1000000.0, 6, lineEdit ) );
@@ -31,7 +31,7 @@ QGctpBox::QGctpBox( QWidget* parent, const char* name )
    dmsEdit = new QDmsEdit( this, "dmsEdit" );
    dmsEdit->setValue( 0 );
 
-//   mainLayout->addWidget( line );
+   mainLayout->addWidget( line );
    mainLayout->addWidget( label );
    mainLayout->addWidget( lineEdit );
    mainLayout->addWidget( spinBox );

@@ -1,17 +1,15 @@
-// $Id: qdmsedit.cpp,v 1.4 2005/08/16 14:25:30 lwoodard Exp $
+// $Id: qdmsedit.cpp,v 1.5 2005/08/18 17:45:22 lwoodard Exp $
 
-
-#include "qdmsedit.h"
-//Added by qt3to4:
-#include <QLabel>
 #include <QFrame>
-#include <QWidget>
 #include <QHBoxLayout>
-
-#include "mapimgvalidator.h"
-
+#include <QLabel>
 #include <QRegexp>
 #include <QToolTip>
+#include <QWidget>
+
+#include "mapimgvalidator.h"
+#include "qdmsedit.h"
+
 
 QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction )
 : QWidget( parent, name)
@@ -26,36 +24,44 @@ QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction 
 
 	dmsLabel = new QLabel( this, "dmsLabel" );
 	dEdit = new QLineEdit( this, "dEdit" );
-	QHBoxLayout *dEditLayout = new QHBoxLayout( mainLayout );
-	dEditLayout->addWidget( dmsLabel );
-	dEditLayout->addWidget( dEdit );
+//	QHBoxLayout *dEditLayout = new QHBoxLayout( mainLayout );
+//	dEditLayout->addWidget( dmsLabel );
+//	dEditLayout->addWidget( dEdit );
+	mainLayout->addWidget( dmsLabel );
+	mainLayout->addWidget( dEdit );
 	dEdit->setMaximumSize( QSize( 40, 32767 ) );
 	dEdit->setAlignment( Qt::AlignRight );
 	dEdit->setFrame( false );
 
 	dLabel = new QLabel( this, "dLabel" );
 	mEdit = new QLineEdit( this, "mEdit" );
-	QHBoxLayout *mEditLayout = new QHBoxLayout( mainLayout );
-	mEditLayout->addWidget( dLabel );
-	mEditLayout->addWidget( dEdit );
+//	QHBoxLayout *mEditLayout = new QHBoxLayout( mainLayout );
+//	mEditLayout->addWidget( dLabel );
+//	mEditLayout->addWidget( dEdit );
+	mainLayout->addWidget( dLabel );
+	mainLayout->addWidget( dEdit );
 	mEdit->setMaximumSize( QSize( 30, 32767 ) );
 	mEdit->setAlignment( Qt::AlignRight );
 	mEdit->setFrame( false );
 
 	mLabel = new QLabel( this, "mLabel" );
 	sEdit = new QLineEdit( this, "sEdit" );
-	QHBoxLayout *sEditLayout = new QHBoxLayout( mainLayout );
-	sEditLayout->addWidget( mLabel );
-	sEditLayout->addWidget( sEdit );
+//	QHBoxLayout *sEditLayout = new QHBoxLayout( AlignRight );
+//	sEditLayout->addWidget( mLabel );
+//	sEditLayout->addWidget( sEdit );
+	mainLayout->addWidget( mLabel );
+	mainLayout->addWidget( sEdit );
 	sEdit->setMaximumSize( QSize( 80, 32767 ) );
 	sEdit->setAlignment( Qt::AlignRight );
 	sEdit->setFrame( false );
 
 	sLabel = new QLabel( this, "sLabel" );
 	directionLabel = new QLabel( this, "directionLabel" );
-	QHBoxLayout *directionLayout = new QHBoxLayout( mainLayout );
-	directionLayout->addWidget( sLabel );
-	directionLayout->addWidget( directionLabel );
+//	QHBoxLayout *directionLayout = new QHBoxLayout( mainLayout );
+//	directionLayout->addWidget( sLabel );
+//	directionLayout->addWidget( directionLabel );
+	mainLayout->addWidget( sLabel );
+	mainLayout->addWidget( directionLabel );
 
 	QFont labelFont = dmsLabel->font();
 	labelFont.setPointSize( 15 );

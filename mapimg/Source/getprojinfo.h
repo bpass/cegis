@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.4 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: getprojinfo.h,v 1.5 2005/08/19 20:43:56 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -93,6 +93,8 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
 
    // Initialize input & output space image & projections
    ioreturnval = imgIO.init_io(input, output, &inimg, &outimg, useType );
+   if( ioreturnval != 1 )
+      return false;
 
    void * mapimginbuf = imgIO.mapimginbuf;
    void * mapimgoutbuf = imgIO.mapimgoutbuf;
@@ -534,8 +536,10 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
    // if process was Aborted, output aborted message
    fclose( paramfile );
 
+   // If mapimgdial is false then don't display the completion message
+   // instead return true if the process wasn't canceled;
    if( mapimgdial == 0 )
-      return progress.wasCanceled();
+      return (!progress.wasCanceled());
 
    if(progress.wasCanceled())
    {

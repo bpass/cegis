@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.6 2005/08/18 17:49:18 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.7 2005/08/19 20:43:56 rbuehler Exp $
 //Last Edited: August 2005; by: lwoodard; for:qt3 to qt4 porting
 
 #include "mapimgform.h"
@@ -659,10 +659,12 @@ bool mapimgForm::previewProjection()
    }
 
    RasterInfo input( inInfoFrame->info() );
+   input.setAuthor("Unknown", "Unknown", "Unknown");
    if( !mapimg::readytoReproject(input, this) )
       return false;
 
    RasterInfo output( outInfoFrame->info() );
+   output.setAuthor("Unknown", "Unknown", "Unknown");
    output.setDataType( input.isSigned(), input.bitCount(), input.type() );
 
    if( !mapimg::readytoFrameIt( output, this ) )
@@ -674,6 +676,7 @@ bool mapimgForm::previewProjection()
 
    RasterInfo smallInput;
    smallInput.setFileName( QDir::currentDirPath().append("/temp_small.img") );
+   smallInput.setAuthor("Unknown", "Unknown", "Unknown");
    mapimg::downSampleImg( input, smallInput, 720, this );
    smallInput.save();
 
@@ -692,7 +695,7 @@ bool mapimgForm::previewProjection()
    resample.setFillValue( input.fillValue() );
    resample.setNoDataValue( input.noDataValue() );
 
-   return !mapimg::reproject( smallInput, output, resample );
+   return mapimg::reproject( smallInput, output, resample );
 }
 
 /*

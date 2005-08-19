@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.4 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: imgio.h,v 1.5 2005/08/19 20:43:56 rbuehler Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -94,6 +94,9 @@ public:
    {
       if( inputDataMap )
          delete inputDataMap;
+
+      cleanup_input();
+      cleanup_output();
    }
 
    int getMaxLineCount() const

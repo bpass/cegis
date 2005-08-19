@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.3 2005/08/16 12:57:20 lwoodard Exp $
+// $Id: rasterinfo.cpp,v 1.4 2005/08/19 20:43:56 rbuehler Exp $
 
 
 #include "rasterinfo.h"
@@ -51,6 +51,20 @@ bool RasterInfo::setFileName( QString &imgFileName )
    fileName = imgFileName;
 
    return parseFileName();
+}
+
+QString RasterInfo::imgFileName() const
+{
+   if( fileName.isEmpty() )
+      return QString();
+   return fileName + ".img";
+}
+
+QString RasterInfo::xmlFileName() const
+{
+   if( fileName.isEmpty() )
+      return QString();
+   return fileName + ".xml";
 }
 
 bool RasterInfo::setAuthor( const QString &name, const QString &company, const QString &email )

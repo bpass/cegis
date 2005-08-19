@@ -1,4 +1,4 @@
-// $Id: rasterinfo.h,v 1.2 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: rasterinfo.h,v 1.3 2005/08/19 20:43:56 rbuehler Exp $
 
 
 #ifndef RASTERINFO_H
@@ -17,8 +17,8 @@ public:
 
    //Files
    bool setFileName( QString &imgFileName );
-   QString imgFileName() const {return fileName + ".img";}
-   QString xmlFileName() const {return fileName + ".xml";}
+   QString imgFileName() const;// {return fileName + ".img";}
+   QString xmlFileName() const;// {return fileName + ".xml";}
 
    //Author
    bool setAuthor( const QString &name, const QString &company, const QString &email );

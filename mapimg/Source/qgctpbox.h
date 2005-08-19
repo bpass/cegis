@@ -1,4 +1,4 @@
-// $Id: qgctpbox.h,v 1.4 2005/08/16 14:25:30 lwoodard Exp $
+// $Id: qgctpbox.h,v 1.5 2005/08/19 12:29:39 lwoodard Exp $
 
 
 #ifndef QGCTPBOX_H
@@ -27,6 +27,7 @@ public:
 
    double value();
    void setValue( const double );
+
 
 public slots:
    void setDisabled( bool disable );

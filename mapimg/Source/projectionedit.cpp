@@ -99,14 +99,6 @@ void ProjectionEdit::reset()
 		gctpBoxes[i]->setValue( 0 );
 }
 
-/*This slot fixes the width of the contents frame.  It is important because 
-it keeps the frames consistent and it is used for other things*/
-/*void ProjectionEdit::fixWidth( uint w )
-{
-	contents->setMinimumWidth( w - 24 );
-	contents->setMaximumWidth( w - 24 );
-}*/
-
 /*
 This function is mainly used by the lock(bool) function to restrict or
 allow all access to the parameters found in a ProjectionEdit
@@ -180,13 +172,13 @@ void ProjectionEdit::appearanceSetup()
 }
 
 void ProjectionEdit::generateWidgets()
-{
+{ 
 	////////STAGE 2: Generate Widgets
    //
 	mainLayout = new QVBoxLayout( contents );
 	mainLayout->setAlignment( Qt::AlignTop );
 	mainLayout->setMargin( 5 );		
-
+	
    //titleBox - Contains function buttons and the title of the Tab
    titleBox = new QHBoxLayout( mainLayout );
   

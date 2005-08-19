@@ -1,15 +1,14 @@
-// $Id: qgctpbox.cpp,v 1.6 2005/08/18 17:45:22 lwoodard Exp $
+// $Id: qgctpbox.cpp,v 1.7 2005/08/19 12:29:39 lwoodard Exp $
 
 #include <QFrame>
+#include <QLabel>
 #include <QToolTip>
+#include <QVBoxLayout>
 #include <QValidator>
 #include <QWidget>
 
 #include "qgctpbox.h"
 #include "qdmsedit.h"
-//Added by qt3to4:
-#include <QLabel>
-#include <QVBoxLayout>
 
 const uint INFO_PRECISION = 6;
 
@@ -19,10 +18,8 @@ QGctpBox::QGctpBox( QWidget* parent, const char* name )
 : QWidget( parent, name )
 {
 	QVBoxLayout *mainLayout = new QVBoxLayout( this );
-	mainLayout->setSizeConstraint( QLayout::SetNoConstraint );
 	setLayout( mainLayout );
-   QFrame *line = new QFrame( this );
-   line->setMinimumHeight( 5 );
+
    label = new QLabel( this, "label" );
    lineEdit = new QLineEdit( "0.000000", this, "lineEdit" );
    lineEdit->setValidator( new QDoubleValidator( 0.0, 1000000.0, 6, lineEdit ) );
@@ -31,7 +28,6 @@ QGctpBox::QGctpBox( QWidget* parent, const char* name )
    dmsEdit = new QDmsEdit( this, "dmsEdit" );
    dmsEdit->setValue( 0 );
 
-   mainLayout->addWidget( line );
    mainLayout->addWidget( label );
    mainLayout->addWidget( lineEdit );
    mainLayout->addWidget( spinBox );
@@ -81,6 +77,7 @@ void QGctpBox::setValue( const double val )
    else if( activeEdit == lineEdit )
       lineEdit->setText( QString::number( val, 'f', 12 ) );
 }
+
 
 void QGctpBox::setDisabled( bool disabled )
 {

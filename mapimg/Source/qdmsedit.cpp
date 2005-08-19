@@ -1,4 +1,4 @@
-// $Id: qdmsedit.cpp,v 1.5 2005/08/18 17:45:22 lwoodard Exp $
+// $Id: qdmsedit.cpp,v 1.6 2005/08/19 12:29:39 lwoodard Exp $
 
 #include <QFrame>
 #include <QHBoxLayout>
@@ -19,48 +19,39 @@ QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction 
 //	setFrameStyle( QFrame::LineEditPanel | QFrame::Sunken );
 //	setLineWidth( 2 );
 	mainLayout->setMargin( 0 );
-	layout()->setMargin( 2 );
+	layout()->setMargin( 0 );		//was value 2
 	setMaximumHeight( 20 );
 
 	dmsLabel = new QLabel( this, "dmsLabel" );
 	dEdit = new QLineEdit( this, "dEdit" );
-//	QHBoxLayout *dEditLayout = new QHBoxLayout( mainLayout );
-//	dEditLayout->addWidget( dmsLabel );
-//	dEditLayout->addWidget( dEdit );
-	mainLayout->addWidget( dmsLabel );
-	mainLayout->addWidget( dEdit );
 	dEdit->setMaximumSize( QSize( 40, 32767 ) );
 	dEdit->setAlignment( Qt::AlignRight );
-	dEdit->setFrame( false );
-
+//	dEdit->setFrame( false );		Until can figure how to make entire line sunken
 	dLabel = new QLabel( this, "dLabel" );
 	mEdit = new QLineEdit( this, "mEdit" );
-//	QHBoxLayout *mEditLayout = new QHBoxLayout( mainLayout );
-//	mEditLayout->addWidget( dLabel );
-//	mEditLayout->addWidget( dEdit );
-	mainLayout->addWidget( dLabel );
-	mainLayout->addWidget( dEdit );
 	mEdit->setMaximumSize( QSize( 30, 32767 ) );
 	mEdit->setAlignment( Qt::AlignRight );
-	mEdit->setFrame( false );
-
+//	mEdit->setFrame( false );		Until can figure how to make entire line sunken
 	mLabel = new QLabel( this, "mLabel" );
 	sEdit = new QLineEdit( this, "sEdit" );
-//	QHBoxLayout *sEditLayout = new QHBoxLayout( AlignRight );
-//	sEditLayout->addWidget( mLabel );
-//	sEditLayout->addWidget( sEdit );
-	mainLayout->addWidget( mLabel );
-	mainLayout->addWidget( sEdit );
 	sEdit->setMaximumSize( QSize( 80, 32767 ) );
 	sEdit->setAlignment( Qt::AlignRight );
-	sEdit->setFrame( false );
-
+//	sEdit->setFrame( false );		Until can figure how to make entire line sunken
 	sLabel = new QLabel( this, "sLabel" );
 	directionLabel = new QLabel( this, "directionLabel" );
-//	QHBoxLayout *directionLayout = new QHBoxLayout( mainLayout );
-//	directionLayout->addWidget( sLabel );
-//	directionLayout->addWidget( directionLabel );
-	mainLayout->addWidget( sLabel );
+
+	/*Setting the widgets to layouts and adding to mainLayout to force 
+	them to line up properly*/
+	mainLayout->addWidget( dmsLabel );
+	QHBoxLayout *degreeLayout = new QHBoxLayout(mainLayout);
+	degreeLayout->addWidget( dEdit );
+	degreeLayout->addWidget( dLabel );
+	QHBoxLayout *minuteLayout = new QHBoxLayout( mainLayout );
+	minuteLayout->addWidget( mEdit );
+	minuteLayout->addWidget( mLabel );
+	QHBoxLayout *secondLayout = new QHBoxLayout( mainLayout );
+	secondLayout->addWidget( sEdit );
+	secondLayout->addWidget( sLabel );
 	mainLayout->addWidget( directionLabel );
 
 	QFont labelFont = dmsLabel->font();

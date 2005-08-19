@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.7 2005/08/16 14:25:30 lwoodard Exp $
+// $Id: resampleform.h,v 1.8 2005/08/19 18:19:41 lwoodard Exp $
 
 
 /****************************************************************************
@@ -50,6 +50,7 @@ public:
 	ResampleInfo info();
 	IgnoreList &ignoreList(){return ilist;}
 	bool wasCanceled(){return canceled;}
+
 
 protected:
 	QGroupBox* resampleBox;		

@@ -1,4 +1,4 @@
-// $Id: qimgframe.cpp,v 1.3 2005/08/16 14:25:30 lwoodard Exp $
+// $Id: qimgframe.cpp,v 1.4 2005/08/19 18:19:41 lwoodard Exp $
 
 
 #include "qimgframe.h"
@@ -75,7 +75,7 @@ void QImgFrame::resample()
 void QImgFrame::resizeEvent( QResizeEvent * )
 {
    QSize newS(pixmapLabel->pixmap()->size());
-   newS.scale(contentsRect().size(), Qt::KeepAspectRatio/*QSize::ScaleMin*/);
+   newS.scale(contentsRect().size(), Qt::KeepAspectRatio);
    QRect newG(QPoint(0,0), newS);
    newG.moveCenter(contentsRect().center());
    pixmapLabel->setGeometry(newG);

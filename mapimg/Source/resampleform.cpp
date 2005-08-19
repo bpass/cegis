@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.8 2005/08/18 17:49:18 rbuehler Exp $
+// $Id: resampleform.cpp,v 1.9 2005/08/19 18:19:41 lwoodard Exp $
 
 
 /****************************************************************************
@@ -8,36 +8,33 @@
 **      by: The User Interface Compiler (Id: qt/main.cpp   3.3.3   edited Nov 24 2003)
 ****************************************************************************/
 
-#include "resampleform.h"
-
-#include <QVariant>
-#include <QPushButton>
-#include <QGroupBox>
 #include <QComboBox>
+#include <QEvent>
+#include <QGroupBox>
+#include <QHBoxLayout>
+#include <QKeyEvent>
 #include <QLabel>
-#include <QRadioButton>
+#include <QLayout>
 #include <QLineEdit>
 #include <QList>
 #include <QListWidget>
-#include <QLayout>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QSlider>
+#include <Qt>
 #include <QToolTip>
 #include <QWhatsThis>
-#include <QEvent>
-#include <QValidator>
-#include <QMessageBox>
-#include <QSlider>
-
-//Added by qt3to4:
-#include <QKeyEvent>
-#include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <Qt>
+#include <QValidator>
+#include <QVariant>
 
-#include "mapimgform.h"
-#include "mapimgvalidator.h"
-#include "mapimgpalette.h"
-#include "rasterinfo.h"
 #include "imgio.h"
+#include "mapimgform.h"
+#include "mapimgpalette.h"
+#include "mapimgvalidator.h"
+#include "rasterinfo.h"
+#include "resampleform.h"
 
 /*
 *  Constructs a ResampleForm as a child of 'parent', with the
@@ -49,6 +46,9 @@
 ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent, const char* name, bool modal, Qt::WFlags fl )
 : QDialog( parent, name, modal, fl )
 {
+	//Keeps it from overly expanding since over riding sizeHint didn't work
+	setMaximumSize( 152, 150 );	
+
 	if ( !name )
 		setName( "ResampleForm" );
 
@@ -60,11 +60,10 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
 	inputLayout = new QVBoxLayout( 0, 0, 6, "inputLayout"); 
 
-	resampleBox = new QGroupBox( this, "resampleBox" );		
-	//   resampleBox->setColumnLayout(0, Qt::Vertical );
-	resampleBox->layout()->setSpacing( 6 );
-	resampleBox->layout()->setMargin( 11 );
-	resampleBoxLayout = new QVBoxLayout( resampleBox->layout() );
+	resampleBox = new QGroupBox( this, "resampleBox" );	
+	resampleBoxLayout = new QVBoxLayout( resampleBox );
+	resampleBoxLayout->setSpacing( 6 );
+	resampleBoxLayout->setMargin( 11 );
 	resampleBoxLayout->setAlignment( Qt::AlignTop );
 
 	resampleCombo = new QComboBox( FALSE, resampleBox, "resampleCombo" );
@@ -76,15 +75,12 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 	catconLabel = new QLabel( "", resampleBox, "catconLabel" );
 	conRadio = new QRadioButton( "Continuous Data", resampleBox, "conRadio" );
 	catRadio = new QRadioButton( "Categorical Data", resampleBox, "catRadio" );
-	/*   catconButtonGroup = new Q3ButtonGroup( resampleBox, "catconButtonGroup" );*/
 	catconButtonGroup = new QGroupBox( resampleBox, "catconButtonGroup" );
 	catconButtonGroup->hide();
-	/*catconButtonGroup->insert( catRadio );
-	catconButtonGroup->insert( conRadio );*/
+	
 	QHBoxLayout *catconLayout = new QHBoxLayout( catconButtonGroup );
 	catconLayout->addWidget( catRadio );
 	catconLayout->addWidget( conRadio );
-	//  catconButtonGroup->setLayout( catconLayout );
 	categoricalLayout->addWidget( catconLabel );
 	categoricalLayout->addWidget( conRadio );
 	categoricalLayout->addWidget( catRadio );
@@ -92,10 +88,9 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 	inputLayout->addWidget( resampleBox );
 
 	ignoreBox = new QGroupBox( this, "ignoreBox" );		
-	//   ignoreBox->setColumnLayout(0, Qt::Vertical );
-	ignoreBox->layout()->setSpacing( 6 );
-	ignoreBox->layout()->setMargin( 11 );
-	ignoreBoxLayout = new QHBoxLayout( ignoreBox->layout() );
+	ignoreBoxLayout = new QHBoxLayout( ignoreBox );
+	ignoreBoxLayout->setSpacing( 6 );
+	ignoreBoxLayout->setMargin( 11 );
 	ignoreBoxLayout->setAlignment( Qt::AlignTop );
 
 	ignoreLayout = new QVBoxLayout( 0, 0, 6, "ignoreLayout");
@@ -104,7 +99,8 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 	ignoreLabel->hide();
 	ignoreBoxLayout->addWidget( ignoreLabel );
 
-
+//QMessageBox::information( this, "Gurng", output.dataType() );
+	
 	ignoreEdit = new QLineEdit( ignoreBox, "ignoreEdit" );
 	ignoreEdit->setMinimumSize( QSize( 125, 0 ) );
 	ignoreEdit->setValidator( new MapimgValidator( output.dataType(), ignoreEdit ) );
@@ -140,10 +136,9 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 	ResampleFormLayout->addLayout( inputLayout );
 
 	memoryBox = new QGroupBox( this, "memoryBox" );		
-	//   memoryBox->setColumnLayout(0, Qt::Vertical );
-	memoryBox->layout()->setSpacing( 6 );
-	memoryBox->layout()->setMargin( 11 );
-	memoryBoxLayout = new QVBoxLayout( memoryBox->layout() );
+	memoryBoxLayout = new QVBoxLayout( memoryBox );
+	memoryBoxLayout->setSpacing( 6 );
+	memoryBoxLayout->setMargin( 11 );
 	memoryBoxLayout->setAlignment( Qt::AlignHCenter | Qt::AlignTop );
 
 	memoryLabelResetLayout = new QHBoxLayout();
@@ -216,6 +211,7 @@ ResampleForm::~ResampleForm()
 {
 	// no need to delete child widgets, Qt does it all for us
 }
+
 
 /*
 *  Sets the strings of the subwidgets using the current

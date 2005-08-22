@@ -2,7 +2,7 @@
  * @file BSQReader.h
  * @author Austin Hartman
  *
- * $Id: BSQReader.h,v 1.8 2005/08/11 20:43:50 ahartman Exp $
+ * $Id: BSQReader.h,v 1.9 2005/08/22 19:07:15 ahartman Exp $
  */
 
 #ifndef AUSTIN_BSQREADER_H
@@ -12,20 +12,18 @@
 #include <string>
 #include <vector>
 
+#include "RasterReader.h"
+
 /**
  * A class used to hold information about a BSQ file and to allow the user to
  * access data from it.
  */
 template<class DataType>
-class BSQReader
+class BSQReader : public RasterReader<DataType>
 {
 public:
-    /**
-     * Used to indicate when we are referring to types that are UTM 
-     * coordinates.
-     */
-    typedef double UTMCoordinateType;
-
+    typedef typename RasterReader<DataType>::UTMCoordinateType 
+        UTMCoordinateType;
     /**
      * Constructor to create an object from the specified BSQ file and the 
      * header file whose name is determined from the name of the BSQ file.
@@ -76,9 +74,9 @@ public:
      *
      * @return The value from the image at the specified position and band.
      */
-    DataType getValue(const UTMCoordinateType& xCoord, 
-                      const UTMCoordinateType& yCoord,
-                      size_t band) const;
+    virtual DataType getValue(const UTMCoordinateType& xCoord, 
+                              const UTMCoordinateType& yCoord,
+                              size_t band) const;
 
     /**
      * Get the name of the BSQ file that this object is reading from.
@@ -101,7 +99,7 @@ public:
      *
      * @return The minimum x-coordinate.
      */
-    UTMCoordinateType getMinX() const;
+    virtual UTMCoordinateType getMinX() const;
 
     /**
      * Gets the maximum value of the x-coordinate that the image contains
@@ -109,7 +107,7 @@ public:
      *
      * @return The maximum x-coordinate.
      */
-    UTMCoordinateType getMaxX() const;
+    virtual UTMCoordinateType getMaxX() const;
 
     /**
      * Gets the minimum value of the y-coordinate that the image contains
@@ -117,7 +115,7 @@ public:
      *
      * @return The minimum y-coordinate.
      */
-    UTMCoordinateType getMinY() const;
+    virtual UTMCoordinateType getMinY() const;
 
     /**
      * Gets the maximum value of the y-coordinate that the image contains
@@ -125,7 +123,7 @@ public:
      *
      * @return The maximum y-coordinate.
      */
-    UTMCoordinateType getMaxY() const;
+    virtual UTMCoordinateType getMaxY() const;
 
     /**
      * Gets the width in UTM coordinates that each pixel in the image covers.
@@ -160,7 +158,7 @@ public:
      *
      * @return The number of bands.
      */
-    size_t getNumBands() const;
+    virtual size_t getNumBands() const;
 
     /**
      * Exception class to be used when opening the BSQ file fails.
@@ -182,13 +180,6 @@ public:
     {};
 
     /**
-     * Exception class to be used when the user requests data from a band not
-     * contained in the source image.
-     */
-    class InvalidBand
-    {};
-
-    /**
      * Exception class to be used when the user requests data from a row not
      * in the source image.
      */
@@ -200,20 +191,6 @@ public:
      * in the source image.
      */
     class InvalidCol
-    {};
-
-    /**
-     * Exception class to be used when the user requests data from an
-     * x-coordinate that the source image does not contain.
-     */
-    class InvalidXCoordinate
-    {};
-
-    /**
-     * Exception class to be used when the user requests data from an
-     * y-coordinate that the source image does not contain.
-     */
-    class InvalidYCoordinate
     {};
 
 private:

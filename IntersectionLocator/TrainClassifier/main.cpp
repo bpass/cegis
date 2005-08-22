@@ -1,4 +1,8 @@
-
+/**
+ * @file main.cpp
+ *
+ * $Id: main.cpp,v 1.8 2005/08/22 18:17:45 ahartman Exp $
+ */
 
 // This file is a quick program to train a classifier and save the
 // training data.  This is just for my convenience, so that I don't

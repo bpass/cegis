@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
  *
- * $Id: main.cpp,v 1.8 2005/08/22 18:17:45 ahartman Exp $
+ * $Id: main.cpp,v 1.9 2005/08/22 18:21:20 ahartman Exp $
  */
 
 // This file is a quick program to train a classifier and save the
@@ -14,8 +14,6 @@
 #include <iostream>
 #include <string>
 #include "../Classifier.h"
-
-using namespace std;
 
 void outputClassifiedImage( std::string ortho, std::string outputFile,
                             Classifier &C );
@@ -73,8 +71,11 @@ int main()
 // viewing the output, see the doxygen documentation for the main
 // project, on the page called Preparing for new data.
 void outputClassifiedImage( std::string ortho, std::string outputFile,
-                             Classifier &C )
+                            Classifier &C )
 {
+    using std::cerr;
+    using std::cout;
+
     GDALDataset *image;
     image = static_cast<GDALDataset *>( GDALOpen( ortho.c_str(), GA_ReadOnly ) );
     if( image == NULL )

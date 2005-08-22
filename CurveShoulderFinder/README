@@ -7,7 +7,14 @@ To build and use, just run the following:
 
   OR
 
+    export AUTOMAKE='automake --foreign' (if you're using a Bourne shell, 
+                                          otherwise do the equivalent step for 
+                                          setting an environment variable;
+                                          also, putting this in your .*rc file
+                                          is probably a good idea)
     autoreconf --force --install --symlink --verbose
+    configure
+    make
 
 To execute the tests, run:
     make check

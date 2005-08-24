@@ -1,4 +1,4 @@
-// $Id: authorform.cpp,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
+// $Id: authorform.cpp,v 1.3 2005/08/24 17:58:25 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -70,7 +70,7 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, 
    authorFormLayout->addItem( spacer3 );
 
    infoLabel = new QLabel( this, "infoLabel" );
-/****/   infoLabel->setAlignment( int (Qt::TextWordWrap | Qt::AlignVCenter ) );
+   infoLabel->setAlignment( int (Qt::TextWordWrap | Qt::AlignVCenter ) );
    authorFormLayout->addWidget( infoLabel );
 
    layout2 = new QHBoxLayout( 0, 0, 6, "layout2"); 
@@ -127,3 +127,4 @@ void authorForm::okClicked()
 
    close();
 }
+

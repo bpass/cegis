@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.4 2005/08/19 20:43:56 rbuehler Exp $
+// $Id: rasterinfo.cpp,v 1.5 2005/08/24 17:58:26 lwoodard Exp $
 
 
 #include "rasterinfo.h"
@@ -72,6 +72,10 @@ bool RasterInfo::setAuthor( const QString &name, const QString &company, const Q
    aName = name.length()?name:"Unknown";
    aCompany = company.length()?company:"Unknown";
    aEmail = email.length()?email:"Unknown";
+
+   tempAName = new QString( aName );
+   tempACompany = new QString( aCompany );
+   tempAEmail = new QString( aEmail );
 
    return true;
 }
@@ -183,6 +187,18 @@ bool RasterInfo::setNoDataValue( double noDataValue )
 }
 
 
+QString RasterInfo::fullDataType() const
+{
+	QString ret;
+	
+	ret = signd ? "Signed " : "Unsigned ";
+	ret += QString("%1 Bits ").arg( bits );
+	ret += datatype;
+
+	return ret;	
+}
+
+
 bool RasterInfo::setHasFillValue( const bool& hasFill )
 {
    hasFillVal = hasFill;
@@ -291,9 +307,9 @@ bool RasterInfo::save( QString imgFileName )
    {
       RasterXML r;
 
-      r.setAuthorName( aName );
-      r.setAuthorCompany( aCompany );
-      r.setAuthorEmail( aEmail );
+      r.setAuthorName( *tempAName );
+      r.setAuthorCompany( *tempACompany );
+      r.setAuthorEmail( *tempAEmail );
 
       r.setUlCorner( ulx, uly );
       r.setRows( row );

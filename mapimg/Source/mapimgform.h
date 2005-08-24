@@ -1,4 +1,4 @@
-// $Id: mapimgform.h,v 1.5 2005/08/18 17:49:18 rbuehler Exp $
+// $Id: mapimgform.h,v 1.6 2005/08/24 17:58:26 lwoodard Exp $
 
 
 /****************************************************************************
@@ -11,17 +11,16 @@
 #ifndef mapimgFORM_H
 #define mapimgFORM_H
 
+#include <QActionGroup>
 #include <QVariant>
 #include <QMainWindow>
-#include <q3mainwindow.h>
+
 #include <QMessageBox>
 //Added by qt3to4:
-#include <Q3ActionGroup>
 #include <QGridLayout>
 #include <QEvent>
 #include <QHBoxLayout>
 #include <QDropEvent>
-#include <Q3PopupMenu>
 #include <QDragEnterEvent>
 #include <QToolBar>
 
@@ -29,11 +28,8 @@ class QHBoxLayout;
 class QGridLayout;
 class QSpacerItem;
 class QAction;
-class Q3ActionGroup;
-class Q3PopupMenu;
 class QToolBar;	
 class QToolButton;
-class Q3WidgetStack;
 class QImgFrame;
 class QInfoFrame;
 class RasterInfo;
@@ -81,6 +77,7 @@ protected slots:
 	void webDSSClicked();
 
 private:
+
    // Contents
    QHBoxLayout *contentLayout;
 	QInfoFrame  *inInfoFrame;

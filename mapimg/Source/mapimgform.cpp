@@ -1,32 +1,32 @@
-// $Id: mapimgform.cpp,v 1.7 2005/08/19 20:43:56 rbuehler Exp $
+// $Id: mapimgform.cpp,v 1.8 2005/08/24 17:58:26 lwoodard Exp $
 //Last Edited: August 2005; by: lwoodard; for:qt3 to qt4 porting
 
 #include "mapimgform.h"
 
-#include <QVariant>
-#include <QLayout>
-#include <QTooltip>
-#include <QWhatsThis>
 #include <QAction>
-#include <QMenuBar>
-#include <QMenu>
-#include <QToolButton>
-#include <QMainWindow>
-#include <QToolBar>
-
-//	#include <q3toolbar.h>
-#include <q3dragobject.h>
-//#include <q3widgetstack.h>
-#include <q3filedialog.h>
-#include <QFile>
+#include <QByteArray>
 #include <QDataStream>
-#include <QSettings>
-#include <q3process.h>
-//Added by qt3to4:
-#include <Q3CString>
 #include <QEvent>
-#include <Q3Frame>
+#include <QFile>
+#include <QFileDialog>
+#include <QFrame>
 #include <QHBoxLayout>
+#include <QLayout>
+#include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
+#include <QProcess>
+#include <QSettings>
+#include <QToolButton>
+#include <QToolBar>
+#include <QTooltip>
+#include <QUrl>
+#include <QWhatsThis>
+#include <QVariant>
+
+#include <q3dragobject.h>
+//Added by qt3to4:
+
 #include <QDropEvent>
 #include <QDragEnterEvent>
 #include <QMouseEvent>
@@ -75,224 +75,222 @@ preview the reprojection.
 mapimgForm::mapimgForm( QWidget* parent, const char* name, Qt::WFlags fl )
 : QMainWindow( parent, name, fl )
 {
-   setIcon( QPixmap( "./Resources/USGS Swirl Sphere.png" ) );
-   setCaption( QString("MapIMG %1").arg(MAJOR_VERSION) );
-   setAcceptDrops( true );
+	setIcon( QPixmap( "./Resources/USGS Swirl Sphere.png" ) );
+	setCaption( QString("MapIMG %1").arg(MAJOR_VERSION) );
+	setAcceptDrops( true );
 
-   setupContents();
-   createActions();
-   setupMenubar();
-   setupToolbar();
-   makeConnections();
-   loadSettings();
+	setupContents();
+	createActions();
+	setupMenubar();
+	setupToolbar();
+	makeConnections();
+	loadSettings();
 
-   imgName = "";
-   imgSet = false;
-   newInfo = false;
+	imgName = "";
+	imgSet = false;
+	newInfo = false;
 
-   ignorePreviewSignals = false;
-   prevLast = prevInput;
+	ignorePreviewSignals = false;
+	prevLast = prevInput;
 
-   resize( QSize(600, 524).expandedTo(minimumSizeHint()) );
+	resize( QSize(600, 524).expandedTo(minimumSizeHint()) );
 }
 
 void mapimgForm::setupContents()
 {
-   setCentralWidget( new QWidget( this, "qt_central_widget" ) );
+	setCentralWidget( new QWidget( this, "qt_central_widget" ) );
 
-   contentLayout = new QHBoxLayout( centralWidget() );
-   contentLayout->setMargin(2);
-   contentLayout->setSpacing(1);
+	contentLayout = new QHBoxLayout( centralWidget() );
+	contentLayout->setMargin(2);
+	contentLayout->setSpacing(1);
 
-   inInfoFrame = new QInfoFrame( centralWidget() );
-   inInfoFrame->setAsInput();
-   inInfoFrame->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::MinimumExpanding );
-   contentLayout->addWidget( inInfoFrame );
+	inInfoFrame = new QInfoFrame( centralWidget() );
+	inInfoFrame->setAsInput();
+	inInfoFrame->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::MinimumExpanding );
+	contentLayout->addWidget( inInfoFrame );
 
-   imgFrame = new QImgFrame( centralWidget() );
-   //imgFrame->setFrameStyle( Q3Frame::StyledPanel | Q3Frame::Sunken );
-   //imgFrame->setLineWidth(2);
-   imgFrame->setPixmap( QPixmap("./Resources/USGS Logo.png" ) );
-   //imgFrame->setMinimumSize( QSize( 167, 62 ) );
-   //imgFrame->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding );
-   imgFrame->hide();
-   imgFrame->installEventFilter( this );
-   contentLayout->addWidget( imgFrame );
+	imgFrame = new QImgFrame( centralWidget() );
+	imgFrame->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
+	imgFrame->setLineWidth(2);
+	imgFrame->setPixmap( QPixmap("./Resources/USGS Logo.png" ) );
+	imgFrame->setMinimumSize( QSize( 167, 62 ) );
+	imgFrame->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding );
+	imgFrame->hide();
+	imgFrame->installEventFilter( this );
+	contentLayout->addWidget( imgFrame );
 
-   outInfoFrame = new QInfoFrame( centralWidget(), "outInfoFrame" );
-   outInfoFrame->setAsOutput(); outInfoFrame->setPartner( inInfoFrame );
-   outInfoFrame->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::MinimumExpanding );
-   contentLayout->addWidget( outInfoFrame );
+	outInfoFrame = new QInfoFrame( centralWidget(), "outInfoFrame" );
+	outInfoFrame->setAsOutput(); outInfoFrame->setPartner( inInfoFrame );
+	outInfoFrame->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::MinimumExpanding );
+	contentLayout->addWidget( outInfoFrame );
 }
 
 void mapimgForm::createActions()
 {
-   //QIcon *openIcon
-   inOpenAction = new QAction( tr("&Open"), this );
-   inOpenAction->setIcon( QIcon( QPixmap("./Resources/open.png").scaled(25, 25, Qt::KeepAspectRatio, Qt::SmoothTransformation) ) );
-   inOpenAction->setShortcut( tr("Ctrl+O") );
-   inOpenAction->setToolTip( tr("Open an input file.") );
+	//QIcon *openIcon
+	inOpenAction = new QAction( tr("&Open"), this );
+	inOpenAction->setIcon( QIcon( QPixmap("./Resources/open.png").scaled(25, 25, Qt::KeepAspectRatio, Qt::SmoothTransformation) ) );
+	inOpenAction->setShortcut( tr("Ctrl+O") );
+	inOpenAction->setToolTip( tr("Open an input file.") );
 
-   inSaveAction = new QAction( tr("Save Input Parameters"), this);
-   inSaveAction->setIcon( QIcon( "./Resources/insave.png" ) );
-   inSaveAction->setToolTip( tr("") );
+	inSaveAction = new QAction( tr("Save Input Parameters"), this);
+	inSaveAction->setIcon( QIcon( "./Resources/insave.png" ) );
+	inSaveAction->setToolTip( tr("") );
 
-   exitAction = new QAction( tr("Exit"), this);
-   exitAction->setIcon( QIcon( "./Resources/exit.png" ) );
-   exitAction->setToolTip("Close the MapIMG application.");
+	exitAction = new QAction( tr("Exit"), this);
+	exitAction->setIcon( QIcon( "./Resources/exit.png" ) );
+	exitAction->setToolTip("Close the MapIMG application.");
 
-   authAction = new QAction( tr("Edit Author"), this );
-   authAction->setToolTip( tr("Change the author properties for the current user.") );
+	authAction = new QAction( tr("Edit Author"), this );
+	authAction->setToolTip( tr("Change the author properties for the current user.") );
 
-   inInfoAction = new QAction( "Show Input Parameters", this );
-   inInfoAction->setIcon( QIcon( "./Resources/inputinfo.png" ) );
-   inInfoAction->setCheckable( true );
-   inInfoAction->setOn( inInfoFrame->isShown() );
+	inInfoAction = new QAction( "Show Input Parameters", this );
+	inInfoAction->setIcon( QIcon( "./Resources/inputinfo.png" ) );
+	inInfoAction->setCheckable( true );
+	inInfoAction->setOn( inInfoFrame->isShown() );
 
-   viewShowAction = new QAction(	"Show Preview", this );
-   viewShowAction->setIcon( QIcon( "./Resources/preview.png" ) );
-   viewShowAction->setCheckable( true );
+	viewShowAction = new QAction(	"Show Preview", this );
+	viewShowAction->setIcon( QIcon( "./Resources/preview.png" ) );
+	viewShowAction->setCheckable( true );
 
-   outInfoAction = new QAction( "Show Output Parameters", this );
-   outInfoAction->setIcon( QIcon ( "./Resources/outputinfo.png" ) );
-   outInfoAction->setCheckable( true );
-   outInfoAction->setOn( outInfoFrame->isShown() );
+	outInfoAction = new QAction( "Show Output Parameters", this );
+	outInfoAction->setIcon( QIcon ( "./Resources/outputinfo.png" ) );
+	outInfoAction->setCheckable( true );
+	outInfoAction->setOn( outInfoFrame->isShown() );
 
-   outSaveAction = new QAction( "Reproject and &Save", this );
-   outSaveAction->setIcon( QIcon( "./Resources/outsave.png" ) );
-   outSaveAction->setShortcut( tr("Ctrl+S") );
+	outSaveAction = new QAction( "Reproject and &Save", this );
+	outSaveAction->setIcon( QIcon( "./Resources/outsave.png" ) );
+	outSaveAction->setShortcut( tr("Ctrl+S") );
 
-   viewResampleAction = new QAction( tr("Resample Preview"), this );
-   viewResampleAction->setShortcut( tr("F5") );
-   viewResampleAction->setIcon( QIcon( "./Resources/resample.png" ) );
-   viewResampleAction->setToolTip( tr("") );
+	viewResampleAction = new QAction( tr("Resample Preview"), this );
+	viewResampleAction->setShortcut( tr("F5") );
+	viewResampleAction->setIcon( QIcon( "./Resources/resample.png" ) );
+	viewResampleAction->setToolTip( tr("") );
 
-   previewProjAction = new QAction( "Preview Reprojection", this );
-   previewProjAction->setIcon( QIcon( "./Resources/previewproject.png" ) );
+	previewProjAction = new QAction( "Preview Reprojection", this );
+	previewProjAction->setIcon( QIcon( "./Resources/previewproject.png" ) );
 
-   webDSSAction = new QAction( "Decision Support System", this );
-   webDSSAction->setToolTip( tr("") );
+	webDSSAction = new QAction( "Decision Support System", this );
+	webDSSAction->setToolTip( tr("") );
 
-   aboutAction = new QAction( "About MapIMG", this );
+	aboutAction = new QAction( "About MapIMG", this );
 
-   aboutQtAction = new QAction( "About Qt", this );
+	aboutQtAction = new QAction( "About Qt", this );
 }
 
 void mapimgForm::setupMenubar()
 {
-   fileMenu = menuBar()->addMenu( tr( "&File" ) ); 
-   fileMenu->addAction( inOpenAction );
-   fileMenu->addSeparator();
-   fileMenu->addAction( inSaveAction );
-   fileMenu->addAction( outSaveAction );
-   fileMenu->addSeparator();
-   fileMenu->addAction( exitAction );
+	fileMenu = menuBar()->addMenu( tr( "&File" ) ); 
+	fileMenu->addAction( inOpenAction );
+	fileMenu->addSeparator();
+	fileMenu->addAction( inSaveAction );
+	fileMenu->addAction( outSaveAction );
+	fileMenu->addSeparator();
+	fileMenu->addAction( exitAction );
 
-   optionsMenu = menuBar()->addMenu( tr( "&Options" ) );
-   optionsMenu->addAction( authAction );
+	optionsMenu = menuBar()->addMenu( tr( "&Options" ) );
+	optionsMenu->addAction( authAction );
 
-   previewMenu = menuBar()->addMenu( tr( "&Preview" ) );
-   previewMenu->addAction( viewResampleAction );
-   previewMenu->addAction( previewProjAction );
+	previewMenu = menuBar()->addMenu( tr( "&Preview" ) );
+	previewMenu->addAction( viewResampleAction );
+	previewMenu->addAction( previewProjAction );
 
-   toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
-   toolsMenu->addAction( webDSSAction );
+	toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
+	toolsMenu->addAction( webDSSAction );
 
-   helpMenu = menuBar()->addMenu( tr( "&Help" ) );
-   helpMenu->addAction( aboutAction );
-   helpMenu->addAction( aboutQtAction );
+	helpMenu = menuBar()->addMenu( tr( "&Help" ) );
+	helpMenu->addAction( aboutAction );
+	helpMenu->addAction( aboutQtAction );
 }
 
 void mapimgForm::setupToolbar()
 {
-   toolBar = addToolBar(tr("File"));
-   toolBar->setMovable(false);
-   toolBar->setIconSize( QSize(25,25) );
+	toolBar = addToolBar(tr("File"));
+	toolBar->setMovable(false);
+	toolBar->setIconSize( QSize(25,25) );
 
-   toolBar->addAction( inOpenAction );
-   toolBar->addAction( outSaveAction );
-   toolBar->addSeparator();
-   toolBar->addAction( inInfoAction );
+	toolBar->addAction( inOpenAction );
+	toolBar->addAction( outSaveAction );
+	toolBar->addSeparator();
+	toolBar->addAction( inInfoAction );
 
-   /****/
-   viewShowButton = new QToolButton( QIcon( "./Resources/preview.png" ),
-      "Show Preview", "", NULL, 0, this, "previewButton" );
-   /****/
-   viewShowButton->installEventFilter( this );
+	viewShowButton = new QToolButton( QIcon( "./Resources/preview.png" ),
+		"Show Preview", "", NULL, 0, this, "previewButton" );
+	viewShowButton->installEventFilter( this );
 
-   toolBar->addWidget( viewShowButton );
-   toolBar->addAction( outInfoAction );
-   toolBar->addSeparator(); 
-   toolBar->addAction( viewResampleAction );
-   toolBar->addAction( previewProjAction );
+	toolBar->addWidget( viewShowButton );
+	toolBar->addAction( outInfoAction );
+	toolBar->addSeparator(); 
+	toolBar->addAction( viewResampleAction );
+	toolBar->addAction( previewProjAction );
 
-   //preview button extra features
-   viewShowPopup = new QMenu( "viewShowPopup", viewShowButton );
+	//preview button extra features
+	viewShowPopup = new QMenu( "viewShowPopup", viewShowButton );
 
-   prevInput = new QAction( "Preview Input", QKeySequence(""), this, "prevInput" );
-   prevInput->setCheckable( true ); 
-   viewShowPopup->addAction( prevInput );
-   prevOutput = new QAction( "Preview Output", QKeySequence(""), this, "prevOutput" );
-   prevOutput->setCheckable( true );
-   viewShowPopup->addAction( prevOutput );
+	prevInput = new QAction( "Preview Input", QKeySequence(""), this, "prevInput" );
+	prevInput->setCheckable( true ); 
+	viewShowPopup->addAction( prevInput );
+	prevOutput = new QAction( "Preview Output", QKeySequence(""), this, "prevOutput" );
+	prevOutput->setCheckable( true );
+	viewShowPopup->addAction( prevOutput );
 
-   viewShowButton->setCheckable(true);
+	viewShowButton->setCheckable(true);
 }
 
 void mapimgForm::makeConnections()
 {
-   connect( exitAction, SIGNAL( activated() ), this, SLOT( close() ) );
-   connect( authAction, SIGNAL( activated() ), this, SLOT( editAuthor() ) );
+	connect( exitAction, SIGNAL( activated() ), this, SLOT( close() ) );
+	connect( authAction, SIGNAL( activated() ), this, SLOT( editAuthor() ) );
 
-   connect( inInfoAction, SIGNAL( toggled(bool) ), inInfoFrame, SLOT( setShown(bool) ) );
-   connect( inOpenAction, SIGNAL( activated() ), this, SLOT( inOpenClicked() ) );
-   connect( inSaveAction, SIGNAL( activated() ), this, SLOT( inSaveClicked() ) );
-   connect( inInfoFrame, SIGNAL( locked() ), this, SLOT( inSaveClicked() ) );
+	connect( inInfoAction, SIGNAL( toggled(bool) ), inInfoFrame, SLOT( setShown(bool) ) );
+	connect( inOpenAction, SIGNAL( activated() ), this, SLOT( inOpenClicked() ) );
+	connect( inSaveAction, SIGNAL( activated() ), this, SLOT( inSaveClicked() ) );
+	connect( inInfoFrame, SIGNAL( locked() ), this, SLOT( inSaveClicked() ) );
 
-   connect( viewShowAction, SIGNAL( toggled(bool) ), this, SLOT( showPreview(bool) ) );
-   connect( viewResampleAction, SIGNAL( activated() ), imgFrame, SLOT( resample() ) );
-   connect( previewProjAction, SIGNAL( activated() ), this, SLOT( showOutputPreview() ) );
+	connect( viewShowAction, SIGNAL( toggled(bool) ), this, SLOT( showPreview(bool) ) );
+	connect( viewResampleAction, SIGNAL( activated() ), imgFrame, SLOT( resample() ) );
+	connect( previewProjAction, SIGNAL( activated() ), this, SLOT( showOutputPreview() ) );
 
-   connect( viewShowButton, SIGNAL( toggled(bool) ), this, SLOT( showPreview(bool) ) );
-   connect( prevInput, SIGNAL( toggled(bool) ), this, SLOT( showInputPreview(bool) ) );
-   connect( prevOutput, SIGNAL( toggled(bool) ), this, SLOT( showOutputPreview(bool) ) );
+	connect( viewShowButton, SIGNAL( toggled(bool) ), this, SLOT( showPreview(bool) ) );
+	connect( prevInput, SIGNAL( toggled(bool) ), this, SLOT( showInputPreview(bool) ) );
+	connect( prevOutput, SIGNAL( toggled(bool) ), this, SLOT( showOutputPreview(bool) ) );
 
-   connect( outInfoAction, SIGNAL( toggled(bool) ), outInfoFrame, SLOT( setShown(bool) ) );
-   connect( outSaveAction, SIGNAL( activated() ), this, SLOT( outSaveClicked() ) );
+	connect( outInfoAction, SIGNAL( toggled(bool) ), outInfoFrame, SLOT( setShown(bool) ) );
+	connect( outSaveAction, SIGNAL( activated() ), this, SLOT( outSaveClicked() ) );
 
-   connect( webDSSAction, SIGNAL( activated() ), this, SLOT( webDSSClicked() ) );
+	connect( webDSSAction, SIGNAL( activated() ), this, SLOT( webDSSClicked() ) );
 
-   connect( aboutAction, SIGNAL( activated() ), this, SLOT( aboutClicked() ) );
-   connect( aboutQtAction, SIGNAL( activated() ), this, SLOT( showAboutQt() ) );
+	connect( aboutAction, SIGNAL( activated() ), this, SLOT( aboutClicked() ) );
+	connect( aboutQtAction, SIGNAL( activated() ), this, SLOT( showAboutQt() ) );
 }
 
 
 void mapimgForm::loadSettings()
 {
-   QSettings *settings = new QSettings(QSettings::IniFormat, QSettings::SystemScope,"" /**QSettings::Ini**/ );
-   settings->setPath( "USGS.gov", "MapIMG" );
+	QSettings *settings = new QSettings(QSettings::IniFormat, QSettings::SystemScope,"" /**QSettings::Ini**/ );
+	settings->setPath( "USGS.gov", "MapIMG" );
 
-   inPath = settings->readEntry( "/USGS/MapIMG/DefaultInputPath" );
-   outPath = settings->readEntry( "/USGS/MapIMG/DefaultOutputPath" );
-   authName = settings->readEntry( "/USGS/MapIMG/AuthorName" );
-   authCompany = settings->readEntry( "/USGS/MapIMG/AuthorCompany" );
-   authEmail = settings->readEntry( "/USGS/MapIMG/AuthorEmail" );
+	inPath = settings->readEntry( "/USGS/MapIMG/DefaultInputPath" );
+	outPath = settings->readEntry( "/USGS/MapIMG/DefaultOutputPath" );
+	authName = settings->readEntry( "/USGS/MapIMG/AuthorName" );
+	authCompany = settings->readEntry( "/USGS/MapIMG/AuthorCompany" );
+	authEmail = settings->readEntry( "/USGS/MapIMG/AuthorEmail" );
 
-   if( inPath.isNull() || !QFile::exists(inPath) )
-      settings->writeEntry( "/USGS/MapIMG/DefaultInputPath", QDir::currentDirPath() );
-   if( outPath.isNull() || !QFile::exists(outPath) )
-      settings->writeEntry( "/USGS/MapIMG/DefaultOutputPath", QDir::currentDirPath() );
-   if( authName.isNull() )
-   {
-      settings->writeEntry( "/USGS/MapIMG/AuthorName", QString("Unknown") );
-      settings->writeEntry( "/USGS/MapIMG/AuthorCompany", QString("Unknown") );
-      settings->writeEntry( "/USGS/MapIMG/AuthorEmail", QString("Unknown") );
-      delete settings;
+	if( inPath.isNull() || !QFile::exists(inPath) )
+		settings->writeEntry( "/USGS/MapIMG/DefaultInputPath", QDir::currentDirPath() );
+	if( outPath.isNull() || !QFile::exists(outPath) )
+		settings->writeEntry( "/USGS/MapIMG/DefaultOutputPath", QDir::currentDirPath() );
+	if( authName.isNull() )
+	{
+		settings->writeEntry( "/USGS/MapIMG/AuthorName", QString("Unknown") );
+		settings->writeEntry( "/USGS/MapIMG/AuthorCompany", QString("Unknown") );
+		settings->writeEntry( "/USGS/MapIMG/AuthorEmail", QString("Unknown") );
+		delete settings;
 
-      editAuthor();
-   }
-   else
-      delete settings;
+		editAuthor();
+	}
+	else
+		delete settings;
 }
 
 /*
@@ -300,20 +298,20 @@ Delete temporary files.
 */
 mapimgForm::~mapimgForm()
 {
-   if( QFile::exists( "mapimg.log" ) )
-      QFile::remove( "mapimg.log" );
+	if( QFile::exists( "mapimg.log" ) )
+		QFile::remove( "mapimg.log" );
 
-   if( QFile::exists( "temp_preview.xml" ) )
-      QFile::remove( "temp_preview.xml" );
+	if( QFile::exists( "temp_preview.xml" ) )
+		QFile::remove( "temp_preview.xml" );
 
-   if( QFile::exists( "temp_preview.img" ) )
-      QFile::remove( "temp_preview.img" );
+	if( QFile::exists( "temp_preview.img" ) )
+		QFile::remove( "temp_preview.img" );
 
-   if( QFile::exists( "temp_small.xml" ) )
-      QFile::remove( "temp_small.xml" );
+	if( QFile::exists( "temp_small.xml" ) )
+		QFile::remove( "temp_small.xml" );
 
-   if( QFile::exists( "temp_small.img" ) )
-      QFile::remove( "temp_small.img" );
+	if( QFile::exists( "temp_small.img" ) )
+		QFile::remove( "temp_small.img" );
 }
 
 /*
@@ -327,73 +325,73 @@ The arrow in the
 */
 bool mapimgForm::eventFilter( QObject* object, QEvent* event )
 {
-   if( object == imgFrame && event->type() == QEvent::MouseButtonPress )
-   {
-      QMouseEvent *mouseEvent = (QMouseEvent*)event;
-      if( mouseEvent->button() == Qt::RightButton )
-         viewShowPopup->exec(mouseEvent->globalPos());
-   }
-   else if( object == viewShowButton && event->type() == QEvent::MouseButtonPress )
-   {
-      QMouseEvent *mouseEvent = (QMouseEvent*)event;
-      if( mouseEvent->button() == Qt::LeftButton )
-      {
-         QRect hotspot( viewShowButton->geometry() );
-         hotspot.moveTopLeft( QPoint(0,0) );
-         hotspot.setTopLeft( QPoint(hotspot.center().x(), hotspot.height()*3/5) );
-         if( hotspot.contains( mouseEvent->pos() ) )
-            viewShowPopup->exec( viewShowButton->mapToGlobal( QPoint(0,viewShowButton->height()) ) );
-         else
-            viewShowButton->toggle( );
-         return true;
-      }
-   }
-   return QMainWindow::eventFilter( object, event ); /*************************/
+	if( object == imgFrame && event->type() == QEvent::MouseButtonPress )
+	{
+		QMouseEvent *mouseEvent = (QMouseEvent*)event;
+		if( mouseEvent->button() == Qt::RightButton )
+			viewShowPopup->exec(mouseEvent->globalPos());
+	}
+	else if( object == viewShowButton && event->type() == QEvent::MouseButtonPress )
+	{
+		QMouseEvent *mouseEvent = (QMouseEvent*)event;
+		if( mouseEvent->button() == Qt::LeftButton )
+		{
+			QRect hotspot( viewShowButton->geometry() );
+			hotspot.moveTopLeft( QPoint(0,0) );
+			hotspot.setTopLeft( QPoint(hotspot.center().x(), hotspot.height()*3/5) );
+			if( hotspot.contains( mouseEvent->pos() ) )
+				viewShowPopup->exec( viewShowButton->mapToGlobal( QPoint(0,viewShowButton->height()) ) );
+			else
+				viewShowButton->toggle( );
+			return true;
+		}
+	}
+	return QMainWindow::eventFilter( object, event ); 
 }
 
 void mapimgForm::dragEnterEvent( QDragEnterEvent *evt )
 {
-   if ( Q3TextDrag::canDecode( evt ) )
-      evt->accept();
+	if ( Q3TextDrag::canDecode( evt ) )	
+		evt->accept();
 }
 
 void mapimgForm::dropEvent( QDropEvent *evt )
 {
-   QString text;
+	QString text;
 
-   if ( Q3TextDrag::decode( evt, text ) )
-   {
-      int gi = text.findRev( "img" );
-      int li = text.findRev( "xml" );
-      int fi = text.findRev( "tif" );
-      if( gi > li && gi > fi )
-      {
-         text.truncate( gi );
-         text.append( "img" );     
-      }
-      else if( li > fi )
-      {
-         text.truncate( li );
-         text.append( "img" ); 
-      }
-      else
-      {
-         text.truncate( fi );
-         text.append( "tif" ); 
-      }
+	if ( Q3TextDrag::decode( evt, text ) )	
+	{
+		int gi = text.findRev( "img" );
+		int li = text.findRev( "xml" );
+		int fi = text.findRev( "tif" );
+		if( gi > li && gi > fi )
+		{
+			text.truncate( gi );
+			text.append( "img" );     
+		}
+		else if( li > fi )
+		{
+			text.truncate( li );
+			text.append( "img" ); 
+		}
+		else
+		{
+			text.truncate( fi );
+			text.append( "tif" ); 
+		}
 
-      if( text.left(8) == "file:///" )
-         text.remove( 0, 8 );
-      text.replace( "%20", " " );
-      text.replace( "%5c", "/" );
-      text.replace( '\\', '/' );
+		if( text.left(8) == "file:///" )
+			text.remove( 0, 8 );
+		text.replace( "%20", " " );
+		text.replace( "%5c", "/" );
+		text.replace( '\\', '/' );
 
-      if( openFile( text ) )
-      {
-         outInfoAction->setOn(false);
-         viewShowAction->setOn(true);
-      }
-   }
+		if( openFile( text ) )
+		{
+			outInfoAction->setOn(false);
+			viewShowAction->setOn(true);
+		}
+	}
 }
 
 /*
@@ -404,113 +402,114 @@ messages the user and asks them to genererate one using the input frame.
 */
 void mapimgForm::inOpenClicked()
 {
-   QString temp = Q3FileDialog::getOpenFileName(
-      inPath, "MapIMG Files (*.img);;Tiff Files (*.tif)", this, "", "Choose an image");
+	QString temp = QFileDialog::getOpenFileName(
+		inPath, "MapIMG Files (*.img);;Tiff Files (*.tif)", this, "", "Choose an image");
 
-   if( openFile(temp) )
-   {   
-      inPath = imgName.left( imgName.findRev( "/" ) );
-      QSettings *settings = new QSettings(QSettings::IniFormat, QSettings::SystemScope,"" /*QSettings::Ini*/ );
-      settings->setPath( "USGS.gov", "MapIMG" );
-      settings->writeEntry( "/USGS/MapIMG/DefaultInputPath", inPath );
-      delete settings;
-   }
+	if( openFile(temp) )
+	{   
+		inPath = imgName.left( imgName.findRev( "/" ) );
+		QSettings *settings = new QSettings(QSettings::IniFormat, QSettings::SystemScope,"" /*QSettings::Ini*/ );
+		settings->setPath( "USGS.gov", "MapIMG" );
+		settings->writeEntry( "/USGS/MapIMG/DefaultInputPath", inPath );
+		delete settings;
+	}
 }
 
 bool mapimgForm::openFile( QString inFile )
 {
-   if( inFile == "" )
-      return false;
+	if( inFile == "" )
+		return false;
 
-   if( !QFile::exists( inFile ) )
-   {
-      QMessageBox::warning( this, "Open", QString( "%1\n"
-         "File not found.\n"
-         "Please verify that the correct file name was given.")
-         .arg(inFile) );
-      return false;
-   }
+	if( !QFile::exists( inFile ) )
+	{
+		QMessageBox::warning( this, "Open", QString( "%1\n"
+			"File not found.\n"
+			"Please verify that the correct file name was given.")
+			.arg(inFile) );
+		return false;
+	}
 
-   if( inFile.endsWith( ".tif" ) )
-   {
-      int convert = QMessageBox::information( this, "Open",
-         "Tiff images cannot be projected directly\n"
-         "Would you like to export to generic binary?",
-         QMessageBox::Yes, QMessageBox::No );
+	if( inFile.endsWith( ".tif" ) )
+	{
+		int convert = QMessageBox::information( this, "Open",
+			"Tiff images cannot be projected directly\n"
+			"Would you like to export to generic binary?",
+			QMessageBox::Yes, QMessageBox::No );
 
-      if( convert == QMessageBox::No )
-         return false;
+		if( convert == QMessageBox::No )
+			return false;
 
-      QString tiffFile = inFile;
-      inFile.append( ".img" );
+		QString tiffFile = inFile;
+		inFile.append( ".img" );
 
-      if( tiff2img( tiffFile, inFile ) )
-      {
-         QMessageBox::information( this, "Open",
-            "TIFF conversion completed succesfully." );
-      }
-      else
-      {
-         QMessageBox::information( this, "Tiff Image",
-            "Conversion failed for unknown reason." );
-         return false;
-      }
-   }
+		if( tiff2img( tiffFile, inFile ) )
+		{
+			QMessageBox::information( this, "Open",
+				"TIFF conversion completed succesfully." );
+		}
+		else
+		{
+			QMessageBox::information( this, "Tiff Image",
+				"Conversion failed for unknown reason." );
+			return false;
+		}
+	}
 
-   if( !inFile.endsWith( ".img" ) )
-   {
-      QMessageBox::information( this, "Open", 
-         QString( "%1\n"
-         "MapIMG cannot read this file.\n"
-         "This is not a valid raster image, or its format is not currently supported." )
-         .arg(inFile) );
-      return false;
-   }
+	if( !inFile.endsWith( ".img" ) )
+	{
+		QMessageBox::information( this, "Open", 
+			QString( "%1\n"
+			"MapIMG cannot read this file.\n"
+			"This is not a valid raster image, or its format is not currently supported." )
+			.arg(inFile) );
+		return false;
+	}
 
-   imgName = inFile;
-   imgSet = true;
-   RasterInfo info;
+	imgName = inFile;
+	imgSet = true;
+	RasterInfo info;
 
-   if( info.load( imgName ) )
-   {
-      inInfoFrame->setInfo( info );
-      inInfoFrame->lock( true, false );
-      newInfo = false;
+	info.setAuthor( authName, authCompany, authEmail );
+	if( info.load( imgName ) )
+	{
+		inInfoFrame->setInfo( info );
+		inInfoFrame->lock( true, false );
+		newInfo = false;
 
-      prevLast = NULL;
-      showInputPreview( imgFrame->isShown() );
-   }
-   else
-   {
-      info.setAuthor( authName, authCompany, authEmail );
-      inInfoFrame->lock( false, false );
-      inInfoAction->setOn( true );
-      outInfoAction->setOn( false );
+		prevLast = NULL;
+		showInputPreview( imgFrame->isShown() );
+	}
+	else
+	{
+		info.setAuthor( authName, authCompany, authEmail );
+		inInfoFrame->lock( false, false );
+		inInfoAction->setOn( true );
+		outInfoAction->setOn( false );
 
-      imgFrame->setPixmap( QPixmap( "./Resources/USGS Logo.png" ) );
-      viewShowButton->setOn( false );
-      inInfoFrame->setInfo( info );
+		imgFrame->setPixmap( QPixmap( "./Resources/USGS Logo.png" ) );
+		viewShowButton->setOn( false );
+		inInfoFrame->setInfo( info );	//This is where it breaks
 
-      QMessageBox::information( this, "Open", 
-         QString( "%1\n"
-         "XML file corrupted or not found.\n\n"
-         "Please use the Input Info Editor to define the map and projection parameters.\n\n"
-         "-The lock button saves changes.\n"
-         "-The calculator button figures out the rows, columns and upper left coordinates." )
-         .arg( info.xmlFileName() ) );
-      newInfo = true;
-   }
+		QMessageBox::information( this, "Open", 
+			QString( "%1\n"
+			"XML file corrupted or not found.\n\n"
+			"Please use the Input Info Editor to define the map and projection parameters.\n\n"
+			"-The lock button saves changes.\n"
+			"-The calculator button figures out the rows, columns and upper left coordinates." )
+			.arg( info.xmlFileName() ) );
+		newInfo = true;
+	}
 
 
-   ////////Parse fileName for window caption
-   QString cap( imgName );
-   cap.replace('\\', '/');
-   int index = cap.findRev("/");
-   index++;
-   cap = cap.right(cap.length() - index);
-   setCaption(cap + " - MapIMG");
+	////////Parse fileName for window caption
+	QString cap( imgName );
+	cap.replace('\\', '/');
+	int index = cap.findRev("/");
+	index++;
+	cap = cap.right(cap.length() - index);
+	setCaption(cap + " - MapIMG");
 
-   return true;
+	return true;
 }
 
 /*
@@ -527,42 +526,42 @@ it would be too easy to accidentally overwrite the file otherwise.
 */
 void mapimgForm::inSaveClicked()
 {
-   if( !imgSet )
-   {
-      QMessageBox::critical( this, "Save Input Parameters",
-         "No input image has been loaded yet." );
-      return;
-   }
+	if( !imgSet )
+	{
+		QMessageBox::critical( this, "Save Input Parameters",
+			"No input image has been loaded yet." );
+		return;
+	}
 
-   RasterInfo i( inInfoFrame->info() );
-   i.setAuthor( authName, authCompany, authEmail );
+	RasterInfo i( inInfoFrame->info() );
+	i.setAuthor( authName, authCompany, authEmail );
 
-   if( !mapimg::readytoReproject(i, this) )
-   {
-      inInfoFrame->lock( false, false );
-      return;
-   }
+	if( !mapimg::readytoReproject(i, this) )
+	{
+		inInfoFrame->lock( false, false );
+		return;
+	}
 
-   if( !newInfo && QFile::exists( i.xmlFileName() ) )
-   {
-      RasterInfo j( i.xmlFileName() );
-      j.load();
+	if( !newInfo && QFile::exists( i.xmlFileName() ) )
+	{
+		RasterInfo j( i.xmlFileName() );
+		j.load();
 
-      if( QMessageBox::warning( this, "Save Input Parameters",
-         QString("%1 already exists.\nDo you want to replace it?").arg(i.xmlFileName()),
-         QMessageBox::Yes, QMessageBox::No) == QMessageBox::No )
-      {
-         inInfoFrame->setInfo( j );
-         return;
-      }
+		if( QMessageBox::warning( this, "Save Input Parameters",
+			QString("%1 already exists.\nDo you want to replace it?").arg(i.xmlFileName()),
+			QMessageBox::Yes, QMessageBox::No) == QMessageBox::No )
+		{
+			inInfoFrame->setInfo( j );
+			return;
+		}
 
-      i.setAuthor( j.author(), j.company(), j.email() );
-   }
+		i.setAuthor( j.author(), j.company(), j.email() );
+	}
 
-   i.save();
-   prevLast = NULL;
-   showInputPreview( imgFrame->isShown() );
-   return;
+	i.save();
+	prevLast = NULL;
+	showInputPreview( imgFrame->isShown() );
+	return;
 }
 
 /*
@@ -570,73 +569,75 @@ void mapimgForm::inSaveClicked()
 */
 void mapimgForm::showPreview( bool on )
 {
-   if( ignorePreviewSignals )
-      return;
+	if( ignorePreviewSignals )
+		return;
 
-   if( !prevLast )               /*if a file is freshly loaded, but not displayed, prevLast will be NULL*/
-      showInputPreview( true );     /*this addition will generate the preview for this case*/
+	if( !prevLast )               /*if a file is freshly loaded, but not displayed, prevLast will be NULL*/
+		showInputPreview( true );     /*this addition will generate the preview for this case*/
 
-   prevLast->setOn(on);
+	prevLast->setOn(on);
 
-   ignorePreviewSignals = true;
-   {
-      viewShowButton->setOn(on);
-   }
-   ignorePreviewSignals = false;
+	ignorePreviewSignals = true;
+	{
+		viewShowButton->setOn(on);
+	}
+	ignorePreviewSignals = false;
+
 }
 
 void mapimgForm::showInputPreview( bool on )
 {
-   if( ignorePreviewSignals )
-      return;
+	if( ignorePreviewSignals )
+		return;
 
-   if( on && prevLast != prevInput )
-   {
-      imgFrame->loadImg( inInfoFrame->info().imgFileName() );
-      prevLast = prevInput;
-   }
+	if( on && prevLast != prevInput )
+	{
+		imgFrame->loadImg( inInfoFrame->info().imgFileName() );
+		prevLast = prevInput;
+	}
 
-   ignorePreviewSignals = true;                      /* what is this block? is it conditional? */
-   {
-      prevInput->setOn(on);
-      prevOutput->setOn(false);
-      viewShowButton->setOn(on);
-      imgFrame->setShown(on);
-   }
-   ignorePreviewSignals = false;
+	ignorePreviewSignals = true;                      /* what is this block? is it conditional? */
+	{
+		prevInput->setOn(on);
+		prevOutput->setOn(false);
+		viewShowButton->setOn(on);
+		imgFrame->setShown(on);
+	}
+	ignorePreviewSignals = false;
 }
 
 void mapimgForm::showOutputPreview( bool on )
 {
-   if( ignorePreviewSignals )
-      return;
 
-   ignorePreviewSignals = true;
-   {
-      prevOutput->setOn(on);
-      if( on )
-      {
-         if( previewProjection() )
-         {
-            imgFrame->loadImg( QDir::currentDirPath().append("/temp_preview.img"), true );
-            prevLast = prevOutput;
-            prevInput->setOn(false);
-            viewShowButton->setOn(true);
-            imgFrame->setShown(true);
-         }
-         else
-         {
-            prevOutput->setOn(false);
-         }
-      }
-      else
-      {
-         prevInput->setOn(false);
-         viewShowButton->setOn(false);
-         imgFrame->setShown(false);
-      }
-   }
-   ignorePreviewSignals = false;
+	if( ignorePreviewSignals )
+		return;
+
+	ignorePreviewSignals = true;
+	{
+		prevOutput->setOn(on);
+		if( on )
+		{
+			if( previewProjection() )
+			{
+				imgFrame->loadImg( QDir::currentDirPath().append("/temp_preview.img"), true );
+				prevLast = prevOutput;
+				prevInput->setOn(false);
+				viewShowButton->setOn(true);
+				imgFrame->setShown(true);
+			}
+			else
+			{
+				prevOutput->setOn(false);
+			}
+		}
+		else
+		{
+			prevInput->setOn(false);
+			viewShowButton->setOn(false);
+			imgFrame->setShown(false);
+		}
+	}
+	ignorePreviewSignals = false;
 }
 
 /*
@@ -649,53 +650,53 @@ reprojects to a much smaller output.
 */
 bool mapimgForm::previewProjection()
 {
-   if( !imgSet )
-   {
-      QMessageBox::critical( this, "Input not set",
-         "No input to preview reprojection from." );
-      prevOutput->setOn(false);
-      ignorePreviewSignals = false;
-      return false;
-   }
+	if( !imgSet )
+	{
+		QMessageBox::critical( this, "Input not set",
+			"No input to preview reprojection from." );
+		prevOutput->setOn(false);
+		ignorePreviewSignals = false;
+		return false;
+	}
 
-   RasterInfo input( inInfoFrame->info() );
-   input.setAuthor("Unknown", "Unknown", "Unknown");
-   if( !mapimg::readytoReproject(input, this) )
-      return false;
+	RasterInfo input( inInfoFrame->info() );
+	input.setAuthor("Unknown", "Unknown", "Unknown");
+	if( !mapimg::readytoReproject(input, this) )
+		return false;
 
-   RasterInfo output( outInfoFrame->info() );
-   output.setAuthor("Unknown", "Unknown", "Unknown");
-   output.setDataType( input.isSigned(), input.bitCount(), input.type() );
+	RasterInfo output( outInfoFrame->info() );
+	output.setAuthor("Unknown", "Unknown", "Unknown");
+	output.setDataType( input.isSigned(), input.bitCount(), input.type() );
 
-   if( !mapimg::readytoFrameIt( output, this ) )
-      return false;
-   mapimg::frameIt( output );
-   outInfoFrame->setInfo( output );
-   if( !mapimg::readytoReproject( output, this, false ) )
-      return false;
+	if( !mapimg::readytoFrameIt( output, this ) )
+		return false;
+	mapimg::frameIt( output );
+	outInfoFrame->setInfo( output );
+	if( !mapimg::readytoReproject( output, this, false ) )
+		return false;
 
-   RasterInfo smallInput;
-   smallInput.setFileName( QDir::currentDirPath().append("/temp_small.img") );
-   smallInput.setAuthor("Unknown", "Unknown", "Unknown");
-   mapimg::downSampleImg( input, smallInput, 720, this );
-   smallInput.save();
+	RasterInfo smallInput;
+	smallInput.setFileName( QDir::currentDirPath().append("/temp_small.img") );
+	smallInput.setAuthor("Unknown", "Unknown", "Unknown");
+	mapimg::downSampleImg( input, smallInput, 720, this );
+	smallInput.save();
 
-   if( !mapimg::downSizeProjection( output, 720 ) )
-   {
-      QMessageBox::critical( this, "Output Error",
-         "Unexpected failure with output operations" );
-      return false;
-   }
+	if( !mapimg::downSizeProjection( output, 720 ) )
+	{
+		QMessageBox::critical( this, "Output Error",
+			"Unexpected failure with output operations" );
+		return false;
+	}
 
-   output.setFileName( QDir::currentDirPath().append("/temp_preview.img") );
-   output.save();
+	output.setFileName( QDir::currentDirPath().append("/temp_preview.img") );
+	output.save();
 
-   ResampleInfo resample;
-   resample.setResampleCode( ResampleInfo::NearestNeighbor );
-   resample.setFillValue( input.fillValue() );
-   resample.setNoDataValue( input.noDataValue() );
+	ResampleInfo resample;
+	resample.setResampleCode( ResampleInfo::NearestNeighbor );
+	resample.setFillValue( input.fillValue() );
+	resample.setNoDataValue( input.noDataValue() );
 
-   return mapimg::reproject( smallInput, output, resample );
+	return mapimg::reproject( smallInput, output, resample );
 }
 
 /*
@@ -706,204 +707,201 @@ the reprojection begins.
 */
 void mapimgForm::outSaveClicked()
 {
-   // Check that all input settings are ready
-   if( !imgSet )
-   {
-      QMessageBox::critical( this, "Reproject and Save",
-         "No file loaded for reprojection input." );
-      return;
-   }
+	// Check that all input settings are ready
+	if( !imgSet )
+	{
+		QMessageBox::critical( this, "Reproject and Save",
+			"No file loaded for reprojection input." );
+		return;
+	}
 
-   RasterInfo input( inInfoFrame->info() );
+	RasterInfo input( inInfoFrame->info() );
 
-   if( input.projectionNumber() == 0 )
-   {
-      mapimg::geo2eqr( input );
-   }
-   else
-   {
-      if( !mapimg::readytoReproject(input, this) )
-         return;
-   }
+	if( input.projectionNumber() == 0 )
+	{
+		mapimg::geo2eqr( input );
+	}
+	else
+	{
+		if( !mapimg::readytoReproject(input, this) )
+			return;
+	}
 
-   // Check that all output settings are ready
-   RasterInfo output( outInfoFrame->info() );
-   output.setAuthor( authName, authCompany, authEmail );
+	// Check that all output settings are ready
+	RasterInfo output( outInfoFrame->info() );
+	output.setAuthor( authName, authCompany, authEmail );
 
-   if( !mapimg::readytoFrameIt( output, this ) )
-      return;
-   mapimg::frameIt( output );
-   outInfoFrame->setInfo( output );
-   if( !mapimg::readytoReproject( output, this, false ) )
-      return;
+	if( !mapimg::readytoFrameIt( output, this ) )
+		return;
+	mapimg::frameIt( output );
+	outInfoFrame->setInfo( output );
+	if( !mapimg::readytoReproject( output, this, false ) )
+		return;
 
-   // Prompt for destination of new projection
-   QString temp = Q3FileDialog::getSaveFileName(
-      outPath, "MapIMG Raster Files (*.img)", this, "", "Choose a destination for the reprojection");
-   if( temp.isNull() )
-      return;
+	// Prompt for destination of new projection
+	QString temp = QFileDialog::getSaveFileName(
+		outPath, "MapIMG Raster Files (*.img)", this, "", "Choose a destination for the reprojection");
+	if( temp.isNull() )
+		return;
 
-   if( !output.setFileName( temp ) )
-   {
-      QMessageBox::critical( this, "Reproject and Save",
-         QString( "%1\n"
-         "Invalid output file name." )
-         .arg( temp ) );
-      return;
-   }
+	if( !output.setFileName( temp ) )
+	{
+		QMessageBox::critical( this, "Reproject and Save",
+			QString( "%1\n"
+			"Invalid output file name." )
+			.arg( temp ) );
+		return;
+	}
 
-   // Prompt on overwrite of output
-   if( QFile::exists( output.imgFileName() ) )
-   {
-      int status = QMessageBox::question( this, "Reproject and Save", 
-         output.imgFileName() + " already exists."
-         "\nDo you want to replace it?",
-         QMessageBox::Yes, QMessageBox::No );
+	// Prompt on overwrite of output
+	if( QFile::exists( output.imgFileName() ) )
+	{
+		int status = QMessageBox::question( this, "Reproject and Save", 
+			output.imgFileName() + " already exists."
+			"\nDo you want to replace it?",
+			QMessageBox::Yes, QMessageBox::No );
 
-      if( status == QMessageBox::No )
-         return;
+		if( status == QMessageBox::No )
+			return;
 
-      QFile::remove( output.imgFileName() );
-      if( QFile::exists( output.xmlFileName() ) )
-         QFile::remove( output.xmlFileName() );
-   }
+		QFile::remove( output.imgFileName() );
+		if( QFile::exists( output.xmlFileName() ) )
+			QFile::remove( output.xmlFileName() );
+	}
 
-   // Prompt for resample parameters
-   ResampleForm *resForm = new ResampleForm( input, output, this, "resForm", false,
-      WINDOW_FLAGS );
+	// Prompt for resample parameters
+	ResampleForm *resForm = new ResampleForm( input, output, this, "resForm", false,
+		WINDOW_FLAGS );
 
-   if( resForm->exec() == QDialog::Rejected )
-   {
-      delete resForm;
-      return;
-   }
+	if( resForm->exec() == QDialog::Rejected )
+	{
+		delete resForm;
+		return;
+	}
 
-   ResampleInfo resample( resForm->info() );
-   resample.setFillValue( output.fillValue() );
-   resample.setNoDataValue( output.noDataValue() );
-   resample.setHasNoDataValue( output.hasNoDataValue() );
-   delete resForm;
+	ResampleInfo resample( resForm->info() );
+	resample.setFillValue( output.fillValue() );
+	resample.setNoDataValue( output.noDataValue() );
+	resample.setHasNoDataValue( output.hasNoDataValue() );
+	delete resForm;
 
-   // Reproject (finally)
-   if( mapimg::reproject( input, output, resample, this ) )
-   {
-      if( QFile::exists( output.imgFileName() ) )
-         QFile::remove( output.imgFileName() );
-      return;
-   }
+	// Reproject (finally)
+	if( mapimg::reproject( input, output, resample, this ) )
+	{
+		if( QFile::exists( output.imgFileName() ) )
+			QFile::remove( output.imgFileName() );
+		return;
+	}
 
-   output.save();
+	output.save();
 
-   // Save output path to settings
-   outPath = temp.left( temp.findRev( "/" ) );
-   QSettings *settings = new QSettings( QSettings::IniFormat, QSettings::SystemScope,"" /**QSettings::Ini**/ );
-   settings->setPath( "USGS.gov", "MapIMG" );
-   settings->writeEntry( "/USGS/MapIMG/DefaultOutputPath", outPath );
-   delete settings;
+	// Save output path to settings
+	outPath = temp.left( temp.findRev( "/" ) );
+	QSettings *settings = new QSettings( QSettings::IniFormat, QSettings::SystemScope,"" /**QSettings::Ini**/ );
+	settings->setPath( "USGS.gov", "MapIMG" );
+	settings->writeEntry( "/USGS/MapIMG/DefaultOutputPath", outPath );
+	delete settings;
 }
 
 void mapimgForm::editAuthor()
 {
-   QSettings *settings = new QSettings( QSettings::IniFormat, QSettings::SystemScope,""/**QSettings::Ini**/ );
-   settings->setPath( "USGS.gov", "MapIMG" );
+	QSettings *settings = new QSettings( QSettings::IniFormat, QSettings::SystemScope,""/**QSettings::Ini**/ );
+	settings->setPath( "USGS.gov", "MapIMG" );
 
-   authorForm *form = new authorForm(settings, this, "about", false,
-      WINDOW_FLAGS );
-   form->exec();
-   delete form;
+	authorForm *form = new authorForm(settings, this, "about", false,
+		WINDOW_FLAGS );
+	form->exec();
+	delete form;
 
-   authName = settings->readEntry( "/USGS/MapIMG/AuthorName" );
-   authCompany = settings->readEntry( "/USGS/MapIMG/AuthorCompany" );
-   authEmail = settings->readEntry( "/USGS/MapIMG/AuthorEmail" );
+	authName = settings->readEntry( "/USGS/MapIMG/AuthorName" );
+	authCompany = settings->readEntry( "/USGS/MapIMG/AuthorCompany" );
+	authEmail = settings->readEntry( "/USGS/MapIMG/AuthorEmail" );
 
-   delete settings;
+	delete settings;
 }
 
 void mapimgForm::aboutClicked()
 {
-   aboutForm *about = new aboutForm(this, "about", false,
-      WINDOW_FLAGS );
-   about->exec();
-   delete about;
+	aboutForm *about = new aboutForm(this, "about", false,
+		WINDOW_FLAGS );
+	about->exec();
+	delete about;
 }
 
 
 //Tools
 void mapimgForm::webDSSClicked()
 {
-   launchWebTool( "http://mcmcweb.er.usgs.gov/research/DSSMain/DSSApplet.html" );
+	launchWebTool( "http://mcmcweb.er.usgs.gov/research/DSSMain/DSSApplet.html" );
 
-   return;
+	return;
 }
 
 void mapimgForm::launchWebTool( const QString& url )
 {
-   Q3Process* web = new Q3Process( this, "webTool" );
-   bool supportedPlatform = true;
-   bool executeProcess = false;
+	QProcess* web = new QProcess( this );
+	bool supportedPlatform = true;
+	bool executeProcess = false;
 
 #if defined(Q_OS_WIN32)
 #include <windows.h>
 
-   //Trolltech's Windows Version Independent Default Browser Launch
-   QT_WA( {ShellExecute( winId(), 0, (TCHAR*)url.ucs2(), 0, 0, SW_SHOWNORMAL );},
-   {ShellExecuteA( winId(), 0, url.local8Bit(), 0, 0, SW_SHOWNORMAL );} );
+	//Trolltech's Windows Version Independent Default Browser Launch
+	QT_WA( {ShellExecute( winId(), 0, (TCHAR*)url.ucs2(), 0, 0, SW_SHOWNORMAL );},
+	{ShellExecuteA( winId(), 0, url.local8Bit(), 0, 0, SW_SHOWNORMAL );} );
 
-   supportedPlatform = true;
-   executeProcess = false;
+	supportedPlatform = true;
+	executeProcess = false;
 #elif defined(Q_OS_LINUX)
 #include <stdio.h>
 #include <stdlib.h>
 
-   //get : delimited list of all perferred browsers
-   Q3CString allBrowsers = getenv( "BROWSER" );
+	//get : delimited list of all perferred browsers
+	QByteArray allBrowsers = getenv( "BROWSER" );
 
-   if( allBrowsers.isEmpty() ) //if it is empty we're hosed
-   {
-      qDebug( "No $BROWSER environment varialbe set." );
-      supportedPlatform = false;
-      executeProcess = false;
-   }
-   else
-   {
-      //split the list
-      QStringList browsers = QStringList::split( ":" , allBrowsers );
+	if( allBrowsers.isEmpty() ) //if it is empty we're hosed
+	{
+		qDebug( "No $BROWSER environment varialbe set." );
+		supportedPlatform = false;
+		executeProcess = false;
+	}
+	else
+	{
+		//split the list
+		QStringList browsers = QStringList::split( ":" , allBrowsers );
 
-      //grab the first (default)
-      QString browser = *browsers.begin();
+		//grab the first (default)
+		QString browser = *browsers.begin();
 
-      if( browser.contains( "kfmclient" ) )
-      {
-         web->addArgument( "kfmclient" );
-         web->addArgument( "exec" );
-      }
-      else
-      {
-         web->addArgument( browser );
-      }
+		if( browser.contains( "kfmclient" ) )
+		{
+			web->addArgument( "kfmclient" );
+			web->addArgument( "exec" );
+		}
+		else
+		{
+			web->addArgument( browser );
+		}
 
-      web->addArgument( url );
+		web->addArgument( url );
 
-      executeProcess = true;
-   }
+		executeProcess = true;
+
+	}
 #elif defined(Q_OS_MACX)
-   //Trolltech's Mac OSX Version Independent Default Browser Launch
-   web->addArgument( "/usr/bin/open" );
-   web->addArgument( url );
-   executeProcess = true;
+	//Trolltech's Mac OSX Version Independent Default Browser Launch
+	web->addArgument( "/usr/bin/open" );
+	web->addArgument( url );
+	executeProcess = true;
 #else
-   supportedPlatform = false;
-   executeProcess = false;
+	supportedPlatform = false;
+	executeProcess = false;
 #endif
 
-   int returnValue = 0;
-   QObject::connect( web, SIGNAL( processExited() ), web, SLOT( deleteLater() ) );
+	QObject::connect( web, SIGNAL( processExited() ), web, SLOT( deleteLater() ) );
 
-   if( executeProcess )
-      returnValue = !web->start();
+	if( !QUrl( url ).isValid() || !supportedPlatform )	
+		QMessageBox::information( this, "Mapimg", QString("Unable to launch web browser to %1").arg( url ) );
 
-   if( returnValue || !supportedPlatform )
-      QMessageBox::information( this, "Mapimg", QString("Unable to launch web browser to %1").arg( url ) );
-
-   return;
+	return;
 }

@@ -1,4 +1,4 @@
-// $Id: authorform.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
+// $Id: authorform.h,v 1.3 2005/08/24 17:58:25 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -55,6 +55,7 @@ public:
    QLineEdit* emailEdit;
    QPushButton* okButton;
    QPushButton* cancelButton;
+
 
 protected:
    QVBoxLayout* authorFormLayout;

@@ -1,4 +1,4 @@
-// $Id: rasterinfo.h,v 1.3 2005/08/19 20:43:56 rbuehler Exp $
+// $Id: rasterinfo.h,v 1.4 2005/08/24 17:58:26 lwoodard Exp $
 
 
 #ifndef RASTERINFO_H
@@ -43,6 +43,7 @@ public:
    bool setFillValue( double fillValue );
    bool setNoDataValue( double noDataValue );
    QString dataType() const {return datatype;}
+   QString fullDataType() const;	//returns isSigned + bitCount + dataType 
    bool isSigned() const {return signd;}
    int bitCount() const {return bits;}
    QString type() const {return datatype;}
@@ -95,6 +96,8 @@ private:
    QString  aName;
    QString  aCompany;
    QString  aEmail;
+
+   QString *tempAName, *tempACompany, *tempAEmail;
 
    double   ulx;
    double   uly;

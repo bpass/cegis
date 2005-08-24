@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.9 2005/08/19 18:19:41 lwoodard Exp $
+// $Id: resampleform.cpp,v 1.10 2005/08/24 17:58:26 lwoodard Exp $
 
 
 /****************************************************************************
@@ -98,12 +98,10 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 	ignoreLabel = new QLabel( "Ignore values cannot be used if an output \"No Data \nValue\" is not provided.", ignoreBox, "ignoreLabel" );
 	ignoreLabel->hide();
 	ignoreBoxLayout->addWidget( ignoreLabel );
-
-//QMessageBox::information( this, "Gurng", output.dataType() );
 	
 	ignoreEdit = new QLineEdit( ignoreBox, "ignoreEdit" );
 	ignoreEdit->setMinimumSize( QSize( 125, 0 ) );
-	ignoreEdit->setValidator( new MapimgValidator( output.dataType(), ignoreEdit ) );
+	ignoreEdit->setValidator( new MapimgValidator( output.fullDataType(), ignoreEdit ) );
 	ignoreLayout->addWidget( ignoreEdit );
 
 	newButton = new QPushButton( ignoreBox, "newButton" );

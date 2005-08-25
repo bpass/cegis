@@ -32,18 +32,32 @@ namespace USGSMosix
     
     class ProjImageScale : public SerializableInterface {
         public:
-            ProjImageScale()
-                : x(0.0f), y(0.0f),
-                  m_units(ProjLib::UNKNOWN_UNIT) {} 
+
+
+            ProjImageScale() : x(0.0f), y(0.0f), m_units(ProjLib::UNKNOWN_UNIT)             {
+            } 
+          
+            /// \param xy A pair representing the scale in the horizontal 
+            /// and the vertical direction respectively.  Scale being 
+            /// the pixel / unit ratio.
+            /// \note In this constructor the units are net set.
+            ProjImageScale(std::pair<scale_t, scale_t> xy) : x(xy.first), 
+                y(xy.second), m_units(ProjLib::UNKNOWN_UNIT)
+            {
+            } 
+            
+            /// \param _x The pixel/unit ratio in the horizontal direction.
+            /// \param _y The pixel/unit ratio in the vertical direction.
+            /// \param unit The units this ratio has been formulated in.
+            ProjImageScale( scale_t _x, scale_t _y, UNIT unit ) : x(_x), y(_y), 
+                m_units(unit)             
+            {
+            }   
            
-            ProjImageScale(std::pair<scale_t, scale_t> xy)
-                : x(xy.first), y(xy.second) {} 
-            
-            ProjImageScale( scale_t _x, 
-                            scale_t _y,
-                            UNIT unit )
-                : x(_x), y(_y), m_units(unit) {}  
-            
+            /// \param socket The socket which has data waiting on it from 
+            /// a ProjImageScale object's call to exportToSocket().
+            /// \brief Constructs a copy of the object which called 
+            /// exportToSocket(). 
             static ProjImageScale createFromSocket( ClientSocket & socket ) 
             {
                 scale_t _x, _y;
@@ -56,6 +70,10 @@ namespace USGSMosix
                 return ProjImageScale( _x, _y, units );
             }
             
+            /// \param socket A socket to which pertinent data should be
+            /// outputted for the purposes of creating a copy of the 
+            /// current object.
+            /// \brief Used to serialize the current object over a socket.
             void exportToSocket( ClientSocket& socket ) const
             {
                 socket.appendToBuffer( &x, sizeof(x) );
@@ -66,13 +84,22 @@ namespace USGSMosix
                 return;
             }
             
+            // scale in the horizontal direction.
             scale_t x;
-            scale_t y;
             
+            // scale in the vertical direction.
+            scale_t y;
+           
+            /// \brief Returns the units that this scale is ini.
             UNIT getUnits() { return m_units; }     
+            
+            /// \brief Sets the units per pixel.
             void setUnits( UNIT _unit ) { m_units = _unit; }             
+            
         private:
-            UNIT m_units; // per pixel 
+
+            // the units per pixel
+            UNIT m_units; 
     };
 
 } // namespace 

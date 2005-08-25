@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 20:56:35 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
@@ -10,7 +10,8 @@
  * 
  * \brief The ProjImageOut object is meant to be a representation 
  * of a image for an image projection and all of its 
- * implicit characteristics.
+ * implicit characteristics.  ProjImageOut accepts misc. parameters
+ * and opens a blank output image with an associated projection.
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -84,7 +85,8 @@ void ProjImageOut::setupImage( std::string filename,
         throw GeneralException("Height and width problem.");
 
     strExtension = getFileExtension(filename);
-    
+   
+    // switch on file extension
     if ( !cmp_nocase( strExtension, "TIFF" ) ||
          !cmp_nocase( strExtension, "TIF" ) ) 
     {
@@ -263,12 +265,9 @@ void ProjImageOut::exportToSocket( ClientSocket & socket )const
 
 /****************************************************************************/
 
-
-void ProjImageOut::putScanlines( const ProjImageOutPiece & piece )
+void ProjImageOut::putScanlines( const ProjImageOutPiece & )
 {
-    (void)piece;
     // TODO
-    return;
 }
 
 /****************************************************************************/

@@ -1,11 +1,11 @@
-#ifndef _USGSMOSIX_PROJIMAGEDATA_H_
-#define _USGSMOSIX_PROJIMAGEDATA_H_
+#ifndef __USGSMOSIX_PROJIMAGEDATA_H_
+#define __USGSMOSIX_PROJIMAGEDATA_H_
 
 /*! 
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
@@ -47,50 +47,101 @@ class ProjImageData : public virtual ProjImageDataInterface
         virtual ~ProjImageData(); 
         
         // virtual get methods
+        
+        /// \brief Returns the left bound in degrees of the current image.
         virtual double getLeftBound()                        const;
+        /// \brief Returns the right bound in degrees of the current image.
         virtual double getRightBound()                       const;
+        /// \brief Returns the top bound in degress of the current image.
         virtual double getTopBound()                         const;
+        /// \brief Returns the top bound in degress of the current image.
         virtual double getBottomBound()                      const;
+        /// \brief Returns the outerbounds in degrees of the current image.
         virtual DRect  getOuterBounds()                      const;
+        /// \brief Returns the height in pixels of the current image.
         virtual long int getHeight()                         const;
+        /// \brief Returns the width in pixels of the current image. 
         virtual long int getWidth()                          const; 
+        /// \brief Returns the projection of the current image.
         virtual const ProjLib::Projection * getProjection()  const;
+        /// \brief Returns the units/pixel measurement of the image.
         virtual ProjImageScale getPixelScale()               const;
+        /// \brief Returns the image's photometric (e.g., RGB, greyscale)
         virtual int getPhotometric()                         const;
+        /// \brief Returns the image's bits per sample (or channel.)
         virtual int getBPS()                                 const;
+        /// \brief Returns the samples per pixel. 
         virtual int getSPP()                                 const;
-       
-        // additional get methods
+        /// \brief Returns the filename for the current image file.
         std::string getFilename()                            const;
         
-        // virtual set methods
+        /// \brief Returns the pixel scale for the current image.
         virtual void setPixelScale( const ProjImageScale & s );
         
-        // additional set functions
+        /// \brief Sets bounds for the current image file (in degrees.) 
         void setBounds( const DRect& rect );
+        /// \brief Sets the left bound for the current image file (in deg.)
         void setLeftBound( const double& l ); 
+        /// \brief Sets the right bound for the current image file (in deg.)
         void setRightBound( const double& r );
+        /// \brief Sets the top bound for the current image file (in deg.)
         void setTopBound( const double& t );
+        /// \brief Sets the bottom bound for the current image file (in deg.)
         void setBottomBound( const double& b );
+        /// \brief Sets the width of the current file (in pixels).
         void setWidth( const long int& w);
+        /// \brief Sets the height of the current file (in pixels).
         void setHeight(const long int& h);
+        /// \brief Sets the filename for the current image file.
         void setFilename( std::string & s );
 
+        /// \param toProjection The destination projection to be 
+        /// projected to from this image's current projection.  In other
+        /// words, the mesh will be mapping from the current projimage's
+        /// projection to the destination.
+        /// 
+        /// \param divisions The number of vertical/horizontal divisions
+        /// made in the mesh.  Defaults to a globally defined constant.
+        ///
+        /// \param interp.  The type of interpolation to be used in 
+        /// mesh pixel getting.  Defaults to a globally defined constant.
+        /// 
+        /// \brief Sets up a forward mesh using this ProjImage's projection
+        /// and a second Projection.  
         virtual const PmeshLib::ProjectionMesh & setupMesh(
-                const ProjLib::Projection & secondProjection,
+                const ProjLib::Projection & toProjection,
                 unsigned int divisions = kgMeshDivisions , 
                 MathLib::InterpolatorType interp = kgInterpolator )const;
 
+        /// \param fromProjection The source projection.  In other words,
+        /// the mesh will be a mapping from fromProjection to the 
+        /// current projection.
+        /// 
+        /// \param divisions The number of vertical/horizontal divisions
+        /// made in the mesh.  Defaults to a globally defined constant.
+        ///
+        /// \param interp.  The type of interpolation to be used in 
+        /// mesh pixel getting.  Defaults to a globally defined constant.
+        /// 
+        /// \brief Sets up a reverse mesh using this ProjImage's projection
+        /// and a second Projection.  
         virtual const PmeshLib::ProjectionMesh & setupReverseMesh(
-                const ProjLib::Projection & secondProjection,
+                const ProjLib::Projection & fromProjection,
                 const DRect & boundaries, 
                 unsigned int divisions = kgMeshDivisions , 
                 MathLib::InterpolatorType interp = kgInterpolator )const;
         
     protected:
+        /// \param filename A image filename with an extension.
+        /// \brief Returns the file extension of the filename passed 
+        /// to it.
         std::string getFileExtension( const std::string& filename );
+
+        /// the scale of the current image.
         ProjImageScale m_scale;
+        /// a pointer to the current image.
         USGSImageLib::ImageFile * m_file;
+        /// the projection which m_file is in.
         const ProjLib::Projection * m_proj;
     private:
         DRect m_boundaries;  ///< boundaries to scale, not lat, long or pixel.

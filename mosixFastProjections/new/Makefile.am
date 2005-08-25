@@ -3,7 +3,7 @@
 # @file Makefile.am
 # @author Mark Schisler 
 #
-# $Id: Makefile.am,v 1.3 2005/08/17 20:56:35 mschisler Exp $
+# $Id: Makefile.am,v 1.4 2005/08/25 21:07:29 mschisler Exp $
 #
 
 # SUBDIRS = tests
@@ -17,7 +17,7 @@ noinst_PROGRAMS = reproject
 reproject_SOURCES =ClientSocket.cpp ProjImageFactory.cpp \
 				   driver.cpp \
 				   ProjImageIn.cpp ServerSocket.cpp \
-				   FromMultiGeoProjector.cpp  ProjImageInList.cpp \
+				   GeneralProjector.cpp  ProjImageInList.cpp \
 				   SlaveProjector.cpp ProjectorFactory.cpp \
 				   ProjImageOut.cpp  SocketWrapper.cpp \
 				   ProjImageParams.cpp \

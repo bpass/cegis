@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
@@ -63,7 +63,10 @@ bool ClientSocket::send( const void * in_buffer, unsigned int in_size )
 {
   size_t sentthiscall = 0;
   size_t sentsofar = 0;
-  
+ 
+  // send will not neccesarily send the whole message in one call, 
+  // so we have to put this in a do-while to try and get the whole 
+  // message was sent. :: denotes the global namespace.
   do {
       
     sentsofar += ( sentthiscall = ::send( m_socketDesc,
@@ -93,7 +96,10 @@ bool ClientSocket::sendFromBuffer()
   
   size_t sentthiscall = 0;
   size_t sentsofar = 0;
-  
+ 
+  // send will not neccesarily send the whole message in one call, 
+  // so we have to put this in a do-while to try and get the whole 
+  // message was sent. :: denotes the global namespace.
   do {
       
     sentsofar += ( sentthiscall = ::send( m_socketDesc,
@@ -123,21 +129,28 @@ bool ClientSocket::setupSocket()
     hostent * serverhost = NULL;
     sockaddr_in serverAddr;
     char serveripbuf[16] = {0};
-    
+  
+    // get the name of this host.
     if ((serverhost = gethostbyname(m_hostname.c_str())) == NULL ) 
         throw GeneralException("Client: Failed to resolve hostname.");
 
+    // get the ip address and null terminate it.
     strncpy(serveripbuf, inet_ntoa(*((in_addr*)serverhost->h_addr_list[0])),16);
     serveripbuf[15] = '\0';
        
+    // check the validity of the ip address.
     if(inet_aton(serveripbuf, &serverAddr.sin_addr ) == 0 )
         throw GeneralException("Client: Invalid IP Address.");
 
+    // set up the port number for this ip.
     serverAddr.sin_port = htons(m_portNo);
     serverAddr.sin_family = AF_INET;
     
+    // try and bind the socket to the selected port, m_portNo
     if ( (m_socketDesc = socket(AF_INET, SOCK_STREAM, 0)) != -1 ) 
     {
+        // try to reconnect several times as specified by the 
+        // global constant.
         int retriesleft = kgConnectRetries;
         while(retriesleft > 0)
         {

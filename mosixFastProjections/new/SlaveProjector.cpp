@@ -2,13 +2,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 20:56:34 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
  * \file SlaveProjector.cpp
  * 
- * \brief Built as a wrapper for an FromMultiGeoProjector object,
+ * \brief Built as a wrapper for an GeneralProjector object,
  * this class will redirect all output from it usual file ouput, 
  * to being network controlled --i.e., all output will be
  * directed toward a socket via a forwarded descriptor.
@@ -20,7 +20,7 @@
  */
 
 #include "SlaveProjector.h"
-#include "FromMultiGeoProjector.h"
+#include "GeneralProjector.h"
 
 namespace USGSMosix {
 
@@ -38,7 +38,7 @@ ProjImageInInterface & inInterface,
 ProjImageOutInterface & imgOutInterface,
 std::pair<unsigned long, unsigned long> scanlineRange  ) : 
 
-m_projInterface( new FromMultiGeoProjector(inInterface, imgOutInterface)),
+m_projInterface( new GeneralProjector(inInterface, imgOutInterface)),
 m_scanlineRange( scanlineRange ),
 m_noScanlines( 0 ),
 m_scanlines( NULL )

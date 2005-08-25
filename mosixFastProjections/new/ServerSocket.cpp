@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
@@ -61,8 +61,6 @@ ClientSocket ServerSocket::accept()
 
 /******************************************************************************/
 
-// send whatever's in the buffer to the socket parameter.
-// \note may block due to send().  
 bool ServerSocket::sendFromBuffer( const ClientSocket & receiver )
 {
   if( m_bufferEnd == 0 )

@@ -5,7 +5,7 @@
  *
  * \file ProjectorFactory.h
  *
- * \date $Date: 2005/08/17 20:57:02 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  *
@@ -15,7 +15,7 @@
  *
  */
 
-#include "FromMultiGeoProjector.h"
+#include "GeneralProjector.h"
 #include "SlaveProjector.h"
 #include "ProjectorFactory.h"
 #include "GeneralException.h"
@@ -26,10 +26,9 @@ namespace USGSMosix {
 
 ProjectorFactory::~ProjectorFactory()
 {
-/*    for( std::list<ProjectorInterface *>::iterator i; 
-         i != m_projectors.end();
-         ++i )
-        delete *i; */
+    for( std::list<ProjectorInterface *>::iterator i = m_projectors.begin(); 
+         i != m_projectors.end(); ++i )
+        delete *i; 
 }
     
 /******************************************************************************/
@@ -38,13 +37,15 @@ ProjectorInterface * ProjectorFactory::makeProjector( ClientSocket & client )
 {
     PROJECTORTYPE ty;
     ProjectorInterface * iface = NULL;
-    
+   
+    // peek at which type of projector it is and use that to construct
+    // the projector type.
     client.peek(&ty, sizeof(ty));
     switch( ty )
     {
         case GEOPROJ:
-            iface = new(std::nothrow) FromMultiGeoProjector(
-                    FromMultiGeoProjector::createFromSocket(client));
+            iface = new(std::nothrow) GeneralProjector(
+                    GeneralProjector::createFromSocket(client));
             break;
         case SLAVEPROJ:
             iface = new(std::nothrow) SlaveProjector(

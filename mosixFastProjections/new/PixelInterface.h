@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
@@ -27,21 +27,34 @@
 namespace USGSMosix 
 {
 
+/*! Templated on the data type of the sample or channels. */
 template<class T>
 class PixelInterface
 {
 public:
     PixelInterface() {} 
     virtual ~PixelInterface() {} 
-    
+   
+    /// \param r The Red value.
+    /// \param g The Green value.
+    /// \param b The Blue value.
+    /// \brief Gets the Red, green and blue values for the current pixel.
     virtual void getRGB(sample_t& r, sample_t& g, sample_t& b)const = 0;
     
+    /// \param g The grey value.
+    /// \brief Returns the grey value for the current pixel.
     virtual void getGrey(sample_t& g)const = 0;
 
-    // virtual void setRGB(const sample_t& r, 
-    //                     const sample_t& g, const sample_t&b) = 0;
+    /// \param r The Red value.
+    /// \param g The Green value.
+    /// \param b The Blue value.
+    /// \brief Sets the R,G,B values for the current pixel.
+    virtual void setRGB(const sample_t& r, 
+                        const sample_t& g, const sample_t&b) = 0;
     
-    // virtual void setGrey(const sample_t& g) = 0;
+    /// \param g The grey value.
+    /// \brief Sets the grey value for the current pixel.
+    virtual void setGrey(const sample_t& g) = 0;
 };
     
 } // USGSMosix

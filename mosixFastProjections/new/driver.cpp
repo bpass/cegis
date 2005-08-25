@@ -4,7 +4,7 @@
  *
  * \file driver.cpp
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \brief Purpose is to be a temporary test driver for the mosix
  * fast projections project.
@@ -21,7 +21,7 @@
 #include "ProjImageInInterface.h"
 #include "ProjImageParams.h"
 #include "ProjImageFactory.h"
-#include "FromMultiGeoProjector.h"
+#include "GeneralProjector.h"
 using namespace USGSMosix;
 
 void cleanupPtrList( std::list<ProjImageParams* > & l ) 
@@ -99,7 +99,7 @@ int main(int argc, char** argv )
        
         if ( inputImageList != NULL  && outputFileParams != NULL )
         {
-            projector = new FromMultiGeoProjector( *outputFileParams,
+            projector = new GeneralProjector( *outputFileParams,
                                                    //  *input
                                                    *inputImageList );
             projector->project();

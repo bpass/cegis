@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
@@ -15,7 +15,8 @@
  * be used for storing pixel information.  AbstractPixel of the 
  * ImageLib involved way too much casting for the purposes of
  * the MOSIX code.  PixelGrey defines a pixel with one channels 
- * (or sample) which measures brightness.  
+ * (or sample) which measures brightness.  Note: allows for 
+ * const and non-const functionality for the forwarded pointer.
  * 
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -26,28 +27,51 @@
 namespace USGSMosix 
 {
 
+/*! Templated over the data type used for the sample or channel
+ *  data . */
 template<class T>
 class PixelGrey  : public PixelInterface<T> 
 {
 public:
 
-    PixelGrey( const T * greyPointer ) : m_grey(greyPointer)  
+    PixelGrey( T* greyPointer) : m_kgrey(greyPointer), m_grey(greyPointer) 
     {
         if ( m_grey == NULL ) 
+            throw GeneralException("Pixel initialized with NULL value.");
+    }
+    
+    PixelGrey( const T * greyPointer ) : m_kgrey(greyPointer), 
+                                         m_grey(NULL)  
+    {
+        if ( m_kgrey == NULL ) 
             throw GeneralException("Pixel initialized with NULL value.");
     } 
    
     virtual ~PixelGrey() {} 
     
+    /// \param r The Red value.
+    /// \param g The Green value.
+    /// \param b The Blue value.
+    /// \brief Gets the Red, green and blue values for the current pixel.
     virtual void getRGB(T& r, T& g, T& b)const;
-    
+ 
+    /// \param g The grey value.
+    /// \brief Returns the grey value for the current pixel.
     virtual void getGrey(T& grey)const;
 
-    // virtual void setRGB(const T& r, const T& g, const T& b);
-    // virtual void setGrey(const T& grey);
+    /// \param r The Red value.
+    /// \param g The Green value.
+    /// \param b The Blue value.
+    /// \brief Sets the R,G,B values for the current pixel.
+    virtual void setRGB(const T& r, const T& g, const T& b);
+    
+    /// \param g The grey value.
+    /// \brief Sets the grey value for the current pixel.
+    virtual void setGrey(const T& grey);
 
 private:
-   const T * m_grey;
+   const T * m_kgrey;
+   T* m_grey;
 };
 
 /******************************************************************************/
@@ -55,9 +79,9 @@ private:
 template<typename T>
 inline void PixelGrey<T>::getRGB(T& r, T& g, T& b)const
 {
-    r = *m_grey;
-    g = *m_grey;
-    b = *m_grey;
+    r = *m_kgrey;
+    g = *m_kgrey;
+    b = *m_kgrey;
     return;
 }
 
@@ -66,30 +90,36 @@ inline void PixelGrey<T>::getRGB(T& r, T& g, T& b)const
 template<typename T>
 inline void PixelGrey<T>::getGrey(T& grey)const
 {
-    grey = *m_grey; 
+    grey = *m_kgrey; 
     return;
 }
 
 /******************************************************************************/
 
-/*
+
 template<typename T>
 inline void PixelGrey<T>::setRGB(const T& r, const T& g, 
                                  const T& b)
 {
-    *m_grey = (21 * r + 32 * g + 11 * b ) / 64; 
+    if ( m_grey != NULL ) 
+    {
+        *m_grey = (21 * r + 32 * g + 11 * b ) / 64; 
+    } else throw GeneralException("Error, initialized with const pointer.");
     return;
-}*/
+}
 
 /******************************************************************************/
 
-/*
+
 template<typename T>
 inline void PixelGrey<T>::setGrey(const T& grey)
 {
-    *m_grey = grey;
+    if ( m_grey != NULL )
+    {
+        *m_grey = grey;
+    } else throw GeneralException("Error, initialized with const pointer.");
     return;
-}*/
+}
 
 /******************************************************************************/
 

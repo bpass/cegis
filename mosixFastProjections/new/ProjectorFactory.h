@@ -7,7 +7,7 @@
  *
  * \file ProjectorFactory.h
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  *
@@ -27,9 +27,16 @@ namespace USGSMosix {
     public:
         ProjectorFactory() {} 
         virtual ~ProjectorFactory();
-        
+
+        /// \param client A socket containing information regarding
+        /// the construction of an unknown type of projector.
+        ///
+        /// \brief Makes a projector based on the type of information
+        /// waiting in the socket.
         ProjectorInterface * makeProjector( ClientSocket & client );
+        
     private:
+        /// for memory management
         std::list<ProjectorInterface *> m_projectors;
             
     };

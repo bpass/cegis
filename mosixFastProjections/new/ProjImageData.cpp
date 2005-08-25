@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 20:56:34 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
@@ -73,14 +73,21 @@ const PmeshLib::ProjectionMesh & ProjImageData::setupMesh(
     
         if ( m_proj == NULL || mesh == NULL  ) 
             throw GeneralException("NULL in setting up Mesh.");
-        
+    
+        // the mesh boundaries are for the current image, since that
+        // is where we are coming from.
         mesh->setSourceMeshBounds( getLeftBound(),
                                    getBottomBound(),
                                    getRightBound(),
                                    getTopBound() );
-        
+    
+        // set the number of divisions in the x and y directions.
         mesh->setMeshSize( divisions, divisions );
+
+        // set the type of interpolation to be used in the mesh 
         mesh->setInterpolator( interp );
+
+        // create the mesh.
         mesh->calculateMesh( *(m_proj), toProjection );
         
     } catch ( GeneralException & ge ) 
@@ -108,13 +115,20 @@ const PmeshLib::ProjectionMesh & ProjImageData::setupReverseMesh(
         if ( m_proj == NULL || mesh == NULL  ) 
             throw GeneralException("NULL in setting up Mesh.");
         
+        // the mesh boundaries are for the destination image,
+        // since that is where we are coming from.
         mesh->setSourceMeshBounds( boundaries.left,
                                    boundaries.bottom,
                                    boundaries.right,
                                    boundaries.top );
         
+        // set the number of divisions in the x and y directions.
         mesh->setMeshSize( divisions, divisions );
+        
+        // set the type of interpolation to be used.
         mesh->setInterpolator( interp );
+
+        // create the mesh.
         mesh->calculateMesh( fromProjection , *(m_proj));
         
     } catch ( GeneralException & ge ) 

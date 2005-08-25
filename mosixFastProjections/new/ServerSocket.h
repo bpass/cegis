@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
@@ -38,23 +38,38 @@ public:
     friend class ClientSocket;
   
     ServerSocket();
+
+    /// \param socketDesc A socket descriptor for use in this server socket.
     ServerSocket( int socketDesc ); 
+
+    /// \param port The port which we would like to accept connections on. 
     ServerSocket( unsigned int port );    
     
+    /// \brief Accepts connections on the port and host the server socket 
+    /// was opened on.
+    // \note A blocking call.
     ClientSocket accept();
     
-    // send whatever's in the buffer to the socket parameter.
+    /// \brief Sends data to connected socket which was appended to the 
+    /// internal buffer via calls to appendToBuffer().
     // \note may block due to send().  
     bool sendFromBuffer( const ClientSocket & receiver );
+    
+    /// \brief Returns the hostname on which the socket is operating.
     virtual std::string getHostname() { return m_hostname; } 
+    
+    /// \brief Returns the port on which the socket is operating.
     virtual unsigned int getPort()    { return m_portNo;   } 
     
 protected :
+
+    /// \brief sets up the socket to accept connections by binding it 
+    /// to a port, creating a socket descriptor, etc.
     virtual bool setupSocket();
 private:
-    std::string m_hostname; 
-    unsigned int m_portNo;
-    sockaddr_in m_mySocketAddr;
+    std::string m_hostname;     ///< the name of the host we're on
+    unsigned int m_portNo;      ///< the port we're operating on
+    sockaddr_in m_mySocketAddr; ///< socket address struct
 };
 
 

@@ -4,7 +4,7 @@
  * \author Mark Schisler \n
  *         Chris Bilderback 
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
@@ -166,7 +166,7 @@ ProjImageIn::ProjImageIn( const ProjImageParams & params )
 
     // save a copy for faster access time.
     m_spp = this->getSPP();
-    std::cout << "got spp " << m_spp << std::endl;
+    WRITE_DEBUG (  "got spp " << m_spp << std::endl );
     
     //set the dimensions
     this->setRightBound(this->getLeftBound() + m_scale.x * this->getWidth());
@@ -227,7 +227,7 @@ ProjImageScale ProjImageIn::calculateScale(const DRect & bounds)
 
 bool ProjImageIn::openImageWithParamFile(const std::string& filename)
 {
-    bool success = true;
+    bool success = false;
     std::string strExtension, Filename(filename); // const improper in imagelib
     using MiscUtils::cmp_nocase;
     using std::nothrow;
@@ -243,21 +243,25 @@ bool ProjImageIn::openImageWithParamFile(const std::string& filename)
         {
             if (!(m_file = new(nothrow)USGSImageLib::JPEGImageIFile(Filename)))
                 throw std::bad_alloc();
-            std::cout << "opened jpg:" << filename << std::endl
-                      << getOuterBounds() << std::endl;
+           
+            WRITE_DEBUG ( "opened jpg:" << filename << std::endl
+                          << getOuterBounds() << std::endl );
             
+            success = true;
                 
         } else if ( !cmp_nocase(strExtension, "PNG") == 0 )
         {
             if(!(m_file = new(nothrow)USGSImageLib::PNGImageIFile(Filename))) 
                 throw std::bad_alloc();
-            std::cout << " opened png:" << std::endl
-                      << getOuterBounds() << filename << std::endl;
+            
+            WRITE_DEBUG ( " opened png:" << std::endl
+                          << getOuterBounds() << filename << std::endl );
+
+            success = true;
             
         } else
         {
-            success = false;
-            std::cout << "failure" << std::endl;
+            WRITE_DEBUG ( "failure" << std::endl );
         }
         
         calculateScale(getOuterBounds()); 
@@ -265,17 +269,15 @@ bool ProjImageIn::openImageWithParamFile(const std::string& filename)
        
     } catch ( GeneralException & ge ) 
     {
-        std::cout << ge.toString() << std::endl;
-        success = false;
+        WRITE_DEBUG ( ge.toString() << std::endl );
         
     } catch ( USGSImageLib::ImageException & ie ) 
     {
-        std::cout << "ImageException thrown." << std::endl;
-        success = false;
+        WRITE_DEBUG ( "ImageException thrown." << std::endl );
         
     } catch ( ... )
     {
-        std::cout << "Uknown error." << std::endl;    
+        WRITE_DEBUG ( "Uknown error." << std::endl );
     }
 
     return success;
@@ -308,28 +310,20 @@ ProjImageIn::getPixel( const double& latitude, const double& longitude ) const
     static long int xSrcPixel(0), ySrcPixel(0); 
     static double xSrcScale(0.0), ySrcScale(0.0);
 
-//    std::cout << "---------------" << latitude << std::endl;
-//    std::cout << "latitude in:" << latitude << std::endl;
-//    std::cout << "longitude out:" << longitude << std::endl;
-    
+    // if we haven't already, set up the geographic mesh.
     if ( !m_geoMesh )
     {
         m_geoMesh = &this->setupReverseMesh(m_geoProjection,
                                             getGeographicBounds());
     }
-   
+    
     xSrcScale = longitude;
     ySrcScale = latitude;
     
+    // project latitude and longitude to scale of image.
     m_geoMesh->projectPoint(xSrcScale, ySrcScale);
-   
-//    std::cout << "xSrcScale:" << xSrcScale << std::endl;
-//    std::cout << "ySrcScale:" << ySrcScale << std::endl;
-
-
-//    std::cout << "m_scale x:" << m_scale.x << std::endl;
-//    std::cout << "m_scale y:" << m_scale.y << std::endl;
-    
+  
+    // get pixel coordinates using source boundaries. 
     xSrcPixel  = Math<long int>::ceil( (xSrcScale - getLeftBound()) 
                  / m_scale.x ); 
     ySrcPixel  = Math<long int>::ceil( (getTopBound() - ySrcScale) 
@@ -339,13 +333,11 @@ ProjImageIn::getPixel( const double& latitude, const double& longitude ) const
     if ( xSrcPixel < 0  || xSrcPixel >= getWidth() ||
          ySrcPixel < 0  || ySrcPixel >= getHeight() ) 
     {
-//        std::cout << "Requesting Pixel: " << xSrcPixel << "x" 
-//                  << ySrcPixel << std::endl;
-        
         return NULL;
         
     } else // if they are instead in bounds
     {
+        // get the pixel using the getPixel function
         return getPixel(static_cast<unsigned int>(xSrcPixel), 
                         static_cast<unsigned int>(ySrcPixel));
     }
@@ -364,7 +356,7 @@ DRect ProjImageIn::getNewBounds(const PmeshLib::ProjectionMesh & mesh)const
     long int xPixelCount(0), yPixelCount(0);
     DRect outputBounds;
 
-    std::cout << "sourceBounds" << sourceBounds << std::endl;
+    WRITE_DEBUG ( "sourceBounds" << sourceBounds << std::endl );
     
     for( xPixelCount = 0; xPixelCount < inWidth; ++xPixelCount )
     {
@@ -411,7 +403,7 @@ DRect ProjImageIn::getNewBounds(const PmeshLib::ProjectionMesh & mesh)const
     outputBounds.bottom = Math<double>::getMin(yPts);
     outputBounds.top    = Math<double>::getMax(yPts);
 
-    std::cout << "outputBounds" << outputBounds << std::endl;
+    WRITE_DEBUG (  "outputBounds" << outputBounds << std::endl );
     
     return outputBounds;
 }
@@ -420,20 +412,25 @@ DRect ProjImageIn::getNewBounds(const PmeshLib::ProjectionMesh & mesh)const
 
 DRect ProjImageIn::getGeographicBounds()const
 {
+    // since this function is pretty expensive, we use a bool to have this
+    // function keep state so we only have to generate the data for it once.
     if ( !m_haveGeoBounds  )
     {
-        std::cout << m_proj->toString() << std::endl;
+        WRITE_DEBUG ( m_proj->toString() << std::endl );
         
         m_haveGeoBounds = true; 
         
         if ( m_proj->getProjectionSystem() != GEO )
         {
-            std::cout << " generating geographic bounds. " << std::endl;
+            WRITE_DEBUG ( "generating geographic bounds. " << std::endl );
             return ( m_geoBounds = 
                     this->getNewBounds(this->setupMesh(m_geoProjection)));
+        
+        // in this case, no need to create a mesh, return the geographic 
+        // bounds directly.
         } else
         {
-            std::cout << " returning geographic bounds directly." << std::endl;
+            WRITE_DEBUG ( "returning geographic bounds directly."<<std::endl);
             return getOuterBounds();
         }
             
@@ -451,6 +448,8 @@ ProjImageIn ProjImageIn::createFromSocket( ClientSocket & socket )
     static unsigned int i = 1; 
     
     socket.receive(&i, sizeof(i));
+    // in this case what is trying to be constructed here is a list, and 
+    // not an individual image.  
     if ( i != 1 )
     {
         i = 1;
@@ -476,12 +475,14 @@ void ProjImageIn::exportToSocket( ClientSocket & socket )const
     unsigned int length = paramFilename.length();
     static unsigned int i = 1; 
 
+    // put information in buffer
     socket.appendToBuffer(&i, sizeof(i));
     socket.appendToBuffer(&length, sizeof(length));
 
     socket.appendToBuffer(paramFilename.c_str(), 
                           paramFilename.length());
     
+    // send
     socket.sendFromBuffer();
 }
 

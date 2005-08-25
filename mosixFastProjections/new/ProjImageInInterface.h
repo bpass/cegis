@@ -1,11 +1,11 @@
-#ifndef _USGSMOSIX_PROJIMAGEININTERFACE_H_
-#define _USGSMOSIX_PROJIMAGEININTERFACE_H_
+#ifndef __USGSMOSIX_PROJIMAGEININTERFACE_H_
+#define __USGSMOSIX_PROJIMAGEININTERFACE_H_
 
 /*! 
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
@@ -39,17 +39,22 @@ namespace USGSMosix
             
         ProjImageInInterface() {} 
         virtual ~ProjImageInInterface() {} 
-        
-        // virtual get
-        virtual const PixelInterface<sample_t> *
-        getPixel( const unsigned int& x, const unsigned int& y )const = 0;
-        
+       
+        /// \param latitude The latitude of the pixel you are requesting.
+        /// \param longitude The longitude of the pixel you are requesting.
+        ///
+        /// \brief Returns a pixel based off of latitude and longitude 
+        /// coordinates in the image. 
         virtual const PixelInterface<sample_t> *
         getPixel( const double & latitude, const double & longitude )const = 0;
         
+        /// \brief Returns the new bounds for the current image based off 
+        /// of a forward projecting mesh which is forwarded to the function.
         virtual DRect 
         getNewBounds(const PmeshLib::ProjectionMesh & m)const = 0; 
 
+        /// \brief Returns a rectangle representing the latitude and longitude
+        /// bounds for the image.
         virtual DRect getGeographicBounds()const = 0;
    };
     

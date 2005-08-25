@@ -18,7 +18,7 @@
 # @file Makefile.am
 # @author Mark Schisler 
 #
-# $Id: Makefile,v 1.5 2005/08/17 20:56:35 mschisler Exp $
+# $Id: Makefile,v 1.6 2005/08/25 21:07:29 mschisler Exp $
 #
 
 # SUBDIRS = tests
@@ -62,7 +62,7 @@ PROGRAMS = $(noinst_PROGRAMS)
 am_reproject_OBJECTS = ClientSocket.$(OBJEXT) \
 	ProjImageFactory.$(OBJEXT) driver.$(OBJEXT) \
 	ProjImageIn.$(OBJEXT) ServerSocket.$(OBJEXT) \
-	FromMultiGeoProjector.$(OBJEXT) ProjImageInList.$(OBJEXT) \
+	GeneralProjector.$(OBJEXT) ProjImageInList.$(OBJEXT) \
 	SlaveProjector.$(OBJEXT) ProjectorFactory.$(OBJEXT) \
 	ProjImageOut.$(OBJEXT) SocketWrapper.$(OBJEXT) \
 	ProjImageParams.$(OBJEXT) ProjImageData.$(OBJEXT) \
@@ -77,7 +77,7 @@ DEFAULT_INCLUDES = -I. -I$(srcdir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 DEP_FILES = ./$(DEPDIR)/ClientSocket.Po \
-	./$(DEPDIR)/FromMultiGeoProjector.Po \
+	./$(DEPDIR)/GeneralProjector.Po \
 	./$(DEPDIR)/ProjImageData.Po \
 	./$(DEPDIR)/ProjImageFactory.Po \
 	./$(DEPDIR)/ProjImageIn.Po \
@@ -183,7 +183,7 @@ COMPILE = %OD
 reproject_SOURCES = ClientSocket.cpp ProjImageFactory.cpp \
 				   driver.cpp \
 				   ProjImageIn.cpp ServerSocket.cpp \
-				   FromMultiGeoProjector.cpp  ProjImageInList.cpp \
+				   GeneralProjector.cpp  ProjImageInList.cpp \
 				   SlaveProjector.cpp ProjectorFactory.cpp \
 				   ProjImageOut.cpp  SocketWrapper.cpp \
 				   ProjImageParams.cpp \
@@ -262,7 +262,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 include ./$(DEPDIR)/ClientSocket.Po
-include ./$(DEPDIR)/FromMultiGeoProjector.Po
+include ./$(DEPDIR)/GeneralProjector.Po
 include ./$(DEPDIR)/ProjImageData.Po
 include ./$(DEPDIR)/ProjImageFactory.Po
 include ./$(DEPDIR)/ProjImageIn.Po

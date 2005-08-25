@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
@@ -27,6 +27,8 @@ namespace USGSMosix
 class SerializableInterface
 {
     public:
+        /// \brief Used to serialize an object over a socket, for the 
+        /// purposes of recreating the same object somewhere else.
         virtual void exportToSocket( ClientSocket & socket)const = 0;
 };
 

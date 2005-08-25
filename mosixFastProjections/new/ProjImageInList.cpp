@@ -3,7 +3,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
@@ -24,10 +24,13 @@
 
 namespace USGSMosix
 {
+ 
+// static members    
 /****************************************************************************/
 
 const ProjLib::GeographicProjection ProjImageInList::m_geoProjection;
 
+// function definitions
 /****************************************************************************/
 
 ProjImageInList::ProjImageInList(unsigned long height, unsigned long width) :
@@ -63,9 +66,12 @@ DRect ProjImageInList::getOuterBounds()const
 {
     std::list<std::pair<ProjImageInInterface*,DRect> >::const_iterator 
         kiterator;
-    
+   
+    // if the list contents have been modified since the last time
+    // we looked at the outerbounds.
     if ( m_modified == true ) 
     {
+        // reset the flag
         m_modified = false;
         
         if ( (kiterator = m_imgList.begin()) != m_imgList.end() )

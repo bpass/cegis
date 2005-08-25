@@ -3,22 +3,19 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/08/25 21:07:29 $
  *
  * \version 0.1
  * 
  * \file Math.hpp
  * 
- * \brief The ProjImage object is meant to be a representation 
- * of a image for an image projection and all of its 
- * implicit characteristics.
+ * \brief A collection of random, yet useful math functions. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
  * the file COPYING.  
  *
  */
-
 
 namespace USGSMosix 
 {

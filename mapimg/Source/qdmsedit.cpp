@@ -1,4 +1,4 @@
-// $Id: qdmsedit.cpp,v 1.7 2005/08/29 16:48:14 lwoodard Exp $
+// $Id: qdmsedit.cpp,v 1.8 2005/08/29 21:33:59 lwoodard Exp $
 
 #include <QFrame>
 #include <QHBoxLayout>
@@ -12,32 +12,32 @@
 
 
 QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction )
-: QWidget( parent, name)
+: QFrame( parent, name)
 {	
 	QHBoxLayout *mainLayout = new QHBoxLayout( this );
 	setLayout( mainLayout );
-//	setFrameStyle( QFrame::LineEditPanel | QFrame::Sunken );
-//	setLineWidth( 2 );
+	setFrameStyle( QFrame::LineEditPanel | QFrame::Sunken );
+	setLineWidth( 2 );
 	mainLayout->setMargin( 0 );
 	layout()->setMargin( 0 );		//was value 2
-	setMaximumHeight( 20 );
+	setMaximumHeight( 10 );
 	mainLayout->setSizeConstraint( QLayout::Minimum );
 
 	dmsLabel = new QLabel( this, "dmsLabel" );
 	dEdit = new QLineEdit( this, "dEdit" );
 	dEdit->setMaximumSize( QSize( 40, 32767 ) );
 	dEdit->setAlignment( Qt::AlignRight );
-//	dEdit->setFrame( false );		Until can figure how to make entire line sunken
+	dEdit->setFrame( false );		//Until can figure how to make entire line sunken
 	dLabel = new QLabel( this, "dLabel" );
 	mEdit = new QLineEdit( this, "mEdit" );
 	mEdit->setMaximumSize( QSize( 30, 32767 ) );
 	mEdit->setAlignment( Qt::AlignRight );
-//	mEdit->setFrame( false );		Until can figure how to make entire line sunken
+	mEdit->setFrame( false );		//Until can figure how to make entire line sunken
 	mLabel = new QLabel( this, "mLabel" );
 	sEdit = new QLineEdit( this, "sEdit" );
 	sEdit->setMaximumSize( QSize( 80, 32767 ) );
 	sEdit->setAlignment( Qt::AlignRight );
-//	sEdit->setFrame( false );		Until can figure how to make entire line sunken
+	sEdit->setFrame( false );		//Until can figure how to make entire line sunken
 	sLabel = new QLabel( this, "sLabel" );
 	directionLabel = new QLabel( this, "directionLabel" );
 

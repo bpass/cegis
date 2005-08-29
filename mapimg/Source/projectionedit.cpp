@@ -184,7 +184,6 @@ void ProjectionEdit::generateWidgets()
 	
    //titleBox - Contains function buttons and the title of the Tab
    titleBox = new QHBoxLayout( mainLayout );
-  
 	copyButton = new QPushButton( QIcon( "./Resources/copy.png" ),
 		"", this, "copyButton" );
 	lockButton = new QPushButton( QIcon( "./Resources/unlocked.png" ),

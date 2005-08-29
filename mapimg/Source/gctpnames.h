@@ -1,4 +1,4 @@
-// $Id: gctpnames.h,v 1.3 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: gctpnames.h,v 1.4 2005/08/29 21:33:59 lwoodard Exp $
 
 
 #ifndef GCTPNAMES_H
@@ -244,7 +244,7 @@ namespace
    }
 
    // A list of projections sorted by projection code
-   const QStringList projNames(QStringList::split( ',', 
+   const QStringList projNames(QString(
       "Geographic,Universal Transverse Mercator,State Plane Coordinates,"
       "Albers Conical Equal Area,Lambert Conformal Conic,Mercator,"
       "Polar Stereographic,Polyconic,Equidistant Conic,Transverse Mercator,"
@@ -254,7 +254,8 @@ namespace
       "Hotine Oblique Mercator,Robinson,Space Oblique Mercator,"
       "Modified Stereographic Conformal--Alaska,Interrupted Goode Homolsine,"
       "Mollweide,Interrupted Mollweide,Hammer,Wagner IV,Wagner VII,"
-      "Oblated Equal Area" ));
+	  "Oblated Equal Area" )
+	  .split(','));
 
    // A list of unit types sorted by unit-code
    const QStringList unitNames = QStringList::split( ',',

@@ -1,4 +1,4 @@
-// $Id: mapimgform.h,v 1.6 2005/08/24 17:58:26 lwoodard Exp $
+// $Id: mapimgform.h,v 1.7 2005/08/29 16:48:14 lwoodard Exp $
 
 
 /****************************************************************************
@@ -49,6 +49,7 @@ public:
 	~mapimgForm();
 
 	bool openFile( QString inFile );
+
 
 protected:
 	bool eventFilter( QObject* object, QEvent* event );

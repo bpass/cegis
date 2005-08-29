@@ -1,4 +1,4 @@
-// $Id: authorform.h,v 1.3 2005/08/24 17:58:25 lwoodard Exp $
+// $Id: authorform.h,v 1.4 2005/08/29 16:48:14 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -21,6 +21,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
+#include <QObject>
 
 class QVBoxLayout;
 class QHBoxLayout;

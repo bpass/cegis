@@ -438,6 +438,7 @@ void MapEdit::generateWidgets()
 	//dataBox - Contains one combo box for selecting what type of data it is
 	dataBox = new QVBoxLayout( mainLayout );
 	dataBox->setSizeConstraint( QLayout::SetNoConstraint );
+	dataBox->setSpacing( 0 );
 	pixelDataTypeLabel = new QLabel( "Pixel Data Type", this);
 	dataCombo = new QComboBox( this, "dataCombo" );
 	fillValueLabel = new QLabel( "Fill Value", this );
@@ -467,7 +468,7 @@ void MapEdit::generateWidgets()
 
 	//noDataBox - Contains hidable checkbox and a lineEdit; goes into dataBox
 	noDataBox = new QHBoxLayout( dataBox );
-	noDataBox->setSizeConstraint( QLayout::SetNoConstraint );
+	noDataBox->setSizeConstraint( QLayout::SetMinimumSize );
 	hasNoDataCheck = new QCheckBox( this, "hasNoDataCheck" );
 	hasNoDataCheck->hide();
 	noDataEdit = new QLineEdit( this, "noDataEdit" );

@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.7 2005/08/19 12:29:39 lwoodard Exp $
+// $Id: qgctpbox.cpp,v 1.8 2005/08/29 16:48:14 lwoodard Exp $
 
 #include <QFrame>
 #include <QLabel>
@@ -16,9 +16,11 @@ QMap<QString,double> *QGctpBox::holdValues=0;
 
 QGctpBox::QGctpBox( QWidget* parent, const char* name )
 : QWidget( parent, name )
-{
+{ 
 	QVBoxLayout *mainLayout = new QVBoxLayout( this );
 	setLayout( mainLayout );
+	mainLayout->setMargin( 0 );
+	mainLayout->setSpacing( 0 );
 
    label = new QLabel( this, "label" );
    lineEdit = new QLineEdit( "0.000000", this, "lineEdit" );
@@ -31,7 +33,7 @@ QGctpBox::QGctpBox( QWidget* parent, const char* name )
    mainLayout->addWidget( label );
    mainLayout->addWidget( lineEdit );
    mainLayout->addWidget( spinBox );
-   mainLayout->addWidget( dmsEdit );
+   mainLayout->addWidget( dmsEdit );   
 
    activeEdit = NULL;
    name=NULL;

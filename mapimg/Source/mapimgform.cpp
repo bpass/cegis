@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.8 2005/08/24 17:58:26 lwoodard Exp $
+// $Id: mapimgform.cpp,v 1.9 2005/08/29 16:48:14 lwoodard Exp $
 //Last Edited: August 2005; by: lwoodard; for:qt3 to qt4 porting
 
 #include "mapimgform.h"
@@ -6,6 +6,8 @@
 #include <QAction>
 #include <QByteArray>
 #include <QDataStream>
+#include <QDragEnterEvent>
+#include <QDropEvent>
 #include <QEvent>
 #include <QFile>
 #include <QFileDialog>
@@ -15,6 +17,7 @@
 #include <QMainWindow>
 #include <QMenu>
 #include <QMenuBar>
+#include <QMouseEvent>
 #include <QProcess>
 #include <QSettings>
 #include <QToolButton>
@@ -23,13 +26,6 @@
 #include <QUrl>
 #include <QWhatsThis>
 #include <QVariant>
-
-#include <q3dragobject.h>
-//Added by qt3to4:
-
-#include <QDropEvent>
-#include <QDragEnterEvent>
-#include <QMouseEvent>
 
 #include "mapimgversion.h"
 #include "qimgframe.h"
@@ -94,6 +90,8 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, Qt::WFlags fl )
 	prevLast = prevInput;
 
 	resize( QSize(600, 524).expandedTo(minimumSizeHint()) );
+
+	
 }
 
 void mapimgForm::setupContents()
@@ -103,6 +101,7 @@ void mapimgForm::setupContents()
 	contentLayout = new QHBoxLayout( centralWidget() );
 	contentLayout->setMargin(2);
 	contentLayout->setSpacing(1);
+	contentLayout->setSizeConstraint( QLayout::Minimum );
 
 	inInfoFrame = new QInfoFrame( centralWidget() );
 	inInfoFrame->setAsInput();
@@ -206,6 +205,7 @@ void mapimgForm::setupMenubar()
 void mapimgForm::setupToolbar()
 {
 	toolBar = addToolBar(tr("File"));
+	toolBar->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
 	toolBar->setMovable(false);
 	toolBar->setIconSize( QSize(25,25) );
 
@@ -351,7 +351,7 @@ bool mapimgForm::eventFilter( QObject* object, QEvent* event )
 
 void mapimgForm::dragEnterEvent( QDragEnterEvent *evt )
 {
-	if ( Q3TextDrag::canDecode( evt ) )	
+	if ( evt->mimeData()->hasUrls() )	//File name is in url form
 		evt->accept();
 }
 
@@ -359,8 +359,12 @@ void mapimgForm::dropEvent( QDropEvent *evt )
 {
 	QString text;
 
-	if ( Q3TextDrag::decode( evt, text ) )	
+	if ( evt->mimeData()->hasUrls() )	
 	{
+			//.toLocalFile automatically changes the / directions so you don't have
+			//to do parsing yourself.
+		text = evt->mimeData()->urls()[0].toLocalFile();
+
 		int gi = text.findRev( "img" );
 		int li = text.findRev( "xml" );
 		int fi = text.findRev( "tif" );
@@ -379,12 +383,6 @@ void mapimgForm::dropEvent( QDropEvent *evt )
 			text.truncate( fi );
 			text.append( "tif" ); 
 		}
-
-		if( text.left(8) == "file:///" )
-			text.remove( 0, 8 );
-		text.replace( "%20", " " );
-		text.replace( "%5c", "/" );
-		text.replace( '\\', '/' );
 
 		if( openFile( text ) )
 		{
@@ -469,7 +467,8 @@ bool mapimgForm::openFile( QString inFile )
 	imgSet = true;
 	RasterInfo info;
 
-	info.setAuthor( authName, authCompany, authEmail );
+	info.setAuthor( authName, authCompany, authEmail ); 
+
 	if( info.load( imgName ) )
 	{
 		inInfoFrame->setInfo( info );
@@ -596,7 +595,7 @@ void mapimgForm::showInputPreview( bool on )
 		prevLast = prevInput;
 	}
 
-	ignorePreviewSignals = true;                      /* what is this block? is it conditional? */
+	ignorePreviewSignals = true;       /* what is this block? is it conditional? */
 	{
 		prevInput->setOn(on);
 		prevOutput->setOn(false);

@@ -1,4 +1,4 @@
-// $Id: qdmsedit.cpp,v 1.6 2005/08/19 12:29:39 lwoodard Exp $
+// $Id: qdmsedit.cpp,v 1.7 2005/08/29 16:48:14 lwoodard Exp $
 
 #include <QFrame>
 #include <QHBoxLayout>
@@ -13,7 +13,7 @@
 
 QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction )
 : QWidget( parent, name)
-{
+{	
 	QHBoxLayout *mainLayout = new QHBoxLayout( this );
 	setLayout( mainLayout );
 //	setFrameStyle( QFrame::LineEditPanel | QFrame::Sunken );
@@ -21,6 +21,7 @@ QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction 
 	mainLayout->setMargin( 0 );
 	layout()->setMargin( 0 );		//was value 2
 	setMaximumHeight( 20 );
+	mainLayout->setSizeConstraint( QLayout::Minimum );
 
 	dmsLabel = new QLabel( this, "dmsLabel" );
 	dEdit = new QLineEdit( this, "dEdit" );
@@ -43,7 +44,7 @@ QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction 
 	/*Setting the widgets to layouts and adding to mainLayout to force 
 	them to line up properly*/
 	mainLayout->addWidget( dmsLabel );
-	QHBoxLayout *degreeLayout = new QHBoxLayout(mainLayout);
+	QHBoxLayout *degreeLayout = new QHBoxLayout( mainLayout);
 	degreeLayout->addWidget( dEdit );
 	degreeLayout->addWidget( dLabel );
 	QHBoxLayout *minuteLayout = new QHBoxLayout( mainLayout );

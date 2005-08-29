@@ -1,4 +1,4 @@
-// $Id: rasterinfo.h,v 1.4 2005/08/24 17:58:26 lwoodard Exp $
+// $Id: rasterinfo.h,v 1.5 2005/08/29 16:48:14 lwoodard Exp $
 
 
 #ifndef RASTERINFO_H
@@ -97,7 +97,8 @@ private:
    QString  aCompany;
    QString  aEmail;
 
-   QString *tempAName, *tempACompany, *tempAEmail;
+   //Used to keep hold of aName, aCompany, and aEmail between functions
+   QString *tempAName, *tempACompany, *tempAEmail; 
 
    double   ulx;
    double   uly;

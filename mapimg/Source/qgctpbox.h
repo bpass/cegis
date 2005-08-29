@@ -1,4 +1,4 @@
-// $Id: qgctpbox.h,v 1.5 2005/08/19 12:29:39 lwoodard Exp $
+// $Id: qgctpbox.h,v 1.6 2005/08/29 16:48:14 lwoodard Exp $
 
 
 #ifndef QGCTPBOX_H
@@ -14,7 +14,7 @@
 
 class QDmsEdit;
 
-class QGctpBox : public QWidget
+class QGctpBox : public QWidget 
 {
    Q_OBJECT
 

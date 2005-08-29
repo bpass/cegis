@@ -87,6 +87,9 @@ void ProjectionEdit::projChange()
 		gctpBoxes[i]->setGctpName( projNames[i] );
 
 	zoneBox->setShown( projNum == 1 );
+
+		//To keep the vertical scrollbar insync with the height of the scrollview contents
+	contents->resize( size().width(), size().height() ); 
 }
 
 /*This slot is called from the imgedit (infoFrame) when it needs to reset values)*/
@@ -220,6 +223,7 @@ void ProjectionEdit::generateWidgets()
    for( int i = 0; i < 15; ++i )
    {
 	   gctpBoxes[i] = new QGctpBox( this );
+	   
 	   mainLayout->addWidget( gctpBoxes[i] );
    }
 }

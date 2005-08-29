@@ -1,4 +1,4 @@
-// $Id: gctpdiffform.cpp,v 1.2 2005/08/29 19:54:32 rbuehler Exp $
+// $Id: gctpdiffform.cpp,v 1.3 2005/08/29 22:13:47 rbuehler Exp $
 
 #include "gctpdiffform.h"
 
@@ -31,8 +31,7 @@ GctpDiffForm::GctpDiffForm( QWidget *parent, Qt::WFlags flags )
    
    outputButton = new QPushButton( "Browse...", this );
 
-   // QGridLayout( numRows, numColumns, spacing, char* );
-   mainLayout = new QGridLayout(4, 3, -1, 0);
+   mainLayout = new QGridLayout;
    // addWidget(QWidget, row, column, height, width)
    mainLayout->addWidget( inputAcceptor, 0, 0, 1, 1 );
    mainLayout->addWidget( inputButton, 1, 0, 1, 1 );

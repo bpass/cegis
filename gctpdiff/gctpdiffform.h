@@ -1,4 +1,4 @@
-// $Id: gctpdiffform.h,v 1.3 2005/08/29 19:54:32 rbuehler Exp $
+// $Id: gctpdiffform.h,v 1.4 2005/08/29 22:13:47 rbuehler Exp $
 
 //////////////////////////////////////////////
 ////
@@ -24,8 +24,8 @@ public:
    GctpDiffForm( QWidget *parent=0, Qt::WFlags flags=0 );
 
 protected slots:
-   void inputAccepted(bool);
-   void outputAccepted(bool);
+   //void inputAccepted(bool);
+   //void outputAccepted(bool);
 
 private:
    RasterDropFrame *inputAcceptor;

@@ -1,4 +1,4 @@
-// $Id: main.cpp,v 1.1 2005/08/27 00:20:32 rbuehler Exp $
+// $Id: main.cpp,v 1.2 2005/08/29 22:13:47 rbuehler Exp $
 
 #include <qapplication.h>
 #include "gctpdiffform.h"
@@ -6,9 +6,7 @@
 int main( int argc, char ** argv )
 {
    QApplication a( argc, argv );
-   GctpDiffForm d;
-   d.show();
-
-   a.connect( &a, SIGNAL( lastWindowClosed() ), &a, SLOT( quit() ) );
+   GctpDiffForm diffForm;
+   diffForm.show();
    return a.exec();
 }

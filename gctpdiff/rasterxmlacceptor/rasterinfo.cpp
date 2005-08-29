@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.1 2005/08/27 00:20:32 rbuehler Exp $
+// $Id: rasterinfo.cpp,v 1.2 2005/08/29 22:14:15 rbuehler Exp $
 
 
 #include "rasterinfo.h"
@@ -127,7 +127,7 @@ bool RasterInfo::setDataType( const QString &dataType )
    else //( dataType.contains( "8" ) > 0 )
       bits = 8;
 
-   if( dataType.contains("IEEE", false) > 0 || dataType.contains("Float", false) > 0 )
+   if( dataType.contains("IEEE") > 0 || dataType.contains("Float") > 0 )
    {
       datatype = "IEEE Float";
       signd = true;
@@ -307,9 +307,9 @@ bool RasterInfo::save( QString imgFileName )
    {
       RasterXML r;
 
-      r.setAuthorName( *tempAName );
-      r.setAuthorCompany( *tempACompany );
-      r.setAuthorEmail( *tempAEmail );
+      r.setAuthorName( aName.toAscii() );
+      r.setAuthorCompany( aCompany.toAscii() );
+      r.setAuthorEmail( aEmail.toAscii() );
 
       r.setUlCorner( ulx, uly );
       r.setRows( row );
@@ -317,7 +317,7 @@ bool RasterInfo::save( QString imgFileName )
 
       r.setSigned( signd );
       r.setBits( bits );
-      r.setDataType( datatype.ascii() );
+      r.setDataType( datatype.toAscii() );
       r.setPixelSize( pixsize );
       r.setFillValue( fillval );
       r.setNoDataValue( noval );
@@ -326,12 +326,12 @@ bool RasterInfo::save( QString imgFileName )
       r.setHasNoDataValue( hasNoDataVal );
 
       r.setProjNumber( projcode );
-      r.setProjName( projNames[projcode] );
+      r.setProjName( projNames[projcode].toAscii() );
       r.setZone( zonecode );
       r.setDatumNumber( datumcode );
-      r.setDatumName( spheroidNames[datumcode] );
+      r.setDatumName( spheroidNames[datumcode].toAscii() );
       r.setUnitsNumber( unitcode );
-      r.setUnitsName( unitNames[unitcode] );
+      r.setUnitsName( unitNames[unitcode].toAscii() );
 
       char variation = 'a';
       if( projcode == 8 && gctpParams[8] == 1 )
@@ -340,9 +340,9 @@ bool RasterInfo::save( QString imgFileName )
          variation = 'b';
       QStringList paramNames( gctpNames(projcode, variation) );
       for( int i = 0; i < 15; ++i )
-         r.setParam( i, gctpParams[i], nameMeanings(paramNames[i]) );
+         r.setParam( i, gctpParams[i], nameMeanings(paramNames[i]).toAscii() );
 
-      returnValue =  r.save( QString( fileName + ".xml" ).ascii() );
+      returnValue =  r.save( QString( fileName + ".xml" ).toAscii() );
    }
    catch( XMLException exception )
    {
@@ -356,7 +356,7 @@ bool RasterInfo::save( QString imgFileName )
 
 bool RasterInfo::parseFileName()
 {
-   fileName.stripWhiteSpace();
+   fileName = fileName.simplified();
 
    if( fileName.right(4) == ".img" || fileName.right(4) == ".xml" )
       fileName.truncate( fileName.length() - 4 );
@@ -371,14 +371,13 @@ void RasterInfo::loadInfo()
 {
    QFile *file = new QFile( fileName + ".img.info" );
    file->open( QIODevice::ReadOnly );
-   QStringList inFile( QStringList::split( '\n', QString(file->readAll()) ) );
+   QStringList inFile( QString(file->readAll()).split('\n') );
    file->close();
    delete file;
 
    ////////Rows and Columns
-   int breakPoint = inFile[0].find( ' ', 0, false );
-   row = inFile[0].left( breakPoint ).toInt();
-   col = inFile[0].right( inFile[0].length() - breakPoint - 1 ).toInt();
+   row = inFile[0].split(' ')[0].toInt();
+   col = inFile[0].split(' ')[1].toInt();
 
    projcode = inFile[1].toInt(); //Projection Number/Name
    zonecode = inFile[2].toInt(); //Zone Code
@@ -387,12 +386,11 @@ void RasterInfo::loadInfo()
    pixsize = inFile[5].toDouble(); //Pixel Size
 
    ////////UL Latitude and Longitude
-   breakPoint = inFile[6].find( ' ', 0, false );
-   ulx = inFile[6].left( breakPoint ).toDouble();
-   uly = inFile[6].right( inFile[6].length() - breakPoint - 1 ).toDouble();
+   ulx = inFile[6].split(' ')[0].toDouble();
+   uly = inFile[6].split(' ')[1].toDouble();
 
    ////////15 GCTP Params
-   QStringList gctpValues = QStringList::split( " ", inFile[7] );
+   QStringList gctpValues = inFile[7].split(" ");
    for( int i = 0; i < 15; ++i )
       gctpParams[i] = gctpValues[i].toDouble();
 
@@ -405,7 +403,7 @@ bool RasterInfo::loadXml()
 
    try
    {
-      RasterXML xml( QString( fileName + ".xml" ).ascii() );
+      RasterXML xml( QString( fileName + ".xml" ).toAscii() );
 
       aName = xml.getAuthorName();
       aCompany = xml.getAuthorCompany();

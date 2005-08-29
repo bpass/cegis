@@ -1,27 +1,42 @@
-// $Id: gctpdiffform.h,v 1.2 2005/08/27 00:30:44 rbuehler Exp $
+// $Id: gctpdiffform.h,v 1.3 2005/08/29 19:54:32 rbuehler Exp $
 
+//////////////////////////////////////////////
+////
+////  CLASS GctpDiffForm
+////
+////  Description: The GctpDiffForm is the main window displayed.
+////     It displays two drop acceptors to allow for file dropping.
+////
+//////////////////////////////////////////////
 
 #include <QDialog>
 
-class QVBoxLayout;
-class QPushButton;
-class RasterDropAcceptor;
+class RasterDropFrame;
+class QGridLayout;
 class QLabel;
+class QPushButton;
 
 class GctpDiffForm : public QDialog
 {
    Q_OBJECT
 
 public:
-   GctpDiffForm();
+   GctpDiffForm( QWidget *parent=0, Qt::WFlags flags=0 );
 
-   QVBoxLayout *mainLayout;
+protected slots:
+   void inputAccepted(bool);
+   void outputAccepted(bool);
+
+private:
+   RasterDropFrame *inputAcceptor;
+   QLabel *inputLabel;
+   QPushButton *inputButton;
+
+   RasterDropFrame *outputAcceptor;
+   QLabel *outputLabel;
+   QPushButton *outputButton;
 
    QPushButton *diffButton;
 
-   RasterDropAcceptor *inputAcceptor;
-   QLabel *inputLabel;
-
-   RasterDropAcceptor *outputAcceptor;
-   QLabel *outputLabel;
-}
+   QGridLayout *mainLayout;
+};

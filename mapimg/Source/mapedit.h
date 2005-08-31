@@ -50,7 +50,7 @@ public:
 	friend RasterInfo QInfoFrame::info();
 
 	void reset();
-	void setRO( bool ro );
+	void setRO( bool ro, int inOut = 0 );
 	void setAsInput();
 	void setAsOutput();
 	void setFrameInfo( int rows, int cols, QString ul_X, QString ul_Y );
@@ -64,6 +64,7 @@ signals:
 	void dataComboActivated( int );
 	void fillEditChanged( const QString & );
 	void noDataEditChanged( const QString & );
+	void changeMyPartner();
 
 public slots:
 	void pixelChange(int);

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.9 2005/08/29 16:48:14 lwoodard Exp $
+// $Id: mapimgform.cpp,v 1.10 2005/08/31 19:15:19 lwoodard Exp $
 //Last Edited: August 2005; by: lwoodard; for:qt3 to qt4 porting
 
 #include "mapimgform.h"
@@ -119,7 +119,9 @@ void mapimgForm::setupContents()
 	contentLayout->addWidget( imgFrame );
 
 	outInfoFrame = new QInfoFrame( centralWidget(), "outInfoFrame" );
-	outInfoFrame->setAsOutput(); outInfoFrame->setPartner( inInfoFrame );
+	outInfoFrame->setAsOutput(); 
+	outInfoFrame->setPartner( inInfoFrame );
+	outInfoFrame->setReadOnly( true, 1 );
 	outInfoFrame->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::MinimumExpanding );
 	contentLayout->addWidget( outInfoFrame );
 }
@@ -267,7 +269,7 @@ void mapimgForm::makeConnections()
 
 void mapimgForm::loadSettings()
 {
-	QSettings *settings = new QSettings(QSettings::IniFormat, QSettings::SystemScope,"" /**QSettings::Ini**/ );
+	QSettings *settings = new QSettings(QSettings::IniFormat, QSettings::SystemScope,"" );
 	settings->setPath( "USGS.gov", "MapIMG" );
 
 	inPath = settings->readEntry( "/USGS/MapIMG/DefaultInputPath" );

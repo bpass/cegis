@@ -1,4 +1,4 @@
-// $Id: mapimgedit.h,v 1.6 2005/08/18 17:49:18 rbuehler Exp $
+// $Id: mapimgedit.h,v 1.7 2005/08/31 19:15:19 lwoodard Exp $
 
 #ifndef QINFOFRAME_H
 #define QINFOFRAME_H
@@ -50,7 +50,7 @@ public:
 	void reset();
 	void fixWidth( uint w );
 
-	void setReadOnly( bool ro );
+	void setReadOnly( bool ro, int inOut );
 	void setAsInput();
 	void setAsOutput();
 	void setPartner( QInfoFrame * i );

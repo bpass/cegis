@@ -1,4 +1,4 @@
-// $Id: mapimgedit.cpp,v 1.8 2005/08/24 17:58:25 lwoodard Exp $
+// $Id: mapimgedit.cpp,v 1.9 2005/08/31 19:15:19 lwoodard Exp $
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -103,9 +103,9 @@ void QInfoFrame::fixWidth( uint w )
 This function is mainly used by the lock(bool) function to restrict or
 allow all access to the parameters found in a QInfoFrame.
 */
-void QInfoFrame::setReadOnly( bool ro )
+void QInfoFrame::setReadOnly( bool ro, int inOut )
 {
-	mapTab->setRO( ro );
+	mapTab->setRO( ro, inOut );
 	gctpTab->setRO( ro );
 }
 
@@ -154,6 +154,7 @@ void QInfoFrame::setPartner( QInfoFrame *i )
 		SLOT( partnerChanged() ) );
 	connect( i->mapTab, SIGNAL( noDataEditChanged( const QString & ) ), this, 
 		SLOT( partnerChanged() ) );
+	connect( i->mapTab, SIGNAL( changeMyPartner() ), this, SLOT( partnerChanged() ) );
 }
 
 /*
@@ -231,6 +232,7 @@ void QInfoFrame::partnerChanged()
 	{
 		mapTab->fillEdit->setEnabled( true );
 		mapTab->fillButton->setShown( true );
+		mapTab->fillButton->setDisabled( false );
 	}
 	else
 	{
@@ -265,7 +267,7 @@ void QInfoFrame::lock( bool on, bool saveFile )
       return;
 
    locking = true;
-   setReadOnly( on );
+   setReadOnly( on, 0 );
    if( on )
    {
 	   mapTab->lockButton->setIcon( QIcon( "./Resources/locked.png" ) );
@@ -395,8 +397,8 @@ void QInfoFrame::setInfo( RasterInfo &input )
 		mapTab->fillEdit->validator()->fixup( fillString );
 	}
 
-	mapTab->fillEdit->setText( fillString );
-	//   mapTab->fillButton->setShown( input.fillValue() == -1.0 );
+		mapTab->fillEdit->setText( fillString );
+	 //  mapTab->fillButton->setShown( input.fillValue() == -1.0 );
 
 
 	QString noDataString = "Undefined";

@@ -62,6 +62,9 @@ MapEdit::MapEdit( QWidget* parent )
 		emit SIGNAL( fillEditChanged( const QString & ) ) );
 	connect( noDataEdit, SIGNAL( textChanged( const QString & ) ), this,
 		emit SIGNAL( noDataEditChanged( const QSting &) ) );
+	connect( noDataEdit, SIGNAL( textChanged( const QString & ) ), this, 
+		emit SIGNAL( changeMyPartner() ) );
+	connect( hasNoDataCheck, SIGNAL(toggled()), this, SLOT( QInfoFrame::partnerChanged()));
 }
 
 /*
@@ -143,6 +146,7 @@ void MapEdit::noDataCheckToggled( bool state )
 	{
 		noDataEdit->setText( lastNoDataValue );
 		noDataEdit->setDisabled( false );
+		hasNoDataCheck->setDisabled( false );
 	}
 
 	if( noDataEdit->validator() != 0 )
@@ -151,7 +155,7 @@ void MapEdit::noDataCheckToggled( bool state )
 		((MapimgValidator*)noDataEdit->validator())->fixup( noDataString );
 		noDataEdit->setText( noDataString );
 	}
-
+	emit changeMyPartner();
 	return;
 }
 
@@ -168,6 +172,9 @@ void MapEdit::pixelChange(int index)
 		pixelEdit->setText( pixelValues[index-1] );
 	}
 	pixelEdit->setShown( index == 6 );
+
+    if( index == 6)
+		contents->resize( size().width(), size().height() );
 }
 
 /*
@@ -215,18 +222,11 @@ void MapEdit::reset()
 	hasNoDataCheck->setChecked( true );
 }
 
-/*This slot fixes the width of the contents frame.  It is important because 
-it keeps the frames consistent and it is used for other things*/
-/*void MapEdit::fixWidth( uint w )
-{
-	contents->setMinimumWidth( w - 24 );
-}*/
-
 /*
 This function is mainly used by the lock(bool) function to restrict or
 allow all access to the parameters found in a MapEdit
 */
-void MapEdit::setRO( bool ro )
+void MapEdit::setRO( bool ro, int inOut )
 {
 	rowSpin->setDisabled( ro );
 	colSpin->setDisabled( ro );
@@ -237,6 +237,9 @@ void MapEdit::setRO( bool ro )
 	ulLonEdit->setDisabled( ro );
 	ulLatEdit->setDisabled( ro );
 	dataCombo->setDisabled( ro );
+
+	if(inOut == 1 )
+		pixelCombo->setDisabled( false );
 
 	hasFillCheck->setHidden( ro );
 	hasFillCheck->setDisabled( ro );
@@ -448,8 +451,7 @@ void MapEdit::generateWidgets()
 	dataBox->addWidget( fillValueLabel );
 
 	//fillBox - Contains hidable checkbox, a lineEdit and a pushbutton; goes into dataBox
-	fillBox = new QHBoxLayout( dataBox );
-	fillBox->setSizeConstraint( QLayout::SetNoConstraint );
+	fillBox = new QHBoxLayout( dataBox );	
 	fillBox->setSizeConstraint( QLayout::SetNoConstraint );
 	hasFillCheck = new QCheckBox( this, "hasFillCheck" );
 	hasFillCheck->hide(); 
@@ -461,13 +463,12 @@ void MapEdit::generateWidgets()
 	fillBox->addWidget( hasFillCheck );
 	fillBox->addWidget( fillEdit );
 	fillBox->addWidget( fillButton );
-	dataBox->addLayout( fillBox );
 
 	noDataValueLabel = new QLabel( "No Data Value", this );
 	dataBox->addWidget( noDataValueLabel );
 
 	//noDataBox - Contains hidable checkbox and a lineEdit; goes into dataBox
-	noDataBox = new QHBoxLayout( dataBox );
+	noDataBox = new QHBoxLayout( dataBox );	
 	noDataBox->setSizeConstraint( QLayout::SetMinimumSize );
 	hasNoDataCheck = new QCheckBox( this, "hasNoDataCheck" );
 	hasNoDataCheck->hide();
@@ -476,7 +477,6 @@ void MapEdit::generateWidgets()
 		//Adding widgets to noDataBox and adding noDataBox to dataBox
 	noDataBox->addWidget( hasNoDataCheck );
 	noDataBox->addWidget( noDataEdit );
-	dataBox->addLayout( noDataBox );	
 }
 
 void MapEdit::polishWidgets()

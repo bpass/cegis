@@ -44,7 +44,7 @@ public:
 	friend RasterInfo QInfoFrame::info();
 
 	void reset();
-	void setRO( bool ro );
+	void setRO( bool ro, int inOut );
 	void setAsInput();
 	void setAsOutput();
 	void setFrameInfo( QString projName );

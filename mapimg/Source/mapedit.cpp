@@ -75,7 +75,7 @@ MapEdit::~MapEdit()
 
 
 /* eventFilter is an event filter for misc GUI events. Right now it is used
-to dsiplay a popup menu when a user right-clicks on teh fill value edit box
+to dsiplay a popup menu when a user right-clicks on the fill value edit box
 */
 bool MapEdit::eventFilter( QObject* object, QEvent* event )
 {

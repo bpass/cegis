@@ -106,12 +106,15 @@ void ProjectionEdit::reset()
 This function is mainly used by the lock(bool) function to restrict or
 allow all access to the parameters found in a ProjectionEdit
 */
-void ProjectionEdit::setRO( bool ro )
+void ProjectionEdit::setRO( bool ro, int inOut )
 {
-	projCombo->setDisabled( ro );
-	zoneSpin->setDisabled( ro );
-	for( int i = 0; i < 15; ++i )
-		gctpBoxes[i]->setDisabled( ro );
+	if( inOut == 0 )
+	{
+		projCombo->setDisabled( ro );
+		zoneSpin->setDisabled( ro );
+		for( int i = 0; i < 15; ++i )
+			gctpBoxes[i]->setDisabled( ro );
+	}
 }
 
 /*

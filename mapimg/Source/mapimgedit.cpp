@@ -1,4 +1,4 @@
-// $Id: mapimgedit.cpp,v 1.9 2005/08/31 19:15:19 lwoodard Exp $
+// $Id: mapimgedit.cpp,v 1.10 2005/09/06 20:03:11 lwoodard Exp $
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -106,7 +106,7 @@ allow all access to the parameters found in a QInfoFrame.
 void QInfoFrame::setReadOnly( bool ro, int inOut )
 {
 	mapTab->setRO( ro, inOut );
-	gctpTab->setRO( ro );
+	gctpTab->setRO( ro, inOut );
 }
 
 /*

@@ -5,14 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 20:56:34 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
- * \file ProjOutImageOut.h 
+ * \file ProjImageDataOutInterface.h
  * 
- * \brief The ProjImageDataOutInterface serves as an abstract base  
- * for objects which need to output re-projected image data.
+ * \brief Header file for ProjImageDataOutInterface class. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -20,8 +19,12 @@
  *
  */
 
+#include "Globals.h"
+
 namespace USGSMosix 
 {
+    /// The ProjImageDataOutInterface serves as an abstract base  
+    /// for objects which need to output re-projected image data. 
     class ProjImageDataOutInterface 
     {
     public:

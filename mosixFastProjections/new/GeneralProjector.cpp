@@ -3,15 +3,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file GeneralProjector.cpp
  * 
- * \brief The GeneralProjector class is an object which takes 
- * input from several images in a Geographic projection, and projects 
- * this input into a single image of a desired projection.
+ * \brief Implemenation file for GeneralProjector class. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -53,7 +51,7 @@ GeneralProjector::GeneralProjector(
     m_fromProj = m_imgIn.getProjection();
     m_toProj = m_imgOut->getProjection(); 
     if (m_toProj == NULL ) 
-        throw GeneralException("No to Projection");
+        throw GeneralException("No to-Projection");
 }
     
 /******************************************************************************/
@@ -71,9 +69,9 @@ GeneralProjector::GeneralProjector(
     m_reverseMesh(NULL)
 {
     m_fromProj = m_imgIn.getProjection();
-    m_toProj = m_params->getProjection(); 
+    m_toProj = m_params->getProjection();
     if (m_toProj == NULL ) 
-        throw GeneralException("No to Projection");
+        throw GeneralException("No to-Projection");
 }
 
 /******************************************************************************/
@@ -111,7 +109,7 @@ void GeneralProjector::setPmeshDivisions(const int & inpmeshsize)
 const ProjLib::Projection* GeneralProjector::getOutputProjection() const 
 {
     if ( m_imgOut != NULL ) return m_imgOut->getProjection();    
-    else throw GeneralException("m_imgOut is NULL");
+    else throw GeneralException("m_imgOut is NULL in getOutputProjection()");
 }
 
 /******************************************************************************/
@@ -133,7 +131,7 @@ int GeneralProjector::getPmeshDivisions() const
 DRect GeneralProjector::getoutRect() const
 {
     if ( m_imgOut != NULL ) return m_imgOut->getOuterBounds(); 
-    else throw GeneralException("m_imgOut is NULL");
+    else throw GeneralException("m_imgOut is NULL in getoutrect()");
 }
 
 /******************************************************************************/
@@ -154,13 +152,6 @@ bool GeneralProjector::setupOutput()
             // are projecting onto.
             constructOutImage( *m_forwardMesh);
         
-            // delete this mesh as we're now done with it.
-            if ( m_forwardMesh != NULL ) 
-            {   
-                delete m_forwardMesh;
-                m_forwardMesh = NULL;
-            }
-
         } else
             throw GeneralException("m_forwardMesh is NULL");
     }
@@ -193,13 +184,34 @@ void GeneralProjector::project()
         scanlines = NULL;
                                 
     } else
-        throw GeneralException("m_imgOut is NULL");
+        throw GeneralException("m_imgOut is NULL in project()");
+}
+
+/******************************************************************************/
+
+ProjImageOutPiece GeneralProjector::projectPiece( long unsigned int beginLine,
+                                                  long unsigned int endLine )
+{
+    WRITE_DEBUG("GenProjector: projecting piece.");
+    scanlines_t scanlines = this->project(beginLine,endLine);
+    return ProjImageOutPiece(scanlines,
+                             std::pair<unsigned long, unsigned long>(beginLine,
+                                                                     endLine),
+                             m_imgOut->getWidth(),
+                             m_imgOut->getSPP());
+}
+
+/******************************************************************************/
+
+ProjImageOutPiece GeneralProjector::projectPiece()
+{
+    return projectPiece(0, m_imgOut->getHeight());
 }
 
 /******************************************************************************/
 
 scanlines_t GeneralProjector::project( long unsigned int beginLine, 
-                                            long unsigned int endLine )
+                                       long unsigned int endLine )
 {
     static const ProjLib::GeographicProjection geoProj;
     double xSrcScale(0.0f), ySrcScale(0.0f);
@@ -212,7 +224,12 @@ scanlines_t GeneralProjector::project( long unsigned int beginLine,
     try {
 
         if ( m_imgOut == NULL )
-            throw GeneralException("m_imgOut is NULL");
+        {
+            setupOutput(); 
+    
+            if ( m_imgOut == NULL ) 
+                throw GeneralException( "m_imgOut is NULL in project(int,int)");
+        }
 
         // grab these to start to speed up computation ... 
         // i.e., we don't want to be fetching these variables
@@ -328,7 +345,7 @@ const PmeshLib::ProjectionMesh & mesh )
         m_forwardMesh = &mesh;
         
         if ( m_fromProj == NULL || m_toProj == NULL || m_params == NULL )
-            throw GeneralException("NULL pointer in constructOutImage");
+            throw GeneralException("NULL pointer in constructOutImage()");
         
         outputBounds = m_imgIn.getNewBounds(mesh);
        
@@ -384,35 +401,65 @@ const PmeshLib::ProjectionMesh & mesh )
 
 /*****************************************************************************/
 
-GeneralProjector 
-GeneralProjector::createFromSocket( ClientSocket & socket )
+GeneralProjector GeneralProjector::createFromSocket( ClientSocket & socket )
 {
     PROJECTORTYPE ty = UNKNOWN; // from Globals.h
-  
-    socket.receive(&ty, sizeof(ty));
+    int i = 0; // cannot send enumerated types?
+    bool bOutImgExists = false;
+    
+    socket.receive(&i, sizeof(i));
+    ty = static_cast<PROJECTORTYPE>(i);
     if ( ty != GEOPROJ ) 
-        throw GeneralException(
-        "GeoProjector cannot create different projector.");
+        throw GeneralException("Attempt to create wrong projector.");
     
     ProjImageInInterface * imgIn = m_imgFactory.makeProjImageIn( socket );
-    ProjImageOutInterface * imgOut = m_imgFactory.makeProjImageOut( socket );
-    if ( imgIn != NULL && imgOut != NULL ) 
-        return GeneralProjector( *imgIn, *imgOut );
-    else throw GeneralException("Tried to coonsturct projector from NULL ptr.");
+    
+    if ( imgIn == NULL ) 
+        throw GeneralException("Input image creation failed.");
+
+    WRITE_DEBUG ( "input creation succesful" << std::endl );
+    socket.receive(&bOutImgExists, sizeof(bOutImgExists));
+
+    if ( bOutImgExists )
+    {
+       WRITE_DEBUG ( "creating output image" << std::endl );
+       ProjImageOutInterface * imgOut = m_imgFactory.makeProjImageOut( socket );
+       if ( imgOut == NULL ) 
+           throw GeneralException("Output image creation failed.");
+       return GeneralProjector( *imgIn, *imgOut );
+       
+    } else
+    {
+        WRITE_DEBUG ( "creating parameter file" << std::endl );
+        ProjImageParams * params = 
+            new ProjImageParams(ProjImageParams::createFromSocket( socket ));
+        if ( params == NULL )
+            throw GeneralException("Output parms null on creation.");
+        return GeneralProjector(*params, *imgIn);
+    }
 }
 
 /*****************************************************************************/
 
 void GeneralProjector::exportToSocket( ClientSocket & socket )const
 {
-    static PROJECTORTYPE ty = GEOPROJ; /// from Globals.h
+    PROJECTORTYPE ty = GEOPROJ; // from Globals.h
+    int i = static_cast<int>(ty) ; // cannot send enums through socket?
+    bool bOutImgExists = (m_imgOut != NULL); 
     
-    if ( m_imgOut == NULL ) 
-        throw GeneralException("Error: Cannot export object.  Has no out img.");
-       
-    socket.send(&ty, sizeof(ty));
+    socket.send(&i, sizeof(i));
     m_imgIn.exportToSocket(socket);
-    m_imgOut->exportToSocket(socket);
+    socket.send(&bOutImgExists, sizeof(bOutImgExists));
+    
+    if ( bOutImgExists ) 
+        m_imgOut->exportToSocket(socket);
+    else
+    {
+        if ( m_params == NULL )
+            throw GeneralException("Params do not exist and need to.");
+        m_params->exportToSocket(socket);
+    }
+
     
     return;
 }

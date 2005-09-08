@@ -5,18 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file PixelGrey.h
  * 
- * \brief PixelInterface outlines a ``generic'' type which can 
- * be used for storing pixel information.  AbstractPixel of the 
- * ImageLib involved way too much casting for the purposes of
- * the MOSIX code.  PixelGrey defines a pixel with one channels 
- * (or sample) which measures brightness.  Note: allows for 
- * const and non-const functionality for the forwarded pointer.
+ * \brief Implementation and header file for PixelGrey class.
  * 
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -27,8 +22,9 @@
 namespace USGSMosix 
 {
 
-/*! Templated over the data type used for the sample or channel
- *  data . */
+/// PixelGrey defines a pixel with one channel which measures brightness.  
+/// Allows for const and non-const functionality, depending on how initialized.
+/// Templated over the data type used for the sample or channel data.  
 template<class T>
 class PixelGrey  : public PixelInterface<T> 
 {
@@ -55,7 +51,7 @@ public:
     /// \brief Gets the Red, green and blue values for the current pixel.
     virtual void getRGB(T& r, T& g, T& b)const;
  
-    /// \param g The grey value.
+    /// \param grey The grey value.
     /// \brief Returns the grey value for the current pixel.
     virtual void getGrey(T& grey)const;
 
@@ -65,7 +61,7 @@ public:
     /// \brief Sets the R,G,B values for the current pixel.
     virtual void setRGB(const T& r, const T& g, const T& b);
     
-    /// \param g The grey value.
+    /// \param grey The grey value.
     /// \brief Sets the grey value for the current pixel.
     virtual void setGrey(const T& grey);
 

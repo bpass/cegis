@@ -5,13 +5,11 @@
  *
  * \file ProjectorFactory.h
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  *
- * \brief This is the Projector.  It is designed to encapulate the 
- * details of creating a Projimage Reprojector, so that if the process 
- * changes later, life will still proceed smoothly.
+ * \brief Implementation file for ProjectorFactory class. 
  *
  */
 

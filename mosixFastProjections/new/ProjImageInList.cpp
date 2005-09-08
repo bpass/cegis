@@ -3,14 +3,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file ProjImageInList.h 
  * 
- * \brief The ProjImageInList is a storage container for Projected
- * Images.  
+ * \brief Implementation file for the ProjImageInList class.
  * 
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -35,7 +34,7 @@ const ProjLib::GeographicProjection ProjImageInList::m_geoProjection;
 
 ProjImageInList::ProjImageInList(unsigned long height, unsigned long width) :
     ProjImageInInterface(),
-    m_height(height), m_width(width)
+    m_height(height), m_width(width), m_modified(false)
 {
     m_pixelRatio.x = Math<double>::abs((getRightBound() - getLeftBound())) 
                    / m_width;
@@ -304,8 +303,10 @@ void ProjImageInList::exportToSocket( ClientSocket & socket )const
     std::list<std::pair<ProjImageInInterface*,DRect> >::const_iterator 
         kiterator = m_imgList.begin();
     unsigned int _size = size();
-    
+
     socket.send(&_size, sizeof(_size));
+    socket.send(&m_height, sizeof(m_height));
+    socket.send(&m_width, sizeof(m_width));
     
     for( ; kiterator != m_imgList.end(); ++kiterator )
     {

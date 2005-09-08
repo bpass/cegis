@@ -2,16 +2,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file SlaveProjector.cpp
  * 
- * \brief Built as a wrapper for an GeneralProjector object,
- * this class will redirect all output from it usual file ouput, 
- * to being network controlled --i.e., all output will be
- * directed toward a socket via a forwarded descriptor.
+ * \brief Implementation file for SlaveProjector class.
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -19,6 +16,7 @@
  *
  */
 
+#include "Macros.h"
 #include "SlaveProjector.h"
 #include "GeneralProjector.h"
 
@@ -39,9 +37,7 @@ ProjImageOutInterface & imgOutInterface,
 std::pair<unsigned long, unsigned long> scanlineRange  ) : 
 
 m_projInterface( new GeneralProjector(inInterface, imgOutInterface)),
-m_scanlineRange( scanlineRange ),
-m_noScanlines( 0 ),
-m_scanlines( NULL )
+m_scanlineRange( scanlineRange )
 {
     ++m_id;     
 }
@@ -52,10 +48,7 @@ SlaveProjector::SlaveProjector( ProjectorInterface & interface,
 std::pair<unsigned long, unsigned long> scanlineRange ) :
 
 m_projInterface( &interface ),
-m_scanlineRange( scanlineRange ),
-m_noScanlines( 0 ),
-m_scanlines( NULL )
-   
+m_scanlineRange( scanlineRange )
 {
     ++m_id; 
 }
@@ -65,7 +58,6 @@ m_scanlines( NULL )
 SlaveProjector::~SlaveProjector()
 {
     delete m_projInterface;    
-    cleanupScanlines();
 }
 
 
@@ -85,45 +77,39 @@ bool SlaveProjector::setupOutput()
 
 /******************************************************************************/
 
-scanlines_t SlaveProjector::project( long unsigned int beginLine, 
-                                     long unsigned int endLine )
+ProjImageOutPiece SlaveProjector::projectPiece( long unsigned int beginLine,
+                                                long unsigned int endLine )
 {
-    return  m_projInterface->project(beginLine,endLine);
+    WRITE_DEBUG ("projecting piece" << std::endl );
+    if ( setupOutput() ) 
+    {
+        ProjImageOutPiece p = m_projInterface->projectPiece(beginLine,endLine);
+        return p;
+    } else
+        throw GeneralException("m_imgOut is NULL");
+}          
+
+/******************************************************************************/
+
+ProjImageOutPiece SlaveProjector::projectPiece()
+{
+    if ( setupOutput() ) 
+        return m_projInterface->projectPiece();
+    else
+        throw GeneralException("m_imgOut is NULL");
 }
+
 
 /******************************************************************************/
 
 void SlaveProjector::project()
 {
-    cleanupScanlines();
-    
-    m_noScanlines = m_scanlineRange.first - m_scanlineRange.second;  
-    
     if ( setupOutput() ) 
     {
         // get scanline data
-        m_scanlines = project(m_scanlineRange.first,m_scanlineRange.second);
-
+        m_projInterface->project();
     } else
         throw GeneralException("m_imgOut is NULL");
-
-    return;
-}
-
-/******************************************************************************/
-
-void SlaveProjector::cleanupScanlines()
-{
-    m_noScanlines = 0;
-    
-    if ( m_scanlines != NULL ) 
-    {
-        // cleanup space for scanlines    
-        for( unsigned long i = 0; i < m_noScanlines; ++i ) 
-            delete m_scanlines[i];
-        delete [] m_scanlines;
-        m_scanlines = NULL;
-    }
     return;
 }
 
@@ -131,13 +117,17 @@ void SlaveProjector::cleanupScanlines()
 
 void SlaveProjector::exportToSocket( ClientSocket & client ) const
 {
-    static PROJECTORTYPE ty = SLAVEPROJ; /// from Globals.h
-   
+    PROJECTORTYPE ty = SLAVEPROJ; /// from Globals.h
+    unsigned int i = static_cast<int>(ty); 
     // sync our immediate data members
-    client.appendToBuffer(&ty, sizeof(ty));
-    client.appendToBuffer(&m_scanlineRange.first,sizeof(m_scanlineRange.first));
-    client.appendToBuffer( &m_scanlineRange.second,
+    client.appendToBuffer(&i, sizeof(i));
+    
+    client.appendToBuffer( &m_scanlineRange.first,
                            sizeof(m_scanlineRange.first));
+    
+    client.appendToBuffer( &m_scanlineRange.second,
+                           sizeof(m_scanlineRange.second));
+    
     client.sendFromBuffer();
 
     // sync interface members
@@ -153,16 +143,20 @@ SlaveProjector SlaveProjector::createFromSocket( ClientSocket & client )
     PROJECTORTYPE ty = UNKNOWN;
     std::pair<long unsigned int, long unsigned int> range(0,0);
     ProjectorInterface * interface = NULL;
-
+    unsigned int i = 0;
     // sync our immediate data members
-    client.receive(&ty, sizeof(ty));
+    client.receive(&i, sizeof(i));
+    ty = static_cast<PROJECTORTYPE>(i);
+    
     if ( ty != SLAVEPROJ ) 
-        throw GeneralException(
-        "SlaveProjector cannot create different projector!");
+    {
+        throw 
+        GeneralException("SlaveProjector cannot create different projector!");
+    }
     
     client.receive(&range.first,sizeof(range.first));
     client.receive(&range.second, sizeof(range.second));
-    
+   
     // sync interface members
     interface  = m_projFactory.makeProjector(client);
 
@@ -173,7 +167,5 @@ SlaveProjector SlaveProjector::createFromSocket( ClientSocket & client )
 }
 
 /******************************************************************************/
-
-
 
 } // namespace

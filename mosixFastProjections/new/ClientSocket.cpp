@@ -2,14 +2,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file ClientSocket.cpp 
  * 
- * \brief ClientSocket is a socket which may only connect to other 
- * sockets.  It cannot be bound to a port, nor can it listen.
+ * \brief Implementation file for ClientSocket member functions. 
  * 
  * \remarks Originally written by Matt Zykan sometime in 2004, but
  * was re-written by Mark Schisler in 8/2005.  At this time, functions
@@ -82,7 +81,7 @@ bool ClientSocket::send( const void * in_buffer, unsigned int in_size )
 
   } else
   {
-    perror("Send failed");
+    perror("Send failed\n");
     return false;
   }
 }
@@ -117,7 +116,7 @@ bool ClientSocket::sendFromBuffer()
 
   } else
   {
-    perror("Send failed");
+    perror("Send failed\n");
     return false;
   }
 }

@@ -5,16 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
- * \file ProjOutImageOut.h 
+ * \file ProjImageOut.h
  * 
- * \brief The ProjImage object is meant to be a representation 
- * of a image for an image reprojection and all of its 
- * implicit characteristics.  ProjImageOut accepts misc. parameters
- * and opens a blank output image with an associated projection.
+ * \brief Header file for ProjImageOut class. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -34,6 +31,9 @@
 namespace USGSMosix
 {
 
+/// Accepts misc parameters and opens a blank output image with an 
+/// associated projection.  Is able to accept image data and output
+/// to a ImageOFile.
 class ProjImageOut : private virtual ProjImageData,
                      public virtual ProjImageOutInterface
 {
@@ -43,7 +43,7 @@ class ProjImageOut : private virtual ProjImageData,
                       ProjIOLib::ProjectionWriter & writer, 
                       std::string filename, 
                       std::pair<long int, long int> heightThenWidth,
-                      const ProjImageScale & newScale,
+                      const ProjImageScale & newScale, 
                       int photometric,
                       int bps,           ///< bits per sample
                       int spp,           ///< samples per pixel 
@@ -85,7 +85,7 @@ class ProjImageOut : private virtual ProjImageData,
         virtual void putScanlines( scanlines_t scanlines,
                                    const unsigned int& beginLine,
                                    const unsigned int& endLine ); 
-        /// \param scanlines A 'piece' of the output image (i.e., a contigous
+        /// \param piece A 'piece' of the output image (i.e., a contigous
         /// grouping of scanlines.)
         /// \brief Puts piece of output iamge into USGSImageLib::ImageOFile for
         /// writing to output file.  
@@ -96,12 +96,7 @@ class ProjImageOut : private virtual ProjImageData,
 
         /// \brief Sets up the output image, ImageOFile, for the file and 
         /// sets member data appropriately.
-        void setupImage( std::string filename,
-                         std::pair<long int, long int> heightThenWidth,
-                         const ProjImageScale & newscale,
-                         int photometric,
-                         int bps,
-                         int spp );
+        void setupImage(); 
        
         /// The parameter file object for the output image.
         const ProjImageParams & m_params; 
@@ -111,6 +106,8 @@ class ProjImageOut : private virtual ProjImageData,
 
         /// The palette for ImageLib files, if used.  If not, NULL.
         USGSImageLib::RGBPalette * m_pal;
+
+        bool m_bSetupImage;
 };
 
 } // namespace 

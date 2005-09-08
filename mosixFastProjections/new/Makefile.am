@@ -3,7 +3,7 @@
 # @file Makefile.am
 # @author Mark Schisler 
 #
-# $Id: Makefile.am,v 1.4 2005/08/25 21:07:29 mschisler Exp $
+# $Id: Makefile.am,v 1.5 2005/09/08 16:41:22 mschisler Exp $
 #
 
 # SUBDIRS = tests
@@ -12,19 +12,21 @@ OBJDIR = .obj
 
 COMPILE = %OD
 
-noinst_PROGRAMS = reproject
+noinst_PROGRAMS = reproject slave
 
-reproject_SOURCES =ClientSocket.cpp ProjImageFactory.cpp \
-				   driver.cpp \
-				   ProjImageIn.cpp ServerSocket.cpp \
-				   GeneralProjector.cpp  ProjImageInList.cpp \
-				   SlaveProjector.cpp ProjectorFactory.cpp \
-				   ProjImageOut.cpp  SocketWrapper.cpp \
-				   ProjImageParams.cpp \
-                   ProjImageData.cpp  ProjImageScale.cpp \
-				   ProjImageOutPiece.h
-                   # ProjProcessSpawner.cpp  ProjectorSplitter.cpp
-				    
+COMSOURCES = ClientSocket.cpp ProjImageFactory.cpp \ 
+		     ProjImageIn.cpp ServerSocket.cpp \
+  		     GeneralProjector.cpp  ProjImageInList.cpp \
+		     SlaveProjector.cpp ProjectorFactory.cpp \
+		     ProjImageOut.cpp  SocketWrapper.cpp \
+		     ProjImageParams.cpp \
+		     ProjImageData.cpp  ProjImageScale.cpp \
+			 ProjImageOutPiece.cpp
+			 # ProjProcessSpawner.cpp  ProjectorSplitter.cpp
+			 
+reproject_SOURCES = MasterMain.cpp $(COMSOURCES)
+slave_SOURCES = SlaveMain.cpp $(COMSOURCES) 
+					
 AM_CPPFLAGS = -pg -g -Wno-deprecated -Wall -W -pedantic \
 -I/work/mosixFastProjections/include/Projector \
 -I/usr/src/linux/include \
@@ -33,6 +35,7 @@ AM_CPPFLAGS = -pg -g -Wno-deprecated -Wall -W -pedantic \
 -I/work/mosixFastProjections/
 
 reproject_LDFLAGS = -pg 
+slave_LDFLAGS = -pg
 
 reproject_LDADD = \
 /work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
@@ -46,3 +49,5 @@ reproject_LDADD = \
 -lProjectionMesh -lMathLib -lProjectionIO -lImageLib \
 -lgeotiff -ltiff -lProjection -lMiscUtils \
 -lpthread -lgctpc -lboost_thread -lpng -ljpeg 
+
+slave_LDADD = $(reproject_LDADD)

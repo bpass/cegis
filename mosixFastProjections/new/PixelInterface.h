@@ -5,17 +5,14 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file PixelInterface.h
  * 
- * \brief PixelInterface outlines a ``generic'' type which can 
- * be used for storing pixel information.  AbstractPixel of the 
- * ImageLib involved way too much casting for the purposes of
- * the MOSIX code.  So here we introduce a parameterized type.
- * 
+ * \brief Header file for PixelInterface class.
+ *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
  * the file COPYING.  
@@ -27,7 +24,10 @@
 namespace USGSMosix 
 {
 
-/*! Templated on the data type of the sample or channels. */
+/// PixelInterface outlines a ``generic'' type which can be used for 
+/// storing pixel information.  AbstractPixel of the ImageLib involved way too 
+/// much casting for the purposes of the MOSIX code.  So here we introduce a 
+/// parameterized type templated on the data type of the sample or channels.
 template<class T>
 class PixelInterface
 {

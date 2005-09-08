@@ -5,13 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file SerializableInterface.h 
  * 
- * \brief Provide a common interface for serializing objects. 
+ * \brief Header file for SerializableInterface class. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -24,6 +24,7 @@
 namespace USGSMosix 
 {
 
+/// Provides a common interface for serializing objects over sockets. 
 class SerializableInterface
 {
     public:

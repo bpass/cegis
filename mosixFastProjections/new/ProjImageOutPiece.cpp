@@ -3,26 +3,20 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file ProjImageOutPiece.cpp
  * 
- * \brief Defines a piece of a ProjImage.  This is useful in the  
- * MOSIX fast re-projections project as pieces of output images
- * frequently need to be transported across the network.  
- * IMPORTANT: For simplicity this piece is assumed to be contiguous.
- * Therefore one cannot have a piece of a image which contains 
- * the lines 1, 2, 132134, and 33 or something similiar.  It 
- * may only have pieces which contain ranges of scanlines.
+ * \brief Implementation file for ProjImageOutPiece class.
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
  * the file COPYING.  
  *
  */
-
+#include <iostream>
 #include "ProjImageOutPiece.h"
 #include "GeneralException.h"
 
@@ -32,9 +26,9 @@ namespace USGSMosix {
 
 ProjImageOutPiece::ProjImageOutPiece()
     : m_scanlines(NULL),
-      m_range(-1,-1),
-      m_width( 0 ),
-      m_spp( 1 )
+      m_widthPixels( 0 ),
+      m_spp( 1 ),
+      m_range(-1, -1)
 {
     
 }
@@ -46,42 +40,81 @@ ProjImageOutPiece::ProjImageOutPiece( scanlines_t scanlines,
                                       unsigned long int width,
                                       int spp )
     : m_scanlines ( scanlines ),
-      m_range( range ),
-      m_width( width ),
-      m_spp ( spp )
-{
+      m_widthPixels( width ),
+      m_spp ( spp ),
+      m_range( range )
+{   
 }
 
 /******************************************************************************/
 
-ProjImageOutPiece ProjImageOutPiece::createFromSocket( ClientSocket & socket)
+ProjImageOutPiece::ProjImageOutPiece( const ProjImageOutPiece & copyOf )
+    : ProjImageDataOutInterface(),
+      SerializableInterface(),
+      m_widthPixels( copyOf.m_widthPixels ),
+      m_spp ( copyOf.m_spp ),
+      m_range ( copyOf.m_range )
 {
-    const unsigned int height = range.second - range.first;
-    std::pair<long unsigned int, long unsigned int> range(0,0);
+    const unsigned int height = m_range.second - m_range.first;
+    m_scanlines = allocScanlines(std::pair<unsigned long, unsigned long>
+                                 (height,m_widthPixels),m_spp); 
+    
+    for( unsigned int i = 0; i < height; ++i )
+    {
+        for ( unsigned int j = 0; j < m_widthPixels; ++j )
+        {
+            m_scanlines[i][j] = copyOf.m_scanlines[i][j];
+        }
+    }
+
+}
+
+/******************************************************************************/
+
+ProjImageOutPiece::~ProjImageOutPiece()
+{
+    cleanupScanlines();
+}
+
+/******************************************************************************/
+
+ProjImageOutPiece ProjImageOutPiece::createFromSocket( ClientSocket & client )
+{
     bool bAcceptScanlines = false;
     scanlines_t scanlines = NULL;
+    std::pair<long, long> range(0,0); 
     unsigned long int width(0);
     int spp(0);
 
     client.receive(&range.first,sizeof(range.first));
+    WRITE_DEBUG ( "begin range: " << range.first << std::endl );
     client.receive(&range.second, sizeof(range.second));
+    WRITE_DEBUG ( "end range: " << range.second << std::endl );
     client.receive(&width, sizeof(width));
+    WRITE_DEBUG ( "width:" << width << std::endl );
     client.receive(&spp, sizeof(spp));
-  
+    WRITE_DEBUG ( "spp:" << spp << std::endl );
     // sync resulting scanlines if they are there.
     client.receive(&bAcceptScanlines, sizeof(bAcceptScanlines));
+    WRITE_DEBUG ( "accept scanlines" << bAcceptScanlines << std::endl );
     if ( bAcceptScanlines )
     {
+        const unsigned int height = range.second - range.first;
+        const size_t rcvSize = spp * width * sizeof(sample_t);
+        std::cout << "send size" << rcvSize << std::endl;
         // allocate memory for scanlines
         scanlines = allocScanlines (
                     std::pair<unsigned long, unsigned long>(height,width),spp); 
         
         for ( unsigned int i = 0; i < height; ++i )
         {
-            client.receive(scanlines[i] ,spp * width ); 
+            client.receive(scanlines[i] , rcvSize); 
         }
-    }
-    
+        WRITE_DEBUG ( "Received " << height << " scanlines." );
+    } else
+        WRITE_DEBUG ( "no scanlines received." << std::endl );
+   
+   
     return ProjImageOutPiece(scanlines, range, width, spp); 
 }
 
@@ -90,43 +123,60 @@ ProjImageOutPiece ProjImageOutPiece::createFromSocket( ClientSocket & socket)
 void ProjImageOutPiece::exportToSocket( ClientSocket & socket )const
 {
     const unsigned int height = m_range.second - m_range.first; 
-    bool bSendScanlines = (m_scanlines == NULL);
+    bool bSendScanlines = (m_scanlines != NULL);
+    scanline_t blankscanline = NULL;
     
     socket.appendToBuffer(&m_range.first, sizeof(m_range.first));
+    WRITE_DEBUG ( "sending begin range: " << m_range.first << std::endl );
     socket.appendToBuffer(&m_range.second, sizeof(m_range.second));
-    socket.appendToBuffer(&bSendScanlines, sizeof(bSendScanlines));
-    socket.appendToBuffer(&m_width, sizeof(m_width));
+    WRITE_DEBUG ( "sending end range: " << m_range.second << std::endl );
+    socket.appendToBuffer(&m_widthPixels, sizeof(m_widthPixels));
+    WRITE_DEBUG ( "sending width (pixels): " << m_widthPixels << std::endl );
     socket.appendToBuffer(&m_spp, sizeof(m_spp));
-    
-    if ( bSendScalines )
+    WRITE_DEBUG ( "sending samples per pixel: " << m_spp << std::endl );
+    socket.appendToBuffer(&bSendScanlines, sizeof(bSendScanlines));
+    WRITE_DEBUG ( "sending scanline flag: " << bSendScanlines << std::endl );
+    socket.sendFromBuffer();
+    if ( bSendScanlines )
     {
-        if ( !(blankscanline = new(std::nothrow) unsigned char[ width*spp ]))
+        const size_t sendSize = m_spp * m_widthPixels * sizeof(sample_t);
+       
+        std::cout << "send size" << sendSize << std::endl;
+        
+        WRITE_DEBUG ( "sending scanlines" << std::endl );
+        if ( !(blankscanline = new(std::nothrow)sample_t[m_widthPixels*m_spp]))
             throw GeneralException("Dynamic Alloc' failed.");
             
         for( unsigned long int h = 0; h < height; ++h )
         {
             if ( m_scanlines[h] != NULL ) 
-                socket.appendToBuffer( m_scanlines[h], spp * width ); 
+                // socket.appendToBuffer( m_scanlines[h], sendSize ); 
+                socket.send( m_scanlines[h], sendSize ); 
             else
-                client.appendToBuffer( blankscanline, spp * width ); 
+            {
+                std::cout << "sending blankline :" << h << std::endl;
+                //socket.appendToBuffer( blankscanline, sendSize ); 
+                socket.send( blankscanline, sendSize ); 
+                                     
+            }
         }
         delete[] blankscanline;
     }
-    
-    socket.sendFromBuffer();
+  
+    //socket.sendFromBuffer();
 }
 
 
 /******************************************************************************/
 
-void ProjImageOutPiece::putScanline( scanline_t scanline, 
+void ProjImageOutPiece::putScanline( scanline_t, 
                                      const unsigned int& lineNo )
 {
     if ( (m_range.first != -1 ) &&
-         lineNo - 1 != m_range.first ||
-         lineNo + 1 != m_range.first ||
-         lineNo - 1 != m_range.second ||
-         lineNo + 1 != m_range.second )
+         static_cast<int>(lineNo - 1) != m_range.first ||
+         static_cast<int>(lineNo + 1) != m_range.first ||
+         static_cast<int>(lineNo - 1) != m_range.second ||
+         static_cast<int>(lineNo + 1) != m_range.second )
         throw GeneralException(
         "Error: Inserting line which would make ProjImageOut non-contiguous.");
 
@@ -149,21 +199,43 @@ void ProjImageOutPiece::putScanlines( scanlines_t scanlines,
 
 /******************************************************************************/
  
-scanlines_t ProjImageOut::allocScanlines(
+scanlines_t ProjImageOutPiece::allocScanlines(
     std::pair<unsigned long, unsigned long> hwPixels, int spp )
 {
     scanlines_t scanlines;
-
+    const size_t makeSize = hwPixels.second * spp; 
     if ( !(scanlines = new(std::nothrow) scanline_t[hwPixels.first] ) )
         throw GeneralException("Dynamic Alloc' failed.");
 
+    std::cout << "making this many scanlines: " << hwPixels.first << std::endl;
+    std::cout << "with this width: " << makeSize << std::endl;
     for( unsigned int i = 0; i < hwPixels.first; ++i )
     {
-        if ( !(scanlines[i] = new(std::nothrow) sample_t[hwPixels.second*spp]))
+        if ( !(scanlines[i] = new(std::nothrow) sample_t[makeSize]))
             throw GeneralException("Dynamic Alloc' failed.");
     }
-    
     return scanlines;
+}
+
+/****************************************************************************/
+
+void ProjImageOutPiece::cleanupScanlines()
+{
+    const long int h = m_range.second - m_range.first;
+    if ( m_scanlines != NULL )
+    {
+        for ( long int i = 0; i < h; ++i )
+        {
+            if ( m_scanlines[i] != NULL )
+            {
+                delete [] m_scanlines[i];
+                m_scanlines[i] = NULL;
+            }
+            
+        }
+        delete [] m_scanlines;
+        m_scanlines = NULL;
+    }
 }
 
 /****************************************************************************/

@@ -5,19 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file ProjImageData.h 
  * 
- * \brief A ProjImage object is meant to be a representation 
- * of a image for an image projection and all of its 
- * implicit characteristics.  The ProjImageData object 
- * exploits the commonality between ProjImageIn and ProjImageOut
- * and avoids repeated code by being in the inheritence tree
- * of both, implementing their common get/set and setup mesh 
- * funcitons.
+ * \brief Header file for ProjImageData class. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -38,6 +32,9 @@
 namespace USGSMosix
 {
 
+/// The ProjImageData object exploits the commonality between ProjImageIn and 
+/// ProjImageOut and avoids repeated code by being in the inheritence tree
+/// of both, implementing their common get/set and setup mesh funcitons.
 class ProjImageData : public virtual ProjImageDataInterface
 {
     public:
@@ -74,6 +71,8 @@ class ProjImageData : public virtual ProjImageDataInterface
         virtual int getSPP()                                 const;
         /// \brief Returns the filename for the current image file.
         std::string getFilename()                            const;
+        /// \brief Returns a pointer to the image file.
+        USGSImageLib::ImageFile* getImageFile()              const; 
         
         /// \brief Returns the pixel scale for the current image.
         virtual void setPixelScale( const ProjImageScale & s );
@@ -94,7 +93,18 @@ class ProjImageData : public virtual ProjImageDataInterface
         void setHeight(const long int& h);
         /// \brief Sets the filename for the current image file.
         void setFilename( std::string & s );
-
+        /// \brief Sets the image photometric: RGB, black and white, etc.
+        void setPhotometric(int photo);
+        /// \brief Sets the Bits per sample
+        void setBPS(int bps);
+        /// \brief Sets the samples per pixel
+        void setSPP(int spp);
+        /// \brief Sets the image file to the forwarded pointer and syncs
+        /// the data members indicating samples per pixel, bits per sample,
+        /// filename, height, width, etc., to be those that are contained in
+        /// the ImageFile.
+        void setImageFile( USGSImageLib::ImageFile* file );
+        
         /// \param toProjection The destination projection to be 
         /// projected to from this image's current projection.  In other
         /// words, the mesh will be mapping from the current projimage's
@@ -103,7 +113,7 @@ class ProjImageData : public virtual ProjImageDataInterface
         /// \param divisions The number of vertical/horizontal divisions
         /// made in the mesh.  Defaults to a globally defined constant.
         ///
-        /// \param interp.  The type of interpolation to be used in 
+        /// \param interp The type of interpolation to be used in 
         /// mesh pixel getting.  Defaults to a globally defined constant.
         /// 
         /// \brief Sets up a forward mesh using this ProjImage's projection
@@ -120,7 +130,10 @@ class ProjImageData : public virtual ProjImageDataInterface
         /// \param divisions The number of vertical/horizontal divisions
         /// made in the mesh.  Defaults to a globally defined constant.
         ///
-        /// \param interp.  The type of interpolation to be used in 
+        /// \param boundaries The boundaries for the source image in 
+        /// degrees.
+        ///
+        /// \param interp  The type of interpolation to be used in 
         /// mesh pixel getting.  Defaults to a globally defined constant.
         /// 
         /// \brief Sets up a reverse mesh using this ProjImage's projection
@@ -139,12 +152,17 @@ class ProjImageData : public virtual ProjImageDataInterface
 
         /// the scale of the current image.
         ProjImageScale m_scale;
-        /// a pointer to the current image.
-        USGSImageLib::ImageFile * m_file;
-        /// the projection which m_file is in.
+                /// the projection which m_file is in.
         const ProjLib::Projection * m_proj;
     private:
-        DRect m_boundaries;  ///< boundaries to scale, not lat, long or pixel.
+        /// a pointer to the current image.
+        USGSImageLib::ImageFile * m_file;
+        /// boundaries to scale, not lat, long or pixel.
+        DRect m_boundaries; 
+        int m_photo, m_bps, m_spp;
+        long int m_width, m_height;
+        std::string m_filename;
+        mutable std::list<PmeshLib::ProjectionMesh *> m_meshes;
 };
 
 /******************************************************************************/
@@ -161,31 +179,25 @@ inline ProjImageScale ProjImageData::getPixelScale() const
     return m_scale;
 }
 
-/******************************************************************************/
+/****************************************************************************/
 
 inline int ProjImageData::getPhotometric() const
 {
-    assert ( m_file );
-    int i; m_file->getPhotometric(i);
-    return i;
+    return m_photo;
 }
     
 /******************************************************************************/
 
 inline int ProjImageData::getBPS() const
 {
-    assert ( m_file );
-    int i; m_file->getBitsPerSample(i);
-    return i;
+    return m_bps;
 }
 
 /******************************************************************************/
 
 inline int ProjImageData::getSPP() const
 {
-    assert ( m_file );
-    int i; m_file->getSamplesPerPixel(i);
-    return i;
+    return m_spp;
 }
 
 /******************************************************************************/
@@ -227,27 +239,21 @@ inline double ProjImageData::getBottomBound()const
 
 inline long int ProjImageData::getWidth() const 
 {
-    assert ( m_file );
-    long int w; m_file->getWidth(w);
-    return w;
+    return m_width;
 }
 
 /******************************************************************************/
 
 inline long int ProjImageData::getHeight() const 
 {
-    assert( m_file );
-    long int h; m_file->getHeight(h);
-    return h;
+    return m_height;
 }
 
 /******************************************************************************/
 
 inline std::string ProjImageData::getFilename() const 
 {
-    assert( m_file );
-    std::string s; m_file->getFileName(s); 
-    return s;
+    return m_filename;
 }
 
 /******************************************************************************/
@@ -294,8 +300,8 @@ inline void ProjImageData::setBounds(const DRect& rect)
 
 inline void ProjImageData::setWidth(const long int & w)
 {
-    assert( m_file );
-    m_file->setWidth(w);
+    m_width = w;
+    if ( m_file ) m_file->setWidth(w);
     return;
 }
 
@@ -303,8 +309,8 @@ inline void ProjImageData::setWidth(const long int & w)
 
 inline void ProjImageData::setHeight(const long int & h)
 {
-    assert( m_file );
-    m_file->setHeight(h);
+    m_height = h;
+    if ( m_file ) m_file->setHeight(h);
     return; 
 }
 
@@ -312,9 +318,33 @@ inline void ProjImageData::setHeight(const long int & h)
 
 inline void ProjImageData::setFilename( std::string & s) 
 {
-    assert( m_file );
-    m_file->setFileName(s); 
+    m_filename = s;
+    if ( m_file ) m_file->setFileName(s); 
     return;
+}
+
+/******************************************************************************/
+
+inline void ProjImageData::setPhotometric(int photo)
+{
+    m_photo = photo;
+    if ( m_file ) m_file->setPhotometric(photo);
+}
+
+/******************************************************************************/
+
+inline void ProjImageData::setBPS(int bps)
+{
+    m_bps = bps;
+    if ( m_file ) m_file->setBitsPerSample(bps);
+}
+
+/******************************************************************************/
+
+inline void ProjImageData::setSPP(int spp)
+{
+    m_spp = spp;
+    if ( m_file ) m_file->setSamplesPerPixel(spp);
 }
 
 /******************************************************************************/
@@ -322,6 +352,31 @@ inline void ProjImageData::setFilename( std::string & s)
 inline void ProjImageData::setPixelScale( const ProjImageScale & s ) 
 {
     m_scale = s;
+    return;
+}
+
+/******************************************************************************/
+
+inline USGSImageLib::ImageFile * ProjImageData::getImageFile()const
+{
+    return m_file;
+}
+
+/******************************************************************************/
+
+inline void ProjImageData::setImageFile( USGSImageLib::ImageFile* file )
+{
+    m_file = file;
+    
+    if ( m_file != NULL )
+    {
+        m_file->getSamplesPerPixel(m_spp);
+        m_file->getBitsPerSample(m_bps);
+        m_file->getPhotometric(m_photo);
+        m_file->getFileName(m_filename);
+        m_file->getHeight(m_height);
+        m_file->getWidth(m_width);
+    }
     return;
 }
 

@@ -2,14 +2,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file SocketWrapper.cpp
  * 
- * \brief Global constants, enumerations, and typedefs used by  
- * the MOSIX fast projections project.
+ * \brief Implementation file for SocketWrapper class. 
  *
  * \remarks Originally written by Matt Zykan sometime in 2004, but
  * was re-written by Mark Schisler in 8/2005.  At this time, functions
@@ -24,7 +23,9 @@
  */
 
 #include "SocketWrapper.h"
+#include <strings.h>
 #include <stdlib.h>
+#include <iostream>
 
 namespace USGSMosix { 
 
@@ -40,7 +41,8 @@ SocketWrapper::SocketWrapper()
   if(m_bufferAlloced < 1)
       throw GeneralException("Error: Buffer size requested <= 0.");
 
-  m_buffer = static_cast<unsigned char*>(malloc(m_bufferAlloced));
+  m_buffer = static_cast<unsigned char*>(malloc(m_bufferAlloced * 
+                                         sizeof(sample_t)));
 }
 
 /******************************************************************************/
@@ -55,7 +57,8 @@ SocketWrapper::SocketWrapper( size_t bufferSize )
     if(m_bufferAlloced < 1)
         throw GeneralException("Error: Buffer size requested <= 0.");
     
-    m_buffer = static_cast<unsigned char*>(malloc(m_bufferAlloced));
+    m_buffer = static_cast<unsigned char*>(malloc(m_bufferAlloced *
+                                           sizeof(sample_t)));
 }
 
 /******************************************************************************/
@@ -72,14 +75,25 @@ SocketWrapper::~SocketWrapper()
 
 void SocketWrapper::appendToBuffer(const void * in_buffer, size_t in_size)
 {
+  unsigned char * temp_buffer = NULL; 
+    
+  if ( in_size <= 0 ) 
+      throw GeneralException("Error: in_size less than or equal to zero.");
+
   // if there is room for all of in_buffer in buffer.
-  if ( in_size > (m_bufferAlloced - m_bufferEnd) )  
-    realloc(m_buffer, (m_bufferAlloced = (m_bufferEnd + in_size)));
-
-  memcpy( &m_buffer[m_bufferEnd], 
-          static_cast<const unsigned char *>(in_buffer), 
-          in_size );
-
+  if ( (in_size + m_bufferEnd) > (m_bufferAlloced) )  
+  {
+    std::cout << "using realloc " << std::endl;
+    // give twice as much as asked for to reduce cost of 
+    // repeatedly getting dynamic memory
+    m_bufferAlloced = m_bufferEnd + (2 * in_size);
+    
+    m_buffer = static_cast<unsigned char*>(realloc(m_buffer, sizeof(sample_t) * 
+                                                   m_bufferAlloced ));
+  }
+  
+  memcpy(&m_buffer[m_bufferEnd],static_cast<const unsigned char *>(in_buffer), 
+         in_size );
   m_bufferEnd += in_size;
   return; 
 }

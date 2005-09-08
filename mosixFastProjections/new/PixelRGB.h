@@ -5,19 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file PixelRGB.h
  * 
- * \brief PixelInterface outlines a ``generic'' type which can 
- * be used for storing pixel information.  AbstractPixel of the 
- * ImageLib involved way too much casting for the purposes of
- * the MOSIX code.  RGB Defines a pixel with three channels, 
- * a red channel, a green channel, and a blue channel, also 
- * known as samples. Note: allows for const and non-const 
- * functionality for the forwarded pointer.
+ * \brief Header and implementation file for PixelRGB. 
  * 
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -30,7 +24,11 @@
 namespace USGSMosix 
 {
 
-/*! Templated on the data type of the channel or samples. */
+/// PixelRGB defines a pixel with three channels, 
+/// a red channel, a green channel, and a blue channel, also 
+/// known as samples.  Note: allows for const and non-const 
+/// functionality for the forwarded pointer.
+/// Templated on the data type of the channel or samples. */
 template<class T>
 class PixelRGB  : public PixelInterface<T>
 {
@@ -55,7 +53,7 @@ public:
     /// \brief Gets the Red, green and blue values for the current pixel.
     virtual void getRGB(T& r, T& g, T& b)const;
    
-    /// \param g The grey value.
+    /// \param grey The grey value.
     /// \brief Returns the grey value for the current pixel.
     virtual void getGrey(T& grey)const;
 
@@ -65,7 +63,7 @@ public:
     /// \brief Sets the R,G,B values for the current pixel.
     virtual void setRGB(const T& r, const T& g, const T& b);
   
-    /// \param g The grey value.
+    /// \param grey The grey value.
     /// \brief Sets the grey value for the current pixel.
     virtual void setGrey(const T& grey);
 

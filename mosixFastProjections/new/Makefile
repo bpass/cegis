@@ -18,12 +18,12 @@
 # @file Makefile.am
 # @author Mark Schisler 
 #
-# $Id: Makefile,v 1.6 2005/08/25 21:07:29 mschisler Exp $
+# $Id: Makefile,v 1.7 2005/09/08 16:41:22 mschisler Exp $
 #
 
 # SUBDIRS = tests
 
-SOURCES = $(reproject_SOURCES)
+SOURCES = $(reproject_SOURCES) $(slave_SOURCES)
 
 srcdir = .
 top_srcdir = .
@@ -45,7 +45,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-noinst_PROGRAMS = reproject$(EXEEXT)
+noinst_PROGRAMS = reproject$(EXEEXT) slave$(EXEEXT)
 subdir = .
 DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/configure COPYING depcomp \
@@ -59,45 +59,54 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
 mkinstalldirs = $(mkdir_p)
 CONFIG_CLEAN_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
-am_reproject_OBJECTS = ClientSocket.$(OBJEXT) \
-	ProjImageFactory.$(OBJEXT) driver.$(OBJEXT) \
+am__objects_1 = ClientSocket.$(OBJEXT) ProjImageFactory.$(OBJEXT) \
 	ProjImageIn.$(OBJEXT) ServerSocket.$(OBJEXT) \
 	GeneralProjector.$(OBJEXT) ProjImageInList.$(OBJEXT) \
 	SlaveProjector.$(OBJEXT) ProjectorFactory.$(OBJEXT) \
 	ProjImageOut.$(OBJEXT) SocketWrapper.$(OBJEXT) \
 	ProjImageParams.$(OBJEXT) ProjImageData.$(OBJEXT) \
-	ProjImageScale.$(OBJEXT)
+	ProjImageScale.$(OBJEXT) ProjImageOutPiece.$(OBJEXT)
+am_reproject_OBJECTS = MasterMain.$(OBJEXT) $(am__objects_1)
 reproject_OBJECTS = $(am_reproject_OBJECTS)
 reproject_DEPENDENCIES = /work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
 	/work/mosixFastProjections/include/Projector/.obj/ProjectorException.o \
 	/work/mosixFastProjections/include/Projector/.obj/ProjUtil.o \
 	/work/mosixFastProjections/.obj/JPEGImageOFile.o \
 	/work/mosixFastProjections/.obj/PNGImageOFile.o
+am_slave_OBJECTS = SlaveMain.$(OBJEXT) $(am__objects_1)
+slave_OBJECTS = $(am_slave_OBJECTS)
+am__DEPENDENCIES_1 = /work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
+	/work/mosixFastProjections/include/Projector/.obj/ProjectorException.o \
+	/work/mosixFastProjections/include/Projector/.obj/ProjUtil.o \
+	/work/mosixFastProjections/.obj/JPEGImageOFile.o \
+	/work/mosixFastProjections/.obj/PNGImageOFile.o
+slave_DEPENDENCIES = $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I. -I$(srcdir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 DEP_FILES = ./$(DEPDIR)/ClientSocket.Po \
 	./$(DEPDIR)/GeneralProjector.Po \
+	./$(DEPDIR)/MasterMain.Po \
 	./$(DEPDIR)/ProjImageData.Po \
 	./$(DEPDIR)/ProjImageFactory.Po \
 	./$(DEPDIR)/ProjImageIn.Po \
 	./$(DEPDIR)/ProjImageInList.Po \
 	./$(DEPDIR)/ProjImageOut.Po \
+	./$(DEPDIR)/ProjImageOutPiece.Po \
 	./$(DEPDIR)/ProjImageParams.Po \
 	./$(DEPDIR)/ProjImageScale.Po \
 	./$(DEPDIR)/ProjectorFactory.Po \
 	./$(DEPDIR)/ServerSocket.Po \
+	./$(DEPDIR)/SlaveMain.Po \
 	./$(DEPDIR)/SlaveProjector.Po \
-	./$(DEPDIR)/SocketWrapper.Po ./$(DEPDIR)/driver.Po
+	./$(DEPDIR)/SocketWrapper.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
-CCLD = $(CC)
-LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(reproject_SOURCES)
-DIST_SOURCES = $(reproject_SOURCES)
+SOURCES = $(reproject_SOURCES) $(slave_SOURCES)
+DIST_SOURCES = $(reproject_SOURCES) $(slave_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -180,16 +189,17 @@ sysconfdir = ${prefix}/etc
 target_alias = 
 OBJDIR = .obj
 COMPILE = %OD
-reproject_SOURCES = ClientSocket.cpp ProjImageFactory.cpp \
-				   driver.cpp \
-				   ProjImageIn.cpp ServerSocket.cpp \
-				   GeneralProjector.cpp  ProjImageInList.cpp \
-				   SlaveProjector.cpp ProjectorFactory.cpp \
-				   ProjImageOut.cpp  SocketWrapper.cpp \
-				   ProjImageParams.cpp \
-                   ProjImageData.cpp  ProjImageScale.cpp \
-				   ProjImageOutPiece.h
+COMSOURCES = ClientSocket.cpp ProjImageFactory.cpp \
+		     ProjImageIn.cpp ServerSocket.cpp \
+  		     GeneralProjector.cpp  ProjImageInList.cpp \
+		     SlaveProjector.cpp ProjectorFactory.cpp \
+		     ProjImageOut.cpp  SocketWrapper.cpp \
+		     ProjImageParams.cpp \
+		     ProjImageData.cpp  ProjImageScale.cpp \
+			 ProjImageOutPiece.cpp
 
+reproject_SOURCES = MasterMain.cpp $(COMSOURCES)
+slave_SOURCES = SlaveMain.cpp $(COMSOURCES) 
 AM_CPPFLAGS = -pg -g -Wno-deprecated -Wall -W -pedantic \
 -I/work/mosixFastProjections/include/Projector \
 -I/usr/src/linux/include \
@@ -198,6 +208,7 @@ AM_CPPFLAGS = -pg -g -Wno-deprecated -Wall -W -pedantic \
 -I/work/mosixFastProjections/
 
 reproject_LDFLAGS = -pg 
+slave_LDFLAGS = -pg
 reproject_LDADD = \
 /work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
 /work/mosixFastProjections/include/Projector/.obj/ProjectorException.o \
@@ -211,6 +222,7 @@ reproject_LDADD = \
 -lgeotiff -ltiff -lProjection -lMiscUtils \
 -lpthread -lgctpc -lboost_thread -lpng -ljpeg 
 
+slave_LDADD = $(reproject_LDADD)
 all: all-am
 
 .SUFFIXES:
@@ -254,6 +266,9 @@ clean-noinstPROGRAMS:
 reproject$(EXEEXT): $(reproject_OBJECTS) $(reproject_DEPENDENCIES) 
 	@rm -f reproject$(EXEEXT)
 	$(CXXLINK) $(reproject_LDFLAGS) $(reproject_OBJECTS) $(reproject_LDADD) $(LIBS)
+slave$(EXEEXT): $(slave_OBJECTS) $(slave_DEPENDENCIES) 
+	@rm -f slave$(EXEEXT)
+	$(CXXLINK) $(slave_LDFLAGS) $(slave_OBJECTS) $(slave_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -263,18 +278,20 @@ distclean-compile:
 
 include ./$(DEPDIR)/ClientSocket.Po
 include ./$(DEPDIR)/GeneralProjector.Po
+include ./$(DEPDIR)/MasterMain.Po
 include ./$(DEPDIR)/ProjImageData.Po
 include ./$(DEPDIR)/ProjImageFactory.Po
 include ./$(DEPDIR)/ProjImageIn.Po
 include ./$(DEPDIR)/ProjImageInList.Po
 include ./$(DEPDIR)/ProjImageOut.Po
+include ./$(DEPDIR)/ProjImageOutPiece.Po
 include ./$(DEPDIR)/ProjImageParams.Po
 include ./$(DEPDIR)/ProjImageScale.Po
 include ./$(DEPDIR)/ProjectorFactory.Po
 include ./$(DEPDIR)/ServerSocket.Po
+include ./$(DEPDIR)/SlaveMain.Po
 include ./$(DEPDIR)/SlaveProjector.Po
 include ./$(DEPDIR)/SocketWrapper.Po
-include ./$(DEPDIR)/driver.Po
 
 .cpp.o:
 	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -560,7 +577,7 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
 
-                   # ProjProcessSpawner.cpp  ProjectorSplitter.cpp
+			 # ProjProcessSpawner.cpp  ProjectorSplitter.cpp
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -5,15 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
- * \file FromMultiProjector.h 
+ * \file GeneralProjector.h
  * 
- * \brief The GeneralProjector class is an object which takes 
- * input from several images in a Geographic projection, and projects 
- * this input into a single image of a desired projection.
+ * \brief Header file for GeneralProjector class. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -36,17 +34,16 @@
 namespace USGSMosix 
 {
 
-/*! The GeneralProjector takes input from an image interface. 
- *  (ImageList) and crafts this list of images and their cooresponding 
- *  bounding boxes into a single resulting image in a specified projection 
- */
+/// The GeneralProjector takes input from an image interface 
+/// and crafts this list of images and their cooresponding 
+/// bounding boxes into a single resulting image in a specified projection 
 class GeneralProjector : public ProjectorInterface 
 {
    public:
        /// \param params The parameters for the output projection.
        /// \param source The ProjImageIn from which we are projecting.
        GeneralProjector( ProjImageParams & params,
-                              ProjImageInInterface & source ); 
+                         ProjImageInInterface & source ); 
       
        /// \param source The ProjImageIn from which we are projecting.
        /// \param destination The ProjImageOut we are projecting to.
@@ -101,15 +98,19 @@ class GeneralProjector : public ProjectorInterface
        /// to use this function you must have called setupOutput.
        ///
        /// \brief Performs the image reprojection.
-       virtual scanlines_t project( long unsigned int beginLine, 
-                                    long unsigned int endLine ); 
+       virtual ProjImageOutPiece projectPiece( long unsigned int beginLine,
+                                               long unsigned int endLine );
 
+       /// \brief Performs the image reprojection and returns what was 
+       /// reprojected as a image piece.
+       virtual ProjImageOutPiece projectPiece();
+       
        /// \note Unless this object was constructed with a output reference, 
        /// to use this function you must have called setupOutput.
        ///
        /// \brief Performs the image reprojection.
        virtual void project();    
-     
+       
        /// \param socket A socket which has the data which is neccessary to
        /// construct a GeneralProjector object waiting on it.
        ///
@@ -127,6 +128,19 @@ class GeneralProjector : public ProjectorInterface
        virtual void exportToSocket( ClientSocket & socket )const;
        
     private:
+       /// \brief The line which we should begin reprojecting at with the 
+       /// current ProjImageIn and Out.  (zero based.)
+       ///
+       /// \brief The line which we should end reprojecting at with the
+       /// current ProjImageIn and Out.  (zero based.)
+       ///
+       /// \note Unless this object was constructed with a output reference, 
+       /// to use this function you must have called setupOutput.
+       ///
+       /// \brief Performs the image reprojection.
+       scanlines_t project( long unsigned int beginLine, 
+                            long unsigned int endLine ); 
+       
        /// \param mesh A reference to a pointer to a mesh which will point
        /// to a constructed mesh upon a successful completion of the funciton.
        ///

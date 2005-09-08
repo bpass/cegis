@@ -5,15 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file ProjImageInInterface.h 
  * 
- * \brief The ProjImage object is meant to be a representation 
- * of a image for an image projection and all of its 
- * implicit characteristics.
+ * \brief Header file for the ProjImageInInterface class. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -32,6 +30,8 @@
 
 namespace USGSMosix 
 {
+    /// An interface for dealing with Projected Image input in a re-projection
+    /// environment 
     class ProjImageInInterface : public virtual ProjImageDataInterface,
                                  public virtual SerializableInterface
     {

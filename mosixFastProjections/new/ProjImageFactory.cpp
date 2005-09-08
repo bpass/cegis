@@ -4,13 +4,11 @@
  *
  * \file ProjImageFactory.cpp
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  *
- * \brief This is the ProjImageFactory.  It is designed to encapulate the 
- * details of creating a ProjImage, so that if the process changes later,  
- * life will still proceed smoothly.
+ * \brief Implementation file for ProjImageFactory class. 
  *
  */
 
@@ -54,7 +52,7 @@ ProjImageFactory::makeProjImageInList( std::list<ProjImageParams*> & inParams,
     ProjImageInInterface *temp(NULL);
     std::pair<long int, long int> hwPair = outParams.getHeightWidthPair();
     ProjImageInList *list = new ProjImageInList(hwPair.first, hwPair.second); 
-    // TODO : m_images.push_back(list);
+    m_images.push_back(list);
     
     WRITE_DEBUG ( inParams.size() << std::endl );
     
@@ -65,7 +63,6 @@ ProjImageFactory::makeProjImageInList( std::list<ProjImageParams*> & inParams,
         WRITE_DEBUG (  "making new image" << std::endl );
         
         temp = new ProjImageIn( *(*i) );
-        m_images.push_front(temp);
         assert (list->appendHead(temp)); 
     }
     
@@ -95,17 +92,15 @@ ProjImageFactory::makeProjImageIn( ClientSocket & socket )
         
     } else
     { 
-        socket.receive(&width, sizeof(width));
         socket.receive(&height, sizeof(height));
+        socket.receive(&width, sizeof(width));
        
         imgList = new ProjImageInList(height, width); 
-        // TODO : m_images.push_back(imgList);
+        m_images.push_back(imgList);
         
         for( unsigned int i = 1; i <= noInputs; ++i ) 
         {
             tempInImg  = new ProjImageIn(ProjImageIn::createFromSocket(socket));
-            
-            m_images.push_front(tempInImg);
             assert(imgList->appendHead(tempInImg)); 
         }
 
@@ -124,7 +119,6 @@ ProjImageFactory::makeProjImageOut( ClientSocket & socket )
     
     tempImgOut = new ProjImageOut(
                  ProjImageOut(ProjImageOut::createFromSocket( socket )));
-
     m_images.push_front(tempImgOut);
 
     return tempImgOut;

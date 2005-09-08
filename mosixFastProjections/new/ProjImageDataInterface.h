@@ -6,17 +6,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file ProjImageDataInterface.h 
  * 
- * \brief A ProjImage object is meant to be a representation 
- * of a image for an image projection and all of its 
- * implicit characteristics.  The ProjImageDataInterface defines
- * the common set and get functions for the ProjImage set of 
- * objects.
+ * \brief Header file for ProjImageDataInterface class. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -30,6 +26,8 @@
 namespace USGSMosix 
 {
 
+/// The ProjImageDataInterface defines the common set and get functions for 
+/// the ProjImage set of objects. 
 class ProjImageDataInterface
 {
     public:
@@ -87,7 +85,7 @@ class ProjImageDataInterface
         /// \param divisions The number of vertical/horizontal divisions
         /// made in the mesh.  Defaults to a globally defined constant.
         ///
-        /// \param interp.  The type of interpolation to be used in 
+        /// \param interp  The type of interpolation to be used in 
         /// mesh pixel getting.  Defaults to a globally defined constant.
         /// 
         /// \brief Sets up a forward mesh using this ProjImage's projection
@@ -104,7 +102,10 @@ class ProjImageDataInterface
         /// \param divisions The number of vertical/horizontal divisions
         /// made in the mesh.  Defaults to a globally defined constant.
         ///
-        /// \param interp.  The type of interpolation to be used in 
+        /// \param boundaries The boundaries for the source image in 
+        /// degrees.
+        /// 
+        /// \param interp  The type of interpolation to be used in 
         /// mesh pixel getting.  Defaults to a globally defined constant.
         /// 
         /// \brief Sets up a reverse mesh using this ProjImage's projection

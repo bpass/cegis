@@ -7,13 +7,11 @@
  *
  * \file ProjImageFactory.h
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  *
- * \brief This is the ProjImageFactory.  It is designed to encapulate the 
- * details of creating a ProjImage, so that if the process changes later,  
- * life will still proceed smoothly.
+ * \brief Header file for ProjImageFactory class.
  *
  */
 
@@ -31,6 +29,7 @@ namespace USGSMosix
 using ProjIOLib::ProjectionWriter;
 using ProjIOLib::ProjectionReader;
 
+/// Designed to encapsulate the details of creating a ProjImage. 
 class ProjImageFactory
 {
     public:

@@ -5,16 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
- * \file ProjImageInterface.h 
+ * \file ProjImageOutInterface.h
  * 
- * \brief The ProjImage object is meant to be a representation 
- * of a image for an image reprojection and all of its 
- * implicit characteristics. To be a interface for outputting  
- * to blank image with  an associated projection.
+ * \brief Header file for the ProjImageOutInterface class 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -27,6 +24,8 @@
 
 namespace USGSMosix 
 {
+    /// Designed as an interface for outputting blank image data to a
+    /// particular projection. 
     class ProjImageOutInterface : public virtual ProjImageDataInterface,
                                   public virtual ProjImageDataOutInterface,
                                   public virtual SerializableInterface
@@ -37,7 +36,7 @@ namespace USGSMosix
         ProjImageOutInterface() {} 
         virtual ~ProjImageOutInterface() {} 
         
-        /// \param scanlines A 'piece' of the output image (i.e., a contigous
+        /// \param piece A 'piece' of the output image (i.e., a contigous
         /// grouping of scanlines.)
         /// \brief Puts piece of output iamge into USGSImageLib::ImageOFile for
         /// writing to output file.  

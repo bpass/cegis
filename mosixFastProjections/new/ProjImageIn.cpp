@@ -4,15 +4,13 @@
  * \author Mark Schisler \n
  *         Chris Bilderback 
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file ProjImageIn.h 
  * 
- * \brief The ProjImageIn object is meant to be a representation 
- * of a image for an image projection and all of its 
- * implicit characteristics.
+ * \brief Implementation file for ProjImageIn class. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -71,6 +69,8 @@ ProjImageIn::ProjImageIn( const ProjImageParams & params )
   DOQImageIFile * indoq = NULL;         // used to recast as a doq
   std::string imgFilename = params.getFilename();
   std::string strExtension;
+ 
+  WRITE_DEBUG ( "Creating ProjImageIn" << std::endl );
   
   strExtension = getFileExtension(imgFilename);
   
@@ -93,7 +93,7 @@ ProjImageIn::ProjImageIn( const ProjImageParams & params )
        
             // if the geo open was successful 
             if(ingeo->good())
-            {
+            { 
               //create the from projection
               m_proj = m_projReader.createProjection(ingeo);
 
@@ -114,7 +114,7 @@ ProjImageIn::ProjImageIn( const ProjImageParams & params )
               this->setLeftBound( tp[3] );
               this->setTopBound( tp[4] );
             
-              m_file = ingeo; 
+              this->setImageFile(ingeo); 
               
               if (indoq != NULL ) delete indoq;
               indoq = NULL;
@@ -140,7 +140,7 @@ ProjImageIn::ProjImageIn( const ProjImageParams & params )
               indoq->getYOrigin(temp);
               this->setTopBound(temp);
 
-              m_file = indoq;
+              this->setImageFile(indoq);
 
               if (ingeo != NULL ) delete ingeo;
               ingeo = NULL;
@@ -154,13 +154,13 @@ ProjImageIn::ProjImageIn( const ProjImageParams & params )
     }
 
     // set some common attributes
-    m_file->setFileName(imgFilename);
+    this->setFilename(imgFilename);
 
     //check for 16 bit tiffs that can't use cache
     if( (this->getBPS() == 8) && kgCacheSize > 0 ) 
     {
       if(!(m_cache = new(nothrow) LRUCacheManager(
-           dynamic_cast<USGSImageLib::ImageIFile*>(m_file), kgCacheSize)))
+         dynamic_cast<USGSImageLib::ImageIFile*>(getImageFile()), kgCacheSize)))
         throw bad_alloc();
     } 
 
@@ -229,6 +229,7 @@ bool ProjImageIn::openImageWithParamFile(const std::string& filename)
 {
     bool success = false;
     std::string strExtension, Filename(filename); // const improper in imagelib
+    USGSImageLib::ImageFile* file = NULL;
     using MiscUtils::cmp_nocase;
     using std::nothrow;
 
@@ -241,22 +242,24 @@ bool ProjImageIn::openImageWithParamFile(const std::string& filename)
         if ( !cmp_nocase(strExtension, "JPG") == 0 || 
              !cmp_nocase(strExtension, "JPEG") == 0 )
         {
-            if (!(m_file = new(nothrow)USGSImageLib::JPEGImageIFile(Filename)))
+            if (!(file = new(nothrow)USGSImageLib::JPEGImageIFile(Filename)))
                 throw std::bad_alloc();
            
             WRITE_DEBUG ( "opened jpg:" << filename << std::endl
                           << getOuterBounds() << std::endl );
-            
+           
+            this->setImageFile(file);
             success = true;
                 
         } else if ( !cmp_nocase(strExtension, "PNG") == 0 )
         {
-            if(!(m_file = new(nothrow)USGSImageLib::PNGImageIFile(Filename))) 
+            if(!(file = new(nothrow)USGSImageLib::PNGImageIFile(Filename))) 
                 throw std::bad_alloc();
             
             WRITE_DEBUG ( " opened png:" << std::endl
                           << getOuterBounds() << filename << std::endl );
 
+            this->setImageFile(file);
             success = true;
             
         } else
@@ -445,26 +448,31 @@ ProjImageIn ProjImageIn::createFromSocket( ClientSocket & socket )
     unsigned int strLen(0);
     char * pszParamfilename = NULL;
     std::string strParamfilename("");
-    static unsigned int i = 1; 
+    unsigned int i = 1; 
     
     socket.receive(&i, sizeof(i));
     // in this case what is trying to be constructed here is a list, and 
-    // not an individual image.  
+    // not an individual image. 
     if ( i != 1 )
     {
-        i = 1;
-        throw GeneralException("Error, not an individual image in transit.");        }
+        std::cout << "i = " << i << std::endl;
+        throw GeneralException("Error, not an individual image in transit.");
+    }
 
     socket.receive(&strLen,sizeof(strLen));
     
     if ( strLen <= 0 )
         throw GeneralException("Cannot make array of size less than zero.");
-    if ( ( pszParamfilename = new (std::nothrow)char[strLen] ) == NULL ) 
+    if ( ( pszParamfilename = new (std::nothrow)char[strLen + 1] ) == NULL ) 
         throw GeneralException("Failed Dynamic Allocation.");
     socket.receive(pszParamfilename, strLen);
-
-    return ProjImageIn(ProjImageParams(std::string(pszParamfilename), 
-                       ProjImageParams::INPUT ));
+    pszParamfilename[strLen] = '\0';
+    strParamfilename = pszParamfilename;
+    delete pszParamfilename;    
+    
+    WRITE_DEBUG ( "filename: " << strParamfilename << std::endl );
+    
+    return ProjImageIn(ProjImageParams(strParamfilename,ProjImageParams::INPUT));
 }
  
 /*****************************************************************************/
@@ -473,7 +481,7 @@ void ProjImageIn::exportToSocket( ClientSocket & socket )const
 {
     std::string paramFilename = m_params.getParamFilename();
     unsigned int length = paramFilename.length();
-    static unsigned int i = 1; 
+    unsigned int i = 1; 
 
     // put information in buffer
     socket.appendToBuffer(&i, sizeof(i));

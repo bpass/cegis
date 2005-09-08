@@ -5,16 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file SlaveProjector.h
  * 
- * \brief Built as a wrapper for an GeneralProjector object,
- * this class will redirect all output from its usual file ouput, 
- * to being network controlled --i.e., all output will be
- * directed toward a socket via a forwarded descriptor.
+ * \brief Header file for SlaveProjector class. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -33,6 +30,8 @@
 
 namespace USGSMosix
 {
+    /// A wrapper for the GeneralProjector object which re-directs all of 
+    /// its output to the network instead of directly back to a file. 
     class SlaveProjector : public ProjectorInterface
     {
     public:
@@ -41,7 +40,7 @@ namespace USGSMosix
         /// data will come.
         /// \param imgOutInterface The ProjImage interface from which the
         /// ouput data will come.
-        /// \param scanline Range The inclusive range of scanlines (zero-based)
+        /// \param scanlineRange The inclusive range of scanlines (zero-based)
         /// for which this Projector is responsible.
         SlaveProjector( ProjImageInInterface & inInterface,
                         ProjImageOutInterface & imgOutInterface,
@@ -49,7 +48,7 @@ namespace USGSMosix
 
         /// \param interface The Projector that the SlaveProjector will be
         /// composed of and use to carry out a projection.
-        /// \param scanline Range The inclusive range of scanlines (zero-based)
+        /// \param scanlineRange The inclusive range of scanlines (zero-based)
         /// for which this Projector is responsible.
         SlaveProjector( ProjectorInterface & interface, 
                         std::pair<unsigned long, unsigned long> scanlineRange );
@@ -64,14 +63,13 @@ namespace USGSMosix
         /// parameters.
         virtual bool setupOutput();
 
-        /// \brief Sets the scanline pointer member to the pointer forwarded.
-        void setScanlines(scanlines_t sl);
-            
         /// \brief Reprojects the scanlines in the inclusive range [ beginLine,
         /// endLine] from the source projection to the destination projection.
-        virtual scanlines_t project( long unsigned int beginLine, 
-                                     long unsigned int endLine );
-       
+        virtual ProjImageOutPiece projectPiece( long unsigned int beginLine,
+                                                long unsigned int endLine );
+        
+        virtual ProjImageOutPiece projectPiece();    
+        
         /// \brief Reprojects all scanlines in the range given to the 
         /// projector.
         virtual void project();   
@@ -94,10 +92,6 @@ namespace USGSMosix
         
     private:
 
-        /// \brief cleans up dynamically allocated scanlines saved in 
-        /// m_scanlines.
-        void cleanupScanlines();
-
         /// The factory necessary for creating Projectors from the
         /// createFromSocket() function.
         static ProjectorFactory m_projFactory;
@@ -112,11 +106,6 @@ namespace USGSMosix
         /// responsible.
         std::pair<long int, long int> m_scanlineRange;
 
-        /// the total number of scanlines for which we are repsonible.
-        unsigned int m_noScanlines;
-
-        /// a pointer to the scanline data we're repsonsible for.
-        scanlines_t m_scanlines; 
     };
 
 /******************************************************************************/
@@ -133,14 +122,6 @@ inline
 const ProjImageOutInterface * SlaveProjector::getProjImageOut()const
 {
     return m_projInterface->getProjImageOut();
-}
-
-/******************************************************************************/
-
-inline 
-void SlaveProjector::setScanlines(scanlines_t sl)
-{ 
-    m_scanlines = sl; 
 }
 
 /******************************************************************************/

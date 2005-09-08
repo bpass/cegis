@@ -10,8 +10,7 @@
  * 
  * \file ProjImageScale.h
  *
- * \brief The ImageScale object is meant to encapsulate the comparison 
- * of different types of image scales. 
+ * \brief Header and Implementation file for ProjImageScale class.
  *
  * \note This library is free software and is distributed under the 
  * MIT open source license.  For more information, consult the file 
@@ -29,7 +28,8 @@
 namespace USGSMosix 
 {
     using ProjLib::UNIT;
-    
+
+    /// Used to encapsulate the comparison of different types of image scales.
     class ProjImageScale : public SerializableInterface {
         public:
 

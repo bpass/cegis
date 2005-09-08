@@ -5,15 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file ProjImageIn.h 
  * 
- * \brief The ProjImage object is meant to be a representation 
- * of a image and an associated projection. 
- * 
+ * \brief Header file for ProjImageIn class. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -33,10 +31,9 @@
 namespace USGSMosix 
 {
 
-/*! The ProjImageIn object contains information useful in 
- *  reprojecting a specific image (i.e., its scale, samples
- *  per pixel, bits per sample, photometric, filename, etc.)
- */
+/// The ProjImageIn object contains information useful in 
+/// reprojecting a specific image  -- its scale, samples
+/// per pixel, bits per sample, photometric, filename, etc.
 class ProjImageIn : private virtual ProjImageData,
                     public virtual ProjImageInInterface
 {

@@ -5,14 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file Macros.h
  * 
- * \brief Global constants, enumerations, and typedefs used by  
- * the MOSIX fast projections project.
+ * \brief Global macros. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -20,10 +19,10 @@
  *
  */
 
-/* To enable debug messages for the program */
+/// To enable debug messages for the program 
 #define USE_DEBUG
 
-/* For debug messages. */
+/// For debug messages. 
 #ifdef USE_DEBUG
    #define WRITE_DEBUG(x) std::cerr << __FILE__ << ":" << __LINE__ << ":" << x;
 #else

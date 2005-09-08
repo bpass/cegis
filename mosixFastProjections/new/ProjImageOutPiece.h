@@ -5,28 +5,33 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file ProjImageOutPiece.h
  * 
- * \brief Defines a piece of a ProjImage.  This is useful in the  
- * MOSIX fast re-projections project as pieces of output images
- * frequently need to be transported across the network.  
- * IMPORTANT: For simplicity this piece is assumed to be contiguous.
- * Therefore one cannot have a piece of a image which contains 
- * the lines 1, 2, 132134, and 33 or something similiar.  It 
- * may only have pieces which contain ranges of scanlines.
- *
+ * \brief Header file for ProjImageOutPiece class. 
+ * 
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
  * the file COPYING.  
  *
  */
 
+#include "ProjImageDataOutInterface.h"
+#include "SerializableInterface.h"
+
+
 namespace USGSMosix {
 
+    /// Defines a piece of a ProjImage.  This is useful in the  
+    /// MOSIX fast re-projections project as pieces of output images
+    /// frequently need to be transported across the network.  
+    /// \note For simplicity this piece is assumed to be contiguous.
+    /// Therefore one cannot have a piece of a image which contains 
+    /// the lines 1, 2, 132134, and 33 or something similiar.  It 
+    /// may only have pieces which contain ranges of scanlines.
     class ProjImageOutPiece : public ProjImageDataOutInterface, 
                               public SerializableInterface  
     {
@@ -36,10 +41,17 @@ namespace USGSMosix {
             /// \param scanlines The scanlines for the image.
             /// \param range The range of the scanlines forwarded to 
             /// the image.  (zero based.)
+            /// \param width The width of the scanlines in pixels.h
+            /// \param spp The samples per pixel of the image that is
+            /// being dealt with.
             ProjImageOutPiece( scanlines_t scanlines, 
-                               std::pair<long, long> range ); 
-           
-            virtual ~ProjImageOutPiece() {}
+                               std::pair<long, long> range,
+                               unsigned long int width,
+                               int spp );
+          
+            ProjImageOutPiece( const ProjImageOutPiece & copyOf );
+                
+            virtual ~ProjImageOutPiece();
             
             /// \param socket The socket which has information waiting on it
             /// which can construct a ProjImageOutPiece.
@@ -48,7 +60,7 @@ namespace USGSMosix {
             /// on a socket that was placed there by a call on another
             /// existing object to exportToSocket().  A copy of that object
             /// will be returned from this function.
-            static ProjImageOutPiece createFromSocket( ClientSocket & socket);
+            static ProjImageOutPiece createFromSocket( ClientSocket & client );
             
             /// \param socket The socket to which all information needed to
             /// reconstruct this object will be outputted to.
@@ -67,7 +79,7 @@ namespace USGSMosix {
             virtual void putScanline( scanline_t scanline, 
                                       const unsigned int& lineNo );
 
-            /// \param scanline A pointer to a group of scanlines.  
+            /// \param scanlines A pointer to a group of scanlines.  
             /// \param beginLine The line number of the begining of the
             /// range of lines that was sent.
             /// \param endLine The line number of the end of the range of lines
@@ -86,22 +98,33 @@ namespace USGSMosix {
             {
                 return m_range;
             } 
+           
+            /// \brief Returns the width of the image in pixels.
+            unsigned long getWidthPixels()const { return m_widthPixels; } 
+           
+            /// \brief Returns the scanline data. 
+            scanlines_t getScanlines()const { return m_scanlines; }  
             
         private:
+           
             /// \brief allocates dynamic memory for a group of scanlines,
             /// with a certain sample per pixel count, based off the size
             /// of sample_t defined in Globals.h
             static scanlines_t allocScanlines( 
                 std::pair<unsigned long, unsigned long> hwPixels, int spp );
 
+            /// \brief Deletes dynamically allocated scanlines, if they
+            /// are present.
+            void cleanupScanlines(); 
+            
+            /// The scanline data.
+            scanlines_t m_scanlines;
+
             /// The width of the scanlines contained in this piece.
             unsigned long int m_widthPixels;
             
             /// Samples per pixel for this piece of image.
             int m_spp;
-
-            /// The scanline data.
-            scanlines_t m_scanlines;
 
             /// the range of scanlines currently in this piece.
             std::pair<long, long> m_range;

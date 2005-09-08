@@ -7,13 +7,11 @@
  *
  * \file ProjectorFactory.h
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  *
- * \brief This is the Projector.  It is designed to encapulate the 
- * details of creating a Projimage Reprojector, so that if the process 
- * changes later, life will still proceed smoothly.
+ * \brief Header file for ProjectorFactory class. 
  *
  */
 
@@ -22,6 +20,8 @@
 
 namespace USGSMosix {
 
+    /// A factory which makes projectors, designed to encapulate the 
+    /// details of creating a ProjImage re-projector. 
     class ProjectorFactory {
 
     public:

@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
@@ -30,6 +30,8 @@
 namespace USGSMosix 
 {
 
+/// A storage container for projected images which allows for groups
+/// of image(s) to be re-projected as a single object. 
 class ProjImageInList : public ProjImageInInterface 
 {
     public:
@@ -108,13 +110,13 @@ class ProjImageInList : public ProjImageInInterface
         /// \param divisions The number of vertical/horizontal divisions
         /// made in the mesh.  Defaults to a globally defined constant.
         ///
-        /// \param interp.  The type of interpolation to be used in 
+        /// \param interp  The type of interpolation to be used in 
         /// mesh pixel getting.  Defaults to a globally defined constant.
         /// 
         /// \brief Sets up a forward mesh using this ProjImage's projection
         /// and a second Projection.  
         virtual const PmeshLib::ProjectionMesh & setupMesh(
-            const ProjLib::Projection & fromProjection,
+            const ProjLib::Projection & toProjection,
             unsigned int divisions = kgMeshDivisions,  
             MathLib::InterpolatorType interp = kgInterpolator)const;
 
@@ -124,8 +126,13 @@ class ProjImageInList : public ProjImageInInterface
         /// 
         /// \param divisions The number of vertical/horizontal divisions
         /// made in the mesh.  Defaults to a globally defined constant.
+        /// \param boundaries The boundaries for the source image in 
+        /// degrees.
+        /// 
+        /// \param boundaries The boundaries for the source image in 
+        /// degrees.
         ///
-        /// \param interp.  The type of interpolation to be used in 
+        /// \param interp  The type of interpolation to be used in 
         /// mesh pixel getting.  Defaults to a globally defined constant.
         /// 
         /// \brief Sets up a reverse mesh using this ProjImage's projection
@@ -162,12 +169,12 @@ class ProjImageInList : public ProjImageInInterface
         /// list is empty, NULL is returned.  
         ProjImageInInterface* first()const;
         
-        /// \brief Decrements the iterator by a position.  
+        /// \brief Increments the iterator by a position.  
         /// Returns a pointer to the next item.  If there is no next item, 
         /// NULL is returned. 
         ProjImageInInterface* next()const;
         
-        /// \brief Increments the iterator by a position.  Returns a pointer 
+        /// \brief Decrements the iterator by a position.  Returns a pointer 
         /// to the previous item in the list. 
         ProjImageInInterface* prev()const;
         
@@ -262,12 +269,12 @@ inline void ProjImageInList::removeHead()
 inline void ProjImageInList::clear()
 {
     m_modified = true;
-    m_iterator = m_imgList.begin();
     
-    for( size_t i = 0;  i < m_imgList.size(); ++i ) 
+    for( m_iterator = m_imgList.begin();  
+         m_iterator != m_imgList.end(); 
+         ++m_iterator ) 
     {
-        if (m_iterator != m_imgList.end())
-            delete m_iterator->first;
+        delete m_iterator->first;
     }
     
     m_imgList.clear();

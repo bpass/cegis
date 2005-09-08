@@ -7,13 +7,11 @@
  *
  * \file ProjImageParams.h 
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
- * \brief ProjImageParams is to take care of the business of accepting
- * and dealing with input parameters for the MOSIX fast projections 
- * project.
+ * \brief Header file for ProjImageParams class.
  *
  */
 
@@ -31,7 +29,7 @@ namespace USGSMosix {
 using std::istream;
 using std::ostream;
 
-/// \brief The ProJImageParams object contains encapsulates the 
+/// The ProjImageParams object contains encapsulates the 
 /// process of gathering boundary data, image data, and creating
 /// a projection from a parameter file.
 class ProjImageParams : public SerializableInterface {
@@ -47,8 +45,8 @@ class ProjImageParams : public SerializableInterface {
         ProjImageParams( const ProjImageParams & params );
         virtual ~ProjImageParams();
         
-        /// \param The socket which the data for creating the ProjImageParam
-        /// object is waiting on.
+        /// \param socket The socket which the data for creating the 
+        /// ProjImageParam object is waiting on.
         ///
         /// \pre  The data waiting in the forwarded socket is that which 
         /// was exported by a function call to exportFromSocket().
@@ -65,7 +63,7 @@ class ProjImageParams : public SerializableInterface {
         /// the same object on the other end of the forwarded socket.
         virtual void exportToSocket( ClientSocket & socket )const;
 
-        /// \param out The stream which has the data for a parameter 
+        /// \param in The stream which has the data for a parameter 
         /// file, as prescribed by program documentation, waiting on it.
         ///
         /// \param params The object which will have the data from the 
@@ -75,7 +73,7 @@ class ProjImageParams : public SerializableInterface {
         /// in, into params.
         friend istream& operator>>( istream& in, ProjImageParams& params );
         
-        /// \param in The stream which the data for params should
+        /// \param out The stream which the data for params should
         /// be outputted to in text form.
         ///
         /// \param params The object which will have its data outputted

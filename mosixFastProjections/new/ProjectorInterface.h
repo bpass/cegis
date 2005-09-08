@@ -5,16 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file ProjectorInterface.h 
  * 
- * \brief This Interface is designed to lessen the tight-coupledness
- * of the frequent inheritence from the Projector class encountered
- * in the MOSIX Fast Projections project.  
- *
+ * \brief Header file for ProjectorInterface. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -30,6 +27,10 @@
 
 namespace USGSMosix {
 
+
+/// This Interface is designed to lessen the tight-coupledness of the frequent 
+/// inheritence from the Projector class encountered in the MOSIX Fast 
+/// Projections project. */ 
 class ProjectorInterface : public SerializableInterface {
     public:
 
@@ -46,17 +47,18 @@ class ProjectorInterface : public SerializableInterface {
         
         /// \brief The line which we should begin reprojecting at with the 
         /// current ProjImageIn and Out.  (zero based.)
-        ///
         /// \brief The line which we should end reprojecting at with the
         /// current ProjImageIn and Out.  (zero based.)
-        ///
         /// \note Unless this object was constructed with a output reference, 
         /// to use this function you must have called setupOutput.
-        ///
         /// \brief Performs the image reprojection.
-        virtual scanlines_t project( long unsigned int beginLine, 
-                                     long unsigned int endLine ) = 0;
-
+        virtual ProjImageOutPiece projectPiece( long unsigned int beginLine,
+                                                long unsigned int endLine ) = 0;
+        
+        /// \brief Performs the image reprojection and returns what was 
+        /// reprojected as a image piece.
+        virtual ProjImageOutPiece projectPiece() = 0;
+        
         /// \note Unless this object was constructed with a output reference, 
         /// to use this function you must have called setupOutput.
         ///

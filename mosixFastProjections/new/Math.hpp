@@ -3,13 +3,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file Math.hpp
  * 
- * \brief A collection of random, yet useful math functions. 
+ * \brief Implementation file for Math class. 
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 

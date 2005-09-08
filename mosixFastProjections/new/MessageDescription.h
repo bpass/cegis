@@ -3,14 +3,14 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file MessageDescription.h 
  * 
- * \brief Identifies the purpose of a socket transmission,  
- * i.e., a message "header" or "envelope."
+ * \brief Header file which contains struct that identifies the purpose of 
+ * a socket transmission, i.e., a message "header" or "envelope."
  *
  * \note This library is free software and is distributed under 
  * the MIT open source license.  For more information, consult 
@@ -26,6 +26,7 @@
 
 namespace USGSMosix 
 {
+    /// A type of header for all socket communication
     struct MessageDescription
     {
       unsigned long int m_sender; 

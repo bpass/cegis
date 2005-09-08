@@ -5,14 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file ClientSocket.h 
  * 
- * \brief ClientSocket is a socket which may only connect to other 
- * sockets.  It cannot be "bound" to a port, nor can it listen.
+ * \brief Header file for ClientSocket class.
  * 
  * \remarks Originally written by Matt Zykan sometime in 2004, but
  * was re-written by Mark Schisler in 8/2005.  At this time, functions
@@ -32,6 +31,9 @@
 
 namespace USGSMosix {
 
+/// ClientSocket is a socket which may only connect to other sockets.  
+/// It cannot be "bound" to a port, nor can it listen on a port.  It
+/// has to connect to perform any operations.
 class ClientSocket : public SocketWrapper
 {
 public:
@@ -42,23 +44,19 @@ public:
     ///
     /// \param port The port which we have connected to.
     ///
-    ///
     ClientSocket( int socketDesc, unsigned int port );
 
     /// \param hostname The name of the host to which this socket
     /// should connect.  
-    //
-    /// \param the port which we are connecting to.
+    /// \param port the port which we are connecting to.
     ClientSocket( std::string hostname, unsigned int port );
    
     virtual ~ClientSocket();
     
     /// \param in_buffer A pointer to data which will be sent over
     /// the connected socket. 
-    ///
-    /// \param the number of bytes that should be copied over the 
+    /// \param in_size the number of bytes that should be copied over the 
     /// socket from the pointer forwarded.
-    ///
     /// \brief send() sends data from the in_buffer through socket
     /// on which we are connected immediately.  It is not
     /// stored at all in the internal buffer.

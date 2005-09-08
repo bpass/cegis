@@ -5,13 +5,11 @@
  *
  * \file ProjImageParams.h
  *
- * \date $Date: 2005/08/17 01:09:01 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
- * \brief ProjImageParams is to take care of the business of accepting
- * and dealing with input parameters for the MOSIX fast projections 
- * project.
+ * \brief Implementation file for ProjImageParams class. 
  *
  */
 
@@ -27,6 +25,7 @@ ProjImageParams::ProjImageParams( std::string paramFilename, FileType ft )
     : m_paramFilename(paramFilename),
       m_projection(NULL)
 {
+    WRITE_DEBUG ( "Creating Parameter file: " << paramFilename << std::endl );
     m_fileType = ft;
     std::ifstream in(paramFilename.c_str());
     in >> *this;
@@ -37,7 +36,7 @@ ProjImageParams::ProjImageParams( std::string paramFilename, FileType ft )
 
 ProjImageParams::~ProjImageParams()
 {
-    // TODO: if ( m_projection != NULL ) delete m_projection; 
+    delete m_projection; 
 }
 
 /*****************************************************************************/
@@ -58,20 +57,26 @@ ProjImageParams::ProjImageParams( const ProjImageParams & params)
 ProjImageParams 
 ProjImageParams::createFromSocket( ClientSocket & socket )
 {
-    unsigned int len; 
+    unsigned int len;
+    int i = 0;
     char * msg = NULL;
+    std::string strMsg; 
     FileType ft; 
-    
     socket.receive( &len, sizeof(len) );
-    if ( len <= 0 ) 
-        msg = new char[len]; 
-    else
+    if ( len > 0 ) 
+    {
+        msg = new (std::nothrow)char[len + 1]; 
+        if ( msg == NULL )
+            throw GeneralException("New allocation failed.");
+    } else
         throw GeneralException("Error: Cannot make array of size less than 1");
-   
-    socket.receive( &msg, len );
-    socket.receive( &ft, sizeof(ft) );
-    
-    return ProjImageParams( std::string(msg), ft );
+    socket.receive( msg, len );
+    msg[len] = '\0';
+    strMsg = msg; 
+    delete msg;
+    socket.receive( &i, sizeof(i) );
+    ft = static_cast<FileType>(i);
+    return ProjImageParams( strMsg, ft );
             
 }
 
@@ -79,11 +84,12 @@ ProjImageParams::createFromSocket( ClientSocket & socket )
 
 void ProjImageParams::exportToSocket( ClientSocket & socket )const
 {
-    unsigned int len = m_imageFilename.length(); 
-    
+    unsigned int len = m_paramFilename.length(); 
+    const char * _cstr = m_paramFilename.c_str();
+    int i = static_cast<int>(m_fileType); // cannot transport enums 
     socket.appendToBuffer( &len, sizeof(len) );
-    socket.appendToBuffer( m_paramFilename.c_str(), len );
-    socket.appendToBuffer( &m_fileType, sizeof(m_fileType) );
+    socket.appendToBuffer( _cstr, len );
+    socket.appendToBuffer( &i, sizeof(i) );
     socket.sendFromBuffer();
 
     return;

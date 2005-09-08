@@ -5,14 +5,13 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/08/25 21:07:29 $
+ * \date $Date: 2005/09/08 16:41:22 $
  *
  * \version 0.1
  * 
  * \file ServerSocket.h
  * 
- * \brief Global constants, enumerations, and typedefs used by  
- * the MOSIX fast projections project.
+ * \brief Header file for ServerSocket class. 
  *
  * \remarks Originally written by Matt Zykan sometime in 2004, but
  * was re-written by Mark Schisler in 8/2005.  At this time, functions
@@ -30,6 +29,8 @@
 namespace USGSMosix
 {
 
+/// A socket which is only used in a serving sense.  It can only "accept"
+/// connections, it cannot connect. 
 class ServerSocket : public SocketWrapper 
 {
     

@@ -1,0 +1,768 @@
+/********************************************************************/
+/*Programmer: Kyle Williams - USGS                                  */
+/*            Tim Krupinski - USGS                                  */
+/*Creation Date: January, 2005                                      */
+/*Updated:                                                          */
+/*                                                                  */
+/*ADGen Automation Program                                          */
+/*This program takes as input 4 images (.img) and converts them into*/
+/*    22 parameters to be used by AGNPS.                            */
+/********************************************************************/
+
+component main
+{
+    
+    frame startframe;
+    frame mainframe;
+        
+    frame startframe
+    {
+        title "ADGen 2.0";
+        geometry 300, 300, 500, 280;
+        
+        statusbar;
+
+variable debug;
+
+        variable savePref;
+        
+        /***************************************/
+        /* Input files                         */
+        /***************************************/
+        filename f_dem;          /* Original DEM image    */
+        filename f_waterCutout;  /* Watershed image       */
+        filename f_soils;        /* Soils image           */
+        filename f_landcover;    /* Land cover image      */
+        
+        /***************************************/
+        /* Intermediate files                  */
+        /***************************************/
+        variable f_asciidem;    /* DEM in ascii format    */
+        variable f_flow;
+        variable f_asciiflow;
+        variable f_gord;
+        variable f_asciigord;
+        variable f_npsfile;
+        
+        /***************************************/
+        /* Output files                        */
+        /***************************************/
+        variable outputStack;    /* Stack of output parameters */
+        
+        variable f_p1;
+        variable f_p3;
+        variable f_p5;
+        variable f_p6;
+        variable f_p7;
+        variable f_p8;
+        variable f_p9;
+        variable f_p10;
+        variable f_p11;
+        variable f_p12;
+        variable f_p14;
+        variable f_p15;
+        variable f_p16;
+        variable f_p17;
+        variable f_p22;
+        
+        variable f_hydro;
+        variable f_clay;
+        variable f_silt;
+        variable f_sagg;
+        variable f_lagg;
+        variable f_sand;
+        variable f_total;
+        variable f_nitro;
+        variable f_phospho;
+        
+        /***************************************/
+        /* Variables for stacking images       */
+        /***************************************/
+        variable declareInput;
+        variable createFunc;
+        variable stackedImage;
+        
+        variable dataFile;
+        variable cellNumber;
+        variable outletImageStack;
+        
+        variable stackArray; 
+        
+        
+        /***************************************/
+        /* Variables for landcover info group  */
+        /***************************************/
+        variable landcoverGroup;
+        
+        popuplist popup_a;
+        variable field_a;
+        variable path_a;
+        
+        popuplist popup_b;
+        variable field_b;
+        variable path_b;
+        
+        popuplist popup_c;
+        variable field_c;
+        variable path_c;
+        
+        popuplist popup_d;
+        variable field_d;
+        variable path_d;
+        
+        popuplist popup_classNames;
+        variable field_classNames;
+        variable path_classNames;
+        
+        popuplist popup_manning;
+        variable field_manning;
+        variable path_manning;
+        
+        popuplist popup_surfaceCond;
+        variable field_surfaceCond;
+        variable path_surfaceCond;
+        
+        popuplist popup_CFactor;
+        variable field_CFactor;
+        variable path_CFactor;
+        
+        popuplist popup_COD;
+        variable field_COD;
+        variable path_COD;
+        
+        popuplist popup_fertilizer;
+        variable field_fertilizer;
+        variable path_fertilizer;
+        
+        textnumber rowWithWater;
+        
+        /***************************************/
+        /* Variables for soils info group      */
+        /***************************************/
+        variable soilGroup;
+        
+        popuplist popup_soilGroup;
+        variable field_soilGroup;
+        variable path_soilGroup;
+        
+        popuplist popup_KFactor;
+        variable field_KFactor;
+        variable path_KFactor;
+        
+        popuplist popup_soilTexture;
+        variable field_soilTexture;
+        variable path_soilTexture;
+        
+        
+        
+        tabsheet linetabs
+        {
+            geometry 5, 5, 490, 270;
+            
+            /*******************************************************/
+            /* Group inputData will allow the user to select which */
+            /*    files will be used for input                     */
+            /*******************************************************/
+            group inputData
+            {
+                title "Data";
+                geometry 5, 5, 495, 240;
+                
+                filename f_dem
+                {
+                    title above left "Elevation";
+                    info "Select the image file containing elevation data.";
+                    geometry 50, 30, 150, 35;
+                    shortform;
+                    select getpref("eml" "default_data_path") + "/*.img";
+                }
+                
+                filename f_waterCutout
+                {
+                    title above left "Watershed Cutout";
+                    info "Select the image file containing the watershed cutout.";
+                    geometry 295, 30, 150, 35;
+                    shortform;
+                    select getpref("eml" "default_data_path") + "/*.img";
+                }
+                
+                /*******************************************************/
+                /* For the soils file and landcover file, when an image*/
+                /*    is selected, the lists on the corresponding tab  */
+                /*    are populated with the categories that are       */
+                /*    contained within the image.                      */
+                /*******************************************************/
+                filename f_soils
+                {
+                    title above left "Soil moisture";
+                    info "Select the image file containing soil moisture data.";
+                    geometry 50, 110, 150, 35;
+                    shortform;
+                    select getpref ("eml" "default_data_path") + "/*.img";
+                    
+                    on filenamechoosen
+                    {
+                        set soilGroup = getfeaturefields($f_soils, 1, raster, any);
+                                                       
+                        $popup_soilGroup.SetNameAndTitleList(getfeaturefields($f_soils, 1, raster, any),
+                                                             getfeaturefields($f_soils, 1, raster, any));
+                        $popup_KFactor.SetNameAndTitleList(getfeaturefields($f_soils, 1, raster, any),
+                                                           getfeaturefields($f_soils, 1, raster, any));
+                        $popup_soilTexture.SetNameAndTitleList(getfeaturefields($f_soils, 1, raster, any),
+                                                               getfeaturefields($f_soils, 1, raster, any));
+                    }
+                }
+                
+                filename f_landcover
+                {
+                    title above left "Land cover";
+                    info "Select the file containing land coverage data.";
+                    geometry 295, 110, 150, 35;
+                    shortform;
+                    select getpref("eml" "default_data_path") + "/*.img";
+                    
+                    on filenamechoosen
+                    {
+                        set landcoverGroup = getfeaturefields($f_landcover, 1, raster, any);
+                                                            
+                        $popup_a.SetNameAndTitleList(getfeaturefields($f_landcover, 1, raster, any),
+                                                     getfeaturefields($f_landcover, 1, raster, any));
+                        $popup_b.SetNameAndTitleList(getfeaturefields($f_landcover, 1, raster, any),
+                                                     getfeaturefields($f_landcover, 1, raster, any));
+                        $popup_c.SetNameAndTitleList(getfeaturefields($f_landcover, 1, raster, any),
+                                                     getfeaturefields($f_landcover, 1, raster, any));
+                        $popup_d.SetNameAndTitleList(getfeaturefields($f_landcover, 1, raster, any),
+                                                     getfeaturefields($f_landcover, 1, raster, any));
+                        $popup_classNames.SetNameAndTitleList(getfeaturefields($f_landcover, 1, raster, any),
+                                                              getfeaturefields($f_landcover, 1, raster, any));
+                        $popup_manning.SetNameAndTitleList(getfeaturefields($f_landcover, 1, raster, any),
+                                                           getfeaturefields($f_landcover, 1, raster, any));
+                        $popup_surfaceCond.SetNameAndTitleList(getfeaturefields($f_landcover, 1, raster, any),
+                                                               getfeaturefields($f_landcover, 1, raster, any));
+                        $popup_CFactor.SetNameAndTitleList(getfeaturefields($f_landcover, 1, raster, any),
+                                                           getfeaturefields($f_landcover, 1, raster, any));
+                        $popup_COD.SetNameAndTitleList(getfeaturefields($f_landcover, 1, raster, any),
+                                                       getfeaturefields($f_landcover, 1, raster, any));
+                        $popup_fertilizer.SetNameAndTitleList(getfeaturefields($f_landcover, 1, raster, any),
+                                                              getfeaturefields($f_landcover, 1, raster, any));
+                    }
+                }
+                
+                button d_backButton /* Disabled button */
+                {
+                    title "<<";
+                    geometry 165, 200, 35, 35;
+                }
+                
+                button quitButton
+                {
+                    title "Exit";
+                    geometry 205, 200, 75, 35;
+                    on mousedown dismiss();
+                }
+                
+                button nextButton
+                {
+                    title ">>";
+                    geometry 285, 200, 35, 35;
+                    on mousedown
+                        set linetabs = landcoverInfo;
+                }
+            }
+            
+            group landcoverInfo
+            {
+                title "LC Info";
+                geometry 5, 5, 495, 415;
+                
+                popuplist popup_a
+                {
+                    title above left "Group A";
+                    info "Pick the corresponding name from the list of attributes.";
+                    geometry 3, 3, 150, 35;
+                    names "None";
+                    on valuechanged
+                    {
+                        set field_a = GetListIndex() + 1;
+                    }
+                }
+                
+                popuplist popup_b
+                {
+                    title above left "Group B";
+                    info "Pick the corresponding name from the list of attributes.";
+                    geometry 3, 48, 150, 35;
+                    names "None";
+                    on valuechanged
+                    {
+                        set field_b = GetListIndex() + 1;
+                    }
+                }
+                
+                popuplist popup_c
+                {
+                    title above left "Group C";
+                    info "Pick the corresponding name from the list of attributes.";
+                    geometry 3, 93, 150, 35;
+                    names "None";
+                    on valuechanged
+                    {
+                        set field_c = GetListIndex() + 1;
+                    }
+                }
+                
+                popuplist popup_d
+                {
+                    title above left "Group D";
+                    info "Pick the corresponding name from the list of attributes.";
+                    geometry 3, 138, 150, 35;
+                    names "None";
+                    on valuechanged
+                    {
+                        set field_d = GetListIndex() + 1;
+                    }
+                }
+                
+                popuplist popup_classNames
+                {
+                    title above left "Class Names";
+                    info "Pick the corresponding name from the list of attributes.";
+                    geometry 168, 3, 150, 35;
+                    names "None";
+                    on valuechanged
+                    {
+                        set field_classNames = GetListIndex() + 1;
+                    }
+                }
+                
+                popuplist popup_manning
+                {
+                    title above left "Manning Coefficient";
+                    info "Pick the corresponding name from the list of attributes.";
+                    geometry 168, 48, 150, 35;
+                    names "None";
+                    on valuechanged
+                    {
+                        set field_manning = GetListIndex() + 1;
+                    }
+                }
+                
+                popuplist popup_surfaceCond
+                {
+                    title above left "Surface Condition";
+                    info "Pick the corresponding name from the list of attributes.";
+                    geometry 168, 93, 150, 35;
+                    names "None";
+                    on valuechanged
+                    {
+                        set field_surfaceCond = GetListIndex() + 1;
+                    }
+                }
+                
+                popuplist popup_CFactor
+                {
+                    title above left "C-Factor";
+                    info "Pick the corresponding name from the list of attributes.";
+                    geometry 168, 138, 150, 35;
+                    names "None";
+                    on valuechanged
+                    {
+                        set field_CFactor = GetListIndex() + 1;
+                    }
+                }
+                
+                popuplist popup_COD
+                {
+                    title above left "COD";
+                    info "Pick the corresponding name from the list of attributes.";
+                    geometry 333, 3, 150, 35;
+                    names "None";
+                    on valuechanged
+                    {
+                        set field_COD = GetListIndex() + 1;
+                    }
+                }
+                
+                popuplist popup_fertilizer
+                {
+                    title above left "Fertilizer";
+                    info "Pick the corresponding name from the list of attributes.";
+                    geometry 333, 48, 150, 35;
+                    names "None";
+                    on valuechanged
+                    {
+                        set field_fertilizer = GetListIndex() + 1;
+                    }
+                }
+                
+                textnumber rowWithWater
+                {
+                    title above left "Row With Water";
+                    info "Enter which row in attribute table pertains to water.";
+                    geometry 333, 138, 150, 45;
+                    max 50;
+                }
+                
+                button backButton
+                {
+                    title "<<";
+                    geometry 165, 200, 35, 35;
+                    on mousedown
+                        set linetabs = inputData;                
+                }
+                
+                button quitButton
+                {
+                    title "Exit";
+                    geometry 205, 200, 75, 35;
+                    on mousedown dismiss();
+                }
+                
+                button nextButton
+                {
+                    title ">>";
+                    geometry 285, 200, 35, 35;
+                    on mousedown
+                        set linetabs = soilInfo;
+                }
+            }
+            
+            group soilInfo
+            {
+                title "Soil Info";
+                geometry 5, 5, 490, 270;
+                
+                popuplist popup_soilGroup
+                {
+                    title above left "Soil Group";
+                    info "Pick the corresponding name from the list of attributes.";
+                    geometry 80, 100, 150, 35;
+                    names "None";
+                    on valuechanged
+                    {
+                        set field_soilGroup = GetListIndex() + 1;
+                    }
+                }
+                
+                popuplist popup_KFactor
+                {
+                    title above left "K-Factor";
+                    info "Pick the corresponding name from the list of attributes.";
+                    geometry 168, 40, 150, 35;
+                    names "None";
+                    on valuechanged
+                    {
+                        set field_KFactor = GetListIndex() + 1;
+                    }
+                }
+                
+                popuplist popup_soilTexture
+                {
+                    title above left "Soil Texture";
+                    info "Pick the corresponding name from the list of attributes.";
+                    geometry 255, 100, 150, 35;
+                    names "None";
+                    on valuechanged
+                    {
+                        set field_soilTexture = GetListIndex() + 1;
+                    }
+                }
+                
+                button backButton
+                {
+                    title "<<";
+                    geometry 165, 200, 35, 35;
+                    on mousedown
+                        set linetabs = landcoverInfo;                
+                }
+                
+                button quitButton
+                {
+                    title "Exit";
+                    geometry 205, 200, 75, 35;
+                    on mousedown dismiss();
+                }
+                
+                button nextButton
+                {
+                    title ">>";
+                    geometry 285, 200, 35, 35;
+                    on mousedown
+                        set linetabs = runGroup;
+                }
+            }
+            
+            group runGroup
+            {
+                title "Run";
+                geometry 5, 5, 495, 415;
+                
+                /*******************************************************/
+                /* In the future, outlet cell should be determined     */
+                /*    automatically.                                   */
+                /*******************************************************/
+                textnumber outletCell
+                {
+                    title above left "Outlet Cell";
+                    geometry 165, 5, 155, 45;
+                    max 4294967296;
+                }
+                
+                /*******************************************************/
+                /* createButton runs the entire process.               */
+                /* Steps:                                              */
+                /*   1) Create image files for each parameter.         */
+                /*   2) Create a stackfile containing all the images. */
+                /*   3) Use the stackfile to create a data file (.dat) */
+                /*   4) Run AGNPS (agrun) to get the output .nps file  */
+                /*   5) Turn the .nps file into Imagine images         */
+                /*******************************************************/
+                button createButton
+                {
+                    title "Run";
+                    geometry 165, 70, 155, 70;
+                    on mousedown
+                    {
+                        /*******************************************************/
+                        /*   Step 1) Create image files for each parameter.    */
+                        /*******************************************************/
+                        set outputStack = fpath($f_dem) + "imageStack.img";
+                        
+                        set path_a = "\"" + $landcoverGroup[$field_a] + "\"";
+                        set path_b = "\"" + $landcoverGroup[$field_b] + "\"";
+                        set path_c = "\"" + $landcoverGroup[$field_c] + "\"";
+                        set path_d = "\"" + $landcoverGroup[$field_d] + "\"";
+                        set path_manning = "\"" + $landcoverGroup[$field_manning] + "\"";
+                        set path_surfaceCond = "\"" + $landcoverGroup[$field_surfaceCond] + "\"";
+                        set path_CFactor = "\"" + $landcoverGroup[$field_CFactor] + "\"";
+                        set path_COD = "\"" + $landcoverGroup[$field_COD] + "\"";
+                        set path_fertilizer = "\"" + $landcoverGroup[$field_fertilizer] + "\"";
+                        set path_classNames = "\"" + $landcoverGroup[$field_classNames] + "\"";
+                        
+                        set path_soilGroup = "\"" + $soilGroup[$field_soilGroup] + "\"";
+                        set path_KFactor = "\"" + $soilGroup[$field_KFactor] + "\"";
+                        set path_soilTexture = "\"" + $soilGroup[$field_soilTexture] + "\"";
+                        
+                        set f_asciidem = img2ascii($f_dem);
+                        
+                        /*******************************************************/
+                        /* Create flood, flow, and strahler stream order files */
+                        /*    for parameter creation                           */
+                        /*******************************************************/
+                        flood("flood.exe" $f_asciidem);
+                        flow("d8.exe" $f_asciidem);
+                        
+                        set f_asciiflow = fpath($f_dem) + froot($f_dem) + "p.asc";
+                        set f_flow = ascii2img($f_asciiflow $f_dem);
+                        stream("gridnet.exe" $f_asciidem);
+                        set f_asciigord = fpath($f_dem) + froot($f_dem) + "gord.asc";
+                        ascii2img($f_asciigord $f_dem);
+                        set f_gord = fpath($f_dem) + froot($f_dem) + "gord.img";
+                        
+                        /*******************************************************/
+                        /* Imagine will error if images already exist.         */
+                        /* If images (parameterXX.img) already exist, rename   */
+                        /*    them.  If renamed images already exist, delete   */
+                        /*    them.                                            */
+                        /*******************************************************/
+                        deleteFiles(fpath($f_dem));
+                        
+                        set f_p1 = fpath($f_dem) + "parameter01.img";
+                        set f_p3 = fpath($f_dem) + "parameter03.img";
+                        set f_p5 = fpath($f_dem) + "parameter05.img";
+                        set f_p6 = fpath($f_dem) + "parameter06.img";
+                        set f_p7 = fpath($f_dem) + "parameter07.img";
+                        set f_p8 = fpath($f_dem) + "parameter08.img";
+                        set f_p9 = fpath($f_dem) + "parameter09.img";
+                        set f_p10 = fpath($f_dem) + "parameter10.img";
+                        set f_p11 = fpath($f_dem) + "parameter11.img";
+                        set f_p12 = fpath($f_dem) + "parameter12.img";
+                        set f_p14 = fpath($f_dem) + "parameter14.img";
+                        set f_p15 = fpath($f_dem) + "parameter15.img";
+                        set f_p16 = fpath($f_dem) + "parameter16.img";
+                        set f_p17 = fpath($f_dem) + "parameter17.img";
+                        set f_p22 = fpath($f_dem) + "parameter22.img";
+                        
+                        set savePref = getpref("eml", "KeepStatusBox");
+                        setpref("eml", "KeepStatusBox", 0);
+                        
+                        cells($f_waterCutout, $f_p1);
+                        
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p5_flowconversion_model.mdl" -s -m $f_flow $f_p5;
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p7_slope_model.mdl" -s -m $f_dem $f_p7;
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p3_rec_cell_model.mdl" $f_p1 $f_p5 $f_p3;
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p6_scs_curve_num.mdl" $f_soils $f_landcover $f_p6 $path_soilGroup $path_a $path_b $path_c $path_d;
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p17_fertilizer_model.mdl" $f_landcover $f_p17 $path_fertilizer;
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p16_soil_text_model.mdl" $f_soils $f_p16 $path_soilTexture;
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p8_slope_shape_FINAL.mdl" $f_p1 $f_p5 $f_p7 $f_p8;
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p9_slope_length.mdl" $f_p7 $f_p9;
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p22_complete_model.mdl" $f_gord $f_landcover $f_p22 $rowwithwater;
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p10_manning_model.mdl" $f_landcover $f_p10 $path_manning;
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p11_k_factor_model.mdl" $f_soils $f_p11 $path_KFactor;
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p12_c_fact_model.mdl" $f_landcover $f_p12 $path_CFactor;
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p14_s_cond_const_model.mdl" $f_landcover $f_p14 $path_surfaceCond;
+                        syncjob modeler "$IMAGINE_HOME/etc/models/p15_cod_fact_model.mdl" $f_landcover $f_p15 $path_COD;
+                        
+                        /*********************************************************/
+                        /* Step 2) Create a stackfile containing all the images. */
+                        /*********************************************************/
+                        echo "Stacking images...";
+                        
+                        set declareInput = "FLOAT RASTER n1 FILE OLD NEAREST NEIGHBOR AOI " + 
+                                                "NONE EDGE FILL " + quote($f_p1) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n2 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p3) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n3 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p5) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n4 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p6) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n5 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p7) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n6 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p8) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n7 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p9) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n8 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p10) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n9 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p11) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n10 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p12) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n11 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p14) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n12 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p15) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n13 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p16) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n14 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p17) + ";" ;
+                        set declareInput = $declareInput + "FLOAT RASTER n15 FILE OLD NEAREST NEIGHBOR " +
+                                                "AOI NONE EDGE FILL " + quote($f_p22) + ";" ;
+                        
+                        set createFunc = "n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15";
+                        
+                        syncjob modeler -nq "$IMAGINE_HOME/etc/models/layermerge.pmdl" 
+                            -meter 
+                            -state
+                            "Union" 
+                            "None" 
+                            $declareInput 
+                            "ignore" 
+                            "Float_Single" 
+                            quote($outputStack) 
+                            $createFunc;
+                            
+                        setpref("eml", "KeepStatusBox", savePref);
+                        
+                        /*********************************************************/
+                        /* Step 3) Use the stackfile to create a data file (.dat)*/
+                        /*********************************************************/
+                        set dataFile = fpath($f_dem) + "data.dat";
+                        
+                        /*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$*/
+                        /* Need to get cell number - add conditional to use */
+                        /* appropriate model for data type. */
+                        /* getDataType(Parameter1.img) will return the data type*/
+                        /*********************************************************/
+                        /*set outletImageStack = fpath($f_dem) + "lr1920outlet_stack.img";*/
+                        /*set cellNumber = getOutCell($OutletImageStack);*/
+                        echo "Data file: " $dataFile;
+                        set dataFile = format($outputStack, $stackArray, $dataFile, $outletCell);
+                        echo "Data file: " $dataFile;
+                        
+                        /*********************************************************/
+                        /* Step 4) Run AGNPS (agrun) to get the output .nps file */
+                        /*********************************************************/
+                        set stackedImage = fpath($f_dem) + "imagestack.img";
+                        
+                        
+                        set f_npsfile = fpath($f_dem) + "data.nps";
+                        
+                        executor("agrun.exe" $dataFile "1" "1" "1");
+                        
+                        
+                        /*********************************************************/
+                        /* Step 5) Turn the .nps file into Imagine images        */
+                        /*********************************************************/
+                        set f_hydro = fpath($f_dem) + "hydro.img";
+                        set f_clay = fpath($f_dem) + "clay.img";
+                        set f_silt = fpath($f_dem) + "silt.img";
+                        set f_sagg = fpath($f_dem) + "sagg.img";
+                        set f_lagg = fpath($f_dem) + "lagg.img";
+                        set f_sand = fpath($f_dem) + "sand.img";
+                        set f_total = fpath($f_dem) + "total.img";
+                        set f_nitro = fpath($f_dem) + "nitro.img";
+                        set f_phospho = fpath($f_dem) + "phospho.img";
+                        
+                        makeimage($f_npsfile, $f_p1, $f_hydro, $f_clay, $f_silt, $f_sagg, 
+                                        $f_lagg, $f_sand, $f_total, $f_nitro, $f_phospho);
+                    }
+                }
+                
+                
+                button backButton
+                {
+                    title "<<";
+                    geometry 165, 200, 35, 35;
+                    on mousedown
+                        set linetabs = soilInfo;                
+                }
+                
+                button quitButton
+                {
+                    title "Exit";
+                    geometry 205, 200, 75, 35;
+                    on mousedown dismiss();
+                }
+                
+                button d_nextButton
+                {
+                    title ">>";
+                    geometry 285, 200, 35, 35;
+                }
+            }
+        }
+        
+        on framedisplay
+        {
+            set field_a = 0;
+            set field_b = 0;
+            set field_c = 0;
+            set field_d = 0;
+            set field_classNames = 0;
+            set field_manning = 0;
+            set field_surfaceCond = 0;
+            set field_CFactor = 0;
+            set field_COD = 0;
+            set field_fertilizer = 0;
+            
+            set field_soilGroup = 0;
+            set field_KFactor = 0;
+            set field_soilTexture = 0;
+            
+            set stackArray = {1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 
+                              1, 1, 0, 1, 1, 1, 1, 0, 0, 0,
+                              0, 1 };
+            
+            disable d_backButton;
+            disable d_nextButton;
+            
+            set f_dem = "D:\\WorkSpace\\lr1920dem.img";
+            set f_waterCutout = "D:\\WorkSpace\\lr1920_cutout.img";
+            set f_soils = "D:\\WorkSpace\\lr1920_soils.img";
+            set f_landcover = "D:\\WorkSpace\\lr1920_landcover.img";
+        }
+ 
+    }
+    
+    
+    /***********************OLD INTERFACE STUFF STARTS HERE******************/
+    /*            We just keep it around for reference when we need it         */
+    /************************************************************************/
+    frame mainframe
+    {
+    }    
+
+    on startup display startframe;
+}
+

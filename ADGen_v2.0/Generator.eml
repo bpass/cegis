@@ -1,0 +1,4981 @@
+/************************************************************************************/
+/*
+/*  Eml for AGNPS/Imagine Interface     Version 1.01b
+/*
+/* -Written by Doug Scheidt
+/*  July 2001 - May 2002
+/* -Updated by Gregory Jaromack
+/*  May 2002 -
+/*
+/************************************************************************************/
+component main
+{
+    /*************/
+    /*           */
+    /*  Globals  */
+    /*           */
+    /*************/
+    frame p1cutoutf;	  /* frame used for making a cutout image */
+    frame infoframe;      /* for default naming */
+    frame p1frame;
+    frame p3frame;        /* Each of these is for creating the */
+    frame p5frame;
+    frame p6frame;        /* respective parameter.             */
+    frame p7frame;
+    frame p8frame;
+    frame p9frame;
+    frame p10frame;
+    frame p11frame;
+    frame p12frame;
+    frame p14frame;
+    frame p15frame;
+    frame p16frame;
+    frame p17frame;
+    frame p22frame;
+    frame customframe;    /* Parameters other than those given  */
+    frame freezeframe;    /* User cannot create p1, p5, p7      */
+    frame notdoneframe;   /* User has not filled out all fields */
+    frame datframe;       /* Extra info for making data file    */
+    frame nixoutletframe; /* User did not enter an outlet       */
+    frame getlayersframe; /* If layers are needed for data run  */
+    frame agnpsframe;     /* For running AGNPS 5.0              */
+    frame waitframe;      /* Tell the user to wait for a process to finish    */
+    frame goodframe;      /* AGNPS worked                       */
+    frame badframe;       /* AGNPS sucked                       */
+    frame nodefaultframe; /* Used when user tries to use default names without setting them */
+    frame npswaitframe;   /* Used to tell the user to wait for the npsframe to disapear */
+    frame npsframe;       /* For creating images from AGNPS out */
+    frame p1stackedframe; /* User did not select p1 for stack   */
+    frame needfileframe;  /* Need a stacked file for datformat  */
+    frame agnpsheaderframe;
+
+    variable inffile;
+    variable file1;
+    variable file2;       /* The filenames for each file        */
+    variable file3;
+    variable file4;
+    variable file5;
+    variable file6;
+    variable file7;
+    variable file8;
+    variable file9;
+    variable file10;
+    variable file11;
+    variable file12;
+    variable file13;
+    variable file14;
+    variable file15;
+    variable file16;
+    variable file17;
+    variable file18;
+    variable file19;
+    variable file20;
+    variable file21;
+    variable file22;
+    variable fileout;
+    variable fcutout;
+
+    variable stackarray;   /* Shows which parameters have been entered    */
+    variable stackedfile;  /* The stacked file (duh)                      */
+    variable thing;        /* A return variable from an external function */
+    variable here;         /* The $HOME of Imagine where agrun.exe (AGNPS)
+                                should be.                                */
+
+
+	/* AGNPS Header Flags and Variables */
+	/*=== Line 2 ===*/
+	variable hf_errLog;
+	variable hf_srcAcct;
+	variable hf_hydro;
+	variable hf_sed;
+	variable hf_nutr;
+	variable hf_pesti;
+
+	/*=== Line 5 ===*/
+	variable hf_hyd_calc;
+	variable hf_geomorph;
+	variable hf_k_coeff;
+	variable hf_prepeak;
+
+	/*=== Line 6 ===*/
+	variable hf_storm_type;
+	variable hf_energy_int;
+	variable hf_duration;
+	variable hf_precip;
+	variable hf_nitro_conc;
+
+    /*
+    ** Main Frame
+    */
+    frame mainframe
+    {
+        title "AGNPS Data Generator";
+        geometry 50, 50, 660, 475;
+
+        /*
+        ** Declarations
+        */
+        filename infile1;
+        filename infile3;
+        filename infile5;
+        filename infile6;
+        filename infile7;
+        filename infile8;
+        filename infile9;
+        filename infile10;
+        filename infile11;
+        filename infile12;
+        filename infile14;
+        filename infile15;
+        filename infile16;
+        filename infile17;
+        filename infile22;
+        filename mainoutfile;
+        variable haveimages;   /* User opts to use pre-made images */
+        variable area;         /* Variables necessary to run stack */
+        variable aoi;
+        variable declareinput;
+        variable zero;
+        variable oftype;
+        variable createfunc;
+        textnumber count;
+        textnumber recount;    /* A check variable for running stacks */
+        textnumber outletcell; /* The outlet cell of a watershed */
+        button datformat;
+        button releasebutton;
+
+        statusbar;
+
+        /************************************/
+        /*                                  */
+        /*      PARAMETER BUTTONS           */
+        /*                                  */
+        /************************************/
+
+        button P1b
+        {
+            geometry 30, 20, 80, 30;
+            title "Parameter 1";
+            info "Create the Cell Numbers using DEM watershed cutout.";
+            on mousedown
+            {
+                display p1frame;
+            }
+        }
+
+        button P3b
+        {
+            geometry 30, 70, 80, 30;
+            title "Parameter 3";
+            info "Create Receiving Cell Number from Parameters 1 and 5";
+            on mousedown
+            {
+                display p3frame;
+            }
+        }
+
+        button P5b
+        {
+            geometry 30, 120, 80, 30;
+            title "Parameter 5";
+            info "Create Flow Direction using the DEM.";
+            on mousedown
+            {
+                display p5frame;
+            }
+        }
+
+        button P6b
+        {
+            geometry 30, 170, 80, 30;
+            title "Parameter 6";
+            info "Create SCS Curve Number from Soils";
+            on mousedown
+            {
+                display p6frame;
+            }
+        }
+
+        button P7b
+        {
+            geometry 30, 220, 80, 30;
+            title "Parameter 7";
+            info "Create Slope using the DEM.";
+            on mousedown
+            {
+                display p7frame;
+            }
+        }
+
+        button P8b
+        {
+            geometry 30, 270, 80, 30;
+            title "Parameter 8";
+            info "Create Slope Shape from Parameters 1, 5, and 7";
+            on mousedown
+            {
+                display p8frame;
+            }
+        }
+
+        button P9b
+        {
+            geometry 30, 320, 80, 30;
+            title "Parameter 9";
+            info "Create Slope Length from Parameter 7";
+            on mousedown
+            {
+                display p9frame;
+            }
+        }
+
+        button P10b
+        {
+            geometry 30, 370, 80, 30;
+            title "Parameter 10";
+            info "Create Overland Mannings image from Land Cover";
+            on mousedown
+            {
+                display p10frame;
+            }
+        }
+
+        button P11b
+        {
+            geometry 360, 20, 80, 30;
+            title "Parameter 11";
+            info "Create Soil Erodibility (k-factor) from Soils";
+            on mousedown
+            {
+                display p11frame;
+            }
+        }
+
+        button P12b
+        {
+            geometry 360, 70, 80, 30;
+            title "Parameter 12";
+            info "Create Cropping Factor from Land Cover";
+            on mousedown
+            {
+                display p12frame;
+            }
+        }
+
+        button P14b
+        {
+            geometry 360, 120, 80, 30;
+            title "Parameter 14";
+            info "Create Surface Condition Constant from Land Cover";
+            on mousedown
+            {
+                display p14frame;
+            }
+        }
+
+        button P15b
+        {
+            geometry 360, 170, 80, 30;
+            title "Parameter 15";
+            info "Create COD Factor from Land Cover";
+            on mousedown
+            {
+                display p15frame;
+            }
+        }
+
+        button P16b
+        {
+            geometry 360, 220, 80, 30;
+            title "Parameter 16";
+            info "Create Soil Type from Soils";
+            on mousedown
+            {
+                display p16frame;
+            }
+        }
+
+        button P17b
+        {
+            geometry 360, 270, 80, 30;
+            title "Parameter 17";
+            info "Create Ferilizer Level from Land Cover";
+            on mousedown
+            {
+                display p17frame;
+            }
+        }
+
+        button P22b
+        {
+            geometry 360, 320, 80, 30;
+            title "Parameter 22";
+            info "Create Channel Type from Strahler Order File and Land Cover";
+            on mousedown
+            {
+                display p22frame;
+            }
+        }
+
+        /************************************/
+        /*                                  */
+        /*      PARAMETER FILENAMES         */
+        /*                                  */
+        /************************************/
+        filename infile1
+        {
+            title above left "Parameter 1 image";
+            info "The file containing parameter 1.";
+            geometry 140, 0, 150, 20;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[1] = 1;  /* File is entered */
+                if($file1=="")
+                {
+                }
+                else
+                {
+                   set infile1 = $file1;
+                }
+            }
+        }
+
+        filename infile3
+        {
+            title above left "Parameter 3 image";
+            info "The file containing parameter 3.";
+            geometry 140, 50, 150, 20;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[3] = 1;
+                if($file3=="")
+                {
+                }
+                else
+                {
+                   set infile3 = $file3;
+                }
+            }
+        }
+
+        filename infile5
+        {
+            title above left "Parameter 5 image";
+            info "The file containing parameter 5.";
+            geometry 140, 100, 150, 30;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[5] = 1;
+                if($file5=="")
+                {
+                }
+                else
+                {
+                   set infile5 = $file5;
+                }
+            }
+        }
+
+        filename infile6
+        {
+            title above left "Parameter 6 image";
+            info "The file containing parameter 6.";
+            geometry 140, 150, 150, 30;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[6] = 1;
+                if($file6=="")
+                {
+                }
+                else
+                {
+                   set infile6 = $file6;
+                }
+            }
+        }
+
+        filename infile7
+        {
+            title above left "Parameter 7 image";
+            info "The file containing parameter 7.";
+            geometry 140, 200, 150, 30;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[7] = 1;
+                if($file7=="")
+                {
+                }
+                else
+                {
+                   set infile7=$file7;
+                }
+            }
+        }
+
+        filename infile8
+        {
+            title above left "Parameter 8 image";
+            info "The file containing parameter 8.";
+            geometry 140, 250, 150, 30;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[8] = 1;
+                if($file8=="")
+                {
+                }
+                else
+                {
+                   set infile8 = $file8;
+                }
+            }
+        }
+
+        filename infile9
+        {
+            title above left "Parameter 9 image";
+            info "The file containing parameter 9.";
+            geometry 140, 300, 150, 30;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[9] = 1;
+                if($file9=="")
+                {
+                }
+                else
+                {
+                    set infile9 = $file9;
+                }
+            }
+        }
+
+        filename infile10
+        {
+            title above left "Parameter 10 image";
+            info "The file containing parameter 10.";
+            geometry 140, 350, 150, 30;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[10] = 1;
+                if($file10=="")
+                {
+                }
+                else
+                {
+                   set infile10 = $file10;
+                }
+            }
+        }
+
+        filename infile11
+        {
+            title above left "Parameter 11 image";
+            info "The file containing parameter 11.";
+            geometry 470, 0, 150, 30;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[11] = 1;
+                if($file11=="")
+                {
+                }
+                else
+                {
+                   set infile11 = $file11;
+                }
+            }
+        }
+
+        filename infile12
+        {
+            title above left "Parameter 12 image";
+            info "The file containing parameter 12.";
+            geometry 470, 50, 150, 30;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[12] = 1;
+                if($file12=="")
+                {
+                }
+                else
+                {
+                   set infile12 = $file12;
+                }
+            }
+        }
+
+        filename infile14
+        {
+            title above left "Parameter 14 image";
+            info "The file containing parameter 14.";
+            geometry 470, 100, 150, 30;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[14] = 1;
+                if($file14=="")
+                {
+                }
+                else
+                {
+                   set infile14 = $file14;
+                }
+            }
+        }
+
+        filename infile15
+        {
+            title above left "Parameter 15 image";
+            info "The file containing parameter 15.";
+            geometry 470, 150, 150, 30;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[15] = 1;
+                if($file15=="")
+                {
+                }
+                else
+                {
+                   set infile15 = $file15;
+                }
+            }
+        }
+
+        filename infile16
+        {
+            title above left "Parameter 16 image";
+            info "The file containing parameter 16.";
+            geometry 470, 200, 150, 30;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[16] = 1;
+                if($file16=="")
+                {
+                }
+                else
+                {
+                   set infile16 = $file16;
+                }
+            }
+        }
+
+        filename infile17
+        {
+            title above left "Parameter 17 image";
+            info "The file containing parameter 17.";
+            geometry 470, 250, 150, 30;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[17] = 1;
+                if($file17=="")
+                {
+                }
+                else
+                {
+                   set infile17 = $file17;
+                }
+            }
+        }
+
+        filename infile22
+        {
+            title above left "Parameter 22 image";
+            info "The file containing parameter 22.";
+            geometry 470, 300, 150, 30;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                set stackarray[22] = 1;
+                if($file22=="")
+                {
+                }
+                else
+                {
+                   set infile22 = $file22;
+                }
+            }
+        }
+
+        filename mainoutfile
+        {
+            title above left "Stacked Output Image";
+            info "The final stacked image of the above parameters";
+            geometry 470, 350, 150, 30;
+            nocheck;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                if($fileout=="")
+                {
+                }
+                else
+                {
+                   set mainoutfile = $fileout;
+                }
+
+                set stackedfile = $mainoutfile;
+            }
+        }
+
+
+        /******************************/
+        /* Other buttons              */
+        /******************************/
+
+        button closebuttn
+        {
+            geometry 570, 450, 80, 25;
+            title "Close";
+            info "Close this window.";
+            on mousedown
+            {
+               dismiss();
+               unload;
+            }
+        }
+
+        button releasebutton
+        {
+            geometry 120, 420, 80, 25;
+            title "Have Images";
+            info "If you already have some or all of the images to be used.";
+            on mousedown
+            {
+                if($haveimages == 0)
+                {
+                    set haveimages = 1;
+                    enable infile1;
+                    enable infile3;
+                    enable infile5;
+                    enable infile6;
+                    enable infile7;
+                    enable infile8;
+                    enable infile9;
+                    enable infile10;
+                    enable infile11;
+                    enable infile12;
+                    enable infile14;
+                    enable infile15;
+                    enable infile16;
+                    enable infile17;
+                    enable infile22;
+                }
+                else
+                {
+                    set haveimages = 0;
+                    disable infile1;
+                    disable infile3;
+                    disable infile5;
+                    disable infile6;
+                    disable infile7;
+                    disable infile8;
+                    disable infile9;
+                    disable infile10;
+                    disable infile11;
+                    disable infile12;
+                    disable infile14;
+                    disable infile15;
+                    disable infile16;
+                    disable infile17;
+                    disable infile22;
+                }
+            }
+        }
+
+        button infob
+        {
+            geometry 30, 420, 80, 25;
+            title "Default output";
+            info "Enter default output file name for automatic naming";
+            on mousedown
+            {
+                display infoframe;
+            }
+        }
+
+        button stacker
+        {
+            geometry 300, 420, 80, 25;
+            title "Create Stack";
+            info "Stack the images into one file.";
+            on mousedown
+            {
+                set count = 1;
+                set createfunc = "";
+                set declareinput="";
+
+                /* Is there anything besides a bitwise "or" in EML? */
+                if( $infile1 == "" ) display notdoneframe;
+                elsif( $infile3 == "" ) display notdoneframe;
+                elsif( $infile5 == "" ) display notdoneframe;
+                elsif( $infile6 == "" ) display notdoneframe;
+                elsif( $infile7 == "" ) display notdoneframe;
+                elsif( $infile8 == "" ) display notdoneframe;
+                elsif( $infile9 == "" ) display notdoneframe;
+                elsif( $infile10 == "" ) display notdoneframe;
+                elsif( $infile11 == "" ) display notdoneframe;
+                elsif( $infile12 == "" ) display notdoneframe;
+                elsif( $infile14 == "" ) display notdoneframe;
+                elsif( $infile15 == "" ) display notdoneframe;
+                elsif( $infile16 == "" ) display notdoneframe;
+                elsif( $infile17 == "" ) display notdoneframe;
+                elsif( $infile22 == "" ) display notdoneframe;
+                elsif( $mainoutfile == "" ) display notdoneframe;
+                else
+                {
+                    /* This is just how the stack function needs to be set up */
+
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile1) + "; ";
+                    set count = $count + 1;
+                    if( $file2 != "" )
+                    {
+                        set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($file2) + "; ";
+                        set count = $count + 1;
+                        set stackarray[2] = 1;
+                    }
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile3) + "; ";
+                    set count = $count + 1;
+                    if( $file4 != "" )
+                    {
+                        set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($file4) + "; ";
+                        set count = $count + 1;
+                        set stackarray[4] = 1;
+                    }
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile5) + "; ";
+                    set count = $count + 1;
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile6) + "; ";
+                    set count = $count + 1;
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile7) + "; ";
+                    set count = $count + 1;
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile8) + "; ";
+                    set count = $count + 1;
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile9) + "; ";
+                    set count = $count + 1;
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile10) + "; ";
+                    set count = $count + 1;
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile11) + "; ";
+                    set count = $count + 1;
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile12) + "; ";
+                    set count = $count + 1;
+                    if( $file13 != "" )
+                    {
+                        set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($file13) + "; ";
+                        set count = $count + 1;
+                        set stackarray[13] = 1;
+                    }
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile14) + "; ";
+                    set count = $count + 1;
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile15) + "; ";
+                    set count = $count + 1;
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile16) + "; ";
+                    set count = $count + 1;
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile17) + "; ";
+                    set count = $count + 1;
+                    if( $file18 != "" )
+                    {
+                        set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($file18) + "; ";
+                        set count = $count + 1;
+                        set stackarray[18] = 1;
+                    }
+                    if( $file19 != "" )
+                    {
+                        set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($file19) + "; ";
+                        set count = $count + 1;
+                        set stackarray[19] = 1;
+                    }
+                    if( $file20 != "" )
+                    {
+                        set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($file20) + "; ";
+                        set count = $count + 1;
+                        set stackarray[20] = 1;
+                    }
+                    if( $file21 != "" )
+                    {
+                        set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($file21) + "; ";
+                        set count = $count + 1;
+                        set stackarray[21] = 1;
+                    }
+                    set declareinput = $declareinput + "FLOAT RASTER " + "n" + fmt($count,"0")
+                        + " FILE OLD NEAREST NEIGHBOR AOI NONE EDGE FILL" + quote($infile22) + "; ";
+
+
+                    set recount = 1;
+                    while( $recount < $count+1 )
+                    {
+                        if($createfunc == "")
+                            set createfunc = "n" + fmt($recount,"0");
+                        else
+                            set createfunc = $createfunc + "," + "n" + fmt($recount,"0");
+                        set recount = $recount + 1;
+                    }
+
+                    /* Stack the images */
+                    syncjob modeler -nq "$IMAGINE_HOME/etc/models/layermerge.pmdl"
+                        -meter
+                        -state
+                        $area
+                        $aoi
+                        $declareinput
+                        $zero
+                        $oftype
+                        quote($mainoutfile)
+                        $createfunc;
+                }
+            }
+        }
+
+        button datformat
+        {
+            geometry 390, 420, 80, 25;
+            title "Format Data";
+            info "Generate a data file for AGNPS";
+            on mousedown
+            {
+                if($mainoutfile == "") /* No stack file made */
+                {
+                    display needfileframe;
+                }
+                elsif($infile1 == "")  /* Stack is there, but no other filenames */
+                {
+                    display getlayersframe;
+                }
+                else
+                {
+                    display datframe;
+                    /*imageinfo -image $stackedfile -emlscreen 0;*/
+                }
+
+
+            }
+
+        }
+
+        button customize
+        {
+            geometry 210, 420, 80, 25;
+            title "Have Others";
+            info "If you have parameters not listed above.";
+            on mousedown
+            {
+                display customframe;
+            }
+        }
+
+        button agnpsbtn
+        {
+            geometry 480, 420, 80, 25;
+            title "Run AGNPS";
+            info "Run the data file through AGNPS v5.0";
+            on mousedown
+            {
+                display agnpsframe;
+            }
+        }
+
+        button viewbtn
+        {
+            geometry 570, 420, 80, 25;
+            title "New Images";
+            info "Create new images from AGNPS output.";
+            on mousedown
+            {
+                display npsframe;
+            }
+        }
+
+        line divider
+        {
+            geometry 10, 410, 640, 5;
+            layout horizontal;
+        }
+
+        line otherdivider
+        {
+            geometry 292, 415, 5, 30;
+            layout vertical;
+        }
+
+        textnumber count
+        {
+            format "3.0";
+        }
+
+        textnumber recount
+        {
+            format "3.0";
+        }
+
+
+        on framedisplay
+        {
+            hide count;
+            hide recount;
+            disable infile1;
+            disable infile3;
+            disable infile5;
+            disable infile6;
+            disable infile7;
+            disable infile8;
+            disable infile9;
+            disable infile10;
+            disable infile11;
+            disable infile12;
+            disable infile14;
+            disable infile15;
+            disable infile16;
+            disable infile17;
+            disable infile22;
+            set infile1 = "";
+            set file2 = "";
+            set infile3 = "";
+            set file4 = "";
+            set infile5 = "";
+            set infile6 = "";
+            set infile7 = "";
+            set infile8 = "";
+            set infile9 = "";
+            set infile10 = "";
+            set infile11 = "";
+            set infile12 = "";
+            set file13 = "";
+            set infile14 = "";
+            set infile15 = "";
+            set infile16 = "";
+            set infile17 = "";
+            set file18 = "";
+            set file19 = "";
+            set file20 = "";
+            set file21 = "";
+            set infile22 = "";
+            set mainoutfile = "";
+            set haveimages = 0;
+            set area = "Union";
+            set aoi = "None";
+            set declareinput = "";
+            set zero = "ignore";
+            set oftype = "Float_Single";
+            set createfunc = "";
+            set count = 1;
+            set stackarray = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+            set fcutout = "";
+        }
+
+
+    }
+
+
+
+/********************************************************************************/
+/*
+/*  Parameter 1
+/*
+/*
+/********************************************************************************/
+
+    frame p1frame
+    {
+        title "P1 Generation - Cell Numbering";
+        geometry 400, 80, 220, 150;
+        modal;
+
+
+        filename p1infile;
+        filename p1outfile;
+        button p1runbutton;
+        button p1cutoutb;
+
+        filename p1infile
+        {
+            title above left "Input cutout image";
+            info "Select the file containing the watershed cutout of the DEM.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+
+            	if ($p1infile == "")
+            	{
+					set p1infile = $fcutout;
+            	}
+            	else
+            	{
+
+            	}
+
+                if ($p1infile != "" && $inffile != "")
+                {
+                    set p1outfile = froot ($inffile) + "_01" + "." + fext ($inffile);
+                }
+                enable p1outfile;
+
+                if($p1infile != "" && $p1outfile != "")
+                {
+                    enable p1runbutton;
+                }
+            }
+        }
+
+        filename p1outfile
+        {
+            title above left "Select P1 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 53, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                if($p1infile != "" && $p1outfile != "")
+                {
+                    enable p1runbutton;
+                }
+            }
+        }
+
+        button p1runbutton
+        {
+            title "Run";
+            info  "Generate parameter 1.";
+            geometry 105, 115, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                /* Call C Function */
+                set thing = cells($p1infile,$p1outfile);
+                set file1 = $p1outfile;
+                undisplay p1frame;
+                send filenamechoosen to main:mainframe:infile1;
+                undisplay waitframe;
+            }
+        }
+
+        button p1cutoutb
+        {
+        	title "Create Cutout";
+        	info "Generate a cutout from an image using an Arc Coverage.";
+        	geometry 5, 115, 90, 30;
+        	on mousedown
+        	{
+        		display p1cutoutf;
+        	}
+        }
+
+
+        button p1cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 165, 115, 50, 30;
+            on mousedown
+            {
+                undisplay p1frame;
+                if( $file1 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile1;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p1outfile;
+            disable p1runbutton;
+            set p1infile = "";
+        }
+
+    }
+
+/********************************************************************************/
+/*
+/*  Parameter 3
+/*
+/*
+/********************************************************************************/
+
+    frame p3frame
+    {
+        title "P3 Generation - Recieving Cell Number";
+        geometry 400, 80, 255, 200;
+        modal;
+
+        filename p3infile2;
+        filename p3outfile;
+        button p3runbutton;
+
+
+        filename p3infile1
+        {
+            title above left "Parameter 1 image";
+            info "Select the file containing parameter 1.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p3infile2;
+            }
+        }
+
+        filename p3infile2
+        {
+            title above left "Parameter 5 image";
+            info "Select the file containing parameter 5.";
+            geometry 5, 53, 150, 35;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                if ($p3infile1 != "" && $p3infile2 != "" && $inffile != "")
+                {
+                    set p3outfile = froot ($inffile) + "_03" + "." + fext ($inffile);
+                }
+                enable p3outfile;
+
+                if($p3infile1 != "" && $p3infile2 != "" && $p3outfile != "")
+                {
+                    enable p3runbutton;
+                }
+            }
+        }
+
+        filename p3outfile
+        {
+            title above left "Select P3 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 103, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p3runbutton;
+            }
+        }
+
+        button p3runbutton
+        {
+            title "Run";
+            info  "Generate parameter 3.";
+            geometry 60, 165, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                syncjob modeler "$IMAGINE_HOME/etc/models/p3_rec_cell_model.mdl" -s -m $p3infile1 $p3infile2 $p3outfile;
+                set file3 = $p3outfile;
+                undisplay p3frame;
+                send filenamechoosen to main:mainframe:infile3;
+                undisplay waitframe;
+            }
+        }
+
+        button p3cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 120, 165, 50, 30;
+            on mousedown
+            {
+                undisplay p3frame;
+                if( $file3 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile3;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p3infile2;
+            disable p3outfile;
+            disable p3runbutton;
+        }
+
+    }
+
+
+/********************************************************************************/
+/*
+/*  Parameter 5
+/*
+/*
+/********************************************************************************/
+
+    frame p5frame
+    {
+        title "P5 Generation - Flow Direction";
+        geometry 250, 40, 295, 395;
+
+        filename p5asciidem;
+        filename p5infile;
+        filename p5outfile;
+        button p5floodbutton;
+        button p5d8button;
+        button p5runbutton;
+        button p5convert2ascii;
+        button p5convert2img;
+        variable p5temp;
+
+        filename p5demfile
+        {
+            title above left "Original DEM";
+            info "Select the file containing elevation data.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p5convert2ascii;
+            }
+        }
+
+        button p5convert2ascii
+        {
+            title "Convert";
+            info "Change .img to .asc";
+            geometry 205, 23, 80, 30;
+            on mousedown
+            {
+            	display waitframe;
+                /* Convert to ascii file */
+                set p5asciidem = img2ascii($p5demfile);
+                enable p5floodbutton;
+                undisplay waitframe;
+            }
+        }
+
+        filename p5asciidem
+        {
+            title "ASCII DEM";
+            info "Select the file containing the DEM in ASCII format";
+            geometry 5, 55, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.asc";
+            on filenamechoosen
+            {
+            }
+        }
+
+        button p5floodbutton
+        {
+            title "Flood";
+            info "Fill the pits of the DEM";
+            geometry 5, 115, 80, 30;
+            on mousedown
+            {
+            	display waitframe;
+                /* Run flood on the file */
+                set here = "flood.exe";
+                set thing = flood($here $p5asciidem);
+                enable p5d8button;
+                undisplay waitframe;
+            }
+        }
+
+        button p5d8button
+        {
+            title "Flow";
+            info "Set up the flow of the streams.";
+            geometry 5, 150, 80, 30;
+            on mousedown
+            {
+            	display waitframe;
+                /* Run d8 on the file */
+                set here = "d8.exe";
+                set thing = flow($here $p5asciidem);
+                undisplay waitframe;
+            }
+        }
+
+        filename p5flowfile
+        {
+            title above left "Flow ASCII file (p suffix)";
+            info "Choose the 'p' ASCII file created from d8.";
+            geometry 5, 185, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.asc";
+            on filenamechoosen
+            {
+                enable p5convert2img;
+            }
+        }
+
+        button p5convert2img
+        {
+            title "Reconvert";
+            info "Change .asc to .img";
+            geometry 205, 205, 80, 30;
+            on mousedown
+            {
+                if ($p5flowfile != "" && $inffile != "")
+                {
+                    set p5outfile = froot ($inffile) + "_05" + "." + fext ($inffile);
+                }
+
+                if($p5flowfile != "" && $p5outfile != "")
+                {
+                    enable p5runbutton;
+                }
+
+                if($p5demfile == "")
+                {
+                    display freezeframe;
+                }
+                else
+                {
+                	display waitframe;
+                    set p5infile = ascii2img($p5flowfile, $p5demfile);
+                    enable p5outfile;
+                    undisplay waitframe;
+                }
+            }
+        }
+
+        filename p5infile
+        {
+            title above left "Flow Direction image";
+            info "Choose the flow image name converted from 'p'.";
+            geometry 5, 240, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p5outfile;
+            }
+        }
+
+        filename p5outfile
+        {
+            title above left "Select P5 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 295, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p5runbutton;
+            }
+        }
+
+        button p5runbutton
+        {
+            title "Run";
+            info  "Generate parameter 5.";
+            geometry 80, 355, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                syncjob modeler "$IMAGINE_HOME/etc/models/p5_flowconversion_model.mdl" -s -m $p5infile $p5outfile;
+                set file5 = $p5outfile;
+                undisplay p5frame;
+                send filenamechoosen to main:mainframe:infile5;
+                undisplay waitframe;
+            }
+        }
+
+        button p5cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 150, 355, 50, 30;
+            on mousedown
+            {
+                undisplay p5frame;
+
+                if( $file5 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile5;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p5convert2ascii;
+            disable p5convert2img;
+            disable p5outfile;
+            disable p5floodbutton;
+            disable p5d8button;
+            disable p5runbutton;
+            set p5demfile = "";
+        }
+
+    }
+
+
+/********************************************************************************/
+/*
+/*  Parameter 6
+/*
+/*
+/********************************************************************************/
+
+    frame p6frame
+    {
+        title "P6 Generation - SCS Curve Number";
+        geometry 350, 400, 250, 425;
+        modal;
+
+        filename p6infile2;
+        filename p6outfile;
+        button p6runbutton;
+        popuplist p6soillist;
+        popuplist p6list1;
+        popuplist p6list2;
+        popuplist p6list3;
+        popuplist p6list4;
+        variable soilfield;
+        variable field1;
+        variable field2;
+        variable field3;
+        variable field4;
+        variable listnames;
+        variable soilnames;
+        variable soilgroup;
+        variable attribute1;
+        variable attribute2;
+        variable attribute3;
+        variable attribute4;
+
+        filename p6infile
+        {
+            title above left "Soils image";
+            info "Select the file containing the soil information.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p6soillist;
+                $p6soillist.SetNameAndTitleList( getfeaturefields($p6infile,1,raster,any),
+                                                 getfeaturefields($p6infile,1,raster,any));
+
+                set soilnames = getfeaturefields($p6infile,1,raster,any);
+                enable p6infile2;
+            }
+        }
+
+        popuplist p6soillist
+        {
+            title "Soil Group:";
+            info "Pick the attribute name of the soil group.";
+            geometry 5, 65, 180, 20;
+            names
+            {
+                "None"
+            };
+
+            on valuechanged
+            {
+                set soilfield = GetListIndex()+1;
+            }
+        }
+
+        filename p6infile2
+        {
+            title above left "Land Cover image";
+            info "Select the file containing the land cover.";
+            geometry 5, 100, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p6list1;
+                /* Create a list using the column names of an image's attributes */
+                $p6list1.SetNameAndTitleList( getfeaturefields($p6infile2,1,raster,any),
+                                              getfeaturefields($p6infile2,1,raster,any) );
+                $p6list2.SetNameAndTitleList( getfeaturefields($p6infile2,1,raster,any),
+                                              getfeaturefields($p6infile2,1,raster,any) );
+                $p6list3.SetNameAndTitleList( getfeaturefields($p6infile2,1,raster,any),
+                                              getfeaturefields($p6infile2,1,raster,any) );
+                $p6list4.SetNameAndTitleList( getfeaturefields($p6infile2,1,raster,any),
+                                              getfeaturefields($p6infile2,1,raster,any) );
+
+                set listnames = getfeaturefields($p6infile2,1,raster,any);
+            }
+        }
+
+        popuplist p6list1
+        {
+            title "Group A:";
+            info "Pick the name of the Soil Group A column.";
+            geometry 5, 170, 180, 20;
+            names
+            {
+                "None"
+            };
+
+            on valuechanged
+            {
+                enable p6list2;
+                set field1 = GetListIndex()+1;
+
+            }
+        }
+
+        popuplist p6list2
+        {
+            title "Group B:";
+            info "Pick the name of the Soil Group B column.";
+            geometry 5, 210, 180, 20;
+            names
+            {
+                "None"
+            };
+
+            on valuechanged
+            {
+                enable p6list3;
+                set field2 = GetListIndex()+1;
+            }
+        }
+
+        popuplist p6list3
+        {
+            title "Group C:";
+            info "Pick the name of the Soil Group C column.";
+            geometry 5, 250, 180, 20;
+            names
+            {
+                "None"
+            };
+
+            on valuechanged
+            {
+                enable p6list4;
+                set field3 = GetListIndex()+1;
+
+            }
+        }
+
+        popuplist p6list4
+        {
+            title "Group D:";
+            info "Pick the name of the Soil Group D column.";
+            geometry 5, 290, 180, 20;
+            names
+            {
+                "None"
+            };
+
+            on valuechanged
+            {
+                set field4 = GetListIndex()+1;
+
+                if ($p6infile != "" && $p6infile2 != "" && $inffile != "")
+                {
+                    set p6outfile = froot ($inffile) + "_06" + "." + fext ($inffile);
+                }
+                enable p6outfile;
+
+                if($p6infile != "" && $p6infile2 != "" && $p6outfile != "")
+                {
+                    enable p6runbutton;
+                }
+            }
+        }
+
+        filename p6outfile
+        {
+            title above left "Select P6 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 325, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p6runbutton;
+            }
+        }
+
+        button p6runbutton
+        {
+            title "Run";
+            info  "Generate parameter 6.";
+            geometry 50, 385, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                /* Set up for correct input in modeler call */
+                set soilgroup = "\"" + $soilnames[$soilfield] + "\"";
+                set attribute1 = "\"" + $listnames[$field1] + "\"";
+                set attribute2 = "\"" + $listnames[$field2] + "\"";
+                set attribute3 = "\"" + $listnames[$field3] + "\"";
+                set attribute4 = "\"" + $listnames[$field4] + "\"";
+                syncjob modeler "$IMAGINE_HOME/etc/models/p6_scs_curve_num.mdl" -s -m $p6infile $p6infile2 $p6outfile $soilgroup $attribute1 $attribute2 $attribute3 $attribute4;
+                set file6 = $p6outfile;
+                undisplay p6frame;
+                send filenamechoosen to main:mainframe:infile6;
+                undisplay waitframe;
+            }
+        }
+
+        button p6cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 120, 385, 50, 30;
+            on mousedown
+            {
+                undisplay p6frame;
+
+                if( $file6 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile6;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p6soillist;
+            disable p6list1;
+            disable p6list2;
+            disable p6list3;
+            disable p6list4;
+            disable p6infile2;
+            disable p6outfile;
+            disable p6runbutton;
+        }
+
+    }
+
+
+/********************************************************************************/
+/*
+/*  Parameter 7
+/*
+/*
+/********************************************************************************/
+
+    frame p7frame
+    {
+        title "P7 Generation - Slope";
+        geometry 400, 80, 220, 150;
+        modal;
+
+        filename p7infile;
+        filename p7outfile;
+        button p7runbutton;
+
+
+        filename p7infile
+        {
+            title above left "DEM image";
+            info "Select the file containing the DEM.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                if ($p7infile != "" && $inffile != "")
+                {
+                    set p7outfile = froot ($inffile) + "_07" + "." + fext ($inffile);
+                }
+                enable p7outfile;
+
+                if($p7infile != "" && $p7outfile != "")
+                {
+                    enable p7runbutton;
+                }
+            }
+        }
+
+        filename p7outfile
+        {
+            title above left "Select P7 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 53, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p7runbutton;
+            }
+        }
+
+        button p7runbutton
+        {
+            title "Run";
+            info  "Generate parameter 7.";
+            geometry 60, 115, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                syncjob modeler "$IMAGINE_HOME/etc/models/p7_slope_model.mdl" -s -m $p7infile $p7outfile;
+                set file7 = $p7outfile;
+                undisplay p7frame;
+                send filenamechoosen to main:mainframe:infile7;
+                undisplay waitframe;
+            }
+        }
+
+        button p7cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 120, 115, 50, 30;
+            on mousedown
+            {
+                undisplay p7frame;
+                if( $file7 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile7;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p7outfile;
+            disable p7runbutton;
+        }
+
+    }
+
+
+/********************************************************************************/
+/*
+/*  Parameter 8
+/*
+/*
+/********************************************************************************/
+
+    frame p8frame
+    {
+        title "P8 Generation - Slope Shape";
+        geometry 350, 400, 220, 250;
+        modal;
+
+        filename p8infile2;
+        filename p8infile3;
+        filename p8outfile;
+        button p8runbutton;
+
+
+        filename p8infile1
+        {
+            title above left "Parameter 1 image";
+            info "Select the file containing parameter 1.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p8infile2;
+            }
+        }
+
+        filename p8infile2
+        {
+            title above left "Parameter 5 image";
+            info "Select the file containing parameter 5.";
+            geometry 5, 53, 150, 35;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p8infile3;
+            }
+        }
+
+        filename p8infile3
+        {
+            title above left "Parameter 7 image";
+            info "Select the file containing parameter 7.";
+            geometry 5, 103, 150, 35;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                if ($p8infile1 != "" && $p8infile2 != "" && $p8infile3 != "" && $inffile != "")
+                {
+                    set p8outfile = froot ($inffile) + "_08" + "." + fext ($inffile);
+                }
+                enable p8outfile;
+
+                if($p8infile1 != "" && $p8infile2 != "" && $p8infile3 != "" && $p8outfile != "")
+                {
+                    enable p8runbutton;
+                }
+
+            }
+        }
+
+        filename p8outfile
+        {
+            title above left "Select P8 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 153, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p8runbutton;
+            }
+        }
+
+        button p8runbutton
+        {
+            title "Run";
+            info  "Generate parameter 8.";
+            geometry 60, 215, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                syncjob modeler "$IMAGINE_HOME/etc/models/p8_slope_shape_FINAL.mdl" -s -m $p8infile1 $p8infile2 $p8infile3 $p8outfile;
+                set file8 = $p8outfile;
+                undisplay p8frame;
+                send filenamechoosen to main:mainframe:infile8;
+                undisplay waitframe;
+            }
+        }
+
+        button p8cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 120, 215, 50, 30;
+            on mousedown
+            {
+                undisplay p8frame;
+
+                if( $file8 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile8;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p8infile2;
+            disable p8infile3;
+            disable p8outfile;
+            disable p8runbutton;
+        }
+
+    }
+
+/********************************************************************************/
+/*
+/*  Parameter 9
+/*
+/*
+/********************************************************************************/
+
+    frame p9frame
+    {
+        title "P9 Generation - Slope Length";
+        geometry 350, 400, 220, 170;
+        modal;
+
+        filename p9outfile;
+        button p9runbutton;
+
+
+        filename p9infile
+        {
+            title above left "Parameter 7 image";
+            info "Select the file containing parameter 7.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                if ($p9infile != "" && $inffile != "")
+                {
+                    set p9outfile = froot ($inffile) + "_09" + "." + fext ($inffile);
+                }
+                enable p9outfile;
+
+                if($p9infile != "" && $p9outfile != "")
+                {
+                    enable p9runbutton;
+                }
+            }
+        }
+
+
+        filename p9outfile
+        {
+            title above left "Select P9 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 63, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p9runbutton;
+            }
+        }
+
+        button p9runbutton
+        {
+            title "Run";
+            info  "Generate parameter 9.";
+            geometry 60, 135, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                syncjob modeler "$IMAGINE_HOME/etc/models/p9_slope_length.mdl" -s -m $p9infile $p9outfile;
+                set file9 = $p9outfile;
+                undisplay p9frame;
+                send filenamechoosen to main:mainframe:infile9;
+                undisplay waitframe;
+            }
+        }
+
+        button p9cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 120, 135, 50, 30;
+            on mousedown
+            {
+                undisplay p9frame;
+
+                if( $file9 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile9;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p9outfile;
+            disable p9runbutton;
+        }
+
+    }
+
+
+/********************************************************************************/
+/*
+/*  Parameter 10
+/*
+/*
+/********************************************************************************/
+
+    frame p10frame
+    {
+        title "P10 Generation - Overland Mannings";
+        geometry 350, 400, 350, 250;
+        modal;
+
+        filename p10outfile;
+        button p10runbutton;
+        popuplist p10list;
+        variable field;
+        variable listnames;
+        variable attribute;
+
+        filename p10infile
+        {
+            title above left "Land Cover image";
+            info "Select the file containing the land cover.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p10list;
+                /* Like p6, make a list based on column attributes */
+                $p10list.SetNameAndTitleList( getfeaturefields($p10infile,1,raster,any),
+                                              getfeaturefields($p10infile,1,raster,any) );
+
+
+                set listnames = getfeaturefields($p10infile,1,raster,any);
+
+            }
+        }
+
+        popuplist p10list
+        {
+            title "Overland Manning Attribute:";
+            info "Pick the name of the overland mannings column.";
+            geometry 5, 80, 300, 20;
+            names
+            {
+                "None"
+            };
+
+            on valuechanged
+            {
+                if ($p10infile != "" && $inffile != "")
+                {
+                    set p10outfile = froot ($inffile) + "_10" + "." + fext ($inffile);
+                }
+                enable p10outfile;
+
+                if($p10infile != "" && $p10outfile != "")
+                {
+                    enable p10runbutton;
+                }
+
+                set field = GetListIndex()+1;
+
+            }
+        }
+
+        filename p10outfile
+        {
+            title above left "Select P10 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 130, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p10runbutton;
+            }
+        }
+
+        button p10runbutton
+        {
+            title "Run";
+            info  "Generate parameter 10.";
+            geometry 100, 205, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                set attribute = "\"" + $listnames[$field] + "\"";
+                syncjob modeler "$IMAGINE_HOME/etc/models/p10_manning_model.mdl" -s -m $p10infile $p10outfile $attribute;
+                set file10 = $p10outfile;
+                undisplay p10frame;
+                send filenamechoosen to main:mainframe:infile10;
+                undisplay waitframe;
+            }
+        }
+
+        button p10cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 180, 205, 50, 30;
+            on mousedown
+            {
+                undisplay p10frame;
+
+                if( $file10 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile10;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p10list;
+            disable p10outfile;
+            disable p10runbutton;
+        }
+
+    }
+
+/********************************************************************************/
+/*
+/*  Parameter 11
+/*
+/*
+/********************************************************************************/
+
+    frame p11frame
+    {
+        title "P11 Generation - Soil Erodiblility (k-factor)";
+        geometry 350, 400, 390, 250;
+        modal;
+
+        filename p11outfile;
+        button p11runbutton;
+        popuplist p11list;
+        variable field;
+        variable listnames;
+        variable attribute;
+
+        filename p11infile
+        {
+            title above left "Soils image";
+            info "Select the file containing soil info.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p11list;
+                $p11list.SetNameAndTitleList( getfeaturefields($p11infile,1,raster,any),
+                                              getfeaturefields($p11infile,1,raster,any) );
+
+
+                set listnames = getfeaturefields($p11infile,1,raster,any);
+
+            }
+        }
+
+        popuplist p11list
+        {
+            title "Soil Erodibility Attribute (K-Factor):";
+            info "Pick the name of the soil erodibility column.";
+            geometry 5, 80, 340, 20;
+            names
+            {
+                "None"
+            };
+
+            on valuechanged
+            {
+                if ($p11infile != "" && $inffile != "")
+                {
+                    set p11outfile = froot ($inffile) + "_11" + "." + fext ($inffile);
+                }
+                enable p11outfile;
+
+                if($p11infile != "" && $p11outfile != "")
+                {
+                    enable p11runbutton;
+                }
+
+                set field = GetListIndex()+1;
+
+            }
+        }
+
+        filename p11outfile
+        {
+            title above left "Select P11 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 130, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p11runbutton;
+            }
+        }
+
+        button p11runbutton
+        {
+            title "Run";
+            info  "Generate parameter 11.";
+            geometry 120, 205, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                set attribute = "\"" + $listnames[$field] + "\"";
+                syncjob modeler "$IMAGINE_HOME/etc/models/p11_k_factor_model.mdl" -s -m $p11infile $p11outfile $attribute;
+                set file11 = $p11outfile;
+                undisplay p11frame;
+                send filenamechoosen to main:mainframe:infile11;
+                undisplay waitframe;
+            }
+        }
+
+        button p11cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 200, 205, 50, 30;
+            on mousedown
+            {
+                undisplay p11frame;
+
+                if( $file11 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile11;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p11list;
+            disable p11outfile;
+            disable p11runbutton;
+        }
+
+    }
+
+/********************************************************************************/
+/*
+/*  Parameter 12
+/*
+/*
+/********************************************************************************/
+
+    frame p12frame
+    {
+        title "P12 Generation - Cropping Factor";
+        geometry 350, 400, 390, 250;
+        modal;
+
+        filename p12outfile;
+        button p12runbutton;
+        popuplist p12list;
+        variable field;
+        variable listnames;
+        variable attribute;
+
+        filename p12infile
+        {
+            title above left "Land Cover image";
+            info "Select the file containing the land cover.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p12list;
+                $p12list.SetNameAndTitleList( getfeaturefields($p12infile,1,raster,any),
+                                              getfeaturefields($p12infile,1,raster,any) );
+
+
+                set listnames = getfeaturefields($p12infile,1,raster,any);
+
+            }
+        }
+
+        popuplist p12list
+        {
+            title "Cropping Factor Attribute (C-factor):";
+            info "Pick the name of the cropping factor column.";
+            geometry 5, 80, 340, 20;
+            names
+            {
+                "None"
+            };
+
+            on valuechanged
+            {
+                if ($p12infile != "" && $inffile != "")
+                {
+                    set p12outfile = froot ($inffile) + "_12" + "." + fext ($inffile);
+                }
+                enable p12outfile;
+
+                if($p12infile != "" && $p12outfile != "")
+                {
+                    enable p12runbutton;
+                }
+
+
+                set field = GetListIndex()+1;
+
+            }
+        }
+
+        filename p12outfile
+        {
+            title above left "Select P12 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 130, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p12runbutton;
+            }
+        }
+
+        button p12runbutton
+        {
+            title "Run";
+            info  "Generate parameter 12.";
+            geometry 120, 205, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                set attribute = "\"" + $listnames[$field] + "\"";
+                syncjob modeler "$IMAGINE_HOME/etc/models/p12_c_fact_model.mdl" -s -m $p12infile $p12outfile $attribute;
+                set file12 = $p12outfile;
+                undisplay p12frame;
+                send filenamechoosen to main:mainframe:infile12;
+                undisplay waitframe;
+            }
+        }
+
+        button p12cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 200, 205, 50, 30;
+            on mousedown
+            {
+                undisplay p12frame;
+
+                if( $file12 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile12;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p12list;
+            disable p12outfile;
+            disable p12runbutton;
+        }
+
+    }
+
+/********************************************************************************/
+/*
+/*  Parameter 14
+/*
+/*
+/********************************************************************************/
+
+    frame p14frame
+    {
+        title "P14 Generation - Surface Condition Constant";
+        geometry 350, 400, 390, 250;
+        modal;
+
+        filename p14outfile;
+        button p14runbutton;
+        popuplist p14list;
+        variable field;
+        variable listnames;
+        variable attribute;
+
+        filename p14infile
+        {
+            title above left "Land Cover image";
+            info "Select the file containing land cover.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p14list;
+                $p14list.SetNameAndTitleList( getfeaturefields($p14infile,1,raster,any),
+                                              getfeaturefields($p14infile,1,raster,any) );
+
+
+                set listnames = getfeaturefields($p14infile,1,raster,any);
+
+            }
+        }
+
+        popuplist p14list
+        {
+            title "Surface Condition Constant Attribute:";
+            info "Pick the name of the surface condition constant column.";
+            geometry 5, 80, 340, 20;
+            names
+            {
+                "None"
+            };
+
+            on valuechanged
+            {
+                if ($p14infile != "" && $inffile != "")
+                {
+                    set p14outfile = froot ($inffile) + "_14" + "." + fext ($inffile);
+                }
+                enable p14outfile;
+
+                if($p14infile != "" && $p14outfile != "")
+                {
+                    enable p14runbutton;
+                }
+
+
+                set field = GetListIndex()+1;
+
+            }
+        }
+
+        filename p14outfile
+        {
+            title above left "Select P14 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 130, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p14runbutton;
+            }
+        }
+
+        button p14runbutton
+        {
+            title "Run";
+            info  "Generate parameter 14.";
+            geometry 120, 205, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                set attribute = "\"" + $listnames[$field] + "\"";
+                syncjob modeler "$IMAGINE_HOME/etc/models/p14_s_cond_const_model.mdl" -s -m $p14infile $p14outfile $attribute;
+                set file14 = $p14outfile;
+                undisplay p14frame;
+                send filenamechoosen to main:mainframe:infile14;
+                undisplay waitframe;
+            }
+        }
+
+        button p14cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 200, 205, 50, 30;
+            on mousedown
+            {
+                undisplay p14frame;
+
+                if( $file14 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile14;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p14list;
+            disable p14outfile;
+            disable p14runbutton;
+        }
+
+    }
+
+/********************************************************************************/
+/*
+/*  Parameter 15
+/*
+/*
+/********************************************************************************/
+
+    frame p15frame
+    {
+        title "P15 Generation - COD Factor";
+        geometry 350, 400, 320, 250;
+        modal;
+
+        filename p15outfile;
+        button p15runbutton;
+        popuplist p15list;
+        variable field;
+        variable listnames;
+        variable attribute;
+
+        filename p15infile
+        {
+            title above left "Land Cover image";
+            info "Select the file containing land cover.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p15list;
+                $p15list.SetNameAndTitleList( getfeaturefields($p15infile,1,raster,any),
+                                              getfeaturefields($p15infile,1,raster,any) );
+
+
+                set listnames = getfeaturefields($p15infile,1,raster,any);
+
+            }
+        }
+
+        popuplist p15list
+        {
+            title "COD Factor Attribute:";
+            info "Pick the name of the COD factor column.";
+            geometry 5, 80, 300, 20;
+            names
+            {
+                "None"
+            };
+
+            on valuechanged
+            {
+                if ($p15infile != "" && $inffile != "")
+                {
+                    set p15outfile = froot ($inffile) + "_15" + "." + fext ($inffile);
+                }
+                enable p15outfile;
+
+                if($p15infile != "" && $p15outfile != "")
+                {
+                    enable p15runbutton;
+                }
+
+                set field = GetListIndex()+1;
+
+            }
+        }
+
+        filename p15outfile
+        {
+            title above left "Select P15 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 130, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p15runbutton;
+            }
+        }
+
+        button p15runbutton
+        {
+            title "Run";
+            info  "Generate parameter 15.";
+            geometry 90, 205, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                set attribute = "\"" + $listnames[$field] + "\"";
+                syncjob modeler "$IMAGINE_HOME/etc/models/p15_cod_fact_model.mdl" -s -m $p15infile $p15outfile $attribute;
+                set file15 = $p15outfile;
+                undisplay p15frame;
+                send filenamechoosen to main:mainframe:infile15;
+                undisplay waitframe;
+            }
+        }
+
+        button p15cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 170, 205, 50, 30;
+            on mousedown
+            {
+                undisplay p15frame;
+
+                if( $file15 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile15;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p15list;
+            disable p15outfile;
+            disable p15runbutton;
+        }
+
+    }
+
+/********************************************************************************/
+/*
+/*  Parameter 16
+/*
+/*
+/********************************************************************************/
+
+    frame p16frame
+    {
+        title "P16 Generation - Soil Texture";
+        geometry 350, 400, 320, 250;
+        modal;
+
+        filename p16outfile;
+        button p16runbutton;
+        popuplist p16list;
+        variable field;
+        variable listnames;
+        variable attribute;
+
+        filename p16infile
+        {
+            title above left "Soils image";
+            info "Select the file containing soils info.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p16list;
+                $p16list.SetNameAndTitleList( getfeaturefields($p16infile,1,raster,any),
+                                              getfeaturefields($p16infile,1,raster,any) );
+
+
+                set listnames = getfeaturefields($p16infile,1,raster,any);
+
+            }
+        }
+
+        popuplist p16list
+        {
+            title "Soil Texture Attribute:";
+            info "Pick the name of the soil type column.";
+            geometry 5, 80, 300, 20;
+            names
+            {
+                "None"
+            };
+
+            on valuechanged
+            {
+                if ($p16infile != "" && $inffile != "")
+                {
+                    set p16outfile = froot ($inffile) + "_16" + "." + fext ($inffile);
+                }
+                enable p16outfile;
+
+                if($p16infile != "" && $p16outfile != "")
+                {
+                    enable p16runbutton;
+                }
+
+                set field = GetListIndex()+1;
+
+            }
+        }
+
+        filename p16outfile
+        {
+            title above left "Select P16 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 130, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p16runbutton;
+            }
+        }
+
+        button p16runbutton
+        {
+            title "Run";
+            info  "Generate parameter 16.";
+            geometry 90, 205, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                set attribute = "\"" + $listnames[$field] + "\"";
+                syncjob modeler "$IMAGINE_HOME/etc/models/p16_soil_text_model.mdl" -s -m $p16infile $p16outfile $attribute;
+                set file16 = $p16outfile;
+                undisplay p16frame;
+                send filenamechoosen to main:mainframe:infile16;
+                undisplay waitframe;
+            }
+        }
+
+        button p16cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 170, 205, 50, 30;
+            on mousedown
+            {
+                undisplay p16frame;
+
+                if( $file16 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile16;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p16list;
+            disable p16outfile;
+            disable p16runbutton;
+        }
+
+    }
+
+/********************************************************************************/
+/*
+/*  Parameter 17
+/*
+/*
+/********************************************************************************/
+
+    frame p17frame
+    {
+        title "P17 Generation - Fertilizer Level";
+        geometry 350, 400, 320, 250;
+        modal;
+
+        filename p17outfile;
+        button p17runbutton;
+        popuplist p17list;
+        variable field;
+        variable listnames;
+        variable attribute;
+
+        filename p17infile
+        {
+            title above left "Land Cover image";
+            info "Select the file containing land cover.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p17list;
+                $p17list.SetNameAndTitleList( getfeaturefields($p17infile,1,raster,any),
+                                              getfeaturefields($p17infile,1,raster,any) );
+
+
+                set listnames = getfeaturefields($p17infile,1,raster,any);
+
+            }
+        }
+
+        popuplist p17list
+        {
+            title "Fertilizer Level Attribute:";
+            info "Pick the name of the fertilizer level column.";
+            geometry 5, 80, 300, 20;
+            names
+            {
+                "None"
+            };
+
+            on valuechanged
+            {
+                if ($p17infile != "" && $inffile != "")
+                {
+                    set p17outfile = froot ($inffile) + "_17" + "." + fext ($inffile);
+                }
+                enable p17outfile;
+
+                if($p17infile != "" && $p17outfile != "")
+                {
+                    enable p17runbutton;
+                }
+
+                set field = GetListIndex()+1;
+
+            }
+        }
+
+        filename p17outfile
+        {
+            title above left "Select P17 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 130, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p17runbutton;
+            }
+        }
+
+        button p17runbutton
+        {
+            title "Run";
+            info  "Generate parameter 10.";
+            geometry 90, 205, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                set attribute = "\"" + $listnames[$field] + "\"";
+                syncjob modeler "$IMAGINE_HOME/etc/models/p17_fertilizer_model.mdl" -s -m $p17infile $p17outfile $attribute;
+                set file17 = $p17outfile;
+                undisplay p17frame;
+                send filenamechoosen to main:mainframe:infile17;
+                undisplay waitframe;
+            }
+        }
+
+        button p17cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 170, 205, 50, 30;
+            on mousedown
+            {
+                undisplay p17frame;
+
+                if( $file17 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile17;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p17list;
+            disable p17outfile;
+            disable p17runbutton;
+        }
+
+    }
+
+/********************************************************************************/
+/*
+/*  Parameter 22
+/*
+/*
+/********************************************************************************/
+
+    frame p22frame
+    {
+        title "P22 Generation - Channel Type";
+        geometry 250, 40, 295, 530;
+
+        filename p22asciidem;
+        filename p22infile1;
+        filename p22infile2;
+        filename p22outfile;
+        button p22floodbutton;
+        button p22d8button;
+        button p22gridnetbutton;
+        button p22runbutton;
+        button p22convert2ascii;
+        button p22convert2img;
+        checkbox p22shortcut;
+        textnumber p22water;
+        variable p22temp;
+
+        filename p22demfile
+        {
+            title above left "Original DEM";
+            info "Select the file containing elevation data.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                if($p22shortcut==0)
+                {
+                    enable p22convert2ascii;
+                }
+                else
+                {
+                    enable p22gridnetbutton;
+                }
+            }
+        }
+
+        button p22convert2ascii
+        {
+            title "Convert";
+            info "Change .img to .asc";
+            geometry 205, 23, 80, 30;
+            on mousedown
+            {
+            	display waitframe;
+                /* Convert to ascii file */
+                set p22asciidem = img2ascii($p22demfile);
+                if($p22shortcut==0)
+                {
+                    enable p22floodbutton;
+                }
+                else
+                {
+                    enable p22gridnetbutton;
+                }
+                undisplay waitframe;
+            }
+        }
+
+        filename p22asciidem
+        {
+            title "ASCII DEM";
+            info "Select the file containing the DEM in ASCII format";
+            geometry 5, 55, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.asc";
+            on filenamechoosen
+            {
+                if($p22shortcut==0)
+                {
+                    enable p22floodbutton;
+                }
+                else
+                {
+                    enable p22gridnetbutton;
+                }
+            }
+        }
+
+        checkbox p22shortcut
+        {
+            title "Have Already Created P5";
+            info "Check box if you have flow direction ASCII file.";
+            geometry 110, 120, 150, 20;
+            on valuechanged
+            {
+                if($p22demfile!="")
+                {
+                    if($p22shortcut==1)
+                    {
+                        disable p22convert2ascii;
+                    }
+                    else
+                    {
+                        enable p22convert2ascii;
+                    }
+                }
+                else
+                {
+                    disable p22convert2ascii;
+                }
+
+                if($p22asciidem!="")
+                {
+                    if($p22shortcut==1)
+                    {
+                        disable p22floodbutton;
+                        disable p22d8button;
+                        enable p22gridnetbutton;
+                    }
+                    else
+                    {
+                        enable p22floodbutton;
+                        disable p22gridnetbutton;
+                    }
+                }
+                else
+                {
+                    disable p22floodbutton;
+                    disable p22gridnetbutton;
+                }
+            }
+        }
+
+        button p22floodbutton
+        {
+            title "Flood";
+            info "Fill the pits of the DEM";
+            geometry 5, 115, 80, 30;
+            on mousedown
+            {
+            	display waitframe;
+                /* Run flood on the file */
+                set here = "flood.exe";
+                set thing = flood($here $p22asciidem);
+                enable p22d8button;
+                undisplay waitframe;
+            }
+        }
+
+        button p22d8button
+        {
+            title "Flow";
+            info "Set up the flow of the streams.";
+            geometry 5, 150, 80, 30;
+            on mousedown
+            {
+            	display waitframe;
+                /* Run d8 on the file */
+                set here = "d8.exe";
+                set thing = flow($here $p22asciidem);
+                enable p22gridnetbutton;
+                undisplay waitframe;
+            }
+        }
+
+        button p22gridnetbutton
+        {
+            title "Streams";
+            info "Create the Strahler order streams for the watershed.";
+            geometry 5, 185, 80, 30;
+            on mousedown
+            {
+            	display waitframe;
+                /* Run gridnet on the file */
+                set here = "gridnet.exe";
+                set thing = stream($here $p22asciidem);
+                undisplay waitframe;
+            }
+        }
+
+        filename p22streamfile
+        {
+            title above left "Stream ASCII file (gord)";
+            info "Choose the 'gord' ASCII file created from gridnet.";
+            geometry 5, 225, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.asc";
+            on filenamechoosen
+            {
+                enable p22convert2img;
+            }
+        }
+
+        button p22convert2img
+        {
+            title "Reconvert";
+            info "Change .asc to .img";
+            geometry 205, 245, 80, 30;
+            on mousedown
+            {
+            	display waitframe;
+                if($p22demfile == "")
+                {
+                    display freezeframe;
+                }
+                else
+                {
+                    set p22infile1 = ascii2img($p22streamfile, $p22demfile);
+                    enable p22infile2;
+                }
+                undisplay waitframe;
+            }
+        }
+
+        filename p22infile1
+        {
+            title above left "Strahler Order image";
+            info "Choose the stream image name converted from 'gord'.";
+            geometry 5, 280, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+            }
+        }
+
+        filename p22infile2
+        {
+            title above left "Land Cover image";
+            info "Select the file containing land cover.";
+            geometry 5, 335, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p22water;
+            }
+        }
+
+        textnumber p22water
+        {
+            title "Row containing water:";
+            info "Choose the row of land cover containing water (0,1,2...etc):";
+            geometry 5, 395, 200, 20;
+
+            on valuechanged
+            {
+                if ($p22infile1 != "" && $p22infile2 != "" && $inffile != "")
+                {
+                    set p22outfile = froot ($inffile) + "_22" + "." + fext ($inffile);
+                }
+                enable p22outfile;
+
+                if($p22infile1 != "" && $p22infile2 != "" && $p22outfile != "")
+                {
+                    enable p22runbutton;
+                }
+
+            }
+        }
+
+        filename p22outfile
+        {
+            title above left "Select P22 output image name";
+            info "Choose the IMG file you wish to create.";
+            geometry 5, 430, 150, 35;
+            newfile;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable p22runbutton;
+            }
+        }
+
+        button p22runbutton
+        {
+            title "Run";
+            info  "Generate parameter 22.";
+            geometry 80, 490, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+                syncjob modeler "$IMAGINE_HOME/etc/models/p22_complete_model.mdl" -s -m $p22infile1 $p22infile2 $p22outfile $p22water;
+                set file22 = $p22outfile;
+                undisplay p22frame;
+                send filenamechoosen to main:mainframe:infile22;
+                undisplay waitframe;
+            }
+        }
+
+        button p22cancelbutton
+        {
+            title "Close";
+            info "Go back to the main console.";
+            geometry 150, 490, 50, 30;
+            on mousedown
+            {
+                undisplay p22frame;
+
+                if( $file22 == "" )
+                {
+                }
+                else
+                {
+                    send filenamechoosen to main:mainframe:infile22;
+                }
+            }
+        }
+
+        on framedisplay
+        {
+            disable p22convert2ascii;
+            disable p22convert2img;
+            disable p22infile2;
+            disable p22outfile;
+            disable p22floodbutton;
+            disable p22d8button;
+            disable p22gridnetbutton;
+            disable p22runbutton;
+            disable p22water;
+            set p22shortcut = 0;
+            set p22demfile = "";
+        }
+
+    }
+
+/************************************************************************/
+/*
+/*  Freeze Frame
+/*      - called when user hits a button for a parameter only generated
+/*        in Arc.
+/*
+/************************************************************************/
+
+    frame freezeframe
+    {
+        title "No Thank You";
+        geometry 350, 400, 200, 100;
+        modal;
+
+        label disclaimer
+        {
+            title "You must have the";
+            geometry 45, 15, 40, 20;
+        }
+
+        label disclaimer
+        {
+            title "Original DEM image.";
+            geometry 40, 35, 40, 20;
+        }
+
+        button ok
+        {
+            title "Continue";
+            geometry 65, 65, 70, 30;
+            on mousedown
+            {
+                undisplay freezeframe;
+            }
+        }
+    }
+
+/**************************************************************************/
+/*
+/*  Not Done Frame
+/*     - called when user has not filled in all the necessary fields.
+/*
+/**************************************************************************/
+
+    frame notdoneframe
+    {
+        title "Not So Fast, Buddy.";
+        geometry 350, 400, 200, 100;
+        modal;
+
+        label disclaimer
+        {
+            title "You must have all filenames filled out.";
+            geometry 15, 20, 40, 20;
+        }
+
+        button ok
+        {
+            title "Continue";
+            geometry 65, 65, 70, 30;
+            on mousedown
+            {
+                undisplay notdoneframe;
+            }
+        }
+    }
+
+
+/**************************************************************************/
+/*
+/*  Need File Frame
+/*     - called when user has not filled in all the necessary fields.
+/*
+/**************************************************************************/
+
+    frame needfileframe
+    {
+        title "Hold on there.";
+        geometry 350, 400, 200, 100;
+        modal;
+
+        label disclaimer
+        {
+            title "You must have either all the filenames";
+            geometry 10, 15, 40, 20;
+        }
+
+        label disclaimer2
+        {
+            title "or the stacked image file filled in.";
+            geometry 20, 30, 40, 20;
+        }
+
+        button ok
+        {
+            title "Continue";
+            geometry 65, 65, 70, 30;
+            on mousedown
+            {
+                undisplay needfileframe;
+            }
+        }
+    }
+
+
+/*****************************************************************************/
+/*
+/*   Nix Outlet Frame
+/*      - called when user does not designate an outlet cell.
+/*
+/*****************************************************************************/
+
+    frame nixoutletframe
+    {
+        title "You've got to be kidding.";
+        geometry 350, 400, 200, 100;
+        modal;
+
+        label disclaimer
+        {
+            title "You must choose an outlet cell.";
+            geometry 15, 20, 40, 20;
+        }
+
+        button ok
+        {
+            title "Continue";
+            geometry 65, 65, 70, 30;
+            on mousedown
+            {
+                undisplay nixoutletframe;
+            }
+        }
+    }
+
+
+/*******************************************************************************/
+/*
+/*   Dat Frame
+/*      - called when creating .dat file for AGNPS input.
+/*
+/*******************************************************************************/
+
+    frame datframe
+    {
+        title "Format Data for AGNPS v5.0";
+        geometry 300, 200, 200, 250;
+
+        filename dataoutfile
+        {
+            title above left "Output Data File";
+            info "Create the proper data format for AGNPS v5.0";
+            geometry 30, 5, 150, 30;
+            newfile;
+            shortform;
+            filetypedef "data (*.dat)";
+            select getpref ("eml" "default_output_path") + "/*.dat";
+            on filenamechoosen
+            {
+            }
+
+        }
+
+        textnumber outletcell
+        {
+            title above left "Outlet Cell:";
+            info "The main cell that flows out of the watershed.";
+            geometry 30, 65, 120, 45;
+            max 4294967296.0;
+
+        }
+
+        button ok
+        {
+            title "Run";
+            geometry 25, 170, 70, 30;
+            info "Create the AGNPS input data file.";
+            on mousedown
+            {
+            	display waitframe;
+                if($dataoutfile == "")
+                {
+                    display notdoneframe;
+                }
+                elsif($outletcell == 0)
+                {
+                    display nixoutletframe;
+                }
+                else
+                {
+                    set thing = format($stackedfile,$stackarray,$dataoutfile,$outletcell);
+                    undisplay datframe;
+                }
+                undisplay waitframe;
+            }
+        }
+
+        button goback
+        {
+            title "Cancel";
+            geometry 115, 170, 70, 30;
+            info "Close this window.";
+            on mousedown
+            {
+                undisplay datframe;
+            }
+        }
+
+
+	  button setheaderflags
+	  {
+		title "Set AGNPS Header Flags";
+		geometry 25, 130, 150, 30;
+		info "Open the AGNPS Headers Frame";
+		on mousedown
+		{
+			display agnpsheaderframe;
+		}
+	  }
+
+        on framedisplay
+        {
+            set dataoutfile = "";
+            set outletcell = 0;
+        }
+    }
+
+/********************************************************************************/
+/*
+/*  Default output name
+/*
+/*
+/********************************************************************************/
+
+    frame infoframe
+    {
+        title "Default output filename";
+        geometry 400, 80, 220, 150;
+        modal;
+
+        filename infofile;
+        filename stackname;
+        button okb;
+        button closeb;
+
+        filename infofile
+        {
+            title above left "Default output filename";
+            info "Select the place and name of your default filename to be used for automatic naming.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            newfile;
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                enable okb;
+            }
+        }
+
+        button okb
+        {
+            title "OK";
+            geometry 60, 115, 50, 30;
+            on mousedown
+            {
+                set inffile = $infofile;
+                set stackname = froot ($inffile) + "_stack" + "." + fext ($inffile);
+                set fileout = $stackname;
+                undisplay infoframe;
+
+                send filenamechoosen to main:mainframe:mainoutfile;
+            }
+        }
+
+        button closeb
+        {
+            title "Close";
+            geometry 120, 115, 50, 30;
+            on mousedown
+            {
+                undisplay infoframe;
+            }
+        }
+
+        on framedisplay
+        {
+            disable okb;
+        }
+    }
+
+/********************************************************************************/
+/*
+/*  Create Cutout
+/*
+/*
+/********************************************************************************/
+
+	frame p1cutoutf
+	{
+		title "Create Cutout image";
+		geometry 400, 80, 220, 155;
+        modal;
+
+        filename cutinfile;
+        filename cutoutfile;
+        filename cutarcfile;
+        button runb;
+        button closeb;
+
+        filename cutinfile
+        {
+            title above left "Input image";
+            info "Select the image that the cutout will be made from.";
+            geometry 5, 3, 150, 35;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                if($cutinfile != "" && $cutarcfile != "" && $cutoutfile != "")
+                {
+                    enable runb;
+                }
+            }
+        }
+
+        filename cutarcfile
+        {
+        	title above left "Input Arc Coverage";
+        	info "Select the Arc Coverage that will be used to compute the cutout.";
+        	geometry 5, 53, 150, 35;
+        	shortform;
+        	select getpref ("eml" "default_data_path") + "/*.arcinfo";
+        	on filenamechoosen
+        	{
+        		if ($cutinfile != "" && $cutarcfile != "" && $inffile != "")
+                {
+                    set cutoutfile = froot ($inffile) + "_cutout" + "." + fext ($inffile);
+                }
+                enable cutoutfile;
+
+                if($cutinfile != "" && $cutarcfile != "" && $cutoutfile != "")
+                {
+                    enable runb;
+                }
+            }
+        }
+
+        filename cutoutfile
+        {
+        	title above left "Output cutout image";
+        	info "Name the image that will be the cutout from the input image.";
+        	geometry 5, 103, 150, 35;
+        	shortform;
+        	newfile;
+        	filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+                if($cutinfile != "" && $cutarcfile != "" && $cutoutfile != "")
+                {
+                    enable runb;
+                }
+            }
+         }
+
+
+		button runb
+		{
+			title "Run";
+			geometry 165, 75, 50, 30;
+            on mousedown
+            {
+            	display waitframe;
+            	syncjob modeler "$IMAGINE_HOME/etc/models/p1_cutout.mdl" -s -m $cutinfile $cutoutfile $cutarcfile;
+            	set fcutout = $cutoutfile;
+            	send filenamechoosen to main:p1frame:p1infile;
+            	undisplay p1cutoutf;
+				undisplay waitframe;
+            }
+
+        }
+
+
+        button closeb
+        {
+            title "Close";
+            geometry 165, 125, 50, 30;
+            on mousedown
+            {
+                undisplay p1cutoutf;
+            }
+        }
+
+        on framedisplay
+        {
+        	disable cutoutfile;
+            disable runb;
+        }
+	}
+
+
+/****************************************************************************/
+/*
+/*    Custom Frame
+/*      - called when user has files other than the ones currently being
+/*        used by us.
+/*
+/****************************************************************************/
+    frame customframe
+    {
+        title "Other Parameters";
+        geometry 660, 50, 310, 400;
+        modal;
+
+        filename custom2
+        {
+            title above left "Parameter 2 image";
+            info "Select the file containing parameter 2.";
+            geometry 80, 0, 150, 20;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                set file2 = $custom2;
+
+            }
+        }
+
+        filename custom4
+        {
+            title above left "Parameter 4 image";
+            info "Select the file containing parameter 4.";
+            geometry 80, 50, 150, 20;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                set file4 = $custom4;
+            }
+        }
+
+        filename custom13
+        {
+            title above left "Parameter 13 image";
+            info "Select the file containing parameter 13.";
+            geometry 80, 100, 150, 20;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                set file13 = $custom13;
+            }
+        }
+
+        filename custom18
+        {
+            title above left "Parameter 18 image";
+            info "Select the file containing parameter 18.";
+            geometry 80, 150, 150, 20;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                set file18 = $custom18;
+            }
+        }
+
+        filename custom19
+        {
+            title above left "Parameter 19 image";
+            info "Select the file containing parameter 19.";
+            geometry 80, 200, 150, 20;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                set file19 = $custom19;
+            }
+        }
+
+        filename custom20
+        {
+            title above left "Parameter 20 image";
+            info "Select the file containing parameter 20.";
+            geometry 80, 250, 150, 20;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                set file20 = $custom20;
+            }
+        }
+
+        filename custom21
+        {
+            title above left "Parameter 21 image";
+            info "Select the file containing parameter 21.";
+            geometry 80, 300, 150, 20;
+            shortform;
+            select getpref ("eml" "default_data_path") + "/*.img";
+            on filenamechoosen
+            {
+                set file21 = $custom21;
+            }
+        }
+
+        button customcancelbutton
+        {
+            title "OK";
+            info "Go back to the main console.";
+            geometry 120, 360, 50, 30;
+            on mousedown
+            {
+                undisplay customframe;
+            }
+        }
+    }
+
+/**************************************************************************/
+/*
+/*   Get Layers Frame
+/*      - called when user is only using a stacked image to create a
+/*        .dat file.
+/*
+/**************************************************************************/
+
+    frame getlayersframe
+    {
+        title "Select the layers used in stack.";
+        geometry 150, 50, 260, 335;
+
+        checkbox one
+        {
+            title "Parameter 1";
+            geometry 15,10,110,20;
+            on valuechanged
+            {
+                if($stackarray[1]==0)
+                {
+                    set stackarray[1]=1;
+                }
+                else
+                {
+                    set stackarray[1]=0;
+                }
+            }
+        }
+        checkbox two
+        {
+            title "Parameter 2";
+            geometry 15,35,110,20;
+            on valuechanged
+            {
+                if($stackarray[2]==0)
+                {
+                    set stackarray[2]=1;
+                }
+                else
+                {
+                    set stackarray[2]=0;
+                }
+            }
+        }
+        checkbox three
+        {
+            title "Parameter 3";
+            geometry 15,60,110,20;
+            on valuechanged
+            {
+                if($stackarray[3]==0)
+                {
+                    set stackarray[3]=1;
+                }
+                else
+                {
+                    set stackarray[3]=0;
+                }
+            }
+        }
+        checkbox four
+        {
+            title "Parameter 4";
+            geometry 15,85,110,20;
+            on valuechanged
+            {
+                if($stackarray[4]==0)
+                {
+                    set stackarray[4]=1;
+                }
+                else
+                {
+                    set stackarray[4]=0;
+                }
+            }
+        }
+        checkbox five
+        {
+            title "Parameter 5";
+            geometry 15,110,110,20;
+            on valuechanged
+            {
+                if($stackarray[5]==0)
+                {
+                    set stackarray[5]=1;
+                }
+                else
+                {
+                    set stackarray[5]=0;
+                }
+            }
+        }
+        checkbox six
+        {
+            title "Parameter 6";
+            geometry 15,135,110,20;
+            on valuechanged
+            {
+                if($stackarray[6]==0)
+                {
+                    set stackarray[6]=1;
+                }
+                else
+                {
+                    set stackarray[6]=0;
+                }
+            }
+        }
+        checkbox seven
+        {
+            title "Parameter 7";
+            geometry 15,160,110,20;
+            on valuechanged
+            {
+                if($stackarray[7]==0)
+                {
+                    set stackarray[7]=1;
+                }
+                else
+                {
+                    set stackarray[7]=0;
+                }
+            }
+        }
+        checkbox eight
+        {
+            title "Parameter 8";
+            geometry 15,185,110,20;
+            on valuechanged
+            {
+                if($stackarray[4]==0)
+                {
+                    set stackarray[8]=1;
+                }
+                else
+                {
+                    set stackarray[8]=0;
+                }
+            }
+        }
+        checkbox nine
+        {
+            title "Parameter 9";
+            geometry 15,210,110,20;
+            on valuechanged
+            {
+                if($stackarray[9]==0)
+                {
+                    set stackarray[9]=1;
+                }
+                else
+                {
+                    set stackarray[9]=0;
+                }
+            }
+        }
+        checkbox ten
+        {
+            title "Parameter 10";
+            geometry 15,235,110,20;
+            on valuechanged
+            {
+                if($stackarray[10]==0)
+                {
+                    set stackarray[10]=1;
+                }
+                else
+                {
+                    set stackarray[10]=0;
+                }
+            }
+        }
+        checkbox eleven
+        {
+            title "Parameter 11";
+            geometry 15,260,110,20;
+            on valuechanged
+            {
+                if($stackarray[11]==0)
+                {
+                    set stackarray[11]=1;
+                }
+                else
+                {
+                    set stackarray[11]=0;
+                }
+            }
+        }
+        checkbox twelve
+        {
+            title "Parameter 12";
+            geometry 145,10,110,20;
+            on valuechanged
+            {
+                if($stackarray[12]==0)
+                {
+                    set stackarray[12]=1;
+                }
+                else
+                {
+                    set stackarray[12]=0;
+                }
+            }
+        }
+        checkbox thirteen
+        {
+            title "Parameter 13";
+            geometry 145,35,110,20;
+            on valuechanged
+            {
+                if($stackarray[13]==0)
+                {
+                    set stackarray[13]=1;
+                }
+                else
+                {
+                    set stackarray[13]=0;
+                }
+            }
+        }
+        checkbox fourteen
+        {
+            title "Parameter 14";
+            geometry 145,60,110,20;
+            on valuechanged
+            {
+                if($stackarray[14]==0)
+                {
+                    set stackarray[14]=1;
+                }
+                else
+                {
+                    set stackarray[14]=0;
+                }
+            }
+        }
+        checkbox fifteen
+        {
+            title "Parameter 15";
+            geometry 145,85,110,20;
+            on valuechanged
+            {
+                if($stackarray[15]==0)
+                {
+                    set stackarray[15]=1;
+                }
+                else
+                {
+                    set stackarray[15]=0;
+                }
+            }
+        }
+        checkbox sixteen
+        {
+            title "Parameter 16";
+            geometry 145,110,110,20;
+            on valuechanged
+            {
+                if($stackarray[16]==0)
+                {
+                    set stackarray[16]=1;
+                }
+                else
+                {
+                    set stackarray[16]=0;
+                }
+            }
+        }
+        checkbox seventeen
+        {
+            title "Parameter 17";
+            geometry 145,135,110,20;
+            on valuechanged
+            {
+                if($stackarray[17]==0)
+                {
+                    set stackarray[17]=1;
+                }
+                else
+                {
+                    set stackarray[17]=0;
+                }
+            }
+        }
+        checkbox eighteen
+        {
+            title "Parameter 18";
+            geometry 145,160,110,20;
+            on valuechanged
+            {
+                if($stackarray[18]==0)
+                {
+                    set stackarray[18]=1;
+                }
+                else
+                {
+                    set stackarray[18]=0;
+                }
+            }
+        }
+        checkbox nineteen
+        {
+            title "Parameter 19";
+            geometry 145,185,110,20;
+            on valuechanged
+            {
+                if($stackarray[19]==0)
+                {
+                    set stackarray[19]=1;
+                }
+                else
+                {
+                    set stackarray[19]=0;
+                }
+            }
+        }
+        checkbox twenty
+        {
+            title "Parameter 20";
+            geometry 145,210,110,20;
+            on valuechanged
+            {
+                if($stackarray[20]==0)
+                {
+                    set stackarray[20]=1;
+                }
+                else
+                {
+                    set stackarray[20]=0;
+                }
+            }
+        }
+        checkbox twentyone
+        {
+            title "Parameter 21";
+            geometry 145,235,110,20;
+            on valuechanged
+            {
+                if($stackarray[21]==0)
+                {
+                    set stackarray[21]=1;
+                }
+                else
+                {
+                    set stackarray[21]=0;
+                }
+            }
+        }
+        checkbox twentytwo
+        {
+            title "Parameter 22";
+            geometry 145,260,110,20;
+            on valuechanged
+            {
+                if($stackarray[22]==0)
+                {
+                    set stackarray[22]=1;
+                }
+                else
+                {
+                    set stackarray[22]=0;
+                }
+            }
+        }
+
+        button goahead
+        {
+            title "Continue";
+            info "Go on to format data";
+            geometry 55, 290, 55, 30;
+            on mousedown
+            {
+                if($stackarray[1]==0)
+                {
+                    display p1stackedframe;
+                }
+                else
+                {
+                    display datframe;
+                    /*imageinfo -image $stackedfile -emlscreen 0;*/
+                    undisplay getlayersframe;
+                }
+            }
+        }
+
+        button cancelbutton
+        {
+            title "Cancel";
+            info "Go back to the main console.";
+            geometry 145, 290, 55, 30;
+            on mousedown
+            {
+                undisplay getlayersframe;
+            }
+        }
+    }
+
+
+/**************************************************************************/
+/*
+/*  P1 Stacked Frame
+/*     - called when user has not selected p1 as a stacked layer.
+/*
+/**************************************************************************/
+
+    frame p1stackedframe
+    {
+        title "Not So Fast, Buddy.";
+        geometry 350, 400, 200, 100;
+        modal;
+
+        label disclaimer
+        {
+            title "You must have parameter 1 as a layer!";
+            geometry 15, 20, 40, 20;
+        }
+
+        button ok
+        {
+            title "Continue";
+            geometry 65, 65, 70, 30;
+            on mousedown
+            {
+                undisplay p1stackedframe;
+            }
+        }
+    }
+
+
+/****************************************************************************************/
+/*
+/*   AGNPS Frame
+/*      - called when running AGNPS from within Imagine.
+/*
+/****************************************************************************************/
+
+    frame agnpsframe
+    {
+        title "Run AGNPS v5.0";
+        geometry 300, 100, 200, 280;
+        modal;
+
+        filename newdat
+        {
+            title above left "New data file:";
+            geometry 25, 10, 150, 20;
+            fullpath;
+            shortform;
+            filetypedef "data (*.dat)";
+            select getpref ("eml" "default_output_path") + "/*.dat";
+            on filenamechoosen
+            {
+            }
+        }
+
+        textnumber arg1
+        {
+            title above left "Create GIS output:";
+            info "Choose 1 for \"yes\" or 0 for \"no\".";
+            geometry 40, 70, 120, 45;
+            min 0;
+            max 1;
+
+        }
+
+        textnumber arg2
+        {
+            title above left "Create Binary Files:";
+            info "Choose 1 for \"yes\" or 0 for \"no\".";
+            geometry 40, 120, 120, 45;
+            min 0;
+            max 1;
+
+        }
+
+        textnumber arg3
+        {
+            title above left "Create Source Acct Files:";
+            info "Choose 1 for \"yes\" or 0 for \"no\".";
+            geometry 40, 170, 120, 45;
+            min 0;
+            max 1;
+
+        }
+
+        button sure
+        {
+            title "Run";
+            geometry 25, 230, 70, 30;
+            info "Run the AGNPS program.";
+            on mousedown
+            {
+                if($newdat == "")
+                {
+                    display notdoneframe;
+                }
+                else
+                {
+                    display waitframe;
+                    undisplay agnpsframe;
+                    set here = "agrun.exe";
+                    set thing = executor($here $newdat $arg1 $arg2 $arg3);
+                    undisplay waitframe;
+
+                    if($thing==0)
+                        display goodframe;
+                    else
+                        display badframe;
+                }
+            }
+        }
+
+        button nope
+        {
+            title "Cancel";
+            geometry 115, 230, 70, 30;
+            info "Close this window.";
+            on mousedown
+            {
+                undisplay agnpsframe;
+            }
+        }
+
+        on framedisplay
+        {
+            set newdat = "";
+        }
+    }
+
+/****************************************************************************************/
+/*
+/*   Wait Frame
+/*      - called while a process is running.
+/*
+/****************************************************************************************/
+    frame waitframe
+    {
+        title "Running Processes...";
+        geometry 400, 350, 200, 100;
+
+        label wait
+        {
+            geometry 20,40,100,25;
+            title "Running a Process.  Please wait...";
+        }
+    }
+
+/****************************************************************************************/
+/*
+/*   Good Frame
+/*      - called when AGNPS finishes correctly.
+/*
+/****************************************************************************************/
+    frame goodframe
+    {
+        title "Completed";
+        geometry 400, 350, 200, 120;
+        modal;
+
+        label wait
+        {
+            title "AGNPS finished.  Output created.";
+            geometry 20,35,100,25;
+        }
+
+        button okayb
+        {
+            title "Okay";
+            geometry 65, 75, 70, 30;
+            on mousedown
+            {
+                undisplay goodframe;
+            }
+        }
+    }
+
+/****************************************************************************************/
+/*
+/*   Bad Frame
+/*      - called when AGNPS chokes.
+/*
+/****************************************************************************************/
+    frame badframe
+    {
+        title "That's Not Good";
+        geometry 400, 300, 200, 120;
+        modal;
+
+        label wait
+        {
+            title "AGNPS did not run properly.";
+            geometry 30,35,100,25;
+        }
+
+        button okaybutton
+        {
+            title "Okay";
+            geometry 65, 75, 70, 30;
+            on mousedown
+            {
+                undisplay badframe;
+            }
+        }
+    }
+
+/*******************************************************************************/
+/*
+/*  No Default Name Frame
+/*      - called when no default name has been set.
+/*
+/*******************************************************************************/
+
+    frame nodefaultframe
+    {
+        title "No default selected";
+        geometry 350, 400, 275, 100;
+        modal;
+
+        label disclaimer
+        {
+            title "You must select a default name in the main frame.";
+            geometry 20, 20, 40, 20;
+        }
+
+        button ok
+        {
+            title "Continue";
+            geometry 100, 65, 70, 30;
+            on mousedown
+            {
+                undisplay nodefaultframe;
+            }
+        }
+    }
+
+/*******************************************************************************/
+/*
+/*  NPS Wait Frame
+/*      - called when NPS frame is making images.
+/*
+/*******************************************************************************/
+
+    frame npswaitframe
+    {
+        title "Running NPS to Images...";
+        geometry 400, 350, 200, 100;
+
+        label wait
+        {
+            geometry 15,40,100,25;
+            title "Running Image Maker.  Please wait...";
+        }
+    }
+
+/*******************************************************************************/
+/*
+/*   NPS Frame
+/*      - called when user wants to make images from AGNPS output.
+/*
+/*******************************************************************************/
+
+    frame npsframe
+    {
+        title "NPS to Images";
+        geometry 150, 50, 380, 360;
+
+        button defaultnameb;
+
+        filename npsfile
+        {
+            title above left "Output from AGNPS:";
+            info "Select the output file from AGNPS";
+            geometry 200, 5, 150, 30;
+            shortform;
+            filetypedef "AGNPS file (*.nps)";
+            select getpref ("eml" "default_output_path") + "/*.nps";
+            on filenamechoosen
+            {
+            }
+
+        }
+
+        filename p1info
+        {
+            title above left "Parameter 1 file:";
+            info "Select the image with parameter 1.";
+            geometry 30, 60, 150,30;
+            shortform;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+            }
+        }
+
+        filename hydro
+        {
+            title above left "Hydrology output image:";
+            info "Select the output file for Hydrology data";
+            geometry 30, 110, 150, 30;
+            shortform;
+            newfile;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+            }
+        }
+
+        filename clay
+        {
+            title above left "Clay output image:";
+            info "Select the output file for Clay data";
+            geometry 30, 160, 150, 30;
+            shortform;
+            newfile;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+            }
+        }
+
+        filename silt
+        {
+            title above left "Silt output image:";
+            info "Select the output file for Silt data";
+            geometry 30, 210, 150, 30;
+            shortform;
+            newfile;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+            }
+        }
+
+        filename sagg
+        {
+            title above left "Small Aggregates output:";
+            info "Select the output file for SAGG data";
+            geometry 30, 260, 150, 30;
+            shortform;
+            newfile;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+            }
+        }
+
+        filename lagg
+        {
+            title above left "Large Aggregates output:";
+            info "Select the output file for LAGG data";
+            geometry 200, 60, 150, 30;
+            shortform;
+            newfile;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+            }
+        }
+
+        filename sand
+        {
+            title above left "Sand output image:";
+            info "Select the output file for Sand data";
+            geometry 200, 110, 150, 30;
+            shortform;
+            newfile;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+            }
+        }
+
+        filename total
+        {
+            title above left "Total soil loss output:";
+            info "Select the output file for Total data";
+            geometry 200, 160, 150, 30;
+            shortform;
+            newfile;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+            }
+        }
+
+        filename nitro
+        {
+            title above left "Nitrogen output image:";
+            info "Select the output file for Nitrogen data";
+            geometry 200, 210, 150, 30;
+            shortform;
+            newfile;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+            }
+        }
+
+        filename phospho
+        {
+            title above left "Phosphorous output image:";
+            info "Select the output file for Phosphorous data";
+            geometry 200, 260, 150, 30;
+            shortform;
+            newfile;
+            filetypedef "raster (*.img)";
+            select getpref ("eml" "default_output_path") + "/*.img";
+            on filenamechoosen
+            {
+            }
+        }
+
+        button defaultnameb
+        {
+            title "Default names.";
+            above p1info;
+            info "Use default naming.";
+            on mousedown
+            {
+                if($inffile != "")
+                {
+                    set hydro = froot ($inffile) + "_hydro" + "." + fext ($inffile);
+                    set clay = froot ($inffile) + "_clay" + "." + fext ($inffile);
+                    set silt = froot ($inffile) + "_silt" + "." + fext ($inffile);
+                    set sagg = froot ($inffile) + "_smallagg" + "." + fext ($inffile);
+                    set lagg = froot ($inffile) + "_largeagg" + "." + fext ($inffile);
+                    set sand = froot ($inffile) + "_sand" + "." + fext ($inffile);
+                    set total = froot ($inffile) + "_total" + "." + fext ($inffile);
+                    set nitro = froot ($inffile) + "_nitro" + "." + fext ($inffile);
+                    set phospho = froot ($inffile) + "_phospho" + "." + fext ($inffile);
+                }
+                else
+                {
+                    display nodefaultframe;
+                }
+            }
+        }
+
+        button goforit
+        {
+            title "Run";
+            geometry 110, 320, 70, 30;
+            info "Create images from AGNPS output file";
+            on mousedown
+            {
+                if( $npsfile == "" )
+                {
+                    display notdoneframe;
+                }
+                elsif($p1info == "")
+                {
+                    display notdoneframe;
+                }
+                elsif($hydro == "")
+                {
+                    display notdoneframe;
+                }
+                elsif($clay == "")
+                {
+                    display notdoneframe;
+                }
+                elsif($silt == "")
+                {
+                    display notdoneframe;
+                }
+                elsif($sagg == "")
+                {
+                    display notdoneframe;
+                }
+                elsif($lagg == "")
+                {
+                    display notdoneframe;
+                }
+                elsif($sand == "")
+                {
+                    display notdoneframe;
+                }
+                elsif($total == "")
+                {
+                    display notdoneframe;
+                }
+                elsif($nitro == "")
+                {
+                    display notdoneframe;
+                }
+                elsif($phospho == "")
+                {
+                    display notdoneframe;
+                }
+                else
+                {
+                    display npswaitframe;
+                    set thing = makeimage($npsfile,$p1info,$hydro,$clay,$silt,$sagg,$lagg,$sand,$total,$nitro,$phospho);
+
+                    undisplay npsframe;
+                    undisplay npswaitframe;
+                }
+            }
+        }
+
+        button nevermind
+        {
+            title "Cancel";
+            geometry 200, 320, 70, 30;
+            info "Close this window.";
+            on mousedown
+            {
+                undisplay npsframe;
+            }
+        }
+
+        on framedisplay
+        {
+            set npsfile = "";
+            set p1info = "";
+            set hydro = "";
+            set clay = "";
+            set silt = "";
+            set sagg = "";
+            set lagg = "";
+            set sand = "";
+            set total = "";
+            set nitro = "";
+            set phospho = "";
+        }
+    }
+
+/*******************************************************************************/
+/*
+/*   agnps headers Frame
+/*      - called during dataformat 
+/*		- allows the user to set header flags for *.dat agnps file
+/*
+/*******************************************************************************/
+
+	frame agnpsheaderframe
+	{
+		title "AGNPS/ADGen headers";
+		geometry 0, 0, 400, 250;
+
+		tabsheet linetabs
+		{
+			geometry 5, 5, 395, 200;
+
+			group line2
+			{
+				geometry 5, 5, 390, 190;
+				title "Line 2";
+
+				checkbox g2t1
+				{
+					title "Error Log";
+					geometry 20, 10, 150, 25;
+					on valuechanged set hf_errLog = $g2t1;
+				}
+
+				checkbox g2t2
+				{
+					title "Source Accounting";
+					geometry 20, 50, 150, 25;
+					on valuechanged set hf_srcAcct = $g2t2;
+				}
+
+				checkbox g2t3
+				{
+					title "Hydrology";
+					geometry 20, 90, 150, 25;
+					on valuechanged set hf_hydro = $g2t3;
+				}
+
+				checkbox g2t4
+				{
+					title "Sediment";
+					geometry 200, 10, 150, 25;
+					on valuechanged set hf_sed = $g2t4;
+				}
+
+				checkbox g2t5
+				{
+					title "Nutrient";
+					geometry 200, 50, 150, 25;
+					on valuechanged set hf_nutr = $g2t5;
+				}
+
+				checkbox g2t6
+				{
+					title "Pesticide";
+					geometry 200, 90, 150, 25;
+					on valuechanged set hf_pesti = $g2t6;
+				}
+			}
+
+			group line5
+			{
+				geometry 5, 5, 390, 190;
+				title "Line 5";
+
+				textnumber g5t4
+				{
+					title "Hyd Calc Ind:";
+					geometry 25, 25, 150, 25;
+					rangespec 0, 1;
+					on valuechanged set hf_hyd_calc = $g5t4;
+				}
+
+				textnumber g5t5
+				{
+					title "Geomorph Ind:";
+					geometry 25, 75, 150, 25;
+					rangespec 0, 1;
+					on valuechanged set hf_geomorph = $g5t5;
+				}
+
+				textnumber g5t6
+				{
+					title "K Coeff:";
+					geometry 225, 25, 150, 25;
+					rangespec 0, 1;
+					on valuechanged set hf_k_coeff = $g5t6;
+				}
+
+				textnumber g5t7
+				{
+					title "Pre peak:";
+					geometry 225, 75, 150, 25;
+					/*format "2.1";*/
+					rangespec 0, 1;
+					on valuechanged set hf_prepeak = $g5t7;
+				}
+			}
+
+			group line6
+			{
+				geometry 5, 5, 390, 190;
+				title "Line 6";
+
+				popuplist g6t1
+				{
+					title "Storm Type:";
+					geometry 10, 10, 150, 25;
+					titlelist{"1", "2", "3", "I", "Ia", "II", "III"};
+					names{"1", "2", "3", "I", "Ia", "II", "III"};
+					on valuechanged set hf_storm_type = $g6t1;
+				}
+
+				textnumber g6t2
+				{
+					title "Energy Int:";
+					geometry 10, 50, 150, 25;
+					format "6.3";
+					rangespec 0, 999;
+					on valuechanged set hf_energy_int = $g6t2;
+				}
+
+				textnumber g6t3
+				{
+					title "Duration:";
+					geometry 10, 90, 150, 25;
+					format "6.3";
+					rangespec 0, 999;
+					on valuechanged set hf_duration = $g6t3;
+				}
+
+				textnumber g6t4
+				{
+					title "Rainfall:";
+					geometry 200, 10, 150, 25;
+					format "6.3";
+					rangespec 0.1, 999;
+					on valuechanged set hf_precip = $g6t4;
+				}
+
+				textnumber g6t5
+				{
+					title "Nitrogen:";
+					geometry 200, 50, 150, 25;
+					format "6.3";
+					rangespec 0, 10;
+					on valuechanged set hf_nitro_conc = $g6t5;
+				}
+			}
+		}
+
+		button saveIt
+		{
+			title "Save";
+			geometry 25, 205, 100, 25;
+			on mousedown
+			{
+				set thing = saveflags($hf_errLog, $hf_srcAcct, $hf_hydro, $hf_sed, $hf_nutr, $hf_pesti, $hf_hyd_calc, $hf_geomorph, $hf_k_coeff, $hf_prepeak, $hf_storm_type, $hf_energy_int, $hf_duration, $hf_precip, $hf_nitro_conc);
+			}
+		}
+
+
+		/* terminates program */
+		button closeIt
+		{
+			title "Close";
+			geometry 275, 205, 100, 25;
+			on mousedown undisplay agnpsheaderframe;
+		}
+
+		button resetToDefaults
+		{
+			title "Reset to Defaults";
+			geometry 125, 205, 150, 25;
+			on mousedown
+			{
+				/* Set all variables to their default values */
+				set g2t1 = 0;
+				set g2t2 = 0;
+				set g2t3 = 0;
+				set g2t4 = 0;
+				set g2t5 = 0;
+				set g2t6 = 0;
+
+				set g5t4 = 1;
+				set g5t5 = 0;
+				set g5t6 = 1;
+				set g5t7 = 366.00;
+
+				set g6t1 = "3";
+				set g6t2 = 160.00;
+				set g6t3 = 0;
+				set g6t4 = 7.30;
+				set g6t5 = 1.10;
+			}
+		}
+
+		on framedisplay
+		{
+			/* Displays the previously stores values for the header variables */
+			set g2t1 = $hf_errLog;
+			set g2t2 = $hf_srcAcct;
+			set g2t3 = $hf_hydro;
+			set g2t4 = $hf_sed;
+			set g2t5 = $hf_nutr;
+			set g2t6 = $hf_pesti;
+
+			set g5t4 = $hf_hyd_calc;
+			set g5t5 = $hf_geomorph;
+			set g5t6 = $hf_k_coeff;
+			set g5t7 = $hf_prepeak;
+
+			set g6t1 = $hf_storm_type;
+			set g6t2 = $hf_energy_int;
+			set g6t3 = $hf_duration;
+			set g6t4 = $hf_precip;
+			set g6t5 = $hf_nitro_conc;
+		}
+	}
+
+on startup
+    
+    {
+        display mainframe;
+        set inffile = "";
+        set file1 = "";
+        set file3 = "";
+        set file5 = "";
+        set file6 = "";
+        set file7 = "";
+        set file8 = "";
+        set file9 = "";
+        set file10 = "";
+        set file11 = "";
+        set file12 = "";
+        set file14 = "";
+        set file15 = "";
+        set file16 = "";
+        set file17 = "";
+        set file22 = "";
+        set fileout = "";
+
+	/* Set all header flags to their default values */
+	/* Header Flags */
+	/*=== Line 2 ===*/
+	set hf_errLog = 0;
+	set hf_srcAcct = 0;
+	set hf_hydro = 0;
+	set hf_sed = 0;
+	set hf_nutr = 0;
+	set hf_pesti = 0;
+
+	/*=== Line 5 ===*/
+	set hf_hyd_calc = 1;
+	set hf_geomorph = 0;
+	set hf_k_coeff = 1;
+	set hf_prepeak = 366.00;
+
+	/*=== Line 6 ===*/
+	set hf_storm_type = 3;
+	set hf_energy_int = 160.00;
+	set hf_duration = 0;
+	set hf_precip = 7.30;
+	set hf_nitro_conc = 1.10;
+    }
+}

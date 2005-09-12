@@ -26,15 +26,20 @@
 # spread out over the entire source repository.
 
 ADGenAutomation ADGenAutomation
+ADGen_exe ADGen_exe
 ADGen_v1.0 ADGen_v1.0
+ADGen_v2.0 ADGen_v2.0
+ADGen_v2.0_EML ADGen_v2.0_EML
 bilinearInterp bilinearInterp
 classifier classifier
 classifierWin classifierWin
 CurveShoulderFinder CurveShoulderFinder
 DiffIMG DiffIMG
 DSS DSS
+DSSv1 DSSv1
 FileConverter FileConverter
 GCTP_CPP GCTP_CPP
+gctpdiff gctpdiff
 Generator Generator
 IntersectionLocator IntersectionLocator
 JGCTP JGCTP

@@ -4117,7 +4117,7 @@ component main
                 {
                     display datframe;
                     /*imageinfo -image $stackedfile -emlscreen 0;*/
-                    undisplay getlayersframe;
+                    /*undisplay getlayersframe;*/
                 }
             }
         }

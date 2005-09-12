@@ -2088,7 +2088,11 @@ Eerr_ErrorReport **err;
 				(layer->pixelType==7 && (p1pixelrect->currentData[(j/4)+p]>0 ||
 										 p1pixelrect->currentData[(j/4)+p+1]>0 ||
 										 p1pixelrect->currentData[(j/4)+p+2]>0 ||
-										 p1pixelrect->currentData[(j/4)+p+3]>0) ) )
+										 p1pixelrect->currentData[(j/4)+p+3]>0) ) 
+             (layer->pixelType == 9 && (p1pixelrect->currentData[(j/4)+p]>0 ||
+										 p1pixelrect->currentData[(j/4)+p+1]>0 ||
+										 p1pixelrect->currentData[(j/4)+p+2]>0 ||
+										 p1pixelrect->currentData[(j/4)+p+3]>0)))
 			{
 				/***** Hydro data *****/
 				fscanf(fptr,"%i",&cellNum);				
@@ -2636,7 +2640,11 @@ Eerr_ErrorReport **err;
 				(layer->pixelType==7 && (p1pixelrect->currentData[(j/4)+p]>0 ||
 										 p1pixelrect->currentData[(j/4)+p+1]>0 ||
 										 p1pixelrect->currentData[(j/4)+p+2]>0 ||
-										 p1pixelrect->currentData[(j/4)+p+3]>0) ) )
+										 p1pixelrect->currentData[(j/4)+p+3]>0) ) 
+             (layer->pixelType == 9 && (p1pixelrect->currentData[(j/4)+p]>0 ||
+										 p1pixelrect->currentData[(j/4)+p+1]>0 ||
+										 p1pixelrect->currentData[(j/4)+p+2]>0 ||
+										 p1pixelrect->currentData[(j/4)+p+3]>0)))
 			{
 				/***** Nitrogen data *****/
 				fscanf(fptr,"%i",&cellNum);

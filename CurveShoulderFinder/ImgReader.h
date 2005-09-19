@@ -2,7 +2,7 @@
  * @file ImgReader.h
  * @author Austin Hartman
  *
- * $Id: ImgReader.h,v 1.2 2005/09/19 15:34:18 ahartman Exp $
+ * $Id: ImgReader.h,v 1.3 2005/09/19 17:29:03 ahartman Exp $
  */
 
 #ifndef AUSTIN_IMGREADER_H
@@ -10,6 +10,8 @@
 
 #include <string>
 #include <vector>
+
+#include <gdal_priv.h>
 
 #include "RasterReader.h"
 
@@ -93,8 +95,8 @@ public:
     /**
      * Exception class to be used when opening the img file fails.
      */
-    class FailedOpeningImgFile() : 
-        public typename RasterReader<DataType>::FailedOpeningFile
+    class FailedOpeningImgFile : 
+        public RasterReader<DataType>::FailedOpeningFile
     {
     public:
         virtual ~FailedOpeningImgFile();
@@ -104,7 +106,7 @@ private:
     static bool initialized;
     GDALDataset* dataset;
     std::vector<double> geoTransform;
-}
+};
 
 #include "ImgReader.hpp"
 

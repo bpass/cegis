@@ -3,7 +3,7 @@
 # @file Makefile.am
 # @author Austin Hartman
 #
-# $Id: Makefile.am,v 1.5 2005/08/15 20:40:26 ahartman Exp $
+# $Id: Makefile.am,v 1.6 2005/09/19 22:20:37 ahartman Exp $
 #
 
 noinst_PROGRAMS = IntersectionLocator
@@ -31,4 +31,4 @@ INCLUDES = $(GDAL_CFLAGS)
 # build it first before going there
 BUILT_SOURCES = libIntersectionLocator.la
 
-#SUBDIRS = TrainClassifier
+SUBDIRS = TrainClassifier

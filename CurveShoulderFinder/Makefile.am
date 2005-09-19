@@ -3,13 +3,10 @@
 # @file Makefile.am
 # @author Austin Hartman
 #
-# $Id: Makefile.am,v 1.2 2005/07/07 19:10:16 ahartman Exp $
+# $Id: Makefile.am,v 1.3 2005/09/19 22:21:39 ahartman Exp $
 #
 
 SUBDIRS = tests
-
-noinst_PROGRAMS = CurveShoulderFinder
-CurveShoulderFinder_SOURCES = driver.cpp
 
 EXTRA_DIST = README \
              Doxyfile

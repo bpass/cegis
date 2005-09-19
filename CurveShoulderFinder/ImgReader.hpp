@@ -2,7 +2,7 @@
  * @file ImgReader.hpp
  * @author Austin Hartman
  *
- * $Id: ImgReader.hpp,v 1.2 2005/09/19 15:34:18 ahartman Exp $
+ * $Id: ImgReader.hpp,v 1.3 2005/09/19 17:43:34 ahartman Exp $
  */
 
 #ifdef AUSTIN_IMGREADER_H
@@ -10,6 +10,8 @@
 #define AUSTIN_IMGREADER_HPP
 
 #include <cassert>
+
+#include "GDALDataTypeTraits.h"
 
 template<class DataType>
 bool ImgReader<DataType>::initialized = false;
@@ -24,7 +26,7 @@ ImgReader<DataType>::ImgReader(const std::string& filename)
         initialized = true;
     }
     
-    dataset = static_cast<GDALDataSet*>(GDALOpen(filename.c_str(),
+    dataset = static_cast<GDALDataset*>(GDALOpen(filename.c_str(),
                                                  GA_ReadOnly));
     if(dataset == NULL)
     {
@@ -52,10 +54,28 @@ ImgReader<DataType>::getValue(const UTMCoordinateType& xCoord,
                               size_t band) const
 {
     GDALRasterBand* rasterBand = dataset->GetRasterBand(band);
-    const size_t pixel = /*static_cast<size_t>*/
+    const size_t pixel = //static_cast<size_t>
                          ((xCoord - geoTransform[0]) / geoTransform[1]);
-    const size_t line  = /*static_cast<size_t>*/
+    const size_t line  = //static_cast<size_t>
                          ((yCoord - geoTransform[3]) / geoTransform[5]);
+    // XXX maybe do some error checking here to see if xCoord and yCoord are
+    // even in the image; GDAL might do this already though
+
+    DataType data; // The memory we'll read into
+
+    CPLErr rasterIOError = 
+        rasterBand->RasterIO(GF_Read,
+                             pixel, line,
+                             1, 1, // read just a single pixel
+                             &data,
+                             1, 1,
+//                             GDT_Float32,
+                             GDALDataTypeTraits<DataType>::dataType, 
+                             0, 1);
+
+    // XXX do something in case there's an error
+
+    return data;
 }
 
 template<class DataType>

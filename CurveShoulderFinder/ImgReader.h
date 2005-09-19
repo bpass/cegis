@@ -2,7 +2,7 @@
  * @file ImgReader.h
  * @author Austin Hartman
  *
- * $Id: ImgReader.h,v 1.3 2005/09/19 17:29:03 ahartman Exp $
+ * $Id: ImgReader.h,v 1.4 2005/09/19 22:46:02 ahartman Exp $
  */
 
 #ifndef AUSTIN_IMGREADER_H
@@ -15,6 +15,11 @@
 
 #include "RasterReader.h"
 
+/**
+ * This class allows the user to access data from an .img file.  It is a
+ * wrapper for the GDAL code which is used to do all of the actual reading
+ * of the data.
+ */
 template<class DataType>
 class ImgReader : public RasterReader<DataType>
 {
@@ -103,8 +108,22 @@ public:
     };
 
 private:
+    /** 
+     * This is used to tell if we should run GDALAllRegister or if that's
+     * already been done.
+     */
     static bool initialized;
+
+    /**
+     * This GDALDataset allows us to access data from the .img file.
+     */
     GDALDataset* dataset;
+
+    /**
+     * This holds coordinates for the upper-left corner of the image and
+     * coefficients to convert between x- and y-coordinates and pixel/line
+     * locations.
+     */
     std::vector<double> geoTransform;
 };
 

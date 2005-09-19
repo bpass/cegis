@@ -2,7 +2,7 @@
  * @file GDALDataTypeTraits.h
  * @author Austin Hartman
  *
- * $Id: GDALDataTypeTraits.h,v 1.1 2005/09/19 17:32:50 ahartman Exp $
+ * $Id: GDALDataTypeTraits.h,v 1.2 2005/09/19 23:01:01 ahartman Exp $
  */
 
 #ifndef AUSTIN_GDALDATATYPETRAITS_H
@@ -10,6 +10,11 @@
 
 #include <gdal.h>
 
+/**
+ * A traits class to allow the conversion from C++ types to the appropriate
+ * value of the enum GDALDataType.
+ */
+//@{
 template<class DataType>
 struct GDALDataTypeTraits
 {
@@ -39,5 +44,6 @@ struct GDALDataTypeTraits<double>
 {
     static const GDALDataType dataType = GDT_Float64;
 };
+//@}
 
 #endif

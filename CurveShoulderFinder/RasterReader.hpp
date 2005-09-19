@@ -2,7 +2,7 @@
  * @file RasterReader.hpp
  * @author Austin Hartman
  *
- * $Id: RasterReader.hpp,v 1.1 2005/08/22 19:05:25 ahartman Exp $
+ * $Id: RasterReader.hpp,v 1.2 2005/09/19 15:29:15 ahartman Exp $
  */
 
 #ifdef AUSTIN_RASTERREADER_H
@@ -11,6 +11,10 @@
 
 template<class DataType>
 RasterReader<DataType>::~RasterReader()
+{}
+
+template<class DataType>
+RasterReader<DataType>::FailedOpeningFile::~FailedOpeningFile()
 {}
 
 #endif

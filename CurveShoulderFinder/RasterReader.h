@@ -2,7 +2,7 @@
  * @file RasterReader.h
  * @author Austin Hartman
  *
- * $Id: RasterReader.h,v 1.1 2005/08/22 19:05:25 ahartman Exp $
+ * $Id: RasterReader.h,v 1.2 2005/09/19 15:29:15 ahartman Exp $
  */
 
 #ifndef AUSTIN_RASTERREADER_H
@@ -103,6 +103,15 @@ public:
      */
     class InvalidBand
     {};
+
+    /**
+     * Exception class to be used when opening a file fails
+     */
+    class FailedOpeningFile
+    {
+    public:
+        virtual ~FailedOpeningFile();
+    };
 };
 
 #include "RasterReader.hpp"

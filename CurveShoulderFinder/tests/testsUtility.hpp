@@ -2,7 +2,7 @@
  * @file testsUtility.hpp
  * @author Austin Hartman
  *
- * $Id: testsUtility.hpp,v 1.1 2005/06/13 18:34:47 ahartman Exp $
+ * $Id: testsUtility.hpp,v 1.2 2005/09/19 21:23:56 ahartman Exp $
  */
 
 template<class T>
@@ -26,6 +26,18 @@ bool matricesEqual(const Matrix<T>& m1, const Matrix<T>& m2,
         }
     }
 
+    return true;
+}
+
+template<class T>
+bool
+floatsEqual(T v1, T v2)
+{
+    const T epsilon = .001;
+    if(std::abs(v1 - v2) > epsilon)
+    {
+        return false;
+    }
     return true;
 }
 

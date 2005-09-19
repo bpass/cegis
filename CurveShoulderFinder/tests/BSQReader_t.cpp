@@ -2,10 +2,11 @@
  * @file BSQReader_t.cpp
  * @author Austin Hartman
  *
- * $Id: BSQReader_t.cpp,v 1.6 2005/08/11 20:44:54 ahartman Exp $
+ * $Id: BSQReader_t.cpp,v 1.7 2005/09/19 21:23:56 ahartman Exp $
  */
 
 #include "BSQReader.h"
+#include "testsUtility.h"
 
 #include <cassert>
 #include <cmath>
@@ -14,9 +15,6 @@
 #ifdef PRINT_VALUES
 #include <iostream>
 #endif
-
-template<class T>
-bool floatsEqual(T v1, T v2);
 
 int main()
 {
@@ -254,17 +252,5 @@ int main()
     assert(floatsEqual(reader4.getValue(point3X, point3Y, 1), point3Band1Value));
     assert(floatsEqual(reader4.getValue(point3X, point3Y, 5), point3Band5Value));
     assert(floatsEqual(reader4.getValue(point3X, point3Y, 15), point3Band15Value));
-}
-
-template<class T>
-bool
-floatsEqual(T v1, T v2)
-{
-    const T epsilon = .001;
-    if(std::abs(v1 - v2) > epsilon)
-    {
-        return false;
-    }
-    return true;
 }
 

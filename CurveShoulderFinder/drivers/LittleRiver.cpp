@@ -1,7 +1,7 @@
 /**
  * @file LittleRiver.cpp
  *
- * $Id: LittleRiver.cpp,v 1.11 2005/08/15 18:10:10 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.12 2005/09/19 22:19:48 ahartman Exp $
  */
 
 #include <iomanip>
@@ -17,7 +17,7 @@
 //#define PRINT_RESOLUTIONS
 //#define PRINT_FILENAMES
 //#define PRINT_SUFFIXES
-#define PAUSE_AT_END
+//#define PAUSE_AT_END
 
 typedef std::vector<unsigned int> Resolutions_t;
 typedef std::vector<std::vector<std::string> > Filenames_t;
@@ -97,26 +97,26 @@ createFilenames()
 {
     // Set up the main data directory
 #ifdef WIN32
-    const std::string dataDir = "D:/Data/Little_River/";
+    const std::string dataDir = "D:/Data/MassiveLRiver/austin/7.30in/";
 #else
     const std::string dataDir = "/snap/ahartman/AGNPSOutput/BSQs/Little_River/";
 #endif
 
     const Resolutions_t resolutions = createResolutions();
-    const std::string prefix = "n";
+    const std::string prefix = "lr";
 
     // Set up the suffixes for each filename
     const std::string suffixesAsArray[] =
     {
-        "little_clay",
-        "little_hydro",
-        "little_lagg",
-        "little_nitro",
-        "little_phospho",
-        "little_sagg",
-        "little_sand",
-        "little_silt",
-        "little_total"
+        "_clay",
+        "_hydro",
+        "_largeagg",
+        "_nitro",
+        "_phospho",
+        "_sand",
+        "_silt",
+        "_smallagg",
+        "_total"
     };
     const size_t numSuffixes = sizeof(suffixesAsArray) / sizeof(std::string);
     const std::vector<std::string> 
@@ -176,17 +176,26 @@ void littleRiverPrintPoints()
 
     // Set up the points we want to read
     Points_t points;
-    points.push_back(Point_t(249064.067797, 3499322.525424));
-    points.push_back(Point_t(254786.440678, 3485895.745763));
+    points.push_back(Point_t(244338.17235, 3509943.05796));
+    points.push_back(Point_t(243876.45384, 3509519.99026));
+    points.push_back(Point_t(244925.32144, 3507531.60852));
+    points.push_back(Point_t(250344.48237, 3499648.11321));
+    points.push_back(Point_t(241920.86317, 3514708.05963));
+    points.push_back(Point_t(256122.17418, 3487125.20807));
+    points.push_back(Point_t(254514.00120, 3485869.88143));
+    points.push_back(Point_t(254419.30251, 3489880.48902));
+//    points.push_back(Point_t(249064.067797, 3499322.525424));
+//    points.push_back(Point_t(254786.440678, 3485895.745763));
 //    points.push_back(Point_t(237540.000000, 3516595.420200));
 //    points.push_back(Point_t(260580.000000, 3516595.420200));
 //    points.push_back(Point_t(237540.000000, 3485911.000000));
 //    points.push_back(Point_t(260580.000000, 3485911.000000));
 
     // Set up the data files we want to read
-    const std::string myFileTypes[] = { "clay", "hydro", "lagg", "nitro", 
-                                        "phospho", "sagg", "sand", "silt",
-                                        "total" };
+//    const std::string myFileTypes[] = { "clay", "hydro", "largeagg", "nitro",
+//                                        "phospho", "sand", "silt", "smallagg",
+//                                        "total" };
+    const std::string myFileTypes[] = { "hydro" };
     const size_t numMyFileTypes = sizeof(myFileTypes) / sizeof(myFileTypes[0]);
 
     // Set up the bands we want to read
@@ -204,10 +213,10 @@ void littleRiverPrintPoints()
                       myHydroBandsAsArray, myHydroBandsAsArray + 
                       sizeof(myHydroBandsAsArray) / sizeof(size_t));
 
-    const size_t myLaggBandsAsArray[] = { 1, 2, 3, 4, 5 };
-    const BandsList_t myLaggBands(
-                      myLaggBandsAsArray, myLaggBandsAsArray + 
-                      sizeof(myLaggBandsAsArray) / sizeof(size_t));
+    const size_t myLargeAggBandsAsArray[] = { 1, 2, 3, 4, 5 };
+    const BandsList_t myLargeAggBands(
+                      myLargeAggBandsAsArray, myLargeAggBandsAsArray + 
+                      sizeof(myLargeAggBandsAsArray) / sizeof(size_t));
 
     const size_t myNitroBandsAsArray[] = { 1, 2, 3, 4, 5, 6 };
     const BandsList_t myNitroBands(
@@ -219,11 +228,6 @@ void littleRiverPrintPoints()
                       myPhosphoBandsAsArray, myPhosphoBandsAsArray + 
                       sizeof(myPhosphoBandsAsArray) / sizeof(size_t));
 
-    const size_t mySaggBandsAsArray[] = { 1, 2, 3, 4, 5 };
-    const BandsList_t mySaggBands(
-                      mySaggBandsAsArray, mySaggBandsAsArray + 
-                      sizeof(mySaggBandsAsArray) / sizeof(size_t));
-
     const size_t mySandBandsAsArray[] = { 1, 2, 3, 4, 5 };
     const BandsList_t mySandBands(
                       mySandBandsAsArray, mySandBandsAsArray + 
@@ -234,6 +238,11 @@ void littleRiverPrintPoints()
                       mySiltBandsAsArray, mySiltBandsAsArray + 
                       sizeof(mySiltBandsAsArray) / sizeof(size_t));
 
+    const size_t mySmallAggBandsAsArray[] = { 1, 2, 3, 4, 5 };
+    const BandsList_t mySmallAggBands(
+                      mySmallAggBandsAsArray, mySmallAggBandsAsArray + 
+                      sizeof(mySmallAggBandsAsArray) / sizeof(size_t));
+
     const size_t myTotalBandsAsArray[] = { 1, 2, 3, 4, 5 };
     const BandsList_t myTotalBands(
                       myTotalBandsAsArray, myTotalBandsAsArray + 
@@ -241,12 +250,12 @@ void littleRiverPrintPoints()
 
     myBands["clay"] = myClayBands;
     myBands["hydro"] = myHydroBands;
-    myBands["lagg"] = myLaggBands;
+    myBands["largeagg"] = myLargeAggBands;
     myBands["nitro"] = myNitroBands;
     myBands["phospho"] = myPhosphoBands;
-    myBands["sagg"] = mySaggBands;
     myBands["sand"] = mySandBands;
     myBands["silt"] = mySiltBands;
+    myBands["smallagg"] = mySmallAggBands;
     myBands["total"] = myTotalBands;
 
     // Create the BSQReaders for the files we want

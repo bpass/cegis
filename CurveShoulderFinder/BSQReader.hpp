@@ -2,7 +2,7 @@
  * @file BSQReader.hpp
  * @author Austin Hartman
  *
- * $Id: BSQReader.hpp,v 1.8 2005/08/11 20:43:50 ahartman Exp $
+ * $Id: BSQReader.hpp,v 1.9 2005/09/19 15:31:25 ahartman Exp $
  */
 
 #ifdef AUSTIN_BSQREADER_H
@@ -315,6 +315,14 @@ BSQReader<DataType>::parseHeaderLine(const std::string& line) const
 
     return keyValuePair;
 }
+
+template<class DataType>
+BSQReader<DataType>::FailedOpeningBSQFile::~FailedOpeningBSQFile()
+{}
+
+template<class DataType>
+BSQReader<DataType>::FailedOpeningHeaderFile::~FailedOpeningHeaderFile()
+{}
 
 #endif
 #endif

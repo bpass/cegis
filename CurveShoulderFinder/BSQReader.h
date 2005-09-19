@@ -2,7 +2,7 @@
  * @file BSQReader.h
  * @author Austin Hartman
  *
- * $Id: BSQReader.h,v 1.9 2005/08/22 19:07:15 ahartman Exp $
+ * $Id: BSQReader.h,v 1.10 2005/09/19 15:31:25 ahartman Exp $
  */
 
 #ifndef AUSTIN_BSQREADER_H
@@ -163,14 +163,22 @@ public:
     /**
      * Exception class to be used when opening the BSQ file fails.
      */
-    class FailedOpeningBSQFile
-    {};
+    class FailedOpeningBSQFile : 
+        public RasterReader<DataType>::FailedOpeningFile
+    {
+    public:
+        virtual ~FailedOpeningBSQFile();
+    };
 
     /**
      * Exception class to be used when opening the header file fails.
      */
-    class FailedOpeningHeaderFile
-    {};
+    class FailedOpeningHeaderFile : 
+        public RasterReader<DataType>::FailedOpeningFile
+    {
+    public:
+        virtual ~FailedOpeningHeaderFile();
+    };
 
     /**
      * Exception class to be used when the header file contains an unexpected

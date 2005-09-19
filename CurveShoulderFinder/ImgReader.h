@@ -2,7 +2,7 @@
  * @file ImgReader.h
  * @author Austin Hartman
  *
- * $Id: ImgReader.h,v 1.1 2005/09/19 15:06:21 ahartman Exp $
+ * $Id: ImgReader.h,v 1.2 2005/09/19 15:34:18 ahartman Exp $
  */
 
 #ifndef AUSTIN_IMGREADER_H
@@ -93,8 +93,12 @@ public:
     /**
      * Exception class to be used when opening the img file fails.
      */
-    class FailedOpeningImgFile()
-    {};
+    class FailedOpeningImgFile() : 
+        public typename RasterReader<DataType>::FailedOpeningFile
+    {
+    public:
+        virtual ~FailedOpeningImgFile();
+    };
 
 private:
     static bool initialized;

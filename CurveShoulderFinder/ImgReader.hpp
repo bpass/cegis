@@ -2,7 +2,7 @@
  * @file ImgReader.hpp
  * @author Austin Hartman
  *
- * $Id: ImgReader.hpp,v 1.1 2005/09/19 15:06:21 ahartman Exp $
+ * $Id: ImgReader.hpp,v 1.2 2005/09/19 15:34:18 ahartman Exp $
  */
 
 #ifdef AUSTIN_IMGREADER_H
@@ -92,6 +92,10 @@ ImgReader<DataType>::getNumBands() const
 {
     return dataset->GetRasterCount();
 }
+
+template<class DataType>
+ImgReader<DataType>::FailedOpeningImgFile::~FailedOpeningImgFile()
+{}
 
 #endif
 #endif

@@ -2,7 +2,7 @@
  * @file ImgReader.hpp
  * @author Austin Hartman
  *
- * $Id: ImgReader.hpp,v 1.3 2005/09/19 17:43:34 ahartman Exp $
+ * $Id: ImgReader.hpp,v 1.4 2005/09/19 18:19:30 ahartman Exp $
  */
 
 #ifdef AUSTIN_IMGREADER_H
@@ -54,9 +54,9 @@ ImgReader<DataType>::getValue(const UTMCoordinateType& xCoord,
                               size_t band) const
 {
     GDALRasterBand* rasterBand = dataset->GetRasterBand(band);
-    const size_t pixel = //static_cast<size_t>
+    const size_t pixel = static_cast<size_t>
                          ((xCoord - geoTransform[0]) / geoTransform[1]);
-    const size_t line  = //static_cast<size_t>
+    const size_t line  = static_cast<size_t>
                          ((yCoord - geoTransform[3]) / geoTransform[5]);
     // XXX maybe do some error checking here to see if xCoord and yCoord are
     // even in the image; GDAL might do this already though

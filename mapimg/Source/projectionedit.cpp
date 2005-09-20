@@ -69,8 +69,8 @@ adapt to each name by updating the label and which style of edit to provide.
 */
 void ProjectionEdit::projChange()
 {
-	int projNum = combo2proj( projCombo->currentItem() );
-	char variation = projCombo->currentText().right(1)[0].latin1();
+	int projNum = combo2proj( projCombo->currentIndex() );
+	char variation = projCombo->currentText().right(1)[0].toLatin1();
 
 	switch(projNum)
 	{
@@ -95,7 +95,7 @@ void ProjectionEdit::projChange()
 /*This slot is called from the imgedit (infoFrame) when it needs to reset values)*/
 void ProjectionEdit::reset()
 {
-	projCombo->setCurrentItem( 0 );
+	projCombo->setCurrentIndex( 0 );
 	projChange();
 	gctpBoxes[0]->setValue( 6370997.000 );
 	for( int i = 1; i < 15; ++i )
@@ -130,14 +130,13 @@ here as an additional step in initialization.
 */
 void ProjectionEdit::setAsInput()
 {
-	static_cast<QLabel*>(child( "gctpLabel" ))->setText( "Input Projection Info" );
+	findChild<QLabel*>( "gctpLabel" )->setText( "Input Projection Info" );
 	copyButton->hide();
 	lockButton->show();
 
 	QPalette p( QColor( 151, 160, 148 ) ); //INPUT_COLOR mapimgpalette.h
-	p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
+	p.setColor( QPalette::Text, p.color( QPalette::Active, QPalette::Text ) );
 	viewport()->setPalette( p );
-	viewport()->setEraseColor( QColor( 151, 160, 148 ) ); //INPUT_COLOR
 }
 
 /*
@@ -145,14 +144,13 @@ See comments on setAsInput().
 */
 void ProjectionEdit::setAsOutput()
 {
-	static_cast<QLabel*>(child( "gctpLabel" ))->setText( "Output Projection Info" );
+	findChild<QLabel*>( "gctpLabel" )->setText( "Output Projection Info" );
 	copyButton->show();
 	lockButton->hide();
 
 	QPalette p( QColor( 163, 146, 146 ) ); //OUTPUT_COLOR mapimgpalette.h
-	p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
-	viewport()->setPalette( p );
-	viewport()->setEraseColor( QColor( 163, 146, 146 ) );//OUTPUT_COLOR 
+	p.setColor( QPalette::Text, p.color( QPalette::Active, QPalette::Text ) );
+	viewport()->setPalette( p ); 
 }
 
 /*
@@ -162,7 +160,7 @@ other parameters.
 */
 void ProjectionEdit::setFrameInfo( QString projName )
 {
-	projCombo->setCurrentText( projName );
+	projCombo->setCurrentIndex( projCombo->findText( projName ) );
 }
 
 void ProjectionEdit::appearanceSetup()
@@ -186,12 +184,16 @@ void ProjectionEdit::generateWidgets()
 	mainLayout->setMargin( 5 );		
 	
    //titleBox - Contains function buttons and the title of the Tab
-   titleBox = new QHBoxLayout( mainLayout );
+   titleBox = new QHBoxLayout( 0 );
+   titleBox->setParent( mainLayout );
+   mainLayout->addLayout( titleBox );
+
 	copyButton = new QPushButton( QIcon( "./Resources/copy.png" ),
-		"", this, "copyButton" );
+		"", this );
 	lockButton = new QPushButton( QIcon( "./Resources/unlocked.png" ),
-		"", this, "lockedButton" );
-   gctpLabel = new QLabel( "Projection Info", this, "gctpLabel" );
+		"", this );
+   gctpLabel = new QLabel( "Projection Info", this );
+   gctpLabel->setObjectName( "gctpLabel" );
 
    titleBox->addWidget( copyButton );
    titleBox->addWidget( lockButton );
@@ -199,11 +201,14 @@ void ProjectionEdit::generateWidgets()
 
    //projBox - Contains the combo box for selecting which projection to use
    //    Also contains the bad projection label
-   projBox = new QVBoxLayout( mainLayout );
+   projBox = new QVBoxLayout( 0 );
+   projBox->setParent( mainLayout );
+   mainLayout->addLayout( projBox );
+
    projectionLabel = new QLabel( "Projection", this);
-   projCombo = new QComboBox( this, "projCombo" );
+   projCombo = new QComboBox( this );
    badProjBlank = new QWidget( this );
-   badProjLabel = new QLabel( badProjBlank, "badProjLabel" );
+   badProjLabel = new QLabel( badProjBlank );
 
    projBox->addWidget( projectionLabel );
    projBox->addWidget( projCombo );
@@ -215,7 +220,10 @@ void ProjectionEdit::generateWidgets()
 
    zoneBoxLayout = new QVBoxLayout( zoneBox ); //puts layout in widget
    zoneLabel = new QLabel( "UTM Zone Code", this); 
-   zoneSpin = new QSpinBox( -60, 60, 1, this, "zoneSpin" );
+   zoneSpin = new QSpinBox( this );
+   zoneSpin->setMinimum( -60 );
+   zoneSpin->setMaximum( 60 );
+   zoneSpin->setSingleStep( 1 );
 
    zoneBoxLayout->addWidget( zoneLabel );
    zoneBoxLayout->addWidget( zoneSpin );
@@ -236,39 +244,38 @@ void ProjectionEdit::polishWidgets()
    //
    //titleBox
    copyButton->setMaximumWidth( 28 ); copyButton->setMaximumHeight( 28 );
-   QToolTip::add( copyButton, "Copy from input info editor." );
+   copyButton->setToolTip( "Copy from input info editor." );
    lockButton->setMaximumWidth( 28 ); lockButton->setMaximumHeight( 28 );
-   lockButton->setToggleButton( true );
-   QToolTip::add( lockButton, "Use to allow editing of .xml file.<br><br>"
+   lockButton->setCheckable( true );
+   lockButton->setToolTip( "Use to allow editing of .xml file.<br><br>"
       "<b>Note</b>: Locking this info editor automatically saves to the .xml file." );
    QFont largeFont(  gctpLabel->font() );
    largeFont.setPointSize( 12 );
    gctpLabel->setFont( largeFont ); 
-/**/  gctpLabel->setAlignment( Qt::AlignCenter );
-//   titleBox->setMaximumHeight( titleBox->height() );
+  gctpLabel->setAlignment( Qt::AlignCenter );
 
    //projBox
-   projCombo->insertItem( "" );
-   projCombo->insertStringList( projNames );
+   projCombo->addItem( "" );
+   projCombo->addItems( projNames );
    int c = 23;
    projCombo->removeItem( c );
-   projCombo->insertItem( "Space Oblique Mercator b", c );
-   projCombo->insertItem( "Space Oblique Mercator a", c );
+   projCombo->addItem( "Space Oblique Mercator b", c );
+   projCombo->addItem( "Space Oblique Mercator a", c );
    c = 21;
    projCombo->removeItem( c );
-   projCombo->insertItem( "Hotine Oblique Mercator b", c );
-   projCombo->insertItem( "Hotine Oblique Mercator a", c );
+   projCombo->addItem( "Hotine Oblique Mercator b", c );
+   projCombo->addItem( "Hotine Oblique Mercator a", c );
    c = 9;
    projCombo->removeItem( c );
-   projCombo->insertItem( "Equidistant Conic b", c );
-   projCombo->insertItem( "Equidistant Conic a", c );
-   QToolTip::add( projCombo, "Name of map projection" );
+   projCombo->addItem( "Equidistant Conic b", c );
+   projCombo->addItem( "Equidistant Conic a", c );
+   projCombo->setToolTip( "Name of map projection" );
 
    badProjBlank->setFixedHeight(10);
    badProjLabel->setFixedHeight(10);
    badProjLabel->hide();
    badProjLabel->setText( "Bad Projection *" );
-   QToolTip::add( badProjLabel, 
+   badProjLabel->setToolTip( 
       "<b>Bad Projection</b>: This projection either generates "
       "useless data or crashes. It is recommended that you "
       "choose a different one. This issue may be addressed in "
@@ -277,7 +284,7 @@ void ProjectionEdit::polishWidgets()
    //zoneBox
    zoneSpin->setValue( 0 );
    zoneBox->hide();
-   QToolTip::add( zoneSpin, "Zone code used in UTM Projection" );
+   zoneSpin->setToolTip( "Zone code used in UTM Projection" );
 
    //This connection is for updating the gctpBoxes whenever the projection changes
    connect( projCombo, SIGNAL( activated(int) ), this, SLOT( projChange() ) );

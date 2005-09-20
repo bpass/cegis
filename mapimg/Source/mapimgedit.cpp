@@ -1,4 +1,4 @@
-// $Id: mapimgedit.cpp,v 1.10 2005/09/06 20:03:11 lwoodard Exp $
+// $Id: mapimgedit.cpp,v 1.11 2005/09/20 19:46:31 lwoodard Exp $
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -39,7 +39,7 @@ It origionally was but has since been updated to a QTabWidget. Whether or not
 it needs to be renamed is currently undecided.
 */
 QInfoFrame::QInfoFrame( QWidget* parent, const char* name)
-: QTabWidget( parent, name)
+: QTabWidget( parent )
 {
 	mapTab = new MapEdit( this );
 	gctpTab = new ProjectionEdit( this );
@@ -84,20 +84,6 @@ void QInfoFrame::reset()
 	return;
 }
 
-/*
-The fixWidth(uint) function has a very specific purpose within mapimg. It
-is used to manipulate the appearance of the tabs so they maintain shape, style,
-and whitespace how I want it. It is neither dynamic nor elegant, but it is
-practical and needed for my application in mapimg.
-*/
-void QInfoFrame::fixWidth( uint w )
-{
-	setMinimumWidth( w );
-	/*
-	emit setMapTabWidth( w );
-	emit setGctpTabWidth( w );
-	*/
-}
 
 /*
 This function is mainly used by the lock(bool) function to restrict or
@@ -177,13 +163,13 @@ void QInfoFrame::copy( QInfoFrame *src )
 
 	mapTab->rowSpin->setValue( source->mapTab->rowSpin->value() );
 	mapTab->colSpin->setValue( source->mapTab->colSpin->value() );
-	mapTab->pixelCombo->setCurrentItem( 
-		source->mapTab->pixelCombo->currentItem() );
+	mapTab->pixelCombo->setCurrentIndex( 
+		source->mapTab->pixelCombo->currentIndex() );
 	mapTab->pixelEdit->setText( source->mapTab->pixelEdit->text() );
 	mapTab->ulLonEdit->setText( source->mapTab->ulLonEdit->text() );
 	mapTab->ulLatEdit->setText( source->mapTab->ulLatEdit->text() );
-	mapTab->dataCombo->setCurrentItem( 
-		source->mapTab->dataCombo->currentItem() );
+	mapTab->dataCombo->setCurrentIndex( 
+		source->mapTab->dataCombo->currentIndex() );
 
 	if( source->mapTab->hasFillCheck->isChecked() )
 		mapTab->fillEdit->setText( source->mapTab->fillEdit->text() );
@@ -191,8 +177,8 @@ void QInfoFrame::copy( QInfoFrame *src )
 	mapTab->hasNoDataCheck->setChecked( source->mapTab->hasNoDataCheck->isChecked() );
 	mapTab->noDataEdit->setText( source->mapTab->noDataEdit->text() );
 
-	gctpTab->projCombo->setCurrentText( 
-		source->gctpTab->projCombo->currentText() );
+	gctpTab->projCombo->setCurrentIndex( source->gctpTab->projCombo->findText(
+		source->gctpTab->projCombo->currentText() ) );
 	gctpTab->projChange();
 	gctpTab->zoneSpin->setValue( source->gctpTab->zoneSpin->value() );
 	for( int i = 0; i < 15; ++i )
@@ -206,8 +192,8 @@ the signal and updates those two values.
 */
 void QInfoFrame::partnerChanged()
 {
-	mapTab->dataCombo->setCurrentItem(
-		partner->mapTab->dataCombo->currentItem() );
+	mapTab->dataCombo->setCurrentIndex(
+		partner->mapTab->dataCombo->currentIndex() );
 
 	if( mapTab->fillEdit->validator() != 0 )
 	{
@@ -228,7 +214,7 @@ void QInfoFrame::partnerChanged()
 
 	QString fillString = partner->mapTab->fillEdit->text();
 
-	if( fillString.upper() == "UNDEFINED" && static_cast<QLabel*>(mapTab->child( "mapLabel" ))->text().contains( "Output", false ) )
+	if( fillString.toUpper() == "UNDEFINED" && mapTab->findChild<QLabel*>( "mapLabel" )->text().contains( "Output", Qt::CaseInsensitive ) )
 	{
 		mapTab->fillEdit->setEnabled( true );
 		mapTab->fillButton->setShown( true );
@@ -278,8 +264,8 @@ void QInfoFrame::lock( bool on, bool saveFile )
 	   mapTab->lockButton->setIcon( QIcon( "./Resources/unlocked.png" ) );
 	   gctpTab->lockButton->setIcon( QIcon( "./Resources/unlocked.png" ) );
    }
-   mapTab->lockButton->setOn( on );
-   gctpTab->lockButton->setOn( on );
+   mapTab->lockButton->setChecked( on );
+   gctpTab->lockButton->setChecked( on );
 
 	locking = false;
 
@@ -318,7 +304,7 @@ bool QInfoFrame::frame()
 void QInfoFrame::getFill()
 {
 	RasterInfo inf;
-	if( static_cast<QLabel*>(mapTab->child( "mapLabel" ))->text().contains( "Output", false ) )
+	if( mapTab->findChild<QLabel*>( "mapLabel" )->text().contains( "Output", Qt::CaseInsensitive ) )
 		inf.copy( partner->info() );
 	else
 		inf.copy( info() );
@@ -352,7 +338,7 @@ void QInfoFrame::setInfo( RasterInfo &input )
 
 		QString cap( xmlName );
 		cap.replace('\\', '/');
-		int index = cap.findRev("/");
+		int index = cap.lastIndexOf( "/" );
 		index += 1;
 		cap = cap.right(cap.length() - index);
 
@@ -363,15 +349,15 @@ void QInfoFrame::setInfo( RasterInfo &input )
 	mapTab->rowSpin->setValue( input.rows() );
 	mapTab->colSpin->setValue( input.cols() );
 
-	mapTab->unitCombo->setCurrentText(
-		unitNames[input.unitNumber()] );
-	mapTab->spheroidCombo->setCurrentText(
-		spheroidNames[input.datumNumber()] );
+	mapTab->unitCombo->setCurrentIndex( mapTab->unitCombo->findText(
+		unitNames[input.unitNumber()] ) );
+	mapTab->spheroidCombo->setCurrentIndex( mapTab->spheroidCombo->findText(
+		spheroidNames[input.datumNumber()] ) );
 
 	mapTab->pixelEdit->setText( QString::number(input.pixelSize(), 'f', 6) );
-	int index = pixelValues.findIndex( mapTab->pixelEdit->text() );
+	int index = pixelValues.indexOf( mapTab->pixelEdit->text() );
 	if( index == -1 ) index = 5;
-	mapTab->pixelCombo->setCurrentItem( index + 1 );
+	mapTab->pixelCombo->setCurrentIndex( index + 1 );
 	mapTab->pixelEdit->setShown( index == 5 );
 
 	mapTab->ulLonEdit->setText( QString::number(input.ul_X(), 'f', 6) );
@@ -381,7 +367,7 @@ void QInfoFrame::setInfo( RasterInfo &input )
 	dtype += QString::number(input.bitCount());
 	dtype += " Bit ";
 	dtype += input.dataType();
-	mapTab->dataCombo->setCurrentText( dtype );
+	mapTab->dataCombo->setCurrentIndex( mapTab->dataCombo->findText( dtype ) );
 
 	QString fillString = "Undefined";
 	if( input.hasFillValue() )
@@ -408,8 +394,8 @@ void QInfoFrame::setInfo( RasterInfo &input )
 	if( mapTab->noDataEdit->validator() != 0 )
 	{
 		((MapimgValidator*)mapTab->noDataEdit->validator())->setDataType( dtype );
-		((MapimgValidator*)mapTab->noDataEdit->validator())->setAllowUndefined( noDataString.upper() == "UNDEFINED" );
-		mapTab->hasNoDataCheck->setChecked( !(noDataString.upper() == "UNDEFINED") );
+		((MapimgValidator*)mapTab->noDataEdit->validator())->setAllowUndefined( noDataString.toUpper() == "UNDEFINED" );
+		mapTab->hasNoDataCheck->setChecked( !(noDataString.toUpper() == "UNDEFINED") );
 		mapTab->noDataEdit->setDisabled( true );
 		mapTab->noDataEdit->validator()->fixup( noDataString );
 	}
@@ -427,11 +413,12 @@ void QInfoFrame::setInfo( RasterInfo &input )
 	if( ( projNum == 20 || projNum == 22 ) && input.gctpParam(12) == 1 )
 		variation = 'b';
 	if( projNum == 8 || projNum == 20 || projNum == 22 )
-		gctpTab->projCombo->setCurrentText( 
-		projNames[input.projectionNumber()] + " " + variation );
+		gctpTab->projCombo->setCurrentIndex( gctpTab->projCombo->findText(
+		projNames[input.projectionNumber()] + " " + variation ) );
 	else
-		gctpTab->projCombo->setCurrentText(
-		projNames[input.projectionNumber()] );		//This is where it breaks projNum=-1
+		gctpTab->projCombo->setCurrentIndex( gctpTab->projCombo->findText (
+		projNames[input.projectionNumber()] ) );	
+	
 	gctpTab->projChange();
 
 	gctpTab->zoneSpin->setValue( input.zoneNumber() );
@@ -461,18 +448,18 @@ RasterInfo QInfoFrame::info()
 		mapTab->fillEdit->text().toDouble(),
 		mapTab->noDataEdit->text().toDouble() );
 
-	if( mapTab->fillEdit->text().upper() == "UNDEFINED" )
+	if( mapTab->fillEdit->text().toUpper() == "UNDEFINED" )
 		ret.setHasFillValue( false );
 	else
 		ret.setHasFillValue( true );
 
-	if( mapTab->noDataEdit->text().upper() == "UNDEFINED" )
+	if( mapTab->noDataEdit->text().toUpper() == "UNDEFINED" )
 		ret.setHasNoDataValue( false );
 	else
 		ret.setHasNoDataValue( true );
 
 	ret.setProjection(
-		combo2proj( gctpTab->projCombo->currentItem() ),
+		combo2proj( gctpTab->projCombo->currentIndex() ),
 		gctpTab->zoneSpin->value() );
 
 	for( int i = 0; i < 15; ++i )

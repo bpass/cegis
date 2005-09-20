@@ -109,7 +109,7 @@ void MapEdit::fillCheckToggled( bool state )
 	if(fillEdit->validator() != 0 )
 		((MapimgValidator*)fillEdit->validator())->setAllowUndefined( !state );
 
-	if( state == QCheckBox::Off )
+	if( state == Qt::Unchecked ) 
 	{
 		lastFillValue = fillEdit->text();
 		fillEdit->setText( "Undefined" );
@@ -186,7 +186,8 @@ with which data type it is trying to validate.
 void MapEdit::dataChange( const QString& newDataType )
 {
 	QString tempText = "";
-	if( newDataType.stripWhiteSpace() != "" )
+	//newDataType.remove( ' ' );	//added
+	if( newDataType.stripWhiteSpace() != "" )	//newDataType.stripWhiteSpace()
 	{
 		((MapimgValidator*)fillEdit->validator())->setDataType( newDataType );
 		tempText = fillEdit->text();
@@ -208,14 +209,14 @@ void MapEdit::reset()
 	fileEdit->setText( "" );
 	rowSpin->setValue( 0 );
 	colSpin->setValue( 0 );
-	unitCombo->setCurrentItem( 3 );
-	spheroidCombo->setCurrentItem( 20 );
-	pixelCombo->setCurrentItem( 0 );
+	unitCombo->setCurrentIndex( 3 );	
+	spheroidCombo->setCurrentIndex( 20 );	
+	pixelCombo->setCurrentIndex( 0 );		
 	pixelEdit->setText( "0.000000" );
 	pixelEdit->setShown( false );
 	ulLonEdit->setText( "0.000000" );
 	ulLatEdit->setText( "0.000000" );
-	dataCombo->setCurrentItem( 0 );
+	dataCombo->setCurrentIndex( 0 );		
 	fillEdit->setText( "0.000000" );
 	noDataEdit->setText( "0.000000" );
 	hasFillCheck->setChecked( true );
@@ -266,16 +267,15 @@ here as an additional step in initialization.
 */
 void MapEdit::setAsInput()
 {
-	static_cast<QLabel*>(child( "mapLabel" ))->setText( "Input Map Info" );
+	findChild<QLabel*>( "mapLabel" )->setText( "Input Map Info" );
 	fileEdit->setDisabled( true );
 	copyButton->hide();
 	lockButton->show();
 	fillButton->hide();
 
 	QPalette p( QColor( 151, 160, 148 ) ); //INPUT_COLOR mapimgpalette.h
-	p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
+	p.setColor( QPalette::Text, p.color( QPalette::Text ) );
 	viewport()->setPalette( p );
-	viewport()->setEraseColor( QColor( 151, 160, 148 ) ); //INPUT_COLOR
 }
 
 /*
@@ -283,7 +283,7 @@ See comments on setAsInput().
 */
 void MapEdit::setAsOutput()
 {
-	static_cast<QLabel*>(child( "mapLabel" ))->setText( "Output Map Info" );
+	findChild<QLabel*>( "mapLabel" )->setText( "Output Map Info" );
 	fileEdit->setDisabled( true );
 	fileEdit->setText( "Use Save button to reproject" );
 	copyButton->show();
@@ -291,9 +291,8 @@ void MapEdit::setAsOutput()
 	fillButton->hide();
 
 	QPalette p( QColor( 163, 146, 146 ) ); //OUTPUT_COLOR mapimgpalette.h
-	p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
+	p.setColor( QPalette::Text, p.color( QPalette::Text ) );
 	viewport()->setPalette( p );
-	viewport()->setEraseColor( QColor( 163, 146, 146 ) );//OUTPUT_COLOR 
 
 	rowSpin->setDisabled( true );
 	colSpin->setDisabled( true );
@@ -353,7 +352,7 @@ void MapEdit::appearanceSetup()
 	setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 	
-	contents = new QWidget( viewport(), "contents" );	
+	contents = new QWidget( viewport(), 0 );	
 
 		//Created a mainLayout to inorder to insert multiple Layouts into 
 	mainLayout = new QVBoxLayout( contents );	//the contents widget
@@ -368,15 +367,18 @@ void MapEdit::generateWidgets()
 	////////STAGE 2: Generate Widgets
 	//
 	//titleBox - Contains function buttons and the title of the Tab
-	titleBox = new QHBoxLayout( mainLayout );	
+	titleBox = new QHBoxLayout( 0 );
+	titleBox->setParent( mainLayout );
+	mainLayout->addLayout( titleBox );
 
 	copyButton = new QPushButton( QIcon( "./Resources/copy.png" ),
-		"", this, "copyButton" );
+		"", this );
 	lockButton = new QPushButton( QIcon( "./Resources/unlocked.png" ),
-		"", this, "lockButton");
-	mapLabel = new QLabel( "Map Info", this, "mapLabel" );
+		"", this );
+	mapLabel = new QLabel( "Map Info", this );
+	mapLabel->setObjectName( "mapLabel" );
 	frameButton = new QPushButton( QIcon( "./Resources/calculate.png" ),
-		"", this, "frameButton");	
+		"", this );	
 	
 		//Adding widgets to the titleBox group layout
 	titleBox->addWidget( copyButton );	
@@ -385,19 +387,29 @@ void MapEdit::generateWidgets()
 	titleBox->addWidget( frameButton );		
 
 	//fileBox - Contains a lineedit for displaying the ".info" filename
-	fileBox = new QVBoxLayout( mainLayout );
+	fileBox = new QVBoxLayout( 0 );
+	fileBox->setParent( mainLayout );
+	mainLayout->addLayout( fileBox );
 	fileNameLabel = new QLabel( "File Name:", this );
-	fileEdit = new QLineEdit( "", "", this, "fileEdit" );
+	fileEdit = new QLineEdit( "", this );
 	
 	fileBox->addWidget( fileNameLabel );
 	fileBox->addWidget( fileEdit );
 
 	//rowcolBox - Contains two spin boxes for defining the pixel dimensions
-	rowcolBox = new QVBoxLayout( mainLayout );
+	rowcolBox = new QVBoxLayout( 0 );
+	rowcolBox->setParent( mainLayout );
+	mainLayout->addLayout( rowcolBox );
 	rowsOfPixelsLabel = new QLabel( "Rows of Pixels:", this );
-	rowSpin = new QSpinBox( 0, 100000000, 1, this, "rowSpin" ); 
+	rowSpin = new QSpinBox( this ); 
+	rowSpin->setMinimum( 0 );
+	rowSpin->setMaximum( 100000000 );
+	rowSpin->setSingleStep( 1 );
 	colsOfPixelsLabel = new QLabel( "Columns of Pixels:", this );
-	colSpin = new QSpinBox( 0, 100000000, 1, this, "colSpin" );
+	colSpin = new QSpinBox( this );
+	colSpin->setMinimum( 0 );
+	colSpin->setMaximum( 100000000 );
+	colSpin->setSingleStep( 1 );
 		
 		//Adding widgets to the rowcolBox group layout
 	rowcolBox->addWidget( rowsOfPixelsLabel );
@@ -406,15 +418,17 @@ void MapEdit::generateWidgets()
 	rowcolBox->addWidget( colSpin );
 
 	//comboBox - Contains four combo boxes for selecting preset values
-	comboBox = new QVBoxLayout( mainLayout );
+	comboBox = new QVBoxLayout( 0 );
+	comboBox->setParent( mainLayout );
+	mainLayout->addLayout( comboBox );
 	comboBox->setSizeConstraint( QLayout::SetNoConstraint );
-	unitLabel = new QLabel( "Units", this, "unitLabel" );
-	unitCombo = new QComboBox( this, "unitCombo" );
-	spheroidLabel = new QLabel( "Spheroid", this, "spheroidLabel" );
-	spheroidCombo = new QComboBox( this, "spheroidCombo" );
+	unitLabel = new QLabel( "Units", this );
+	unitCombo = new QComboBox( this );
+	spheroidLabel = new QLabel( "Spheroid", this );
+	spheroidCombo = new QComboBox( this );
 	pixelSizeLabel = new QLabel( "Pixel Size", this );
-	pixelCombo = new QComboBox( this, "pixelCombo" );
-	pixelEdit = new QLineEdit( this, "pixelEdit" );
+	pixelCombo = new QComboBox( this );
+	pixelEdit = new QLineEdit( this );
 
 		//Adding widgets to comboBox layout
 	comboBox->addWidget( unitLabel );
@@ -426,11 +440,13 @@ void MapEdit::generateWidgets()
 	comboBox->addWidget( pixelEdit );
 
 	//ulBox - Contains line edits for defining the upper left corner of the map
-	ulBox = new QVBoxLayout( mainLayout );
+	ulBox = new QVBoxLayout( 0 );
+	ulBox->setParent( mainLayout );
+	mainLayout->addLayout( ulBox );
 	ulLonLabel = new QLabel( "UL Longitude in meters", this );
-	ulLonEdit = new QLineEdit( this, "ulLonEdit" );
+	ulLonEdit = new QLineEdit( this );
 	ulLatLabel =  new QLabel( "UL Latitude in meters", this);
-	ulLatEdit = new QLineEdit( this, "ulLatEdit" );
+	ulLatEdit = new QLineEdit( this );
 		
 		//Adding widgets to the ulBox layout
 	ulBox->addWidget( ulLonLabel );
@@ -439,11 +455,13 @@ void MapEdit::generateWidgets()
 	ulBox->addWidget( ulLatEdit );
 
 	//dataBox - Contains one combo box for selecting what type of data it is
-	dataBox = new QVBoxLayout( mainLayout );
+	dataBox = new QVBoxLayout( 0 );
+	dataBox->setParent( mainLayout );
+	mainLayout->addLayout( dataBox );
 	dataBox->setSizeConstraint( QLayout::SetNoConstraint );
 	dataBox->setSpacing( 0 );
 	pixelDataTypeLabel = new QLabel( "Pixel Data Type", this);
-	dataCombo = new QComboBox( this, "dataCombo" );
+	dataCombo = new QComboBox( this );
 	fillValueLabel = new QLabel( "Fill Value", this );
 	
 	dataBox->addWidget( pixelDataTypeLabel );
@@ -451,11 +469,13 @@ void MapEdit::generateWidgets()
 	dataBox->addWidget( fillValueLabel );
 
 	//fillBox - Contains hidable checkbox, a lineEdit and a pushbutton; goes into dataBox
-	fillBox = new QHBoxLayout( dataBox );	
+	fillBox = new QHBoxLayout( 0 );	
+	fillBox->setParent( dataBox );
+	dataBox->addLayout( fillBox );	
 	fillBox->setSizeConstraint( QLayout::SetNoConstraint );
-	hasFillCheck = new QCheckBox( this, "hasFillCheck" );
+	hasFillCheck = new QCheckBox( this );
 	hasFillCheck->hide(); 
-	fillEdit = new QLineEdit( this, "fillEdit" );
+	fillEdit = new QLineEdit( this );
 	fillEdit->installEventFilter( this );
 	fillButton = new QPushButton( "?", this );
 	
@@ -468,11 +488,13 @@ void MapEdit::generateWidgets()
 	dataBox->addWidget( noDataValueLabel );
 
 	//noDataBox - Contains hidable checkbox and a lineEdit; goes into dataBox
-	noDataBox = new QHBoxLayout( dataBox );	
+	noDataBox = new QHBoxLayout( 0 );	
+	noDataBox->setParent( dataBox );
+	dataBox->addLayout( noDataBox );	
 	noDataBox->setSizeConstraint( QLayout::SetMinimumSize );
-	hasNoDataCheck = new QCheckBox( this, "hasNoDataCheck" );
+	hasNoDataCheck = new QCheckBox( this );
 	hasNoDataCheck->hide();
-	noDataEdit = new QLineEdit( this, "noDataEdit" );
+	noDataEdit = new QLineEdit( this );
 
 		//Adding widgets to noDataBox and adding noDataBox to dataBox
 	noDataBox->addWidget( hasNoDataCheck );
@@ -485,73 +507,73 @@ void MapEdit::polishWidgets()
 	//
 	//titleBox
 	copyButton->setMaximumWidth( 28 ); copyButton->setMaximumHeight( 28 );
-	QToolTip::add( copyButton, "Copy from input info editor." );
+	copyButton->setToolTip( "Copy from input info editor." );
 	lockButton->setMaximumWidth( 28 ); lockButton->setMaximumHeight( 28 );
-	lockButton->setToggleButton( true );
-	QToolTip::add( lockButton, "Use to allow editing of .xml file.<br><br>"
+	lockButton->setCheckable( true );
+	lockButton->setToolTip( "Use to allow editing of .xml file.<br><br>"
 		"<b>Note</b>: Locking this info editor automatically saves to the .xml file." );
 	QFont largeFont(  mapLabel->font() );
 	largeFont.setPointSize( 12 );
 	mapLabel->setFont( largeFont );
 	mapLabel->setAlignment(Qt::AlignCenter);
 	frameButton->setMaximumWidth( 28 ); frameButton->setMaximumHeight( 28 );
-	QToolTip::add( frameButton, "Calculate rows, columns, and upper left coordinates." );
+	frameButton->setToolTip( "Calculate rows, columns, and upper left coordinates." );
 
 	//fileBox
 	fileEdit->setReadOnly( true );
-	QToolTip::add( fileEdit, "File name of the loaded .xml file" );
+	fileEdit->setToolTip( "File name of the loaded .xml file" );
 
 	//rowcolBox
-	QToolTip::add( rowSpin, "Height of the map in pixels" );
-	QToolTip::add( colSpin, "Width of the map in pixels" );
+	rowSpin->setToolTip( "Height of the map in pixels" );
+	colSpin->setToolTip( "Width of the map in pixels" );
 
 	//comboBox
-	unitCombo->insertItem( "" );
-	unitCombo->insertStringList( unitNames );
-	unitCombo->setCurrentText( "Meters" );
+	unitCombo->addItem( "" );
+	unitCombo->addItems( unitNames );
+	unitCombo->setCurrentIndex( 3 );	//displays Meters
 	unitCombo->setDisabled( true );
-	QToolTip::add( unitCombo, "Units for all measurements<br><br>"
+	unitCombo->setToolTip( "Units for all measurements<br><br>"
 		"<b>Note</b>: Currently only \"Meters\" are supported." );
-	spheroidCombo->insertItem( "" );
-	spheroidCombo->insertStringList( spheroidNames );
-	spheroidCombo->setCurrentText( "Sphere of Radius 6370997 meters" );
+	spheroidCombo->addItem( "" );
+	spheroidCombo->addItems( spheroidNames );
+	spheroidCombo->setCurrentIndex( 20 ); //Sphere of Radius 6370997 meters
 	spheroidCombo->setDisabled( true );
-	QToolTip::add( spheroidCombo, "Name of the spheroid used in projection<br><br>"
+	spheroidCombo->setToolTip( "Name of the spheroid used in projection<br><br>"
 		"<b>Note</b>: Currently only \"Sphere of Radius 6370997 meters\" is supported." );
-	pixelCombo->insertItem( "" );
-	pixelCombo->insertStringList( pixelSizes );
-	QToolTip::add( pixelCombo, "Size of each pixel in the raster image" );
-	QToolTip::add( pixelEdit, "Pixel size<br>"
+	pixelCombo->addItem( "" );
+	pixelCombo->addItems( pixelSizes );
+	pixelCombo->setToolTip( "Size of each pixel in the raster image" );
+	pixelEdit->setToolTip( "Pixel size<br>"
 		"<b>Meters:</b> Entered value must be from 0 to 10000000." );
 	pixelEdit->setValidator( new MapimgValidator( 0, 10000000, 12, pixelEdit ) );
 	pixelEdit->hide();
 
 	//ulBox
 	ulLonEdit->setValidator( new MapimgValidator( -100000000, 100000000, 12, ulLonEdit ) );
-	QToolTip::add( ulLonEdit, "Longitude of upper left corner of map<br>"
+	ulLonEdit->setToolTip( "Longitude of upper left corner of map<br>"
 		"<b>Meters:</b> Entered value must be from -100000000 to 100000000." );
 	ulLatEdit->setValidator( new MapimgValidator( -100000000, 100000000, 12, ulLatEdit ) );
-	QToolTip::add( ulLatEdit, "Latitude of upper left corner of map<br>"
+	ulLatEdit->setToolTip( "Latitude of upper left corner of map<br>"
 		"<b>Meters:</b> Entered value must be from -100000000 to 100000000." );
 
 	//dataBox
-	dataCombo->insertItem( "" );
-	dataCombo->insertStringList( dataTypes );
-	QToolTip::add( dataCombo, "Data type of each pixel in the raster image" );
+	dataCombo->addItem( "" );
+	dataCombo->addItems( dataTypes );
+	dataCombo->setToolTip( "Data type of each pixel in the raster image" );
 	fillEdit->setValidator( new MapimgValidator( -100000000, 100000000, INFO_PRECISION, fillEdit ) );
-	QToolTip::add( hasFillCheck, "Toggle whether fill value is defined.<br>"
+	hasFillCheck->setToolTip( "Toggle whether fill value is defined.<br>"
 		"<b>Note</b>: The fill value is optional for input parameters only, "
 		"but if it is defined in the input then it is forced in the output." );
-	QToolTip::add( fillEdit, "Fill value to represent a pixel outside the map frame<br>"
+	fillEdit->setToolTip( "Fill value to represent a pixel outside the map frame<br>"
 		"Entered value must be from -100000000 to 100000000." );
 	fillButton->setMaximumSize( 20, 20 );
-	QToolTip::add( hasNoDataCheck, "Toggle whether No Data Value is defined.<br>"
+	hasNoDataCheck->setToolTip( "Toggle whether No Data Value is defined.<br>"
 		"<b>Note</b>: The no data value is optional for both input and output parameters, "
 		"but if it is defined in the input then it is forced in the output." );
-	QToolTip::add( fillButton, "Recommend fill value by reading file and "
+	fillButton->setToolTip( "Recommend fill value by reading file and "
 		"solving for the maximum value + 2" );
 	noDataEdit->setValidator( new MapimgValidator( -100000000, 100000000, INFO_PRECISION, noDataEdit ) );
-	QToolTip::add( noDataEdit, "\"No Data\" value to represent a pixel inside the map frame"
+	noDataEdit->setToolTip( "\"No Data\" value to represent a pixel inside the map frame"
 		" with no value<br>"
 		"Entered value must be from -100000000 to 100000000." );
 

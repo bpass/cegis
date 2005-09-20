@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.h,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: mapimgvalidator.h,v 1.4 2005/09/28 20:24:28 lwoodard Exp $
 
 #ifndef MAPIMGVALIDATOR_H
 #define MAPIMGVALIDATOR_H
@@ -22,11 +22,11 @@ class MapimgValidator : public QValidator
       Q_PROPERTY( int decimals READ decimals WRITE setDecimals )
 
 public:
-   MapimgValidator( QObject* parent, const char* name = 0 );
-   MapimgValidator( QString mapimgDataType, QObject* parent, const char* name = 0 );
-   MapimgValidator( QString mapimgDataType, bool allowUndefined, QObject* parent, const char* name = 0 );
-   MapimgValidator( double bottom, double top, int decimals, QObject* parent, const char* name = 0 );
-   MapimgValidator( double bottom, double top, int decimals, bool allowUndefined, QObject* parent = 0, const char* name = 0 );
+   MapimgValidator( QObject* parent );
+   MapimgValidator( QString mapimgDataType, QObject* parent );
+   MapimgValidator( QString mapimgDataType, bool allowUndefined, QObject* parent );
+   MapimgValidator( double bottom, double top, int decimals, QObject* parent );
+   MapimgValidator( double bottom, double top, int decimals, bool allowUndefined, QObject* parent = 0 );
    ~MapimgValidator();
 
    QValidator::State validate( QString & input, int & ) const;

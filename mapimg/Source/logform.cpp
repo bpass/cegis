@@ -1,4 +1,4 @@
-// $Id: logform.cpp,v 1.3 2005/08/16 12:57:20 lwoodard Exp $
+// $Id: logform.cpp,v 1.4 2005/09/20 19:46:31 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -36,31 +36,31 @@
 *  The dialog will by default be modeless, unless you set 'modal' to
 *  TRUE to construct a modal dialog.
 */
-logForm::logForm( QWidget* parent, const char* name, bool modal, Qt::WFlags fl )
-: QDialog( parent, name, modal, fl )
+logForm::logForm( QWidget* parent, bool modal, Qt::WFlags fl )
+: QDialog( parent, fl )
 {
-   if ( !name )
-      setName( "logForm" );
+   setModal( modal );
 
    setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)0, 0, 0, sizePolicy().hasHeightForWidth() ) );
    setMinimumSize( QSize( 300, 300 ) );
    setMaximumSize( QSize( 600, 600 ) );
    setBaseSize( QSize( 400, 375 ) );
-   logFormLayout = new QGridLayout( this, 1, 1, 11, 6, "logFormLayout"); 
+   logFormLayout = new QGridLayout( this ); //, 1, 1, 11, 6, "logFormLayout"); 
 
-   layout3 = new QHBoxLayout( 0, 0, 6, "layout3"); 
+   layout3 = new QHBoxLayout( 0 );	//, 0, 6, "layout3"); 
+   layout3->setSpacing( 6 );	//added
    spacer1 = new QSpacerItem( 210, 21, QSizePolicy::Expanding, QSizePolicy::Minimum );
    layout3->addItem( spacer1 );
 
-   saveButton = new QPushButton( this, "saveButton" );
+   saveButton = new QPushButton( this );
    layout3->addWidget( saveButton );
 
-   okButton = new QPushButton( this, "okButton" );
+   okButton = new QPushButton( this );
    layout3->addWidget( okButton );
 
    logFormLayout->addLayout( layout3, 1, 0 );
 
-   logViewer = new QTextEdit( this, "logViewer" );
+   logViewer = new QTextEdit( this );
 
    logFormLayout->addWidget( logViewer, 0, 0 );
    languageChange();
@@ -93,8 +93,8 @@ logForm::~logForm()
 */
 void logForm::languageChange()
 {
-   setCaption( tr( "MapIMG Log..." ) );
-   setIconText( QString::null );
+   setWindowTitle( tr( "MapIMG Log..." ) );
+   //setIconText( QString::null );
    saveButton->setText( tr( "&Save..." ) );
    okButton->setText( tr( "&OK" ) );
 }
@@ -113,7 +113,8 @@ void logForm::saveLog()
    if( s.isNull() ) return;   //cancel pressed
 
    //add default extension if none is provided
-   if( (s.find( '.' ) == -1 ) ) s.append( ".txt" );
+   //if( (s.find( '.' ) == -1 ) ) s.append( ".txt" );
+   if( s.contains( '.' ) ) s.append( ".txt" );
 
    // if output file exists, ask about overwriting
    if( !s.isNull()  &&  QFile::exists(s) )
@@ -172,8 +173,8 @@ void logForm::refreshLog()
 void logForm::loadLog()
 {
    QString fullLog = ""; 
-  /****/ char *tempLine = "";
-   const Q_LONG MAX_LINE_LENGTH = 500;  //maximum number of characters to read at one time
+   char *tempLine = "";
+   const long MAX_LINE_LENGTH = 500;  //maximum number of characters to read at one time
 
    if( QFile::exists( logFile ) )
    {

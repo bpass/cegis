@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.cpp,v 1.2 2005/08/05 16:02:00 lwoodard Exp $
+// $Id: mapimgvalidator.cpp,v 1.3 2005/09/20 19:46:31 lwoodard Exp $
 
 #include <QValidator>
 #include <QString>
@@ -10,8 +10,8 @@
 #include "mapimgvalidator.h"
 #include "mapimgdatatypes.h"
 
-MapimgValidator::MapimgValidator( QObject* parent, const char* name )
-: QValidator( parent, name )
+MapimgValidator::MapimgValidator( QObject* parent )
+: QValidator( parent )
 {
    m_bottom = -HUGE_VAL;
    m_top = HUGE_VAL;
@@ -19,8 +19,8 @@ MapimgValidator::MapimgValidator( QObject* parent, const char* name )
    m_allowUndefined = false;
 }
 
-MapimgValidator::MapimgValidator( QString mapimgDataType, QObject* parent, const char* name )
-: QValidator( parent, name )
+MapimgValidator::MapimgValidator( QString mapimgDataType, QObject* parent )
+: QValidator( parent )
 {
    m_bottom = 0.0;
    m_top = 0.0;
@@ -30,8 +30,8 @@ MapimgValidator::MapimgValidator( QString mapimgDataType, QObject* parent, const
    setDataType( mapimgDataType );
 }
 
-MapimgValidator::MapimgValidator( QString mapimgDataType, bool allowUndefined, QObject* parent, const char* name )
-: QValidator( parent, name )
+MapimgValidator::MapimgValidator( QString mapimgDataType, bool allowUndefined, QObject* parent )
+: QValidator( parent )
 {
    m_bottom = 0.0;
    m_top = 0.0;
@@ -119,8 +119,8 @@ void MapimgValidator::setDataType( QString mapimgDataType, bool quiet )
    return;
 }
 
-MapimgValidator::MapimgValidator( double bottom, double top, int decimals, QObject* parent, const char* name )
-: QValidator( parent, name )
+MapimgValidator::MapimgValidator( double bottom, double top, int decimals, QObject* parent )
+: QValidator( parent )
 {
    m_bottom = bottom;
    m_top = top;
@@ -128,8 +128,8 @@ MapimgValidator::MapimgValidator( double bottom, double top, int decimals, QObje
    m_allowUndefined = false;
 }
 
-MapimgValidator::MapimgValidator( double bottom, double top, int decimals, bool allowUndefined, QObject* parent, const char* name )
-: QValidator( parent, name )
+MapimgValidator::MapimgValidator( double bottom, double top, int decimals, bool allowUndefined, QObject* parent )
+: QValidator( parent )
 {
    m_bottom = bottom;
    m_top = top;
@@ -172,28 +172,26 @@ void MapimgValidator::setAllowUndefined( bool allow )
 
 QValidator::State MapimgValidator::validate( QString & input, int & ) const
 {
-   if( input.upper() == "UNDEFINED" && m_allowUndefined )
+   if( input.toUpper() == "UNDEFINED" && m_allowUndefined )
    {
       input = "Undefined";
       return Acceptable;
    }
 
    QRegExp empty( QString::fromLatin1(" *-?\\.? *") );
-   if ( m_bottom >= 0 &&
-      input.stripWhiteSpace().startsWith(QString::fromLatin1("-")) )
+   if ( m_bottom >= 0 && input.remove(' ').startsWith( QString::fromLatin1("-")))
       return Invalid;
    if ( empty.exactMatch(input) )
       return Intermediate;
    bool ok = TRUE;
    double entered = input.toDouble( &ok );
-/****/
    bool nume = FALSE;
    nume = input.contains( 'e');
-/****/
+
    if ( !ok ) {
       // explicit exponent regexp
       QRegExp expexpexp( QString::fromLatin1("[Ee][+-]?\\d*$") );
-      int eeePos = expexpexp.search( input );
+	  int eeePos = expexpexp.indexIn( input );
       if ( eeePos > 0 && nume == 1 ) {
          QString mantissa = input.left( eeePos );
          entered = mantissa.toDouble( &ok );
@@ -208,10 +206,10 @@ QValidator::State MapimgValidator::validate( QString & input, int & ) const
 
    QString tempInput = QString::number( entered );
 
-   int tempj = tempInput.find( '.' );
-   int i = input.find( '.' );
+   int tempj = tempInput.indexOf( '.' );
+   int i = input.indexOf( '.' );
 
-   if( (i >= 0 || tempj >= 0 || input.contains("e-", FALSE)) && m_decimals == 0 )
+   if( (i >= 0 || tempj >= 0 || input.contains("e-", Qt::CaseInsensitive)) && m_decimals == 0 )
    {
       return Invalid;
    }
@@ -236,7 +234,7 @@ QValidator::State MapimgValidator::validate( QString & input, int & ) const
 
 void MapimgValidator::fixup( QString& input ) const
 {
-   if( input.upper() == "UNDEFINED" && m_allowUndefined )
+   if( input.toUpper() == "UNDEFINED" && m_allowUndefined )
    {
       input = "Undefined";
       return;
@@ -258,7 +256,7 @@ void MapimgValidator::fixup( QString& input ) const
    /*fix decimal*/
    if( m_decimals == 0 )
    {
-      int decimalPlace = input.find( '.' );
+      int decimalPlace = input.indexOf( '.' );
 
       if( decimalPlace != -1 )
       {

@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.5 2005/08/19 20:43:56 rbuehler Exp $
+// $Id: imgio.h,v 1.6 2005/09/20 19:46:31 lwoodard Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -272,7 +272,7 @@ public:
       const qulonglong SUBSAMPLE = MAXSAMPLE / 3;
       const qulonglong INPUTSIZE = input.rows() * input.cols();
 
-      QFile inFile( input.imgFileName().ascii() );
+      QFile inFile( input.imgFileName().toAscii() );
       inFile.open( QIODevice::ReadOnly );
 
       if( !inFile.isOpen() || !inFile.isReadable() )
@@ -289,7 +289,7 @@ public:
       {
          type *valBuffer = new type[SUBSAMPLE];
 
-         inFile.at( 0 );
+         inFile.seek( 0 );	
          inFile.readBlock( (char*&)valBuffer, sizeof(type) * SUBSAMPLE );
          max_value = valBuffer[0];
          for( index = 0; index < SUBSAMPLE; index++ )
@@ -298,7 +298,7 @@ public:
                max_value = *((type*)valBuffer + index);
          }
 
-         inFile.at( ((INPUTSIZE/2) - SUBSAMPLE) * sizeof(type) );
+         inFile.seek( ((INPUTSIZE/2) - SUBSAMPLE) * sizeof(type) );
          inFile.readBlock( (char*&)valBuffer, SUBSAMPLE * sizeof(type) );
          for( index = 0; index < SUBSAMPLE; index++ )
          {
@@ -306,7 +306,7 @@ public:
                max_value = *((type*)valBuffer + index);
          }
 
-         inFile.at( (INPUTSIZE - SUBSAMPLE) * sizeof(type) );
+         inFile.seek( (INPUTSIZE - SUBSAMPLE) * sizeof(type) );
          inFile.readBlock( (char*&)valBuffer, SUBSAMPLE * sizeof(type) );
          for( index = 0; index < SUBSAMPLE; index++ )
          {
@@ -320,7 +320,7 @@ public:
       {
          type *valBuffer = new type[SUBSAMPLE];
 
-         inFile.at( 0 );
+         inFile.seek( 0 );
          inFile.readBlock( (char*&)valBuffer, sizeof(type) * INPUTSIZE );
          max_value = valBuffer[0];
          for( index = 0; index < INPUTSIZE; index++ )

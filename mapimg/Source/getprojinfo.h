@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.5 2005/08/19 20:43:56 rbuehler Exp $
+// $Id: getprojinfo.h,v 1.6 2005/09/20 19:46:31 lwoodard Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -44,7 +44,7 @@ extern "C"
 #include "proj.h"
 }
 
-static char*  logFile = strdup( QDir::currentDirPath().append("/mapimg.log").ascii() );
+static char*  logFile = strdup( QDir::currentPath().append("/mapimg.log").toAscii() );
 static long   errorMode = 3;    //print both errors and parameters to a precreated
 static long   paramMode = 3;    //FILE* to logFile
 
@@ -587,7 +587,7 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
       if( informationDisplay.exec() == QMessageBox::Yes )      //corresponding to the "View Log" Button
       {
          logForm *logform;
-         logform = new logForm(0,0,true,WINDOW_FLAGS);
+         logform = new logForm(0,true,WINDOW_FLAGS);
          logform->setPalette( AUTHORFORM_COLOR );
          logform->exec();
          delete logform;

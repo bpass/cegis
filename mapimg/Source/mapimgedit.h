@@ -1,4 +1,4 @@
-// $Id: mapimgedit.h,v 1.7 2005/08/31 19:15:19 lwoodard Exp $
+// $Id: mapimgedit.h,v 1.9 2005/09/28 20:24:28 lwoodard Exp $
 
 #ifndef QINFOFRAME_H
 #define QINFOFRAME_H
@@ -48,8 +48,6 @@ public:
 	QSize sizeHint() const;
 
 	void reset();
-	void fixWidth( uint w );
-
 	void setReadOnly( bool ro, int inOut );
 	void setAsInput();
 	void setAsOutput();

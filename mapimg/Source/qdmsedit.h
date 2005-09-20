@@ -1,4 +1,4 @@
-// $Id: qdmsedit.h,v 1.6 2005/08/29 21:33:59 lwoodard Exp $
+// $Id: qdmsedit.h,v 1.8 2005/09/28 20:24:28 lwoodard Exp $
 
 
 #ifndef QDMSEDIT_H
@@ -17,7 +17,7 @@ class QDmsEdit : public QFrame
 
 public:
    enum Directionality { North, East, South, West, Unspecified };
-   QDmsEdit( QWidget* parent = 0, const char* name = 0, Directionality direction = Unspecified );
+   QDmsEdit( QWidget* parent = 0, Directionality direction = Unspecified );
    ~QDmsEdit(){};
 
    int minVal() const;

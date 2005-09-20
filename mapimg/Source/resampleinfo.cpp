@@ -1,4 +1,4 @@
-// $Id: resampleinfo.cpp,v 1.3 2005/08/15 19:51:40 lwoodard Exp $
+// $Id: resampleinfo.cpp,v 1.4 2005/09/20 19:46:31 lwoodard Exp $
 
 
 #include "resampleinfo.h"
@@ -57,10 +57,9 @@ void ResampleInfo::setResampleCode( ResampleCode code )
 
 bool ResampleInfo::setResampleCode( const QString &codeName )
 {
-   QString str( codeName.lower() );
-   str.stripWhiteSpace();
+	QString str( codeName.toLower() );
    str.remove(' ');
-   strncpy( rn, str.ascii(), RN_MAXLENGTH );
+   strncpy( rn, str.toAscii(), RN_MAXLENGTH );
 
    if( str == "nearestneighbor" )
       rc = ResampleInfo::NearestNeighbor;

@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.8 2005/08/29 16:48:14 lwoodard Exp $
+// $Id: qgctpbox.cpp,v 1.9 2005/09/20 19:46:31 lwoodard Exp $
 
 #include <QFrame>
 #include <QLabel>
@@ -15,19 +15,19 @@ const uint INFO_PRECISION = 6;
 QMap<QString,double> *QGctpBox::holdValues=0;
 
 QGctpBox::QGctpBox( QWidget* parent, const char* name )
-: QWidget( parent, name )
+: QWidget( parent )
 { 
 	QVBoxLayout *mainLayout = new QVBoxLayout( this );
 	setLayout( mainLayout );
 	mainLayout->setMargin( 0 );
 	mainLayout->setSpacing( 0 );
 
-   label = new QLabel( this, "label" );
-   lineEdit = new QLineEdit( "0.000000", this, "lineEdit" );
+   label = new QLabel( this );
+   lineEdit = new QLineEdit( "0.000000", this );
    lineEdit->setValidator( new QDoubleValidator( 0.0, 1000000.0, 6, lineEdit ) );
-   spinBox = new QSpinBox( this, "spinBox" );
+   spinBox = new QSpinBox( this );
    spinBox->setValue( 0 );
-   dmsEdit = new QDmsEdit( this, "dmsEdit" );
+   dmsEdit = new QDmsEdit( this );
    dmsEdit->setValue( 0 );
 
    mainLayout->addWidget( label );
@@ -100,8 +100,8 @@ QString QGctpBox::output()
    else if( activeEdit == dmsEdit )
       cleanUp = QString::number( dmsEdit->value(), 'f', 14 );
 
-   cleanUp.stripWhiteSpace();
-   int newLen = cleanUp.find( '.' ) + INFO_PRECISION + 1;
+   cleanUp.remove( ' ' );
+   int newLen = cleanUp.indexOf( '.' ) + INFO_PRECISION + 1;
    if( newLen == INFO_PRECISION ) //No '.' found
       cleanUp.append( ".000000" );
    else if( newLen < cleanUp.length() )
@@ -109,7 +109,7 @@ QString QGctpBox::output()
    else
       cleanUp.append( QString("000000").left( newLen - cleanUp.length() ) );
 
-   if( cleanUp.find( '.' ) == 0 )
+   if( cleanUp.indexOf( '.' ) == 0 )
       cleanUp.prepend( "0" );
 
    return cleanUp;
@@ -121,7 +121,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       holdValues->replace( name, value() );
 
    activeEdit = NULL;
-   QToolTip::remove( label );
+   label->setToolTip( QString() );
 
    if( gctpName == "" )
    {
@@ -150,7 +150,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( -180 );
       dmsEdit->setMaxVal( 180 );
       dmsEdit->setDirection( QDmsEdit::East );
-      QToolTip::add( label,
+	  label->setToolTip(
          "For Landsat-1,2,3 orbits this parameter should be:\n"
          "128° 52' 12\" + (360/251 * path number)\n\n"
          "For Landsat-4,5 orbits this parameter should be:\n"
@@ -201,35 +201,35 @@ void QGctpBox::setGctpName( const QString & gctpName )
       label->setText( "Scale Factor at Center of Projection: *" );
       activeEdit = lineEdit;
       lineEdit->setValidator( new QDoubleValidator( 0.0, 1000000.0, 6, lineEdit ) );
-      QToolTip::add( label, "This will default to 1 if left as 0." );
+	  label->setToolTip( "This will default to 1 if left as 0." );
    }
    else if( gctpName == "FactorM" )
    {
       label->setText( "Scale Factor at Central Meridian: *" );
       activeEdit = lineEdit;
       lineEdit->setValidator( new QDoubleValidator( 0.0, 1000000.0, 6, lineEdit ) );
-      QToolTip::add( label, "This will default to 1 if left as 0." );
+	  label->setToolTip( "This will default to 1 if left as 0." );
    }
    else if( gctpName == "FE" )
    {
       label->setText( "False Easting:" );
       activeEdit = lineEdit;
       lineEdit->setValidator( new QDoubleValidator( -10000000.0, 10000000.0, 6, lineEdit ) );
-      QToolTip::add( label, "Value must be between -10000000 and 10000000." );
+	  label->setToolTip( "Value must be between -10000000 and 10000000." );
    }
    else if( gctpName == "FN" )
    {
       label->setText( "False Northing:" );
       activeEdit = lineEdit;
       lineEdit->setValidator( new QDoubleValidator( -10000000.0, 10000000.0, 6, lineEdit ) );
-      QToolTip::add( label, "Value must be between -10000000 and 10000000." );
+      label->setToolTip( "Value must be between -10000000 and 10000000." );
    }
    else if( gctpName == "Height" )	
    {
       label->setText( "Height of Perspective: *" );
       activeEdit = lineEdit;
       lineEdit->setValidator( new QDoubleValidator( -1000000000.0, 1000000000.0, 6, lineEdit ) );
-      QToolTip::add( label, "Value must be between -1000000000.0 and 1000000000 meters.<br><br>"
+      label->setToolTip( "Value must be between -1000000000.0 and 1000000000 meters.<br><br>"
          "<b>Note:</b> Currently, values less than or equal to 0 create unexpected results<br><br>"
          "<b>Note:</b> It is also recommended that the value be greater than 1km (1000m)");
    }
@@ -240,7 +240,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( 0 );
       dmsEdit->setMaxVal( 360 );
       dmsEdit->setDirection( QDmsEdit::Unspecified );
-      QToolTip::add( label,
+      label->setToolTip(
          "For Landsat-1,2,3 orbits this parameter should be:\n"
          "99° 05' 31.2\"\n\n"
          "For Landsat-4,5 orbits this parameter should be:\n"
@@ -261,7 +261,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
       dmsEdit->setDirection( QDmsEdit::North );
-      QToolTip::add( label, "MapIMG will not work if this is equal to "
+      label->setToolTip( "MapIMG will not work if this is equal to "
          "2nd point." );
    }
    else if( gctpName == "Lat2" )	
@@ -271,7 +271,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
       dmsEdit->setDirection( QDmsEdit::North );
-      QToolTip::add( label, "MapIMG will not work if this is equal to "
+      label->setToolTip( "MapIMG will not work if this is equal to "
          "1st point." );
    }
    else if( gctpName == "Lon/Z" )	
@@ -289,7 +289,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( -180 );
       dmsEdit->setMaxVal( 180 );
       dmsEdit->setDirection( QDmsEdit::East );
-      QToolTip::add( label, "MapIMG will not work if this is equal to "
+      label->setToolTip( "MapIMG will not work if this is equal to "
          "2nd point." );
    }
    else if( gctpName == "Long2" )
@@ -299,14 +299,14 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( -180 );
       dmsEdit->setMaxVal( 180 );
       dmsEdit->setDirection( QDmsEdit::East );
-      QToolTip::add( label, "MapIMG will not work if this is equal to "
+      label->setToolTip( "MapIMG will not work if this is equal to "
          "1st point." );
    }
    else if( gctpName == "LongPol" )
    {
       label->setText( "Longitude down below Pole of Map:" );
       activeEdit = dmsEdit;
-      QToolTip::remove( this );
+	  setToolTip( QString() );
       dmsEdit->setMinVal( -360 );
       dmsEdit->setMaxVal( 360 );
       dmsEdit->setDirection( QDmsEdit::East );
@@ -315,12 +315,12 @@ void QGctpBox::setGctpName( const QString & gctpName )
    {
       label->setText( "Landsat Ratio: *" );
       activeEdit = lineEdit;
-      QToolTip::add( label,
+      label->setToolTip(
          "For Landsat-1,2,3 orbits this parameter should be:\n"
          "0.5201613\n\n"
          "For Landsat-4,5 orbits this parameter should be:\n"
          "0.5201613");
-      QToolTip::add( label, "Value must be between 0 and 1." );
+      label->setToolTip( "Value must be between 0 and 1." );
       lineEdit->setValidator( new QDoubleValidator( 0.0, 1.0, 6, lineEdit ) );
    }
    else if( gctpName == "OriginLat" )	
@@ -335,15 +335,15 @@ void QGctpBox::setGctpName( const QString & gctpName )
    {
       label->setText( "Landsat Path Number:" );
       activeEdit = spinBox;
-      spinBox->setMinValue(1);
-      spinBox->setMaxValue(233);
-      QToolTip::add( label, "Value must be between 1 and 233." );
+      spinBox->setMinimum(1);
+      spinBox->setMaximum(233);
+      label->setToolTip( "Value must be between 1 and 233." );
    }
    else if( gctpName == "PFlag" )	
    {
       label->setText( "End of Path Flag: *" );
       activeEdit = spinBox;
-      QToolTip::add( label,
+      label->setToolTip(
          "A portion of Landsat rows 1 and 2 may also be seen as parts of rows "
          "246 or 247. To place these locations at rows 246 or 247, set the "
          "end of path flag to 1" );
@@ -352,7 +352,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
    {
       label->setText( "Period of Satellite Revolution: *" );
       activeEdit = lineEdit;
-      QToolTip::add( label,
+      label->setToolTip(
          "For Landsat-1,2,3 orbits this parameter should be:\n"
          "103.2669323\n\n"
          "For Landsat-4,5 orbits this parameter should be:\n"
@@ -362,44 +362,44 @@ void QGctpBox::setGctpName( const QString & gctpName )
    {
       label->setText( "Landsat Satellite Number: *" );
       activeEdit = spinBox;
-      spinBox->setMinValue(1);
-      spinBox->setMaxValue(7);
-      QToolTip::add( label, "Value must be 1, 2, 3, 4, 5, or 7.\n"
+      spinBox->setMinimum(1);
+      spinBox->setMaximum(7);
+      label->setToolTip( "Value must be 1, 2, 3, 4, 5, or 7.\n"
          "6 will be changed to 1.");
    }
    else if( gctpName == "Shapem" )	
    {
       label->setText( "Oval Shape Parameter m:" );
       activeEdit = lineEdit;
-      QToolTip::add( label, "Value must be between 0 and 2." );
+      label->setToolTip( "Value must be between 0 and 2." );
       lineEdit->setValidator( new QDoubleValidator( 0.0, 2.0, 6, lineEdit ) );
    }
    else if( gctpName == "Shapen" )	
    {
       label->setText( "Oval Shape Parameter n:" );
       activeEdit = lineEdit;
-      QToolTip::add( label, "Value must be greater than 2." );
+      label->setToolTip( "Value must be greater than 2." );
       lineEdit->setValidator( new QDoubleValidator( 2.0, 10000000.0, 6, lineEdit ) );
    }
    else if( gctpName == "SMajor" )	
    {
       label->setText( "Semi-Major Axis:" );
       activeEdit = lineEdit;
-      QToolTip::add( label, "Value must be between 0 and 10000000m." );
+      label->setToolTip( "Value must be between 0 and 10000000m." );
       lineEdit->setValidator( new QDoubleValidator( 0.0, 100000000.0, 6, lineEdit ) );
    }
    else if( gctpName == "SMinor" )	
    {
       label->setText( "Semi-Minor Axis:" );
       activeEdit = lineEdit;
-      QToolTip::add( label, "Value must be between 0 and 10000000m." );
+      label->setToolTip( "Value must be between 0 and 10000000m." );
       lineEdit->setValidator( new QDoubleValidator( 0.0, 10000000.0, 6, lineEdit ) );
    }
    else if( gctpName == "Sphere" )	
    {
       label->setText( "Radius of the Reference Sphere: *" );
       activeEdit = lineEdit;
-      QToolTip::add( label, "This will default to 6370997 if left as 0." );
+      label->setToolTip( "This will default to 6370997 if left as 0." );
       lineEdit->setValidator( new QDoubleValidator( 0.0, 10000000.0, 6, lineEdit ) );
    }
    else if( gctpName == "STDPAR" )	
@@ -417,7 +417,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
       dmsEdit->setDirection( QDmsEdit::North );
-      QToolTip::add( label, "MapIMG will not work if this is equal to "
+      label->setToolTip( "MapIMG will not work if this is equal to "
          "2nd Standard Parallel." );
    }
    else if( gctpName == "STDPR2" )	
@@ -427,7 +427,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       dmsEdit->setMinVal( -90 );
       dmsEdit->setMaxVal( 90 );
       dmsEdit->setDirection( QDmsEdit::North );
-      QToolTip::add( label, "MapIMG will not work if this is equal to "
+      label->setToolTip( "MapIMG will not work if this is equal to "
          "1st Standard Parallel." );
    }
    else if( gctpName == "TrueScale" )

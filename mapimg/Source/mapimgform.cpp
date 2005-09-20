@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.10 2005/08/31 19:15:19 lwoodard Exp $
+// $Id: mapimgform.cpp,v 1.11 2005/09/20 19:46:31 lwoodard Exp $
 //Last Edited: August 2005; by: lwoodard; for:qt3 to qt4 porting
 
 #include "mapimgform.h"
@@ -89,9 +89,7 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, Qt::WFlags fl )
 	ignorePreviewSignals = false;
 	prevLast = prevInput;
 
-	resize( QSize(600, 524).expandedTo(minimumSizeHint()) );
-
-	
+	resize( QSize(600, 524).expandedTo(minimumSizeHint()) );	
 }
 
 void mapimgForm::setupContents()
@@ -742,7 +740,7 @@ void mapimgForm::outSaveClicked()
 	// Prompt for destination of new projection
 	QString temp = QFileDialog::getSaveFileName(
 		outPath, "MapIMG Raster Files (*.img)", this, "", "Choose a destination for the reprojection");
-	if( temp.isNull() )
+	if( temp.isEmpty() )
 		return;
 
 	if( !output.setFileName( temp ) )
@@ -809,7 +807,7 @@ void mapimgForm::editAuthor()
 	QSettings *settings = new QSettings( QSettings::IniFormat, QSettings::SystemScope,""/**QSettings::Ini**/ );
 	settings->setPath( "USGS.gov", "MapIMG" );
 
-	authorForm *form = new authorForm(settings, this, "about", false,
+	authorForm *form = new authorForm(settings, this, false,
 		WINDOW_FLAGS );
 	form->exec();
 	delete form;
@@ -869,7 +867,7 @@ void mapimgForm::launchWebTool( const QString& url )
 	else
 	{
 		//split the list
-		QStringList browsers = QStringList::split( ":" , allBrowsers );
+		QStringList browsers = QString( allBrowsers ).split( ':' );
 
 		//grab the first (default)
 		QString browser = *browsers.begin();

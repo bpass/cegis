@@ -1,4 +1,4 @@
-// $Id: authorform.h,v 1.4 2005/08/29 16:48:14 lwoodard Exp $
+// $Id: authorform.h,v 1.6 2005/09/28 20:24:28 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -42,7 +42,7 @@ class authorForm : public QDialog
    Q_OBJECT
 
 public:
-   authorForm( QSettings *settings = 0, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
+   authorForm( QSettings *settings = 0, QWidget* parent = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
    ~authorForm();
 
    QLabel* descrLabel;

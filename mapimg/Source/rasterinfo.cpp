@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.5 2005/08/24 17:58:26 lwoodard Exp $
+// $Id: rasterinfo.cpp,v 1.6 2005/09/20 19:46:31 lwoodard Exp $
 
 
 #include "rasterinfo.h"
@@ -371,7 +371,7 @@ void RasterInfo::loadInfo()
 {
    QFile *file = new QFile( fileName + ".img.info" );
    file->open( QIODevice::ReadOnly );
-   QStringList inFile( QStringList::split( '\n', QString(file->readAll()) ) );
+   QStringList inFile( QString( file->readAll() ).split('\n') );
    file->close();
    delete file;
 
@@ -392,7 +392,7 @@ void RasterInfo::loadInfo()
    uly = inFile[6].right( inFile[6].length() - breakPoint - 1 ).toDouble();
 
    ////////15 GCTP Params
-   QStringList gctpValues = QStringList::split( " ", inFile[7] );
+   QStringList gctpValues = QString( inFile[7] ).split( " " );
    for( int i = 0; i < 15; ++i )
       gctpParams[i] = gctpValues[i].toDouble();
 

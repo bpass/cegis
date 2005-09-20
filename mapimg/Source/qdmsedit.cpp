@@ -1,4 +1,4 @@
-// $Id: qdmsedit.cpp,v 1.9 2005/09/12 21:16:01 rbuehler Exp $
+// $Id: qdmsedit.cpp,v 1.10 2005/09/20 19:46:31 lwoodard Exp $
 
 #include <QFrame>
 #include <QHBoxLayout>
@@ -11,8 +11,8 @@
 #include "qdmsedit.h"
 
 
-QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction )
-: QFrame( parent, name)
+QDmsEdit::QDmsEdit( QWidget* parent, Directionality direction )
+: QFrame( parent )
 {
    setFrameStyle( QFrame::WinPanel | QFrame::Sunken );
 
@@ -80,10 +80,10 @@ QDmsEdit::QDmsEdit( QWidget* parent, const char* name, Directionality direction 
    mEdit->setValidator( new QIntValidator(0, 60, mEdit) );
    QRegExp exp( QString::fromLatin1("^(60|[1-5]?\\d(\\.\\d*)?)$") );
    sEdit->setValidator( new QRegExpValidator(exp, sEdit) );
-   QToolTip::add( dEdit, QString("<b>degrees</b>: integer from %1 to %2" ).
+   dEdit->setToolTip( QString("<b>degrees</b>: integer from %1 to %2" ).
       arg(min).arg(max));
-   QToolTip::add( mEdit, QString("<b>minutes</b>: integer from 0 to 60" ));
-   QToolTip::add( sEdit, QString("<b>seconds</b>: real from 0 to 60" ));
+   mEdit->setToolTip( QString("<b>minutes</b>: integer from 0 to 60" ));
+   sEdit->setToolTip( QString("<b>seconds</b>: real from 0 to 60" ));
 
    min = 0;
    max = 360;

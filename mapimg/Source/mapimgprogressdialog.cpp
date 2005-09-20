@@ -55,7 +55,7 @@ MapimgProgressDialog::MapimgProgressDialog( const QString& labelText, const QStr
       stepsPerUpdate = defaultStepsPerUpdate;
 
       QPalette p( *colorStart );
-      p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
+      p.setColor( QPalette::Text, p.color( QPalette::Active, QPalette::Text ) );
       setPalette( p );
    }
 }
@@ -88,13 +88,12 @@ void MapimgProgressDialog::defaults()
 void MapimgProgressDialog::setProgress( int progress )
 {
 	QProgressDialog::setValue( progress ); 
-   //QProgressDialog::setProgress( progress );
 
-   if( progress == maximum()/*totalSteps()*/ && colorEnd )
+   if( progress == maximum() && colorEnd )
    {
-      currentRed = colorEnd->red();		//took Qt:: away
-      currentGreen = colorEnd->green();	//before color
-	  currentBlue = colorEnd->blue();		//names
+      currentRed = colorEnd->red();		
+      currentGreen = colorEnd->green();	
+	  currentBlue = colorEnd->blue();		
    }
    else
    {
@@ -107,7 +106,7 @@ void MapimgProgressDialog::setProgress( int progress )
    {
       QColor c( (int)currentRed, (int)currentGreen, (int)currentBlue );
       QPalette p( c );
-      p.setColor( QColorGroup::Text, p.color( QPalette::Active, QColorGroup::Text ) );
+      p.setColor( QPalette::Text, p.color( QPalette::Active, QPalette::Text ) );
       setPalette( p );
    }
    return;
@@ -116,7 +115,6 @@ void MapimgProgressDialog::setProgress( int progress )
 void MapimgProgressDialog::setTotalSteps( int totalSteps )
 {
 	QProgressDialog::setMaximum( totalSteps );
-   //QProgressDialog::setTotalSteps( totalSteps );
 
    int tempSteps = totalSteps;
    if( tempSteps <= 0 )

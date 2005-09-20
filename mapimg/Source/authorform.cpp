@@ -1,4 +1,4 @@
-// $Id: authorform.cpp,v 1.3 2005/08/24 17:58:25 lwoodard Exp $
+// $Id: authorform.cpp,v 1.4 2005/09/20 19:46:31 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -31,37 +31,36 @@
 *  Constructs a authorForm as a child of 'parent', with the
 *  name 'name'.
 */
-authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, bool modal, Qt::WFlags fl )
-: QDialog( parent, name, modal, fl )
+authorForm::authorForm( QSettings *settings, QWidget* parent, bool modal, Qt::WFlags fl )
+: QDialog( parent, fl )
 {
    set = settings;
-   if ( !name )
-      setName( "authorForm" );
 
+   setModal( modal );
    setPalette( AUTHORFORM_COLOR );
 
-   authorFormLayout = new QVBoxLayout( this, 5, 3, "authorFormLayout"); 
+   authorFormLayout = new QVBoxLayout( this ); 
 
-   descrLabel = new QLabel( this, "descrLabel" );
-   descrLabel->setAlignment( int(  Qt::TextWordWrap | Qt::AlignVCenter ) );
+   descrLabel = new QLabel( this );
+   descrLabel->setAlignment( Qt::AlignVCenter );
    authorFormLayout->addWidget( descrLabel );
 
-   inputBox = new QGroupBox( this, "inputBox" );
-   layout1 = new QGridLayout( inputBox, 1, 1, 10, 3, "layout1"); 
+   inputBox = new QGroupBox( this );
+   layout1 = new QGridLayout( inputBox ); 
 
-   nameLabel = new QLabel( inputBox, "nameLabel" );
+   nameLabel = new QLabel( inputBox );
    layout1->addWidget( nameLabel, 0, 0 );
-   nameEdit = new QLineEdit( inputBox, "nameEdit" );
+   nameEdit = new QLineEdit( inputBox );
    layout1->addWidget( nameEdit, 0, 1 );
 
-   companyLabel = new QLabel( inputBox, "companyLabel" );
+   companyLabel = new QLabel( inputBox );
    layout1->addWidget( companyLabel, 1, 0 );
-   companyEdit = new QLineEdit( inputBox, "companyEdit" );
+   companyEdit = new QLineEdit( inputBox );
    layout1->addWidget( companyEdit, 1, 1 );
 
-   emailLabel = new QLabel( inputBox, "emailLabel" );
+   emailLabel = new QLabel( inputBox );
    layout1->addWidget( emailLabel, 2, 0 );
-   emailEdit = new QLineEdit( inputBox, "emailEdit" );
+   emailEdit = new QLineEdit( inputBox );
    layout1->addWidget( emailEdit, 2, 1 );
 
    authorFormLayout->addWidget( inputBox );
@@ -69,17 +68,18 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, const char* name, 
    spacer3 = new QSpacerItem( 20, 21, QSizePolicy::Minimum, QSizePolicy::Expanding );
    authorFormLayout->addItem( spacer3 );
 
-   infoLabel = new QLabel( this, "infoLabel" );
-   infoLabel->setAlignment( int (Qt::TextWordWrap | Qt::AlignVCenter ) );
+   infoLabel = new QLabel( this );
+   infoLabel->setAlignment( Qt::AlignVCenter );
    authorFormLayout->addWidget( infoLabel );
 
-   layout2 = new QHBoxLayout( 0, 0, 6, "layout2"); 
+   layout2 = new QHBoxLayout( 0 );	
+   layout2->setSpacing( 6 );
    spacer4 = new QSpacerItem( 31, 21, QSizePolicy::Expanding, QSizePolicy::Minimum );
    layout2->addItem( spacer4 );
 
-   okButton = new QPushButton( this, "okButton" );
+   okButton = new QPushButton( 0 );
    okButton->setMaximumSize( QSize( 80, 32767 ) );
-   cancelButton = new QPushButton( this, "cancelButton" );
+   cancelButton = new QPushButton( 0 );
    cancelButton->setMaximumSize( QSize( 80, 32767 ) );
    layout2->addWidget( okButton );
    layout2->addWidget( cancelButton );
@@ -105,12 +105,12 @@ authorForm::~authorForm()
 */
 void authorForm::languageChange()
 {
-   setCaption( tr( "Author Properties" ) );
-   descrLabel->setText( tr( "For your covenience MapIMG can attach your information to the re-projections that you create." ).arg(MAJOR_VERSION) );
+   setWindowTitle( tr( "Author Properties" ) );
+   descrLabel->setText( tr( "For your covenience MapIMG can attach your\ninformation to the re-projections that you create." ).arg(MAJOR_VERSION) );
    nameLabel->setText( tr( "Name:" ) );
    companyLabel->setText( tr( "Company:" ) );
    emailLabel->setText( tr( "Email address:" ) );
-   infoLabel->setText( tr( "These fields can be changed at any time by clicking \"Edit Author\" under the Options menu." ) );
+   infoLabel->setText( tr( "These fields can be changed at any time by clicking\n\"Edit Author\" under the Options menu." ) );
    okButton->setText( tr( "Ok" ) );
    cancelButton->setText( tr( "Cancel" ) );
    nameEdit->setText( tr( set->readEntry( "/USGS/MapIMG/AuthorName" ) ) );

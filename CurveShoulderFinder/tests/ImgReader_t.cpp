@@ -2,13 +2,15 @@
  * @file ImgReader_t.cpp
  * @author Austin Hartman
  *
- * $Id: ImgReader_t.cpp,v 1.2 2005/09/19 21:20:57 ahartman Exp $
+ * $Id: ImgReader_t.cpp,v 1.3 2005/09/21 19:09:42 ahartman Exp $
  */
 
 #include "ImgReader.h"
 #include "testsUtility.h"
 
+#include <algorithm>
 #include <cassert>
+#include <vector>
 
 //#define PRINT_VALUES
 
@@ -17,18 +19,45 @@
 #include <iomanip>
 #endif
 
+typedef float type;
+
+void readTest(ImgReader<type>& reader);
+void copyTest();
+
 int main()
 {
     const std::string filename = "./1920newstack.img";
-    typedef float type;
 
 #ifdef PRINT_VALUES
     std::cerr << std::fixed;
     std::cerr.precision(6);
 #endif
 
+    // Test to make sure we can read correctly with a single reader
     ImgReader<type> reader(filename);
+    readTest(reader);
 
+    // Test to make sure operator= works
+    ImgReader<type> reader2 = reader;
+    readTest(reader2);
+
+    // Test to make sure copy constructor works
+    ImgReader<type> reader3(reader);
+    readTest(reader3);
+
+    // Test to make sure we can read correctly with multiple readers pointing
+    // to the same img file
+    const size_t numReaders = 10;
+    const size_t numTimes = 2;
+    std::vector<ImgReader<type> > readers(numReaders, reader);
+    for(size_t i = 0; i < numTimes; ++i)
+    {
+        for_each(readers.begin(), readers.end(), readTest);
+    }
+}
+
+void readTest(ImgReader<type>& reader)
+{
     // Test to make sure the number of bands is correct
     assert(reader.getNumBands() == 15);
 
@@ -146,4 +175,3 @@ int main()
     assert(floatsEqual(reader.getValue(point6x, point6y, 15),
                        point6band15value));
 }
-

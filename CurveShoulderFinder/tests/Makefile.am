@@ -3,7 +3,7 @@
 # @file Makefile.am
 # @author Austin Hartman
 #
-# $Id: Makefile.am,v 1.10 2005/09/19 17:48:07 ahartman Exp $
+# $Id: Makefile.am,v 1.11 2005/09/21 19:07:57 ahartman Exp $
 #
 
 AM_CPPFLAGS = -I..
@@ -24,8 +24,8 @@ noinst_PROGRAMS = $(TESTS)
 BSQReader_t_SOURCES = BSQReader_t.cpp
 DiagonalMatrix_t_SOURCES = DiagonalMatrix_t.cpp
 ImgReader_t_SOURCES = ImgReader_t.cpp
-ImgReader_t_CPPFLAGS = -I/usr/local/include -I..
-ImgReader_t_LDADD = -L/usr/local/lib -lgdal
+ImgReader_t_CPPFLAGS = $(GDAL_CFLAGS) -I..
+ImgReader_t_LDADD = $(GDAL_LIBS)
 InvertMatrix_t_SOURCES = InvertMatrix_t.cpp
 LUDecomposition_t_SOURCES = LUDecomposition_t.cpp
 LUDecompositionSolver_t_SOURCES = LUDecompositionSolver_t.cpp

@@ -2,7 +2,7 @@
  * @file ImgReader.hpp
  * @author Austin Hartman
  *
- * $Id: ImgReader.hpp,v 1.4 2005/09/19 18:19:30 ahartman Exp $
+ * $Id: ImgReader.hpp,v 1.5 2005/09/21 15:21:41 ahartman Exp $
  */
 
 #ifdef AUSTIN_IMGREADER_H
@@ -69,7 +69,6 @@ ImgReader<DataType>::getValue(const UTMCoordinateType& xCoord,
                              1, 1, // read just a single pixel
                              &data,
                              1, 1,
-//                             GDT_Float32,
                              GDALDataTypeTraits<DataType>::dataType, 
                              0, 1);
 

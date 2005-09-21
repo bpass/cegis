@@ -2,7 +2,7 @@
  * @file ImgReader.h
  * @author Austin Hartman
  *
- * $Id: ImgReader.h,v 1.4 2005/09/19 22:46:02 ahartman Exp $
+ * $Id: ImgReader.h,v 1.5 2005/09/21 16:16:29 ahartman Exp $
  */
 
 #ifndef AUSTIN_IMGREADER_H
@@ -10,6 +10,8 @@
 
 #include <string>
 #include <vector>
+
+#include <boost/shared_ptr.hpp>
 
 #include <gdal_priv.h>
 
@@ -117,7 +119,7 @@ private:
     /**
      * This GDALDataset allows us to access data from the .img file.
      */
-    GDALDataset* dataset;
+    boost::shared_ptr<GDALDataset> dataset;
 
     /**
      * This holds coordinates for the upper-left corner of the image and

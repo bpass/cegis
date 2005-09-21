@@ -2,7 +2,7 @@
  * @file ImgReader.hpp
  * @author Austin Hartman
  *
- * $Id: ImgReader.hpp,v 1.5 2005/09/21 15:21:41 ahartman Exp $
+ * $Id: ImgReader.hpp,v 1.6 2005/09/21 16:16:29 ahartman Exp $
  */
 
 #ifdef AUSTIN_IMGREADER_H
@@ -26,8 +26,8 @@ ImgReader<DataType>::ImgReader(const std::string& filename)
         initialized = true;
     }
     
-    dataset = static_cast<GDALDataset*>(GDALOpen(filename.c_str(),
-                                                 GA_ReadOnly));
+    dataset.reset(static_cast<GDALDataset*>(GDALOpen(filename.c_str(),
+                                                     GA_ReadOnly)));
     if(dataset == NULL)
     {
         throw typename ImgReader<DataType>::FailedOpeningImgFile();
@@ -43,9 +43,7 @@ ImgReader<DataType>::ImgReader(const std::string& filename)
 
 template<class DataType>
 ImgReader<DataType>::~ImgReader()
-{
-    delete dataset;
-}
+{}
 
 template<class DataType>
 DataType

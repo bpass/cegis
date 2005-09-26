@@ -2,7 +2,7 @@
  * @file ImgReader_t.cpp
  * @author Austin Hartman
  *
- * $Id: ImgReader_t.cpp,v 1.3 2005/09/21 19:09:42 ahartman Exp $
+ * $Id: ImgReader_t.cpp,v 1.4 2005/09/26 17:25:04 ahartman Exp $
  */
 
 #include "ImgReader.h"
@@ -20,6 +20,7 @@
 #endif
 
 typedef float type;
+typedef unsigned int type2;
 
 void readTest(ImgReader<type>& reader);
 void copyTest();
@@ -36,6 +37,11 @@ int main()
     // Test to make sure we can read correctly with a single reader
     ImgReader<type> reader(filename);
     readTest(reader);
+
+    // Test to make sure we can create reader templated on a different type
+    // XXX It won't work to actually read this file, because it's not of
+    // XXX the specified type
+    ImgReader<type2> type2Reader(filename);
 
     // Test to make sure operator= works
     ImgReader<type> reader2 = reader;

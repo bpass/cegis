@@ -1,7 +1,7 @@
 /**
  * @file LittleRiver.cpp
  *
- * $Id: LittleRiver.cpp,v 1.12 2005/09/19 22:19:48 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.13 2005/09/28 23:06:20 ahartman Exp $
  */
 
 #include <iomanip>
@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-#include "BSQReader.h"
+#include "ImgReader.h"
 #include "Point2D.h"
 
 //#define PRINT_RESOLUTIONS
@@ -97,9 +97,9 @@ createFilenames()
 {
     // Set up the main data directory
 #ifdef WIN32
-    const std::string dataDir = "D:/Data/MassiveLRiver/austin/7.30in/";
+    const std::string dataDir = "L:/sdir_snap/AGNPSOutputAnalysis/Data/LittleRiver/NAWQA/Output/2005-08-17/7.30in/";
 #else
-    const std::string dataDir = "/snap/ahartman/AGNPSOutput/BSQs/Little_River/";
+    const std::string dataDir = "/snap/AGNPSOutputAnalysis/Data/LittleRiver/NAWQA/Output/2005-08-17/7.30in/";
 #endif
 
     const Resolutions_t resolutions = createResolutions();
@@ -132,7 +132,7 @@ createFilenames()
     }
 #endif
 
-    const std::string extension = ".bsq";
+    const std::string extension = ".img";
 
     // Set up all the filenames
     Filenames_t filenames(resolutions.size(), 
@@ -144,9 +144,8 @@ createFilenames()
         const std::string resolutionAsString = oss.str();
         for(size_t j = 0; j < numSuffixes; ++j)
         {
-            filenames[i][j] = dataDir + resolutionAsString + '/' + 
-                              prefix + resolutionAsString + suffixes[j] +
-                              extension;
+            filenames[i][j] = dataDir + prefix + resolutionAsString +
+                              suffixes[j] + extension;
         }
     }
 
@@ -170,8 +169,8 @@ void littleRiverPrintPoints()
 {
     // Read the data from various points at each resolution
     typedef float Data_t;
-    typedef BSQReader<Data_t> BSQReader_t;
-    typedef Point2D<BSQReader_t::UTMCoordinateType> Point_t;
+    typedef ImgReader<Data_t> ImgReader_t;
+    typedef Point2D<ImgReader_t::UTMCoordinateType> Point_t;
     typedef std::vector<Point_t> Points_t;
 
     // Set up the points we want to read
@@ -192,10 +191,10 @@ void littleRiverPrintPoints()
 //    points.push_back(Point_t(260580.000000, 3485911.000000));
 
     // Set up the data files we want to read
-//    const std::string myFileTypes[] = { "clay", "hydro", "largeagg", "nitro",
-//                                        "phospho", "sand", "silt", "smallagg",
-//                                        "total" };
-    const std::string myFileTypes[] = { "hydro" };
+    const std::string myFileTypes[] = { "clay", "hydro", "largeagg", "nitro",
+                                        "phospho", "sand", "silt", "smallagg",
+                                        "total" };
+//    const std::string myFileTypes[] = { "hydro" };
     const size_t numMyFileTypes = sizeof(myFileTypes) / sizeof(myFileTypes[0]);
 
     // Set up the bands we want to read
@@ -258,18 +257,18 @@ void littleRiverPrintPoints()
     myBands["smallagg"] = mySmallAggBands;
     myBands["total"] = myTotalBands;
 
-    // Create the BSQReaders for the files we want
+    // Create the ImgReaders for the files we want
     const Resolutions_t resolutions = createResolutions();
     const Filenames_t filenames = createFilenames();
-    std::vector<std::vector<BSQReader_t> > bsqReaders(resolutions.size());
+    std::vector<std::vector<ImgReader_t> > imgReaders(resolutions.size());
     for(size_t i = 0; i < resolutions.size(); ++i)
     {
         for(size_t j = 0; j < numMyFileTypes; ++j)
         {
             const size_t indexInFilenames = 
                 (fileTypes.find(myFileTypes[j]))->second;
-            bsqReaders[i].push_back
-                (BSQReader_t(filenames[i][indexInFilenames]));
+            imgReaders[i].push_back
+                (ImgReader_t(filenames[i][indexInFilenames]));
         }
     }
 
@@ -297,7 +296,7 @@ void littleRiverPrintPoints()
                     try
                     {
                         const Data_t value = 
-                            bsqReaders[resolution][myFileType].
+                            imgReaders[resolution][myFileType].
                                 getValue(point->x(), point->y(), *band);
                         std::cout << value << '\n';
                     }

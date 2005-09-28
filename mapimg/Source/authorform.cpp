@@ -1,4 +1,4 @@
-// $Id: authorform.cpp,v 1.4 2005/09/20 19:46:31 lwoodard Exp $
+// $Id: authorform.cpp,v 1.5 2005/09/28 20:24:28 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -35,7 +35,7 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, bool modal, Qt::WF
 : QDialog( parent, fl )
 {
    set = settings;
-
+   
    setModal( modal );
    setPalette( AUTHORFORM_COLOR );
 
@@ -46,7 +46,7 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, bool modal, Qt::WF
    authorFormLayout->addWidget( descrLabel );
 
    inputBox = new QGroupBox( this );
-   layout1 = new QGridLayout( inputBox ); 
+   layout1 = new QGridLayout( inputBox );  
 
    nameLabel = new QLabel( inputBox );
    layout1->addWidget( nameLabel, 0, 0 );
@@ -72,7 +72,7 @@ authorForm::authorForm( QSettings *settings, QWidget* parent, bool modal, Qt::WF
    infoLabel->setAlignment( Qt::AlignVCenter );
    authorFormLayout->addWidget( infoLabel );
 
-   layout2 = new QHBoxLayout( 0 );	
+   layout2 = new QHBoxLayout( 0 );
    layout2->setSpacing( 6 );
    spacer4 = new QSpacerItem( 31, 21, QSizePolicy::Expanding, QSizePolicy::Minimum );
    layout2->addItem( spacer4 );
@@ -113,17 +113,17 @@ void authorForm::languageChange()
    infoLabel->setText( tr( "These fields can be changed at any time by clicking\n\"Edit Author\" under the Options menu." ) );
    okButton->setText( tr( "Ok" ) );
    cancelButton->setText( tr( "Cancel" ) );
-   nameEdit->setText( tr( set->readEntry( "/USGS/MapIMG/AuthorName" ) ) );
-   companyEdit->setText( tr( set->readEntry( "/USGS/MapIMG/AuthorCompany" ) ) );
-   emailEdit->setText( tr( set->readEntry( "/USGS/MapIMG/AuthorEmail" ) ) );
+   nameEdit->setText( set->value( "/USGS/MapIMG/AuthorName" ).toString() );
+   companyEdit->setText( set->value( "/USGS/MapIMG/AuthorCompany" ).toString() );
+   emailEdit->setText( set->value( "/USGS/MapIMG/AuthorEmail" ).toString() );
 }
 
 // okClicked() saves the changes made by the user before exitting.
 void authorForm::okClicked()
 {
-   set->writeEntry( "/USGS/MapIMG/AuthorName", nameEdit->text() );
-   set->writeEntry( "/USGS/MapIMG/AuthorCompany", companyEdit->text() );
-   set->writeEntry( "/USGS/MapIMG/AuthorEmail", emailEdit->text() );
+   set->setValue( "/USGS/MapIMG/AuthorName", nameEdit->text() );
+   set->setValue( "/USGS/MapIMG/AuthorCompany", companyEdit->text() );
+   set->setValue( "/USGS/MapIMG/AuthorEmail", emailEdit->text() );
 
    close();
 }

@@ -1,4 +1,4 @@
-// $Id: qimgframe.cpp,v 1.4 2005/08/19 18:19:41 lwoodard Exp $
+// $Id: qimgframe.cpp,v 1.5 2005/09/28 20:24:28 lwoodard Exp $
 
 
 #include "qimgframe.h"
@@ -11,12 +11,14 @@
 #include <QResizeEvent>
 #include "mapimgpalette.h"
 
-QImgFrame::QImgFrame( QWidget* parent, const char* name)
-: QFrame( parent, name)
+QImgFrame::QImgFrame( QWidget* parent )
+: QFrame( parent)
 {
-   setPaletteBackgroundColor( IMGCOLOR );
+	QPalette palette;
+	palette.setColor( backgroundRole(), IMGCOLOR );
+	setPalette( palette );
 
-   pixmapLabel	= new QLabel( this, "pixmapLabel" );
+   pixmapLabel	= new QLabel( this );
    pixmapLabel->setPixmap( QPixmap(1,1) );
    pixmapLabel->move( contentsRect().topLeft() );
    pixmapLabel->setScaledContents( TRUE );
@@ -54,7 +56,7 @@ void QImgFrame::loadImg( const QString &fileName, bool reload )
    if( newFile )
    {
       imgName = fileName;
-      if( isShown() )
+      if( !isHidden() )
       {
          imgPainter->setFile(imgName);
          resample();

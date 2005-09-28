@@ -1,4 +1,4 @@
-// $Id: tiff2img.h,v 1.3 2005/08/17 19:44:32 lwoodard Exp $
+// $Id: tiff2img.h,v 1.4 2005/09/28 20:24:29 lwoodard Exp $
 
 
 #ifndef TIFF2IMG_H
@@ -27,7 +27,7 @@ bool tiff2img( QString tiffFile, QString imgFile )
 
    if( QFile::exists( tiffFile ) && tiffFile.right(3)=="tif" )
    {
-      TIFF* tif = TIFFOpen(tiffFile.ascii(), "r");
+      TIFF* tif = TIFFOpen(tiffFile.toAscii(), "r");
 
       if (tif)
       {
@@ -84,7 +84,7 @@ bool tiff2img( QString tiffFile, QString imgFile )
                {
                   for( unsigned int x = 0; x < w; x++ )
                   {
-                     newImg.putch( outMap[x][y] );
+                     newImg.putChar( outMap[x][y] );
                   }
                }
                newImg.close();

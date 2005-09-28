@@ -1,4 +1,4 @@
-// $Id: qimgpainter.h,v 1.4 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: qimgpainter.h,v 1.5 2005/09/28 20:24:28 lwoodard Exp $
 
 
 #ifndef QIMGPAINTER_H
@@ -95,7 +95,7 @@ void QImgPainter::setFile(QString imgFile)
       return;
 
    fileName = imgFile;
-   file.setName( fileName ); 
+   file.setFileName( fileName ); 
 
    rows = info.rows();
    cols = info.cols();
@@ -105,8 +105,8 @@ void QImgPainter::setFile(QString imgFile)
    dataType += info.dataType();
 
    size = rows * cols;
-   pixmap.resize(cols, rows);
-
+   pixmap = QPixmap(cols, rows);
+ 
    if(file.size() < 10000000)
       callConstruct(1);
    else
@@ -122,7 +122,7 @@ QPixmap QImgPainter::getSample(QSize sampleSize)
    if(!fileSet)
       return QPixmap(2,1);
 
-   pixmap.resize(sampleSize);
+   pixmap = QPixmap(sampleSize);
    callPaint();      
    return pixmap;
 }
@@ -140,22 +140,22 @@ void QImgPainter::callClear()
    {	float data = 0;
    clearColorTable(data);	}
    else if( dataType == "Signed 32 Bit Integer" )
-   {	Q_INT32 data = 0;
+   {	qint32 data = 0;
    clearColorTable(data);	}
    else if( dataType == "Unsigned 32 Bit Integer" )
-   {	Q_UINT32 data = 0;
+   {	quint32 data = 0;
    clearColorTable(data);	}
    else if( dataType == "Signed 16 Bit Integer" )
-   {	Q_INT16 data = 0;
+   {	qint16 data = 0;
    clearColorTable(data);	}
    else if( dataType == "Unsigned 16 Bit Integer" )
-   {	Q_UINT16 data = 0;
+   {	quint16 data = 0;
    clearColorTable(data);	}
    else if( dataType == "Signed 8 Bit Integer" )
-   { 	Q_INT8 data = 0;
+   { 	qint8 data = 0;
    clearColorTable(data);	}
    else //(dataType == "Unsigned 8 Bit Integer")
-   {  Q_UINT8 data = 0;
+   {  quint8 data = 0;
    clearColorTable(data);	}
 }
 
@@ -179,22 +179,22 @@ void QImgPainter::callConstruct(qulonglong offset)
    {	float data = 0;
    constructColorTable(data, offset);	}
    else if( dataType == "Signed 32 Bit Integer" )
-   {	Q_INT32 data = 0;
+   {	qint32 data = 0;
    constructColorTable(data, offset);	}
    else if( dataType == "Unsigned 32 Bit Integer" )
-   {	Q_UINT32 data = 0;
+   {	quint32 data = 0;
    constructColorTable(data, offset);	}
    else if( dataType == "Signed 16 Bit Integer" )
-   {	Q_INT16 data = 0;
+   {	qint16 data = 0;
    constructColorTable(data, offset);	}
    else if( dataType == "Unsigned 16 Bit Integer" )
-   {	Q_UINT16 data = 0;
+   {	quint16 data = 0;
    constructColorTable(data, offset);	}
    else if( dataType == "Signed 8 Bit Integer" )
-   { 	Q_INT8 data = 0;
+   { 	qint8 data = 0;
    constructColorTable(data, offset);	}
    else //( dataType == "Unsigned 8 Bit Integer" )
-   {  Q_UINT8 data = 0;
+   {  quint8 data = 0;
    constructColorTable(data, offset);	}
 }
 
@@ -241,9 +241,9 @@ void QImgPainter::constructColorTable(Type data, qulonglong offset)
       for( int x = 0; x < pixmap.width(); x++ )
       {
          xOffSet = static_cast<qulonglong>(offset * x) * dataBytes;
-         file.at(yOffSet + xOffSet);
+         file.seek(yOffSet + xOffSet);
          dataStream >> data;
-         colorTable->insert(data, QColor(0,0,0), false);
+         colorTable->insert(data, QColor(0,0,0));
       }
    }
    file.close();
@@ -270,7 +270,7 @@ void QImgPainter::constructColorTable(Type data, qulonglong offset)
          }
          pd.setProgress(static_cast<int>(f));
       }
-      it.data() = QColor((int)f, (int)f, (int)f);
+      it.value() = QColor((int)f, (int)f, (int)f);
       f += colorFactor;
    }
    vColorTable = colorTable;
@@ -289,22 +289,22 @@ void QImgPainter::callPaint()
    {	float data = 0;
    paintPixmap(data);	}
    else if( dataType == "Signed 32 Bit Integer" )
-   {	Q_INT32 data = 0;
+   {	qint32 data = 0;
    paintPixmap(data);	}
    else if( dataType == "Unsigned 32 Bit Integer" )
-   {	Q_UINT32 data = 0;
+   {	quint32 data = 0;
    paintPixmap(data);	}
    else if( dataType == "Signed 16 Bit Integer" )
-   {	Q_INT16 data = 0;
+   {	qint16 data = 0;
    paintPixmap(data);	}
    else if( dataType == "Unsigned 16 Bit Integer" )
-   {	Q_UINT16 data = 0;
+   {	quint16 data = 0;
    paintPixmap(data);	}
    else if( dataType == "Signed 8 Bit Integer" )
-   { 	Q_INT8 data = 0;
+   { 	qint8 data = 0;
    paintPixmap(data);	}
    else //( dataType == "Unsigned 8 Bit Integer" )
-   {	Q_UINT8 data = 0;
+   {	quint8 data = 0;
    paintPixmap(data);	}
 }
 
@@ -321,10 +321,10 @@ void QImgPainter::paintPixmap(Type data)
    double fileRatio = static_cast<double>( rows ) /
       static_cast<double>( cols );
    if( pixRatio > fileRatio )
-      pixmap.resize(pixmap.width(), 
+      pixmap = QPixmap(pixmap.width(), 
       static_cast<int>(pixmap.width() * fileRatio));
    else if( pixRatio < fileRatio)
-      pixmap.resize(static_cast<int>(pixmap.height() / fileRatio),
+      pixmap = QPixmap(static_cast<int>(pixmap.height() / fileRatio),
       pixmap.height());
    double file_pixRatio = static_cast<double>( rows ) / 
       static_cast<double>( pixmap.height() );
@@ -334,7 +334,7 @@ void QImgPainter::paintPixmap(Type data)
    if(file_pixRatio < 1)
    {
       file_pixRatio = 1;
-      pixmap.resize(cols, rows);
+      pixmap = QPixmap(cols, rows);
    }
    //file_pixRatio == lastRatio means that pixmap is already resampled
    //at the requested size so leave it alone
@@ -384,9 +384,9 @@ void QImgPainter::paintPixmap(Type data)
       for( int x = 0; x < pixmap.width(); x++ )
       {
          xOffSet = static_cast<qulonglong>(file_pixRatio * x) * dataBytes;
-         file.at(yOffSet + xOffSet);
+         file.seek(yOffSet + xOffSet);
          dataStream >> data;
-         painter.setPen( QPen( colorTable->find(data).data() ) );
+         painter.setPen( QPen( colorTable->find(data).value() ) );
          painter.drawPoint(x,y);
       }
    }

@@ -150,7 +150,7 @@ void ProjectionEdit::setAsOutput()
 
 	QPalette p( QColor( 163, 146, 146 ) ); //OUTPUT_COLOR mapimgpalette.h
 	p.setColor( QPalette::Text, p.color( QPalette::Active, QPalette::Text ) );
-	viewport()->setPalette( p ); 
+	viewport()->setPalette( p );
 }
 
 /*
@@ -275,7 +275,7 @@ void ProjectionEdit::polishWidgets()
    badProjLabel->setFixedHeight(10);
    badProjLabel->hide();
    badProjLabel->setText( "Bad Projection *" );
-   badProjLabel->setToolTip( 
+   badProjLabel->setToolTip(
       "<b>Bad Projection</b>: This projection either generates "
       "useless data or crashes. It is recommended that you "
       "choose a different one. This issue may be addressed in "

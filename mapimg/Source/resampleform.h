@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.8 2005/08/19 18:19:41 lwoodard Exp $
+// $Id: resampleform.h,v 1.9 2005/09/28 20:24:29 lwoodard Exp $
 
 
 /****************************************************************************
@@ -44,7 +44,7 @@ class ResampleForm : public QDialog
 	Q_OBJECT
 
 public:
-	ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent = 0, const char* name = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
+	ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
 	~ResampleForm();
 
 	ResampleInfo info();

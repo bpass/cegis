@@ -1,4 +1,4 @@
-// $Id: aboutform.h,v 1.3 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: aboutform.h,v 1.4 2005/09/28 20:24:28 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -39,7 +39,7 @@ class aboutForm : public QDialog
    Q_OBJECT
 
 public:
-   aboutForm( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
+   aboutForm( QWidget* parent = 0, const char *name = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
    ~aboutForm(){}
 
    QLabel* logoLabel;

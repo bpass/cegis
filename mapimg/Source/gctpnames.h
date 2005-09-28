@@ -1,4 +1,4 @@
-// $Id: gctpnames.h,v 1.5 2005/09/20 19:46:31 lwoodard Exp $
+// $Id: gctpnames.h,v 1.6 2005/09/28 20:24:28 lwoodard Exp $
 
 
 #ifndef GCTPNAMES_H
@@ -237,10 +237,13 @@ namespace
    // Convert the index of the projection combo box to actual projection code
    uint combo2proj( uint i )
    {
-      if( i < 10 ) return i - 1;
-      if( i < 23 ) return i - 2;
-      if( i < 26 ) return i - 3;
-      return i - 4;
+      if( i < 9 ) return i - 1;
+	   else if( i < 20 ) return i;
+	   else if( i == 20 ) return i + 1;
+	   else if( i < 29 ) return i + 2;
+	   else if( ( i == 29 ) || ( i == 30 ) ) return 22;
+	   else if( ( i == 31 ) || ( i == 32 ) ) return 20;
+	   return 8;
    }
 
    // A list of projections sorted by projection code

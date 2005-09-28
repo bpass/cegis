@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.11 2005/09/20 19:46:31 lwoodard Exp $
+// $Id: mapimgform.cpp,v 1.12 2005/09/28 20:24:28 lwoodard Exp $
 //Last Edited: August 2005; by: lwoodard; for:qt3 to qt4 porting
 
 #include "mapimgform.h"
@@ -68,11 +68,11 @@ TOOLBARS creates the button toolbar with the actions to open a new input,
 reproject to a file, hide/show the three frames, resample the imgframe, and
 preview the reprojection.
 */
-mapimgForm::mapimgForm( QWidget* parent, const char* name, Qt::WFlags fl )
-: QMainWindow( parent, name, fl )
+mapimgForm::mapimgForm( QWidget* parent, Qt::WFlags fl )
+: QMainWindow( parent, fl )
 {
-	setIcon( QPixmap( "./Resources/USGS Swirl Sphere.png" ) );
-	setCaption( QString("MapIMG %1").arg(MAJOR_VERSION) );
+	setWindowIcon( QPixmap( "./Resources/USGS Swirl Sphere.png" ) );
+	setWindowTitle( QString("MapIMG %1").arg(MAJOR_VERSION) );
 	setAcceptDrops( true );
 
 	setupContents();
@@ -94,12 +94,12 @@ mapimgForm::mapimgForm( QWidget* parent, const char* name, Qt::WFlags fl )
 
 void mapimgForm::setupContents()
 {
-	setCentralWidget( new QWidget( this, "qt_central_widget" ) );
-
+	setCentralWidget( new QWidget( this ) );
+	
 	contentLayout = new QHBoxLayout( centralWidget() );
 	contentLayout->setMargin(2);
 	contentLayout->setSpacing(1);
-	contentLayout->setSizeConstraint( QLayout::Minimum );
+	contentLayout->setSizeConstraint( QLayout::SetMinimumSize );
 
 	inInfoFrame = new QInfoFrame( centralWidget() );
 	inInfoFrame->setAsInput();
@@ -146,7 +146,7 @@ void mapimgForm::createActions()
 	inInfoAction = new QAction( "Show Input Parameters", this );
 	inInfoAction->setIcon( QIcon( "./Resources/inputinfo.png" ) );
 	inInfoAction->setCheckable( true );
-	inInfoAction->setOn( inInfoFrame->isShown() );
+	inInfoAction->setChecked( inInfoFrame->isVisible() );
 
 	viewShowAction = new QAction(	"Show Preview", this );
 	viewShowAction->setIcon( QIcon( "./Resources/preview.png" ) );
@@ -155,7 +155,7 @@ void mapimgForm::createActions()
 	outInfoAction = new QAction( "Show Output Parameters", this );
 	outInfoAction->setIcon( QIcon ( "./Resources/outputinfo.png" ) );
 	outInfoAction->setCheckable( true );
-	outInfoAction->setOn( outInfoFrame->isShown() );
+	outInfoAction->setChecked( outInfoFrame->isVisible() );
 
 	outSaveAction = new QAction( "Reproject and &Save", this );
 	outSaveAction->setIcon( QIcon( "./Resources/outsave.png" ) );
@@ -214,8 +214,11 @@ void mapimgForm::setupToolbar()
 	toolBar->addSeparator();
 	toolBar->addAction( inInfoAction );
 
-	viewShowButton = new QToolButton( QIcon( "./Resources/preview.png" ),
-		"Show Preview", "", NULL, 0, this, "previewButton" );
+	viewShowButton = new QToolButton( this );
+	viewShowButton->setIcon( QIcon( "./Resources/preview.png" ) );
+	viewShowButton->setText( "Show Preview" );
+	viewShowButton->setToolTip( "Show Preview" );
+	
 	viewShowButton->installEventFilter( this );
 
 	toolBar->addWidget( viewShowButton );
@@ -227,10 +230,10 @@ void mapimgForm::setupToolbar()
 	//preview button extra features
 	viewShowPopup = new QMenu( "viewShowPopup", viewShowButton );
 
-	prevInput = new QAction( "Preview Input", QKeySequence(""), this, "prevInput" );
+	prevInput = new QAction( "Preview Input", this );
 	prevInput->setCheckable( true ); 
 	viewShowPopup->addAction( prevInput );
-	prevOutput = new QAction( "Preview Output", QKeySequence(""), this, "prevOutput" );
+	prevOutput = new QAction( "Preview Output", this );
 	prevOutput->setCheckable( true );
 	viewShowPopup->addAction( prevOutput );
 
@@ -267,24 +270,24 @@ void mapimgForm::makeConnections()
 
 void mapimgForm::loadSettings()
 {
-	QSettings *settings = new QSettings(QSettings::IniFormat, QSettings::SystemScope,"" );
-	settings->setPath( "USGS.gov", "MapIMG" );
+	QSettings *settings = new QSettings(QSettings::IniFormat, QSettings::SystemScope,
+		"USGS.gov", "MapIMG" );
 
-	inPath = settings->readEntry( "/USGS/MapIMG/DefaultInputPath" );
-	outPath = settings->readEntry( "/USGS/MapIMG/DefaultOutputPath" );
-	authName = settings->readEntry( "/USGS/MapIMG/AuthorName" );
-	authCompany = settings->readEntry( "/USGS/MapIMG/AuthorCompany" );
-	authEmail = settings->readEntry( "/USGS/MapIMG/AuthorEmail" );
+	inPath = settings->value( "/USGS/MapIMG/DefaultInputPath" ).toString();
+	outPath = settings->value( "/USGS/MapIMG/DefaultOutputPath" ).toString();
+	authName = settings->value( "/USGS/MapIMG/AuthorName" ).toString();
+	authCompany = settings->value( "/USGS/MapIMG/AuthorCompany" ).toString();
+	authEmail = settings->value( "/USGS/MapIMG/AuthorEmail" ).toString();
 
 	if( inPath.isNull() || !QFile::exists(inPath) )
-		settings->writeEntry( "/USGS/MapIMG/DefaultInputPath", QDir::currentDirPath() );
+		settings->setValue( "/USGS/MapIMG/DefaultInputPath", QDir::currentPath() );
 	if( outPath.isNull() || !QFile::exists(outPath) )
-		settings->writeEntry( "/USGS/MapIMG/DefaultOutputPath", QDir::currentDirPath() );
+		settings->setValue( "/USGS/MapIMG/DefaultOutputPath", QDir::currentPath() );
 	if( authName.isNull() )
 	{
-		settings->writeEntry( "/USGS/MapIMG/AuthorName", QString("Unknown") );
-		settings->writeEntry( "/USGS/MapIMG/AuthorCompany", QString("Unknown") );
-		settings->writeEntry( "/USGS/MapIMG/AuthorEmail", QString("Unknown") );
+		settings->setValue( "/USGS/MapIMG/AuthorName", QString("Unknown") );
+		settings->setValue( "/USGS/MapIMG/AuthorCompany", QString("Unknown") );
+		settings->setValue( "/USGS/MapIMG/AuthorEmail", QString("Unknown") );
 		delete settings;
 
 		editAuthor();
@@ -365,9 +368,9 @@ void mapimgForm::dropEvent( QDropEvent *evt )
 			//to do parsing yourself.
 		text = evt->mimeData()->urls()[0].toLocalFile();
 
-		int gi = text.findRev( "img" );
-		int li = text.findRev( "xml" );
-		int fi = text.findRev( "tif" );
+		int gi = text.lastIndexOf( "img" );
+		int li = text.lastIndexOf( "xml" );
+		int fi = text.lastIndexOf( "tif" );
 		if( gi > li && gi > fi )
 		{
 			text.truncate( gi );
@@ -386,8 +389,8 @@ void mapimgForm::dropEvent( QDropEvent *evt )
 
 		if( openFile( text ) )
 		{
-			outInfoAction->setOn(false);
-			viewShowAction->setOn(true);
+			outInfoAction->setChecked(false);
+			viewShowAction->setChecked(true);
 		}
 	}
 }
@@ -400,15 +403,15 @@ messages the user and asks them to genererate one using the input frame.
 */
 void mapimgForm::inOpenClicked()
 {
-	QString temp = QFileDialog::getOpenFileName(
-		inPath, "MapIMG Files (*.img);;Tiff Files (*.tif)", this, "", "Choose an image");
+	QString temp = QFileDialog::getOpenFileName( this, "Choose an image",
+		inPath, "MapIMG Files (*.img);;Tiff Files (*.tif)" );
 
 	if( openFile(temp) )
 	{   
-		inPath = imgName.left( imgName.findRev( "/" ) );
-		QSettings *settings = new QSettings(QSettings::IniFormat, QSettings::SystemScope,"" /*QSettings::Ini*/ );
-		settings->setPath( "USGS.gov", "MapIMG" );
-		settings->writeEntry( "/USGS/MapIMG/DefaultInputPath", inPath );
+		inPath = imgName.left( imgName.lastIndexOf( "/" ) );
+		QSettings *settings = new QSettings(QSettings::IniFormat, QSettings::SystemScope,
+			"USGS.gov", "MapIMG" );
+		settings->setValue( "/USGS/MapIMG/DefaultInputPath", inPath );
 		delete settings;
 	}
 }
@@ -476,17 +479,17 @@ bool mapimgForm::openFile( QString inFile )
 		newInfo = false;
 
 		prevLast = NULL;
-		showInputPreview( imgFrame->isShown() );
+		showInputPreview( imgFrame->isVisible() );
 	}
 	else
 	{
 		info.setAuthor( authName, authCompany, authEmail );
 		inInfoFrame->lock( false, false );
-		inInfoAction->setOn( true );
-		outInfoAction->setOn( false );
+		inInfoAction->setChecked( true );
+		outInfoAction->setChecked( false );
 
 		imgFrame->setPixmap( QPixmap( "./Resources/USGS Logo.png" ) );
-		viewShowButton->setOn( false );
+		viewShowButton->setChecked( false );
 		inInfoFrame->setInfo( info );	//This is where it breaks
 
 		QMessageBox::information( this, "Open", 
@@ -503,10 +506,10 @@ bool mapimgForm::openFile( QString inFile )
 	////////Parse fileName for window caption
 	QString cap( imgName );
 	cap.replace('\\', '/');
-	int index = cap.findRev("/");
+	int index = cap.lastIndexOf("/");
 	index++;
 	cap = cap.right(cap.length() - index);
-	setCaption(cap + " - MapIMG");
+	setWindowTitle(cap + " - MapIMG");
 
 	return true;
 }
@@ -559,7 +562,7 @@ void mapimgForm::inSaveClicked()
 
 	i.save();
 	prevLast = NULL;
-	showInputPreview( imgFrame->isShown() );
+	showInputPreview( imgFrame->isVisible() );
 	return;
 }
 
@@ -574,11 +577,11 @@ void mapimgForm::showPreview( bool on )
 	if( !prevLast )               /*if a file is freshly loaded, but not displayed, prevLast will be NULL*/
 		showInputPreview( true );     /*this addition will generate the preview for this case*/
 
-	prevLast->setOn(on);
+	prevLast->setChecked(on);
 
 	ignorePreviewSignals = true;
 	{
-		viewShowButton->setOn(on);
+		viewShowButton->setChecked(on);
 	}
 	ignorePreviewSignals = false;
 
@@ -597,9 +600,9 @@ void mapimgForm::showInputPreview( bool on )
 
 	ignorePreviewSignals = true;       /* what is this block? is it conditional? */
 	{
-		prevInput->setOn(on);
-		prevOutput->setOn(false);
-		viewShowButton->setOn(on);
+		prevInput->setChecked(on);
+		prevOutput->setChecked(false);
+		viewShowButton->setChecked(on);
 		imgFrame->setShown(on);
 	}
 	ignorePreviewSignals = false;
@@ -613,26 +616,26 @@ void mapimgForm::showOutputPreview( bool on )
 
 	ignorePreviewSignals = true;
 	{
-		prevOutput->setOn(on);
+		prevOutput->setChecked(on);
 		if( on )
 		{
 			if( previewProjection() )
 			{
-				imgFrame->loadImg( QDir::currentDirPath().append("/temp_preview.img"), true );
+				imgFrame->loadImg( QDir::currentPath().append("/temp_preview.img"), true );
 				prevLast = prevOutput;
-				prevInput->setOn(false);
-				viewShowButton->setOn(true);
+				prevInput->setChecked(false);
+				viewShowButton->setChecked(true);
 				imgFrame->setShown(true);
 			}
 			else
 			{
-				prevOutput->setOn(false);
+				prevOutput->setChecked(false);
 			}
 		}
 		else
 		{
-			prevInput->setOn(false);
-			viewShowButton->setOn(false);
+			prevInput->setChecked(false);
+			viewShowButton->setChecked(false);
 			imgFrame->setShown(false);
 		}
 	}
@@ -653,7 +656,7 @@ bool mapimgForm::previewProjection()
 	{
 		QMessageBox::critical( this, "Input not set",
 			"No input to preview reprojection from." );
-		prevOutput->setOn(false);
+		prevOutput->setChecked(false);
 		ignorePreviewSignals = false;
 		return false;
 	}
@@ -675,7 +678,7 @@ bool mapimgForm::previewProjection()
 		return false;
 
 	RasterInfo smallInput;
-	smallInput.setFileName( QDir::currentDirPath().append("/temp_small.img") );
+	smallInput.setFileName( QDir::currentPath().append("/temp_small.img") );
 	smallInput.setAuthor("Unknown", "Unknown", "Unknown");
 	mapimg::downSampleImg( input, smallInput, 720, this );
 	smallInput.save();
@@ -687,7 +690,7 @@ bool mapimgForm::previewProjection()
 		return false;
 	}
 
-	output.setFileName( QDir::currentDirPath().append("/temp_preview.img") );
+	output.setFileName( QDir::currentPath().append("/temp_preview.img") );
 	output.save();
 
 	ResampleInfo resample;
@@ -738,8 +741,10 @@ void mapimgForm::outSaveClicked()
 		return;
 
 	// Prompt for destination of new projection
-	QString temp = QFileDialog::getSaveFileName(
-		outPath, "MapIMG Raster Files (*.img)", this, "", "Choose a destination for the reprojection");
+	QString temp = QFileDialog::getSaveFileName( this, 
+		"Choose a destination for the reprojection", outPath, 	
+		"MapIMG Raster Files (*.img)" );
+
 	if( temp.isEmpty() )
 		return;
 
@@ -769,7 +774,7 @@ void mapimgForm::outSaveClicked()
 	}
 
 	// Prompt for resample parameters
-	ResampleForm *resForm = new ResampleForm( input, output, this, "resForm", false,
+	ResampleForm *resForm = new ResampleForm( input, output, this, false,
 		WINDOW_FLAGS );
 
 	if( resForm->exec() == QDialog::Rejected )
@@ -795,26 +800,26 @@ void mapimgForm::outSaveClicked()
 	output.save();
 
 	// Save output path to settings
-	outPath = temp.left( temp.findRev( "/" ) );
-	QSettings *settings = new QSettings( QSettings::IniFormat, QSettings::SystemScope,"" /**QSettings::Ini**/ );
-	settings->setPath( "USGS.gov", "MapIMG" );
-	settings->writeEntry( "/USGS/MapIMG/DefaultOutputPath", outPath );
+	outPath = temp.left( temp.lastIndexOf( "/" ) );
+	QSettings *settings = new QSettings( QSettings::IniFormat, QSettings::SystemScope,
+		"USGS.gov", "MapIMG" );
+	settings->setValue( "/USGS/MapIMG/DefaultOutputPath", outPath );
 	delete settings;
 }
 
 void mapimgForm::editAuthor()
 {
-	QSettings *settings = new QSettings( QSettings::IniFormat, QSettings::SystemScope,""/**QSettings::Ini**/ );
-	settings->setPath( "USGS.gov", "MapIMG" );
+	QSettings *settings = new QSettings( QSettings::IniFormat, QSettings::SystemScope,
+		"USGS.gov", "MapIMG" );
 
 	authorForm *form = new authorForm(settings, this, false,
 		WINDOW_FLAGS );
 	form->exec();
 	delete form;
 
-	authName = settings->readEntry( "/USGS/MapIMG/AuthorName" );
-	authCompany = settings->readEntry( "/USGS/MapIMG/AuthorCompany" );
-	authEmail = settings->readEntry( "/USGS/MapIMG/AuthorEmail" );
+	authName = settings->value( "/USGS/MapIMG/AuthorName" ).toString();
+	authCompany = settings->value( "/USGS/MapIMG/AuthorCompany" ).toString();
+	authEmail = settings->value( "/USGS/MapIMG/AuthorEmail" ).toString();
 
 	delete settings;
 }
@@ -846,8 +851,8 @@ void mapimgForm::launchWebTool( const QString& url )
 #include <windows.h>
 
 	//Trolltech's Windows Version Independent Default Browser Launch
-	QT_WA( {ShellExecute( winId(), 0, (TCHAR*)url.ucs2(), 0, 0, SW_SHOWNORMAL );},
-	{ShellExecuteA( winId(), 0, url.local8Bit(), 0, 0, SW_SHOWNORMAL );} );
+	QT_WA( {ShellExecute( winId(), 0, (TCHAR*)url.utf16(), 0, 0, SW_SHOWNORMAL );},
+	{ShellExecuteA( winId(), 0, url.toLocal8Bit(), 0, 0, SW_SHOWNORMAL );} );
 
 	supportedPlatform = true;
 	executeProcess = false;

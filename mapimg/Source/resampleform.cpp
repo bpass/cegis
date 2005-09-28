@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.10 2005/08/24 17:58:26 lwoodard Exp $
+// $Id: resampleform.cpp,v 1.11 2005/09/28 20:24:29 lwoodard Exp $
 
 
 /****************************************************************************
@@ -43,39 +43,44 @@
 *  The dialog will by default be modeless, unless you set 'modal' to
 *  TRUE to construct a modal dialog.
 */
-ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent, const char* name, bool modal, Qt::WFlags fl )
-: QDialog( parent, name, modal, fl )
+ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent, bool modal, Qt::WFlags fl )
+: QDialog( parent, fl )
 {
+	setModal( modal );
 	//Keeps it from overly expanding since over riding sizeHint didn't work
 	setMaximumSize( 152, 150 );	
-
-	if ( !name )
-		setName( "ResampleForm" );
+	
+	if ( objectName().isEmpty() )
+		setObjectName( "ResampleForm" );
 
 	setPalette( RESAMPLEFORM_COLOR );
 
 	bytesPerRow = (input.cols() * (input.bitCount() / 8));
 
-	ResampleFormLayout = new QVBoxLayout( this, 11, 6, "ResampleFormLayout");
+	ResampleFormLayout = new QVBoxLayout( this );
+	ResampleFormLayout->setSpacing( 6 );
 
-	inputLayout = new QVBoxLayout( 0, 0, 6, "inputLayout"); 
+	inputLayout = new QVBoxLayout( 0 ); 
+	inputLayout->setSpacing( 6 );
 
-	resampleBox = new QGroupBox( this, "resampleBox" );	
+	resampleBox = new QGroupBox( this );	
 	resampleBoxLayout = new QVBoxLayout( resampleBox );
 	resampleBoxLayout->setSpacing( 6 );
 	resampleBoxLayout->setMargin( 11 );
 	resampleBoxLayout->setAlignment( Qt::AlignTop );
 
-	resampleCombo = new QComboBox( FALSE, resampleBox, "resampleCombo" );
+	resampleCombo = new QComboBox( resampleBox );
 	resampleCombo->setMinimumSize( QSize( 125, 0 ) );
 	resampleCombo->installEventFilter( this );
 	resampleBoxLayout->addWidget( resampleCombo );
 
-	categoricalLayout = new QHBoxLayout( resampleBoxLayout );
-	catconLabel = new QLabel( "", resampleBox, "catconLabel" );
-	conRadio = new QRadioButton( "Continuous Data", resampleBox, "conRadio" );
-	catRadio = new QRadioButton( "Categorical Data", resampleBox, "catRadio" );
-	catconButtonGroup = new QGroupBox( resampleBox, "catconButtonGroup" );
+	categoricalLayout = new QHBoxLayout( 0 );
+	categoricalLayout->setParent( resampleBoxLayout );
+	resampleBoxLayout->addLayout( categoricalLayout );
+	catconLabel = new QLabel( "", resampleBox );
+	conRadio = new QRadioButton( "Continuous Data", resampleBox );
+	catRadio = new QRadioButton( "Categorical Data", resampleBox );
+	catconButtonGroup = new QGroupBox( resampleBox );
 	catconButtonGroup->hide();
 	
 	QHBoxLayout *catconLayout = new QHBoxLayout( catconButtonGroup );
@@ -87,27 +92,28 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
 	inputLayout->addWidget( resampleBox );
 
-	ignoreBox = new QGroupBox( this, "ignoreBox" );		
+	ignoreBox = new QGroupBox( this );		
 	ignoreBoxLayout = new QHBoxLayout( ignoreBox );
 	ignoreBoxLayout->setSpacing( 6 );
 	ignoreBoxLayout->setMargin( 11 );
 	ignoreBoxLayout->setAlignment( Qt::AlignTop );
 
-	ignoreLayout = new QVBoxLayout( 0, 0, 6, "ignoreLayout");
+	ignoreLayout = new QVBoxLayout( 0 );
+	ignoreLayout->setSpacing( 6 );
 
-	ignoreLabel = new QLabel( "Ignore values cannot be used if an output \"No Data \nValue\" is not provided.", ignoreBox, "ignoreLabel" );
+	ignoreLabel = new QLabel( "Ignore values cannot be used if an output \"No Data \nValue\" is not provided.", ignoreBox );
 	ignoreLabel->hide();
 	ignoreBoxLayout->addWidget( ignoreLabel );
 	
-	ignoreEdit = new QLineEdit( ignoreBox, "ignoreEdit" );
+	ignoreEdit = new QLineEdit( ignoreBox );
 	ignoreEdit->setMinimumSize( QSize( 125, 0 ) );
 	ignoreEdit->setValidator( new MapimgValidator( output.fullDataType(), ignoreEdit ) );
 	ignoreLayout->addWidget( ignoreEdit );
 
-	newButton = new QPushButton( ignoreBox, "newButton" );
+	newButton = new QPushButton( ignoreBox );
 	newButton->setAutoDefault( false );
 	ignoreLayout->addWidget( newButton );
-	delButton = new QPushButton( ignoreBox, "delButton" );
+	delButton = new QPushButton( ignoreBox );
 	delButton->setEnabled( false );
 	delButton->setAutoDefault( false );
 	ignoreLayout->addWidget( delButton );
@@ -133,7 +139,7 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
 	ResampleFormLayout->addLayout( inputLayout );
 
-	memoryBox = new QGroupBox( this, "memoryBox" );		
+	memoryBox = new QGroupBox( this );		
 	memoryBoxLayout = new QVBoxLayout( memoryBox );
 	memoryBoxLayout->setSpacing( 6 );
 	memoryBoxLayout->setMargin( 11 );
@@ -141,10 +147,10 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
 	memoryLabelResetLayout = new QHBoxLayout();
 
-	memoryLabel = new QLabel( memoryBox, "memoryLabel" );
+	memoryLabel = new QLabel( memoryBox );
 	memoryLabel->setAlignment( Qt::AlignCenter );
 
-	memoryResetButton = new QPushButton( "Default", memoryBox, "memoryResetButton" );
+	memoryResetButton = new QPushButton( "Default", memoryBox );
 	QFontMetrics metrics( memoryResetButton->font() );
 	memoryResetButton->setMaximumWidth( metrics.width(memoryResetButton->text()) + (metrics.maxWidth()) );
 	memoryResetButton->setMaximumHeight( (int)(1.5*metrics.height()) );
@@ -153,13 +159,12 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 
 	//DEFAULT_Max_Data_Element_Count is defined in imgio.h
 	//minimum computed as the ratio of output to input plus 2% of the input
-	memoryAllocation = new QSlider( (int)((output.pixelSize()/input.pixelSize()) + 0.02*(float)input.rows()), //min
-		input.rows(),                           //max
-		10,                                     //step size
-		DEFAULT_Max_Data_Element_Count,         //default
-		Qt::Horizontal,                         //orientation
-		memoryBox,                              //parent
-		"memoryAllocationSlider" );             //name
+	memoryAllocation = new QSlider( Qt::Horizontal, memoryBox );
+	memoryAllocation->setMinimum( (int)((output.pixelSize()/input.pixelSize()) + 0.02*(float)input.rows()) );
+	memoryAllocation->setMaximum( input.rows() );
+	memoryAllocation->setPageStep( 10 );
+	memoryAllocation->setValue( DEFAULT_Max_Data_Element_Count );
+
 	defaultMemory = memoryAllocation->value();
 
 	memoryLabelResetLayout->addWidget( memoryLabel );
@@ -168,17 +173,18 @@ ResampleForm::ResampleForm( RasterInfo input, RasterInfo output, QWidget* parent
 	memoryBoxLayout->addWidget( memoryAllocation );
 	inputLayout->addWidget( memoryBox );
 
-	okLayout = new QHBoxLayout( 0, 0, 6, "okLayout");
+	okLayout = new QHBoxLayout( 0 );
+	okLayout->setSpacing( 6 );
 	okSpacer = new QSpacerItem( 141, 21, QSizePolicy::Expanding, QSizePolicy::Minimum );
 	okLayout->addItem( okSpacer );
 
-	okButton = new QPushButton( this, "okButton" );
+	okButton = new QPushButton( this );
 	okButton->setAutoDefault( false );
 	okLayout->addWidget( okButton );
 
-	cancelButton = new QPushButton( this, "cancelButton" );
+	cancelButton = new QPushButton( this );
 	cancelButton->setAutoDefault( false );
-	cancelButton->setAccel( Qt::Key_Escape );
+	cancelButton->setShortcut( Qt::Key_Escape );
 	okLayout->addWidget( cancelButton );
 	ResampleFormLayout->addLayout( okLayout );
 	languageChange();
@@ -217,16 +223,16 @@ ResampleForm::~ResampleForm()
 */
 void ResampleForm::languageChange()
 {
-	setCaption( tr( "Resample Options" ) );
+	setWindowTitle( tr( "Resample Options" ) );
 	resampleBox->setTitle( tr( "Resample Method" ) );
 	resampleCombo->clear();
-	resampleCombo->insertItem( tr( "Nearest Neighbor" ) );
-	resampleCombo->insertItem( tr( "Sum" ) );
-	resampleCombo->insertItem( tr( "Mean" ) );
-	resampleCombo->insertItem( tr( "Median" ) );
-	resampleCombo->insertItem( tr( "Mode" ) );
-	resampleCombo->insertItem( tr( "Min" ) );
-	resampleCombo->insertItem( tr( "Max" ) );
+	resampleCombo->addItem( tr( "Nearest Neighbor" ) );
+	resampleCombo->addItem( tr( "Sum" ) );
+	resampleCombo->addItem( tr( "Mean" ) );
+	resampleCombo->addItem( tr( "Median" ) );
+	resampleCombo->addItem( tr( "Mode" ) );
+	resampleCombo->addItem( tr( "Min" ) );
+	resampleCombo->addItem( tr( "Max" ) );
 	ignoreBox->setTitle( tr( "Ignore Values" ) );
 	ignoreEdit->setText( tr( "0" ) );
 	newButton->setText( tr( "New Value -->" ) );
@@ -340,8 +346,7 @@ void ResampleForm::updateMemoryAllocation()
 	else
 		labelText += QString( "%2 B" ).arg( bytes );
 
-
-	memoryLabel->setText( tr( labelText ) );
+	memoryLabel->setText( tr( labelText.toAscii() ) );
 	return;
 }
 

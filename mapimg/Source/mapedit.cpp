@@ -186,8 +186,8 @@ with which data type it is trying to validate.
 void MapEdit::dataChange( const QString& newDataType )
 {
 	QString tempText = "";
-	//newDataType.remove( ' ' );	//added
-	if( newDataType.stripWhiteSpace() != "" )	//newDataType.stripWhiteSpace()
+
+	if( newDataType.trimmed() != "" )
 	{
 		((MapimgValidator*)fillEdit->validator())->setDataType( newDataType );
 		tempText = fillEdit->text();
@@ -209,14 +209,14 @@ void MapEdit::reset()
 	fileEdit->setText( "" );
 	rowSpin->setValue( 0 );
 	colSpin->setValue( 0 );
-	unitCombo->setCurrentIndex( 3 );	
-	spheroidCombo->setCurrentIndex( 20 );	
-	pixelCombo->setCurrentIndex( 0 );		
+	unitCombo->setCurrentIndex( 3 );
+	spheroidCombo->setCurrentIndex( 20 );
+	pixelCombo->setCurrentIndex( 0 );
 	pixelEdit->setText( "0.000000" );
 	pixelEdit->setShown( false );
 	ulLonEdit->setText( "0.000000" );
 	ulLatEdit->setText( "0.000000" );
-	dataCombo->setCurrentIndex( 0 );		
+	dataCombo->setCurrentIndex( 0 );
 	fillEdit->setText( "0.000000" );
 	noDataEdit->setText( "0.000000" );
 	hasFillCheck->setChecked( true );
@@ -375,7 +375,7 @@ void MapEdit::generateWidgets()
 		"", this );
 	lockButton = new QPushButton( QIcon( "./Resources/unlocked.png" ),
 		"", this );
-	mapLabel = new QLabel( "Map Info", this );
+	mapLabel = new QLabel("Map Info", this );
 	mapLabel->setObjectName( "mapLabel" );
 	frameButton = new QPushButton( QIcon( "./Resources/calculate.png" ),
 		"", this );	
@@ -391,7 +391,7 @@ void MapEdit::generateWidgets()
 	fileBox->setParent( mainLayout );
 	mainLayout->addLayout( fileBox );
 	fileNameLabel = new QLabel( "File Name:", this );
-	fileEdit = new QLineEdit( "", this );
+	fileEdit = new QLineEdit( "", this ); 
 	
 	fileBox->addWidget( fileNameLabel );
 	fileBox->addWidget( fileEdit );
@@ -401,7 +401,7 @@ void MapEdit::generateWidgets()
 	rowcolBox->setParent( mainLayout );
 	mainLayout->addLayout( rowcolBox );
 	rowsOfPixelsLabel = new QLabel( "Rows of Pixels:", this );
-	rowSpin = new QSpinBox( this ); 
+	rowSpin = new QSpinBox( this );
 	rowSpin->setMinimum( 0 );
 	rowSpin->setMaximum( 100000000 );
 	rowSpin->setSingleStep( 1 );
@@ -471,7 +471,7 @@ void MapEdit::generateWidgets()
 	//fillBox - Contains hidable checkbox, a lineEdit and a pushbutton; goes into dataBox
 	fillBox = new QHBoxLayout( 0 );	
 	fillBox->setParent( dataBox );
-	dataBox->addLayout( fillBox );	
+	dataBox->addLayout( fillBox );
 	fillBox->setSizeConstraint( QLayout::SetNoConstraint );
 	hasFillCheck = new QCheckBox( this );
 	hasFillCheck->hide(); 
@@ -490,7 +490,7 @@ void MapEdit::generateWidgets()
 	//noDataBox - Contains hidable checkbox and a lineEdit; goes into dataBox
 	noDataBox = new QHBoxLayout( 0 );	
 	noDataBox->setParent( dataBox );
-	dataBox->addLayout( noDataBox );	
+	dataBox->addLayout( noDataBox );
 	noDataBox->setSizeConstraint( QLayout::SetMinimumSize );
 	hasNoDataCheck = new QCheckBox( this );
 	hasNoDataCheck->hide();

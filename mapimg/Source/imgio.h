@@ -1,4 +1,4 @@
-// $Id: imgio.h,v 1.6 2005/09/20 19:46:31 lwoodard Exp $
+// $Id: imgio.h,v 1.7 2005/09/28 20:24:28 lwoodard Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -183,7 +183,7 @@ public:
       if(outptr.isOpen())
          outptr.close();
 
-      remove(outfile_name);
+	  remove(outfile_name.toAscii() );
       return;
    }
 
@@ -198,7 +198,7 @@ public:
       if( inptr.isOpen() )
          inptr.close();
 
-      inptr.setName( infile_name );
+      inptr.setFileName( infile_name );	//setName
       inptr.open( QIODevice::ReadOnly );
 
       if( !inptr.isOpen() || !inptr.isReadable() )
@@ -213,7 +213,7 @@ public:
       if( outptr.isOpen() )
          outptr.close();
 
-      outptr.setName( outfile_name );
+      outptr.setFileName( outfile_name );	//setName
       outptr.open( QIODevice::WriteOnly );
 
       if(!outptr.isOpen() || !outptr.isWritable() )
@@ -289,8 +289,8 @@ public:
       {
          type *valBuffer = new type[SUBSAMPLE];
 
-         inFile.seek( 0 );	
-         inFile.readBlock( (char*&)valBuffer, sizeof(type) * SUBSAMPLE );
+         inFile.seek( 0 );
+         inFile.read( (char*&)valBuffer, sizeof(type) * SUBSAMPLE ); 
          max_value = valBuffer[0];
          for( index = 0; index < SUBSAMPLE; index++ )
          {
@@ -299,7 +299,7 @@ public:
          }
 
          inFile.seek( ((INPUTSIZE/2) - SUBSAMPLE) * sizeof(type) );
-         inFile.readBlock( (char*&)valBuffer, SUBSAMPLE * sizeof(type) );
+         inFile.read( (char*&)valBuffer, SUBSAMPLE * sizeof(type) ); //readBlock
          for( index = 0; index < SUBSAMPLE; index++ )
          {
             if( *((type*)valBuffer + index) > max_value )
@@ -307,7 +307,7 @@ public:
          }
 
          inFile.seek( (INPUTSIZE - SUBSAMPLE) * sizeof(type) );
-         inFile.readBlock( (char*&)valBuffer, SUBSAMPLE * sizeof(type) );
+         inFile.read( (char*&)valBuffer, SUBSAMPLE * sizeof(type) ); //readBlock
          for( index = 0; index < SUBSAMPLE; index++ )
          {
             if( *((type*)valBuffer + index) > max_value )
@@ -321,7 +321,7 @@ public:
          type *valBuffer = new type[SUBSAMPLE];
 
          inFile.seek( 0 );
-         inFile.readBlock( (char*&)valBuffer, sizeof(type) * INPUTSIZE );
+         inFile.read( (char*&)valBuffer, sizeof(type) * INPUTSIZE );//readBlock
          max_value = valBuffer[0];
          for( index = 0; index < INPUTSIZE; index++ )
          {
@@ -345,7 +345,7 @@ public:
    {
       if( inputDataMap == NULL )
       {
-         inputDataMap = new QCache< QString, type >( Max_Data_Element_Count, (int)(1.6*Max_Data_Element_Count) );
+         inputDataMap = new QCache< QString, type >( Max_Data_Element_Count );
          last_offset = offset;
       }
       else if( last_offset == offset )
@@ -360,7 +360,7 @@ public:
 
       if( buf ==  0 )
       {
-         if( !inptr.at( (qulonglong)(offset) * lineLength * sizeof(type)) )
+         if( !inptr.seek( (qulonglong)(offset) * lineLength * sizeof(type)) )
          {
             // end of file or corrupt file found
             printf( "error seeking!!!\n" );
@@ -369,11 +369,11 @@ public:
 
          //then load the line into memory
          type *newBuffer = new type[lineLength];
-         long amountRead = inptr.readBlock( (char*&)newBuffer, sizeof(type) * lineLength);
+         long amountRead = inptr.read( (char*&)newBuffer, sizeof(type) * lineLength); //readBlock
 
          if( amountRead != (long)(sizeof(type) * lineLength) )
          {
-            printf( "Read %li requested %i at line %s\n", amountRead, lineLength, offsetString.ascii() );
+            printf( "Read %li requested %i at line %s\n", amountRead, lineLength, offsetString.toAscii() );
             fflush( stdout );
 
             if( inptr.atEnd() )
@@ -422,7 +422,7 @@ public:
    {
       if( outptr.isOpen() && outptr.isWritable() )
       {
-         outptr.writeBlock( (char*&)buf, outsize*sizeof(type) );
+         outptr.write( (char*&)buf, outsize*sizeof(type) );
          outptr.flush();
       }
       else

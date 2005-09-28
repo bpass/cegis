@@ -1,4 +1,4 @@
-// $Id: qimgframe.h,v 1.4 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: qimgframe.h,v 1.5 2005/09/28 20:24:28 lwoodard Exp $
 
 
 #ifndef QIMGFRAME_H
@@ -33,7 +33,7 @@ class QImgFrame : public QFrame
       Q_PROPERTY( QPixmap pixmap READ pixmap WRITE setPixmap )
 
 public:
-   QImgFrame( QWidget* parent = 0, const char* name = 0);
+   QImgFrame( QWidget* parent = 0 );
    ~QImgFrame();
 
    const QPixmap *pixmap() const;

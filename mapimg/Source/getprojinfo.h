@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.6 2005/09/20 19:46:31 lwoodard Exp $
+// $Id: getprojinfo.h,v 1.7 2005/09/28 20:24:28 lwoodard Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -70,7 +70,7 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
 
    IMGIO<type> imgIO( resample.cacheLineCount() );
 
-   imgIO.parse_input(input.imgFileName().ascii(), output.imgFileName().ascii());
+   imgIO.parse_input(input.imgFileName(), output.imgFileName());
 
    IMGINFO inimg;            // Image information--input
    IMGINFO outimg;         // Image information--output
@@ -103,7 +103,7 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
    //INPUT_COLOR and OUTPUT_COLOR are defined in mapimgpalette.h
    MapimgProgressDialog progress( "Performing Transformation", "Abort", outimg.nl, &INPUT_COLOR, &OUTPUT_COLOR,
       mapimgdial, "progress", TRUE, WINDOW_FLAGS );
-   progress.setCaption( "Processing..." );
+   progress.setWindowTitle( "Processing..." );
 
    // Set min Duration required for Dialog at 1 second (try to make it always show)
    progress.setMinimumDuration(1);
@@ -456,9 +456,9 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
                               it != coverageMap.end();
                               ++it )
                            {
-                              if( it.data() > maxCount )
+                              if( it.value() > maxCount )
                               {
-                                 maxCount = it.data();
+                                 maxCount = it.value();
                                  modeValue = it.key();
                               }
                            }
@@ -610,7 +610,7 @@ bool mapimg_downsample( const RasterInfo &input, const RasterInfo &output, type 
    if( pixRatio < 1 ) pixRatio = 0;
 
    IMGIO<type> imgIO;
-   imgIO.parse_input(input.imgFileName().ascii(), output.imgFileName().ascii());
+   imgIO.parse_input(input.imgFileName().toAscii(), output.imgFileName().toAscii());
    IMGINFO inimg, outimg;
    imgIO.init_io(input, output, &inimg, &outimg, useType );
 
@@ -619,7 +619,7 @@ bool mapimg_downsample( const RasterInfo &input, const RasterInfo &output, type 
 
    MapimgProgressDialog progress( "Down Sample Input", "Abort", outimg.nl,
       &INPUT_COLOR, &ABOUTFORM_COLOR, mapimgdial, "progress", TRUE, WINDOW_FLAGS );
-   progress.setCaption( "Sampling..." );
+   progress.setWindowTitle( "Sampling..." );
    progress.setMinimumDuration(1);
 
    long outX, outY;

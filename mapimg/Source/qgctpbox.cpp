@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.9 2005/09/20 19:46:31 lwoodard Exp $
+// $Id: qgctpbox.cpp,v 1.10 2005/09/28 20:24:28 lwoodard Exp $
 
 #include <QFrame>
 #include <QLabel>
@@ -118,10 +118,13 @@ QString QGctpBox::output()
 void QGctpBox::setGctpName( const QString & gctpName )
 {
    if( name != QString::null )
-      holdValues->replace( name, value() );
+      {
+	   holdValues->remove( name );
+	   holdValues->insert( name, value() );
+   }
 
    activeEdit = NULL;
-   label->setToolTip( QString() );
+	label->setToolTip( QString() );
 
    if( gctpName == "" )
    {
@@ -201,7 +204,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       label->setText( "Scale Factor at Center of Projection: *" );
       activeEdit = lineEdit;
       lineEdit->setValidator( new QDoubleValidator( 0.0, 1000000.0, 6, lineEdit ) );
-	  label->setToolTip( "This will default to 1 if left as 0." );
+      label->setToolTip( "This will default to 1 if left as 0." );
    }
    else if( gctpName == "FactorM" )
    {
@@ -460,7 +463,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
          activeEdit->show();
 
       name = gctpName;
-      setValue( holdValues->find(name).data() );
+      setValue( holdValues->value( name ) );
       show();
    }
 }

@@ -1,4 +1,4 @@
-// $Id: logform.cpp,v 1.4 2005/09/20 19:46:31 lwoodard Exp $
+// $Id: logform.cpp,v 1.5 2005/09/28 20:24:28 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -40,15 +40,17 @@ logForm::logForm( QWidget* parent, bool modal, Qt::WFlags fl )
 : QDialog( parent, fl )
 {
    setModal( modal );
+	setObjectName( "logForm" );
 
-   setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)0, 0, 0, sizePolicy().hasHeightForWidth() ) );
+   //setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)0, (QSizePolicy::SizeType)0, 0, 0, sizePolicy().hasHeightForWidth() ) );
+   setSizePolicy( QSizePolicy::Preferred , QSizePolicy::Preferred );
    setMinimumSize( QSize( 300, 300 ) );
    setMaximumSize( QSize( 600, 600 ) );
    setBaseSize( QSize( 400, 375 ) );
    logFormLayout = new QGridLayout( this ); //, 1, 1, 11, 6, "logFormLayout"); 
 
-   layout3 = new QHBoxLayout( 0 );	//, 0, 6, "layout3"); 
-   layout3->setSpacing( 6 );	//added
+   layout3 = new QHBoxLayout( 0 ); 
+   layout3->setSpacing( 6 );	
    spacer1 = new QSpacerItem( 210, 21, QSizePolicy::Expanding, QSizePolicy::Minimum );
    layout3->addItem( spacer1 );
 
@@ -93,8 +95,8 @@ logForm::~logForm()
 */
 void logForm::languageChange()
 {
-   setWindowTitle( tr( "MapIMG Log..." ) );
-   //setIconText( QString::null );
+	setWindowTitle( tr( "MapIMG Log..." ) );
+//   setIconText( QString::null );
    saveButton->setText( tr( "&Save..." ) );
    okButton->setText( tr( "&OK" ) );
 }
@@ -106,15 +108,13 @@ void logForm::saveLog()
    QString fileTypes = "MapIMG Log files (*.txt);;All Files (*.*)";
 
    QString s = QFileDialog::getSaveFileName(
-      "", fileTypes, this, "save log dialog",
-      "Choose a filename to save under" );
+	   this, "Choose a filename to save under", "" , fileTypes );
 
    int answer = -1;
    if( s.isNull() ) return;   //cancel pressed
 
    //add default extension if none is provided
-   //if( (s.find( '.' ) == -1 ) ) s.append( ".txt" );
-   if( s.contains( '.' ) ) s.append( ".txt" );
+   if( !s.contains( '.' ) ) s.append( ".txt" );
 
    // if output file exists, ask about overwriting
    if( !s.isNull()  &&  QFile::exists(s) )
@@ -127,7 +127,7 @@ void logForm::saveLog()
 
    // if yes, remove generic binary and .info files to prepare for overwrite
    if(answer == 0)
-      remove(s);
+	   remove(s.toAscii());
 
    // if no overwrite needed
    else if(answer == -1)
@@ -152,7 +152,7 @@ void logForm::saveLog()
       }
 
       QTextStream ts( &logFileOutput );
-      ts << logViewer->text();
+      ts << logViewer->toPlainText();
 
       logFileOutput.close();
    }
@@ -166,19 +166,19 @@ void logForm::saveLog()
 
 void logForm::refreshLog()
 {
-   logViewer->repaint(true);
+   logViewer->repaint();
 }
 
 
 void logForm::loadLog()
 {
    QString fullLog = ""; 
-   char *tempLine = "";
+
    const long MAX_LINE_LENGTH = 500;  //maximum number of characters to read at one time
 
    if( QFile::exists( logFile ) )
    {
-      logViewer->setText( "" );
+      logViewer->setPlainText( "" );
       logViewer->setReadOnly( true );
 
       QFile log( logFile );
@@ -186,12 +186,12 @@ void logForm::loadLog()
 
       while( !log.atEnd() )
       {
-         //if there was not an error reading append
-         if( log.readLine( tempLine, MAX_LINE_LENGTH ) != -1 )
-            fullLog += tempLine;
+			//if there was not an error reading append
+		  if(log.isReadable())
+			  fullLog += log.readLine( MAX_LINE_LENGTH );
       }
 
-      logViewer->setText( fullLog );
+      logViewer->setPlainText( fullLog );
       log.close();
    }
    return;

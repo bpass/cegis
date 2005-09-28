@@ -1,4 +1,5 @@
 #include <QColor>
+#include <QColorGroup>
 #include <QString>
 #include <QProgressDialog>
 
@@ -55,7 +56,7 @@ MapimgProgressDialog::MapimgProgressDialog( const QString& labelText, const QStr
       stepsPerUpdate = defaultStepsPerUpdate;
 
       QPalette p( *colorStart );
-      p.setColor( QPalette::Text, p.color( QPalette::Active, QPalette::Text ) );
+	  p.setColor( QPalette::Text, p.color( QPalette::Active, QPalette::Text ) );
       setPalette( p );
    }
 }

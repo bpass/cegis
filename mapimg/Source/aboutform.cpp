@@ -1,4 +1,4 @@
-// $Id: aboutform.cpp,v 1.3 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: aboutform.cpp,v 1.4 2005/09/28 20:24:28 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -35,75 +35,83 @@
 *  TRUE to construct a modal dialog.
 */
 aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, Qt::WFlags fl )
-: QDialog( parent, name, modal, fl )
+: QDialog( parent, fl )
 {
-   if ( !name )
-      setName( "aboutForm" );
+	setObjectName( name );
+	setModal( modal );
 
-   // Load in the preset colors form mapimgpalette.h
-   setPalette( ABOUTFORM_COLOR );
-   setPaletteForegroundColor( ABOUTTEXT_COLOR );
+	if ( objectName().isEmpty() )
+		setObjectName( "aboutForm" );
 
-   aboutFormLayout = new QVBoxLayout( this, 4, 3, "aboutFormLayout");
+	// Load in the preset colors form mapimgpalette.h
+	setPalette( ABOUTFORM_COLOR );
+	QPalette palette;
+	palette.setColor(foregroundRole(), QColor(ABOUTTEXT_COLOR));
+	setPalette(palette);
 
-   logoLabel = new QLabel( this, "logoLabel" );
-   logoLabel->setMaximumSize( QSize( 400, 147 ) );
-   logoLabel->setFrameShape( QLabel::WinPanel );
-   logoLabel->setFrameShadow( QLabel::Sunken );
-   logoLabel->setPixmap( QPixmap( "./Resources/USGS Logo.png" ) );
-   logoLabel->setScaledContents( TRUE );
-   aboutFormLayout->addWidget( logoLabel );
+	aboutFormLayout = new QVBoxLayout( this );
+	aboutFormLayout->setSpacing( 4 );
 
-   titleLabel = new QLabel( this, "titleLabel" );
-   QFont titleLabel_font(  titleLabel->font() );
-   titleLabel_font.setFamily( "Arial" );
-   titleLabel_font.setPointSize( 22 );
-   titleLabel_font.setBold( TRUE );
-   titleLabel->setFont( titleLabel_font ); 
-   /****/titleLabel->setAlignment( int( Qt::TextWordWrap | Qt::AlignCenter ) );
-   aboutFormLayout->addWidget( titleLabel );
+	logoLabel = new QLabel( this );
+	logoLabel->setMaximumSize( QSize( 400, 147 ) );
+	logoLabel->setFrameShape( QLabel::WinPanel );
+	logoLabel->setFrameShadow( QLabel::Sunken );
+	logoLabel->setPixmap( QPixmap( "./Resources/USGS Logo.png" ) );
+	logoLabel->setScaledContents( TRUE );
+	aboutFormLayout->addWidget( logoLabel );
 
-   descFrame = new QFrame( this, "descFrame" );
-   descFrame->setFrameShape( QFrame::WinPanel );
-   descFrame->setFrameShadow( QFrame::Sunken );
-   descFrameLayout = new QVBoxLayout( descFrame, 4, 0, "discFrameLayout"); 
+	titleLabel = new QLabel( this );
+	QFont titleLabel_font(  titleLabel->font() );
+	titleLabel_font.setFamily( "Arial" );
+	titleLabel_font.setPointSize( 22 );
+	titleLabel_font.setBold( TRUE );
+	titleLabel->setFont( titleLabel_font ); 
+	titleLabel->setAlignment( Qt::AlignCenter );
+	aboutFormLayout->addWidget( titleLabel );
 
-   descLabel1 = new QLabel( descFrame, "descLabel1" );
-   QFont descLabel1_font(  descLabel1->font() );
-   descLabel1_font.setFamily( "Arial" );
-   descLabel1_font.setPointSize( 10 );
-   descLabel1->setFont( descLabel1_font ); 
-   descLabel1->setTextFormat( Qt::RichText );
-   /****/descLabel1->setAlignment( int( Qt::TextWordWrap | Qt::AlignJustify | Qt::AlignTop ) );
-   descFrameLayout->addWidget( descLabel1 );
+	descFrame = new QFrame( this );
+	descFrame->setFrameShape( QFrame::WinPanel );
+	descFrame->setFrameShadow( QFrame::Sunken );
+	descFrameLayout = new QVBoxLayout( descFrame ); 
+	descFrameLayout->setSpacing( 4 );
 
-   descLabel2 = new QLabel( descFrame, "descLabel2" );
-   QFont descLabel2_font(  descLabel2->font() );
-   descLabel2_font.setFamily( "Arial" );
-   descLabel2_font.setPointSize( 12 );
-   descLabel2->setFont( descLabel2_font ); 
-   descLabel2->setTextFormat( Qt::RichText );
-   /****/descLabel2->setAlignment( int( Qt::TextWordWrap | Qt::AlignJustify | Qt::AlignTop ) );
-   descFrameLayout->addWidget( descLabel2 );
-   aboutFormLayout->addWidget( descFrame );
+	descLabel1 = new QLabel( descFrame );
+	QFont descLabel1_font(  descLabel1->font() );
+	descLabel1_font.setFamily( "Arial" );
+	descLabel1_font.setPointSize( 10 );
+	descLabel1->setFont( descLabel1_font ); 
+	descLabel1->setTextFormat( Qt::RichText );
+	descLabel1->setAlignment( Qt::AlignJustify | Qt::AlignTop );
+	descFrameLayout->addWidget( descLabel1 );
 
-   descLabel3 = new QLabel( descFrame, "descLabel3" );
-   descLabel3->setFont( descLabel1_font ); 
-   descLabel3->setTextFormat( Qt::RichText );
-   /****/descLabel3->setAlignment( int( Qt::TextWordWrap | Qt::AlignJustify | Qt::AlignTop ) );
-   descFrameLayout->addWidget( descLabel3 );
+	descLabel2 = new QLabel( descFrame );
+	QFont descLabel2_font(  descLabel2->font() );
+	descLabel2_font.setFamily( "Arial" );
+	descLabel2_font.setPointSize( 12 );
+	descLabel2->setFont( descLabel2_font ); 
+	descLabel2->setTextFormat( Qt::RichText );
+	descLabel2->setAlignment( Qt::AlignJustify | Qt::AlignTop );
+	descFrameLayout->addWidget( descLabel2 );
+	aboutFormLayout->addWidget( descFrame );
 
-   okLayout = new QHBoxLayout( this, 4, 3, "okLayout" );
-   okLayout->addItem( new QSpacerItem( 30, 10 ) );
-   okButton = new QPushButton( this, "okButton" );
-   okButton->setMaximumWidth( 80 );
-   okLayout->addWidget( okButton );
+	descLabel3 = new QLabel( descFrame );
+	descLabel3->setFont( descLabel1_font ); 
+	descLabel3->setTextFormat( Qt::RichText );
+	descLabel3->setAlignment( Qt::AlignJustify | Qt::AlignTop );
+	descFrameLayout->addWidget( descLabel3 );
 
-   aboutFormLayout->addItem( okLayout );
+	okLayout = new QHBoxLayout( this );
+	okLayout->setSpacing( 4 );
+	okLayout->addItem( new QSpacerItem( 30, 10 ) );
+	okButton = new QPushButton( this );
+	okButton->setMaximumWidth( 80 );
+	okLayout->addWidget( okButton );
 
-   connect( okButton, SIGNAL( clicked() ), this, SLOT( close() ) );
+	aboutFormLayout->addItem( okLayout );
 
-   languageChange();
+	connect( okButton, SIGNAL( clicked() ), this, SLOT( close() ) );
+
+	languageChange();
 }
 
 /*
@@ -112,14 +120,14 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, Qt::WFlags 
 */
 void aboutForm::languageChange()
 {
-   setCaption( tr( "About MapIMG" ) );
-   titleLabel->setText( QString("MapIMG v%1.%2.%3").arg(MAJOR_VERSION).arg(MINOR_VERSION).arg(REVISION_NUM) );
-   descLabel1->setText( tr( "MapIMG is a research-oriented project. Its source and binaries"
-      " are provided with no warranty or support. <b>Use at your own risk.</b>"
-      " We will, however, provide minimal technical support as time allows."
-      " We are also very interested in feedback as well as bug reports. All"
-      " questions and comments may be sent to:" ) );
-   descLabel2->setText( tr( "<p align=\"center\">mapimg@usgs.gov</p>" ) );
-   descLabel3->setText( tr( "Libraries used: Qt, Libtiff, and TinyXML." ) );
-   okButton->setText( tr( "Ok" ) );
+	setWindowTitle( tr( "About MapIMG" ) );
+	titleLabel->setText( QString("MapIMG v%1.%2.%3").arg(MAJOR_VERSION).arg(MINOR_VERSION).arg(REVISION_NUM) );
+	descLabel1->setText( tr( "MapIMG is a research-oriented project. Its source and binaries"
+		" are provided with no warranty or support. <b>Use at your own risk.</b>"
+		" We will, however, provide minimal technical support as time allows."
+		" We are also very interested in feedback as well as bug reports. All"
+		" questions and comments may be sent to:" ) );
+	descLabel2->setText( tr( "<p align=\"center\">mapimg@usgs.gov</p>" ) );
+	descLabel3->setText( tr( "Libraries used: Qt, Libtiff, and TinyXML." ) );
+	okButton->setText( tr( "Ok" ) );
 }

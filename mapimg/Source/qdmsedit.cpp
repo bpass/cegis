@@ -1,4 +1,4 @@
-// $Id: qdmsedit.cpp,v 1.10 2005/09/20 19:46:31 lwoodard Exp $
+// $Id: qdmsedit.cpp,v 1.11 2005/09/28 20:24:28 lwoodard Exp $
 
 #include <QFrame>
 #include <QHBoxLayout>
@@ -106,8 +106,8 @@ void QDmsEdit::setMinVal( const int &newMin )
       sEdit->setText("0");
    }
    dEdit->setValidator( new QIntValidator(min, max, dEdit) );
-   QToolTip::remove( dEdit );
-   QToolTip::add( dEdit, QString("<b>degrees</b>: integer from %1 to %2" ).
+   dEdit->setToolTip( QString() );
+   dEdit->setToolTip( QString("<b>degrees</b>: integer from %1 to %2" ).
       arg(min).arg(max));
 }
 
@@ -128,8 +128,8 @@ void QDmsEdit::setMaxVal( const int &newMax )
       sEdit->setText("0");
    }
    dEdit->setValidator( new QIntValidator(min, max, dEdit) );
-   QToolTip::remove( dEdit );
-   QToolTip::add( dEdit, QString("<b>degrees</b>: integer from %1 to %2" ).
+   dEdit->setToolTip( QString() );
+   dEdit->setToolTip( QString("<b>degrees</b>: integer from %1 to %2" ).
       arg(min).arg(max));
 }
 
@@ -182,13 +182,13 @@ QDmsEdit::Directionality QDmsEdit::direction() const
 {
    Directionality returnValue = Unspecified;
 
-   if( directionLabel->text().upper() == "N" )
+   if( directionLabel->text().toUpper() == "N" )
       returnValue = North;
-   else if( directionLabel->text().upper() == "E" )
+   else if( directionLabel->text().toUpper() == "E" )
       returnValue = East;
-   else if( directionLabel->text().upper() == "S" )
+   else if( directionLabel->text().toUpper() == "S" )
       returnValue = South;
-   else if( directionLabel->text().upper() == "W" )
+   else if( directionLabel->text().toUpper() == "W" )
       returnValue = West;
 
    return returnValue;

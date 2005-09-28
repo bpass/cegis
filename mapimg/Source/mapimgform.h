@@ -1,4 +1,4 @@
-// $Id: mapimgform.h,v 1.7 2005/08/29 16:48:14 lwoodard Exp $
+// $Id: mapimgform.h,v 1.8 2005/09/28 20:24:28 lwoodard Exp $
 
 
 /****************************************************************************
@@ -39,7 +39,7 @@ class mapimgForm : public QMainWindow
 	Q_OBJECT
 
 public:
-	mapimgForm( QWidget* parent = 0, const char* name = 0, Qt::WFlags fl = Qt::WType_TopLevel );
+	mapimgForm( QWidget* parent = 0, Qt::WFlags fl = Qt::Window );
    void setupContents();
    void createActions();
    void setupMenubar();

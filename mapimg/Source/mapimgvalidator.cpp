@@ -1,4 +1,4 @@
-// $Id: mapimgvalidator.cpp,v 1.3 2005/09/20 19:46:31 lwoodard Exp $
+// $Id: mapimgvalidator.cpp,v 1.4 2005/09/28 20:24:28 lwoodard Exp $
 
 #include <QValidator>
 #include <QString>
@@ -179,7 +179,8 @@ QValidator::State MapimgValidator::validate( QString & input, int & ) const
    }
 
    QRegExp empty( QString::fromLatin1(" *-?\\.? *") );
-   if ( m_bottom >= 0 && input.remove(' ').startsWith( QString::fromLatin1("-")))
+   if ( m_bottom >= 0 &&
+	   input.remove(' ').startsWith( QString::fromLatin1("-")))
       return Invalid;
    if ( empty.exactMatch(input) )
       return Intermediate;
@@ -191,7 +192,7 @@ QValidator::State MapimgValidator::validate( QString & input, int & ) const
    if ( !ok ) {
       // explicit exponent regexp
       QRegExp expexpexp( QString::fromLatin1("[Ee][+-]?\\d*$") );
-	  int eeePos = expexpexp.indexIn( input );
+      int eeePos = expexpexp.indexIn( input );
       if ( eeePos > 0 && nume == 1 ) {
          QString mantissa = input.left( eeePos );
          entered = mantissa.toDouble( &ok );

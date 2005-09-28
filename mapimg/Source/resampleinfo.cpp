@@ -1,4 +1,4 @@
-// $Id: resampleinfo.cpp,v 1.4 2005/09/20 19:46:31 lwoodard Exp $
+// $Id: resampleinfo.cpp,v 1.5 2005/09/28 20:24:29 lwoodard Exp $
 
 
 #include "resampleinfo.h"
@@ -57,7 +57,7 @@ void ResampleInfo::setResampleCode( ResampleCode code )
 
 bool ResampleInfo::setResampleCode( const QString &codeName )
 {
-	QString str( codeName.toLower() );
+   QString str( codeName.toLower() );
    str.remove(' ');
    strncpy( rn, str.toAscii(), RN_MAXLENGTH );
 

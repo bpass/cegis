@@ -1,7 +1,7 @@
 /**
  * @file LittleRiver.cpp
  *
- * $Id: LittleRiver.cpp,v 1.13 2005/09/28 23:06:20 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.14 2005/09/29 23:47:46 ahartman Exp $
  */
 
 #include <iomanip>
@@ -19,7 +19,8 @@
 //#define PRINT_SUFFIXES
 //#define PAUSE_AT_END
 
-typedef std::vector<unsigned int> Resolutions_t;
+typedef unsigned int Resolution_t;
+typedef std::vector<Resolution_t> Resolutions_t;
 typedef std::vector<std::vector<std::string> > Filenames_t;
 
 Resolutions_t createResolutions();
@@ -191,10 +192,10 @@ void littleRiverPrintPoints()
 //    points.push_back(Point_t(260580.000000, 3485911.000000));
 
     // Set up the data files we want to read
-    const std::string myFileTypes[] = { "clay", "hydro", "largeagg", "nitro",
-                                        "phospho", "sand", "silt", "smallagg",
-                                        "total" };
-//    const std::string myFileTypes[] = { "hydro" };
+//    const std::string myFileTypes[] = { "clay", "hydro", "largeagg", "nitro",
+//                                        "phospho", "sand", "silt", "smallagg",
+//                                        "total" };
+    const std::string myFileTypes[] = { "hydro" };
     const size_t numMyFileTypes = sizeof(myFileTypes) / sizeof(myFileTypes[0]);
 
     // Set up the bands we want to read
@@ -287,18 +288,24 @@ void littleRiverPrintPoints()
             {
                 std::cout << "\t\tValues for band " << *band << '\n';
 
-                for(size_t resolution = 0; resolution < resolutions.size(); 
-                    ++resolution)
+                for(size_t resIndex = 0; resIndex < resolutions.size(); 
+                    ++resIndex)
                 {
+                    const Resolution_t resolution = resolutions[resIndex];
                     std::cout << "\t\t\t" << std::setw(4) 
-                              << resolutions[resolution]
-                              << ": ";
+                              << resolution << ": ";
                     try
                     {
                         const Data_t value = 
-                            imgReaders[resolution][myFileType].
+                            imgReaders[resIndex][myFileType].
                                 getValue(point->x(), point->y(), *band);
-                        std::cout << value << '\n';
+                        std::cout << std::setw(10) 
+                                  << value
+                                  << std::setw(10) 
+                                  << value / resolution
+                                  << std::setw(10) 
+                                  << value / (resolution * resolution)
+                                  << '\n';
                     }
                     catch(...)
                     {

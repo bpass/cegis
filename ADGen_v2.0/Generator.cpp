@@ -30,10 +30,10 @@ const int NUM_OF_LAYERS       = 9;
 const __int64 OUTLET_CELL_FLOW= 50000000;
 
 namespace ADGEN {
-   enum {E = 1, SE, S, SW, W, NW, N, NE};
+   enum {NO_DIR = 0, E, SE, S, SW, W, NW, N, NE};
 }
 namespace ARC {
-   enum {S = 1, SW = 2, W = 4, NW = 8, N = 16, NE = 32, E = 64, SE = 128};
+   enum {NO_DIR = 0, S = 1, SW = 2, W = 4, NW = 8, N = 16, NE = 32, E = 64, SE = 128};
 }
 enum SOIL{SAND = 1, SILT, CLAY, PEAT};
 
@@ -231,7 +231,7 @@ Estr_StringList* numberCells(Eeml_Menu          menu,
 
          case EGDA_TYPE_U16:
             t_char = (char*)&t_num;
-            for(t_counter = 0; t_counter < t_width; t_counter += 2)
+            for(t_counter = 0; t_counter < t_width*2; t_counter += 2)
             {
                t_num = 0;
                *(t_char+1) = lineBuffer->currentData[t_counter + 1];
@@ -242,7 +242,7 @@ Estr_StringList* numberCells(Eeml_Menu          menu,
 
          case EGDA_TYPE_U32:
             t_char = (char*)&t_num;
-            for(t_counter = 0; t_counter < t_width; t_counter += 4)
+            for(t_counter = 0; t_counter < t_width*4; t_counter += 4)
             {
                *(t_char+3) = lineBuffer->currentData[t_counter + 3];
                *(t_char+2) = lineBuffer->currentData[t_counter + 2];
@@ -267,7 +267,7 @@ Estr_StringList* numberCells(Eeml_Menu          menu,
             //    treat the float as normal.
             ///////////////////////////////////////////////////////////////////
             t_char = (char*)&t_float;
-            for(t_counter = 0; t_counter < t_width; t_counter += 4)
+            for(t_counter = 0; t_counter < t_width*4; t_counter += 4)
             {
                *(t_char+3) = lineBuffer->currentData[t_counter];
                *(t_char+2) = lineBuffer->currentData[t_counter + 1];
@@ -936,12 +936,12 @@ Estr_StringList* formatData(Eeml_Menu           menu,
                for(int counter = 0;
                    counter < lineBuffer->datalayer[numLayer]->numelements;
                    ++counter)
-               {
+               {  
                   t_float = 0;
-                  *(t_char)   = lineBuffer->datalayer[numLayer]->currentData[counter*4+3];
-                  *(t_char+1) = lineBuffer->datalayer[numLayer]->currentData[counter*4+2];
-                  *(t_char+2) = lineBuffer->datalayer[numLayer]->currentData[counter*4+1];
-                  *(t_char+3) = lineBuffer->datalayer[numLayer]->currentData[counter*4];
+                  *(t_char+3) = lineBuffer->datalayer[numLayer]->currentData[counter*4+3];
+                  *(t_char+2) = lineBuffer->datalayer[numLayer]->currentData[counter*4+2];
+                  *(t_char+1) = lineBuffer->datalayer[numLayer]->currentData[counter*4+1];
+                  *(t_char)   = lineBuffer->datalayer[numLayer]->currentData[counter*4];
 
                   data[numLayer][counter] = t_float;
                }
@@ -992,10 +992,10 @@ Estr_StringList* formatData(Eeml_Menu           menu,
             t_char = (char*)&t_float;
             for(int counter = 0; counter < t_width*4; counter += 4)
             {
-               *(t_char)   = lineBuffer->datalayer[0]->currentData[counter+3];
-               *(t_char+1) = lineBuffer->datalayer[0]->currentData[counter+2];
-               *(t_char+2) = lineBuffer->datalayer[0]->currentData[counter+1];
-               *(t_char+3) = lineBuffer->datalayer[0]->currentData[counter];
+               *(t_char+3) = lineBuffer->datalayer[0]->currentData[counter+3];
+               *(t_char+2) = lineBuffer->datalayer[0]->currentData[counter+2];
+               *(t_char+1) = lineBuffer->datalayer[0]->currentData[counter+1];
+               *(t_char)   = lineBuffer->datalayer[0]->currentData[counter];
 
                validCell[counter/4] = (t_float > 0) ? true : false;
             }
@@ -1029,6 +1029,8 @@ Estr_StringList* formatData(Eeml_Menu           menu,
             // Converting parameter 5 from Arc style to ADGen
             switch(int(data[PARAM_5][numCell])) 
             {
+               case ARC::NO_DIR:
+                  break;
                case ARC::E:
                   data[PARAM_5][numCell] = ADGEN::E;
                   break;
@@ -1746,19 +1748,19 @@ Estr_StringList* imageCreation(Eeml_Menu          menu,
                      &cellNum, &cellDivision, &drainArea, &eqRunoff,
                      &upRunoff, &upFlow, &downRunoff, &downFlow, &runoffAbove);
             moveData((stack[0]->datalayer[0]->currentData)+numCell*4, 
-                                                   (char*)&drainArea, 4, true);
+                                                   (char*)&drainArea, 4, false);
             moveData((stack[0]->datalayer[1]->currentData)+numCell*4,
-                                                   (char*)&eqRunoff, 4, true);
+                                                   (char*)&eqRunoff, 4, false);
             moveData((stack[0]->datalayer[2]->currentData)+numCell*4,
-                                                   (char*)&upRunoff, 4, true);
+                                                   (char*)&upRunoff, 4, false);
             moveData((stack[0]->datalayer[3]->currentData)+numCell*4,
-                                                   (char*)&upFlow, 4, true);
+                                                   (char*)&upFlow, 4, false);
             moveData((stack[0]->datalayer[4]->currentData)+numCell*4,
-                                                   (char*)&downRunoff, 4, true);
+                                                   (char*)&downRunoff, 4, false);
             moveData((stack[0]->datalayer[5]->currentData)+numCell*4,
-                                                   (char*)&downFlow, 4, true);
+                                                   (char*)&downFlow, 4, false);
             moveData((stack[0]->datalayer[6]->currentData)+numCell*4,
-                                                   (char*)&runoffAbove, 4, true);
+                                                   (char*)&runoffAbove, 4, false);
 
             //////////////////////////////////////////////////////
             // Loop to create layers 2 through 7 (indices 1-6)
@@ -1769,15 +1771,15 @@ Estr_StringList* imageCreation(Eeml_Menu          menu,
                            &cellErosion, &upSedimentYield, &sedimentGenerated, 
                            &sedimentYield, &deposition);
                moveData((stack[stackNum]->datalayer[0]->currentData)+numCell*4, 
-                                               (char*)&cellErosion, 4, true);
+                                               (char*)&cellErosion, 4, false);
                moveData((stack[stackNum]->datalayer[1]->currentData)+numCell*4,
-                                               (char*)&upSedimentYield, 4, true);
+                                               (char*)&upSedimentYield, 4, false);
                moveData((stack[stackNum]->datalayer[2]->currentData)+numCell*4,
-                                               (char*)&sedimentGenerated, 4, true);
+                                               (char*)&sedimentGenerated, 4, false);
                moveData((stack[stackNum]->datalayer[3]->currentData)+numCell*4,
-                                               (char*)&sedimentYield, 4, true);
+                                               (char*)&sedimentYield, 4, false);
                moveData((stack[stackNum]->datalayer[4]->currentData)+numCell*4,
-                                               (char*)&deposition, 4, true);
+                                               (char*)&deposition, 4, false);
 
             }
          }
@@ -1861,38 +1863,38 @@ Estr_StringList* imageCreation(Eeml_Menu          menu,
                         &sedimentNitro, &nitroRunoff, 
                         &totalNitro, &nitroConcentration);
             moveData((stack[7]->datalayer[0]->currentData)+numCell*4, 
-                                          (char*)&drainArea, 4, true);
+                                          (char*)&drainArea, 4, false);
             moveData((stack[7]->datalayer[1]->currentData)+numCell*4,
-                                          (char*)&cellNitro, 4, true);
+                                          (char*)&cellNitro, 4, false);
             moveData((stack[7]->datalayer[2]->currentData)+numCell*4,
-                                          (char*)&sedimentNitro, 4, true);
+                                          (char*)&sedimentNitro, 4, false);
             moveData((stack[7]->datalayer[3]->currentData)+numCell*4,
-                                          (char*)&nitroRunoff, 4, true);
+                                          (char*)&nitroRunoff, 4, false);
             moveData((stack[7]->datalayer[4]->currentData)+numCell*4,
-                                          (char*)&totalNitro, 4, true);
+                                          (char*)&totalNitro, 4, false);
             moveData((stack[7]->datalayer[5]->currentData)+numCell*4,
-                                          (char*)&nitroConcentration, 4, true);
+                                          (char*)&nitroConcentration, 4, false);
 
             /////////////////Phosphorus and COD data/////////////////
             fscanf(inFile, "%f.2%f.2%f.2%f.2%f.2%f.2%f.2%f.2",
                            &cellPhospho, &sedimentPhospho, &phosphoRunoff, &totalPhospho,
                            &phosphoConcentration, &cellCOD, &totalCOD, &CODConcentration);
             moveData((stack[8]->datalayer[0]->currentData)+numCell*4, 
-                                          (char*)&cellPhospho, 4, true);
+                                          (char*)&cellPhospho, 4, false);
             moveData((stack[8]->datalayer[1]->currentData)+numCell*4,
-                                          (char*)&sedimentPhospho, 4, true);
+                                          (char*)&sedimentPhospho, 4, false);
             moveData((stack[8]->datalayer[2]->currentData)+numCell*4,
-                                          (char*)&phosphoRunoff, 4, true);
+                                          (char*)&phosphoRunoff, 4, false);
             moveData((stack[8]->datalayer[3]->currentData)+numCell*4,
-                                          (char*)&totalPhospho, 4, true);
+                                          (char*)&totalPhospho, 4, false);
             moveData((stack[8]->datalayer[4]->currentData)+numCell*4,
-                                          (char*)&phosphoConcentration, 4, true);
+                                          (char*)&phosphoConcentration, 4, false);
             moveData((stack[8]->datalayer[5]->currentData)+numCell*4,
-                                          (char*)&cellCOD, 4, true);
+                                          (char*)&cellCOD, 4, false);
             moveData((stack[8]->datalayer[6]->currentData)+numCell*4,
-                                          (char*)&totalCOD, 4, true);
+                                          (char*)&totalCOD, 4, false);
             moveData((stack[8]->datalayer[7]->currentData)+numCell*4,
-                                          (char*)&CODConcentration, 4, true);
+                                          (char*)&CODConcentration, 4, false);
          }
          else // Cells don't have data
          {
@@ -2138,7 +2140,7 @@ Estr_StringList* imageToAscii(Eeml_Menu            menu,
                break;
             case EGDA_TYPE_F32:
                t_float = 0;
-               moveData((char*)&t_float, &lineBuffer->currentData[numCell*4], 4, true);
+               moveData((char*)&t_float, &lineBuffer->currentData[numCell*4], 4, false);
                fprintf(outFile, "%f ", t_float);
                break;
             default:
@@ -2423,31 +2425,24 @@ Estr_StringList* deleteFiles(Eeml_Menu            menu,
 {
    char*    path = argv[0];
    char*    old_Name;
-   char*    new_Name;
    char*    temp;
    int      error = errno;
 
    old_Name = (char*)malloc(MAX_PATH_SIZE);
-   new_Name = (char*)malloc(MAX_PATH_SIZE + 5);
 
    for(int counter = 1; counter <= 22; ++counter)
    {
       sprintf(old_Name, "%sparameter", path);
       if(counter < 10) sprintf(old_Name, "%s0", old_Name);
-      sprintf(old_Name, "%s%i", old_Name, counter);
+      sprintf(old_Name, "%s%i.img", old_Name, counter);
       
-      sprintf(new_Name, "%s_copy.img", old_Name);
-      sprintf(old_Name, "%s.img", old_Name);
-
-      _unlink(new_Name);
-      rename(old_Name, new_Name);
+      _unlink(old_Name);
    }
 
    sprintf(old_Name, "%sImageStack.img", path);
    _unlink(old_Name);
 
    free(old_Name);
-   free(new_Name);
    
    errno = error;
    return NULL;

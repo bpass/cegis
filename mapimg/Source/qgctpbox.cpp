@@ -1,4 +1,4 @@
-// $Id: qgctpbox.cpp,v 1.10 2005/09/28 20:24:28 lwoodard Exp $
+// $Id: qgctpbox.cpp,v 1.11 2005/09/30 15:46:07 lwoodard Exp $
 
 #include <QFrame>
 #include <QLabel>
@@ -390,6 +390,7 @@ void QGctpBox::setGctpName( const QString & gctpName )
       activeEdit = lineEdit;
       label->setToolTip( "Value must be between 0 and 10000000m." );
       lineEdit->setValidator( new QDoubleValidator( 0.0, 100000000.0, 6, lineEdit ) );
+
    }
    else if( gctpName == "SMinor" )	
    {

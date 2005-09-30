@@ -240,7 +240,10 @@ void MapEdit::setRO( bool ro, int inOut )
 	dataCombo->setDisabled( ro );
 
 	if(inOut == 1 )
+	{
 		pixelCombo->setDisabled( false );
+		pixelEdit->setDisabled( false );
+	}
 
 	hasFillCheck->setHidden( ro );
 	hasFillCheck->setDisabled( ro );

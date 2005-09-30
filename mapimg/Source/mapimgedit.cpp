@@ -1,4 +1,4 @@
-// $Id: mapimgedit.cpp,v 1.12 2005/09/28 20:24:28 lwoodard Exp $
+// $Id: mapimgedit.cpp,v 1.13 2005/09/30 15:46:07 lwoodard Exp $
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -170,6 +170,9 @@ void QInfoFrame::copy( QInfoFrame *src )
 	mapTab->ulLatEdit->setText( source->mapTab->ulLatEdit->text() );
 	mapTab->dataCombo->setCurrentIndex( 
 		source->mapTab->dataCombo->currentIndex() );
+
+	if( mapTab->pixelCombo->currentIndex() != 6 )
+		mapTab->pixelEdit->setHidden( true );
 
 	if( source->mapTab->hasFillCheck->isChecked() )
 		mapTab->fillEdit->setText( source->mapTab->fillEdit->text() );

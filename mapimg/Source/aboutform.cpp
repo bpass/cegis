@@ -1,4 +1,4 @@
-// $Id: aboutform.cpp,v 1.4 2005/09/28 20:24:28 lwoodard Exp $
+// $Id: aboutform.cpp,v 1.5 2005/09/30 18:06:26 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -56,7 +56,7 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, Qt::WFlags 
 	logoLabel->setMaximumSize( QSize( 400, 147 ) );
 	logoLabel->setFrameShape( QLabel::WinPanel );
 	logoLabel->setFrameShadow( QLabel::Sunken );
-	logoLabel->setPixmap( QPixmap( "./Resources/USGS Logo.png" ) );
+	logoLabel->setPixmap( QPixmap( ":/Resources/USGS Logo.png" ) );
 	logoLabel->setScaledContents( TRUE );
 	aboutFormLayout->addWidget( logoLabel );
 

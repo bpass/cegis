@@ -188,9 +188,9 @@ void ProjectionEdit::generateWidgets()
    titleBox->setParent( mainLayout );
    mainLayout->addLayout( titleBox );
 
-	copyButton = new QPushButton( QIcon( "./Resources/copy.png" ),
+	copyButton = new QPushButton( QIcon( ":/Resources/copy.png" ),
 		"", this );
-	lockButton = new QPushButton( QIcon( "./Resources/unlocked.png" ),
+	lockButton = new QPushButton( QIcon( ":/Resources/unlocked.png" ),
 		"", this );
    gctpLabel = new QLabel( "Projection Info", this );
    gctpLabel->setObjectName( "gctpLabel" );

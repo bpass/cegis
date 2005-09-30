@@ -1,4 +1,4 @@
-// $Id: mapimgedit.cpp,v 1.13 2005/09/30 15:46:07 lwoodard Exp $
+// $Id: mapimgedit.cpp,v 1.14 2005/09/30 18:06:26 lwoodard Exp $
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -259,13 +259,13 @@ void QInfoFrame::lock( bool on, bool saveFile )
    setReadOnly( on, 0 );
    if( on )
    {
-	   mapTab->lockButton->setIcon( QIcon( "./Resources/locked.png" ) );
-	   gctpTab->lockButton->setIcon( QIcon( "./Resources/locked.png" ) );
+	   mapTab->lockButton->setIcon( QIcon( ":/Resources/locked.png" ) );
+	   gctpTab->lockButton->setIcon( QIcon( ":/Resources/locked.png" ) );
    }
    else
    {
-	   mapTab->lockButton->setIcon( QIcon( "./Resources/unlocked.png" ) );
-	   gctpTab->lockButton->setIcon( QIcon( "./Resources/unlocked.png" ) );
+	   mapTab->lockButton->setIcon( QIcon( ":/Resources/unlocked.png" ) );
+	   gctpTab->lockButton->setIcon( QIcon( ":/Resources/unlocked.png" ) );
    }
    mapTab->lockButton->setChecked( on );
    gctpTab->lockButton->setChecked( on );

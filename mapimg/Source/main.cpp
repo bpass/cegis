@@ -1,4 +1,4 @@
-// $Id: main.cpp,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: main.cpp,v 1.2 2005/09/30 18:06:26 lwoodard Exp $
 
 
 #include <qapplication.h>
@@ -12,6 +12,7 @@ for it to exit.
 int main( int argc, char ** argv )
 {
    QApplication a( argc, argv );
+   Q_INIT_RESOURCE( mapIMGiimages );
    mapimgForm w;
    w.show();
 

@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/new/prefix1" >
+    <qresource prefix="/Resources" >
         <file>Resources\USGS Logo.png</file>
         <file>Resources\USGS Swirl Sphere.png</file>
         <file>Resources\calculate.png</file>

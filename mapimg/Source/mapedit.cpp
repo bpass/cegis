@@ -374,13 +374,13 @@ void MapEdit::generateWidgets()
 	titleBox->setParent( mainLayout );
 	mainLayout->addLayout( titleBox );
 
-	copyButton = new QPushButton( QIcon( "./Resources/copy.png" ),
+	copyButton = new QPushButton( QIcon( ":/Resources/copy.png" ),
 		"", this );
-	lockButton = new QPushButton( QIcon( "./Resources/unlocked.png" ),
+	lockButton = new QPushButton( QIcon( ":/Resources/unlocked.png" ),
 		"", this );
 	mapLabel = new QLabel("Map Info", this );
 	mapLabel->setObjectName( "mapLabel" );
-	frameButton = new QPushButton( QIcon( "./Resources/calculate.png" ),
+	frameButton = new QPushButton( QIcon( ":/Resources/calculate.png" ),
 		"", this );	
 	
 		//Adding widgets to the titleBox group layout

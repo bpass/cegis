@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.12 2005/09/28 20:24:28 lwoodard Exp $
+// $Id: mapimgform.cpp,v 1.13 2005/09/30 18:06:26 lwoodard Exp $
 //Last Edited: August 2005; by: lwoodard; for:qt3 to qt4 porting
 
 #include "mapimgform.h"
@@ -71,7 +71,7 @@ preview the reprojection.
 mapimgForm::mapimgForm( QWidget* parent, Qt::WFlags fl )
 : QMainWindow( parent, fl )
 {
-	setWindowIcon( QPixmap( "./Resources/USGS Swirl Sphere.png" ) );
+	setWindowIcon( QIcon( ":/Resources/USGS Swirl Sphere.png" ) );
 	setWindowTitle( QString("MapIMG %1").arg(MAJOR_VERSION) );
 	setAcceptDrops( true );
 
@@ -109,7 +109,7 @@ void mapimgForm::setupContents()
 	imgFrame = new QImgFrame( centralWidget() );
 	imgFrame->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
 	imgFrame->setLineWidth(2);
-	imgFrame->setPixmap( QPixmap("./Resources/USGS Logo.png" ) );
+	imgFrame->setPixmap( QPixmap(":/Resources/USGS Logo.png" ) );
 	imgFrame->setMinimumSize( QSize( 167, 62 ) );
 	imgFrame->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Expanding );
 	imgFrame->hide();
@@ -128,46 +128,46 @@ void mapimgForm::createActions()
 {
 	//QIcon *openIcon
 	inOpenAction = new QAction( tr("&Open"), this );
-	inOpenAction->setIcon( QIcon( QPixmap("./Resources/open.png").scaled(25, 25, Qt::KeepAspectRatio, Qt::SmoothTransformation) ) );
+	inOpenAction->setIcon( QIcon( QPixmap(":/Resources/open.png").scaled(25, 25, Qt::KeepAspectRatio, Qt::SmoothTransformation) ) );
 	inOpenAction->setShortcut( tr("Ctrl+O") );
 	inOpenAction->setToolTip( tr("Open an input file.") );
 
 	inSaveAction = new QAction( tr("Save Input Parameters"), this);
-	inSaveAction->setIcon( QIcon( "./Resources/insave.png" ) );
+	inSaveAction->setIcon( QIcon( ":/Resources/insave.png" ) );
 	inSaveAction->setToolTip( tr("") );
 
 	exitAction = new QAction( tr("Exit"), this);
-	exitAction->setIcon( QIcon( "./Resources/exit.png" ) );
+	exitAction->setIcon( QIcon( ":/Resources/exit.png" ) );
 	exitAction->setToolTip("Close the MapIMG application.");
 
 	authAction = new QAction( tr("Edit Author"), this );
 	authAction->setToolTip( tr("Change the author properties for the current user.") );
 
 	inInfoAction = new QAction( "Show Input Parameters", this );
-	inInfoAction->setIcon( QIcon( "./Resources/inputinfo.png" ) );
+	inInfoAction->setIcon( QIcon( ":/Resources/inputinfo.png" ) );
 	inInfoAction->setCheckable( true );
 	inInfoAction->setChecked( inInfoFrame->isVisible() );
 
 	viewShowAction = new QAction(	"Show Preview", this );
-	viewShowAction->setIcon( QIcon( "./Resources/preview.png" ) );
+	viewShowAction->setIcon( QIcon( ":/Resources/preview.png" ) );
 	viewShowAction->setCheckable( true );
 
 	outInfoAction = new QAction( "Show Output Parameters", this );
-	outInfoAction->setIcon( QIcon ( "./Resources/outputinfo.png" ) );
+	outInfoAction->setIcon( QIcon ( ":/Resources/outputinfo.png" ) );
 	outInfoAction->setCheckable( true );
 	outInfoAction->setChecked( outInfoFrame->isVisible() );
 
 	outSaveAction = new QAction( "Reproject and &Save", this );
-	outSaveAction->setIcon( QIcon( "./Resources/outsave.png" ) );
+	outSaveAction->setIcon( QIcon( ":/Resources/outsave.png" ) );
 	outSaveAction->setShortcut( tr("Ctrl+S") );
 
 	viewResampleAction = new QAction( tr("Resample Preview"), this );
 	viewResampleAction->setShortcut( tr("F5") );
-	viewResampleAction->setIcon( QIcon( "./Resources/resample.png" ) );
+	viewResampleAction->setIcon( QIcon( ":/Resources/resample.png" ) );
 	viewResampleAction->setToolTip( tr("") );
 
 	previewProjAction = new QAction( "Preview Reprojection", this );
-	previewProjAction->setIcon( QIcon( "./Resources/previewproject.png" ) );
+	previewProjAction->setIcon( QIcon( ":/Resources/previewproject.png" ) );
 
 	webDSSAction = new QAction( "Decision Support System", this );
 	webDSSAction->setToolTip( tr("") );
@@ -215,7 +215,7 @@ void mapimgForm::setupToolbar()
 	toolBar->addAction( inInfoAction );
 
 	viewShowButton = new QToolButton( this );
-	viewShowButton->setIcon( QIcon( "./Resources/preview.png" ) );
+	viewShowButton->setIcon( QIcon( ":/Resources/preview.png" ) );
 	viewShowButton->setText( "Show Preview" );
 	viewShowButton->setToolTip( "Show Preview" );
 	
@@ -488,7 +488,7 @@ bool mapimgForm::openFile( QString inFile )
 		inInfoAction->setChecked( true );
 		outInfoAction->setChecked( false );
 
-		imgFrame->setPixmap( QPixmap( "./Resources/USGS Logo.png" ) );
+		imgFrame->setPixmap( QPixmap( ":/Resources/USGS Logo.png" ) );
 		viewShowButton->setChecked( false );
 		inInfoFrame->setInfo( info );	//This is where it breaks
 

@@ -7,7 +7,7 @@
  *
  * \file ProjImageFactory.h
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  *
@@ -33,8 +33,7 @@ using ProjIOLib::ProjectionReader;
 class ProjImageFactory
 {
     public:
-        ProjImageFactory(ProjectionReader& r, ProjectionWriter& w) 
-            : m_writer(w), m_reader(r) {} 
+        ProjImageFactory() {}
 
         virtual ~ProjImageFactory();
 
@@ -69,9 +68,6 @@ class ProjImageFactory
     private:
         /// to keep track of and clean up dynamic memory.
         std::list<ProjImageDataInterface *> m_images;
-        
-        ProjectionWriter & m_writer;
-        ProjectionReader & m_reader;
 };
 
 } // namespace 

@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -48,7 +48,7 @@ class GeneralProjector : public ProjectorInterface
        /// \param source The ProjImageIn from which we are projecting.
        /// \param destination The ProjImageOut we are projecting to.
        GeneralProjector( ProjImageInInterface & source,
-                              ProjImageOutInterface & destination );
+                         ProjImageOutInterface & destination );
        
        virtual ~GeneralProjector(); 
        
@@ -82,7 +82,7 @@ class GeneralProjector : public ProjectorInterface
        virtual const ProjImageInInterface * getProjImageIn()const;
 
        /// \brief Returns a const pointer to the output ProjImage.
-       virtual const ProjImageOutInterface * getProjImageOut()const;
+       virtual ProjImageOutInterface * getProjImageOut();
        
        /// \brief Sets up the ProjImageOut and the interpolating mesh used  
        /// for the image re-projection.
@@ -207,8 +207,8 @@ GeneralProjector::getProjImageIn()const
 
 /******************************************************************************/
 
-inline const ProjImageOutInterface * 
-GeneralProjector::getProjImageOut()const
+inline ProjImageOutInterface * 
+GeneralProjector::getProjImageOut()
 {
     return m_imgOut;
 }

@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -19,6 +19,7 @@
 #include <iostream>
 #include "ProjImageData.h"
 #include "GeneralException.h"
+#include "ProjectionLib/Projection.h"
 
 namespace USGSMosix {
 
@@ -37,7 +38,8 @@ ProjImageData::ProjImageData( DRect bounds,
    m_height(0),
    m_filename("")
 {
-
+    if ( m_file ) 
+        setImageFile(m_file);
 }
 
 /******************************************************************************/
@@ -75,6 +77,7 @@ const PmeshLib::ProjectionMesh & ProjImageData::setupMesh(
         unsigned int divisions, 
         MathLib::InterpolatorType interp )const  
  { 
+    
     PmeshLib::ProjectionMesh * mesh; 
     mesh = new(std::nothrow) PmeshLib::ProjectionMesh;
     m_meshes.push_back(mesh);    
@@ -82,7 +85,7 @@ const PmeshLib::ProjectionMesh & ProjImageData::setupMesh(
     
         if ( m_proj == NULL || mesh == NULL  ) 
             throw GeneralException("NULL in setting up Mesh.");
-    
+   
         // the mesh boundaries are for the current image, since that
         // is where we are coming from.
         mesh->setSourceMeshBounds( getLeftBound(),
@@ -139,7 +142,7 @@ const PmeshLib::ProjectionMesh & ProjImageData::setupReverseMesh(
 
         // create the mesh.
         mesh->calculateMesh( fromProjection , *(m_proj));
-        
+    
     } catch ( GeneralException & ge ) 
     {
         std::cout << ge.toString() << std::endl;

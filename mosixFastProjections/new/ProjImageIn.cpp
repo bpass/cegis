@@ -4,7 +4,7 @@
  * \author Mark Schisler \n
  *         Chris Bilderback 
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -183,7 +183,7 @@ ProjImageIn::ProjImageIn( const ProjImageParams & params )
 
 ProjImageIn::ProjImageIn( const ProjImageIn & copyOf )
     : ProjImageDataInterface(),
-    ProjImageData(copyOf.getOuterBounds(), NULL, 
+    ProjImageData(copyOf.getOuterBounds(), copyOf.getImageFile(), 
                   copyOf.getProjection()),
     SerializableInterface(),
     ProjImageInInterface(),
@@ -192,8 +192,10 @@ ProjImageIn::ProjImageIn( const ProjImageIn & copyOf )
     m_spp(copyOf.m_spp),
     m_lastLine(copyOf.m_lastLine),
     m_geoMesh(copyOf.m_geoMesh),
+    m_geoBounds(copyOf.m_geoBounds),
     m_haveGeoBounds(copyOf.m_haveGeoBounds)
 {
+    WRITE_DEBUG( "PROJIMAGEIN CONSTRUCTOR CALLED!!!!!!!!" << std::endl );
 }
 
 /*****************************************************************************/
@@ -419,8 +421,6 @@ DRect ProjImageIn::getGeographicBounds()const
     // function keep state so we only have to generate the data for it once.
     if ( !m_haveGeoBounds  )
     {
-        WRITE_DEBUG ( m_proj->toString() << std::endl );
-        
         m_haveGeoBounds = true; 
         
         if ( m_proj->getProjectionSystem() != GEO )
@@ -448,14 +448,14 @@ ProjImageIn ProjImageIn::createFromSocket( ClientSocket & socket )
     unsigned int strLen(0);
     char * pszParamfilename = NULL;
     std::string strParamfilename("");
-    unsigned int i = 1; 
+    int i = 0; 
     
     socket.receive(&i, sizeof(i));
     // in this case what is trying to be constructed here is a list, and 
     // not an individual image. 
-    if ( i != 1 )
+    if ( i != -1 )
     {
-        std::cout << "i = " << i << std::endl;
+        WRITE_DEBUG ( "i = " << i << std::endl; )
         throw GeneralException("Error, not an individual image in transit.");
     }
 
@@ -463,6 +463,7 @@ ProjImageIn ProjImageIn::createFromSocket( ClientSocket & socket )
     
     if ( strLen <= 0 )
         throw GeneralException("Cannot make array of size less than zero.");
+    WRITE_DEBUG ( "string length in: "<< strLen << std::endl; );
     if ( ( pszParamfilename = new (std::nothrow)char[strLen + 1] ) == NULL ) 
         throw GeneralException("Failed Dynamic Allocation.");
     socket.receive(pszParamfilename, strLen);
@@ -481,12 +482,14 @@ void ProjImageIn::exportToSocket( ClientSocket & socket )const
 {
     std::string paramFilename = m_params.getParamFilename();
     unsigned int length = paramFilename.length();
-    unsigned int i = 1; 
+    int i = -1; 
 
     // put information in buffer
     socket.appendToBuffer(&i, sizeof(i));
     socket.appendToBuffer(&length, sizeof(length));
-
+    WRITE_DEBUG ( "string length out: "<< length << std::endl; )
+    WRITE_DEBUG ( "exporting filename: " << paramFilename << std::endl; )
+    
     socket.appendToBuffer(paramFilename.c_str(), 
                           paramFilename.length());
     

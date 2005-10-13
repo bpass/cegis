@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -54,6 +54,7 @@ ProjImageOut::ProjImageOut( const ProjImageParams & params,
    this->setBPS(bps);
    this->setBounds(bounds);
    m_scale = newScale;
+   
    // setupImage();
 }
     
@@ -123,7 +124,10 @@ void ProjImageOut::setupImage()
            throw std::bad_alloc();
         
     } else if ( !cmp_nocase( strExtension, "PNG" ) ) 
-    {  
+    { 
+       WRITE_DEBUG ( "ProjImageOut says this photometric: " 
+                     << this->getPhotometric() << ", this bps: "
+                     << this->getBPS() << std::endl; )
        if (!( file = new(nothrow)PNGImageOFile( filename,
                         heightThenWidth.first,
                         heightThenWidth.second,
@@ -242,7 +246,7 @@ void ProjImageOut::putScanlines( const ProjImageOutPiece & piece )
 	        {
 	            file->putRawScanline(h, scanlines[h]);
 	        }            
-            std::cout << "rcv this many scanlines " << endLine << std::endl;
+            WRITE_DEBUG( "rcv this many scanlines " << endLine << std::endl );
         } else 
             throw std::bad_cast();        
         
@@ -258,8 +262,13 @@ void ProjImageOut::putScanlines( const ProjImageOutPiece & piece )
 
 ProjImageOut ProjImageOut::createFromSocket( ClientSocket & socket )
 {
-    ProjImageParams params = ProjImageParams::createFromSocket(socket);
-    ProjImageScale newScale = ProjImageScale::createFromSocket(socket);
+    // TODO: these will create memory leaks... need to deal with this
+    // somehow.
+    ProjImageParams * params = 
+        new ProjImageParams(ProjImageParams::createFromSocket(socket));
+    ProjImageScale * newScale = 
+        new ProjImageScale(ProjImageScale::createFromSocket(socket));
+    
     static ProjIOLib::ProjectionWriter writer;
     unsigned int filenameLength = 0;
     char * filename = NULL; 
@@ -283,7 +292,7 @@ ProjImageOut ProjImageOut::createFromSocket( ClientSocket & socket )
     socket.receive( &spp, sizeof(spp) );
     socket.receive( &bounds, sizeof(bounds) );
  
-    return ProjImageOut(params,writer,filename,heightThenWidth,newScale,
+    return ProjImageOut(*params,writer,filename,heightThenWidth,*newScale,
                         photometric, bps, spp, bounds );
 }
 

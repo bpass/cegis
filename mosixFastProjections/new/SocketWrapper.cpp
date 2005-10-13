@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -41,8 +41,9 @@ SocketWrapper::SocketWrapper()
   if(m_bufferAlloced < 1)
       throw GeneralException("Error: Buffer size requested <= 0.");
 
-  m_buffer = static_cast<unsigned char*>(malloc(m_bufferAlloced * 
+   m_buffer = static_cast<unsigned char*>(malloc(m_bufferAlloced * 
                                          sizeof(sample_t)));
+    
 }
 
 /******************************************************************************/
@@ -63,6 +64,26 @@ SocketWrapper::SocketWrapper( size_t bufferSize )
 
 /******************************************************************************/
 
+SocketWrapper::SocketWrapper( const SocketWrapper& wrapper )
+    : m_socketDesc(wrapper.m_socketDesc),
+      m_bufferEnd(wrapper.m_bufferEnd),
+      m_bufferAlloced(wrapper.m_bufferAlloced),
+      m_bytesSent(wrapper.m_bytesSent),
+      m_bytesRecv(wrapper.m_bytesRecv)
+{
+     m_buffer = static_cast<unsigned char*>(malloc(m_bufferAlloced *
+                                            sizeof(sample_t)));
+
+     for( unsigned int i = 0; i < m_bufferEnd; ++i )
+     {
+        m_buffer[i] = wrapper.m_buffer[i];
+     }
+
+}
+
+
+/******************************************************************************/
+
 SocketWrapper::~SocketWrapper()
 {
   close(m_socketDesc);
@@ -75,15 +96,13 @@ SocketWrapper::~SocketWrapper()
 
 void SocketWrapper::appendToBuffer(const void * in_buffer, size_t in_size)
 {
-  unsigned char * temp_buffer = NULL; 
-    
   if ( in_size <= 0 ) 
       throw GeneralException("Error: in_size less than or equal to zero.");
 
   // if there is room for all of in_buffer in buffer.
   if ( (in_size + m_bufferEnd) > (m_bufferAlloced) )  
   {
-    std::cout << "using realloc " << std::endl;
+    WRITE_DEBUG ( "using realloc " << std::endl; )
     // give twice as much as asked for to reduce cost of 
     // repeatedly getting dynamic memory
     m_bufferAlloced = m_bufferEnd + (2 * in_size);

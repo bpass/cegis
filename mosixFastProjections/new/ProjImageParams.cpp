@@ -5,7 +5,7 @@
  *
  * \file ProjImageParams.h
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -592,13 +592,17 @@ Projection * ProjImageParams::constructProjection(istream& in)
                            GetUnit(sunit))))
                 throw std::bad_alloc();
             
-        } 
+        } else
+        {
+            WRITE_DEBUG ( "ERROR: No recognized projection" << std::endl; )
+            throw GeneralException(""); 
+        }
 
     }
     catch(...)
     {
-        if (proj)
-            delete proj;
+        std::cout << "ERROR: PROJIMAGE PARAMS THREW ERROR!" << std::endl;
+        delete proj;
         proj = NULL;
     }
 

@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -50,7 +50,9 @@ public:
     /// should connect.  
     /// \param port the port which we are connecting to.
     ClientSocket( std::string hostname, unsigned int port );
-   
+  
+    ClientSocket( const ClientSocket & cs ); 
+    
     virtual ~ClientSocket();
     
     /// \param in_buffer A pointer to data which will be sent over
@@ -73,7 +75,9 @@ public:
     virtual std::string getHostname() { return m_hostname; } 
 
     /// \brief Returns the port number that we've connected to.
-    virtual unsigned int getPort()        { return m_portNo;   } 
+    virtual unsigned int getPort()        { return m_portNo; } 
+   
+    ClientSocket& operator=(const ClientSocket& cs);
     
 protected:
     

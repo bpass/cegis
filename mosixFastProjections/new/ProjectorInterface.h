@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -69,7 +69,7 @@ class ProjectorInterface : public SerializableInterface {
         virtual const ProjImageInInterface * getProjImageIn()const = 0;
         
         /// \brief Returns a const pointer to the output ProjImage.
-        virtual const ProjImageOutInterface * getProjImageOut()const = 0;
+        virtual ProjImageOutInterface * getProjImageOut() = 0;
 };
 
 } // namespace

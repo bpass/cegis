@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -37,17 +37,19 @@ namespace USGSMosix {
     {
         public: 
             ProjImageOutPiece();
-            
+ 
             /// \param scanlines The scanlines for the image.
             /// \param range The range of the scanlines forwarded to 
             /// the image.  (zero based.)
             /// \param width The width of the scanlines in pixels.h
             /// \param spp The samples per pixel of the image that is
             /// being dealt with.
+            /// \param id The id of the object which sent the piece.
             ProjImageOutPiece( scanlines_t scanlines, 
                                std::pair<long, long> range,
                                unsigned long int width,
-                               int spp );
+                               int spp,
+                               unsigned long int id = 0 );
           
             ProjImageOutPiece( const ProjImageOutPiece & copyOf );
                 
@@ -104,7 +106,15 @@ namespace USGSMosix {
            
             /// \brief Returns the scanline data. 
             scanlines_t getScanlines()const { return m_scanlines; }  
+           
+            /// \brief Gets the ID number for the image piece.
+            unsigned long int getID()const { return m_id; }
             
+            /// \brief Sets the ID number for the image piece.
+            void setID(unsigned long int id ) { m_id = id; }
+
+            /// \brief Returns the samples per pixel of the image piece.
+            int getSPP() { return m_spp; }
         private:
            
             /// \brief allocates dynamic memory for a group of scanlines,
@@ -128,6 +138,8 @@ namespace USGSMosix {
 
             /// the range of scanlines currently in this piece.
             std::pair<long, long> m_range;
+            
+            unsigned long int m_id;
     };
 
 

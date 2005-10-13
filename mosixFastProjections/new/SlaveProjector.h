@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -44,14 +44,16 @@ namespace USGSMosix
         /// for which this Projector is responsible.
         SlaveProjector( ProjImageInInterface & inInterface,
                         ProjImageOutInterface & imgOutInterface,
-                        std::pair<unsigned long, unsigned long> scanlineRange); 
+                        std::pair<unsigned long, unsigned long> scanlineRange,
+                        unsigned long int id ); 
 
         /// \param interface The Projector that the SlaveProjector will be
         /// composed of and use to carry out a projection.
         /// \param scanlineRange The inclusive range of scanlines (zero-based)
         /// for which this Projector is responsible.
         SlaveProjector( ProjectorInterface & interface, 
-                        std::pair<unsigned long, unsigned long> scanlineRange );
+                        std::pair<unsigned long, unsigned long> scanlineRange,
+                        unsigned long int id );
         
         virtual ~SlaveProjector();
         
@@ -80,16 +82,16 @@ namespace USGSMosix
 
         /// \brief Returns a const pointer to the ProjImageOutInterface 
         /// reference.
-        virtual const ProjImageOutInterface * getProjImageOut()const;
+        virtual ProjImageOutInterface * getProjImageOut();
 
         /// \param client The socket 
         /// \brief Serializes all member data to a client socket so that
         /// a duplicate object may be created elsewhere.
         virtual void exportToSocket( ClientSocket & client )const;
 
-        
         static SlaveProjector createFromSocket( ClientSocket & client );
-        
+       
+        unsigned long int getID() { return m_id; }        
     private:
 
         /// The factory necessary for creating Projectors from the
@@ -97,7 +99,7 @@ namespace USGSMosix
         static ProjectorFactory m_projFactory;
 
         /// The id number for this projector. 
-        static long int m_id;  
+        unsigned long int m_id;  
 
         /// The child projector which is used to carry out the projection.
         ProjectorInterface * m_projInterface;
@@ -119,7 +121,7 @@ const ProjImageInInterface * SlaveProjector::getProjImageIn()const
 /******************************************************************************/
 
 inline
-const ProjImageOutInterface * SlaveProjector::getProjImageOut()const
+ProjImageOutInterface * SlaveProjector::getProjImageOut()
 {
     return m_projInterface->getProjImageOut();
 }

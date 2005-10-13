@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -20,7 +20,7 @@
  */
 
 /// To enable debug messages for the program 
-#define USE_DEBUG
+// #define USE_DEBUG
 
 /// For debug messages. 
 #ifdef USE_DEBUG

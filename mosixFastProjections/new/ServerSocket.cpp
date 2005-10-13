@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -47,6 +47,16 @@ ServerSocket::ServerSocket(unsigned int port)
 {
    if( setupSocket() == false ) 
       throw GeneralException("Server: Socket setup failed.");
+}
+
+/******************************************************************************/
+
+ServerSocket::ServerSocket( const ServerSocket & ss )
+    : SocketWrapper(ss),
+      m_hostname(ss.m_hostname),
+      m_portNo(ss.m_portNo)
+{
+
 }
 
 /******************************************************************************/
@@ -115,7 +125,7 @@ bool ServerSocket::setupSocket()
 
     m_portNo = ntohs(m_mySocketAddr.sin_port);
 
-    std::cout << "Server listening on port: " << m_portNo << std::endl;
+    WRITE_DEBUG ( "Server listening on port: " << m_portNo << std::endl; )
     
     return true;    
 }

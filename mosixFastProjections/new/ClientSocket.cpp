@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -20,7 +20,7 @@
  * the file COPYING.  
  *
  */
-#include <stdio.h>
+#include <iostream>
 #include "ClientSocket.h"
 
 namespace USGSMosix {
@@ -51,9 +51,18 @@ ClientSocket::ClientSocket( std::string hostname, unsigned int port )
 
 /*****************************************************************************/
 
+ClientSocket::ClientSocket( const ClientSocket & cs ) 
+    : SocketWrapper(cs),
+      m_hostname(cs.m_hostname),
+      m_portNo(cs.m_portNo)
+{
+}
+
+/*****************************************************************************/
+
 ClientSocket::~ClientSocket() 
 {
-
+    free(m_buffer);
 }
 
 /*****************************************************************************/
@@ -73,7 +82,7 @@ bool ClientSocket::send( const void * in_buffer, unsigned int in_size )
         in_size - sentsofar, 
         MSG_NOSIGNAL ) );
     
-  } while((sentsofar < m_bufferEnd) && (sentthiscall > 0));
+  } while((sentsofar < in_size) && (sentthiscall > 0));
   
   if(sentsofar == in_size)
   {
@@ -82,6 +91,7 @@ bool ClientSocket::send( const void * in_buffer, unsigned int in_size )
   } else
   {
     perror("Send failed\n");
+    WRITE_DEBUG ( "Socket Descriptor is: " << m_socketDesc << std::endl; )
     return false;
   }
 }
@@ -177,5 +187,33 @@ bool ClientSocket::setupSocket()
 }
 
 /*****************************************************************************/
+
+ClientSocket& ClientSocket::operator=(const ClientSocket& cs ) 
+{
+    WRITE_DEBUG ( "CALLED operator= " << std::endl );
+    
+    this->m_hostname = cs.m_hostname;
+    this->m_portNo   = cs.m_portNo;
+
+    this->m_socketDesc = cs.m_socketDesc;
+    this->m_bufferEnd = cs.m_bufferEnd;
+    this->m_bufferAlloced = cs.m_bufferAlloced;
+    this->m_bytesSent = cs.m_bytesSent;
+    this->m_bytesRecv = cs.m_bytesRecv;
+
+    
+    // reassign the buffer
+    if ( this->m_buffer ) free(this->m_buffer);
+    
+    this->m_buffer = static_cast<unsigned char*>(malloc(m_bufferAlloced *
+                                                 sizeof(sample_t)));
+
+    for( unsigned int i = 0; i < m_bufferEnd; ++i )
+    {
+        this->m_buffer[i] = cs.m_buffer[i];
+    }
+        
+    return *this;
+}
 
 } // namespace 

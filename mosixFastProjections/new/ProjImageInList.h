@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -221,7 +221,7 @@ inline bool ProjImageInList::appendHead(ProjImageInInterface * img)
 {
     if ( img != NULL ) 
     {
-        std::cout << "appending to head" << std::endl;
+        WRITE_DEBUG ( "appending to head" << std::endl; );
         m_modified = true;
         DRect rect = img->getGeographicBounds();
         m_imgList.push_front(std::pair<ProjImageInInterface*, DRect>(img,rect));

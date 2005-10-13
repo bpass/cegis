@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -168,7 +168,7 @@ class ProjImageData : public virtual ProjImageDataInterface
 /******************************************************************************/
 
 inline const ProjLib::Projection * ProjImageData::getProjection()const
-{ 
+{
     return m_proj; 
 }
 

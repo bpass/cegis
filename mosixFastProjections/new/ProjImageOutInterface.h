@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -21,6 +21,8 @@
 
 #include "ProjImageDataOutInterface.h"
 #include "ProjImageOutPiece.h" 
+#include "ProjImageDataInterface.h"
+#include "SerializableInterface.h"
 
 namespace USGSMosix 
 {

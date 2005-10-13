@@ -18,7 +18,7 @@
 # @file Makefile.am
 # @author Mark Schisler 
 #
-# $Id: Makefile.in,v 1.6 2005/09/08 16:41:22 mschisler Exp $
+# $Id: Makefile.in,v 1.7 2005/10/13 22:27:40 mschisler Exp $
 #
 
 # SUBDIRS = tests
@@ -47,9 +47,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 noinst_PROGRAMS = reproject$(EXEEXT) slave$(EXEEXT)
 subdir = .
-DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(top_srcdir)/configure COPYING depcomp \
-	install-sh missing
+DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(top_srcdir)/configure AUTHORS COPYING \
+	ChangeLog INSTALL NEWS depcomp install-sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -65,27 +65,29 @@ am__objects_1 = ClientSocket.$(OBJEXT) ProjImageFactory.$(OBJEXT) \
 	SlaveProjector.$(OBJEXT) ProjectorFactory.$(OBJEXT) \
 	ProjImageOut.$(OBJEXT) SocketWrapper.$(OBJEXT) \
 	ProjImageParams.$(OBJEXT) ProjImageData.$(OBJEXT) \
-	ProjImageScale.$(OBJEXT) ProjImageOutPiece.$(OBJEXT)
+	ProjImageScale.$(OBJEXT) ProjImageOutPiece.$(OBJEXT) \
+	ProjProcessSpawner.$(OBJEXT) ProjectorManager.$(OBJEXT) \
+	ImageStitcher.$(OBJEXT) ImageStitcherNode.$(OBJEXT)
 am_reproject_OBJECTS = MasterMain.$(OBJEXT) $(am__objects_1)
 reproject_OBJECTS = $(am_reproject_OBJECTS)
-reproject_DEPENDENCIES = /work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
-	/work/mosixFastProjections/include/Projector/.obj/ProjectorException.o \
-	/work/mosixFastProjections/include/Projector/.obj/ProjUtil.o \
-	/work/mosixFastProjections/.obj/JPEGImageOFile.o \
-	/work/mosixFastProjections/.obj/PNGImageOFile.o
+reproject_DEPENDENCIES = include/Projector/.obj/ProjectionParams.o \
+	include/Projector/.obj/ProjectorException.o \
+	include/Projector/.obj/ProjUtil.o lib/JPEGImageOFile.o \
+	lib/PNGImageOFile.o
 am_slave_OBJECTS = SlaveMain.$(OBJEXT) $(am__objects_1)
 slave_OBJECTS = $(am_slave_OBJECTS)
-am__DEPENDENCIES_1 = /work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
-	/work/mosixFastProjections/include/Projector/.obj/ProjectorException.o \
-	/work/mosixFastProjections/include/Projector/.obj/ProjUtil.o \
-	/work/mosixFastProjections/.obj/JPEGImageOFile.o \
-	/work/mosixFastProjections/.obj/PNGImageOFile.o
+am__DEPENDENCIES_1 = include/Projector/.obj/ProjectionParams.o \
+	include/Projector/.obj/ProjectorException.o \
+	include/Projector/.obj/ProjUtil.o lib/JPEGImageOFile.o \
+	lib/PNGImageOFile.o
 slave_DEPENDENCIES = $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I. -I$(srcdir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/ClientSocket.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/GeneralProjector.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ImageStitcher.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ImageStitcherNode.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/MasterMain.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ProjImageData.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ProjImageFactory.Po \
@@ -95,7 +97,9 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/ProjImageOutPiece.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ProjImageParams.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ProjImageScale.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ProjProcessSpawner.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ProjectorFactory.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ProjectorManager.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/ServerSocket.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/SlaveMain.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/SlaveProjector.Po \
@@ -189,38 +193,38 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 OBJDIR = .obj
 COMPILE = %OD
-COMSOURCES = ClientSocket.cpp ProjImageFactory.cpp \
-		     ProjImageIn.cpp ServerSocket.cpp \
+COMSOURCES = ClientSocket.cpp ProjImageFactory.cpp ProjImageIn.cpp ServerSocket.cpp \
   		     GeneralProjector.cpp  ProjImageInList.cpp \
 		     SlaveProjector.cpp ProjectorFactory.cpp \
 		     ProjImageOut.cpp  SocketWrapper.cpp \
 		     ProjImageParams.cpp \
 		     ProjImageData.cpp  ProjImageScale.cpp \
-			 ProjImageOutPiece.cpp
+			 ProjImageOutPiece.cpp \
+			 ProjProcessSpawner.cpp  ProjectorManager.cpp \
+			 ImageStitcher.cpp ImageStitcherNode.cpp
 
 reproject_SOURCES = MasterMain.cpp $(COMSOURCES)
 slave_SOURCES = SlaveMain.cpp $(COMSOURCES) 
 AM_CPPFLAGS = -pg -g -Wno-deprecated -Wall -W -pedantic \
--I/work/mosixFastProjections/include/Projector \
+-Iinclude/Projector \
 -I/usr/src/linux/include \
--I/work/mosixFastProjections/include \
--I/work/mosixFastProjections/ImageLib \
--I/work/mosixFastProjections/
+-Iinclude \
+-Iinclude/ImageLib 
 
 reproject_LDFLAGS = -pg 
 slave_LDFLAGS = -pg
 reproject_LDADD = \
-/work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
-/work/mosixFastProjections/include/Projector/.obj/ProjectorException.o \
-/work/mosixFastProjections/include/Projector/.obj/ProjUtil.o \
-/work/mosixFastProjections/.obj/JPEGImageOFile.o \
-/work/mosixFastProjections/.obj/PNGImageOFile.o \
--L/work/mosixFastProjections/lib \
--L/usr/local/lib \
--L/usr/lib \
--lProjectionMesh -lMathLib -lProjectionIO -lImageLib \
--lgeotiff -ltiff -lProjection -lMiscUtils \
--lpthread -lgctpc -lboost_thread -lpng -ljpeg 
+	include/Projector/.obj/ProjectionParams.o \
+	include/Projector/.obj/ProjectorException.o \
+	include/Projector/.obj/ProjUtil.o \
+	lib/JPEGImageOFile.o \
+	lib/PNGImageOFile.o \
+	-Llib \
+	-L/usr/local/lib \
+	-L/usr/lib \
+	-lProjectionMesh -lMathLib -lProjectionIO -lImageLib \
+	-lgeotiff -ltiff -lProjection -lMiscUtils \
+	-lpthread -lgctpc -lboost_thread -lpng -ljpeg 
 
 slave_LDADD = $(reproject_LDADD)
 all: all-am
@@ -278,6 +282,8 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ClientSocket.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeneralProjector.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ImageStitcher.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ImageStitcherNode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MasterMain.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ProjImageData.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ProjImageFactory.Po@am__quote@
@@ -287,7 +293,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ProjImageOutPiece.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ProjImageParams.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ProjImageScale.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ProjProcessSpawner.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ProjectorFactory.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ProjectorManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ServerSocket.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SlaveMain.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SlaveProjector.Po@am__quote@
@@ -577,7 +585,6 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
 
-			 # ProjProcessSpawner.cpp  ProjectorSplitter.cpp
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

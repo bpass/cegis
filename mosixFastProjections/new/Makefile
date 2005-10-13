@@ -18,7 +18,7 @@
 # @file Makefile.am
 # @author Mark Schisler 
 #
-# $Id: Makefile,v 1.7 2005/09/08 16:41:22 mschisler Exp $
+# $Id: Makefile,v 1.8 2005/10/13 22:27:40 mschisler Exp $
 #
 
 # SUBDIRS = tests
@@ -47,9 +47,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 noinst_PROGRAMS = reproject$(EXEEXT) slave$(EXEEXT)
 subdir = .
-DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(top_srcdir)/configure COPYING depcomp \
-	install-sh missing
+DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(top_srcdir)/configure AUTHORS COPYING \
+	ChangeLog INSTALL NEWS depcomp install-sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -65,27 +65,29 @@ am__objects_1 = ClientSocket.$(OBJEXT) ProjImageFactory.$(OBJEXT) \
 	SlaveProjector.$(OBJEXT) ProjectorFactory.$(OBJEXT) \
 	ProjImageOut.$(OBJEXT) SocketWrapper.$(OBJEXT) \
 	ProjImageParams.$(OBJEXT) ProjImageData.$(OBJEXT) \
-	ProjImageScale.$(OBJEXT) ProjImageOutPiece.$(OBJEXT)
+	ProjImageScale.$(OBJEXT) ProjImageOutPiece.$(OBJEXT) \
+	ProjProcessSpawner.$(OBJEXT) ProjectorManager.$(OBJEXT) \
+	ImageStitcher.$(OBJEXT) ImageStitcherNode.$(OBJEXT)
 am_reproject_OBJECTS = MasterMain.$(OBJEXT) $(am__objects_1)
 reproject_OBJECTS = $(am_reproject_OBJECTS)
-reproject_DEPENDENCIES = /work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
-	/work/mosixFastProjections/include/Projector/.obj/ProjectorException.o \
-	/work/mosixFastProjections/include/Projector/.obj/ProjUtil.o \
-	/work/mosixFastProjections/.obj/JPEGImageOFile.o \
-	/work/mosixFastProjections/.obj/PNGImageOFile.o
+reproject_DEPENDENCIES = include/Projector/.obj/ProjectionParams.o \
+	include/Projector/.obj/ProjectorException.o \
+	include/Projector/.obj/ProjUtil.o lib/JPEGImageOFile.o \
+	lib/PNGImageOFile.o
 am_slave_OBJECTS = SlaveMain.$(OBJEXT) $(am__objects_1)
 slave_OBJECTS = $(am_slave_OBJECTS)
-am__DEPENDENCIES_1 = /work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
-	/work/mosixFastProjections/include/Projector/.obj/ProjectorException.o \
-	/work/mosixFastProjections/include/Projector/.obj/ProjUtil.o \
-	/work/mosixFastProjections/.obj/JPEGImageOFile.o \
-	/work/mosixFastProjections/.obj/PNGImageOFile.o
+am__DEPENDENCIES_1 = include/Projector/.obj/ProjectionParams.o \
+	include/Projector/.obj/ProjectorException.o \
+	include/Projector/.obj/ProjUtil.o lib/JPEGImageOFile.o \
+	lib/PNGImageOFile.o
 slave_DEPENDENCIES = $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I. -I$(srcdir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 DEP_FILES = ./$(DEPDIR)/ClientSocket.Po \
 	./$(DEPDIR)/GeneralProjector.Po \
+	./$(DEPDIR)/ImageStitcher.Po \
+	./$(DEPDIR)/ImageStitcherNode.Po \
 	./$(DEPDIR)/MasterMain.Po \
 	./$(DEPDIR)/ProjImageData.Po \
 	./$(DEPDIR)/ProjImageFactory.Po \
@@ -95,7 +97,9 @@ DEP_FILES = ./$(DEPDIR)/ClientSocket.Po \
 	./$(DEPDIR)/ProjImageOutPiece.Po \
 	./$(DEPDIR)/ProjImageParams.Po \
 	./$(DEPDIR)/ProjImageScale.Po \
+	./$(DEPDIR)/ProjProcessSpawner.Po \
 	./$(DEPDIR)/ProjectorFactory.Po \
+	./$(DEPDIR)/ProjectorManager.Po \
 	./$(DEPDIR)/ServerSocket.Po \
 	./$(DEPDIR)/SlaveMain.Po \
 	./$(DEPDIR)/SlaveProjector.Po \
@@ -120,13 +124,13 @@ DIST_ARCHIVES = $(distdir).tar.gz
 GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/mschisler/MOSIX/new/missing --run aclocal-1.8
+ACLOCAL = ${SHELL} /work/mosixFastProjections/missing --run aclocal-1.8
 AMDEP_FALSE = #
 AMDEP_TRUE = 
-AMTAR = ${SHELL} /home/mschisler/MOSIX/new/missing --run tar
-AUTOCONF = ${SHELL} /home/mschisler/MOSIX/new/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/mschisler/MOSIX/new/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/mschisler/MOSIX/new/missing --run automake-1.8
+AMTAR = ${SHELL} /work/mosixFastProjections/missing --run tar
+AUTOCONF = ${SHELL} /work/mosixFastProjections/missing --run autoconf
+AUTOHEADER = ${SHELL} /work/mosixFastProjections/missing --run autoheader
+AUTOMAKE = ${SHELL} /work/mosixFastProjections/missing --run automake-1.8
 AWK = gawk
 CPPFLAGS = 
 CXX = g++
@@ -147,7 +151,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/mschisler/MOSIX/new/missing --run makeinfo
+MAKEINFO = ${SHELL} /work/mosixFastProjections/missing --run makeinfo
 OBJEXT = o
 PACKAGE = mosixfastreprojections
 PACKAGE_BUGREPORT = mschisler@usgs.gov
@@ -174,14 +178,14 @@ exec_prefix = ${prefix}
 host_alias = 
 includedir = ${prefix}/include
 infodir = ${prefix}/info
-install_sh = /home/mschisler/MOSIX/new/install-sh
+install_sh = /work/mosixFastProjections/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localstatedir = ${prefix}/var
 mandir = ${prefix}/man
 mkdir_p = mkdir -p -- .
 oldincludedir = /usr/include
-prefix = /home/mschisler/MOSIX/new
+prefix = /work/mosixFastProjections/
 program_transform_name = s,x,x,
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
@@ -189,38 +193,38 @@ sysconfdir = ${prefix}/etc
 target_alias = 
 OBJDIR = .obj
 COMPILE = %OD
-COMSOURCES = ClientSocket.cpp ProjImageFactory.cpp \
-		     ProjImageIn.cpp ServerSocket.cpp \
+COMSOURCES = ClientSocket.cpp ProjImageFactory.cpp ProjImageIn.cpp ServerSocket.cpp \
   		     GeneralProjector.cpp  ProjImageInList.cpp \
 		     SlaveProjector.cpp ProjectorFactory.cpp \
 		     ProjImageOut.cpp  SocketWrapper.cpp \
 		     ProjImageParams.cpp \
 		     ProjImageData.cpp  ProjImageScale.cpp \
-			 ProjImageOutPiece.cpp
+			 ProjImageOutPiece.cpp \
+			 ProjProcessSpawner.cpp  ProjectorManager.cpp \
+			 ImageStitcher.cpp ImageStitcherNode.cpp
 
 reproject_SOURCES = MasterMain.cpp $(COMSOURCES)
 slave_SOURCES = SlaveMain.cpp $(COMSOURCES) 
 AM_CPPFLAGS = -pg -g -Wno-deprecated -Wall -W -pedantic \
--I/work/mosixFastProjections/include/Projector \
+-Iinclude/Projector \
 -I/usr/src/linux/include \
--I/work/mosixFastProjections/include \
--I/work/mosixFastProjections/ImageLib \
--I/work/mosixFastProjections/
+-Iinclude \
+-Iinclude/ImageLib 
 
 reproject_LDFLAGS = -pg 
 slave_LDFLAGS = -pg
 reproject_LDADD = \
-/work/mosixFastProjections/include/Projector/.obj/ProjectionParams.o \
-/work/mosixFastProjections/include/Projector/.obj/ProjectorException.o \
-/work/mosixFastProjections/include/Projector/.obj/ProjUtil.o \
-/work/mosixFastProjections/.obj/JPEGImageOFile.o \
-/work/mosixFastProjections/.obj/PNGImageOFile.o \
--L/work/mosixFastProjections/lib \
--L/usr/local/lib \
--L/usr/lib \
--lProjectionMesh -lMathLib -lProjectionIO -lImageLib \
--lgeotiff -ltiff -lProjection -lMiscUtils \
--lpthread -lgctpc -lboost_thread -lpng -ljpeg 
+	include/Projector/.obj/ProjectionParams.o \
+	include/Projector/.obj/ProjectorException.o \
+	include/Projector/.obj/ProjUtil.o \
+	lib/JPEGImageOFile.o \
+	lib/PNGImageOFile.o \
+	-Llib \
+	-L/usr/local/lib \
+	-L/usr/lib \
+	-lProjectionMesh -lMathLib -lProjectionIO -lImageLib \
+	-lgeotiff -ltiff -lProjection -lMiscUtils \
+	-lpthread -lgctpc -lboost_thread -lpng -ljpeg 
 
 slave_LDADD = $(reproject_LDADD)
 all: all-am
@@ -278,6 +282,8 @@ distclean-compile:
 
 include ./$(DEPDIR)/ClientSocket.Po
 include ./$(DEPDIR)/GeneralProjector.Po
+include ./$(DEPDIR)/ImageStitcher.Po
+include ./$(DEPDIR)/ImageStitcherNode.Po
 include ./$(DEPDIR)/MasterMain.Po
 include ./$(DEPDIR)/ProjImageData.Po
 include ./$(DEPDIR)/ProjImageFactory.Po
@@ -287,7 +293,9 @@ include ./$(DEPDIR)/ProjImageOut.Po
 include ./$(DEPDIR)/ProjImageOutPiece.Po
 include ./$(DEPDIR)/ProjImageParams.Po
 include ./$(DEPDIR)/ProjImageScale.Po
+include ./$(DEPDIR)/ProjProcessSpawner.Po
 include ./$(DEPDIR)/ProjectorFactory.Po
+include ./$(DEPDIR)/ProjectorManager.Po
 include ./$(DEPDIR)/ServerSocket.Po
 include ./$(DEPDIR)/SlaveMain.Po
 include ./$(DEPDIR)/SlaveProjector.Po
@@ -577,7 +585,6 @@ uninstall-am: uninstall-info-am
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-info-am
 
-			 # ProjProcessSpawner.cpp  ProjectorSplitter.cpp
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -3,7 +3,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -17,6 +17,7 @@
  *
  */
 
+#include "Macros.h"
 #include "Globals.h"
 #include "GeneralProjector.h"
 #include "Math.h"
@@ -32,7 +33,7 @@ ProjIOLib::ProjectionReader GeneralProjector::m_projReader;
 ProjIOLib::ProjectionWriter GeneralProjector::m_projWriter;
 
 ProjImageFactory 
-GeneralProjector::m_imgFactory(m_projReader, m_projWriter); 
+GeneralProjector::m_imgFactory; 
    
 // member functions
 /******************************************************************************/
@@ -46,7 +47,8 @@ GeneralProjector::GeneralProjector(
     m_pmeshDivisions(kgMeshDivisions), 
     m_pmeshInterp( kgInterpolator ), 
     m_forwardMesh(NULL),
-    m_reverseMesh(NULL)
+    m_reverseMesh(NULL),
+    m_toProj(NULL)
 {
     m_fromProj = m_imgIn.getProjection();
     m_toProj = m_imgOut->getProjection(); 
@@ -205,7 +207,7 @@ ProjImageOutPiece GeneralProjector::projectPiece( long unsigned int beginLine,
 
 ProjImageOutPiece GeneralProjector::projectPiece()
 {
-    return projectPiece(0, m_imgOut->getHeight());
+    return this->projectPiece(0, m_imgOut->getHeight());
 }
 
 /******************************************************************************/
@@ -226,7 +228,7 @@ scanlines_t GeneralProjector::project( long unsigned int beginLine,
         if ( m_imgOut == NULL )
         {
             setupOutput(); 
-    
+            WRITE_DEBUG ( "done setting up output" << std::endl; );
             if ( m_imgOut == NULL ) 
                 throw GeneralException( "m_imgOut is NULL in project(int,int)");
         }
@@ -241,17 +243,19 @@ scanlines_t GeneralProjector::project( long unsigned int beginLine,
         const DRect inBounds(m_imgIn.getOuterBounds());
         const DRect outBounds(m_imgOut->getOuterBounds());
         const int spp(m_imgIn.getSPP());
+        WRITE_DEBUG ( "done grabbing constants" << std::endl; );
 
         if ( beginLine > outHeight || endLine > outHeight  )  
             throw GeneralException("Line boundaries out of range."); 
+
+        if ( m_imgOut->getPhotometric() != PHOTO_RGB && 
+             m_imgOut->getPhotometric() != PHOTO_GREY ) 
+            throw GeneralException("Unsupported output format.");
 
         // allocate the dynamic memory for the resulting scanlines.
         if ( !(scanlines = new(std::nothrow)unsigned char*[endLine-beginLine]))
             throw std::bad_alloc();
 
-        if ( m_imgOut->getPhotometric() != PHOTO_RGB && 
-             m_imgOut->getPhotometric() != PHOTO_GREY ) 
-            throw GeneralException("Unsupported output format.");
         
         for ( unsigned int i = 0; i < (endLine-beginLine); ++i )
         {
@@ -259,12 +263,15 @@ scanlines_t GeneralProjector::project( long unsigned int beginLine,
                 throw std::bad_alloc();
         }
 
+        WRITE_DEBUG ( "done doing dynamic memory" << std::endl; );
+        
         // setup the reverse projection's mesh            
         m_reverseMesh = & m_imgOut->setupMesh( geoProj, 
                                                m_pmeshDivisions,
                                                m_pmeshInterp ); 
 
-        WRITE_DEBUG ( " begin reverse projection " << std::endl );
+        WRITE_DEBUG ( " begin reverse projection lines" << 
+                      beginLine << " through " << endLine << std::endl );
 
         // This is a reverse projection, so in other words,  we're iterating 
         // over the new image's x/y pixels with the double for loops, using 
@@ -279,7 +286,8 @@ scanlines_t GeneralProjector::project( long unsigned int beginLine,
                 // grab the 'to scale' x/y coordinates of where we are
                 // on this image.
                 xSrcScale = outBounds.left + outScale.x * xPixelCount;
-                ySrcScale = outBounds.top - outScale.y * yPixelCount;
+                ySrcScale = outBounds.top - 
+                            outScale.y * (yPixelCount + beginLine);
     
                 // xSrcScale is now a latitude after this call
                 // ySrcScale is now a longitude after this call
@@ -293,7 +301,7 @@ scanlines_t GeneralProjector::project( long unsigned int beginLine,
                    // place a black pixel in each sample (channel)
                    for( sppCount = 0; sppCount < spp; ++sppCount)
                    {
-                        scanlines[(yPixelCount - beginLine)]
+                        scanlines[ yPixelCount ]
                                  [ xPixelCount*spp+sppCount ] = 0; 
                    }
                    
@@ -302,17 +310,17 @@ scanlines_t GeneralProjector::project( long unsigned int beginLine,
                     if ( m_imgOut->getPhotometric() == PHOTO_RGB ) 
                     {
                          tmpPixel->getRGB( 
-                                scanlines[(yPixelCount - beginLine)]
+                                scanlines[ yPixelCount ]
                                          [ xPixelCount*spp],
-                                scanlines[(yPixelCount - beginLine)]
+                                scanlines[ yPixelCount ]
                                          [ xPixelCount*spp + 1],
-                                scanlines[(yPixelCount - beginLine)]
+                                scanlines[ yPixelCount ]
                                          [ xPixelCount*spp + 2]  );
                      
                     } else // i.e., photometric == PHOTO_GREY, which
                            // is one sample per pixel.
                     {
-                        tmpPixel->getGrey(scanlines[(yPixelCount - beginLine)]
+                        tmpPixel->getGrey(scanlines[ yPixelCount ]
                                                    [ xPixelCount*spp] );
                     } 
 
@@ -321,6 +329,10 @@ scanlines_t GeneralProjector::project( long unsigned int beginLine,
             }
         }
 
+        WRITE_DEBUG ( " end reverse projection lines" << 
+                      beginLine << " through " << endLine << std::endl );
+
+       
     } catch ( GeneralException & e ) 
     {
         std::cout << "GeneralProjector: " << e.toString() << std::endl;   

@@ -3,7 +3,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/13 22:27:40 $
  *
  * \version 0.1
  * 
@@ -76,14 +76,14 @@ DRect ProjImageInList::getOuterBounds()const
         if ( (kiterator = m_imgList.begin()) != m_imgList.end() )
         {
             m_outermost = (kiterator->second);
-            std::cout << "first rect:" << m_outermost << std::endl;
+            WRITE_DEBUG ( "first rect:" << m_outermost << std::endl; )
         } else
             throw 
             GeneralException("ProjImageInList::getOutermostBounds() error");
         
         for( ++kiterator; kiterator != m_imgList.end(); ++kiterator )
         {
-            std::cout << "second rect:" << kiterator->second << std::endl; 
+            WRITE_DEBUG (  "second rect:" << kiterator->second << std::endl; )
             
             // get the top-most bound 
             m_outermost.top    = Math<double>::max(m_outermost.top, 
@@ -101,7 +101,7 @@ DRect ProjImageInList::getOuterBounds()const
             m_outermost.right  = Math<double>::max(m_outermost.right, 
                                  (kiterator->second.right));
         }
-        std::cout << "List bounds:  " << m_outermost << std::endl;
+        WRITE_DEBUG ( "List bounds:  " << m_outermost << std::endl; )
     }
     
     return m_outermost;
@@ -302,7 +302,7 @@ void ProjImageInList::exportToSocket( ClientSocket & socket )const
 {
     std::list<std::pair<ProjImageInInterface*,DRect> >::const_iterator 
         kiterator = m_imgList.begin();
-    unsigned int _size = size();
+    int _size = size();
 
     socket.send(&_size, sizeof(_size));
     socket.send(&m_height, sizeof(m_height));

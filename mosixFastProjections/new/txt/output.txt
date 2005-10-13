@@ -1,4 +1,6 @@
 /work/tiffs/out.png
+1200
+1200
 TM
 NAD27
 METERS

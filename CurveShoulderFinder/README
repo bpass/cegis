@@ -1,3 +1,9 @@
+This is just a quick reference.  See the installation instructions in the
+documentation for a complete reference.
+
+To generate the documentation, run:
+    doxygen Doxyfile
+
 To build and use, just run the following:
     aclocal
     automake --add-missing --foreign
@@ -18,7 +24,4 @@ To build and use, just run the following:
 
 To execute the tests, run:
     make check
-
-To generate the documentation, run:
-    doxygen Doxyfile
 

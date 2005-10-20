@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/10/13 22:27:40 $
+ * \date $Date: 2005/10/20 23:21:15 $
  *
  * \version 0.1
  * 
@@ -108,6 +108,7 @@ namespace USGSMosix
         /// responsible.
         std::pair<long int, long int> m_scanlineRange;
 
+        bool m_bDeleteProjector;
     };
 
 /******************************************************************************/

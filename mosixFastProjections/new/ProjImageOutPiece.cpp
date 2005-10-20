@@ -3,7 +3,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/10/13 22:27:40 $
+ * \date $Date: 2005/10/20 23:21:15 $
  *
  * \version 0.1
  * 
@@ -185,10 +185,8 @@ void ProjImageOutPiece::putScanline( scanline_t,
                                      const unsigned int& lineNo )
 {
     if ( (m_range.first != -1 ) &&
-         static_cast<int>(lineNo - 1) != m_range.first ||
          static_cast<int>(lineNo + 1) != m_range.first ||
-         static_cast<int>(lineNo - 1) != m_range.second ||
-         static_cast<int>(lineNo + 1) != m_range.second )
+         static_cast<int>(lineNo - 1) != m_range.second )
         throw GeneralException(
         "Error: Inserting line which would make ProjImageOut non-contiguous.");
 

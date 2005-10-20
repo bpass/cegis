@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/20 23:21:15 $
  *
  * \version 0.1
  * 
@@ -32,9 +32,19 @@ namespace USGSMosix
         
         virtual ~ProjImageDataOutInterface() {}
 
+        /// \param scanline The scanline raw data to be placed into the
+        /// ProjImage. 
+        /// \param lineNo Number indicating which line number's raw data
+        /// is being placed.
         virtual void putScanline( scanline_t scanline, 
                                   const unsigned int& lineNo )   = 0;
 
+        /// \param scanlines The scanline's raw data to be placed into the
+        /// ProjImage.  A contiguous block of scanlines in memory.
+        /// \param beginLine A number indicating the begining scanline at 
+        /// which the raw data begins --zero based.
+        /// \param endLine A number indicating the ending scanline at 
+        /// which the raw data begins --zero based.
         virtual void putScanlines( scanlines_t scanlines, 
                                    const unsigned int& beginLine,
                                    const unsigned int& endLine )  = 0; 

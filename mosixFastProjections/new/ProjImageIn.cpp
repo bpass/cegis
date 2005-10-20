@@ -4,7 +4,7 @@
  * \author Mark Schisler \n
  *         Chris Bilderback 
  *
- * \date $Date: 2005/10/13 22:27:40 $
+ * \date $Date: 2005/10/20 23:21:15 $
  *
  * \version 0.1
  * 
@@ -195,7 +195,7 @@ ProjImageIn::ProjImageIn( const ProjImageIn & copyOf )
     m_geoBounds(copyOf.m_geoBounds),
     m_haveGeoBounds(copyOf.m_haveGeoBounds)
 {
-    WRITE_DEBUG( "PROJIMAGEIN CONSTRUCTOR CALLED!!!!!!!!" << std::endl );
+    WRITE_DEBUG( "PROJIMAGEIN CONSTRUCTOR CALLED" << std::endl );
 }
 
 /*****************************************************************************/
@@ -301,6 +301,7 @@ const unsigned int& x, const unsigned int& y ) const
     
     if ( getPhotometric() == PHOTO_RGB ) 
         return new PixelRGB<sample_t>(m_lastLine.second + (x * m_spp) );
+            
     else if ( getPhotometric() == PHOTO_GREY ) 
         return new PixelGrey<sample_t>(m_lastLine.second + (x * m_spp) );
     else
@@ -434,7 +435,7 @@ DRect ProjImageIn::getGeographicBounds()const
         } else
         {
             WRITE_DEBUG ( "returning geographic bounds directly."<<std::endl);
-            return getOuterBounds();
+            return ( m_geoBounds = getOuterBounds() );
         }
             
     } else

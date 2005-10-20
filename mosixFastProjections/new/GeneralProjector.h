@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/10/13 22:27:40 $
+ * \date $Date: 2005/10/20 23:21:15 $
  *
  * \version 0.1
  * 
@@ -88,11 +88,11 @@ class GeneralProjector : public ProjectorInterface
        /// for the image re-projection.
        virtual bool setupOutput();
        
-       /// \brief The line which we should begin reprojecting at with the 
-       /// current ProjImageIn and Out.  (zero based.)
+       /// \param beginLine Line which we should begin reprojecting at with the 
+       /// current ProjImageIn and Out --zero based.
        ///
-       /// \brief The line which we should end reprojecting at with the
-       /// current ProjImageIn and Out.  (zero based.)
+       /// \param endLine The line which we should end reprojecting at with the
+       /// current ProjImageIn and Out --zero based.
        ///
        /// \note Unless this object was constructed with a output reference, 
        /// to use this function you must have called setupOutput.
@@ -128,10 +128,10 @@ class GeneralProjector : public ProjectorInterface
        virtual void exportToSocket( ClientSocket & socket )const;
        
     private:
-       /// \brief The line which we should begin reprojecting at with the 
+       /// \param beginLine Line which we should begin reprojecting at with the 
        /// current ProjImageIn and Out.  (zero based.)
        ///
-       /// \brief The line which we should end reprojecting at with the
+       /// \param endLine The line which we should end reprojecting at with the
        /// current ProjImageIn and Out.  (zero based.)
        ///
        /// \note Unless this object was constructed with a output reference, 

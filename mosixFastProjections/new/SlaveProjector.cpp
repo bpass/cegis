@@ -2,7 +2,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/10/13 22:27:40 $
+ * \date $Date: 2005/10/20 23:21:15 $
  *
  * \version 0.1
  * 
@@ -37,7 +37,8 @@ std::pair<unsigned long, unsigned long> scanlineRange,
 unsigned long int id ) : 
 m_id(id),
 m_projInterface( new GeneralProjector(inInterface, imgOutInterface)),
-m_scanlineRange( scanlineRange )
+m_scanlineRange( scanlineRange ),
+m_bDeleteProjector( true ) 
 {
 }
 
@@ -49,7 +50,8 @@ unsigned long int id
 ) :
 m_id(id),
 m_projInterface( &interface ),
-m_scanlineRange( scanlineRange )
+m_scanlineRange( scanlineRange ),
+m_bDeleteProjector( false )
 {
 }
 
@@ -57,7 +59,7 @@ m_scanlineRange( scanlineRange )
 
 SlaveProjector::~SlaveProjector()
 {
-    // TODO: delete m_projInterface;    
+    if ( m_bDeleteProjector ) delete m_projInterface;    
 }
 
 

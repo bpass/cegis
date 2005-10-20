@@ -7,7 +7,7 @@
  *
  * \file ProjImageParams.h 
  *
- * \date $Date: 2005/09/08 16:41:22 $
+ * \date $Date: 2005/10/20 23:21:15 $
  *
  * \version 0.1
  * 
@@ -57,7 +57,7 @@ class ProjImageParams : public SerializableInterface {
         static ProjImageParams createFromSocket( ClientSocket & socket );
        
         /// \param socket The destination socket.
-        //
+        ///
         /// \brief This function exports the pertinent data members of
         /// this ProjImageParam object which are needed to recreate 
         /// the same object on the other end of the forwarded socket.

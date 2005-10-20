@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/10/13 22:27:40 $
+ * \date $Date: 2005/10/20 23:21:15 $
  *
  * \version 0.1
  * 
@@ -45,13 +45,16 @@ class ProjectorInterface : public SerializableInterface {
         /// for the image re-projection.
         virtual bool setupOutput() = 0;
         
-        /// \brief The line which we should begin reprojecting at with the 
-        /// current ProjImageIn and Out.  (zero based.)
-        /// \brief The line which we should end reprojecting at with the
-        /// current ProjImageIn and Out.  (zero based.)
-        /// \note Unless this object was constructed with a output reference, 
-        /// to use this function you must have called setupOutput.
-        /// \brief Performs the image reprojection.
+       /// \param beginLine Line which we should begin reprojecting at with the 
+       /// current ProjImageIn and Out --zero based.
+       ///
+       /// \param endLine The line which we should end reprojecting at with the
+       /// current ProjImageIn and Out --zero based.
+       ///
+       /// \note Unless this object was constructed with a output reference, 
+       /// to use this function you must have called setupOutput.
+       ///
+       /// \brief Performs the image reprojection.
         virtual ProjImageOutPiece projectPiece( long unsigned int beginLine,
                                                 long unsigned int endLine ) = 0;
         

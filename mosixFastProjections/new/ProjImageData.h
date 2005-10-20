@@ -5,7 +5,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/10/13 22:27:40 $
+ * \date $Date: 2005/10/20 23:21:15 $
  *
  * \version 0.1
  * 
@@ -99,10 +99,11 @@ class ProjImageData : public virtual ProjImageDataInterface
         void setBPS(int bps);
         /// \brief Sets the samples per pixel
         void setSPP(int spp);
+        
         /// \brief Sets the image file to the forwarded pointer and syncs
         /// the data members indicating samples per pixel, bits per sample,
-        /// filename, height, width, etc., to be those that are contained in
-        /// the ImageFile.
+        /// filename, height, width, etc to be those that are contained in
+        /// the ImageFile.  
         void setImageFile( USGSImageLib::ImageFile* file );
         
         /// \param toProjection The destination projection to be 
@@ -159,7 +160,17 @@ class ProjImageData : public virtual ProjImageDataInterface
         USGSImageLib::ImageFile * m_file;
         /// boundaries to scale, not lat, long or pixel.
         DRect m_boundaries; 
+
+        /// So these are members which duplicate data which is contained
+        /// within m_file.  On one level it doesn't make any sense why 
+        /// we'd need that.  But we use these to delay setting up a m_file
+        /// in case we're doing something silly with this newly constructed 
+        /// object, like for instance serializing it over a socket.  In
+        /// that case there's no reason to parse the parameter file once, 
+        /// serialize the data, then re-parse the parameter file to create
+        /// m_file again.  And so on.
         int m_photo, m_bps, m_spp;
+        
         long int m_width, m_height;
         std::string m_filename;
         mutable std::list<PmeshLib::ProjectionMesh *> m_meshes;

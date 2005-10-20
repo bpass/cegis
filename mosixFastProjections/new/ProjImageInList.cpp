@@ -3,7 +3,7 @@
  *
  * \author Mark Schisler
  *
- * \date $Date: 2005/10/13 22:27:40 $
+ * \date $Date: 2005/10/20 23:21:15 $
  *
  * \version 0.1
  * 
@@ -258,7 +258,6 @@ const PmeshLib::ProjectionMesh & ProjImageInList::setupMesh(
     }
 
     return *(mesh);
-
 }
 
 /****************************************************************************/
@@ -292,7 +291,6 @@ const PmeshLib::ProjectionMesh & ProjImageInList::setupReverseMesh(
         throw;
     }   
     
-    
     return *(mesh);
 }
 
@@ -312,6 +310,8 @@ void ProjImageInList::exportToSocket( ClientSocket & socket )const
     {
         kiterator->first->exportToSocket(socket); 
     }
+    
+    return;
 }
 
 /****************************************************************************/

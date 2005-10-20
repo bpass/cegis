@@ -7,7 +7,7 @@
  *
  * \file ProjImageFactory.h
  *
- * \date $Date: 2005/10/13 22:27:40 $
+ * \date $Date: 2005/10/20 23:21:15 $
  *
  * \version 0.1
  *
@@ -47,6 +47,8 @@ class ProjImageFactory
         /// \param outputParams The output parameters for the list.  
         /// Primarily what is needed here is what the virtual height 
         /// and width should be of the image list.
+        /// \brief Constructs a ProjImageInList based on the parameters
+        /// which are waiting on the socket.
         ProjImageInInterface* 
         makeProjImageInList( std::list<ProjImageParams*>& params,
                              ProjImageParams & outputParams );

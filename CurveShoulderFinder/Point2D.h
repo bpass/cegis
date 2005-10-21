@@ -2,7 +2,7 @@
  * @file Point2D.h
  * @author Austin Hartman
  *
- * $Id: Point2D.h,v 1.2 2005/06/10 21:52:23 ahartman Exp $
+ * $Id: Point2D.h,v 1.3 2005/10/21 17:41:45 ahartman Exp $
  */
 
 #ifndef AUSTIN_POINT2D_H
@@ -13,6 +13,9 @@
 
 template<class T>
 class Point2D;
+
+template<class T>
+bool operator<(const Point2D<T>& lhs, const Point2D<T>& rhs);
 
 template<class T>
 std::ostream& operator<<(std::ostream& os, const Point2D<T>& p);

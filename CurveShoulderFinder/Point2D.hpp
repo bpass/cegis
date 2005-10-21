@@ -2,7 +2,7 @@
  * @file Point2D.hpp
  * @author Austin Hartman
  *
- * $Id: Point2D.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
+ * $Id: Point2D.hpp,v 1.4 2005/10/21 17:41:45 ahartman Exp $
  */
 
 #ifdef AUSTIN_POINT2D_H
@@ -53,6 +53,24 @@ Point2D<T>::y() const
 }
 
 
+template<class T>
+bool
+operator<(const Point2D<T>& lhs, const Point2D<T>& rhs)
+{
+    if(lhs.x() < rhs.x())
+    {
+        return true;
+    }
+    else if(lhs.x() == rhs.x() &&
+            lhs.y() < rhs.y())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 template<class T>
 std::ostream&

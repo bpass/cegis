@@ -3,10 +3,14 @@
 # @file Makefile.am
 # @author Austin Hartman
 #
-# $Id: Makefile.am,v 1.2 2005/09/28 23:03:15 ahartman Exp $
+# $Id: Makefile.am,v 1.3 2005/10/26 19:03:59 ahartman Exp $
 #
 
-noinst_PROGRAMS = LittleRiver
+noinst_PROGRAMS = ComparePrecipitation LittleRiver
+
+ComparePrecipitation_SOURCES = ComparePrecipitation.cpp
+ComparePrecipitation_CPPFLAGS = $(GDAL_CFLAGS) -I..
+ComparePrecipitation_LDADD = $(GDAL_LIBS)
 
 LittleRiver_SOURCES = LittleRiver.cpp
 LittleRiver_CPPFLAGS = $(GDAL_CFLAGS) -I..

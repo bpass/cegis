@@ -1,7 +1,8 @@
 /**
  * @file LittleRiver.cpp
+ * @author Austin Hartman
  *
- * $Id: LittleRiver.cpp,v 1.14 2005/09/29 23:47:46 ahartman Exp $
+ * $Id: LittleRiver.cpp,v 1.15 2005/10/26 19:02:59 ahartman Exp $
  */
 
 #include <iomanip>

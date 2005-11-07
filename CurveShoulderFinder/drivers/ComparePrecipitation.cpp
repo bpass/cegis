@@ -2,7 +2,7 @@
  * @file ComparePrecipitation.cpp
  * @author Austin Hartman
  * 
- * $Id: ComparePrecipitation.cpp,v 1.1 2005/10/26 19:05:14 ahartman Exp $
+ * $Id: ComparePrecipitation.cpp,v 1.2 2005/11/07 17:20:32 ahartman Exp $
  */
 
 #include <fstream>
@@ -32,24 +32,65 @@ typedef std::vector<Precipitation_t> Precipitations_t;
 typedef std::string Resolution_t;
 typedef std::vector<Resolution_t> Resolutions_t;
 
+/**
+ * This class stores all the values from a single .img file for the requested
+ * points and bands.
+ */
 class ImgValues
 {
 public:
+    /**
+     * Constructor to specify the file, points, and bands whose values
+     * we want to store
+     *
+     * @param filename The name of the .img file to read from
+     * @param points The set of points for which values will be stored
+     * for access later
+     * @param bands The set of bands for which values will be stored 
+     * for access later
+     */
     ImgValues(const std::string& filename,
               const Points_t& points,
               const Bands_t& bands);
+
+    /**
+     * Gets the value from the specified point and band.  The point and band
+     * must have been part of the set that was passed into the constructor
+     *
+     * @param point The point at which to get data
+     * @param band The band at which to get data
+     *
+     * @exception InvalidPoint Thrown if the specified point was not part of
+     * the set passed into the constructor
+     * @exception InvalidBand Thrown if the specified band was not part of
+     * the set passed into the constructor
+     */
     const Data_t& getValue(const Point_t& point, const Band_t& band) const;
 
+    /**
+     * Exception class to be used when the user asks for data for a point
+     * that the object does not have data for
+     */
     class InvalidPoint
     {};
 
+    /**
+     * Exception class to be used when the user asks for data for a band
+     * that the object does not have data for
+     */
     class InvalidBand
     {};
 
 private:
+    /**
+     * Data is stored in a hierarchy of std::maps in following way:
+     * point->band->value
+     */
+    //@{
     typedef std::map<Band_t, Data_t> BandMap_t;
     typedef std::map<Point_t, BandMap_t> PointMap_t;
     PointMap_t values;
+    //@}
 };
 
 ImgValues::ImgValues(const std::string& filename,
@@ -147,6 +188,11 @@ CreateFilename::operator()(const std::string& precipitation,
            m_suffix + m_extension;
 }
 
+/**
+ * This class stores values from multiple .img files in such a way that
+ * they are accessible by specifying their precipitation amount and
+ * resolution.
+ */
 class AllValues
 {
 public:
@@ -163,12 +209,22 @@ public:
                     const Point_t& point, 
                     const Band_t& band) const;
 
+    /**
+     * Exception class to be used when the user asks for data for a resolution
+     * that the object does not have data for
+     */
     class InvalidResolution
     {};
 
+    /**
+     * Exception class to be used when the user asks for data for a 
+     * precipitation that the object does not have data for
+     */
     class InvalidPrecipitation
     {};
 
+    // A couple typedefs used so that the user does not need to use the
+    // ImgValues:: scope
     typedef ImgValues::InvalidPoint InvalidPoint;
     typedef ImgValues::InvalidBand InvalidBand;
 
@@ -283,10 +339,11 @@ int main()
         "5.00",
         "6.00",
         "7.00",
+        "7.30",
         "8.00",
         "9.00"
     };
-    Precipitations_t
+    const Precipitations_t
     precipitations(precipitationsArray,
                    precipitationsArray + sizeof(precipitationsArray)/
                                          sizeof(precipitationsArray[0]));
@@ -302,12 +359,12 @@ int main()
         "960",
         "1920"
     };
-    Resolutions_t
+    const Resolutions_t
     resolutions(resolutionsArray,
                 resolutionsArray + sizeof(resolutionsArray)/
                                    sizeof(resolutionsArray[0]));
 
-    const Point_t pointsArray[] = 
+    const Point_t pointsArray[] =
     {
         Point_t(244338.17235, 3509943.05796),
         Point_t(243876.45384, 3509519.99026),
@@ -318,11 +375,11 @@ int main()
         Point_t(254514.00120, 3485869.88143),
         Point_t(254419.30251, 3489880.48902)
     };
-    const Points_t points(pointsArray, 
+    const Points_t points(pointsArray,
                           pointsArray + sizeof(pointsArray)/
                                         sizeof(pointsArray[0]));
 
-    const Band_t bandsArray[] = 
+    const Band_t bandsArray[] =
     {
         1,
         2,
@@ -347,7 +404,10 @@ int main()
                         resolutions, precipitations, points, bands);
 
     std::ofstream ofs("output.csv");
-    ofs << "Resolution,Point,Band,Precipitation,Value\n";
+    ofs.precision(6);
+    ofs << std::fixed;
+
+    ofs << "Resolution,Point X-Coord,Point Y-Coord,Band,Precipitation,Value\n";
     for(Resolutions_t::const_iterator resIter = resolutions.begin();
         resIter != resolutions.end(); ++resIter)
     {
@@ -357,53 +417,19 @@ int main()
             for(Bands_t::const_iterator bandsIter = bands.begin();
                 bandsIter != bands.end(); ++bandsIter)
             {
-                for(Precipitations_t::const_iterator precipIter = 
+                for(Precipitations_t::const_iterator precipIter =
                         precipitations.begin();
                     precipIter != precipitations.end(); ++precipIter)
                 {
-                    const Data_t value = 
+                    const Data_t value =
                         allValues.getValue(*resIter, *precipIter,
                                            *pointsIter, *bandsIter);
-                    ofs << *resIter << ',' << *pointsIter << ',' << *bandsIter
+                    ofs << *resIter << ',' << pointsIter->x() << ',' 
+                        << pointsIter->y() << ',' << *bandsIter
                         << ',' << *precipIter << ',' << value << '\n';
                 }
             }
         }
     }
-//    Points_t points;
-//    points.push_back(Point_t(244338.17235, 3509943.05796));
-//    points.push_back(Point_t(243876.45384, 3509519.99026));
-//    points.push_back(Point_t(244925.32144, 3507531.60852));
-//    points.push_back(Point_t(250344.48237, 3499648.11321));
-//    points.push_back(Point_t(241920.86317, 3514708.05963));
-//    points.push_back(Point_t(256122.17418, 3487125.20807));
-//    points.push_back(Point_t(254514.00120, 3485869.88143));
-//    points.push_back(Point_t(254419.30251, 3489880.48902));
-//
-//    Bands_t bands;
-//    bands.push_back(1);
-//    bands.push_back(2);
-//    bands.push_back(3);
-//    bands.push_back(4);
-//    bands.push_back(5);
-//    bands.push_back(6);
-//    bands.push_back(7);
-//
-//    const std::string filename = 
-//        "L:/sdir_snap/AGNPSOutputAnalysis/Data/LittleRiver/NAWQA/Output/"
-//        "2005-08-17/7.30in/lr1920_hydro.img";
-//
-//    ImgValues imgValues(filename, points, bands);
-//    for(Points_t::const_iterator i = points.begin();
-//        i != points.end(); ++i)
-//    {
-//        std::cout << "Values at point " << *i << ":\n";
-//        for(Bands_t::const_iterator j = bands.begin();
-//            j != bands.end(); ++j)
-//        {
-//            std::cout << "\tBand " << *j << ": " 
-//                      << imgValues.getValue(*i, *j) << '\n';
-//        }
-//    }
 }
 

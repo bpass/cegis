@@ -442,12 +442,14 @@ void Util::sphdz(long isph, double* parm, double* r_major, double* r_minor, doub
 	return;
 }
 
-void Util::convertCoords(int fromUnit, int toUnit, double& x, double& y) {
+long Util::convertCoords(int fromUnit, int toUnit, double& x, double& y) {
 	double factor = 0.0;
-	Util::untfz(fromUnit, toUnit, &factor);
+	long err = 0;
+	err = Util::untfz(fromUnit, toUnit, &factor);
 	
 	x *= factor;
 	y *= factor;
+	return(err);
 }
 
 

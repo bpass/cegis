@@ -43,7 +43,7 @@ int main( int argc, char **argv )
 
 	 sinSd.forward(lon, lat, &x, &y);
 	 printf("Sinusoidal forward lon: %f lat: %f x: %f y %f\n", lon, lat, x, y);
-	 sinSd.inverse(x, y, &latOut, &lonOut);
+	 sinSd.inverse(x, y, &lonOut, &latOut);
 	 printf("Sinusoidal inverse x: %f y: %f lon: %f lat: %f\n", x, y, lonOut, latOut);
 
 	 eq.forward(lon, lat, &x, &y);

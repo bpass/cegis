@@ -291,7 +291,6 @@ protected:
 		\param x Input x coordinate
 		\param y Input y coordinate
 	*/
-
 	virtual void _inverse(double x, double y) = 0;
 
 	void loadFromParams();

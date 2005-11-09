@@ -150,12 +150,17 @@ void Projection::forward(double lon, double lat, double* x, double* y)
 
 	if(errorOccured())
 		return;
-
-	Util::convertCoords(DEGREE, RADIAN, lon, lat);
+	
+	//check if convertCoords returned an error
+	setError(Util::convertCoords(DEGREE, RADIAN, lon, lat));
+	if(errorOccured())
+		return;
 
 	_forward(lon, lat);
 
-	Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord);
+	setError(Util::convertCoords(METER, m_unitCode, m_x_coord, m_y_coord));
+	if(errorOccured())
+		return;
 	
 	if(x)
 		*x = m_x_coord;
@@ -166,7 +171,7 @@ void Projection::forward(double lon, double lat, double* x, double* y)
 void Projection::inverse(double x, double y, double* lon, double* lat)
 {
 	clearError();
-
+	
 	if(paramLoadNeeded())
 		loadFromParams();
 
@@ -179,14 +184,21 @@ void Projection::inverse(double x, double y, double* lon, double* lat)
 	if(errorOccured())
 		return;
 
-	Util::convertCoords(m_unitCode, METER, x, y);
+	//check if convertCoords returned an error
+	setError(Util::convertCoords(m_unitCode, METER, x, y));
+	if(errorOccured())
+		return;
 
 	_inverse(x, y);
 
-	Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude);
+	setError(Util::convertCoords(RADIAN, DEGREE, m_longitude, m_latitude));
+	
+	if(errorOccured())
+		return;
 
 	if(lon)
 		*lon = m_longitude;
+	
 	if(lat)
 		*lat = m_latitude;
 }

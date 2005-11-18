@@ -31,6 +31,7 @@ ADGen_v1.0 ADGen_v1.0
 ADGen_v2.0 ADGen_v2.0
 ADGen_v2.0_EML ADGen_v2.0_EML
 bilinearInterp bilinearInterp
+BSQReader BSQReader
 classifier classifier
 classifierWin classifierWin
 CurveShoulderFinder CurveShoulderFinder
@@ -55,3 +56,4 @@ sample sample
 soil-moisture soil-moisture
 transferHeader transferHeader
 USGSVectorOverlapTool USGSVectorOverlapTool
+

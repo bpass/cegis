@@ -1,0 +1,758 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.10"
+	Name="mapimgcpp"
+	ProjectGUID="{08D3B4BF-C3C7-3F2E-8A5C-F59A4ED1F4B7}">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="."
+			IntermediateDirectory="Release\"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="-Zm200 -w34100 -w34189"
+				Optimization="1"
+				AdditionalIncludeDirectories=".,gctpcpp,$(QTDIR)\include,.,D:\Qt3\Qt\mkspecs\win32-msvc.net"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_DLL,QT_THREAD_SUPPORT,NDEBUG,QT_NO_DEBUG"
+				GeneratePreprocessedFile="0"
+				MinimalRebuild="TRUE"
+				ExceptionHandling="FALSE"
+				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
+				AssemblerListingLocation="Release\"
+				ObjectFile="Release\"
+				ProgramDataBaseFileName=".\"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				IgnoreImportLibrary="TRUE"
+				AdditionalDependencies="qt-mt334.lib qtmain.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib imm32.lib winmm.lib wsock32.lib winspool.lib delayimp.lib"
+				OutputFile="Release\\mapimgcpp.exe"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="$(QTDIR)\lib"
+				DelayLoadDLLs="comdlg32.dll,oleaut32.dll,winmm.dll,wsock32.dll,winspool.dll"
+				GenerateDebugInformation="FALSE"
+				ProgramDatabaseFile=""
+				SubSystem="2"/>
+			<Tool
+				Name="VCMIDLTool"
+				WarningLevel="0"
+				DefaultCharType="0"
+				EnableErrorChecks="1"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="."
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="-Zm200 -w34100 -w34189"
+				Optimization="4"
+				AdditionalIncludeDirectories=".,gctpcpp,$(QTDIR)\include,.,D:\Qt3\Qt\mkspecs\win32-msvc.net"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_DLL,QT_THREAD_SUPPORT"
+				GeneratePreprocessedFile="0"
+				MinimalRebuild="TRUE"
+				ExceptionHandling="TRUE"
+				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
+				AssemblerListingLocation=".\"
+				ObjectFile=".\"
+				ProgramDataBaseFileName=".\"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				IgnoreImportLibrary="TRUE"
+				AdditionalDependencies="qt-mt334.lib qtmain.lib kernel32.lib user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib imm32.lib winmm.lib wsock32.lib winspool.lib delayimp.lib"
+				OutputFile=".\mapimgcpp.exe"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="$(QTDIR)\lib"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile=""
+				SubSystem="2"/>
+			<Tool
+				Name="VCMIDLTool"
+				WarningLevel="0"
+				DefaultCharType="0"
+				EnableErrorChecks="1"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
+			<File
+				RelativePath="aboutform.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\alaskaconformal.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\albersConEqArea.cpp">
+			</File>
+			<File
+				RelativePath="authorform.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\azequidistant.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\coordinate.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\cproj.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\equidistantc.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\equirectangular.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\genvertnsp.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\gnomonic.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\goodeh.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\hammer.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\hotinobmerc.cpp">
+			</File>
+			<File
+				RelativePath="imgio.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\intmollweide.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\lambertazimuth.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\lambertcc.cpp">
+			</File>
+			<File
+				RelativePath="logform.cpp">
+			</File>
+			<File
+				RelativePath="main.cpp">
+			</File>
+			<File
+				RelativePath="mapimg.cpp">
+			</File>
+			<File
+				RelativePath="mapimgform.cpp">
+			</File>
+			<File
+				RelativePath="mapimgprogressdialog.cpp">
+			</File>
+			<File
+				RelativePath="mapimgvalidator.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\mercator.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\miller.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\Mollweide.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\oblatedeqarea.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\orthographic.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\polarstereo.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\polyconic.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\projection.cpp">
+			</File>
+			<File
+				RelativePath="qdmsedit.cpp">
+			</File>
+			<File
+				RelativePath="qgctpbox.cpp">
+			</File>
+			<File
+				RelativePath="qimgframe.cpp">
+			</File>
+			<File
+				RelativePath="qinfoframe.cpp">
+			</File>
+			<File
+				RelativePath="rasterinfo.cpp">
+			</File>
+			<File
+				RelativePath="rasterxml.cpp">
+			</File>
+			<File
+				RelativePath="resampleform.cpp">
+			</File>
+			<File
+				RelativePath="resampleinfo.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\robinson.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\sinusoidal.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\spaceobmerc.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\stereo.cpp">
+			</File>
+			<File
+				RelativePath="tinystr.cpp">
+			</File>
+			<File
+				RelativePath="tinyxml.cpp">
+			</File>
+			<File
+				RelativePath="tinyxmlerror.cpp">
+			</File>
+			<File
+				RelativePath="tinyxmlparser.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\transformer.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\transversemercator.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\util.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\utm.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\vandergrinten.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\wagneriv.cpp">
+			</File>
+			<File
+				RelativePath="gctpcpp\wagnervii.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl">
+			<File
+				RelativePath="aboutform.h">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing aboutform.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe aboutform.h -o moc_aboutform.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_aboutform.cpp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing aboutform.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe aboutform.h -o moc_aboutform.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_aboutform.cpp"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="gctpcpp\alaskaconformal.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\albersConEqArea.h">
+			</File>
+			<File
+				RelativePath="authorform.h">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing authorform.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe authorform.h -o moc_authorform.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_authorform.cpp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing authorform.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe authorform.h -o moc_authorform.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_authorform.cpp"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="gctpcpp\azequidistant.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\constants.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\coordinate.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\cproj.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\equidistantc.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\equirectangular.h">
+			</File>
+			<File
+				RelativePath="gctpnames.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\genvertnsp.h">
+			</File>
+			<File
+				RelativePath="getprojinfo.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\gnomonic.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\goodeh.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\hammer.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\hotinobmerc.h">
+			</File>
+			<File
+				RelativePath="imgio.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\intmollweide.h">
+			</File>
+			<File
+				RelativePath="jt_time.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\lambertazimuth.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\lambertcc.h">
+			</File>
+			<File
+				RelativePath="logform.h">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing logform.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe logform.h -o moc_logform.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_logform.cpp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing logform.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe logform.h -o moc_logform.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_logform.cpp"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="mapimg.h">
+			</File>
+			<File
+				RelativePath="mapimgdatatypes.h">
+			</File>
+			<File
+				RelativePath="mapimgform.h">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing mapimgform.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe mapimgform.h -o moc_mapimgform.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_mapimgform.cpp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing mapimgform.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe mapimgform.h -o moc_mapimgform.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_mapimgform.cpp"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="mapimgimages.h">
+			</File>
+			<File
+				RelativePath="mapimgpalette.h">
+			</File>
+			<File
+				RelativePath="mapimgprogressdialog.h">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing mapimgprogressdialog.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe mapimgprogressdialog.h -o moc_mapimgprogressdialog.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_mapimgprogressdialog.cpp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing mapimgprogressdialog.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe mapimgprogressdialog.h -o moc_mapimgprogressdialog.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_mapimgprogressdialog.cpp"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="mapimgvalidator.h">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing mapimgvalidator.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe mapimgvalidator.h -o moc_mapimgvalidator.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_mapimgvalidator.cpp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing mapimgvalidator.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe mapimgvalidator.h -o moc_mapimgvalidator.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_mapimgvalidator.cpp"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="mapimgversion.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\mercator.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\miller.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\mollweide.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\oblatedeqarea.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\orthographic.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\polarstereo.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\polyconic.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\projection.h">
+			</File>
+			<File
+				RelativePath="qdmsedit.h">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing qdmsedit.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe qdmsedit.h -o moc_qdmsedit.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_qdmsedit.cpp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing qdmsedit.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe qdmsedit.h -o moc_qdmsedit.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_qdmsedit.cpp"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="qgctpbox.h">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing qgctpbox.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe qgctpbox.h -o moc_qgctpbox.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_qgctpbox.cpp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing qgctpbox.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe qgctpbox.h -o moc_qgctpbox.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_qgctpbox.cpp"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="qimgframe.h">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing qimgframe.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe qimgframe.h -o moc_qimgframe.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_qimgframe.cpp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing qimgframe.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe qimgframe.h -o moc_qimgframe.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_qimgframe.cpp"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="qimgpainter.h">
+			</File>
+			<File
+				RelativePath="qinfoframe.h">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing qinfoframe.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe qinfoframe.h -o moc_qinfoframe.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_qinfoframe.cpp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing qinfoframe.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe qinfoframe.h -o moc_qinfoframe.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_qinfoframe.cpp"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="rasterinfo.h">
+			</File>
+			<File
+				RelativePath="rasterxml.h">
+			</File>
+			<File
+				RelativePath="resampleform.h">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing resampleform.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe resampleform.h -o moc_resampleform.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_resampleform.cpp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing resampleform.h..."
+						CommandLine="$(QTDIR)\bin\moc.exe resampleform.h -o moc_resampleform.cpp
+"
+						AdditionalDependencies="$(QTDIR)\bin\moc.exe"
+						Outputs="moc_resampleform.cpp"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="resampleinfo.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\robinson.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\sinusoidal.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\spaceobmerc.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\stereo.h">
+			</File>
+			<File
+				RelativePath="tinystr.h">
+			</File>
+			<File
+				RelativePath="tinyxml.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\transformer.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\transversemercator.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\util.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\utm.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\vandergrinten.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\wagneriv.h">
+			</File>
+			<File
+				RelativePath="gctpcpp\wagnervii.h">
+			</File>
+			<File
+				RelativePath="window_flags.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Generated MOC Files"
+			Filter="cpp;c;cxx;moc">
+			<File
+				RelativePath="moc_aboutform.cpp">
+			</File>
+			<File
+				RelativePath="moc_authorform.cpp">
+			</File>
+			<File
+				RelativePath="moc_logform.cpp">
+			</File>
+			<File
+				RelativePath="moc_mapimgform.cpp">
+			</File>
+			<File
+				RelativePath="moc_mapimgprogressdialog.cpp">
+			</File>
+			<File
+				RelativePath="moc_mapimgvalidator.cpp">
+			</File>
+			<File
+				RelativePath="moc_qdmsedit.cpp">
+			</File>
+			<File
+				RelativePath="moc_qgctpbox.cpp">
+			</File>
+			<File
+				RelativePath="moc_qimgframe.cpp">
+			</File>
+			<File
+				RelativePath="moc_qinfoframe.cpp">
+			</File>
+			<File
+				RelativePath="moc_resampleform.cpp">
+			</File>
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

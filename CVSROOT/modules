@@ -47,6 +47,7 @@ JGCTP JGCTP
 mapimg mapimg
 mapimg101 mapimg101
 MapIMG_1.02_resample MapIMG_1.02_resample
+mapimgcpp mapimgcpp
 mosixFastProjections mosixFastProjections
 OClass OClass
 PolynomialRootFinder PolynomialRootFinder

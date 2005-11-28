@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.7 2005/09/28 20:24:28 lwoodard Exp $
+// $Id: rasterinfo.cpp,v 1.8 2005/11/28 19:30:28 lwoodard Exp $
 
 
 #include "rasterinfo.h"
@@ -193,7 +193,7 @@ QString RasterInfo::fullDataType() const
 	QString ret;
 	
 	ret = signd ? "Signed " : "Unsigned ";
-	ret += QString("%1 Bits ").arg( bits );
+	ret += QString("%1 Bit ").arg( bits );
 	ret += datatype;
 
 	return ret;	
@@ -511,7 +511,7 @@ void RasterInfo::defaults()
    hasNoDataVal = false;   // Undefined
    noval = 0;
 
-   projcode = -1;          // ""
+   projcode = 17;          // Default to Equirectangular
    zonecode = 62;
    datumcode = 19;         // Sphere of Radius...
    unitcode = 2;           // Meters

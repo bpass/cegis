@@ -1,4 +1,4 @@
-// $Id: getprojinfo.h,v 1.7 2005/09/28 20:24:28 lwoodard Exp $
+// $Id: getprojinfo.h,v 1.8 2005/11/28 19:30:28 lwoodard Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -114,7 +114,7 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
    /******* Change bounds here for doing per line or per line section *******/
    FILE *paramfile = fopen( logFile, "wa");
 
-   for(out_line = 0; out_line < outimg.nl; out_line++)       // For each output image line
+   for(out_line   = 0; out_line < outimg.nl; out_line++)       // For each output image line
    {
       // Set progress of Dialog box and cancel if process was cancelled
 
@@ -126,7 +126,6 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
       }
 
       out[1] = outimg.ul_y - (out_line * outimg.pixsize);      // Calc out-img proj_Y coord
-
 
 
       for (out_samp = 0; out_samp < outimg.ns; out_samp++)   // For each output image sample
@@ -141,18 +140,18 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
                inbox[inbox_i][inbox_j] = 0;
 
          find2corners = 0;  // must get all 4 corners at beg. of line
-
+		 
          if( get_coords( outimg, inimg, out, inbox, out_line, out_samp, paramfile,
             (resample.resampleCode() == ResampleInfo::NearestNeighbor) ) )
          {
             in_line = (long int)(((inimg.ul_y - in[1]) / inimg.pixsize) + 0.5);
             in_samp = (long int)(((in[0] - inimg.ul_x) / inimg.pixsize) + 0.5);
-
+			
             // Still inside the input image??
             // ------------------------------
             if (in_line<0||in_samp<0||in_line>=inimg.nl||in_samp>=inimg.ns)
-            {
-               *( (type*)mapimgoutbuf + out_samp) = fill; // Barely ever happens, if at all
+			{
+				*( (type*)mapimgoutbuf + out_samp) = fill; // Barely ever happens, if at all
             }
 
             // Assign the appropriate input image pixel to the output image using
@@ -522,7 +521,6 @@ bool mapimg_resample( const RasterInfo input, const RasterInfo output, const Res
       // -------------------------------------------------------------------
       imgIO.put_line(mapimgoutbuf, useType);
    }
-
 
    progress.setProgress( outimg.nl );
 

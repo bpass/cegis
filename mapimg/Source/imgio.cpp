@@ -1,4 +1,4 @@
-// $Id: imgio.cpp,v 1.3 2005/08/05 19:50:50 lwoodard Exp $
+// $Id: imgio.cpp,v 1.4 2005/11/28 19:30:28 lwoodard Exp $
 
 
 //Copyright 2002 United States Geological Survey
@@ -69,7 +69,7 @@ int get_coords( IMGINFO outimg, IMGINFO inimg, double out[2], double inbox[5][2]
          return 0;
 
    }//if Goode's
-   else
+   else	//COMES IN HERE	COMES IN HERE	COMES IN HERE	COMES IN HERE
    {
       //------ output => lat/long ------//
       gctp(out,&outimg.sys,&outimg.zone,outimg.pparm,&outimg.unit,&outimg.datum,

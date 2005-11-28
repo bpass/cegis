@@ -1,4 +1,4 @@
-// $Id: mapimgedit.cpp,v 1.14 2005/09/30 18:06:26 lwoodard Exp $
+// $Id: mapimgedit.cpp,v 1.15 2005/11/28 19:30:28 lwoodard Exp $
 
 #include <QBoxLayout>
 #include <QCheckBox>
@@ -420,7 +420,7 @@ void QInfoFrame::setInfo( RasterInfo &input )
 		projNames[input.projectionNumber()] + " " + variation ) );
 	else
 		gctpTab->projCombo->setCurrentIndex( gctpTab->projCombo->findText (
-		projNames[input.projectionNumber()] ) );			
+			projNames[/*input.projectionNumber()*/17] ) );
 	gctpTab->projChange();
 
 	gctpTab->zoneSpin->setValue( input.zoneNumber() );

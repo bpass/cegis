@@ -1,4 +1,4 @@
-// $Id: gctp.c,v 1.1 2005/07/12 16:21:04 rbuehler Exp $
+// $Id: gctp.c,v 1.3 2006/05/19 18:55:18 lwoodard Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -357,7 +357,8 @@ long *iflg;		/* error flag					*/
       ----------------------------*/
       if ((*outspheroid == 0) && (*outsys == SPCS) && (*outunit == STPLN_TABLE))
          unit = 1;
-      if ((*outspheroid == 8) && (*outsys == SPCS) && (*outunit == STPLN_TABLE))
+
+	  if ((*outspheroid == 8) && (*outsys == SPCS) && (*outunit == STPLN_TABLE))
          unit = NADUT[(*outzone)/100];
 
       if (*outsys == GEO)

@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.13 2005/09/30 18:06:26 lwoodard Exp $
+// $Id: mapimgform.cpp,v 1.14 2005/12/02 20:17:22 lwoodard Exp $
 //Last Edited: August 2005; by: lwoodard; for:qt3 to qt4 porting
 
 #include "mapimgform.h"
@@ -836,7 +836,7 @@ void mapimgForm::aboutClicked()
 //Tools
 void mapimgForm::webDSSClicked()
 {
-	launchWebTool( "http://mcmcweb.er.usgs.gov/research/DSSMain/DSSApplet.html" );
+	launchWebTool( "http://mcmcweb.er.usgs.gov/DSS/" );
 
 	return;
 }

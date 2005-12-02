@@ -27,20 +27,28 @@
  * ****************************************************************************
  */
 
+#include "gdal.h"
 #include "cpl_string.h"
 #include "vrtdataset.h"
+#include <cstring>
 
 /* compilation on WIN32 machines has not been tested! */
-#ifdef WIN32
-#define PATH_SEP_CHAR '\\'
-#else
+//#ifdef WIN32
+//#define PATH_SEP_CHAR '\\'
+//#else
 #define PATH_SEP_CHAR '/'
-#endif
+//#endif
 
-static CPLErr CopyRasterBand(GDALDataset *poSrcDS, GDALDataset *poDstDS, int nBand, int nSrcXOff, int nSrcYOff, int nSrcXSize, int nSrcYSize);
-static VRTDataset * CopyRasterWindow(GDALDatasetH hSrcDS, int nSrcXOff, int nSrcYOff, int nSrcXSize, int nSrcYSize);
+static CPLErr CopyRasterBand(GDALDataset *poSrcDS, GDALDataset *poDstDS, 
+                             int nBand, int nSrcXOff, int nSrcYOff, 
+                             int nSrcXSize, int nSrcYSize);
+static VRTDataset * CopyRasterWindow(GDALDatasetH hSrcDS, 
+                                     int nSrcXOff, int nSrcYOff, 
+                                     int nSrcXSize, int nSrcYSize);
 static void AttachMetadata( GDALDatasetH, char ** );
-static int SplitFile(const char *pszSource, int cols, int rows, int bQuiet, GDALProgressFunc pfnProgress);
+static int SplitFile(const char *pszSource, 
+                     int cols, int rows, int bQuiet, 
+                     GDALProgressFunc pfnProgress);
 static char * CreateString(const char *fmt, ...);
 static char * CreateFileName(const char *pszSource, int col, int row);
 static char * GetExtension(const char *basename);
@@ -397,7 +405,7 @@ static int SplitFile(const char * pszSource, int cols, int rows, int bQuiet, GDA
 /* -------------------------------------------------------------------- */
 
 	for (i = 1, z = 1, nSrcXOff = 0; i <= cols; i++, nSrcXOff += nSrcXSize) {
-		nSrcXSize = (i != cols) ? nRoundedXSize : nRasterXSize - nRoundedXSize;
+		nSrcXSize = (i != cols) ? nRoundedXSize : nRasterXSize - nRoundedXSize * (cols - 1);
 
 		for (x = 1, nSrcYOff = 0; x <= rows; x++, z++, nSrcYOff += nSrcYSize) {
 			pszDest = CreateFileName(pszSource, i, x);
@@ -405,7 +413,7 @@ static int SplitFile(const char * pszSource, int cols, int rows, int bQuiet, GDA
 			if (!pszDest)
 				return FALSE;
 
-			nSrcYSize = (x != rows) ? nRoundedYSize : nRasterYSize - nRoundedYSize;
+			nSrcYSize = (x != rows) ? nRoundedYSize : nRasterYSize - nRoundedYSize * (rows - 1);
 
 			if (!bQuiet)
 				printf("%d. %s size is %d, %d\n  ", z, pszDest, nSrcXSize, nSrcYSize);
@@ -512,11 +520,11 @@ static char * CreateFileName(const char *pszSource, int col, int row)
 static char * GetExtension(const char *basename) 
 {
 	char *ext;
-	char *p = rindex(basename, '.');
+	char *p = strrchr(basename, '.');
 	if (!p)
 		return NULL;
 
-	if (p < rindex(basename, PATH_SEP_CHAR))
+	if (p < strrchr(basename, PATH_SEP_CHAR))
 		return NULL;
 
 	if ((ext = (char *) malloc (strlen(p))) == NULL) /* no need to do strlen(p + 1) because we are going to disregard the '.' */

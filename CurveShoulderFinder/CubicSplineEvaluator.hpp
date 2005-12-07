@@ -2,7 +2,7 @@
  * @file CubicSplineEvaluator.hpp
  * @author Austin Hartman
  *
- * $Id: CubicSplineEvaluator.hpp,v 1.3 2005/06/16 23:08:34 ahartman Exp $
+ * $Id: CubicSplineEvaluator.hpp,v 1.4 2005/12/07 23:49:04 ahartman Exp $
  */
 
 #ifdef AUSTIN_CUBICSPLINEEVALUATOR_H

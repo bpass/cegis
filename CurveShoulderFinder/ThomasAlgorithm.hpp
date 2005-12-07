@@ -2,7 +2,7 @@
  * @file ThomasAlgorithm.hpp
  * @author Austin Hartman
  *
- * $Id: ThomasAlgorithm.hpp,v 1.4 2005/07/01 23:05:37 ahartman Exp $
+ * $Id: ThomasAlgorithm.hpp,v 1.5 2005/12/07 23:49:04 ahartman Exp $
  */
 
 #ifdef AUSTIN_THOMASALGORITHM_H

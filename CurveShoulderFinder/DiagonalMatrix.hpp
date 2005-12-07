@@ -2,7 +2,7 @@
  * @file DiagonalMatrix.hpp
  * @author Austin Hartman
  *
- * $Id: DiagonalMatrix.hpp,v 1.5 2005/07/01 23:05:37 ahartman Exp $
+ * $Id: DiagonalMatrix.hpp,v 1.6 2005/12/07 23:49:04 ahartman Exp $
  */
 
 #ifdef AUSTIN_DIAGONALMATRIX_H

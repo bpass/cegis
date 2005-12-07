@@ -2,7 +2,7 @@
  * @file MyVector.hpp
  * @author Austin Hartman
  *
- * $Id: MyVector.hpp,v 1.4 2005/06/16 23:08:34 ahartman Exp $
+ * $Id: MyVector.hpp,v 1.5 2005/12/07 23:49:04 ahartman Exp $
  */
 
 #ifdef AUSTIN_MYVECTOR_H

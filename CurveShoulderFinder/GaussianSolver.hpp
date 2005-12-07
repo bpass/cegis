@@ -2,7 +2,7 @@
  * @file GaussianSolver.hpp
  * @author Austin Hartman
  *
- * $Id: GaussianSolver.hpp,v 1.4 2005/07/01 23:05:37 ahartman Exp $
+ * $Id: GaussianSolver.hpp,v 1.5 2005/12/07 23:49:04 ahartman Exp $
  */
 
 #ifdef AUSTIN_GAUSSIANSOLVER_H

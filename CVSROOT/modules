@@ -39,6 +39,7 @@ DiffIMG DiffIMG
 DSS DSS
 DSSv1 DSSv1
 FileConverter FileConverter
+gctp gctp
 GCTP_CPP GCTP_CPP
 gctpdiff gctpdiff
 Generator Generator

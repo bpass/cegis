@@ -51,6 +51,7 @@ mapimgcpp mapimgcpp
 mosixFastProjections mosixFastProjections
 OClass OClass
 PolynomialRootFinder PolynomialRootFinder
+rasterXML rasterXML
 readIMG readIMG
 resample_console resample_console
 sample sample

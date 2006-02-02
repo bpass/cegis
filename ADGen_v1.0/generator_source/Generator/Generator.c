@@ -2082,14 +2082,26 @@ Eerr_ErrorReport **err;
 		p=0;  // If 32-bit, need to keep track of 4 bytes.
 		for(j=0; j<(layer->width)*4; j+=4) 
 		{
-			if( (layer->pixelType==3 && p1pixelrect->currentData[j/4]>0) || 
-			    (layer->pixelType==5 && (p1pixelrect->currentData[(j/4)+k]>0 ||
-				                         p1pixelrect->currentData[(j/4)+k+1]>0) ) ||
-				(layer->pixelType==7 && (p1pixelrect->currentData[(j/4)+p]>0 ||
-										 p1pixelrect->currentData[(j/4)+p+1]>0 ||
-										 p1pixelrect->currentData[(j/4)+p+2]>0 ||
-										 p1pixelrect->currentData[(j/4)+p+3]>0) ) 
-             (layer->pixelType == 9 && (p1pixelrect->currentData[(j/4)+p]>0 ||
+			if( 
+					(layer->pixelType==3 && p1pixelrect->currentData[j/4]>0) 
+				|| 
+					(layer->pixelType==5 && 
+							(p1pixelrect->currentData[(j/4)+k]>0 
+						||
+				             p1pixelrect->currentData[(j/4)+k+1]>0) 
+					) 
+				||
+					(layer->pixelType==7 && 
+							(p1pixelrect->currentData[(j/4)+p]>0 
+						||
+							 p1pixelrect->currentData[(j/4)+p+1]>0 
+						||
+							 p1pixelrect->currentData[(j/4)+p+2]>0
+						||
+							 p1pixelrect->currentData[(j/4)+p+3]>0) 
+					) 
+				||
+					(layer->pixelType == 9 && (p1pixelrect->currentData[(j/4)+p]>0 ||
 										 p1pixelrect->currentData[(j/4)+p+1]>0 ||
 										 p1pixelrect->currentData[(j/4)+p+2]>0 ||
 										 p1pixelrect->currentData[(j/4)+p+3]>0)))
@@ -2640,7 +2652,7 @@ Eerr_ErrorReport **err;
 				(layer->pixelType==7 && (p1pixelrect->currentData[(j/4)+p]>0 ||
 										 p1pixelrect->currentData[(j/4)+p+1]>0 ||
 										 p1pixelrect->currentData[(j/4)+p+2]>0 ||
-										 p1pixelrect->currentData[(j/4)+p+3]>0) ) 
+										 p1pixelrect->currentData[(j/4)+p+3]>0) ) ||
              (layer->pixelType == 9 && (p1pixelrect->currentData[(j/4)+p]>0 ||
 										 p1pixelrect->currentData[(j/4)+p+1]>0 ||
 										 p1pixelrect->currentData[(j/4)+p+2]>0 ||

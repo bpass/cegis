@@ -1,4 +1,4 @@
-// $Id: resampleinfo.cpp,v 1.5 2005/09/28 20:24:29 lwoodard Exp $
+// $Id: resampleinfo.cpp,v 1.6 2006/05/19 18:55:19 lwoodard Exp $
 
 
 #include "resampleinfo.h"
@@ -48,6 +48,11 @@ void ResampleInfo::setResampleCode( ResampleCode code )
    case Max:
       strncpy( rn, "Max", RN_MAXLENGTH );
       break;
+/**/   case Bilinear:
+	   strncpy( rn, "Bilinear", RN_MAXLENGTH );
+	   break;/**/
+/**/ case CubicConvolution:
+	   strncpy( rn, "CubicConvolution", RN_MAXLENGTH );/**/
    default:
       strncpy( rn, "NullResample", RN_MAXLENGTH );
       break;
@@ -75,6 +80,10 @@ bool ResampleInfo::setResampleCode( const QString &codeName )
       rc = ResampleInfo::Min;
    else if( str == "max" )
       rc = ResampleInfo::Max;
+   /**/else if( str == "bilinear" )
+	   rc = ResampleInfo::Bilinear;/**/
+   /**/else if( str == "cubicconvolution" )
+	   rc = ResampleInfo::CubicConvolution;/**/
    else
       return false;
 

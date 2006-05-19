@@ -1,4 +1,4 @@
-// $Id: aboutform.cpp,v 1.5 2005/09/30 18:06:26 lwoodard Exp $
+// $Id: aboutform.cpp,v 1.6 2006/05/19 18:55:18 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -74,6 +74,7 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, Qt::WFlags 
 	descFrame->setFrameShadow( QFrame::Sunken );
 	descFrameLayout = new QVBoxLayout( descFrame ); 
 	descFrameLayout->setSpacing( 4 );
+	aboutFormLayout->addWidget( descFrame );
 
 	descLabel1 = new QLabel( descFrame );
 	QFont descLabel1_font(  descLabel1->font() );
@@ -83,6 +84,30 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, Qt::WFlags 
 	descLabel1->setTextFormat( Qt::RichText );
 	descLabel1->setAlignment( Qt::AlignJustify | Qt::AlignTop );
 	descFrameLayout->addWidget( descLabel1 );
+		
+	descLabel1_two = new QLabel( descFrame );
+	descLabel1_two->setFont( descLabel1_font ); 
+	descLabel1_two->setTextFormat( Qt::RichText );
+	descLabel1_two->setAlignment( Qt::AlignJustify | Qt::AlignTop );
+	descFrameLayout->addWidget( descLabel1_two );
+
+	descLabel1_three = new QLabel( descFrame );
+	descLabel1_three->setFont( descLabel1_font ); 
+	descLabel1_three->setTextFormat( Qt::RichText );
+	descLabel1_three->setAlignment( Qt::AlignJustify | Qt::AlignTop );
+	descFrameLayout->addWidget( descLabel1_three );
+
+	descLabel1_four = new QLabel( descFrame );
+	descLabel1_four->setFont( descLabel1_font ); 
+	descLabel1_four->setTextFormat( Qt::RichText );
+	descLabel1_four->setAlignment( Qt::AlignJustify | Qt::AlignTop );
+	descFrameLayout->addWidget( descLabel1_four );
+
+	descLabel1_five = new QLabel( descFrame );
+	descLabel1_five->setFont( descLabel1_font ); 
+	descLabel1_five->setTextFormat( Qt::RichText );
+	descLabel1_five->setAlignment( Qt::AlignJustify | Qt::AlignTop );
+	descFrameLayout->addWidget( descLabel1_five );
 
 	descLabel2 = new QLabel( descFrame );
 	QFont descLabel2_font(  descLabel2->font() );
@@ -92,7 +117,6 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, Qt::WFlags 
 	descLabel2->setTextFormat( Qt::RichText );
 	descLabel2->setAlignment( Qt::AlignJustify | Qt::AlignTop );
 	descFrameLayout->addWidget( descLabel2 );
-	aboutFormLayout->addWidget( descFrame );
 
 	descLabel3 = new QLabel( descFrame );
 	descLabel3->setFont( descLabel1_font ); 
@@ -100,7 +124,7 @@ aboutForm::aboutForm( QWidget* parent, const char* name, bool modal, Qt::WFlags 
 	descLabel3->setAlignment( Qt::AlignJustify | Qt::AlignTop );
 	descFrameLayout->addWidget( descLabel3 );
 
-	okLayout = new QHBoxLayout( this );
+	okLayout = new QHBoxLayout( 0 );
 	okLayout->setSpacing( 4 );
 	okLayout->addItem( new QSpacerItem( 30, 10 ) );
 	okButton = new QPushButton( this );
@@ -122,11 +146,11 @@ void aboutForm::languageChange()
 {
 	setWindowTitle( tr( "About MapIMG" ) );
 	titleLabel->setText( QString("MapIMG v%1.%2.%3").arg(MAJOR_VERSION).arg(MINOR_VERSION).arg(REVISION_NUM) );
-	descLabel1->setText( tr( "MapIMG is a research-oriented project. Its source and binaries"
-		" are provided with no warranty or support. <b>Use at your own risk.</b>"
-		" We will, however, provide minimal technical support as time allows."
-		" We are also very interested in feedback as well as bug reports. All"
-		" questions and comments may be sent to:" ) );
+	descLabel1->setText( tr( "MapIMG is a research-oriented project. Its source and binaries"   ));
+		descLabel1_two->setText( tr(	" are provided with no warranty or support. <b>Use at your own risk.</b>"  ));
+		descLabel1_three->setText( tr(	" We will, however, provide minimal technical support as time allows."  ));
+		descLabel1_four->setText( tr(	" We are also very interested in feedback as well as bug reports. All"  ));
+		descLabel1_five->setText( tr(	" questions and comments may be sent to:" ) );
 	descLabel2->setText( tr( "<p align=\"center\">mapimg@usgs.gov</p>" ) );
 	descLabel3->setText( tr( "Libraries used: Qt, Libtiff, and TinyXML." ) );
 	okButton->setText( tr( "Ok" ) );

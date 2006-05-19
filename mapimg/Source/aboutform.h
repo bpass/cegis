@@ -1,4 +1,4 @@
-// $Id: aboutform.h,v 1.4 2005/09/28 20:24:28 lwoodard Exp $
+// $Id: aboutform.h,v 1.5 2006/05/19 18:55:18 lwoodard Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -46,6 +46,10 @@ public:
    QLabel* titleLabel;
    QFrame* descFrame;
    QLabel* descLabel1;
+   QLabel* descLabel1_two;
+   QLabel* descLabel1_three;
+   QLabel* descLabel1_four;
+   QLabel* descLabel1_five;
    QLabel* descLabel2;
    QLabel* descLabel3;
    QPushButton* okButton;

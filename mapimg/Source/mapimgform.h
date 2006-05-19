@@ -1,4 +1,4 @@
-// $Id: mapimgform.h,v 1.8 2005/09/28 20:24:28 lwoodard Exp $
+// $Id: mapimgform.h,v 1.9 2006/05/19 18:55:19 lwoodard Exp $
 
 
 /****************************************************************************
@@ -50,7 +50,6 @@ public:
 
 	bool openFile( QString inFile );
 
-
 protected:
 	bool eventFilter( QObject* object, QEvent* event );
 
@@ -76,6 +75,8 @@ protected slots:
 	void showAboutQt(){QMessageBox::aboutQt( this );}
 
 	void webDSSClicked();
+
+	void openZoneSelector();
 
 private:
 
@@ -109,6 +110,8 @@ private:
 
 	QAction        *aboutAction;
 	QAction        *aboutQtAction;
+
+	QAction			*zoneSelector;
 
 	QMenu			*fileMenu;
 	QMenu			*optionsMenu;

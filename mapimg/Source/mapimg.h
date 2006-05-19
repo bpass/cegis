@@ -1,4 +1,4 @@
-// $Id: mapimg.h,v 1.2 2005/08/05 16:01:59 lwoodard Exp $
+// $Id: mapimg.h,v 1.3 2006/05/19 18:55:19 lwoodard Exp $
 
 
 #ifndef MAPIMG_H
@@ -11,7 +11,7 @@ class QString;
 
 /*
 
-This namespace provides functions for checking (re)projectoin parameters,
+This namespace provides functions for checking (re)projection parameters,
 manipulating (re)projection parameters, manipulating mapimg .img files, and
 the reprojection function.
 
@@ -87,7 +87,7 @@ namespace mapimg
    double calcFillValue( const RasterInfo &input );
    bool reproject( const RasterInfo &input, const RasterInfo &output, const ResampleInfo &resample, QWidget *parent = 0 );
    int round(double value, unsigned int decimals = 0);
-
+   void setBounds( int n, int e, int s, int w ); //Used for UTM reprojection
 
    template <typename type>
       int quickSortAndSearch( void* values, type searchValue, int size, int left = 0, int right = -1 )

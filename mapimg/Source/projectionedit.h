@@ -11,6 +11,7 @@
 #include <QWidget>
 
 #include "mapimgedit.h"	//QInfoFrame class
+#include "selectorform.h" //For popup window
 
 class QGctpBox;
 class QRasterInfo;
@@ -55,7 +56,8 @@ signals:
 
 public slots:
 	void projChange();
-
+	void openUTMZoneSelector();
+	
 protected:
 	void appearanceSetup();
 	void generateWidgets();
@@ -86,6 +88,9 @@ private:
 	QVBoxLayout *zoneBoxLayout;
 	QLabel		*zoneLabel;
 	QSpinBox    *zoneSpin;
+	SelectorForm UTMZone; 
+	QPushButton	*UTMZoneButton;
+	QHBoxLayout *zoneSpinNButton;
 
 	//generateWidgets()
 	QGctpBox   **gctpBoxes;

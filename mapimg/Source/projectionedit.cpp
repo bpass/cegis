@@ -25,6 +25,7 @@
 #include "mapimgvalidator.h"
 #include "projectionedit.h"
 #include "qgctpbox.h"
+#include "selectorform.h"
 
 /*
 The ProjectionEdit has one constructor. It executes in three stages.
@@ -48,6 +49,8 @@ ProjectionEdit::ProjectionEdit( QWidget* parent )
 
 	connect( copyButton, SIGNAL( clicked() ), this, emit SIGNAL( copyButtonClicked() ) );
 	connect( lockButton, SIGNAL(toggled(bool)), this, emit SIGNAL( lockButtonToggled() ) );
+	connect( UTMZoneButton, SIGNAL(pressed()),this,SLOT(openUTMZoneSelector()));
+
 }
 
 /*
@@ -63,7 +66,7 @@ ProjectionEdit::~ProjectionEdit()
 The projChange() function is connected to the projCombo so that whenever
 the user selects a new projection this function is called. Its purpose is to
 update the parameter list that the user sees. The zoneBox is shown based on
-whether the selected projection is UTM or not. Then, using the gctpNames()
+whether the selected projection is UTM, Lambert conf. con. or not. Then, using the gctpNames()
 function <gctpnames.h>, each gctpBox is passed a parameter name. The gctpBoxes
 adapt to each name by updating the label and which style of edit to provide.
 */
@@ -74,7 +77,7 @@ void ProjectionEdit::projChange()
 
 	switch(projNum)
 	{
-	case 0: case 1: case 2: case 4: case 6: case 10: case 13: case 23: case 26:
+	case 0: /*case 1:*/ case 2: case 4: case 6: case 10: case 13: case 23: case 26:
 		badProjLabel->show();
 		break;
 	default:
@@ -86,7 +89,7 @@ void ProjectionEdit::projChange()
 	for( int i = 0; i < 15; ++i )
 		gctpBoxes[i]->setGctpName( projNames[i] );
 
-	zoneBox->setShown( projNum == 1 );
+	zoneBox->setShown( projNum == 1 ); //UTM	
 
 		//To keep the vertical scrollbar insync with the height of the scrollview contents
 	contents->resize( size().width(), size().height() ); 
@@ -225,8 +228,14 @@ void ProjectionEdit::generateWidgets()
    zoneSpin->setMaximum( 60 );
    zoneSpin->setSingleStep( 1 );
 
+   UTMZoneButton = new QPushButton(QIcon(":/Resources/utm_zones.png"),"");
+   
+   zoneSpinNButton = new QHBoxLayout();
+
    zoneBoxLayout->addWidget( zoneLabel );
-   zoneBoxLayout->addWidget( zoneSpin );
+   zoneBoxLayout->addLayout(zoneSpinNButton);
+   zoneSpinNButton->addWidget(zoneSpin);
+   zoneSpinNButton->addWidget(UTMZoneButton);
 
    //gctpBoxes - Label and edit fields adaptable to each GCTP parameter
    gctpBoxes = new QGctpBox*[15];
@@ -285,7 +294,21 @@ void ProjectionEdit::polishWidgets()
    zoneSpin->setValue( 0 );
    zoneBox->hide();
    zoneSpin->setToolTip( "Zone code used in UTM Projection" );
+   zoneSpin->setMaximumWidth(250);
+   UTMZoneButton->setToolTip("Click to choose a zone code based on a map");
+   UTMZoneButton->setMaximumWidth(30);
+   UTMZoneButton->setMaximumHeight(30);
+   UTMZoneButton->setIconSize(QSize(25,20));
 
    //This connection is for updating the gctpBoxes whenever the projection changes
    connect( projCombo, SIGNAL( activated(int) ), this, SLOT( projChange() ) );
+}
+
+void ProjectionEdit::openUTMZoneSelector()
+{
+	UTMZone.exec();
+	if(UTMZone.getWhatPressed())
+	{
+		zoneSpin->setValue(UTMZone.getZoneNumber());
+	}
 }

@@ -1,4 +1,4 @@
-// $Id: resampleinfo.h,v 1.4 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: resampleinfo.h,v 1.5 2006/05/19 18:55:19 lwoodard Exp $
 
 
 #ifndef RESAMPLEINFO_H
@@ -15,7 +15,7 @@ public:
    ResampleInfo();
    ResampleInfo( const ResampleInfo &src ){copy(src);}
    ~ResampleInfo(){}
-   enum ResampleCode{ NullResample, NearestNeighbor, Sum, Mean, Median, Mode, Min, Max };
+   enum ResampleCode{ NullResample, NearestNeighbor, Sum, Mean, Median, Mode, Min, Max, /**/Bilinear/**/, /**/CubicConvolution/**/ };
 
    void setResampleCode( ResampleCode code );
    bool setResampleCode( const QString &codeName );

@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.11 2005/09/28 20:24:29 lwoodard Exp $
+// $Id: resampleform.cpp,v 1.12 2006/05/19 18:55:19 lwoodard Exp $
 
 
 /****************************************************************************
@@ -233,6 +233,8 @@ void ResampleForm::languageChange()
 	resampleCombo->addItem( tr( "Mode" ) );
 	resampleCombo->addItem( tr( "Min" ) );
 	resampleCombo->addItem( tr( "Max" ) );
+/**/	resampleCombo->addItem( tr( "Bilinear" ) );/**/
+/**/	resampleCombo->addItem( tr( "Cubic Convolution" ) ); /**/
 	ignoreBox->setTitle( tr( "Ignore Values" ) );
 	ignoreEdit->setText( tr( "0" ) );
 	newButton->setText( tr( "New Value -->" ) );
@@ -318,6 +320,16 @@ void ResampleForm::rcodeChanged( const QString &rcode )
 		catconLabel->setText( "Categorical and Continuous use same algorithm." );
 		showLabel = true;
 	}
+/**/	else if( rcode == "Bilinear" )
+	{
+		catconLabel->setText( "Categorical and Continuous use same algorithm." );
+		showLabel = true;
+	}/**/
+/**/ else if(rcode == "Cubic Convolution" )
+	{
+		catconLabel->setText( "Categorical and Continuous use same algorithm." );
+		showLabel = true;
+	}/**/
 	else
 	{
 		catconLabel->setText( "Unknown resample method selected." );

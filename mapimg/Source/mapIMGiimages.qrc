@@ -17,5 +17,6 @@
         <file>Resources\resample.png</file>
         <file>Resources\save.png</file>
         <file>Resources\unlocked.png</file>
+        <file>Resources\utm_zones.png</file>
     </qresource>
 </RCC>

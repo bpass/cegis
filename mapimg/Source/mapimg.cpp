@@ -1,4 +1,4 @@
-// $Id: mapimg.cpp,v 1.5 2005/09/28 20:24:28 lwoodard Exp $
+// $Id: mapimg.cpp,v 1.6 2006/05/19 18:55:18 lwoodard Exp $
 
 
 #include "mapimg.h"
@@ -32,6 +32,7 @@ int mapimg::round(double value, unsigned int decimals)
 #define DMSHALF_PI   90000000.000000
 #endif//DMSHALF_PI
 
+int northBound, eastBound, southBound, westBound;
 
 /*
 readytoFrameIt() returns true if there are no errors or if the user chooses to
@@ -149,8 +150,8 @@ QString mapimg::projectionErrors( const RasterInfo &input )
 				"\t-The framing generates zeros for rows and cols.\n";
 			break;
 		case 1:  // UTM
-			msg += "UTM is an unsupported projection at this time.\n"
-				"\t-The reprojection created will be uselessly distorted out of zone.";
+			/*msg += "UTM is an unsupported projection at this time.\n"
+				"\t-The reprojection created will be uselessly distorted out of zone.";*/
 			if( input.zoneNumber() == 0 )
 				msg += "0 is not a standard UTM Zone code\n"
 				"\t-Please select a number for -60 to 60 not including 0\n";
@@ -185,12 +186,12 @@ QString mapimg::projectionErrors( const RasterInfo &input )
 				"\t-Most usage of Scale Factor is closer to a value of 1\n";
 			break;
 		case 6:  // Polar Stereographic
-			msg += "Polar Stereographic is an unsupported projection at this time.\n"
-				"\t-The framing generates huge values for rows and cols.\n";
+			/*msg += "Polar Stereographic is an unsupported projection at this time.\n"
+				"\t-The framing generates huge values for rows and cols.\n";*/
 			break;
 		case 10: // Stereographic
-			msg += "Stereographic is an unsupported projection at this time.\n"
-				"\t-The framing generates huge values for rows and cols.\n";
+			/*msg += "Stereographic is an unsupported projection at this time.\n"
+				"\t-The framing generates huge values for rows and cols.\n";*/
 			break;
 		case 13: // Gnomonic
 			msg += "Gnomonic is an unsupported projection at this time.\n"
@@ -276,7 +277,30 @@ void mapimg::frameIt( RasterInfo &input )
 
 	double inCoords[2];
 	double outCoords[2] = {0,0};
-	double ul_lon = -180.0, ul_lat = 90.0, lr_lon = 180.0, lr_lat = -90;
+	
+	if( outProj == 4 ) //Lambert Conf. con.
+	{
+		westBound = -180.0;	northBound = 88.0;
+		eastBound = 180.0;	southBound = -82.0;
+	}
+	else if( outProj == 6 )//polar stereographic
+	{
+		westBound = -170.0; northBound = 70.0;
+		eastBound = 165.0;  southBound = -70.0;
+	}
+	else if( outProj == 10 ) //Stereographic
+	{
+		westBound = -155.0;	northBound = 35.0;
+		eastBound = 162.0;	southBound = -35.0;
+	}
+	else if( outProj != 1 ) //If not UTM (or one of above)
+	{
+		westBound = -180.0; northBound = 90.0;
+		eastBound = 180.0;  southBound = -90.0;
+	}
+
+	double ul_lon = westBound, ul_lat = northBound, 
+		   lr_lon = eastBound, lr_lat = southBound;
 
 	// Calc projection coordinates (initially) for the four corners
 	// ------------------------------------------------------------
@@ -358,11 +382,12 @@ void mapimg::frameIt( RasterInfo &input )
 	// Set output raster area
 	// ---------------------------
 	input.setArea(
-		pxmin + (pixsize/2),
+		pxmin + (pixsize/2),//(pxmin/pixsize) = Columns left of 0 (-x)
 		pymax - (pixsize/2),
-		(int)(mapimg::round( ((pymax - pymin) / pixsize) )),
-		(int)(mapimg::round( ((pxmax - pxmin) / pixsize) )) );
+		(int)(mapimg::round( ((pymax - pymin) / pixsize) )), //# rows
+		(int)(mapimg::round( ((pxmax - pxmin) / pixsize) )) ); //#columns
 }
+
 
 void mapimg::geo2eqr( RasterInfo &input )
 {
@@ -376,15 +401,15 @@ void mapimg::geo2eqr( RasterInfo &input )
 	long status;
 	long i;
 
-	long outProj = 17;
+	long outProj = input.projectionNumber();  //17 - equirectangular
 	long outUnit = 2;
-	long outZone = 62;
+	long outZone = input.zoneNumber(); //was 62
 	long outDatum = 0;
 	double outParms[15];
 
-	long inProj = 0;
+	long inProj = input.projectionNumber();  //0
 	long inUnit = 4;
-	long inZone = 62;
+	long inZone = input.zoneNumber(); //62
 	long inDatum = 0;
 	double R = 6370997.0;
 	double inParms[15];
@@ -421,7 +446,6 @@ void mapimg::geo2eqr( RasterInfo &input )
 	if(outCoords[1] < pymin) pymin = outCoords[1];
 	if(outCoords[1] > pymax) pymax = outCoords[1];
 
-
 	inCoords[0] = 180.0;
 	inCoords[1] = -90.0;
 
@@ -456,7 +480,6 @@ void mapimg::geo2eqr( RasterInfo &input )
 	if(outCoords[0] > pxmax) pxmax = outCoords[0];
 	if(outCoords[1] < pymin) pymin = outCoords[1];
 	if(outCoords[1] > pymax) pymax = outCoords[1];
-
 
 	// Calc output imagee pixel size
 	// -----------------------------
@@ -598,4 +621,12 @@ bool mapimg::reproject( const RasterInfo &input, const RasterInfo &output, const
 	else //( dtype == "Unsigned 8 Bit Integer" )
 	{  quint8 data = 0;
 	return mapimg_resample( input, output, resample, data, parent);   }
+}
+
+void mapimg::setBounds( int n, int e, int s, int w )
+{ 
+	northBound = n;
+	eastBound = e;
+	southBound = s;
+	westBound = w;
 }

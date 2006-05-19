@@ -1,9 +1,10 @@
-// $Id: mapimgform.cpp,v 1.14 2005/12/02 20:17:22 lwoodard Exp $
+// $Id: mapimgform.cpp,v 1.15 2006/05/19 18:55:19 lwoodard Exp $
 //Last Edited: August 2005; by: lwoodard; for:qt3 to qt4 porting
 
 #include "mapimgform.h"
 
 #include <QAction>
+#include <QApplication>
 #include <QByteArray>
 #include <QDataStream>
 #include <QDragEnterEvent>
@@ -39,6 +40,8 @@
 #include "tiff2img.h"
 #include "mapimg.h"
 #include "mapedit.h"
+
+#include "selectorForm.h"
 
 /*
 The mapimgForm has one constructor separated by sections of the form.
@@ -404,7 +407,7 @@ messages the user and asks them to genererate one using the input frame.
 void mapimgForm::inOpenClicked()
 {
 	QString temp = QFileDialog::getOpenFileName( this, "Choose an image",
-		inPath, "MapIMG Files (*.img);;Tiff Files (*.tif)" );
+		inPath, "MapIMG Files (*.img);;Tiff Files (*.tif)" );/*;;JPeg Image (*.jpg)*/
 
 	if( openFile(temp) )
 	{   
@@ -490,7 +493,7 @@ bool mapimgForm::openFile( QString inFile )
 
 		imgFrame->setPixmap( QPixmap( ":/Resources/USGS Logo.png" ) );
 		viewShowButton->setChecked( false );
-		inInfoFrame->setInfo( info );	//This is where it breaks
+		inInfoFrame->setInfo( info );	
 
 		QMessageBox::information( this, "Open", 
 			QString( "%1\n"
@@ -826,8 +829,7 @@ void mapimgForm::editAuthor()
 
 void mapimgForm::aboutClicked()
 {
-	aboutForm *about = new aboutForm(this, "about", false,
-		WINDOW_FLAGS );
+	aboutForm *about = new aboutForm(this, "about", false, WINDOW_FLAGS );
 	about->exec();
 	delete about;
 }
@@ -839,6 +841,12 @@ void mapimgForm::webDSSClicked()
 	launchWebTool( "http://mcmcweb.er.usgs.gov/DSS/" );
 
 	return;
+}
+
+void mapimgForm::openZoneSelector()
+{
+	SelectorForm form;
+	form.exec();
 }
 
 void mapimgForm::launchWebTool( const QString& url )

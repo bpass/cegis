@@ -1,4 +1,4 @@
-// $Id: omerinv.c,v 1.1 2005/07/12 16:21:05 rbuehler Exp $
+// $Id: omerinv.c,v 1.2 2006/05/19 18:55:19 lwoodard Exp $
 
 
 //Copyright 1993 United States Geological Survey
@@ -37,9 +37,9 @@ static double scale_factor;	/* scale factor				*/
 static double lon_origin;	/* center longitude			*/
 static double lat_origin;	/* center latitude			*/
 static double e,es;		/* eccentricity constants		*/
-static double false_northing;	/* y offset in meters			*/
-static double false_easting;	/* x offset in meters			*/
-static double sin_p20,cos_p20;	/* sin and cos values			*/
+static double false_northing;	/* y offset in meters	*/
+static double false_easting;	/* x offset in meters	*/
+static double sin_p20,cos_p20;	/* sin and cos values	*/
 static double bl;
 static double al;
 static double ts;
@@ -57,11 +57,11 @@ long omerinvint(r_maj,r_min,scale_fact,azimuth,lon_orig,lat_orig,false_east,
 double r_maj;			/* major axis			*/
 double r_min;			/* minor axis			*/
 double scale_fact;		/* scale factor			*/
-double azimuth;			/* azimuth east of north	*/
-double lon_orig;		/* longitude of origin		*/
+double azimuth;			/* azimuth east of north*/
+double lon_orig;		/* longitude of origin	*/
 double lat_orig;		/* center latitude		*/
-double false_east;		/* x offset in meters		*/
-double false_north;		/* y offset in meters		*/
+double false_east;		/* x offset in meters	*/
+double false_north;		/* y offset in meters	*/
 double lon1;			/* fist point to define central line	*/
 double lat1;			/* fist point to define central line	*/
 double lon2;			/* second point to define central line	*/

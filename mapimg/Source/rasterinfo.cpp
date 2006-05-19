@@ -1,4 +1,4 @@
-// $Id: rasterinfo.cpp,v 1.8 2005/11/28 19:30:28 lwoodard Exp $
+// $Id: rasterinfo.cpp,v 1.9 2006/05/19 18:55:19 lwoodard Exp $
 
 
 #include "rasterinfo.h"
@@ -232,7 +232,7 @@ bool RasterInfo::setZoneNumber( int zoneNumber )
 {
    zonecode = zoneNumber;
 
-   if( projcode != 1 ||
+   if( ( projcode != 1 && projcode !=4 ) || //If not UTM or Lambert Conf. con.
       (zonecode > 60 && zonecode != 62) ||
       ( zonecode < -60 ) || ( zonecode == 0 ) )
       zonecode = 62;
@@ -359,7 +359,7 @@ bool RasterInfo::parseFileName()
 {
 	fileName.remove( ' ' );
 
-   if( fileName.right(4) == ".img" || fileName.right(4) == ".xml" )
+	if( fileName.right(4) == ".img" || fileName.right(4) == ".xml" /*||fileName.right(4) == ".jpg"*/)
       fileName.truncate( fileName.length() - 4 );
 
    else if( fileName.right(9) == ".img.info" )

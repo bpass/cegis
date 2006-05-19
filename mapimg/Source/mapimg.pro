@@ -79,7 +79,10 @@ HEADERS += aboutform.h \
            tiff2img.h \
            tinystr.h \
            tinyxml.h \
-           window_flags.h
+           window_flags.h \
+	     extension.h \
+	     selectorform.h \
+	     utmimage.h
 SOURCES += aboutform.cpp \
            alberfor.c \
            alberinv.c \
@@ -170,6 +173,9 @@ SOURCES += aboutform.cpp \
            wivfor.c \
            wivinv.c \
            wviifor.c \
-           wviiinv.c
+           wviiinv.c \
+	     extension.cpp \
+	     selectorform.cpp \
+	     utmimage.cpp
 RESOURCES += mapIMGiimages.qrc
 RC_FILE = icon.rc

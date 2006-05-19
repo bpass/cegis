@@ -255,6 +255,7 @@ void MapEdit::setRO( bool ro, int inOut )
 		fillEdit->setDisabled( ro );
 	if( ro || (!ro && hasNoDataCheck->isChecked()) )
 		noDataEdit->setDisabled( ro );
+
 }
 
 /*

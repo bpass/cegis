@@ -1,4 +1,4 @@
-// $Id: aboutform.cpp,v 1.6 2006/05/19 18:55:18 lwoodard Exp $
+// $Id: aboutform.cpp,v 1.7 2007/08/31 14:49:31 cvs Exp $
 
 //Edited by:lwoodard	date:August 2005	for:qt3 to qt4 porting
 
@@ -7,6 +7,7 @@
 **
 ** Created: Thu Jan 6 17:24:09 2005
 **      by: The User Interface Compiler (Id: qt/main.cpp   3.3.3   edited Nov 24 2003)
+**
 ****************************************************************************/
 
 #include "aboutform.h"

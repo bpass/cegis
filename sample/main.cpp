@@ -1,5 +1,7 @@
-// $Id: main.cpp,v 1.24 2007/09/07 17:34:17 oschnarr Exp $
+// $Id: main.cpp,v 1.25 2007/09/07 17:56:21 mfinn Exp $
 
+
+// Test of CVS Thanatos server using Tortoise CVS. Sample main.cpp checked out and modified by MPF
 
 #include <iostream>
 using namespace std;

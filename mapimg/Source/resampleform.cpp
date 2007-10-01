@@ -1,4 +1,4 @@
-// $Id: resampleform.cpp,v 1.12 2006/05/19 18:55:19 lwoodard Exp $
+// $Id: resampleform.cpp,v 1.13 2007/10/01 20:14:08 dmattli Exp $
 
 
 /****************************************************************************
@@ -7,7 +7,7 @@
 ** Created: Thu Jan 20 10:21:37 2005
 **      by: The User Interface Compiler (Id: qt/main.cpp   3.3.3   edited Nov 24 2003)
 ****************************************************************************/
-
+/* TEST COMMENT */
 #include <QComboBox>
 #include <QEvent>
 #include <QGroupBox>

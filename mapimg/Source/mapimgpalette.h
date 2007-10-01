@@ -1,4 +1,4 @@
-// $Id: mapimgpalette.h,v 1.3 2005/08/17 19:42:34 lwoodard Exp $
+// $Id: mapimgpalette.h,v 1.4 2007/10/01 20:14:08 dmattli Exp $
 
 #ifndef MAPIMGPALETTE_H
 #define MAPIMGPALETTE_H

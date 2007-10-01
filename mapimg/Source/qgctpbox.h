@@ -1,4 +1,4 @@
-// $Id: qgctpbox.h,v 1.6 2005/08/29 16:48:14 lwoodard Exp $
+// $Id: qgctpbox.h,v 1.7 2007/10/01 21:11:31 dmattli Exp $
 
 
 #ifndef QGCTPBOX_H

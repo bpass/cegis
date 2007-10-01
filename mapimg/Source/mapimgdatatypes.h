@@ -19,7 +19,7 @@
 #define Q_INT32_MAX         2147483647
 #define Q_INT32_MIN       (-Q_INT32_MAX - 1)
 
-#if defined (Q_OS_WIN32) || defined (Q_OS_WIN64)
+#if (defined (Q_OS_WIN32) || defined (Q_OS_WIN64)) && defined (Q_CC_MSVC)
        #define Q_UINT64_MAX      0xFFFFFFFFFFFFFFFFi64
        #define Q_UINT64_MIN      0
        

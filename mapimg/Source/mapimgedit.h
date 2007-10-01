@@ -1,4 +1,4 @@
-// $Id: mapimgedit.h,v 1.9 2005/09/28 20:24:28 lwoodard Exp $
+// $Id: mapimgedit.h,v 1.10 2007/10/01 21:11:31 dmattli Exp $
 
 #ifndef QINFOFRAME_H
 #define QINFOFRAME_H

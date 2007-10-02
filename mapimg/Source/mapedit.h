@@ -147,4 +147,4 @@ private:
 
 };
 
-#endif MAPEDIT_H
+#endif //MAPEDIT_H

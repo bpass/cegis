@@ -96,4 +96,4 @@ private:
 	QGctpBox   **gctpBoxes;
 };
 
-#endif PROJECTIONEDIT_H
+#endif //PROJECTIONEDIT_H

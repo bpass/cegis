@@ -1,4 +1,4 @@
-// $Id: mapimgform.h,v 1.9 2006/05/19 18:55:19 lwoodard Exp $
+// $Id: mapimgform.h,v 1.10 2007/10/04 12:19:59 dmattli Exp $
 
 
 /****************************************************************************
@@ -23,122 +23,122 @@
 #include <QDropEvent>
 #include <QDragEnterEvent>
 #include <QToolBar>
+#include <QToolButton>
+
+#include "rasterinfo.h"
 
 class QHBoxLayout;
 class QGridLayout;
 class QSpacerItem;
 class QAction;
-class QToolBar;	
 class QToolButton;
 class QImgFrame;
 class QInfoFrame;
-class RasterInfo;
 
 class mapimgForm : public QMainWindow
 {
 	Q_OBJECT
 
 public:
-	mapimgForm( QWidget* parent = 0, Qt::WFlags fl = Qt::Window );
-   void setupContents();
-   void createActions();
-   void setupMenubar();
-   void setupToolbar();
-   void makeConnections();
-   void loadSettings();
-	~mapimgForm();
-
-	bool openFile( QString inFile );
-
+    mapimgForm( QWidget* parent = 0, Qt::WFlags fl = Qt::Window );
+    void setupContents();
+    void createActions();
+    void setupMenubar();
+    void setupToolbar();
+    void makeConnections();
+    void loadSettings();
+    ~mapimgForm();
+    
+    bool openFile( QString inFile );
+  
 protected:
-	bool eventFilter( QObject* object, QEvent* event );
-
-	void dragEnterEvent( QDragEnterEvent *evt );
-	void dropEvent( QDropEvent *evt );
-
-	void launchWebTool( const QString& url );
-
+    bool eventFilter( QObject* object, QEvent* event );
+    
+    void dragEnterEvent( QDragEnterEvent *evt );
+    void dropEvent( QDropEvent *evt );
+    
+    void launchWebTool( const QString& url );
+    
 protected slots:
-	void editAuthor();
+    void editAuthor();
+    
+    void inOpenClicked();
+    void inSaveClicked();
+    
+    void showPreview( bool on = true );
+    void showInputPreview( bool on = true );
+    void showOutputPreview( bool on = true );
+    bool previewProjection();
+    
+    void outSaveClicked();
 
-	void inOpenClicked();
-	void inSaveClicked();
-
-	void showPreview( bool on = true );
-	void showInputPreview( bool on = true );
-	void showOutputPreview( bool on = true );
-	bool previewProjection();
-
-	void outSaveClicked();
-
-	void aboutClicked();
-	void showAboutQt(){QMessageBox::aboutQt( this );}
-
-	void webDSSClicked();
-
-	void openZoneSelector();
+    void aboutClicked();
+    void showAboutQt(){QMessageBox::aboutQt( this );}
+    
+    void webDSSClicked();
+    
+    void openZoneSelector();
 
 private:
+	// Contents
+    QHBoxLayout *contentLayout;
+    QInfoFrame *inInfoFrame;
+    QImgFrame *imgFrame;
+    QInfoFrame *outInfoFrame;
+    
+    QAction *exitAction;
+    
+    QAction *authAction;
 
-   // Contents
-   QHBoxLayout *contentLayout;
-	QInfoFrame  *inInfoFrame;
-	QImgFrame   *imgFrame;
-	QInfoFrame  *outInfoFrame;
-
-	QAction        *exitAction;
-
-	QAction        *authAction;
-
-	QAction        *inInfoAction;
-	QAction        *inOpenAction;
-	QAction        *inSaveAction;
-
-
-	QAction        *viewShowAction;
-	QAction        *viewResampleAction;
-	QAction        *previewProjAction;
-
-	QActionGroup   *prevGroup;
-	QAction        *prevInput;
-	QAction        *prevOutput;
-
-	QAction        *outInfoAction;
-	QAction        *outSaveAction;
-
-	QAction        *webDSSAction;
-
-	QAction        *aboutAction;
-	QAction        *aboutQtAction;
-
-	QAction			*zoneSelector;
-
-	QMenu			*fileMenu;
-	QMenu			*optionsMenu;
-	QMenu			*previewMenu;
-	QMenu       *viewShowPopup;
-	QMenu			*toolsMenu;
-	QMenu			*helpMenu;
-	
-	QToolBar       *toolBar;	
-	QToolButton    *viewShowButton;
-
-
-	QString inPath;
-	QString outPath;
-	QString authName;
-	QString authCompany;
-	QString authEmail;
-
-   QSize _iconSize;
-
-	QString imgName;
-	bool imgSet; //Has the user opened a .img file?
-	//Used to determine wether or not to save .info files when the user says to
-	bool newInfo; //Is the user generating a new .xml file for the .img?
-
-	bool ignorePreviewSignals; //Are actions being automated on/off?
-	QAction *prevLast; //What was the user looking at when imgFrame->hide()
+    QAction *inInfoAction;
+    QAction *inOpenAction;
+    QAction *inSaveAction;
+    
+    
+    QAction        *viewShowAction;
+    QAction        *viewResampleAction;
+    QAction        *previewProjAction;
+    
+    QActionGroup   *prevGroup;
+    QAction        *prevInput;
+    QAction        *prevOutput;
+    
+    QAction        *outInfoAction;
+    QAction        *outSaveAction;
+    
+    QAction        *webDSSAction;
+    
+    QAction        *aboutAction;
+    QAction        *aboutQtAction;
+    
+    QAction *zoneSelector;
+    
+    QMenu *fileMenu;
+    QMenu *optionsMenu;
+    QMenu *previewMenu;
+    QMenu *viewShowPopup;
+    QMenu *toolsMenu;
+    QMenu *helpMenu;
+    
+    QToolBar *toolBar;	
+    QToolButton *viewShowButton;
+    
+    
+    QString inPath;
+    QString outPath;
+    QString authName;
+    QString authCompany;
+    QString authEmail;
+    
+    QSize _iconSize;
+    
+    QString imgName;
+    bool imgSet; //Has the user opened a .img file?
+    //Used to determine wether or not to save .info files when the user says to
+    bool newInfo; //Is the user generating a new .xml file for the .img?
+    
+    bool ignorePreviewSignals; //Are actions being automated on/off?
+    QAction *prevLast; //What was the user looking at when imgFrame->hide()
 };
 
 #endif // mapimgFORM_H

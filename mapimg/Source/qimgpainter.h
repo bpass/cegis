@@ -1,4 +1,4 @@
-// $Id: qimgpainter.h,v 1.5 2005/09/28 20:24:28 lwoodard Exp $
+// $Id: qimgpainter.h,v 1.6 2007/10/04 12:19:59 dmattli Exp $
 
 
 #ifndef QIMGPAINTER_H
@@ -22,6 +22,7 @@
 #include <QFile>
 #include <QDataStream>
 
+#include "mapimgpalette.h"
 #include "mapimgprogressdialog.h"
 #include "rasterinfo.h"
 

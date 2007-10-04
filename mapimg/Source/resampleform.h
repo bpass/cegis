@@ -1,4 +1,4 @@
-// $Id: resampleform.h,v 1.9 2005/09/28 20:24:29 lwoodard Exp $
+// $Id: resampleform.h,v 1.10 2007/10/04 12:19:59 dmattli Exp $
 
 
 /****************************************************************************
@@ -15,7 +15,13 @@
 #include <QDialog>
 
 //Added by qt3to4:
+#include <QComboBox>
 #include <QGridLayout>
+#include <QGroupBox>
+#include <QRadioButton>
+#include <QLineEdit>
+#include <QListWidget>
+#include <QSlider>
 #include <QEvent>
 #include <QKeyEvent>
 #include <QHBoxLayout>
@@ -24,6 +30,7 @@
 #include "resampleinfo.h"
 #include "rasterinfo.h"
 
+/*
 class QVBoxLayout;
 class QHBoxLayout;
 class QGridLayout;
@@ -38,6 +45,7 @@ class QEvent;
 class QSlider;
 class QListWidget;
 class QList;
+*/
 
 class ResampleForm : public QDialog
 {

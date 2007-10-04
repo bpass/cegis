@@ -1,4 +1,4 @@
-// $Id: mapimgform.cpp,v 1.15 2006/05/19 18:55:19 lwoodard Exp $
+// $Id: mapimgform.cpp,v 1.16 2007/10/04 12:19:59 dmattli Exp $
 //Last Edited: August 2005; by: lwoodard; for:qt3 to qt4 porting
 
 #include "mapimgform.h"
@@ -855,7 +855,7 @@ void mapimgForm::launchWebTool( const QString& url )
 	bool supportedPlatform = true;
 	bool executeProcess = false;
 
-#if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN32) & (Q_CC_MSVC)
 #include <windows.h>
 
 	//Trolltech's Windows Version Independent Default Browser Launch

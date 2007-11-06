@@ -16,6 +16,8 @@
 #include <limits.h>
 #include <math.h>
 
+#include "util.h"
+
 /* CLASS NAME: mercator
  *
  */
@@ -66,7 +68,7 @@ namespace trans {
 	min_axis = _min_axis;
 	eccen = sqrt(maj_axis*maj_axis - min_axis*min_axis)/maj_axis;
 	eccen_sq = eccen*eccen;
-	m1 = cos(cen_lat)/(sqrt(1.0 - m_es * sin(cen_lat) * sin(cen_lat))); 
+	m1 = cos(cen_lat)/(sqrt(1.0 - eccen_sq * sin(cen_lat) * sin(cen_lat))); 
 	err_flag = 0;
 	feasting = 0;
 	fnorthing = 0;
@@ -108,7 +110,7 @@ namespace trans {
 	}
 	else {
 	    sinphi = sin(lat);
-	    t = tsfnz(m_e, lat, sinphi);
+	    t = tsfnz(eccen, lat, sinphi);
 	    tmp = fnorthing - (maj_axis * m1 * log(t));
 	}
 
@@ -187,47 +189,7 @@ namespace trans {
 	return 0; // Error...
     }
   
-    template <typename C>
-    int mercator<C>::sign (double x )
-    {
-	if (x < 0.0)
-	    return(-1);
-	else
-	    return(1);
-    }
   
-    template <typename C>
-    double mercator<C>::adjust_lon (double x)
-    {
-#define DBLLONG 4.61168601e18
-    
-	for(unsigned int i=0; i<4; ++i) {
-	    if (fabs(x)<=M_PI)
-		break;
-	    
-	    else if (((long) fabs(x / M_PI)) < 2)
-		x = x-(sign(x) * M_TWOPI);
-	    
-	    else if (((long) fabs(x / M_TWOPI)) < LONG_MAX)
-		x = x-(((long)(x / M_TWOPI))*M_TWOPI);
-		
-      
-	    else if (((long) fabs(x / (LONG_MAX * M_TWOPI))) < LONG_MAX)
-		x = x-(((long)(x / (LONG_MAX * M_TWOPI))) 
-		       * (M_TWOPI * LONG_MAX));
-      
-      
-	    else if (((long) fabs(x / (DBLLONG * M_TWOPI))) < LONG_MAX)
-		x = x-(((long)(x / (DBLLONG * M_TWOPI))) 
-		       * (M_TWOPI * DBLLONG));
-      
-	    else
-		x = x-(sign(x) * M_TWOPI);
-	}
-
-	return x;
-    }
-
 }
 
 

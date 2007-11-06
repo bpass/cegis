@@ -1,12 +1,18 @@
-/* Programmer: David Mattli */
+/* File: mercator.hh
+   Programmer: David Mattli
+
+   Copyright 2007 U.S. Geological Survey
+
+   This program is free software; you can redistribute it and/or
+   modify if under the terms of the GNU General Public License version
+   2 as published by the Free Software Foundation.
+*/
 
 #ifndef TRANS_MERCATOR_HH
 #define TRANS_MERCATOR_HH
 
 #include <limits.h>
 #include <math.h>
-
-#include "transformation.hh"
 
 /* CLASS NAME: mercator
  *
@@ -21,11 +27,14 @@ namespace trans {
 	mercator(C _maj_axis, C _min_axis);
 	~mercator();
     
-	coord<C> forward (coord<C> geo_coord);
-	coord<C> inverse (coord<C> rec_coord);
+	C forward_x (C lon);
+	C forward_y (C lat);
 
-	void set_feasting(double x);
-	void set_fnorthing(double x);
+	C inverse_lon (C x, C y);
+	C inverse_lat (C x, C y);
+
+	void set_feasting (double x);
+	void set_fnorthing (double x);
     
     protected:
 	double eccen;
@@ -45,7 +54,7 @@ namespace trans {
     };
 
     template <typename C>
-    mercator<C>::mercator(C _maj_axis, C _min_axis)
+    mercator<C>::mercator (C _maj_axis, C _min_axis)
     {
 	maj_axis = _maj_axis;
 	min_axis = _min_axis;
@@ -60,56 +69,61 @@ namespace trans {
     }
   
     template <typename C>
-    mercator<C>::~mercator()
+    mercator<C>::~mercator ()
     {
 	return;
     }
   
     template <typename C>
-    coord<C> mercator<C>::forward (coord<C> geo_coord)
+    C mercator<C>::forward_x (C lon)
     {
-	coord<C> tmp;
-	tmp.x = 0;
-	tmp.y = 0; 
+	C tmp = 0; // TODO: Implement... :)
+	
+	return tmp;
+    }
 
+    template <typename C>
+    C mercator<C>::forward_y (C lat)
+    {
+	C tmp = 0;
+	
 	return tmp;
     }
   
     template <typename C>
-    coord<C> mercator<C>::inverse (coord<C> rec_coord)
+    C mercator<C>::inverse_lon (C x, C y)
     {
-	double t;
-	C lat(0), lon(0);
-	coord<C> tmp;
+	C tmp = x - feasting;
+	double t = 0.0;
 
-	rec_coord.x -= feasting;
-	rec_coord.y -= fnorthing;
-      
-	t = exp(-rec_coord.y/maj_axis);
-	lat = phi2z(eccen, t);
-	lon = adjust_lon(cen_lon + rec_coord.x/maj_axis);
-	tmp.x = lat;
-      
-      
-	return tmp;
+	t = exp(-y/maj_axis);
+	return phi2z(eccen, t);
     }
-  
+
     template <typename C>
-    void mercator<C>::set_feasting(double x)
+    C mercator<C>::inverse_lat (C x, C y)
+    {
+	C tmp = y - fnorthing;
+
+	return adjust_lon(cen_lon + x/maj_axis);
+    }
+
+    template <typename C>
+    void mercator<C>::set_feasting (double x)
     {
 	feasting = x;
 	return;
     }
 
     template <typename C>
-    void mercator<C>::set_fnorthing(double x)
+    void mercator<C>::set_fnorthing (double x)
     {
 	fnorthing = x;
 	return;
     }
 
     template <typename C>
-    double mercator<C>::phi2z(double eccen, double ts)
+    double mercator<C>::phi2z (double eccen, double ts)
     {
 	double half_eccen, phi, esin_phi, dphi, sinphi;
 
@@ -129,7 +143,7 @@ namespace trans {
     }
   
     template <typename C>
-    int mercator<C>::sign(double x )
+    int mercator<C>::sign (double x )
     {
 	if (x < 0.0)
 	    return(-1);
@@ -138,27 +152,29 @@ namespace trans {
     }
   
     template <typename C>
-    double mercator<C>::adjust_lon(double x)
+    double mercator<C>::adjust_lon (double x)
     {
 #define DBLLONG 4.61168601e18
     
 	for(unsigned int i=0; i<4; ++i) {
 	    if (fabs(x)<=M_PI)
 		break;
-      
+	    
 	    else if (((long) fabs(x / M_PI)) < 2)
 		x = x-(sign(x) * M_TWOPI);
-      
+	    
 	    else if (((long) fabs(x / M_TWOPI)) < LONG_MAX)
 		x = x-(((long)(x / M_TWOPI))*M_TWOPI);
 		
       
 	    else if (((long) fabs(x / (LONG_MAX * M_TWOPI))) < LONG_MAX)
-		x = x-(((long)(x / (LONG_MAX * M_TWOPI))) * (M_TWOPI * LONG_MAX));
+		x = x-(((long)(x / (LONG_MAX * M_TWOPI))) 
+		       * (M_TWOPI * LONG_MAX));
       
       
 	    else if (((long) fabs(x / (DBLLONG * M_TWOPI))) < LONG_MAX)
-		x = x-(((long)(x / (DBLLONG * M_TWOPI))) * (M_TWOPI * DBLLONG));
+		x = x-(((long)(x / (DBLLONG * M_TWOPI))) 
+		       * (M_TWOPI * DBLLONG));
       
 	    else
 		x = x-(sign(x) * M_TWOPI);

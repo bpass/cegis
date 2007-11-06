@@ -23,159 +23,159 @@ using std::string;
 
 namespace image {
 
-   /* T is pixel value type and C is coordinate type */
-   template <typename T, typename C = unsigned int>
-   class image
-   {
-      public:
-	 image ();
-	 image (string filename, C cols, C rows);
-	 ~image();
+    /* T is pixel value type and C is coordinate type */
+    template <typename T, typename C = unsigned int>
+    class image
+    {
+    public:
+	image ();
+	image (string filename, C cols, C rows);
+	~image();
     
-	 bool initialize(string filename, C cols, C rows);
-	 bool zero();
+	bool initialize(string filename, C cols, C rows);
+	bool zero();
 
-	 bool shut();
+	bool shut();
   
-	 bool ready();
+	bool ready();
 
-	 T getPoint (C x, C y);
-	 bool setPoint (C x, C y, T value);
+	T getPoint (C x, C y);
+	bool setPoint (C x, C y, T value);
 
-	 C num_cols();
-	 C num_rows();
+	C num_cols();
+	C num_rows();
 
-      private:
-	 /* private data */
-	 string name;
-	 int imgfile;
-	 C ncols;
-	 C nrows;
-	 bool readOnly;
-	 int badbit;
+    private:
+	/* private data */
+	string name;
+	int imgfile;
+	C ncols;
+	C nrows;
+	bool readOnly;
+	int badbit;
 
-   };
+    };
 
 
-   /*               
-    * Implementation 
-    */             
+    /*               
+     * Implementation 
+     */             
 
-   template <typename T, typename C>
-   image<T, C>::image ()
-   {
-      imgfile = -1;
-      badbit = 0;
-      return;
-   }
+    template <typename T, typename C>
+    image<T, C>::image ()
+    {
+	imgfile = -1;
+	badbit = 0;
+	return;
+    }
   
-   template <typename T, typename C>
-   image<T, C>::image (string filename, C cols, C rows)
-   {
-      imgfile = -1;
-      badbit = 0;
-      initialize(filename, cols, rows);
+    template <typename T, typename C>
+    image<T, C>::image (string filename, C cols, C rows)
+    {
+	imgfile = -1;
+	badbit = 0;
+	initialize(filename, cols, rows);
     
-      return;
-   }
+	return;
+    }
         
-   template <typename T, typename C>
-   image<T, C>::~image()
-   {
-      shut();
-      return;
-   }
+    template <typename T, typename C>
+    image<T, C>::~image()
+    {
+	shut();
+	return;
+    }
 
-   template <typename T, typename C>
-   bool image<T, C>::initialize (string filename, C cols, C rows)
-   {
-      ncols = cols;
-      nrows = rows;
-      name = filename;
+    template <typename T, typename C>
+    bool image<T, C>::initialize (string filename, C cols, C rows)
+    {
+	ncols = cols;
+	nrows = rows;
+	name = filename;
       
       
-      imgfile = open(filename.c_str(), _O_BINARY|_O_RDWR|_O_CREAT, 00700);
+	imgfile = open(filename.c_str(), _O_BINARY|_O_RDWR|_O_CREAT, 00700);
       
-      if (imgfile == -1)
-	 return false;
-      else 
-	 return true;
+	if (imgfile == -1)
+	    return false;
+	else 
+	    return true;
     
-   }
+    }
 
-  template <typename T, typename C>
-  bool image<T, C>::zero()
-  {
-    int nr = 0;
-    void *buf = calloc(ncols, sizeof(C));
+    template <typename T, typename C>
+    bool image<T, C>::zero()
+    {
+	int nr = 0;
+	void *buf = calloc(ncols, sizeof(C));
 
-    if (buf != 0) {
-      for(unsigned int i=0; i<nrows; ++i)
-	nr = write(imgfile, buf, sizeof(buf));
-      free(buf);
-      return true;
-      }
-    else
-      return false;
-  }
+	if (buf != 0) {
+	    for(unsigned int i=0; i<nrows; ++i)
+		nr = write(imgfile, buf, sizeof(buf));
+	    free(buf);
+	    return true;
+	}
+	else
+	    return false;
+    }
   
-   template <typename T, typename C>
-   bool image<T, C>::shut()
-   {
-      if (close(imgfile) == 0)
-	 return true;
-      else 
-	 return false;
-   }
+    template <typename T, typename C>
+    bool image<T, C>::shut()
+    {
+	if (close(imgfile) == 0)
+	    return true;
+	else 
+	    return false;
+    }
   
-   template <typename T, typename C>
-   bool image<T, C>::ready()
-   {
-      if ((imgfile != -1) && (badbit == 0))
-	 return true;
-      else
-	 return false;
-   }
+    template <typename T, typename C>
+    bool image<T, C>::ready()
+    {
+	if ((imgfile != -1) && (badbit == 0))
+	    return true;
+	else
+	    return false;
+    }
   
-   template <typename T, typename C>
-   T image<T, C>::getPoint (C x, C y)
-   {
-      T temp;
-      C position = x + (ncols * y); 
-      unsigned int nr = 0;
+    template <typename T, typename C>
+    T image<T, C>::getPoint (C x, C y)
+    {
+	T temp;
+	C position = x + (ncols * y); 
+	unsigned int nr = 0;
     
-      lseek(imgfile, position, SEEK_SET);
-      if ((nr = read(imgfile, *temp, sizeof(T))) != -1 && nr  != 0)
-	 return temp;
-      else /* ERROR ! */
-	 return temp;
-   }
+	lseek(imgfile, position, SEEK_SET);
+	if ((nr = read(imgfile, *temp, sizeof(T))) != -1 && nr  != 0)
+	    return temp;
+	else /* ERROR ! */
+	    return temp;
+    }
 
-   template <typename T, typename C>
-   bool image<T, C>::setPoint (C x, C y, T value)
-   {
-      int nr = 0;
-      C position = x + (ncols * y);
-      T buf[1] = {value};
+    template <typename T, typename C>
+    bool image<T, C>::setPoint (C x, C y, T value)
+    {
+	int nr = 0;
+	C position = x + (ncols * y);
+	T buf[1] = {value};
 	
-      lseek(imgfile, position, SEEK_SET);
-      if ((nr = write(imgfile, buf, sizeof(T))) != -1 && nr  != 0)
-	 return true;
-      else
-	 return false;
-   }
+	lseek(imgfile, position, SEEK_SET);
+	if ((nr = write(imgfile, buf, sizeof(T))) != -1 && nr  != 0)
+	    return true;
+	else
+	    return false;
+    }
 
-   template <typename T, typename C>
-   C image<T, C>::num_cols()
-   {
-      return ncols;
-   }
+    template <typename T, typename C>
+    C image<T, C>::num_cols()
+    {
+	return ncols;
+    }
 
-   template <typename T, typename C>
-   C image<T, C>::num_rows()
-   {
-      return nrows;
-   }
+    template <typename T, typename C>
+    C image<T, C>::num_rows()
+    {
+	return nrows;
+    }
 	
 
 } //namespace image

@@ -27,14 +27,16 @@ namespace trans {
 	mercator(C _maj_axis, C _min_axis);
 	~mercator();
     
-	C forward_x (C lon);
-	C forward_y (C lat);
-
+	C forward_x (C lon, C lat);
+	C forward_y (C lon, C lat);
 	C inverse_lon (C x, C y);
 	C inverse_lat (C x, C y);
 
 	void set_feasting (double x);
 	void set_fnorthing (double x);
+
+	bool good();
+	bool bad();
     
     protected:
 	double eccen;
@@ -75,7 +77,7 @@ namespace trans {
     }
   
     template <typename C>
-    C mercator<C>::forward_x (C lon)
+    C mercator<C>::forward_x (C lon, C lat)
     {
 	C tmp = 0; // TODO: Implement... :)
 	
@@ -83,9 +85,9 @@ namespace trans {
     }
 
     template <typename C>
-    C mercator<C>::forward_y (C lat)
+    C mercator<C>::forward_y (C lon, C lat)
     {
-	C tmp = 0;
+	C tmp = 0; // TODO: Implement... :)
 	
 	return tmp;
     }
@@ -121,6 +123,25 @@ namespace trans {
 	fnorthing = x;
 	return;
     }
+    
+    template <typename C>
+    bool mercator<C>::good()
+    {
+	if (err_flag == 0) {
+	    return true;
+	}
+	else {
+	    return false;
+	}
+    }
+
+    template <typename C>
+    bool mercator<C>::bad()
+    {
+	return !good();
+    }
+
+    
 
     template <typename C>
     double mercator<C>::phi2z (double eccen, double ts)

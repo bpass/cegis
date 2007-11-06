@@ -11,6 +11,8 @@
 #ifndef TRANS_MERCATOR_HH
 #define TRANS_MERCATOR_HH
 
+#define EPSLN	1.0e-10
+
 #include <limits.h>
 #include <math.h>
 
@@ -37,17 +39,19 @@ namespace trans {
 
 	bool good();
 	bool bad();
-    
-    protected:
+
+    private:
+	/* Projection Parameters */
 	double eccen;
 	double eccen_sq;
+	double m1;  // TODO: What is this?
 	double feasting;
 	double fnorthing;
 	double maj_axis;
 	double min_axis;
 	double cen_lon;
+	double cen_lat;
 
-    private:
 	int err_flag;
 	int sign(double x);
 	double phi2z(double eccen, double ts);
@@ -62,6 +66,7 @@ namespace trans {
 	min_axis = _min_axis;
 	eccen = sqrt(maj_axis*maj_axis - min_axis*min_axis)/maj_axis;
 	eccen_sq = eccen*eccen;
+	m1 = cos(cen_lat)/(sqrt(1.0 - m_es * sin(cen_lat) * sin(cen_lat))); 
 	err_flag = 0;
 	feasting = 0;
 	fnorthing = 0;
@@ -79,7 +84,14 @@ namespace trans {
     template <typename C>
     C mercator<C>::forward_x (C lon, C lat)
     {
-	C tmp = 0; // TODO: Implement... :)
+	C tmp = 0; 
+
+	if (fabs (fabs (lat) - M_PI_2) <= EPSLN) {
+	    // ERROR!
+	}
+	else {
+	    tmp = feasting + (maj_axis * m1 * adjust_lon(lon - cen_lon));
+	}
 	
 	return tmp;
     }
@@ -87,8 +99,20 @@ namespace trans {
     template <typename C>
     C mercator<C>::forward_y (C lon, C lat)
     {
-	C tmp = 0; // TODO: Implement... :)
-	
+	C tmp = 0; 
+	double t; // Small t value
+	double sinphi; // sin value
+
+	if (fabs (fabs (lat) - M_PI_2) <= EPSLN) {
+	    // ERROR!
+	}
+	else {
+	    sinphi = sin(lat);
+	    t = tsfnz(m_e, lat, sinphi);
+	    tmp = fnorthing - (maj_axis * m1 * log(t));
+	}
+
+
 	return tmp;
     }
   

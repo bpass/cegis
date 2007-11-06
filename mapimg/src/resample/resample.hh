@@ -1,6 +1,12 @@
-/* 
- * Programmer: David Mattli 
- */
+/* File: resample.hh
+   Programmer: David Mattli
+
+   Copyright 2007 U.S. Geological Survey
+
+   This program is free software; you can redistribute it and/or
+   modify if under the terms of the GNU General Public License version
+   2 as published by the Free Software Foundation.
+*/
 
 #ifndef RESAMPLE_HH
 #define RESAMPLE_HH

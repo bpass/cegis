@@ -8,7 +8,6 @@
  * 2 as published by the Free Software Foundation.
  */
 
-
 #include <boost/test/included/unit_test_framework.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 
@@ -29,8 +28,8 @@ void constructors_test ()
 void forward_test ()
 {
   mercator<double> m1(MAJ, MIN); 
-
-  BOOST_CHECK_SMALL(m1.forward_y(0.0, 0.0)/MAJ, DIFF);
+  
+  BOOST_CHECK_CLOSE(m1.forward_y(0.0, 0.0)/MAJ, 1e-20, 1e10);
   //BOOST_CHECK_EQUAL(m1.forward_y(50, 50), 3773);
 
 }

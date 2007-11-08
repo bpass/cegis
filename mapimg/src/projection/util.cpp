@@ -1,10 +1,11 @@
+
 /* File: util.cpp
    Programmer: David Mattli
 
    Copyright 2007 U.S. Geological Survey
 
    This program is free software; you can redistribute it and/or
-   modify if under the terms of the GNU General Public License version
+   modify it under the terms of the GNU General Public License version
    2 as published by the Free Software Foundation.
 */
 
@@ -38,6 +39,16 @@ namespace trans {
 
 	return 0; // Error...
     }
+
+  double tsfnz(double eccen, double phi, double sinphi) 
+  {
+    double con;
+
+    con = eccen * sinphi;
+    con = pow(((1.0 - con) / (1.0 + con)), eccen * .5);
+
+    return (tan(M_PI_4 + phi*.5)*con);
+  }
 
     double adjust_lon (double x)
     {

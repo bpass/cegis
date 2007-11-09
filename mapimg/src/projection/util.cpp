@@ -45,41 +45,51 @@ namespace trans {
     double con;
 
     con = eccen * sinphi;
-    con = pow(((1.0 - con) / (1.0 + con)), eccen * .5);
+    con = pow(((1.0 - con) / (1.0 + con)), .5 * eccen);
 
-    return (tan(M_PI_4 + phi*.5)*con);
+    return (tan((M_PI_2 - phi) * .5)*con);
   }
 
-    double adjust_lon (double x)
-    {
+
+  
+  
+
+
+  double adjust_lon (double x)
+  {
 #define DBLLONG 4.61168601e18
-    
-	for(unsigned int i=0; i<4; ++i) {
-	    if (fabs(x)<=M_PI)
-		break;
-	    
-	    else if (((long) fabs(x / M_PI)) < 2)
-		x = x-(sign(x) * M_TWOPI);
-	    
-	    else if (((long) fabs(x / M_TWOPI)) < LONG_MAX)
+#define MAX_VAL 10
+    long count = 0;
+    for(;;)
+      {
+	if (fabs(x)<=M_PI)
+	  break;
+	else
+	  if (((long) fabs(x / M_PI)) < 2)
+	    x = x-(sign(x) *M_TWOPI);
+	  else
+	    if (((long) fabs(x / M_TWOPI)) < LONG_MAX)
+	      {
 		x = x-(((long)(x / M_TWOPI))*M_TWOPI);
-		
-      
-	    else if (((long) fabs(x / (LONG_MAX * M_TWOPI))) < LONG_MAX)
-		x = x-(((long)(x / (LONG_MAX * M_TWOPI))) 
-		       * (M_TWOPI * LONG_MAX));
-      
-      
-	    else if (((long) fabs(x / (DBLLONG * M_TWOPI))) < LONG_MAX)
-		x = x-(((long)(x / (DBLLONG * M_TWOPI))) 
-		       * (M_TWOPI * DBLLONG));
-      
+	      }
 	    else
-		x = x-(sign(x) * M_TWOPI);
-	}
-
-	return x;
-    }
-
+	      if (((long) fabs(x / (LONG_MAX * M_TWOPI))) < LONG_MAX)
+		{
+		  x = x-(((long)(x / (LONG_MAX * M_TWOPI))) * (M_TWOPI * LONG_MAX));
+		}
+	      else
+		if (((long) fabs(x / (DBLLONG * M_TWOPI))) < LONG_MAX)
+		  {
+		    x = x-(((long)(x / (DBLLONG * M_TWOPI))) * (M_TWOPI * DBLLONG));
+		  }
+		else
+		  x = x-(sign(x) *M_TWOPI);
+	count++;
+	if (count > MAX_VAL)
+	  break;
+      }
+    
+    return x;
+  }
+  
 }
-

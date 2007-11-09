@@ -106,7 +106,7 @@ namespace trans {
 	    err_flag = 1; // ERROR!
 	}
 	else {
-	    tmp = feasting + maj_axis * m1 * adjust_lon(lon - cen_lon);
+	    tmp = feasting + maj_axis * (lon - cen_lon);
 	}
 	
 	return tmp;
@@ -125,28 +125,28 @@ namespace trans {
 	else {
 	    sinphi = sin(lat);
 	    t = tsfnz(eccen, lat, sinphi);
-	    tmp = fnorthing - maj_axis * log(t);
+	    tmp = fnorthing - maj_axis * m1* log(t);
 	}
 
 	return tmp;
     }
   
     template <typename C>
-    C mercator<C>::inverse_lon (C x, C y)
+    C mercator<C>::inverse_lat (C x, C y)
     {
-	C tmp = x - feasting;
+	C tmp = y - fnorthing;
 	double t = 0.0;
 
-	t = exp(-y/maj_axis);
+	t = exp(-tmp/maj_axis);
 	return phi2z(eccen, t);
     }
 
     template <typename C>
-    C mercator<C>::inverse_lat (C x, C y)
+    C mercator<C>::inverse_lon (C x, C y)
     {
-	C tmp = y - fnorthing;
+	C tmp = x - feasting;
 
-	return adjust_lon(cen_lon + x/maj_axis);
+	return adjust_lon(cen_lon + tmp/maj_axis);
     }
 
     template <typename C>

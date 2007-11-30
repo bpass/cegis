@@ -8,21 +8,21 @@
    2 as published by the Free Software Foundation.
 */
 
-#ifndef TRANS_MERCATOR_HH
-#define TRANS_MERCATOR_HH
+#ifndef PROJECTION_MERCATOR_HH
+#define PROJECTION_MERCATOR_HH
 
-#define EPSLN	1.0e-10
+#define EPSLN	1.0e-10 // TODO: Move this somewhere.
 
 #include <limits.h>
 #include <math.h>
 
-#include "util.h"
+#include "util.hh"
 
 /* CLASS NAME: mercator
  *
  */
 
-namespace trans {
+namespace projection {
 
     template <typename C>
     class mercator
@@ -48,7 +48,7 @@ namespace trans {
 	/* Projection Parameters */
 	double eccen;
 	double eccen_sq;
-	double m1;  // TODO: What is this?
+	double m1;  
 	double feasting;
 	double fnorthing;
 	double maj_axis;

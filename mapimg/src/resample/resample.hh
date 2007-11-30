@@ -28,10 +28,9 @@ class resample
 {
 public:
     resample();
-    virtual ~resample();
-    
-    virtual V getpointval(C inx, C iny, image::image<V> &img);
-    
+    ~resample();
+    V nearest_neighbor(C inx, C iny, image::image<V> *img);
+    V bilinear(C inx, C iny, image::image<V> *img);
 };
 
 template <typename V, typename C>
@@ -48,7 +47,7 @@ resample<V, C>::~resample()
 }
 
 template <typename V, typename C>
-V resample<V, C>::nearest_neighbor(C inx, C iny, image::image<V> &img)
+V resample<V, C>::nearest_neighbor(C inx, C iny, image::image<V> *img)
 {
     /* Perform Nearest Neighbor resampling */
     C newx = static_cast<C>(round(inx));

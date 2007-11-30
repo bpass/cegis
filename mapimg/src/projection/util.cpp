@@ -9,9 +9,9 @@
    2 as published by the Free Software Foundation.
 */
 
-#include "util.h"
+#include "util.hh"
 
-namespace trans {
+namespace projection {
   
     int sign (double x )
     {
@@ -49,11 +49,6 @@ namespace trans {
 
     return (tan((M_PI_2 - phi) * .5)*con);
   }
-
-
-  
-  
-
 
   double adjust_lon (double x)
   {

@@ -19,15 +19,28 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+using std::string;
+
 /* Class: image
- * Description: Abstract image container, representing a grid of values.
+ * Description: Container for generic binary image files
  *
  * Constructors: image() Description: Default constructor,
  * 'initialize' must be run before image can be used.
  *
- */
+ * PUBLIC MEMBERS: 
+ * bool init(string filename, C cols, C rows)
+ * Precondition: Parameter filename corresponds to a valid file or place for
+ *               file, cols and rows > 0 
+ * Postcondition: A file at filename is opened and if it has fewer than the
+ *                specified rows/columns then the image is zero filled to 
+ *                the appropriate size.
+ *
 
-using std::string;
+ * 
+ * 
+ *                
+ * 
+ */
 
 namespace image {
 
@@ -40,18 +53,15 @@ namespace image {
 	image (string filename, C cols, C rows);
 	~image();
     
-	bool initialize(string filename, C cols, C rows);
-	bool zero();
-
+	bool init(string filename, C cols, C rows);
 	bool shut();
-  
 	bool ready();
 
-	T getPoint (C x, C y);
-	bool setPoint (C x, C y, T value);
+	T pixel (C x, C y);
+	bool setPixel (C x, C y, T value);
 
-	C num_cols();
-	C num_rows();
+	C numberColumns();
+	C numberRows();
 
     private:
 	/* private data */
@@ -59,7 +69,6 @@ namespace image {
 	int imgfile;
 	C ncols;
 	C nrows;
-	bool readOnly;
 	int badbit;
 
     };
@@ -95,38 +104,30 @@ namespace image {
     }
 
     template <typename T, typename C>
-    bool image<T, C>::initialize (string filename, C cols, C rows)
+    bool image<T, C>::init (string filename, C cols, C rows)
     {
+	int fsize = 0;
+	void *buf = calloc(2, 1);
+
 	ncols = cols;
 	nrows = rows;
 	name = filename;
       
-      
 	imgfile = open(filename.c_str(), _O_BINARY|_O_RDWR|_O_CREAT, 00700);
-      
-	if (imgfile == -1)
+	fsize = lseek(imgfile, 0, SEEK_END)/sizeof(T);
+
+	if (imgfile == -1) {
+	    badbit = -1;
 	    return false;
-	else 
-	    return true;
-    
-    }
-
-    template <typename T, typename C>
-    bool image<T, C>::zero()
-    {
-	int nr = 0;
-	void *buf = calloc(ncols, sizeof(C));
-
-	if (buf != 0) {
-	    for(unsigned int i=0; i<nrows; ++i)
-		nr = write(imgfile, buf, sizeof(buf));
-	    free(buf);
-	    return true;
 	}
-	else
-	    return false;
+	else if (fsize < ncols * nrows) {
+	    fsize = lseek(imgfile, ncols*nrows, SEEK_SET);
+	    write(imgfile, buf, 1);
+	}
+
+	return true;
     }
-  
+
     template <typename T, typename C>
     bool image<T, C>::shut()
     {
@@ -146,7 +147,7 @@ namespace image {
     }
   
     template <typename T, typename C>
-    T image<T, C>::getPoint (C x, C y)
+    T image<T, C>::pixel (C x, C y)
     {
 	T temp;
 	C position = x + (ncols * y); 
@@ -160,7 +161,7 @@ namespace image {
     }
 
     template <typename T, typename C>
-    bool image<T, C>::setPoint (C x, C y, T value)
+    bool image<T, C>::setPixel (C x, C y, T value)
     {
 	int nr = 0;
 	C position = x + (ncols * y);
@@ -174,13 +175,13 @@ namespace image {
     }
 
     template <typename T, typename C>
-    C image<T, C>::num_cols()
+    C image<T, C>::numberColumns()
     {
 	return ncols;
     }
 
     template <typename T, typename C>
-    C image<T, C>::num_rows()
+    C image<T, C>::numberRows()
     {
 	return nrows;
     }

@@ -43,7 +43,6 @@ using std::string;
  */
 
 namespace image {
-
     /* T is pixel value type and C is coordinate type */
     template <typename T, typename C = unsigned int>
     class image
@@ -53,7 +52,6 @@ namespace image {
 	image (string filename, C cols, C rows);
 	~image();
     
-	bool init(string filename, C cols, C rows);
 	bool shut();
 	bool ready();
 
@@ -187,6 +185,6 @@ namespace image {
     }
 	
 
-} //namespace image
+} // namespace image
 
-#endif //IMAGE_H
+#endif //IMAGE_HH

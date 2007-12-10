@@ -1,3 +1,5 @@
+// 	$Id: image.hh,v 1.6 2007/12/10 18:45:30 dmattli Exp $	
+
 /* File: image.hh
    Programmer: David Mattli
 

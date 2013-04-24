@@ -3,7 +3,7 @@
  *
  * Created on June 20, 2002, 1:38 PM
  * 
- * Last modified by lwoodard on July 18, 2005
+ * Last modified by bpassuello on April 24, 2013
  * 
  * This java application provides the functions for the regional projection
  * applet.  It imports the main image than allows the user to use a selection 
@@ -826,15 +826,25 @@ public class DSSRegional extends javax.swing.JApplet
     
     private final int MAXX = 720;               //Max X value
     private final int MAXY = 360;               //Max Y value
+						//Therefore one cell = 0.5 degrees lat/long
     
     private final int MAXBOXX = 90;             //Max X value of box
     private final int MAXBOXY = 75;             //Max Y value of box
     
+/** 		Old Values
+
     private final int OUTER = 39;               //High Latitudes
     private final int MIDUP = 145;              //Mid N Latitudes
     private final int MID = 223;                //Mid Latitudes
     private final int MIDDN = 329;              //Mid S Latitudes
-    
+*/  
+
+/* Changed April 24, 2013 by bpassuello */
+    private final int OUTER = 58;               //High Latitudes 	61 - 90 N
+    private final int MIDUP = 128;              //Mid N Latitudes 	25.5 - 60.5 N
+    private final int MID = 231;                //Mid Latitudes 	25 N - 25 S
+    private final int MIDDN = 301;              //Mid S Latitudes 	25.5 - 60.5 S
+						//Else 			61 - 90 S
  /** public void init()
   {
     //DSSUpdater.setHighLight(HighLight);//.setTicket(ticket);

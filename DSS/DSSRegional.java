@@ -830,16 +830,7 @@ public class DSSRegional extends javax.swing.JApplet
     
     private final int MAXBOXX = 90;             //Max X value of box
     private final int MAXBOXY = 75;             //Max Y value of box
-    
-/** 		Old Values
 
-    private final int OUTER = 39;               //High Latitudes
-    private final int MIDUP = 145;              //Mid N Latitudes
-    private final int MID = 223;                //Mid Latitudes
-    private final int MIDDN = 329;              //Mid S Latitudes
-*/  
-
-/* Changed April 24, 2013 by bpassuello */
     private final int OUTER = 58;               //High Latitudes 	61 - 90 N
     private final int MIDUP = 128;              //Mid N Latitudes 	25.5 - 60.5 N
     private final int MID = 231;                //Mid Latitudes 	25 N - 25 S
